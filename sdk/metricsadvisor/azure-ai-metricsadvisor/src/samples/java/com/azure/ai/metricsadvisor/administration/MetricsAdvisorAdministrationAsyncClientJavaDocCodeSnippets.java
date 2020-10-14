@@ -20,14 +20,14 @@ import com.azure.ai.metricsadvisor.models.DataFeedSource;
 import com.azure.ai.metricsadvisor.models.DataFeedStatus;
 import com.azure.ai.metricsadvisor.models.DetectionConditionsOperator;
 import com.azure.ai.metricsadvisor.models.DimensionKey;
-import com.azure.ai.metricsadvisor.models.EmailHook;
+import com.azure.ai.metricsadvisor.models.EmailNotificationHook;
 import com.azure.ai.metricsadvisor.models.HardThresholdCondition;
-import com.azure.ai.metricsadvisor.models.Hook;
+import com.azure.ai.metricsadvisor.models.NotificationHook;
 import com.azure.ai.metricsadvisor.models.ListDataFeedFilter;
 import com.azure.ai.metricsadvisor.models.ListDataFeedIngestionOptions;
 import com.azure.ai.metricsadvisor.models.ListDataFeedOptions;
 import com.azure.ai.metricsadvisor.models.ListHookOptions;
-import com.azure.ai.metricsadvisor.models.Metric;
+import com.azure.ai.metricsadvisor.models.DataFeedMetric;
 import com.azure.ai.metricsadvisor.models.MetricAnomalyAlertConditions;
 import com.azure.ai.metricsadvisor.models.MetricAnomalyAlertConfiguration;
 import com.azure.ai.metricsadvisor.models.MetricAnomalyAlertConfigurationsOperator;
@@ -37,11 +37,11 @@ import com.azure.ai.metricsadvisor.models.MetricSingleSeriesDetectionCondition;
 import com.azure.ai.metricsadvisor.models.MetricWholeSeriesDetectionCondition;
 import com.azure.ai.metricsadvisor.models.MetricsAdvisorKeyCredential;
 import com.azure.ai.metricsadvisor.models.MySqlDataFeedSource;
-import com.azure.ai.metricsadvisor.models.Severity;
+import com.azure.ai.metricsadvisor.models.AnomalySeverity;
 import com.azure.ai.metricsadvisor.models.SeverityCondition;
 import com.azure.ai.metricsadvisor.models.SmartDetectionCondition;
 import com.azure.ai.metricsadvisor.models.SuppressCondition;
-import com.azure.ai.metricsadvisor.models.WebHook;
+import com.azure.ai.metricsadvisor.models.WebNotificationHook;
 import com.azure.core.http.HttpPipeline;
 import com.azure.core.http.HttpPipelineBuilder;
 import com.azure.core.util.Context;
@@ -101,7 +101,7 @@ public class MetricsAdvisorAdministrationAsyncClientJavaDocCodeSnippets {
             "dataFeedName",
             new MySqlDataFeedSource("conn-string", "query"),
             new DataFeedGranularity().setGranularityType(DataFeedGranularityType.DAILY),
-            new DataFeedSchema(Arrays.asList(new Metric().setName("metric1"), new Metric().setName("metric2"))),
+            new DataFeedSchema(Arrays.asList(new DataFeedMetric().setName("metric1"), new DataFeedMetric().setName("metric2"))),
             new DataFeedIngestionSettings(OffsetDateTime.parse("")),
             new DataFeedOptions().setDescription("data feed description")
                 .setRollupSettings(new DataFeedRollupSettings().setRollupType(DataFeedRollupType.AUTO_ROLLUP)))
@@ -125,7 +125,7 @@ public class MetricsAdvisorAdministrationAsyncClientJavaDocCodeSnippets {
             "dataFeedName",
             new MySqlDataFeedSource("conn-string", "query"),
             new DataFeedGranularity().setGranularityType(DataFeedGranularityType.DAILY),
-            new DataFeedSchema(Arrays.asList(new Metric().setName("metric1"), new Metric().setName("metric2"))),
+            new DataFeedSchema(Arrays.asList(new DataFeedMetric().setName("metric1"), new DataFeedMetric().setName("metric2"))),
             new DataFeedIngestionSettings(OffsetDateTime.parse("")),
             new DataFeedOptions().setDescription("data feed description")
                 .setRollupSettings(new DataFeedRollupSettings().setRollupType(DataFeedRollupType.AUTO_ROLLUP)))
@@ -266,18 +266,18 @@ public class MetricsAdvisorAdministrationAsyncClientJavaDocCodeSnippets {
     }
 
     /**
-     * Code snippet for {@link MetricsAdvisorAdministrationAsyncClient#createHook(Hook)}.
+     * Code snippet for {@link MetricsAdvisorAdministrationAsyncClient#createHook(NotificationHook)}.
      */
     public void createHook() {
         // BEGIN: com.azure.ai.metricsadvisor.administration.MetricsAdvisorAdministrationAsyncClient.createHook#Hook
-        Hook emailHook = new EmailHook("email hook")
+        NotificationHook emailHook = new EmailNotificationHook("email hook")
             .setDescription("my email hook")
             .addEmailToAlert("alertme@alertme.com")
             .setExternalLink("https://adwiki.azurewebsites.net/articles/howto/alerts/create-hooks.html");
 
         metricAdvisorAdministrationAsyncClient.createHook(emailHook)
             .subscribe(hook -> {
-                EmailHook createdEmailHook = (EmailHook) hook;
+                EmailNotificationHook createdEmailHook = (EmailNotificationHook) hook;
                 System.out.printf("Hook Id: %s%n", createdEmailHook.getId());
                 System.out.printf("Hook Name: %s%n", createdEmailHook.getName());
                 System.out.printf("Hook Description: %s%n", createdEmailHook.getDescription());
@@ -288,11 +288,11 @@ public class MetricsAdvisorAdministrationAsyncClientJavaDocCodeSnippets {
     }
 
     /**
-     * Code snippet for {@link MetricsAdvisorAdministrationAsyncClient#createHookWithResponse(Hook)}.
+     * Code snippet for {@link MetricsAdvisorAdministrationAsyncClient#createHookWithResponse(NotificationHook)}.
      */
     public void createHookWithResponse() {
         // BEGIN: com.azure.ai.metricsadvisor.administration.MetricsAdvisorAdministrationAsyncClient.createHookWithResponse#Hook
-        Hook emailHook = new EmailHook("email hook")
+        NotificationHook emailHook = new EmailNotificationHook("email hook")
             .setDescription("my email hook")
             .addEmailToAlert("alertme@alertme.com")
             .setExternalLink("https://adwiki.azurewebsites.net/articles/howto/alerts/create-hooks.html");
@@ -300,7 +300,7 @@ public class MetricsAdvisorAdministrationAsyncClientJavaDocCodeSnippets {
         metricAdvisorAdministrationAsyncClient.createHookWithResponse(emailHook)
             .subscribe(response -> {
                 System.out.printf("Response statusCode: %d%n", response.getStatusCode());
-                EmailHook createdEmailHook = (EmailHook) response.getValue();
+                EmailNotificationHook createdEmailHook = (EmailNotificationHook) response.getValue();
                 System.out.printf("Hook Id: %s%n", createdEmailHook.getId());
                 System.out.printf("Hook Name: %s%n", createdEmailHook.getName());
                 System.out.printf("Hook Description: %s%n", createdEmailHook.getDescription());
@@ -318,15 +318,15 @@ public class MetricsAdvisorAdministrationAsyncClientJavaDocCodeSnippets {
         final String hookId = "f00853f1-6627-447f-bacf-8dccf2e86fed";
         metricAdvisorAdministrationAsyncClient.getHook(hookId)
             .subscribe(hook -> {
-                if (hook instanceof EmailHook) {
-                    EmailHook emailHook = (EmailHook) hook;
+                if (hook instanceof EmailNotificationHook) {
+                    EmailNotificationHook emailHook = (EmailNotificationHook) hook;
                     System.out.printf("Hook Id: %s%n", emailHook.getId());
                     System.out.printf("Hook Name: %s%n", emailHook.getName());
                     System.out.printf("Hook Description: %s%n", emailHook.getDescription());
                     System.out.printf("Hook External Link: %s%n", emailHook.getExternalLink());
                     System.out.printf("Hook Emails: %s%n", String.join(",", emailHook.getEmailsToAlert()));
-                } else if (hook instanceof WebHook) {
-                    WebHook webHook = (WebHook) hook;
+                } else if (hook instanceof WebNotificationHook) {
+                    WebNotificationHook webHook = (WebNotificationHook) hook;
                     System.out.printf("Hook Id: %s%n", webHook.getId());
                     System.out.printf("Hook Name: %s%n", webHook.getName());
                     System.out.printf("Hook Description: %s%n", webHook.getDescription());
@@ -347,16 +347,16 @@ public class MetricsAdvisorAdministrationAsyncClientJavaDocCodeSnippets {
         metricAdvisorAdministrationAsyncClient.getHookWithResponse(hookId)
             .subscribe(response -> {
                 System.out.printf("Response statusCode: %d%n", response.getStatusCode());
-                Hook hook = response.getValue();
-                if (hook instanceof EmailHook) {
-                    EmailHook emailHook = (EmailHook) hook;
+                NotificationHook hook = response.getValue();
+                if (hook instanceof EmailNotificationHook) {
+                    EmailNotificationHook emailHook = (EmailNotificationHook) hook;
                     System.out.printf("Hook Id: %s%n", emailHook.getId());
                     System.out.printf("Hook Name: %s%n", emailHook.getName());
                     System.out.printf("Hook Description: %s%n", emailHook.getDescription());
                     System.out.printf("Hook External Link: %s%n", emailHook.getExternalLink());
                     System.out.printf("Hook Emails: %s%n", String.join(",", emailHook.getEmailsToAlert()));
-                } else if (hook instanceof WebHook) {
-                    WebHook webHook = (WebHook) hook;
+                } else if (hook instanceof WebNotificationHook) {
+                    WebNotificationHook webHook = (WebNotificationHook) hook;
                     System.out.printf("Hook Id: %s%n", webHook.getId());
                     System.out.printf("Hook Name: %s%n", webHook.getName());
                     System.out.printf("Hook Description: %s%n", webHook.getDescription());
@@ -369,14 +369,14 @@ public class MetricsAdvisorAdministrationAsyncClientJavaDocCodeSnippets {
     }
 
     /**
-     * Code snippet for {@link MetricsAdvisorAdministrationAsyncClient#updateHook(Hook)}.
+     * Code snippet for {@link MetricsAdvisorAdministrationAsyncClient#updateHook(NotificationHook)}.
      */
     public void updateHook() {
         // BEGIN: com.azure.ai.metricsadvisor.administration.MetricsAdvisorAdministrationAsyncClient.updateHook#Hook
         final String emailHookId = "f00853f1-6627-447f-bacf-8dccf2e86fed";
         metricAdvisorAdministrationAsyncClient.getHook(emailHookId)
             .flatMap(hook -> {
-                EmailHook emailHook = (EmailHook) hook;
+                EmailNotificationHook emailHook = (EmailNotificationHook) hook;
                 emailHook
                     .removeEmailToAlert("alertme@alertme.com")
                     .addEmailToAlert("alertme2@alertme.com")
@@ -384,7 +384,7 @@ public class MetricsAdvisorAdministrationAsyncClientJavaDocCodeSnippets {
                 return metricAdvisorAdministrationAsyncClient.updateHook(emailHook);
             })
             .subscribe(hook -> {
-                EmailHook emailHook = (EmailHook) hook;
+                EmailNotificationHook emailHook = (EmailNotificationHook) hook;
                 System.out.printf("Hook Id: %s%n", emailHook.getId());
                 System.out.printf("Hook Name: %s%n", emailHook.getName());
                 System.out.printf("Hook Description: %s%n", emailHook.getDescription());
@@ -395,14 +395,14 @@ public class MetricsAdvisorAdministrationAsyncClientJavaDocCodeSnippets {
     }
 
     /**
-     * Code snippet for {@link MetricsAdvisorAdministrationAsyncClient#updateHookWithResponse(Hook)}.
+     * Code snippet for {@link MetricsAdvisorAdministrationAsyncClient#updateHookWithResponse(NotificationHook)}.
      */
     public void updateHookWithResponse() {
         // BEGIN: com.azure.ai.metricsadvisor.administration.MetricsAdvisorAdministrationAsyncClient.updateHookWithResponse#Hook
         final String emailHookId = "f00853f1-6627-447f-bacf-8dccf2e86fed";
         metricAdvisorAdministrationAsyncClient.getHookWithResponse(emailHookId)
             .flatMap(response -> {
-                EmailHook emailHook = (EmailHook) response.getValue();
+                EmailNotificationHook emailHook = (EmailNotificationHook) response.getValue();
                 emailHook
                     .removeEmailToAlert("alertme@alertme.com")
                     .addEmailToAlert("alertme2@alertme.com")
@@ -411,7 +411,7 @@ public class MetricsAdvisorAdministrationAsyncClientJavaDocCodeSnippets {
             })
             .subscribe(response -> {
                 System.out.printf("Response statusCode: %d%n", response.getStatusCode());
-                EmailHook emailHook = (EmailHook) response.getValue();
+                EmailNotificationHook emailHook = (EmailNotificationHook) response.getValue();
                 System.out.printf("Hook Id: %s%n", emailHook.getId());
                 System.out.printf("Hook Name: %s%n", emailHook.getName());
                 System.out.printf("Hook Description: %s%n", emailHook.getDescription());
@@ -451,15 +451,15 @@ public class MetricsAdvisorAdministrationAsyncClientJavaDocCodeSnippets {
         // BEGIN: com.azure.ai.metricsadvisor.administration.MetricsAdvisorAdministrationAsyncClient.listHooks
         metricAdvisorAdministrationAsyncClient.listHooks()
             .subscribe(hook -> {
-                if (hook instanceof EmailHook) {
-                    EmailHook emailHook = (EmailHook) hook;
+                if (hook instanceof EmailNotificationHook) {
+                    EmailNotificationHook emailHook = (EmailNotificationHook) hook;
                     System.out.printf("Hook Id: %s%n", emailHook.getId());
                     System.out.printf("Hook Name: %s%n", emailHook.getName());
                     System.out.printf("Hook Description: %s%n", emailHook.getDescription());
                     System.out.printf("Hook External Link: %s%n", emailHook.getExternalLink());
                     System.out.printf("Hook Emails: %s%n", String.join(",", emailHook.getEmailsToAlert()));
-                } else if (hook instanceof WebHook) {
-                    WebHook webHook = (WebHook) hook;
+                } else if (hook instanceof WebNotificationHook) {
+                    WebNotificationHook webHook = (WebNotificationHook) hook;
                     System.out.printf("Hook Id: %s%n", webHook.getId());
                     System.out.printf("Hook Name: %s%n", webHook.getName());
                     System.out.printf("Hook Description: %s%n", webHook.getDescription());
@@ -483,17 +483,17 @@ public class MetricsAdvisorAdministrationAsyncClientJavaDocCodeSnippets {
         metricAdvisorAdministrationAsyncClient.listHooks(options).byPage()
             .subscribe(hookPage -> {
                 System.out.printf("Page: %d%n", pageCount[0]++);
-                for (Hook hook : hookPage.getElements()) {
-                    if (hook instanceof EmailHook) {
-                        EmailHook emailHook = (EmailHook) hook;
+                for (NotificationHook hook : hookPage.getElements()) {
+                    if (hook instanceof EmailNotificationHook) {
+                        EmailNotificationHook emailHook = (EmailNotificationHook) hook;
                         System.out.printf("Hook Id: %s%n", emailHook.getId());
                         System.out.printf("Hook Name: %s%n", emailHook.getName());
                         System.out.printf("Hook Description: %s%n", emailHook.getDescription());
                         System.out.printf("Hook External Link: %s%n", emailHook.getExternalLink());
                         System.out.printf("Hook Emails: %s%n", String.join(",", emailHook.getEmailsToAlert()));
                         System.out.printf("Hook Admins: %s%n", String.join(",", emailHook.getAdmins()));
-                    } else if (hook instanceof WebHook) {
-                        WebHook webHook = (WebHook) hook;
+                    } else if (hook instanceof WebNotificationHook) {
+                        WebNotificationHook webHook = (WebNotificationHook) hook;
                         System.out.printf("Hook Id: %s%n", webHook.getId());
                         System.out.printf("Hook Name: %s%n", webHook.getName());
                         System.out.printf("Hook Description: %s%n", webHook.getDescription());
@@ -1155,7 +1155,7 @@ public class MetricsAdvisorAdministrationAsyncClientJavaDocCodeSnippets {
                     new MetricAnomalyAlertConfiguration(detectionConfigurationId2,
                         MetricAnomalyAlertScope.forWholeSeries())
                         .setAlertConditions(new MetricAnomalyAlertConditions()
-                            .setSeverityCondition(new SeverityCondition().setMaxAlertSeverity(Severity.HIGH)))))
+                            .setSeverityCondition(new SeverityCondition().setMaxAlertSeverity(AnomalySeverity.HIGH)))))
                 .setCrossMetricsOperator(MetricAnomalyAlertConfigurationsOperator.AND)
                 .setIdOfHooksToAlert(Arrays.asList(hookId1, hookId2)))
             .subscribe(anomalyAlertConfiguration -> {
@@ -1190,7 +1190,7 @@ public class MetricsAdvisorAdministrationAsyncClientJavaDocCodeSnippets {
                     new MetricAnomalyAlertConfiguration(detectionConfigurationId2,
                         MetricAnomalyAlertScope.forWholeSeries())
                         .setAlertConditions(new MetricAnomalyAlertConditions()
-                            .setSeverityCondition(new SeverityCondition().setMaxAlertSeverity(Severity.HIGH)))))
+                            .setSeverityCondition(new SeverityCondition().setMaxAlertSeverity(AnomalySeverity.HIGH)))))
                 .setCrossMetricsOperator(MetricAnomalyAlertConfigurationsOperator.AND)
                 .setIdOfHooksToAlert(Arrays.asList(hookId1, hookId2)))
             .subscribe(alertConfigurationResponse -> {

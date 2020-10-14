@@ -11,7 +11,7 @@ import java.time.OffsetDateTime;
 public final class ListAlertOptions {
     private final OffsetDateTime startTime;
     private final OffsetDateTime endTime;
-    private final TimeMode timeMode;
+    private final AlertQueryTimeMode timeMode;
     private Integer top;
     private Integer skip;
 
@@ -24,7 +24,7 @@ public final class ListAlertOptions {
      */
     public ListAlertOptions(OffsetDateTime startTime,
                             OffsetDateTime endTime,
-                            TimeMode timeMode) {
+                            AlertQueryTimeMode timeMode) {
         this.startTime = startTime;
         this.endTime = endTime;
         this.timeMode = timeMode;
@@ -53,7 +53,7 @@ public final class ListAlertOptions {
      *
      * @return The time mode.
      */
-    public TimeMode getTimeMode() {
+    public AlertQueryTimeMode getTimeMode() {
         return this.timeMode;
     }
 

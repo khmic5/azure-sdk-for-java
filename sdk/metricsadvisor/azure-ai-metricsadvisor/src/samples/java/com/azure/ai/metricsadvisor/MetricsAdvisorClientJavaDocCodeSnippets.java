@@ -3,12 +3,12 @@
 
 package com.azure.ai.metricsadvisor;
 
-import com.azure.ai.metricsadvisor.models.Alert;
-import com.azure.ai.metricsadvisor.models.Anomaly;
+import com.azure.ai.metricsadvisor.models.AnomalyAlert;
+import com.azure.ai.metricsadvisor.models.DataPointAnomaly;
 import com.azure.ai.metricsadvisor.models.ChangePointValue;
 import com.azure.ai.metricsadvisor.models.DimensionKey;
 import com.azure.ai.metricsadvisor.models.FeedbackQueryTimeMode;
-import com.azure.ai.metricsadvisor.models.Incident;
+import com.azure.ai.metricsadvisor.models.AnomalyIncident;
 import com.azure.ai.metricsadvisor.models.IncidentRootCause;
 import com.azure.ai.metricsadvisor.models.ListAlertOptions;
 import com.azure.ai.metricsadvisor.models.ListAnomaliesAlertedOptions;
@@ -30,8 +30,8 @@ import com.azure.ai.metricsadvisor.models.MetricEnrichedSeriesData;
 import com.azure.ai.metricsadvisor.models.MetricFeedback;
 import com.azure.ai.metricsadvisor.models.MetricPeriodFeedback;
 import com.azure.ai.metricsadvisor.models.MetricsAdvisorKeyCredential;
-import com.azure.ai.metricsadvisor.models.Severity;
-import com.azure.ai.metricsadvisor.models.TimeMode;
+import com.azure.ai.metricsadvisor.models.AnomalySeverity;
+import com.azure.ai.metricsadvisor.models.AlertQueryTimeMode;
 import com.azure.core.http.HttpPipeline;
 import com.azure.core.http.HttpPipelineBuilder;
 import com.azure.core.http.rest.PagedIterable;
@@ -150,9 +150,9 @@ public class MetricsAdvisorClientJavaDocCodeSnippets {
                 OffsetDateTime.parse("2020-09-09T00:00:00Z")))
             .forEach(metricSeriesData -> {
                 System.out.println("List of data points for this series:");
-                System.out.println(metricSeriesData.getValueList());
+                System.out.println(metricSeriesData.getValues());
                 System.out.println("Timestamps of the data related to this time series:");
-                System.out.println(metricSeriesData.getTimestampList());
+                System.out.println(metricSeriesData.getTimestamps());
                 System.out.printf("Series Key:");
                 System.out.println(metricSeriesData.getSeriesKey().asMap());
             });
@@ -174,8 +174,8 @@ public class MetricsAdvisorClientJavaDocCodeSnippets {
             .forEach(metricSeriesData -> {
                 System.out.printf("Data feed Id: %s%n", metricSeriesData.getMetricId());
                 System.out.printf("Data feed description: %s%n", metricSeriesData.getSeriesKey());
-                System.out.printf("Data feed source type: %.2f%n", metricSeriesData.getTimestampList());
-                System.out.printf("Data feed creator: %.2f%n", metricSeriesData.getValueList());
+                System.out.printf("Data feed source type: %.2f%n", metricSeriesData.getTimestamps());
+                System.out.printf("Data feed creator: %.2f%n", metricSeriesData.getValues());
             });
         // END: com.azure.ai.metricsadvisor.MetricsAdvisorClient.listMetricSeriesData#String-List-ListMetricSeriesDataOptions-Context
     }
@@ -215,12 +215,12 @@ public class MetricsAdvisorClientJavaDocCodeSnippets {
         final ListIncidentsAlertedOptions options = new ListIncidentsAlertedOptions()
             .setTop(10);
 
-        PagedIterable<Incident> incidentsIterable = metricAdvisorClient.listIncidentsForAlert(
+        PagedIterable<AnomalyIncident> incidentsIterable = metricAdvisorClient.listIncidentsForAlert(
             alertConfigurationId,
             alertId,
             options);
 
-        for (Incident incident : incidentsIterable) {
+        for (AnomalyIncident incident : incidentsIterable) {
             System.out.printf("Metric Id: %s%n", incident.getMetricId());
             System.out.printf("Detection Configuration Id: %s%n", incident.getDetectionConfigurationId());
             System.out.printf("Incident Id: %s%n", incident.getId());
@@ -247,18 +247,18 @@ public class MetricsAdvisorClientJavaDocCodeSnippets {
         final ListIncidentsAlertedOptions options = new ListIncidentsAlertedOptions()
             .setTop(10);
 
-        PagedIterable<Incident> incidentsIterable = metricAdvisorClient.listIncidentsForAlert(
+        PagedIterable<AnomalyIncident> incidentsIterable = metricAdvisorClient.listIncidentsForAlert(
             alertConfigurationId,
             alertId,
             options,
             Context.NONE);
 
-        Stream<PagedResponse<Incident>> incidentsPageStream = incidentsIterable.streamByPage();
+        Stream<PagedResponse<AnomalyIncident>> incidentsPageStream = incidentsIterable.streamByPage();
         int[] pageCount = new int[1];
         incidentsPageStream.forEach(incidentsPage -> {
             System.out.printf("Page: %d%n", pageCount[0]++);
-            IterableStream<Incident> incidentsPageItems = incidentsPage.getElements();
-            for (Incident incident : incidentsPageItems) {
+            IterableStream<AnomalyIncident> incidentsPageItems = incidentsPage.getElements();
+            for (AnomalyIncident incident : incidentsPageItems) {
                 System.out.printf("Metric Id: %s%n", incident.getMetricId());
                 System.out.printf("Detection Configuration Id: %s%n", incident.getDetectionConfigurationId());
                 System.out.printf("Incident Id: %s%n", incident.getId());
@@ -285,12 +285,12 @@ public class MetricsAdvisorClientJavaDocCodeSnippets {
         final String alertId = "1746b031c00";
         final ListAnomaliesAlertedOptions options = new ListAnomaliesAlertedOptions()
             .setTop(10);
-        PagedIterable<Anomaly> anomaliesIterable = metricAdvisorClient.listAnomaliesForAlert(
+        PagedIterable<DataPointAnomaly> anomaliesIterable = metricAdvisorClient.listAnomaliesForAlert(
             alertConfigurationId,
             alertId
         );
 
-        for (Anomaly anomaly : anomaliesIterable) {
+        for (DataPointAnomaly anomaly : anomaliesIterable) {
             System.out.printf("Metric Id: %s%n", anomaly.getMetricId());
             System.out.printf("Detection Configuration Id: %s%n", anomaly.getDetectionConfigurationId());
             System.out.printf("Anomaly Created Time: %s%n", anomaly.getCreatedTime());
@@ -312,18 +312,18 @@ public class MetricsAdvisorClientJavaDocCodeSnippets {
         final String alertId = "1746b031c00";
         final ListAnomaliesAlertedOptions options = new ListAnomaliesAlertedOptions()
             .setTop(10);
-        PagedIterable<Anomaly> anomaliesIterable = metricAdvisorClient.listAnomaliesForAlert(
+        PagedIterable<DataPointAnomaly> anomaliesIterable = metricAdvisorClient.listAnomaliesForAlert(
             alertConfigurationId,
             alertId,
             options,
             Context.NONE);
 
-        Stream<PagedResponse<Anomaly>> anomaliesPageStream = anomaliesIterable.streamByPage();
+        Stream<PagedResponse<DataPointAnomaly>> anomaliesPageStream = anomaliesIterable.streamByPage();
         int[] pageCount = new int[1];
         anomaliesPageStream.forEach(anomaliesPage -> {
             System.out.printf("Page: %d%n", pageCount[0]++);
-            IterableStream<Anomaly> anomaliesPageItems = anomaliesPage.getElements();
-            for (Anomaly anomaly : anomaliesPageItems) {
+            IterableStream<DataPointAnomaly> anomaliesPageItems = anomaliesPage.getElements();
+            for (DataPointAnomaly anomaly : anomaliesPageItems) {
                 System.out.printf("Metric Id: %s%n", anomaly.getMetricId());
                 System.out.printf("Detection Configuration Id: %s%n", anomaly.getDetectionConfigurationId());
                 System.out.printf("Anomaly Created Time: %s%n", anomaly.getCreatedTime());
@@ -345,14 +345,14 @@ public class MetricsAdvisorClientJavaDocCodeSnippets {
         final String alertConfigurationId = "ff3014a0-bbbb-41ec-a637-677e77b81299";
         final OffsetDateTime startTime = OffsetDateTime.parse("2020-01-01T00:00:00Z");
         final OffsetDateTime endTime = OffsetDateTime.parse("2020-09-09T00:00:00Z");
-        final TimeMode timeMode = TimeMode.ANOMALY_TIME;
+        final AlertQueryTimeMode timeMode = AlertQueryTimeMode.ANOMALY_TIME;
         final ListAlertOptions options = new ListAlertOptions(startTime, endTime, timeMode)
             .setTop(10);
 
-        PagedIterable<Alert> alertsIterable
+        PagedIterable<AnomalyAlert> alertsIterable
             = metricAdvisorClient.listAlerts(alertConfigurationId, options);
 
-        for (Alert alert : alertsIterable) {
+        for (AnomalyAlert alert : alertsIterable) {
             System.out.printf("Alert Id: %s%n", alert.getId());
             System.out.printf("Created Time: %s%n", alert.getCreatedTime());
             System.out.printf("Modified Time: %s%n", alert.getModifiedTime());
@@ -368,19 +368,19 @@ public class MetricsAdvisorClientJavaDocCodeSnippets {
         final String alertConfigurationId = "ff3014a0-bbbb-41ec-a637-677e77b81299";
         final OffsetDateTime startTime = OffsetDateTime.parse("2020-01-01T00:00:00Z");
         final OffsetDateTime endTime = OffsetDateTime.parse("2020-09-09T00:00:00Z");
-        final TimeMode timeMode = TimeMode.ANOMALY_TIME;
+        final AlertQueryTimeMode timeMode = AlertQueryTimeMode.ANOMALY_TIME;
         final ListAlertOptions options = new ListAlertOptions(startTime, endTime, timeMode)
             .setTop(10);
 
-        PagedIterable<Alert> alertsIterable
+        PagedIterable<AnomalyAlert> alertsIterable
             = metricAdvisorClient.listAlerts(alertConfigurationId, options, Context.NONE);
 
-        Stream<PagedResponse<Alert>> alertsPageStream = alertsIterable.streamByPage();
+        Stream<PagedResponse<AnomalyAlert>> alertsPageStream = alertsIterable.streamByPage();
         int[] pageCount = new int[1];
         alertsPageStream.forEach(alertsPage -> {
             System.out.printf("Page: %d%n", pageCount[0]++);
-            IterableStream<Alert> alertsPageItems = alertsPage.getElements();
-            for (Alert alert : alertsPageItems) {
+            IterableStream<AnomalyAlert> alertsPageItems = alertsPage.getElements();
+            for (AnomalyAlert alert : alertsPageItems) {
                 System.out.printf("Alert Id: %s%n", alert.getId());
                 System.out.printf("Created Time: %s%n", alert.getCreatedTime());
                 System.out.printf("Modified Time: %s%n", alert.getModifiedTime());
@@ -455,10 +455,10 @@ public class MetricsAdvisorClientJavaDocCodeSnippets {
         final ListIncidentsDetectedOptions options = new ListIncidentsDetectedOptions(startTime, endTime)
             .setTop(1000);
 
-        PagedIterable<Incident> incidentsIterable
+        PagedIterable<AnomalyIncident> incidentsIterable
             = metricAdvisorClient.listIncidentsForDetectionConfiguration(detectionConfigurationId, options);
 
-        for (Incident incident : incidentsIterable) {
+        for (AnomalyIncident incident : incidentsIterable) {
             System.out.printf("Metric Id: %s%n", incident.getMetricId());
             System.out.printf("Detection Configuration Id: %s%n", incident.getDetectionConfigurationId());
             System.out.printf("Incident Id: %s%n", incident.getId());
@@ -481,18 +481,18 @@ public class MetricsAdvisorClientJavaDocCodeSnippets {
         final ListIncidentsDetectedOptions options = new ListIncidentsDetectedOptions(startTime, endTime)
             .setTop(1000);
 
-        PagedIterable<Incident> incidentsIterable
+        PagedIterable<AnomalyIncident> incidentsIterable
             = metricAdvisorClient.listIncidentsForDetectionConfiguration(detectionConfigurationId,
             options,
             Context.NONE);
 
-        Stream<PagedResponse<Incident>> incidentsPageStream = incidentsIterable.streamByPage();
+        Stream<PagedResponse<AnomalyIncident>> incidentsPageStream = incidentsIterable.streamByPage();
 
         int[] pageCount = new int[1];
         incidentsPageStream.forEach(incidentsPage -> {
             System.out.printf("Page: %d%n", pageCount[0]++);
-            IterableStream<Incident> pageElements = incidentsPage.getElements();
-            for (Incident incident : pageElements) {
+            IterableStream<AnomalyIncident> pageElements = incidentsPage.getElements();
+            for (AnomalyIncident incident : pageElements) {
                 System.out.printf("Metric Id: %s%n", incident.getMetricId());
                 System.out.printf("Detection Configuration Id: %s%n", incident.getDetectionConfigurationId());
                 System.out.printf("Incident Id: %s%n", incident.getId());
@@ -515,14 +515,14 @@ public class MetricsAdvisorClientJavaDocCodeSnippets {
         final OffsetDateTime startTime = OffsetDateTime.parse("2020-09-09T00:00:00Z");
         final OffsetDateTime endTime = OffsetDateTime.parse("2020-09-09T12:00:00Z");
         final ListAnomaliesDetectedFilter filter = new ListAnomaliesDetectedFilter()
-            .setSeverity(Severity.LOW, Severity.MEDIUM);
+            .setSeverity(AnomalySeverity.LOW, AnomalySeverity.MEDIUM);
         final ListAnomaliesDetectedOptions options = new ListAnomaliesDetectedOptions(startTime, endTime)
             .setTop(10)
             .setFilter(filter);
-        PagedIterable<Anomaly> anomaliesIterable
+        PagedIterable<DataPointAnomaly> anomaliesIterable
             = metricAdvisorClient.listAnomaliesForDetectionConfiguration(detectionConfigurationId, options);
 
-        for (Anomaly anomaly : anomaliesIterable) {
+        for (DataPointAnomaly anomaly : anomaliesIterable) {
             System.out.printf("Anomaly Severity: %s%n", anomaly.getSeverity());
             System.out.printf("Series Key:");
             DimensionKey seriesKey = anomaly.getSeriesKey();
@@ -543,21 +543,21 @@ public class MetricsAdvisorClientJavaDocCodeSnippets {
         final OffsetDateTime startTime = OffsetDateTime.parse("2020-09-09T00:00:00Z");
         final OffsetDateTime endTime = OffsetDateTime.parse("2020-09-09T12:00:00Z");
         final ListAnomaliesDetectedFilter filter = new ListAnomaliesDetectedFilter()
-            .setSeverity(Severity.LOW, Severity.MEDIUM);
+            .setSeverity(AnomalySeverity.LOW, AnomalySeverity.MEDIUM);
         final ListAnomaliesDetectedOptions options = new ListAnomaliesDetectedOptions(startTime, endTime)
             .setTop(10)
             .setFilter(filter);
-        PagedIterable<Anomaly> anomaliesIterable
+        PagedIterable<DataPointAnomaly> anomaliesIterable
             = metricAdvisorClient.listAnomaliesForDetectionConfiguration(detectionConfigurationId,
             options,
             Context.NONE);
 
-        Stream<PagedResponse<Anomaly>> anomaliesPageStream = anomaliesIterable.streamByPage();
+        Stream<PagedResponse<DataPointAnomaly>> anomaliesPageStream = anomaliesIterable.streamByPage();
         int[] pageCount = new int[1];
         anomaliesPageStream.forEach(anomaliesPage -> {
             System.out.printf("Page: %d%n", pageCount[0]++);
-            IterableStream<Anomaly> anomaliesPageItems = anomaliesPage.getElements();
-            for (Anomaly anomaly : anomaliesPageItems) {
+            IterableStream<DataPointAnomaly> anomaliesPageItems = anomaliesPage.getElements();
+            for (DataPointAnomaly anomaly : anomaliesPageItems) {
                 System.out.printf("Anomaly Severity: %s%n", anomaly.getSeverity());
                 System.out.printf("Series Key:");
                 DimensionKey seriesKey = anomaly.getSeriesKey();
@@ -576,10 +576,13 @@ public class MetricsAdvisorClientJavaDocCodeSnippets {
     public void createMetricFeedback() {
         // BEGIN: com.azure.ai.metricsadvisor.MetricsAdvisorClient.createMetricFeedback#String-MetricFeedback
         final String metricId = "d3gh4i4-b804-4ab9-a70f-0da0c89cft3l";
+        final DimensionKey seriesKey = new DimensionKey()
+            .put("Dim1", "Common Lime")
+            .put("Dim2", "Amphibian");
         final OffsetDateTime startTime = OffsetDateTime.parse("2020-01-01T00:00:00Z");
         final OffsetDateTime endTime = OffsetDateTime.parse("2020-09-09T00:00:00Z");
         final MetricChangePointFeedback metricChangePointFeedback
-            = new MetricChangePointFeedback(startTime, endTime, ChangePointValue.AUTO_DETECT);
+            = new MetricChangePointFeedback(seriesKey, startTime, endTime, ChangePointValue.AUTO_DETECT);
 
         final MetricFeedback metricFeedback
             = metricAdvisorClient.createMetricFeedback(metricId, metricChangePointFeedback);
@@ -601,10 +604,13 @@ public class MetricsAdvisorClientJavaDocCodeSnippets {
     public void createMetricFeedbackWithResponse() {
         // BEGIN: com.azure.ai.metricsadvisor.MetricsAdvisorClient.createMetricFeedbackWithResponse#String-MetricFeedback-Context
         final String metricId = "d3gh4i4-b804-4ab9-a70f-0da0c89cft3l";
+        final DimensionKey seriesKey = new DimensionKey()
+            .put("Dim1", "Common Lime")
+            .put("Dim2", "Amphibian");
         final OffsetDateTime startTime = OffsetDateTime.parse("2020-01-01T00:00:00Z");
         final OffsetDateTime endTime = OffsetDateTime.parse("2020-09-09T00:00:00Z");
         final MetricChangePointFeedback metricChangePointFeedback
-            = new MetricChangePointFeedback(startTime, endTime, ChangePointValue.AUTO_DETECT);
+            = new MetricChangePointFeedback(seriesKey, startTime, endTime, ChangePointValue.AUTO_DETECT);
 
         final Response<MetricFeedback> metricFeedbackResponse
             = metricAdvisorClient.createMetricFeedbackWithResponse(metricId, metricChangePointFeedback, Context.NONE);
@@ -620,7 +626,7 @@ public class MetricsAdvisorClientJavaDocCodeSnippets {
         System.out.printf("Metric feedback end time: %s%n",
             createdMetricChangePointFeedback.getEndTime());
         System.out.printf("Metric feedback associated dimension filter: %s%n",
-            createdMetricChangePointFeedback.getDimensionFilter().asMap());
+            createdMetricChangePointFeedback.getDimensionKey().asMap());
         // END: com.azure.ai.metricsadvisor.MetricsAdvisorClient.createMetricFeedbackWithResponse#String-MetricFeedback-Context
     }
 
@@ -634,7 +640,7 @@ public class MetricsAdvisorClientJavaDocCodeSnippets {
         final MetricFeedback metricFeedback = metricAdvisorClient.getMetricFeedback(feedbackId);
         System.out.printf("Metric feedback Id: %s%n", metricFeedback.getId());
         System.out.printf("Metric feedback associated dimension filter: %s%n",
-            metricFeedback.getDimensionFilter().asMap());
+            metricFeedback.getDimensionKey().asMap());
 
         if (PERIOD.equals(metricFeedback.getFeedbackType())) {
             MetricPeriodFeedback createMetricPeriodFeedback
@@ -659,7 +665,7 @@ public class MetricsAdvisorClientJavaDocCodeSnippets {
         final MetricFeedback metricFeedback = metricFeedbackResponse.getValue();
         System.out.printf("Metric feedback Id: %s%n", metricFeedback.getId());
         System.out.printf("Metric feedback associated dimension filter: %s%n",
-            metricFeedback.getDimensionFilter().asMap());
+            metricFeedback.getDimensionKey().asMap());
 
         if (PERIOD.equals(metricFeedback.getFeedbackType())) {
             MetricPeriodFeedback createMetricPeriodFeedback
@@ -682,7 +688,7 @@ public class MetricsAdvisorClientJavaDocCodeSnippets {
             .forEach(metricFeedback -> {
                 System.out.printf("Metric feedback Id: %s%n", metricFeedback.getId());
                 System.out.printf("Metric feedback associated dimension filter: %s%n",
-                    metricFeedback.getDimensionFilter().asMap());
+                    metricFeedback.getDimensionKey().asMap());
 
                 if (PERIOD.equals(metricFeedback.getFeedbackType())) {
                     MetricPeriodFeedback periodFeedback
@@ -726,7 +732,7 @@ public class MetricsAdvisorClientJavaDocCodeSnippets {
             .forEach(metricFeedback -> {
                 System.out.printf("Metric feedback Id: %s%n", metricFeedback.getId());
                 System.out.printf("Metric feedback associated dimension filter: %s%n",
-                    metricFeedback.getDimensionFilter().asMap());
+                    metricFeedback.getDimensionKey().asMap());
                 System.out.printf("Metric feedback created time %s%n", metricFeedback.getCreatedTime());
 
                 if (PERIOD.equals(metricFeedback.getFeedbackType())) {
@@ -800,7 +806,7 @@ public class MetricsAdvisorClientJavaDocCodeSnippets {
     }
 
     /**
-     * Code snippet for {@link MetricsAdvisorClient#listIncidentRootCauses(Incident)}.
+     * Code snippet for {@link MetricsAdvisorClient#listIncidentRootCauses(AnomalyIncident)}.
      */
     public void listIncidentRootCausesWithIncident() {
         // BEGIN: com.azure.ai.metricsadvisor.MetricsAdvisorClient.listIncidentRootCauses#Incident
@@ -885,15 +891,15 @@ public class MetricsAdvisorClientJavaDocCodeSnippets {
         for (MetricEnrichedSeriesData enrichedData : enrichedDataIterable) {
             System.out.printf("Series Key %s%n:", enrichedData.getSeriesKey().asMap());
             System.out.println("List of data points for this series");
-            System.out.println(enrichedData.getValueList());
+            System.out.println(enrichedData.getValues());
             System.out.println("Timestamps of the data related to this time series:");
-            System.out.println(enrichedData.getTimestampList());
+            System.out.println(enrichedData.getTimestamps());
             System.out.println("The expected values of the data points calculated by the smart detector:");
-            System.out.println(enrichedData.getExpectedValueList());
+            System.out.println(enrichedData.getExpectedValues());
             System.out.println("The lower boundary values of the data points calculated by smart detector:");
-            System.out.println(enrichedData.getLowerBoundaryList());
+            System.out.println(enrichedData.getLowerBounds());
             System.out.println("the periods calculated for the data points in the time series:");
-            System.out.println(enrichedData.getPeriodList());
+            System.out.println(enrichedData.getPeriods());
         }
         // END: com.azure.ai.metricsadvisor.MetricsAdvisorClient.listMetricEnrichedSeriesData#List-String-OffsetDateTime-OffsetDateTime
     }
@@ -925,15 +931,15 @@ public class MetricsAdvisorClientJavaDocCodeSnippets {
             for (MetricEnrichedSeriesData enrichedData : pageElements) {
                 System.out.printf("Series Key %s%n:", enrichedData.getSeriesKey().asMap());
                 System.out.println("List of data points for this series");
-                System.out.println(enrichedData.getValueList());
+                System.out.println(enrichedData.getValues());
                 System.out.println("Timestamps of the data related to this time series:");
-                System.out.println(enrichedData.getTimestampList());
+                System.out.println(enrichedData.getTimestamps());
                 System.out.println("The expected values of the data points calculated by the smart detector:");
-                System.out.println(enrichedData.getExpectedValueList());
+                System.out.println(enrichedData.getExpectedValues());
                 System.out.println("The lower boundary values of the data points calculated by smart detector:");
-                System.out.println(enrichedData.getLowerBoundaryList());
+                System.out.println(enrichedData.getLowerBounds());
                 System.out.println("the periods calculated for the data points in the time series:");
-                System.out.println(enrichedData.getPeriodList());
+                System.out.println(enrichedData.getPeriods());
             }
         });
         // END: com.azure.ai.metricsadvisor.MetricsAdvisorClient.listMetricEnrichedSeriesData#List-String-OffsetDateTime-OffsetDateTime-Context

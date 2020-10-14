@@ -3,7 +3,7 @@
 
 package com.azure.ai.metricsadvisor;
 
-import com.azure.ai.metricsadvisor.models.Anomaly;
+import com.azure.ai.metricsadvisor.models.DataPointAnomaly;
 import com.azure.ai.metricsadvisor.models.ListAnomaliesAlertedOptions;
 import com.azure.ai.metricsadvisor.models.MetricsAdvisorServiceVersion;
 import com.azure.core.http.HttpClient;
@@ -26,7 +26,7 @@ public abstract class AnomalyForAlertTestBase extends MetricsAdvisorClientTestBa
         final int expectedAnomalies = 3;
     }
 
-    protected void assertListAnomaliesForAlertOutput(Anomaly anomaly) {
+    protected void assertListAnomaliesForAlertOutput(DataPointAnomaly anomaly) {
         Assertions.assertNotNull(anomaly);
         Assertions.assertNotNull(anomaly.getMetricId());
         Assertions.assertNotNull(anomaly.getSeverity());

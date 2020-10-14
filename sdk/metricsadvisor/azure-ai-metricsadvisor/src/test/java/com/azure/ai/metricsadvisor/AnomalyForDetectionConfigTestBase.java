@@ -3,11 +3,11 @@
 
 package com.azure.ai.metricsadvisor;
 
-import com.azure.ai.metricsadvisor.models.Anomaly;
+import com.azure.ai.metricsadvisor.models.DataPointAnomaly;
 import com.azure.ai.metricsadvisor.models.ListAnomaliesDetectedFilter;
 import com.azure.ai.metricsadvisor.models.ListAnomaliesDetectedOptions;
 import com.azure.ai.metricsadvisor.models.MetricsAdvisorServiceVersion;
-import com.azure.ai.metricsadvisor.models.Severity;
+import com.azure.ai.metricsadvisor.models.AnomalySeverity;
 import com.azure.core.http.HttpClient;
 import org.junit.jupiter.api.Assertions;
 
@@ -24,13 +24,13 @@ public abstract class AnomalyForDetectionConfigTestBase extends MetricsAdvisorCl
         final OffsetDateTime startTime = OffsetDateTime.parse("2020-09-09T00:00:00Z");
         final OffsetDateTime endTime = OffsetDateTime.parse("2020-09-09T12:00:00Z");
         final ListAnomaliesDetectedFilter filter = new ListAnomaliesDetectedFilter()
-            .setSeverity(Severity.LOW, Severity.MEDIUM);
+            .setSeverity(AnomalySeverity.LOW, AnomalySeverity.MEDIUM);
         final ListAnomaliesDetectedOptions options = new ListAnomaliesDetectedOptions(startTime, endTime)
             .setTop(10)
             .setFilter(filter);
     }
 
-    protected void assertListAnomaliesDetectionConfigOutput(Anomaly anomaly) {
+    protected void assertListAnomaliesDetectionConfigOutput(DataPointAnomaly anomaly) {
         Assertions.assertNotNull(anomaly);
         Assertions.assertNotNull(anomaly.getSeverity());
         Assertions.assertNotNull(anomaly.getTimestamp());

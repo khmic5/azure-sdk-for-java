@@ -4,6 +4,7 @@
 package com.azure.ai.metricsadvisor;
 
 import com.azure.ai.metricsadvisor.models.ChangePointValue;
+import com.azure.ai.metricsadvisor.models.DimensionKey;
 import com.azure.ai.metricsadvisor.models.MetricAnomalyFeedback;
 import com.azure.ai.metricsadvisor.models.MetricChangePointFeedback;
 import com.azure.ai.metricsadvisor.models.MetricCommentFeedback;
@@ -32,10 +33,13 @@ public class MetricFeedbackAsyncSample {
 
         // Create Metric Feedback
         final String metricId = "d3gh4i4-b804-4ab9-a70f-0da0c89cft3l";
+        final DimensionKey seriesKey = new DimensionKey()
+            .put("Dim1", "Common Lime")
+            .put("Dim2", "Amphibian");
         final OffsetDateTime startTime = OffsetDateTime.parse("2020-01-01T00:00:00Z");
         final OffsetDateTime endTime = OffsetDateTime.parse("2020-09-09T00:00:00Z");
         final MetricChangePointFeedback metricChangePointFeedback
-            = new MetricChangePointFeedback(startTime, endTime, ChangePointValue.AUTO_DETECT);
+            = new MetricChangePointFeedback(seriesKey, startTime, endTime, ChangePointValue.AUTO_DETECT);
 
         System.out.printf("Creating Metric Feedback%n");
         final Mono<MetricFeedback> createdFeedbackMono
@@ -60,7 +64,7 @@ public class MetricFeedbackAsyncSample {
                         System.out.printf("Metric Feedback created time : %s%n", feedback.getCreatedTime());
                         System.out.printf("Metric Feedback user principal : %s%n", feedback.getUserPrincipal());
                         System.out.printf("Metric feedback associated dimension filter: %s%n",
-                            feedback.getDimensionFilter().asMap());
+                            feedback.getDimensionKey().asMap());
 
                         if (CHANGE_POINT.equals(createdFeedback.getFeedbackType())) {
                             MetricChangePointFeedback createdMetricChangePointFeedback
@@ -91,7 +95,7 @@ public class MetricFeedbackAsyncSample {
                 System.out.printf("Metric Feedback created time : %s%n", feedbackItem.getCreatedTime());
                 System.out.printf("Metric Feedback user principal : %s%n", feedbackItem.getUserPrincipal());
                 System.out.printf("Metric feedback associated dimension filter: %s%n",
-                    feedbackItem.getDimensionFilter().asMap());
+                    feedbackItem.getDimensionKey().asMap());
 
                 if (CHANGE_POINT.equals(feedbackItem.getFeedbackType())) {
                     MetricChangePointFeedback changePointFeedback

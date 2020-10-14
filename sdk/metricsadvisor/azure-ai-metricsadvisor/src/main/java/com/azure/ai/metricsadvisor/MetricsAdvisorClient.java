@@ -4,12 +4,12 @@
 package com.azure.ai.metricsadvisor;
 
 import com.azure.ai.metricsadvisor.administration.MetricsAdvisorAdministrationClientBuilder;
-import com.azure.ai.metricsadvisor.models.Alert;
-import com.azure.ai.metricsadvisor.models.Anomaly;
+import com.azure.ai.metricsadvisor.models.AnomalyAlert;
+import com.azure.ai.metricsadvisor.models.DataPointAnomaly;
 import com.azure.ai.metricsadvisor.models.DimensionKey;
 import com.azure.ai.metricsadvisor.models.EnrichmentStatus;
 import com.azure.ai.metricsadvisor.models.ErrorCodeException;
-import com.azure.ai.metricsadvisor.models.Incident;
+import com.azure.ai.metricsadvisor.models.AnomalyIncident;
 import com.azure.ai.metricsadvisor.models.IncidentRootCause;
 import com.azure.ai.metricsadvisor.models.ListAlertOptions;
 import com.azure.ai.metricsadvisor.models.ListAnomaliesAlertedOptions;
@@ -284,7 +284,7 @@ public class MetricsAdvisorClient {
      *     or {@code options.startTime} or {@code options.endTime} is null.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedIterable<Anomaly> listAnomaliesForDetectionConfiguration(
+    public PagedIterable<DataPointAnomaly> listAnomaliesForDetectionConfiguration(
         String detectionConfigurationId,
         ListAnomaliesDetectedOptions options) {
         return listAnomaliesForDetectionConfiguration(detectionConfigurationId, options, Context.NONE);
@@ -307,7 +307,7 @@ public class MetricsAdvisorClient {
      *     or {@code options.startTime} or {@code options.endTime} is null.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedIterable<Anomaly> listAnomaliesForDetectionConfiguration(
+    public PagedIterable<DataPointAnomaly> listAnomaliesForDetectionConfiguration(
         String detectionConfigurationId,
         ListAnomaliesDetectedOptions options, Context context) {
         return new PagedIterable<>(client.listAnomaliesForDetectionConfiguration(detectionConfigurationId,
@@ -330,7 +330,7 @@ public class MetricsAdvisorClient {
      *     or {@code options.startTime} or {@code options.endTime} is null.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedIterable<Incident> listIncidentsForDetectionConfiguration(
+    public PagedIterable<AnomalyIncident> listIncidentsForDetectionConfiguration(
         String detectionConfigurationId,
         ListIncidentsDetectedOptions options) {
         return listIncidentsForDetectionConfiguration(detectionConfigurationId, options, Context.NONE);
@@ -352,7 +352,7 @@ public class MetricsAdvisorClient {
      *     or {@code options.startTime} or {@code options.endTime} is null.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedIterable<Incident> listIncidentsForDetectionConfiguration(
+    public PagedIterable<AnomalyIncident> listIncidentsForDetectionConfiguration(
         String detectionConfigurationId,
         ListIncidentsDetectedOptions options, Context context) {
         return new PagedIterable<>(client.listIncidentsForDetectionConfiguration(detectionConfigurationId,
@@ -417,7 +417,7 @@ public class MetricsAdvisorClient {
      * @throws NullPointerException thrown if the {@code detectionConfigurationId} or {@code incidentId} is null.
      **/
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedIterable<IncidentRootCause> listIncidentRootCauses(Incident incident) {
+    public PagedIterable<IncidentRootCause> listIncidentRootCauses(AnomalyIncident incident) {
         return new PagedIterable<>(client.listIncidentRootCauses(incident, Context.NONE));
     }
 
@@ -488,7 +488,7 @@ public class MetricsAdvisorClient {
      * or {@code options.startTime} or {@code options.endTime} is null.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedIterable<Alert> listAlerts(
+    public PagedIterable<AnomalyAlert> listAlerts(
         String alertConfigurationId,
         ListAlertOptions options) {
         return listAlerts(alertConfigurationId, options, Context.NONE);
@@ -511,7 +511,7 @@ public class MetricsAdvisorClient {
      * or {@code options.startTime} or {@code options.endTime} is null.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedIterable<Alert> listAlerts(
+    public PagedIterable<AnomalyAlert> listAlerts(
         String alertConfigurationId,
         ListAlertOptions options, Context context) {
         return new PagedIterable<>(client.listAlerts(alertConfigurationId, options,
@@ -532,7 +532,7 @@ public class MetricsAdvisorClient {
      * @throws NullPointerException thrown if the {@code alertConfigurationId} or {@code alertId} is null.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedIterable<Anomaly> listAnomaliesForAlert(
+    public PagedIterable<DataPointAnomaly> listAnomaliesForAlert(
         String alertConfigurationId,
         String alertId) {
         return listAnomaliesForAlert(alertConfigurationId, alertId, null, Context.NONE);
@@ -555,7 +555,7 @@ public class MetricsAdvisorClient {
      * @throws NullPointerException thrown if the {@code alertConfigurationId} or {@code alertId} is null.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedIterable<Anomaly> listAnomaliesForAlert(
+    public PagedIterable<DataPointAnomaly> listAnomaliesForAlert(
         String alertConfigurationId,
         String alertId,
         ListAnomaliesAlertedOptions options, Context context) {
@@ -581,7 +581,7 @@ public class MetricsAdvisorClient {
      * @throws NullPointerException thrown if the {@code alertConfigurationId} or {@code alertId} is null.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedIterable<Incident> listIncidentsForAlert(
+    public PagedIterable<AnomalyIncident> listIncidentsForAlert(
         String alertConfigurationId,
         String alertId,
         ListIncidentsAlertedOptions options) {
@@ -605,7 +605,7 @@ public class MetricsAdvisorClient {
      * @throws NullPointerException thrown if the {@code alertConfigurationId} or {@code alertId} is null.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedIterable<Incident> listIncidentsForAlert(
+    public PagedIterable<AnomalyIncident> listIncidentsForAlert(
         String alertConfigurationId,
         String alertId,
         ListIncidentsAlertedOptions options, Context context) {

@@ -9,15 +9,15 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
 /** Defines values for Severity. */
-public final class Severity extends ExpandableStringEnum<Severity> {
+public final class AnomalySeverity extends ExpandableStringEnum<AnomalySeverity> {
     /** Static value Low for Severity. */
-    public static final Severity LOW = fromString("Low");
+    public static final AnomalySeverity LOW = fromString("Low");
 
     /** Static value Medium for Severity. */
-    public static final Severity MEDIUM = fromString("Medium");
+    public static final AnomalySeverity MEDIUM = fromString("Medium");
 
     /** Static value High for Severity. */
-    public static final Severity HIGH = fromString("High");
+    public static final AnomalySeverity HIGH = fromString("High");
 
     /**
      * Creates or finds a Severity from its string representation.
@@ -26,12 +26,12 @@ public final class Severity extends ExpandableStringEnum<Severity> {
      * @return the corresponding Severity.
      */
     @JsonCreator
-    public static Severity fromString(String name) {
-        return fromString(name, Severity.class);
+    public static AnomalySeverity fromString(String name) {
+        return fromString(name, AnomalySeverity.class);
     }
 
     /** @return known Severity values. */
-    public static Collection<Severity> values() {
-        return values(Severity.class);
+    public static Collection<AnomalySeverity> values() {
+        return values(AnomalySeverity.class);
     }
 }

@@ -16,11 +16,14 @@ public final class MetricPeriodFeedback extends MetricFeedback {
     /**
      * Creates an instance of MetricPeriodFeedback.
      *
+     * @param dimensionKey the dimension key to identify the series or series group.
      * @param periodType the type of setting period.
      * @param periodValue the number of intervals a period contains.
      */
-    public MetricPeriodFeedback(PeriodType periodType,
-        int periodValue) {
+    public MetricPeriodFeedback(DimensionKey dimensionKey,
+                                PeriodType periodType,
+                                int periodValue) {
+        super(dimensionKey);
         this.periodType = periodType;
         this.periodValue = periodValue;
     }

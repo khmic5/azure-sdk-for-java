@@ -37,12 +37,54 @@ custom-types: AnomalyDetectorDirection,AnomalyStatus,AnomalyValue,ChangePointVal
 
 ### Generated types renamed and moved to model
 
+
+#### Metric -> DataFeedMetric
+```yaml
+directive:
+  - rename-model:
+      from: Metric
+      to: DataFeedMetric
+```
+
+#### Dimension -> DataFeedDimension
+```yaml
+directive:
+  - rename-model:
+      from: Dimension
+      to: DataFeedDimension
+```
+
+#### Severity -> AnomalySeverity
+```yaml
+directive:
+  - rename-model:
+      from: Severity
+      to: AnomalySeverity
+```
+
+#### IncidentStatus -> AnomalyIncidentStatus
+```yaml
+directive:
+  - rename-model:
+      from: IncidentStatus
+      to: AnomalyIncidentStatus
+```
+
 #### AlertResult -> Alert
 ```yaml
 directive:
   - rename-model:
       from: AlertResult
-      to: Alert
+      to: AnomalyAlert
+```
+
+
+#### TimeMode -> AlertQueryTimeMode
+```yaml
+directive:
+  - rename-model:
+      from: TimeMode
+      to: AlertQueryTimeMode
 ```
 
 #### IngestionStatus -> DataFeedIngestionStatus

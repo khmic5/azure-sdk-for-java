@@ -11,9 +11,9 @@ import com.azure.ai.metricsadvisor.implementation.models.HookInfoPatch;
 import com.azure.ai.metricsadvisor.implementation.models.WebhookHookInfo;
 import com.azure.ai.metricsadvisor.implementation.models.WebhookHookInfoPatch;
 import com.azure.ai.metricsadvisor.implementation.models.WebhookHookParameter;
-import com.azure.ai.metricsadvisor.models.EmailHook;
-import com.azure.ai.metricsadvisor.models.Hook;
-import com.azure.ai.metricsadvisor.models.WebHook;
+import com.azure.ai.metricsadvisor.models.EmailNotificationHook;
+import com.azure.ai.metricsadvisor.models.NotificationHook;
+import com.azure.ai.metricsadvisor.models.WebNotificationHook;
 import com.azure.core.http.HttpHeaders;
 import com.azure.core.http.rest.Page;
 import com.azure.core.http.rest.PagedResponse;
@@ -35,9 +35,9 @@ public final class HookTransforms {
     private HookTransforms() {
     }
 
-    public static HookInfo toInnerForCreate(ClientLogger logger, Hook hook) {
-        if (hook instanceof EmailHook) {
-            EmailHook emailHook = (EmailHook) hook;
+    public static HookInfo toInnerForCreate(ClientLogger logger, NotificationHook hook) {
+        if (hook instanceof EmailNotificationHook) {
+            EmailNotificationHook emailHook = (EmailNotificationHook) hook;
             if (CoreUtils.isNullOrEmpty(emailHook.getName())) {
                 throw logger.logExceptionAsError(new IllegalArgumentException("The hook.name is required."));
             }
@@ -52,8 +52,8 @@ public final class HookTransforms {
             innerEmailHook.setHookParameter(new EmailHookParameter()
                 .setToList(emailHook.getEmailsToAlert()));
             return innerEmailHook;
-        } else if (hook instanceof WebHook) {
-            WebHook webHook = (WebHook) hook;
+        } else if (hook instanceof WebNotificationHook) {
+            WebNotificationHook webHook = (WebNotificationHook) hook;
             if (CoreUtils.isNullOrEmpty(webHook.getName())) {
                 throw logger.logExceptionAsError(new IllegalArgumentException("The hook.name is required."));
             }
@@ -79,9 +79,9 @@ public final class HookTransforms {
         }
     }
 
-    public static HookInfoPatch toInnerForUpdate(ClientLogger logger, Hook hook) {
-        if (hook instanceof EmailHook) {
-            EmailHook emailHook = (EmailHook) hook;
+    public static HookInfoPatch toInnerForUpdate(ClientLogger logger, NotificationHook hook) {
+        if (hook instanceof EmailNotificationHook) {
+            EmailNotificationHook emailHook = (EmailNotificationHook) hook;
             EmailHookInfoPatch innerEmailHook = new EmailHookInfoPatch();
             innerEmailHook.setHookName(emailHook.getName());
             innerEmailHook.setDescription(emailHook.getDescription());
@@ -89,8 +89,8 @@ public final class HookTransforms {
             innerEmailHook.setHookParameter(new EmailHookParameter()
                 .setToList(emailHook.getEmailsToAlert()));
             return innerEmailHook;
-        } else if (hook instanceof WebHook) {
-            WebHook webHook = (WebHook) hook;
+        } else if (hook instanceof WebNotificationHook) {
+            WebNotificationHook webHook = (WebNotificationHook) hook;
             WebhookHookInfoPatch innerWebHook = new WebhookHookInfoPatch();
             innerWebHook.setHookName(webHook.getName());
             innerWebHook.setDescription(webHook.getDescription());
@@ -110,16 +110,16 @@ public final class HookTransforms {
         }
     }
 
-    public static Hook fromInner(ClientLogger logger, HookInfo innerHook) {
+    public static NotificationHook fromInner(ClientLogger logger, HookInfo innerHook) {
         if (innerHook instanceof EmailHookInfo) {
             EmailHookInfo innerEmailHook = (EmailHookInfo) innerHook;
-            EmailHook emailHook = new EmailHook(innerEmailHook.getHookName(),
+            EmailNotificationHook emailHook = new EmailNotificationHook(innerEmailHook.getHookName(),
                 innerEmailHook.getHookParameter().getToList());
 
             emailHook.setDescription(innerEmailHook.getDescription());
             emailHook.setExternalLink(innerEmailHook.getExternalLink());
 
-            PrivateFieldAccessHelper.set((Hook) emailHook,
+            PrivateFieldAccessHelper.set((NotificationHook) emailHook,
                 "id",
                 innerEmailHook.getHookId().toString());
 
@@ -127,14 +127,14 @@ public final class HookTransforms {
             if (adminList == null) {
                 adminList = new ArrayList<>();
             }
-            PrivateFieldAccessHelper.set((Hook) emailHook,
+            PrivateFieldAccessHelper.set((NotificationHook) emailHook,
                 "admins",
                 Collections.unmodifiableList(adminList));
 
             return emailHook;
         } else if (innerHook instanceof WebhookHookInfo) {
             WebhookHookInfo innerWebHook = (WebhookHookInfo) innerHook;
-            WebHook webHook = new WebHook(innerWebHook.getHookName(),
+            WebNotificationHook webHook = new WebNotificationHook(innerWebHook.getHookName(),
                 innerWebHook.getHookParameter().getEndpoint());
 
             webHook.setDescription(innerWebHook.getDescription());
@@ -170,9 +170,9 @@ public final class HookTransforms {
         }
     }
 
-    public static PagedResponse<Hook> fromInnerPagedResponse(ClientLogger logger,
-                                                             PagedResponse<HookInfo> innerResponse) {
-        List<Hook> hookList;
+    public static PagedResponse<NotificationHook> fromInnerPagedResponse(ClientLogger logger,
+                                                                         PagedResponse<HookInfo> innerResponse) {
+        List<NotificationHook> hookList;
         final List<HookInfo> innerHookList = innerResponse.getValue();
         if (innerHookList == null || innerHookList.isEmpty()) {
             hookList = new ArrayList<>();
@@ -183,27 +183,27 @@ public final class HookTransforms {
                 .collect(Collectors.toList());
         }
 
-        final IterableStream<Hook> pageElements
+        final IterableStream<NotificationHook> pageElements
             = new IterableStream<>(hookList);
 
-        return new PagedResponseBase<Void, Hook>(innerResponse.getRequest(),
+        return new PagedResponseBase<Void, NotificationHook>(innerResponse.getRequest(),
             innerResponse.getStatusCode(),
             innerResponse.getHeaders(),
             new HookPage(pageElements, innerResponse.getContinuationToken()),
             null);
     }
 
-    private static final class HookPage implements Page<Hook> {
-        private final IterableStream<Hook> elements;
+    private static final class HookPage implements Page<NotificationHook> {
+        private final IterableStream<NotificationHook> elements;
         private final String continuationTToken;
 
-        private HookPage(IterableStream<Hook> elements, String continuationTToken) {
+        private HookPage(IterableStream<NotificationHook> elements, String continuationTToken) {
             this.elements = elements;
             this.continuationTToken = continuationTToken;
         }
 
         @Override
-        public IterableStream<Hook> getElements() {
+        public IterableStream<NotificationHook> getElements() {
             return this.elements;
         }
 

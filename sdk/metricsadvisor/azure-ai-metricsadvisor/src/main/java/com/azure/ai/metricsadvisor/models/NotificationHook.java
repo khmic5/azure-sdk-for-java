@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Describes a hook that receives anomaly incident alerts.
  */
-public abstract class Hook {
+public abstract class NotificationHook {
     /**
      * Gets the id.
      *

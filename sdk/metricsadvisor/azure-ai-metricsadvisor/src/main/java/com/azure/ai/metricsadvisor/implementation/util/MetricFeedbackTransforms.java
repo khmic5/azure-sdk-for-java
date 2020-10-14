@@ -50,6 +50,7 @@ public final class MetricFeedbackTransforms {
         if (metricFeedbackValue instanceof AnomalyFeedback) {
             final AnomalyFeedback anomalyFeedback = (AnomalyFeedback) metricFeedbackValue;
             metricFeedback = new MetricAnomalyFeedback(
+                new DimensionKey(metricFeedbackValue.getDimensionFilter().getDimension()),
                 anomalyFeedback.getStartTime(),
                 anomalyFeedback.getEndTime(),
                 AnomalyValue.fromString(anomalyFeedback.getValue().getAnomalyValue().toString()))
@@ -65,6 +66,7 @@ public final class MetricFeedbackTransforms {
         } else if (metricFeedbackValue instanceof ChangePointFeedback) {
             final ChangePointFeedback changePointFeedback = (ChangePointFeedback) metricFeedbackValue;
             metricFeedback = new MetricChangePointFeedback(
+                new DimensionKey(metricFeedbackValue.getDimensionFilter().getDimension()),
                 changePointFeedback.getStartTime(),
                 changePointFeedback.getEndTime(),
                 ChangePointValue.fromString(changePointFeedback.getValue().getChangePointValue().toString()));
@@ -72,12 +74,14 @@ public final class MetricFeedbackTransforms {
         } else if (metricFeedbackValue instanceof PeriodFeedback) {
             final PeriodFeedback periodFeedback = (PeriodFeedback) metricFeedbackValue;
             metricFeedback = new MetricPeriodFeedback(
+                new DimensionKey(metricFeedbackValue.getDimensionFilter().getDimension()),
                 PeriodType.fromString(periodFeedback.getValue().getPeriodType().toString()),
                 periodFeedback.getValue().getPeriodValue());
             PrivateFieldAccessHelper.set(metricFeedback, "feedbackType", FeedbackType.PERIOD);
         } else if (metricFeedbackValue instanceof CommentFeedback) {
             final CommentFeedback commentFeedback = (CommentFeedback) metricFeedbackValue;
             metricFeedback = new MetricCommentFeedback(
+                new DimensionKey(metricFeedbackValue.getDimensionFilter().getDimension()),
                 commentFeedback.getStartTime(),
                 commentFeedback.getEndTime(),
                 commentFeedback.getValue().getCommentValue());

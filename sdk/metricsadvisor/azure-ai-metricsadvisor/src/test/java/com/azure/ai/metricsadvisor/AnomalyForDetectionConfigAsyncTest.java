@@ -3,7 +3,7 @@
 
 package com.azure.ai.metricsadvisor;
 
-import com.azure.ai.metricsadvisor.models.Anomaly;
+import com.azure.ai.metricsadvisor.models.DataPointAnomaly;
 import com.azure.ai.metricsadvisor.models.MetricsAdvisorServiceVersion;
 import com.azure.core.http.HttpClient;
 import com.azure.core.http.rest.PagedFlux;
@@ -26,19 +26,19 @@ public class AnomalyForDetectionConfigAsyncTest extends AnomalyForDetectionConfi
         MetricsAdvisorAsyncClient client
             = getMetricsAdvisorBuilder(httpClient, serviceVersion).buildAsyncClient();
 
-        PagedFlux<Anomaly> anomaliesFlux
+        PagedFlux<DataPointAnomaly> anomaliesFlux
             = client.listAnomaliesForDetectionConfiguration(
             ListAnomaliesForDetectionConfigInput.INSTANCE.detectionConfigurationId,
             ListAnomaliesForDetectionConfigInput.INSTANCE.options);
 
         Assertions.assertNotNull(anomaliesFlux);
 
-        List<Anomaly> anomaliesList = new ArrayList<>();
+        List<DataPointAnomaly> anomaliesList = new ArrayList<>();
         StepVerifier.create(anomaliesFlux)
             .thenConsumeWhile(anomaliesList::add)
             .verifyComplete();
 
-        for (Anomaly anomaly : anomaliesList) {
+        for (DataPointAnomaly anomaly : anomaliesList) {
             assertListAnomaliesDetectionConfigOutput(anomaly);
         }
     }

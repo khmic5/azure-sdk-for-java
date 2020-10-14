@@ -9,7 +9,7 @@ import com.azure.ai.metricsadvisor.models.MetricAnomalyAlertConfiguration;
 import com.azure.ai.metricsadvisor.models.MetricAnomalyAlertConfigurationsOperator;
 import com.azure.ai.metricsadvisor.models.MetricAnomalyAlertScope;
 import com.azure.ai.metricsadvisor.models.MetricsAdvisorKeyCredential;
-import com.azure.ai.metricsadvisor.models.Severity;
+import com.azure.ai.metricsadvisor.models.AnomalySeverity;
 import com.azure.ai.metricsadvisor.models.SeverityCondition;
 import reactor.core.publisher.Mono;
 
@@ -43,7 +43,7 @@ public class MetricsAnomalyAlertConfigOperationsAsyncSample {
                     new MetricAnomalyAlertConfiguration(detectionConfigurationId2,
                         MetricAnomalyAlertScope.forWholeSeries())
                         .setAlertConditions(new MetricAnomalyAlertConditions()
-                            .setSeverityCondition(new SeverityCondition().setMaxAlertSeverity(Severity.HIGH)))))
+                            .setSeverityCondition(new SeverityCondition().setMaxAlertSeverity(AnomalySeverity.HIGH)))))
                 .setCrossMetricsOperator(MetricAnomalyAlertConfigurationsOperator.AND)
                 .setIdOfHooksToAlert(Arrays.asList(hookId1, hookId2)));
 

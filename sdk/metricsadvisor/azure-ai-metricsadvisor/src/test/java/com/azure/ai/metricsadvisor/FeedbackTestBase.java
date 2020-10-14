@@ -36,7 +36,7 @@ public abstract class FeedbackTestBase extends MetricsAdvisorClientTestBase {
 
     static final OffsetDateTime FEEDBACK_START_TIME = OffsetDateTime.parse("2020-08-05T07:00:00Z");
     static final OffsetDateTime FEEDBACK_END_TIME = OffsetDateTime.parse("2020-08-07T07:00:00Z");
-    static final HashMap<String, String> DIMENSION_FILTER = new HashMap<String, String>() {{
+    static final HashMap<String, String> DIMENSION_KEY_VALUES = new HashMap<String, String>() {{
             put("Dim1", "Common Lime");
             put("Dim2", "Amphibian");
         }};
@@ -82,27 +82,31 @@ public abstract class FeedbackTestBase extends MetricsAdvisorClientTestBase {
     }
 
     MetricFeedback getCommentFeedback() {
-        return new MetricCommentFeedback(FEEDBACK_START_TIME, FEEDBACK_END_TIME, "Not an anomaly.")
-            .setDimensionFilter(new DimensionKey(DIMENSION_FILTER));
+        return new MetricCommentFeedback(new DimensionKey(DIMENSION_KEY_VALUES),
+            FEEDBACK_START_TIME, FEEDBACK_END_TIME, "Not an anomaly.");
     }
 
     void creatMetricFeedbackRunner(Consumer<MetricFeedback> testRunner, FeedbackType metricFeedbackType) {
         // create data feeds
         MetricFeedback metricFeedback;
         if (ANOMALY.equals(metricFeedbackType)) {
-            metricFeedback = new MetricAnomalyFeedback(FEEDBACK_START_TIME, FEEDBACK_END_TIME,
+            metricFeedback = new MetricAnomalyFeedback(new DimensionKey(DIMENSION_KEY_VALUES),
+                FEEDBACK_START_TIME, FEEDBACK_END_TIME,
                 AnomalyValue.NOT_ANOMALY);
         } else if (CHANGE_POINT.equals(metricFeedbackType)) {
-            metricFeedback = new MetricChangePointFeedback(FEEDBACK_START_TIME, FEEDBACK_END_TIME,
+            metricFeedback = new MetricChangePointFeedback(new DimensionKey(DIMENSION_KEY_VALUES),
+                FEEDBACK_START_TIME, FEEDBACK_END_TIME,
                 ChangePointValue.AUTO_DETECT);
         } else if (PERIOD.equals(metricFeedbackType)) {
-            metricFeedback = new MetricPeriodFeedback(PeriodType.AUTO_DETECT, 3);
+            metricFeedback = new MetricPeriodFeedback(new DimensionKey(DIMENSION_KEY_VALUES),
+                PeriodType.AUTO_DETECT, 3);
         } else if (COMMENT.equals(metricFeedbackType)) {
-            metricFeedback = new MetricCommentFeedback(FEEDBACK_START_TIME, FEEDBACK_END_TIME, "Not an anomaly.");
+            metricFeedback = new MetricCommentFeedback(new DimensionKey(DIMENSION_KEY_VALUES),
+                FEEDBACK_START_TIME, FEEDBACK_END_TIME, "Not an anomaly.");
         } else {
             throw new IllegalStateException("Unexpected value: " + metricFeedbackType.toString());
         }
-        testRunner.accept(metricFeedback.setDimensionFilter(new DimensionKey(DIMENSION_FILTER)));
+        testRunner.accept(metricFeedback);
     }
 
 
@@ -112,7 +116,7 @@ public abstract class FeedbackTestBase extends MetricsAdvisorClientTestBase {
         assertNotNull(actualMetricFeedback.getCreatedTime());
         assertNotNull(actualMetricFeedback.getMetricId());
         assertNotNull(actualMetricFeedback.getUserPrincipal());
-        assertEquals(expectedMetricFeedback.getDimensionFilter(), actualMetricFeedback.getDimensionFilter());
+        assertEquals(expectedMetricFeedback.getDimensionKey(), actualMetricFeedback.getDimensionKey());
 
         if (ANOMALY.equals(feedbackType)) {
             MetricAnomalyFeedback expectedAnomalyFeedback = (MetricAnomalyFeedback) expectedMetricFeedback;

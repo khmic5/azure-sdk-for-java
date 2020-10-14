@@ -9,15 +9,15 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
 /** Defines values for TimeMode. */
-public final class TimeMode extends ExpandableStringEnum<TimeMode> {
+public final class AlertQueryTimeMode extends ExpandableStringEnum<AlertQueryTimeMode> {
     /** Static value AnomalyTime for TimeMode. */
-    public static final TimeMode ANOMALY_TIME = fromString("AnomalyTime");
+    public static final AlertQueryTimeMode ANOMALY_TIME = fromString("AnomalyTime");
 
     /** Static value CreatedTime for TimeMode. */
-    public static final TimeMode CREATED_TIME = fromString("CreatedTime");
+    public static final AlertQueryTimeMode CREATED_TIME = fromString("CreatedTime");
 
     /** Static value ModifiedTime for TimeMode. */
-    public static final TimeMode MODIFIED_TIME = fromString("ModifiedTime");
+    public static final AlertQueryTimeMode MODIFIED_TIME = fromString("ModifiedTime");
 
     /**
      * Creates or finds a TimeMode from its string representation.
@@ -26,12 +26,12 @@ public final class TimeMode extends ExpandableStringEnum<TimeMode> {
      * @return the corresponding TimeMode.
      */
     @JsonCreator
-    public static TimeMode fromString(String name) {
-        return fromString(name, TimeMode.class);
+    public static AlertQueryTimeMode fromString(String name) {
+        return fromString(name, AlertQueryTimeMode.class);
     }
 
     /** @return known TimeMode values. */
-    public static Collection<TimeMode> values() {
-        return values(TimeMode.class);
+    public static Collection<AlertQueryTimeMode> values() {
+        return values(AlertQueryTimeMode.class);
     }
 }

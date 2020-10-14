@@ -9,12 +9,12 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
 /** Defines values for IncidentStatus. */
-public final class IncidentStatus extends ExpandableStringEnum<IncidentStatus> {
+public final class AnomalyIncidentStatus extends ExpandableStringEnum<AnomalyIncidentStatus> {
     /** Static value Active for IncidentStatus. */
-    public static final IncidentStatus ACTIVE = fromString("Active");
+    public static final AnomalyIncidentStatus ACTIVE = fromString("Active");
 
     /** Static value Resolved for IncidentStatus. */
-    public static final IncidentStatus RESOLVED = fromString("Resolved");
+    public static final AnomalyIncidentStatus RESOLVED = fromString("Resolved");
 
     /**
      * Creates or finds a IncidentStatus from its string representation.
@@ -23,12 +23,12 @@ public final class IncidentStatus extends ExpandableStringEnum<IncidentStatus> {
      * @return the corresponding IncidentStatus.
      */
     @JsonCreator
-    public static IncidentStatus fromString(String name) {
-        return fromString(name, IncidentStatus.class);
+    public static AnomalyIncidentStatus fromString(String name) {
+        return fromString(name, AnomalyIncidentStatus.class);
     }
 
     /** @return known IncidentStatus values. */
-    public static Collection<IncidentStatus> values() {
-        return values(IncidentStatus.class);
+    public static Collection<AnomalyIncidentStatus> values() {
+        return values(AnomalyIncidentStatus.class);
     }
 }

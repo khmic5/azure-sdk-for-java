@@ -5,7 +5,7 @@
 
 package com.azure.ai.metricsadvisor;
 
-import com.azure.ai.metricsadvisor.models.Incident;
+import com.azure.ai.metricsadvisor.models.AnomalyIncident;
 import com.azure.ai.metricsadvisor.models.MetricsAdvisorServiceVersion;
 import com.azure.core.http.HttpClient;
 import com.azure.core.http.rest.PagedIterable;
@@ -22,14 +22,14 @@ public class IncidentForAlertTest extends IncidentForAlertTestBase {
     public void listIncidentsForAlert(HttpClient httpClient, MetricsAdvisorServiceVersion serviceVersion) {
         MetricsAdvisorClient client = getMetricsAdvisorBuilder(httpClient, serviceVersion).buildClient();
 
-        PagedIterable<Incident> incidentsIterable
+        PagedIterable<AnomalyIncident> incidentsIterable
             = client.listIncidentsForAlert(
             ListIncidentsForAlertInput.INSTANCE.alertConfigurationId,
             ListIncidentsForAlertInput.INSTANCE.alertId,
             ListIncidentsForAlertInput.INSTANCE.options);
 
         int[] cnt = new int[1];
-        for (Incident incident : incidentsIterable) {
+        for (AnomalyIncident incident : incidentsIterable) {
             cnt[0]++;
             assertListIncidentsForAlertOutput(incident);
         }

@@ -39,7 +39,7 @@ import com.azure.ai.metricsadvisor.models.DataFeedOptions;
 import com.azure.ai.metricsadvisor.models.DataFeedRollupSettings;
 import com.azure.ai.metricsadvisor.models.DataFeedSchema;
 import com.azure.ai.metricsadvisor.models.DataFeedSource;
-import com.azure.ai.metricsadvisor.models.Hook;
+import com.azure.ai.metricsadvisor.models.NotificationHook;
 import com.azure.ai.metricsadvisor.models.ListDataFeedFilter;
 import com.azure.ai.metricsadvisor.models.ListDataFeedIngestionOptions;
 import com.azure.ai.metricsadvisor.models.ListDataFeedOptions;
@@ -1063,12 +1063,12 @@ public class MetricsAdvisorAdministrationAsyncClient {
      *
      * @param hook The hook.
      *
-     * @return A {@link Mono} containing the created {@link Hook}.
+     * @return A {@link Mono} containing the created {@link NotificationHook}.
      * @throws NullPointerException If {@code hook}, {@code hook.name}, {@code hook.endpoint} (for web hook) is null.
      * @throws IllegalArgumentException If at least one email not present for email hook.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Hook> createHook(Hook hook) {
+    public Mono<NotificationHook> createHook(NotificationHook hook) {
         return createHookWithResponse(hook)
             .map(Response::getValue);
     }
@@ -1081,12 +1081,12 @@ public class MetricsAdvisorAdministrationAsyncClient {
      *
      * @param hook The hook.
      *
-     * @return A {@link Response} of a {@link Mono} containing the created {@link Hook}.
+     * @return A {@link Response} of a {@link Mono} containing the created {@link NotificationHook}.
      * @throws NullPointerException If {@code hook}, {@code hook.name}, {@code hook.endpoint} (for web hook) is null.
      * @throws IllegalArgumentException If at least one email not present for email hook.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<Hook>> createHookWithResponse(Hook hook) {
+    public Mono<Response<NotificationHook>> createHookWithResponse(NotificationHook hook) {
         try {
             return withContext(context -> createHookWithResponse(hook, context));
         } catch (RuntimeException e) {
@@ -1094,7 +1094,7 @@ public class MetricsAdvisorAdministrationAsyncClient {
         }
     }
 
-    Mono<Response<Hook>> createHookWithResponse(Hook hook, Context context) {
+    Mono<Response<NotificationHook>> createHookWithResponse(NotificationHook hook, Context context) {
         Objects.requireNonNull(hook, "'hook' cannot be null.");
         return service.createHookWithResponseAsync(HookTransforms.toInnerForCreate(logger, hook),
             context.addData(AZ_TRACING_NAMESPACE_KEY, METRICS_ADVISOR_TRACING_NAMESPACE_VALUE))
@@ -1105,7 +1105,7 @@ public class MetricsAdvisorAdministrationAsyncClient {
                 final String hookUri = response.getDeserializedHeaders().getLocation();
                 final String hookId = parseOperationId(hookUri);
                 return getHookWithResponse(hookId, context)
-                    .map(hookResponse -> new ResponseBase<Void, Hook>(response.getRequest(),
+                    .map(hookResponse -> new ResponseBase<Void, NotificationHook>(response.getRequest(),
                         response.getStatusCode(),
                         response.getHeaders(),
                         hookResponse.getValue(),
@@ -1121,12 +1121,12 @@ public class MetricsAdvisorAdministrationAsyncClient {
      *
      * @param hookId The hook unique id.
      *
-     * @return A {@link Mono} containing the {@link Hook} for the provided id.
+     * @return A {@link Mono} containing the {@link NotificationHook} for the provided id.
      * @throws IllegalArgumentException If {@code hookId} does not conform to the UUID format specification.
      * @throws NullPointerException thrown if the {@code hookId} is null.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Hook> getHook(String hookId) {
+    public Mono<NotificationHook> getHook(String hookId) {
         return getHookWithResponse(hookId).map(Response::getValue);
     }
 
@@ -1138,12 +1138,12 @@ public class MetricsAdvisorAdministrationAsyncClient {
      *
      * @param hookId The hook unique id.
      *
-     * @return A {@link Response} of a {@link Mono} containing the {@link Hook} for the provided id.
+     * @return A {@link Response} of a {@link Mono} containing the {@link NotificationHook} for the provided id.
      * @throws IllegalArgumentException If {@code hookId} does not conform to the UUID format specification.
      * @throws NullPointerException thrown if the {@code hookId} is null.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<Hook>> getHookWithResponse(String hookId) {
+    public Mono<Response<NotificationHook>> getHookWithResponse(String hookId) {
         try {
             return withContext(context -> getHookWithResponse(hookId, context));
         } catch (RuntimeException e) {
@@ -1151,14 +1151,14 @@ public class MetricsAdvisorAdministrationAsyncClient {
         }
     }
 
-    Mono<Response<Hook>> getHookWithResponse(String hookId, Context context) {
+    Mono<Response<NotificationHook>> getHookWithResponse(String hookId, Context context) {
         Objects.requireNonNull(hookId, "hookId is required.");
         return service.getHookWithResponseAsync(UUID.fromString(hookId),
             context.addData(AZ_TRACING_NAMESPACE_KEY, METRICS_ADVISOR_TRACING_NAMESPACE_VALUE))
             .doOnRequest(ignoredValue -> logger.info("Retrieving Hook"))
             .doOnSuccess(response -> logger.info("Retrieved Hook {}", response))
             .doOnError(error -> logger.warning("Failed to retrieve hook", error))
-            .map(innerResponse -> new ResponseBase<Void, Hook>(innerResponse.getRequest(),
+            .map(innerResponse -> new ResponseBase<Void, NotificationHook>(innerResponse.getRequest(),
                 innerResponse.getStatusCode(),
                 innerResponse.getHeaders(),
                 HookTransforms.fromInner(logger, innerResponse.getValue()),
@@ -1173,11 +1173,11 @@ public class MetricsAdvisorAdministrationAsyncClient {
      *
      * @param hook The hook to update.
      *
-     * @return A {@link Mono} containing the updated {@link Hook}.
+     * @return A {@link Mono} containing the updated {@link NotificationHook}.
      * @throws NullPointerException If {@code hook.id} is null.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Hook> updateHook(Hook hook) {
+    public Mono<NotificationHook> updateHook(NotificationHook hook) {
         return updateHookWithResponse(hook).map(Response::getValue);
     }
 
@@ -1189,12 +1189,12 @@ public class MetricsAdvisorAdministrationAsyncClient {
      *
      * @param hook The hook to update.
      *
-     * @return A {@link Response} of a {@link Mono} containing the updated {@link Hook}.
+     * @return A {@link Response} of a {@link Mono} containing the updated {@link NotificationHook}.
      * @throws NullPointerException If {@code hook.id} is null.
      * @throws IllegalArgumentException If {@code hook.Id} does not conform to the UUID format specification.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<Hook>> updateHookWithResponse(Hook hook) {
+    public Mono<Response<NotificationHook>> updateHookWithResponse(NotificationHook hook) {
         try {
             return withContext(context -> updateHookWithResponse(hook, context));
         } catch (RuntimeException e) {
@@ -1202,7 +1202,7 @@ public class MetricsAdvisorAdministrationAsyncClient {
         }
     }
 
-    Mono<Response<Hook>> updateHookWithResponse(Hook hook, Context context) {
+    Mono<Response<NotificationHook>> updateHookWithResponse(NotificationHook hook, Context context) {
         Objects.requireNonNull(hook, "'hook' cannot be null.");
         Objects.requireNonNull(hook.getId(), "'hook.id' cannot be null.");
         return service.updateHookWithResponseAsync(UUID.fromString(hook.getId()),
@@ -1212,7 +1212,7 @@ public class MetricsAdvisorAdministrationAsyncClient {
             .doOnSuccess(response -> logger.info("Updated Hook {}", response))
             .doOnError(error -> logger.warning("Failed to update hook", error))
             .flatMap(response -> getHookWithResponse(hook.getId(), context)
-                .map(hookResponse -> new ResponseBase<Void, Hook>(response.getRequest(),
+                .map(hookResponse -> new ResponseBase<Void, NotificationHook>(response.getRequest(),
                     response.getStatusCode(),
                     response.getHeaders(),
                     hookResponse.getValue(),
@@ -1271,10 +1271,10 @@ public class MetricsAdvisorAdministrationAsyncClient {
      * <p><strong>Code sample</strong></p>
      * {@codesnippet com.azure.ai.metricsadvisor.administration.MetricsAdvisorAdministrationAsyncClient.listHooks}
      *
-     * @return A {@link PagedFlux} containing information of all the {@link Hook} in the account.
+     * @return A {@link PagedFlux} containing information of all the {@link NotificationHook} in the account.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedFlux<Hook> listHooks() {
+    public PagedFlux<NotificationHook> listHooks() {
         return listHooks(new ListHookOptions());
     }
 
@@ -1286,10 +1286,10 @@ public class MetricsAdvisorAdministrationAsyncClient {
      *
      * @param options The additional parameters
      *
-     * @return A {@link PagedFlux} containing information of the {@link Hook} resources.
+     * @return A {@link PagedFlux} containing information of the {@link NotificationHook} resources.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedFlux<Hook> listHooks(ListHookOptions options) {
+    public PagedFlux<NotificationHook> listHooks(ListHookOptions options) {
         try {
             return new PagedFlux<>(() ->
                 withContext(context ->
@@ -1302,14 +1302,14 @@ public class MetricsAdvisorAdministrationAsyncClient {
         }
     }
 
-    PagedFlux<Hook> listHooks(ListHookOptions options, Context context) {
+    PagedFlux<NotificationHook> listHooks(ListHookOptions options, Context context) {
         return new PagedFlux<>(() ->
             listHooksSinglePageAsync(options, context),
             continuationToken ->
                 listHooksNextPageAsync(continuationToken, context));
     }
 
-    private Mono<PagedResponse<Hook>> listHooksSinglePageAsync(ListHookOptions options, Context context) {
+    private Mono<PagedResponse<NotificationHook>> listHooksSinglePageAsync(ListHookOptions options, Context context) {
         return service.listHooksSinglePageAsync(
             options != null ? options.getHookNameFilter() : null,
             options != null ? options.getSkip() : null,
@@ -1321,7 +1321,7 @@ public class MetricsAdvisorAdministrationAsyncClient {
             .map(response -> HookTransforms.fromInnerPagedResponse(logger, response));
     }
 
-    private Mono<PagedResponse<Hook>> listHooksNextPageAsync(String nextPageLink, Context context) {
+    private Mono<PagedResponse<NotificationHook>> listHooksNextPageAsync(String nextPageLink, Context context) {
         if (CoreUtils.isNullOrEmpty(nextPageLink)) {
             return Mono.empty();
         }

@@ -3,7 +3,7 @@
 
 package com.azure.ai.metricsadvisor;
 
-import com.azure.ai.metricsadvisor.models.Incident;
+import com.azure.ai.metricsadvisor.models.AnomalyIncident;
 import com.azure.ai.metricsadvisor.models.ListIncidentsDetectedOptions;
 import com.azure.ai.metricsadvisor.models.MetricsAdvisorServiceVersion;
 import com.azure.core.http.HttpClient;
@@ -29,7 +29,7 @@ public abstract class IncidentDetectedTestBase extends MetricsAdvisorClientTestB
         final int expectedIncidents = 57;
     }
 
-    protected void assertListIncidentsDetectedOutput(Incident incident) {
+    protected void assertListIncidentsDetectedOutput(AnomalyIncident incident) {
         Assertions.assertNotNull(incident);
         Assertions.assertNotNull(incident.getId());
         // Note: Service will not return metricId & detectionId when listing incidents by detection

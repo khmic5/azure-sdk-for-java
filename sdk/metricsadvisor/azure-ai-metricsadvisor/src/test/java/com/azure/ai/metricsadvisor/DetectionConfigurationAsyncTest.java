@@ -6,7 +6,7 @@ package com.azure.ai.metricsadvisor;
 import com.azure.ai.metricsadvisor.administration.MetricsAdvisorAdministrationAsyncClient;
 import com.azure.ai.metricsadvisor.models.AnomalyDetectionConfiguration;
 import com.azure.ai.metricsadvisor.models.DataFeed;
-import com.azure.ai.metricsadvisor.models.Metric;
+import com.azure.ai.metricsadvisor.models.DataFeedMetric;
 import com.azure.ai.metricsadvisor.models.MetricsAdvisorServiceVersion;
 import com.azure.core.http.HttpClient;
 import com.azure.core.test.TestBase;
@@ -44,12 +44,12 @@ public class DetectionConfigurationAsyncTest extends DetectionConfigurationTestB
 
         DataFeed dataFeed = super.createDataFeed(httpClient, serviceVersion);
 
-        Optional<Metric> optMetric = dataFeed.getSchema().getMetrics()
+        Optional<DataFeedMetric> optMetric = dataFeed.getSchema().getMetrics()
             .stream()
             .filter(m -> m.getName().equalsIgnoreCase("cost"))
             .findFirst();
 
-        final Metric costMetric = optMetric.get();
+        final DataFeedMetric costMetric = optMetric.get();
         final String costMetricId = costMetric.getId();
 
         final String[] id = new String[1];
@@ -77,12 +77,12 @@ public class DetectionConfigurationAsyncTest extends DetectionConfigurationTestB
 
         DataFeed dataFeed = super.createDataFeed(httpClient, serviceVersion);
 
-        Optional<Metric> optMetric = dataFeed.getSchema().getMetrics()
+        Optional<DataFeedMetric> optMetric = dataFeed.getSchema().getMetrics()
             .stream()
             .filter(m -> m.getName().equalsIgnoreCase("cost"))
             .findFirst();
 
-        final Metric costMetric = optMetric.get();
+        final DataFeedMetric costMetric = optMetric.get();
         final String costMetricId = costMetric.getId();
 
         final String[] id = new String[1];
@@ -110,12 +110,12 @@ public class DetectionConfigurationAsyncTest extends DetectionConfigurationTestB
 
         DataFeed dataFeed = super.createDataFeed(httpClient, serviceVersion);
 
-        Optional<Metric> optMetric = dataFeed.getSchema().getMetrics()
+        Optional<DataFeedMetric> optMetric = dataFeed.getSchema().getMetrics()
             .stream()
             .filter(m -> m.getName().equalsIgnoreCase("cost"))
             .findFirst();
 
-        final Metric costMetric = optMetric.get();
+        final DataFeedMetric costMetric = optMetric.get();
         final String costMetricId = costMetric.getId();
 
         final String[] id = new String[1];
@@ -152,12 +152,12 @@ public class DetectionConfigurationAsyncTest extends DetectionConfigurationTestB
 
         DataFeed dataFeed = super.createDataFeed(httpClient, serviceVersion);
 
-        Optional<Metric> optMetric = dataFeed.getSchema().getMetrics()
+        Optional<DataFeedMetric> optMetric = dataFeed.getSchema().getMetrics()
             .stream()
             .filter(m -> m.getName().equalsIgnoreCase("cost"))
             .findFirst();
 
-        final Metric costMetric = optMetric.get();
+        final DataFeedMetric costMetric = optMetric.get();
         final String costMetricId = costMetric.getId();
 
         final AnomalyDetectionConfiguration[] configs = new AnomalyDetectionConfiguration[1];

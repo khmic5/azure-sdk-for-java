@@ -39,49 +39,49 @@ public class MetricEnrichedSeriesDataTransformations {
             timestampList = new ArrayList<>();
         }
         PrivateFieldAccessHelper.set(enrichedSeriesData,
-            "timestampList", timestampList);
+            "timestamps", timestampList);
 
         List<Double> valueList = innerEnrichedSeriesData.getValueList();
         if (valueList == null) {
             valueList = new ArrayList<>();
         }
         PrivateFieldAccessHelper.set(enrichedSeriesData,
-            "valueList", valueList);
+            "values", valueList);
 
         List<Boolean> isAnomalyList = innerEnrichedSeriesData.getIsAnomalyList();
         if (isAnomalyList == null) {
             isAnomalyList = new ArrayList<>();
         }
         PrivateFieldAccessHelper.set(enrichedSeriesData,
-            "isAnomalyList", isAnomalyList);
+            "isAnomaly", isAnomalyList);
 
         List<Integer> periodList = innerEnrichedSeriesData.getPeriodList();
         if (periodList == null) {
             periodList = new ArrayList<>();
         }
         PrivateFieldAccessHelper.set(enrichedSeriesData,
-            "periodList", periodList);
+            "periods", periodList);
 
         List<Double> expectedValueList = innerEnrichedSeriesData.getExpectedValueList();
         if (expectedValueList == null) {
             expectedValueList = new ArrayList<>();
         }
         PrivateFieldAccessHelper.set(enrichedSeriesData,
-            "expectedValueList", expectedValueList);
+            "expectedValues", expectedValueList);
 
         List<Double> lowerBoundList = innerEnrichedSeriesData.getLowerBoundaryList();
         if (lowerBoundList == null) {
             lowerBoundList = new ArrayList<>();
         }
         PrivateFieldAccessHelper.set(enrichedSeriesData,
-            "lowerBoundaryList", lowerBoundList);
+            "lowerBounds", lowerBoundList);
 
         List<Double> upperBoundList = innerEnrichedSeriesData.getUpperBoundaryList();
         if (upperBoundList == null) {
             upperBoundList = new ArrayList<>();
         }
         PrivateFieldAccessHelper.set(enrichedSeriesData,
-            "upperBoundaryList", upperBoundList);
+            "upperBounds", upperBoundList);
 
         return enrichedSeriesData;
     }

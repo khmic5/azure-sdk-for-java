@@ -3,7 +3,7 @@
 
 package com.azure.ai.metricsadvisor;
 
-import com.azure.ai.metricsadvisor.models.Anomaly;
+import com.azure.ai.metricsadvisor.models.DataPointAnomaly;
 import com.azure.ai.metricsadvisor.models.MetricsAdvisorServiceVersion;
 import com.azure.core.http.HttpClient;
 import com.azure.core.http.rest.PagedIterable;
@@ -20,12 +20,12 @@ public class AnomalyForDetectionConfigTest extends AnomalyForDetectionConfigTest
                                                 MetricsAdvisorServiceVersion serviceVersion) {
         MetricsAdvisorClient client = getMetricsAdvisorBuilder(httpClient, serviceVersion).buildClient();
 
-        PagedIterable<Anomaly> anomaliesIterable
+        PagedIterable<DataPointAnomaly> anomaliesIterable
             = client.listAnomaliesForDetectionConfiguration(
             ListAnomaliesForDetectionConfigInput.INSTANCE.detectionConfigurationId,
             ListAnomaliesForDetectionConfigInput.INSTANCE.options);
 
-        for (Anomaly anomaly : anomaliesIterable) {
+        for (DataPointAnomaly anomaly : anomaliesIterable) {
             assertListAnomaliesDetectionConfigOutput(anomaly);
         }
     }

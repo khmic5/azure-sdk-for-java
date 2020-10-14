@@ -12,7 +12,7 @@ import com.azure.ai.metricsadvisor.models.DataFeedIngestionStatus;
 import com.azure.ai.metricsadvisor.models.DataFeedOptions;
 import com.azure.ai.metricsadvisor.models.DataFeedSchema;
 import com.azure.ai.metricsadvisor.models.DataFeedSource;
-import com.azure.ai.metricsadvisor.models.Hook;
+import com.azure.ai.metricsadvisor.models.NotificationHook;
 import com.azure.ai.metricsadvisor.models.ListDataFeedIngestionOptions;
 import com.azure.ai.metricsadvisor.models.ListDataFeedOptions;
 import com.azure.ai.metricsadvisor.models.ListHookOptions;
@@ -583,12 +583,12 @@ public final class MetricsAdvisorAdministrationClient {
      * {@codesnippet com.azure.ai.metricsadvisor.administration.MetricsAdvisorAdministrationClient.createHook#Hook}
      *
      * @param hook The hook.
-     * @return The created {@link Hook}.
+     * @return The created {@link NotificationHook}.
      * @throws NullPointerException If {@code hook}, {@code hook.name}, {@code hook.endpoint} (for web hook) is null.
      * @throws IllegalArgumentException If at least one email not present for email hook.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Hook createHook(Hook hook) {
+    public NotificationHook createHook(NotificationHook hook) {
         return createHookWithResponse(hook, Context.NONE).getValue();
     }
 
@@ -600,12 +600,12 @@ public final class MetricsAdvisorAdministrationClient {
      *
      * @param hook The hook.
      * @param context Additional context that is passed through the Http pipeline during the service call.
-     * @return A {@link Response} containing the created {@link Hook}.
+     * @return A {@link Response} containing the created {@link NotificationHook}.
      * @throws NullPointerException If {@code hook}, {@code hook.name}, {@code hook.endpoint} (for web hook) is null.
      * @throws IllegalArgumentException If at least one email not present for email hook.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<Hook> createHookWithResponse(Hook hook, Context context) {
+    public Response<NotificationHook> createHookWithResponse(NotificationHook hook, Context context) {
         return client.createHookWithResponse(hook, context == null ? Context.NONE : context)
             .block();
     }
@@ -617,12 +617,12 @@ public final class MetricsAdvisorAdministrationClient {
      * {@codesnippet com.azure.ai.metricsadvisor.administration.MetricsAdvisorAdministrationClient.getHook#String}
      *
      * @param hookId The hook unique id.
-     * @return The {@link Hook} for the provided id.
+     * @return The {@link NotificationHook} for the provided id.
      * @throws IllegalArgumentException If {@code hookId} does not conform to the UUID format specification.
      * @throws NullPointerException thrown if the {@code hookId} is null.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Hook getHook(String hookId) {
+    public NotificationHook getHook(String hookId) {
         return getHookWithResponse(hookId, Context.NONE).getValue();
     }
 
@@ -634,12 +634,12 @@ public final class MetricsAdvisorAdministrationClient {
      *
      * @param hookId The hook unique id.
      * @param context Additional context that is passed through the Http pipeline during the service call.
-     * @return A {@link Response} containing the {@link Hook} for the provided id.
+     * @return A {@link Response} containing the {@link NotificationHook} for the provided id.
      * @throws IllegalArgumentException If {@code hookId} does not conform to the UUID format specification.
      * @throws NullPointerException thrown if the {@code hookId} is null.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<Hook> getHookWithResponse(String hookId, Context context) {
+    public Response<NotificationHook> getHookWithResponse(String hookId, Context context) {
         return client.getHookWithResponse(hookId, context == null ? Context.NONE : context)
             .block();
     }
@@ -651,11 +651,11 @@ public final class MetricsAdvisorAdministrationClient {
      * {@codesnippet com.azure.ai.metricsadvisor.administration.MetricsAdvisorAdministrationClient.updateHook#Hook}
      *
      * @param hook The hook to update.
-     * @return The updated {@link Hook}.
+     * @return The updated {@link NotificationHook}.
      * @throws NullPointerException If {@code hook.id} is null.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Hook updateHook(Hook hook) {
+    public NotificationHook updateHook(NotificationHook hook) {
         return updateHookWithResponse(hook, Context.NONE).getValue();
     }
 
@@ -667,12 +667,12 @@ public final class MetricsAdvisorAdministrationClient {
      *
      * @param hook The hook to update.
      * @param context Additional context that is passed through the Http pipeline during the service call.
-     * @return A {@link Response} containing the updated {@link Hook}.
+     * @return A {@link Response} containing the updated {@link NotificationHook}.
      * @throws NullPointerException If {@code hook.id} is null.
      * @throws IllegalArgumentException If {@code hook.Id} does not conform to the UUID format specification.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<Hook> updateHookWithResponse(Hook hook, Context context) {
+    public Response<NotificationHook> updateHookWithResponse(NotificationHook hook, Context context) {
         return client.updateHookWithResponse(hook, context == null ? Context.NONE : context)
             .block();
     }
@@ -716,10 +716,10 @@ public final class MetricsAdvisorAdministrationClient {
      * <p><strong>Code sample</strong></p>
      * {@codesnippet com.azure.ai.metricsadvisor.administration.MetricsAdvisorAdministrationClient.listHooks}
      *
-     * @return A {@link PagedIterable} containing information of all the {@link Hook} in the account.
+     * @return A {@link PagedIterable} containing information of all the {@link NotificationHook} in the account.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedIterable<Hook> listHooks() {
+    public PagedIterable<NotificationHook> listHooks() {
         return listHooks(new ListHookOptions(), Context.NONE);
     }
 
@@ -731,10 +731,10 @@ public final class MetricsAdvisorAdministrationClient {
      *
      * @param options The additional parameters.
      * @param context Additional context that is passed through the Http pipeline during the service call.
-     * @return A {@link PagedIterable} containing information of the {@link Hook} resources.
+     * @return A {@link PagedIterable} containing information of the {@link NotificationHook} resources.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedIterable<Hook> listHooks(ListHookOptions options, Context context) {
+    public PagedIterable<NotificationHook> listHooks(ListHookOptions options, Context context) {
         return new PagedIterable<>(client.listHooks(options, context == null ? Context.NONE : context));
     }
 

@@ -19,14 +19,17 @@ public final class MetricCommentFeedback extends MetricFeedback {
     /**
      * Creates an instance of MetricCommentFeedback.
      *
+     * @param dimensionKey the dimension key to identify the series or series group.
      * @param startTime the start timestamp of feedback timerange
      * @param endTime the end timestamp of feedback timerange, when equals to startTime means
      * only one timestamp
      * @param comment the value of the comment.
      */
-    public MetricCommentFeedback(OffsetDateTime startTime,
-        OffsetDateTime endTime,
-        String comment) {
+    public MetricCommentFeedback(DimensionKey dimensionKey,
+                                 OffsetDateTime startTime,
+                                 OffsetDateTime endTime,
+                                 String comment) {
+        super(dimensionKey);
         this.startTime = startTime;
         this.endTime = endTime;
         this.comment = comment;

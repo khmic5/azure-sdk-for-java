@@ -8,11 +8,11 @@ import java.time.OffsetDateTime;
 /**
  * Describes an anomaly detected in a metric series.
  */
-public final class Anomaly {
+public final class DataPointAnomaly {
     private String metricId;
     private DimensionKey seriesKey;
     private String detectionConfigurationId;
-    private Severity severity;
+    private AnomalySeverity severity;
     private AnomalyStatus status;
     private OffsetDateTime timeStamp;
     private OffsetDateTime createdTime;
@@ -50,7 +50,7 @@ public final class Anomaly {
      *
      * @return The severity.
      */
-    public Severity getSeverity() {
+    public AnomalySeverity getSeverity() {
         return this.severity;
     }
 

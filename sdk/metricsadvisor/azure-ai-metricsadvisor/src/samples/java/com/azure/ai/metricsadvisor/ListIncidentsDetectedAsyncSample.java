@@ -3,7 +3,7 @@
 
 package com.azure.ai.metricsadvisor;
 
-import com.azure.ai.metricsadvisor.models.Incident;
+import com.azure.ai.metricsadvisor.models.AnomalyIncident;
 import com.azure.ai.metricsadvisor.models.ListIncidentsDetectedOptions;
 import com.azure.ai.metricsadvisor.models.MetricsAdvisorKeyCredential;
 import com.azure.core.http.rest.PagedFlux;
@@ -27,7 +27,7 @@ public class ListIncidentsDetectedAsyncSample {
         final ListIncidentsDetectedOptions options = new ListIncidentsDetectedOptions(startTime, endTime)
             .setTop(1000);
 
-        PagedFlux<Incident> incidentsFlux
+        PagedFlux<AnomalyIncident> incidentsFlux
             = advisorAsyncClient.listIncidentsForDetectionConfiguration(detectionConfigurationId, options);
 
         incidentsFlux.doOnNext(incident -> {

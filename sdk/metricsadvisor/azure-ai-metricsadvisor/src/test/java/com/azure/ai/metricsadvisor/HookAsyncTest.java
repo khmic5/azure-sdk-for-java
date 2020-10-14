@@ -4,7 +4,7 @@
 package com.azure.ai.metricsadvisor;
 
 import com.azure.ai.metricsadvisor.administration.MetricsAdvisorAdministrationAsyncClient;
-import com.azure.ai.metricsadvisor.models.Hook;
+import com.azure.ai.metricsadvisor.models.NotificationHook;
 import com.azure.ai.metricsadvisor.models.ListHookOptions;
 import com.azure.ai.metricsadvisor.models.MetricsAdvisorServiceVersion;
 import com.azure.core.http.HttpClient;
@@ -43,7 +43,7 @@ public final class HookAsyncTest extends HookTestBase {
         MetricsAdvisorAdministrationAsyncClient client
             = getMetricsAdvisorAdministrationBuilder(httpClient, serviceVersion).buildAsyncClient();
 
-        Mono<Hook> createHookMono  = client.createHook(CreateEmailHookInput.INSTANCE.hook);
+        Mono<NotificationHook> createHookMono  = client.createHook(CreateEmailHookInput.INSTANCE.hook);
         String[] hookId = new String[1];
         Assertions.assertNotNull(createHookMono);
         StepVerifier.create(createHookMono)
@@ -66,7 +66,7 @@ public final class HookAsyncTest extends HookTestBase {
         MetricsAdvisorAdministrationAsyncClient client
             = getMetricsAdvisorAdministrationBuilder(httpClient, serviceVersion).buildAsyncClient();
 
-        Mono<Hook> createHookMono  = client.createHook(CreateWebHookInput.INSTANCE.hook);
+        Mono<NotificationHook> createHookMono  = client.createHook(CreateWebHookInput.INSTANCE.hook);
         String[] hookId = new String[1];
         Assertions.assertNotNull(createHookMono);
         StepVerifier.create(createHookMono)
@@ -104,14 +104,14 @@ public final class HookAsyncTest extends HookTestBase {
         Assertions.assertNotNull(hookId[0]);
         Assertions.assertNotNull(hookId[1]);
 
-        List<Hook> hookList = new ArrayList<>();
+        List<NotificationHook> hookList = new ArrayList<>();
         StepVerifier.create(client.listHooks())
             .thenConsumeWhile(hookList::add)
             .verifyComplete();
 
         assertListHookOutput(hookList);
 
-        List<PagedResponse<Hook>> hookPageList = new ArrayList<>();
+        List<PagedResponse<NotificationHook>> hookPageList = new ArrayList<>();
         StepVerifier.create(client.listHooks(new ListHookOptions().setTop(ListHookInput.INSTANCE.pageSize)).byPage())
             .thenConsumeWhile(hookPageList::add)
             .verifyComplete();

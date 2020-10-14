@@ -3,7 +3,7 @@
 
 package com.azure.ai.metricsadvisor;
 
-import com.azure.ai.metricsadvisor.models.Anomaly;
+import com.azure.ai.metricsadvisor.models.DataPointAnomaly;
 import com.azure.ai.metricsadvisor.models.ListAnomaliesAlertedOptions;
 import com.azure.ai.metricsadvisor.models.MetricsAdvisorKeyCredential;
 import com.azure.core.http.rest.PagedIterable;
@@ -24,11 +24,11 @@ public class ListsAnomaliesForAlertsSample {
         final ListAnomaliesAlertedOptions options = new ListAnomaliesAlertedOptions()
             .setTop(10);
 
-        PagedIterable<Anomaly> anomaliesIterable = advisorClient.listAnomaliesForAlert(
+        PagedIterable<DataPointAnomaly> anomaliesIterable = advisorClient.listAnomaliesForAlert(
             alertConfigurationId,
             alertId);
 
-        for (Anomaly anomaly : anomaliesIterable) {
+        for (DataPointAnomaly anomaly : anomaliesIterable) {
             System.out.printf("Metric Id: %s%n", anomaly.getMetricId());
             System.out.printf("Detection Configuration Id: %s%n", anomaly.getDetectionConfigurationId());
             System.out.printf("Anomaly Created Time: %s%n", anomaly.getCreatedTime());

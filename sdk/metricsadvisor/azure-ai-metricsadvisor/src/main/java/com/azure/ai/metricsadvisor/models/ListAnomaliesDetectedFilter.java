@@ -9,8 +9,8 @@ import java.util.List;
  * Describes additional conditions to filter the anomalies while listing.
  */
 public final class ListAnomaliesDetectedFilter {
-    private Severity minSeverity;
-    private Severity maxSeverity;
+    private AnomalySeverity minSeverity;
+    private AnomalySeverity maxSeverity;
     private List<DimensionKey> seriesKeys;
 
     /**
@@ -18,7 +18,7 @@ public final class ListAnomaliesDetectedFilter {
      *
      * @return The minimum severity.
      */
-    public Severity getMinSeverity() {
+    public AnomalySeverity getMinSeverity() {
         return this.minSeverity;
     }
 
@@ -27,7 +27,7 @@ public final class ListAnomaliesDetectedFilter {
      *
      * @return The max severity.
      */
-    public Severity getMaxSeverity() {
+    public AnomalySeverity getMaxSeverity() {
         return this.maxSeverity;
     }
 
@@ -48,7 +48,7 @@ public final class ListAnomaliesDetectedFilter {
      * @param max The maximum severity.
      * @return The ListAnomaliesDetectedFilter object itself.
      */
-    public ListAnomaliesDetectedFilter setSeverity(Severity min, Severity max) {
+    public ListAnomaliesDetectedFilter setSeverity(AnomalySeverity min, AnomalySeverity max) {
         this.minSeverity = min;
         this.maxSeverity = max;
         return this;

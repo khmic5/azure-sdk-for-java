@@ -65,7 +65,7 @@ import com.azure.ai.metricsadvisor.models.DataSourceMissingDataPointFillType;
 import com.azure.ai.metricsadvisor.models.ElasticsearchDataFeedSource;
 import com.azure.ai.metricsadvisor.models.HttpRequestDataFeedSource;
 import com.azure.ai.metricsadvisor.models.InfluxDBDataFeedSource;
-import com.azure.ai.metricsadvisor.models.Metric;
+import com.azure.ai.metricsadvisor.models.DataFeedMetric;
 import com.azure.ai.metricsadvisor.models.MongoDBDataFeedSource;
 import com.azure.ai.metricsadvisor.models.MySqlDataFeedSource;
 import com.azure.ai.metricsadvisor.models.PostgreSqlDataFeedSource;
@@ -128,7 +128,7 @@ public final class DataFeedTransforms {
         PrivateFieldAccessHelper.set(dataFeed, "dataFeedStatus",
             DataFeedStatus.fromString(dataFeedDetail.getStatus().toString()));
         PrivateFieldAccessHelper.set(dataFeed, "metricIds",
-            dataFeedDetail.getMetrics().stream().map(Metric::getId).collect(Collectors.toList()));
+            dataFeedDetail.getMetrics().stream().map(DataFeedMetric::getId).collect(Collectors.toList()));
         return dataFeed;
     }
 

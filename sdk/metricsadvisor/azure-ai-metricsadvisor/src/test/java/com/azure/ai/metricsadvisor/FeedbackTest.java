@@ -144,11 +144,11 @@ public class FeedbackTest extends FeedbackTestBase {
         // Act & Assert
         client.listMetricFeedbacks(METRIC_ID, new ListMetricFeedbackOptions()
                 .setFilter(new ListMetricFeedbackFilter()
-                    .setDimensionFilter(new DimensionKey(DIMENSION_FILTER))).setTop(10),
+                    .setDimensionFilter(new DimensionKey(DIMENSION_KEY_VALUES))).setTop(10),
             Context.NONE)
             .stream().iterator()
             .forEachRemaining(metricFeedback ->
-                metricFeedback.getDimensionFilter().asMap().keySet().stream().anyMatch(DIMENSION_FILTER::containsKey));
+                metricFeedback.getDimensionKey().asMap().keySet().stream().anyMatch(DIMENSION_KEY_VALUES::containsKey));
     }
 
     /**

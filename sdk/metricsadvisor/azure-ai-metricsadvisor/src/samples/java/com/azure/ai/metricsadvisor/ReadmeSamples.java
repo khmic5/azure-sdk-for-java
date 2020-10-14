@@ -21,13 +21,13 @@ import com.azure.ai.metricsadvisor.models.DataFeedRollupSettings;
 import com.azure.ai.metricsadvisor.models.DataFeedSchema;
 import com.azure.ai.metricsadvisor.models.DataSourceMissingDataPointFillType;
 import com.azure.ai.metricsadvisor.models.DetectionConditionsOperator;
-import com.azure.ai.metricsadvisor.models.Dimension;
-import com.azure.ai.metricsadvisor.models.EmailHook;
+import com.azure.ai.metricsadvisor.models.DataFeedDimension;
+import com.azure.ai.metricsadvisor.models.EmailNotificationHook;
 import com.azure.ai.metricsadvisor.models.HardThresholdCondition;
-import com.azure.ai.metricsadvisor.models.Hook;
+import com.azure.ai.metricsadvisor.models.NotificationHook;
 import com.azure.ai.metricsadvisor.models.ListAlertOptions;
 import com.azure.ai.metricsadvisor.models.ListDataFeedIngestionOptions;
-import com.azure.ai.metricsadvisor.models.Metric;
+import com.azure.ai.metricsadvisor.models.DataFeedMetric;
 import com.azure.ai.metricsadvisor.models.MetricAnomalyAlertConditions;
 import com.azure.ai.metricsadvisor.models.MetricAnomalyAlertConfiguration;
 import com.azure.ai.metricsadvisor.models.MetricAnomalyAlertConfigurationsOperator;
@@ -35,11 +35,11 @@ import com.azure.ai.metricsadvisor.models.MetricAnomalyAlertScope;
 import com.azure.ai.metricsadvisor.models.MetricWholeSeriesDetectionCondition;
 import com.azure.ai.metricsadvisor.models.MetricsAdvisorKeyCredential;
 import com.azure.ai.metricsadvisor.models.SQLServerDataFeedSource;
-import com.azure.ai.metricsadvisor.models.Severity;
+import com.azure.ai.metricsadvisor.models.AnomalySeverity;
 import com.azure.ai.metricsadvisor.models.SeverityCondition;
 import com.azure.ai.metricsadvisor.models.SmartDetectionCondition;
 import com.azure.ai.metricsadvisor.models.SuppressCondition;
-import com.azure.ai.metricsadvisor.models.TimeMode;
+import com.azure.ai.metricsadvisor.models.AlertQueryTimeMode;
 import com.azure.core.exception.HttpResponseException;
 
 import java.time.OffsetDateTime;
@@ -91,9 +91,9 @@ public class ReadmeSamples {
             new SQLServerDataFeedSource("sql_server_connection_string", "query"),
             new DataFeedGranularity().setGranularityType(DataFeedGranularityType.DAILY),
             new DataFeedSchema(Arrays.asList(
-                new Metric().setName("cost"), new Metric().setName("revenue")))
+                new DataFeedMetric().setName("cost"), new DataFeedMetric().setName("revenue")))
                 .setDimensions(Arrays.asList(
-                    new Dimension().setName("category"), new Dimension().setName("city"))),
+                    new DataFeedDimension().setName("category"), new DataFeedDimension().setName("city"))),
             new DataFeedIngestionSettings(OffsetDateTime.parse("2020-01-01T00:00:00Z")),
             new DataFeedOptions()
                 .setDescription("My data feed description")
@@ -180,13 +180,13 @@ public class ReadmeSamples {
      * Code snippet for creating an email hook alert.
      */
     public void createHook() {
-        Hook emailHook = new EmailHook("email hook")
+        NotificationHook emailHook = new EmailNotificationHook("email hook")
             .setDescription("my email hook")
             .addEmailToAlert("alertme@alertme.com")
             .setExternalLink("https://adwiki.azurewebsites.net/articles/howto/alerts/create-hooks.html");
 
-        final Hook hook = metricsAdvisorAdministrationClient.createHook(emailHook);
-        EmailHook createdEmailHook = (EmailHook) hook;
+        final NotificationHook hook = metricsAdvisorAdministrationClient.createHook(emailHook);
+        EmailNotificationHook createdEmailHook = (EmailNotificationHook) hook;
         System.out.printf("Hook Id: %s%n", createdEmailHook.getId());
         System.out.printf("Hook Name: %s%n", createdEmailHook.getName());
         System.out.printf("Hook Description: %s%n", createdEmailHook.getDescription());
@@ -213,7 +213,7 @@ public class ReadmeSamples {
                     new MetricAnomalyAlertConfiguration(detectionConfigurationId2,
                         MetricAnomalyAlertScope.forWholeSeries())
                         .setAlertConditions(new MetricAnomalyAlertConditions()
-                            .setSeverityCondition(new SeverityCondition().setMaxAlertSeverity(Severity.HIGH)))))
+                            .setSeverityCondition(new SeverityCondition().setMaxAlertSeverity(AnomalySeverity.HIGH)))))
                 .setCrossMetricsOperator(MetricAnomalyAlertConfigurationsOperator.AND)
                 .setIdOfHooksToAlert(Arrays.asList(hookId1, hookId2)));
     }
@@ -226,7 +226,7 @@ public class ReadmeSamples {
         metricsAdvisorClient.listAlerts(
             alertConfigurationId,
             new ListAlertOptions(OffsetDateTime.parse("2020-01-01T00:00:00Z"), OffsetDateTime.now(),
-                TimeMode.ANOMALY_TIME))
+                AlertQueryTimeMode.ANOMALY_TIME))
             .forEach(alert -> {
                 System.out.printf("Alert Id: %s%n", alert.getId());
                 System.out.printf("Alert created on: %s%n", alert.getCreatedTime());

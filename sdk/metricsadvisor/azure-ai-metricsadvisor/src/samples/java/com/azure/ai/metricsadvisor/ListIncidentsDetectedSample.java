@@ -3,7 +3,7 @@
 
 package com.azure.ai.metricsadvisor;
 
-import com.azure.ai.metricsadvisor.models.Incident;
+import com.azure.ai.metricsadvisor.models.AnomalyIncident;
 import com.azure.ai.metricsadvisor.models.ListIncidentsDetectedOptions;
 import com.azure.ai.metricsadvisor.models.MetricsAdvisorKeyCredential;
 import com.azure.core.http.rest.PagedIterable;
@@ -27,10 +27,10 @@ public class ListIncidentsDetectedSample {
         final ListIncidentsDetectedOptions options = new ListIncidentsDetectedOptions(startTime, endTime)
             .setTop(1000);
 
-        PagedIterable<Incident> incidentsIterable
+        PagedIterable<AnomalyIncident> incidentsIterable
             = advisorClient.listIncidentsForDetectionConfiguration(detectionConfigurationId, options);
 
-        for (Incident incident : incidentsIterable) {
+        for (AnomalyIncident incident : incidentsIterable) {
             System.out.printf("Metric Id: %s%n", incident.getMetricId());
             System.out.printf("Detection Configuration Id: %s%n", incident.getDetectionConfigurationId());
             System.out.printf("Incident Id: %s%n", incident.getId());

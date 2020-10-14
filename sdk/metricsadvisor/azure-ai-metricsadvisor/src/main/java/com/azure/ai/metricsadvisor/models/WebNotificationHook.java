@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * A hook that describes web-hook based incident alerts notification.
  */
-public final class WebHook extends Hook {
+public final class WebNotificationHook extends NotificationHook {
     private String id;
     private String name;
     private String description;
@@ -29,7 +29,7 @@ public final class WebHook extends Hook {
      * @param name The web hook name.
      * @param endpoint The web endpoint to notify incident alerts.
      */
-    public WebHook(String name, String endpoint) {
+    public WebNotificationHook(String name, String endpoint) {
         this.name = name;
         this.endpoint = endpoint;
         this.httpHeaders = new HttpHeaders();
@@ -124,7 +124,7 @@ public final class WebHook extends Hook {
      * @param endpoint The endpoint
      * @return The WebHook object itself.
      */
-    public WebHook setEndPoint(String endpoint) {
+    public WebNotificationHook setEndPoint(String endpoint) {
         this.endpoint = endpoint;
         return this;
     }
@@ -135,7 +135,7 @@ public final class WebHook extends Hook {
      * @param name The web hook name.
      * @return The WebHook object itself.
      */
-    public WebHook setName(String name) {
+    public WebNotificationHook setName(String name) {
         this.name = name;
         return this;
     }
@@ -146,7 +146,7 @@ public final class WebHook extends Hook {
      * @param description The web hook description.
      * @return The WebHook object itself.
      */
-    public WebHook setDescription(String description) {
+    public WebNotificationHook setDescription(String description) {
         this.description = description;
         return this;
     }
@@ -157,7 +157,7 @@ public final class WebHook extends Hook {
      * @param externalLink The customized link.
      * @return The WebHook object itself.
      */
-    public WebHook setExternalLink(String externalLink) {
+    public WebNotificationHook setExternalLink(String externalLink) {
         this.externalLink = externalLink;
         return this;
     }
@@ -169,7 +169,7 @@ public final class WebHook extends Hook {
      * @param password The password.
      * @return The WebHook object itself.
      */
-    public WebHook setUserCredentials(String username, String password) {
+    public WebNotificationHook setUserCredentials(String username, String password) {
         this.username = username;
         this.userPassword = password;
         return this;
@@ -182,7 +182,7 @@ public final class WebHook extends Hook {
      * @param password The certificate password.
      * @return The WebHook object itself.
      */
-    public WebHook setClientCertificate(String certificate, String password) {
+    public WebNotificationHook setClientCertificate(String certificate, String password) {
         this.clientCertificate = certificate;
         this.clientCertificatePassword = password;
         return this;
@@ -194,7 +194,7 @@ public final class WebHook extends Hook {
      * @param httpHeaders The HTTP headers.
      * @return The WebHook object itself.
      */
-    public WebHook setHttpHeaders(HttpHeaders httpHeaders) {
+    public WebNotificationHook setHttpHeaders(HttpHeaders httpHeaders) {
         if (httpHeaders == null) {
             this.httpHeaders = new HttpHeaders();
             return this;

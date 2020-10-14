@@ -21,12 +21,12 @@ public final class MetricSeriesData {
     /*
      * timestamps of the data related to this time series
      */
-    private List<OffsetDateTime> timestampList;
+    private List<OffsetDateTime> timestamps;
 
     /*
      * values of the data related to this time series
      */
-    private List<Double> valueList;
+    private List<Double> values;
 
     /**
      * Get the metricId property: metric unique id.
@@ -54,8 +54,8 @@ public final class MetricSeriesData {
      *
      * @return the timestampList value.
      */
-    public List<OffsetDateTime> getTimestampList() {
-        return this.timestampList;
+    public List<OffsetDateTime> getTimestamps() {
+        return this.timestamps;
     }
 
     /**
@@ -63,7 +63,7 @@ public final class MetricSeriesData {
      *
      * @return the valueList value.
      */
-    public List<Double> getValueList() {
-        return this.valueList;
+    public List<Double> getValues() {
+        return this.values;
     }
 }

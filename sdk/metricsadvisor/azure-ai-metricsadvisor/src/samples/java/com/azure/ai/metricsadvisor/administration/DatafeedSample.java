@@ -11,8 +11,8 @@ import com.azure.ai.metricsadvisor.models.DataFeedGranularityType;
 import com.azure.ai.metricsadvisor.models.DataFeedIngestionSettings;
 import com.azure.ai.metricsadvisor.models.DataFeedOptions;
 import com.azure.ai.metricsadvisor.models.DataFeedSchema;
-import com.azure.ai.metricsadvisor.models.Dimension;
-import com.azure.ai.metricsadvisor.models.Metric;
+import com.azure.ai.metricsadvisor.models.DataFeedDimension;
+import com.azure.ai.metricsadvisor.models.DataFeedMetric;
 import com.azure.ai.metricsadvisor.models.MetricsAdvisorKeyCredential;
 
 import java.time.OffsetDateTime;
@@ -35,9 +35,9 @@ public class DatafeedSample {
             .createDataFeed("sample_db",
                 new AzureAppInsightsDataFeedSource("application_id", "api_key", "azure_Cloud", "query"),
                 new DataFeedGranularity().setGranularityType(DataFeedGranularityType.DAILY),
-                new DataFeedSchema(Arrays.asList(new Metric().setName("cost"), new Metric().setName(
-                    "revenue"))).setDimensions(Arrays.asList(new Dimension().setName("city"),
-                    new Dimension().setName("category"))),
+                new DataFeedSchema(Arrays.asList(new DataFeedMetric().setName("cost"), new DataFeedMetric().setName(
+                    "revenue"))).setDimensions(Arrays.asList(new DataFeedDimension().setName("city"),
+                    new DataFeedDimension().setName("category"))),
                 new DataFeedIngestionSettings(OffsetDateTime.parse("2020-07-01T00:00:00Z")), null);
 
         System.out.printf("Created data feed: %s%n", dataFeed.getId());

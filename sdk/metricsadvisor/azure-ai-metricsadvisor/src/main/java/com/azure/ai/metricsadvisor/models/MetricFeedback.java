@@ -14,7 +14,11 @@ public abstract class MetricFeedback {
     private OffsetDateTime createdTime;
     private String userPrincipal;
     private FeedbackType feedbackType;
-    private DimensionKey dimensionFilter;
+    private DimensionKey dimensionKey;
+
+    public MetricFeedback(final DimensionKey dimensionKey) {
+        this.dimensionKey = dimensionKey;
+    }
 
     /**
      * Get the feedback unique id.
@@ -62,23 +66,11 @@ public abstract class MetricFeedback {
     }
 
     /**
-     * Get the dimensionFilter.
+     * Get the dimension key.
      *
-     * @return the dimensionFilter value.
+     * @return the dimension key.
      */
-    public DimensionKey getDimensionFilter() {
-        return this.dimensionFilter;
-    }
-
-    /**
-     * Set the series keys value for the feedback.
-     *
-     * @param dimensionFilter the dimensionFilter value.
-     *
-     * @return the MetricFeedback object itself.
-     */
-    public MetricFeedback setDimensionFilter(final DimensionKey dimensionFilter) {
-        this.dimensionFilter = dimensionFilter;
-        return this;
+    public DimensionKey getDimensionKey() {
+        return this.dimensionKey;
     }
 }

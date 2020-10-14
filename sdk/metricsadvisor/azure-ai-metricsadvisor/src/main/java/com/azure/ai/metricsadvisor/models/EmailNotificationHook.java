@@ -12,7 +12,7 @@ import java.util.stream.IntStream;
 /**
  * A hook that describes email based incident alerts notification.
  */
-public final class EmailHook extends Hook {
+public final class EmailNotificationHook extends NotificationHook {
     private String id;
     private String name;
     private String description;
@@ -25,7 +25,7 @@ public final class EmailHook extends Hook {
      *
      * @param name The email hook name.
      */
-    public EmailHook(String name) {
+    public EmailNotificationHook(String name) {
         this.emailsToAlert = new ArrayList<>();
         this.name = name;
     }
@@ -36,7 +36,7 @@ public final class EmailHook extends Hook {
      * @param name The email hook name.
      * @param emails The emails to send the alerts.
      */
-    public EmailHook(String name, List<String> emails) {
+    public EmailNotificationHook(String name, List<String> emails) {
         if (emails == null) {
             this.emailsToAlert = new ArrayList<>();
         } else {
@@ -91,7 +91,7 @@ public final class EmailHook extends Hook {
      * @param emails The emails.
      * @return The EmailHook object itself.
      */
-    public EmailHook setEmailsToAlert(List<String> emails) {
+    public EmailNotificationHook setEmailsToAlert(List<String> emails) {
         if (emails == null) {
             this.emailsToAlert = new ArrayList<>();
         } else {
@@ -106,7 +106,7 @@ public final class EmailHook extends Hook {
      * @param email The email to add.
      * @return The EmailHook object itself.
      */
-    public EmailHook addEmailToAlert(String email) {
+    public EmailNotificationHook addEmailToAlert(String email) {
         if (this.emailsToAlert
             .stream()
             .anyMatch(email::equalsIgnoreCase)) {
@@ -122,7 +122,7 @@ public final class EmailHook extends Hook {
      * @param email The email to remove.
      * @return The EmailHook object itself.
      */
-    public EmailHook removeEmailToAlert(String email) {
+    public EmailNotificationHook removeEmailToAlert(String email) {
         int idx = IntStream.range(0, this.emailsToAlert.size())
             .filter(i -> this.emailsToAlert.get(i).equalsIgnoreCase(email))
             .findFirst()
@@ -139,7 +139,7 @@ public final class EmailHook extends Hook {
      * @param name The email hook name.
      * @return The EmailHook object itself.
      */
-    public EmailHook setName(String name) {
+    public EmailNotificationHook setName(String name) {
         this.name = name;
         return this;
     }
@@ -150,7 +150,7 @@ public final class EmailHook extends Hook {
      * @param description The email hook description.
      * @return The EmailHook object itself.
      */
-    public EmailHook setDescription(String description) {
+    public EmailNotificationHook setDescription(String description) {
         this.description = description;
         return this;
     }
@@ -161,7 +161,7 @@ public final class EmailHook extends Hook {
      * @param externalLink The customized link.
      * @return The EmailHook object itself.
      */
-    public EmailHook setExternalLink(String externalLink) {
+    public EmailNotificationHook setExternalLink(String externalLink) {
         this.externalLink = externalLink;
         return this;
     }

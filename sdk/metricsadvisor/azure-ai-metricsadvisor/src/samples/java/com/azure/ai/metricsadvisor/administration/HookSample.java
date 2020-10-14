@@ -3,10 +3,10 @@
 
 package com.azure.ai.metricsadvisor.administration;
 
-import com.azure.ai.metricsadvisor.models.EmailHook;
-import com.azure.ai.metricsadvisor.models.Hook;
+import com.azure.ai.metricsadvisor.models.EmailNotificationHook;
+import com.azure.ai.metricsadvisor.models.NotificationHook;
 import com.azure.ai.metricsadvisor.models.MetricsAdvisorKeyCredential;
-import com.azure.ai.metricsadvisor.models.WebHook;
+import com.azure.ai.metricsadvisor.models.WebNotificationHook;
 import com.azure.core.http.rest.PagedIterable;
 
 /**
@@ -22,17 +22,17 @@ public class HookSample {
 
         // Create email hook.
         System.out.printf("Creating Hook%n");
-        Hook emailHookToCreate = new EmailHook("email hook")
+        NotificationHook emailHookToCreate = new EmailNotificationHook("email hook")
             .setDescription("my email hook")
             .addEmailToAlert("alertme@alertme.com")
             .setExternalLink("https://adwiki.azurewebsites.net/articles/howto/alerts/create-hooks.html");
-        Hook hook = advisorAdministrationClient.createHook(emailHookToCreate);
+        NotificationHook hook = advisorAdministrationClient.createHook(emailHookToCreate);
         System.out.printf("Created hook: %s%n", hook.getId());
 
         // Retrieve the hook that just created.
         System.out.printf("Fetching hook: %s%n", hook.getId());
         hook = advisorAdministrationClient.getHook(hook.getId());
-        EmailHook createdEmailHook = (EmailHook) hook;
+        EmailNotificationHook createdEmailHook = (EmailNotificationHook) hook;
         System.out.printf("Hook Id: %s%n", createdEmailHook.getId());
         System.out.printf("Hook Name: %s%n", createdEmailHook.getName());
         System.out.printf("Hook Description: %s%n", createdEmailHook.getDescription());
@@ -41,7 +41,7 @@ public class HookSample {
 
         // Update the hook.
         System.out.printf("Updating hook: %s%n", hook.getId());
-        EmailHook emailHookToUpdate = (EmailHook) hook;
+        EmailNotificationHook emailHookToUpdate = (EmailNotificationHook) hook;
         emailHookToUpdate
             .removeEmailToAlert("alertme@alertme.com")
             .addEmailToAlert("alertme2@alertme.com")
@@ -56,7 +56,7 @@ public class HookSample {
 
         // Create a web hook
         System.out.printf("Creating web Hook%n");
-        Hook webHookToCreate = new WebHook("web hook", "https://httpbin.org/post")
+        NotificationHook webHookToCreate = new WebNotificationHook("web hook", "https://httpbin.org/post")
             .setDescription("my web hook")
             .setUserCredentials("web-user", "web-user-pwd!")
             .setExternalLink("https://adwiki.azurewebsites.net/articles/howto/alerts/create-hooks.html");
@@ -65,18 +65,18 @@ public class HookSample {
 
         // List hooks.
         System.out.printf("Listing hooks%n");
-        PagedIterable<Hook> hooksIterable
+        PagedIterable<NotificationHook> hooksIterable
             = advisorAdministrationClient.listHooks();
-        for (Hook hookItem : hooksIterable) {
-            if (hookItem instanceof EmailHook) {
-                EmailHook emailHook = (EmailHook) hookItem;
+        for (NotificationHook hookItem : hooksIterable) {
+            if (hookItem instanceof EmailNotificationHook) {
+                EmailNotificationHook emailHook = (EmailNotificationHook) hookItem;
                 System.out.printf("Hook Id: %s%n", emailHook.getId());
                 System.out.printf("Hook Name: %s%n", emailHook.getName());
                 System.out.printf("Hook Description: %s%n", emailHook.getDescription());
                 System.out.printf("Hook External Link: %s%n", emailHook.getExternalLink());
                 System.out.printf("Hook Emails: %s%n", String.join(",", emailHook.getEmailsToAlert()));
-            } else if (hookItem instanceof WebHook) {
-                WebHook webHook = (WebHook) hookItem;
+            } else if (hookItem instanceof WebNotificationHook) {
+                WebNotificationHook webHook = (WebNotificationHook) hookItem;
                 System.out.printf("Hook Id: %s%n", webHook.getId());
                 System.out.printf("Hook Name: %s%n", webHook.getName());
                 System.out.printf("Hook Description: %s%n", webHook.getDescription());

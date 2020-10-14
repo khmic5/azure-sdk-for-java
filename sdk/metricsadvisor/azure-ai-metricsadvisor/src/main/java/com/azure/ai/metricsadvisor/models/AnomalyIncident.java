@@ -8,13 +8,13 @@ import java.time.OffsetDateTime;
 /**
  * Describes an incident detected in a time series or a time series group.
  */
-public final class Incident {
+public final class AnomalyIncident {
     private String id;
     private String metricId;
     private String detectionConfigurationId;
     private DimensionKey rootDimensionKey;
-    private Severity severity;
-    private IncidentStatus status;
+    private AnomalySeverity severity;
+    private AnomalyIncidentStatus status;
     private OffsetDateTime startTime;
     private OffsetDateTime lastTime;
 
@@ -62,7 +62,7 @@ public final class Incident {
      *
      * @return The severity.
      */
-    public Severity getSeverity() {
+    public AnomalySeverity getSeverity() {
         return this.severity;
     }
 
@@ -71,7 +71,7 @@ public final class Incident {
      *
      * @return The incident status.
      */
-    public  IncidentStatus getStatus() {
+    public AnomalyIncidentStatus getStatus() {
         return this.status;
     }
 

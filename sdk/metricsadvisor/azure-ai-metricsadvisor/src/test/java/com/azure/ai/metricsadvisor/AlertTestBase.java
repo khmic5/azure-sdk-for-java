@@ -3,10 +3,10 @@
 
 package com.azure.ai.metricsadvisor;
 
-import com.azure.ai.metricsadvisor.models.Alert;
+import com.azure.ai.metricsadvisor.models.AnomalyAlert;
 import com.azure.ai.metricsadvisor.models.ListAlertOptions;
 import com.azure.ai.metricsadvisor.models.MetricsAdvisorServiceVersion;
-import com.azure.ai.metricsadvisor.models.TimeMode;
+import com.azure.ai.metricsadvisor.models.AlertQueryTimeMode;
 import com.azure.core.http.HttpClient;
 import org.junit.jupiter.api.Assertions;
 
@@ -20,7 +20,7 @@ public abstract class AlertTestBase extends MetricsAdvisorClientTestBase {
         static final ListAlertsInput INSTANCE = new ListAlertsInput();
         final OffsetDateTime startTime = OffsetDateTime.parse("2020-01-01T00:00:00Z");
         final OffsetDateTime endTime = OffsetDateTime.parse("2020-09-09T00:00:00Z");
-        final TimeMode timeMode = TimeMode.ANOMALY_TIME;
+        final AlertQueryTimeMode timeMode = AlertQueryTimeMode.ANOMALY_TIME;
         final ListAlertOptions options = new ListAlertOptions(startTime, endTime, timeMode)
             .setTop(10);
         final String alertConfigurationId = "ff3014a0-bbbb-41ec-a637-677e77b81299";
@@ -31,7 +31,7 @@ public abstract class AlertTestBase extends MetricsAdvisorClientTestBase {
         final int expectedAlerts = 3;
     }
 
-    protected void assertAlertOutput(Alert alert) {
+    protected void assertAlertOutput(AnomalyAlert alert) {
         Assertions.assertNotNull(alert);
         Assertions.assertNotNull(alert.getId());
         Assertions.assertNotNull(alert.getCreatedTime());

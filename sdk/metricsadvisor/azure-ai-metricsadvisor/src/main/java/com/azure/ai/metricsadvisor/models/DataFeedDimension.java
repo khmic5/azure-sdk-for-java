@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** The Dimension model. */
 @Fluent
-public final class Dimension {
+public final class DataFeedDimension {
     /*
      * dimension name
      */
@@ -37,7 +37,7 @@ public final class Dimension {
      * @param name the name value to set.
      * @return the Dimension object itself.
      */
-    public Dimension setName(String name) {
+    public DataFeedDimension setName(String name) {
         this.name = name;
         return this;
     }
@@ -57,7 +57,7 @@ public final class Dimension {
      * @param displayName the displayName value to set.
      * @return the Dimension object itself.
      */
-    public Dimension setDisplayName(String displayName) {
+    public DataFeedDimension setDisplayName(String displayName) {
         this.displayName = displayName;
         return this;
     }

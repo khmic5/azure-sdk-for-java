@@ -4,7 +4,7 @@
 package com.azure.ai.metricsadvisor;
 
 import com.azure.ai.metricsadvisor.administration.MetricsAdvisorAdministrationClient;
-import com.azure.ai.metricsadvisor.models.Hook;
+import com.azure.ai.metricsadvisor.models.NotificationHook;
 import com.azure.ai.metricsadvisor.models.ListHookOptions;
 import com.azure.ai.metricsadvisor.models.MetricsAdvisorServiceVersion;
 import com.azure.core.http.HttpClient;
@@ -26,7 +26,7 @@ public final class HookTest extends HookTestBase {
         MetricsAdvisorAdministrationClient client
             = getMetricsAdvisorAdministrationBuilder(httpClient, serviceVersion).buildClient();
 
-        Hook createdHook  = client.createHook(CreateEmailHookInput.INSTANCE.hook);
+        NotificationHook createdHook  = client.createHook(CreateEmailHookInput.INSTANCE.hook);
         Assertions.assertNotNull(createdHook);
         assertCreateEmailHookOutput(createdHook);
         client.deleteHook(createdHook.getId());
@@ -39,7 +39,7 @@ public final class HookTest extends HookTestBase {
         MetricsAdvisorAdministrationClient client
             = getMetricsAdvisorAdministrationBuilder(httpClient, serviceVersion).buildClient();
 
-        Hook createdHook  = client.createHook(CreateWebHookInput.INSTANCE.hook);
+        NotificationHook createdHook  = client.createHook(CreateWebHookInput.INSTANCE.hook);
         Assertions.assertNotNull(createdHook);
         assertCreateWebHookOutput(createdHook);
         client.deleteHook(createdHook.getId());
@@ -53,22 +53,22 @@ public final class HookTest extends HookTestBase {
             = getMetricsAdvisorAdministrationBuilder(httpClient, serviceVersion).buildClient();
 
         String[] hookId = new String[2];
-        Hook hook1 = client.createHook(ListHookInput.INSTANCE.emailHook);
+        NotificationHook hook1 = client.createHook(ListHookInput.INSTANCE.emailHook);
         hookId[0] = hook1.getId();
 
-        Hook hook2 = client.createHook(ListHookInput.INSTANCE.webHook);
+        NotificationHook hook2 = client.createHook(ListHookInput.INSTANCE.webHook);
         hookId[1] = hook2.getId();
 
         Assertions.assertNotNull(hookId[0]);
         Assertions.assertNotNull(hookId[1]);
 
-        List<Hook> hookList = client.listHooks()
+        List<NotificationHook> hookList = client.listHooks()
             .stream()
             .collect(Collectors.toList());
 
         assertListHookOutput(hookList);
 
-        List<PagedResponse<Hook>> hookPageList
+        List<PagedResponse<NotificationHook>> hookPageList
             = client.listHooks(new ListHookOptions().setTop(ListHookInput.INSTANCE.pageSize), Context.NONE)
             .streamByPage()
             .collect(Collectors.toList());

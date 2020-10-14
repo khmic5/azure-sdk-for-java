@@ -21,14 +21,17 @@ public final class MetricAnomalyFeedback extends MetricFeedback {
     /**
      * Creates an instance of MetricAnomalyFeedback.
      *
-     * @param startTime the start timestamp of feedback timerange
-     * @param endTime the end timestamp of feedback timerange, when equals to startTime means
+     * @param dimensionKey the dimension key to identify the series or series group.
+     * @param startTime the start timestamp of feedback time range
+     * @param endTime the end timestamp of feedback time range, when equals to startTime means
      * only one timestamp
      * @param anomalyValue the value of the anomaly.
      */
-    public MetricAnomalyFeedback(OffsetDateTime startTime,
-        OffsetDateTime endTime,
-        AnomalyValue anomalyValue) {
+    public MetricAnomalyFeedback(DimensionKey dimensionKey,
+                                 OffsetDateTime startTime,
+                                 OffsetDateTime endTime,
+                                 AnomalyValue anomalyValue) {
+        super(dimensionKey);
         this.startTime = startTime;
         this.endTime = endTime;
         this.anomalyValue = anomalyValue;
