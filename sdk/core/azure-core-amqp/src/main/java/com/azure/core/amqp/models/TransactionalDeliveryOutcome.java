@@ -8,14 +8,19 @@ import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
- * @see <a href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transactions-v1.0-os.html#type-transactional-state>Transactional
+ * @see <a href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transactions-v1.0-os.html#type-transactional-state">Transactional
  *     state</a>
  */
 @Fluent
-public class TransactionalDeliveryOutcome extends DeliveryOutcome {
+public final class TransactionalDeliveryOutcome extends DeliveryOutcome {
     private DeliveryOutcome outcome;
     private final AmqpTransaction amqpTransaction;
 
+    /**
+     * Creates an outcome with the given transaction.
+     *
+     * @param transaction The transaction.
+     */
     public TransactionalDeliveryOutcome(AmqpTransaction transaction) {
         super(null);
         this.amqpTransaction = Objects.requireNonNull(transaction, "'transaction' cannot be null.");

@@ -13,16 +13,30 @@ import com.azure.core.annotation.Fluent;
 public class DeliveryOutcome {
     private DeliveryState deliveryState;
 
+    /**
+     * Creates an instance of the delivery outcome with its state.
+     *
+     * @param deliveryState The state of the delivery.
+     */
     public DeliveryOutcome(DeliveryState deliveryState) {
         this.deliveryState = deliveryState;
     }
 
+    /**
+     * Gets the delivery state.
+     *
+     * @return The delivery state.
+     */
     public DeliveryState getDeliveryState() {
         return deliveryState;
     }
 
-    DeliveryOutcome setDeliveryState(DeliveryState deliveryState) {
+    /**
+     * Sets the delivery state.
+     *
+     * @param deliveryState The delivery state.
+     */
+    void setDeliveryState(DeliveryState deliveryState) {
         this.deliveryState = deliveryState;
-        return this;
     }
 }

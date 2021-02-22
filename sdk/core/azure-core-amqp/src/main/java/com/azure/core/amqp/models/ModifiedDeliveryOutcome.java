@@ -23,7 +23,7 @@ import java.util.Map;
  * </p>
  *
  * @see <a href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-modified">Modified
- * outcome</a>
+ *     outcome</a>
  */
 @Fluent
 public final class ModifiedDeliveryOutcome extends DeliveryOutcome {
@@ -44,7 +44,14 @@ public final class ModifiedDeliveryOutcome extends DeliveryOutcome {
         return this.isUndeliverableHere;
     }
 
-    public ModifiedDeliveryOutcome setIsUndeliverableHere(boolean isUndeliverable) {
+    /**
+     * Sets whether or not the message is undeliverable here.
+     *
+     * @param isUndeliverable If the message is undeliverable here.
+     *
+     * @return The updated {@link ModifiedDeliveryOutcome} outcome.
+     */
+    public ModifiedDeliveryOutcome setUndeliverableHere(boolean isUndeliverable) {
         this.isUndeliverableHere = isUndeliverable;
         return this;
     }
@@ -58,7 +65,14 @@ public final class ModifiedDeliveryOutcome extends DeliveryOutcome {
         return isDeliveryFailed;
     }
 
-    public ModifiedDeliveryOutcome setIsDeliveryFailed(boolean isDeliveryFailed) {
+    /**
+     * Sets whether or not to count the transfer as an unsuccessful delivery attempt.
+     *
+     * @param isDeliveryFailed {@code true} to count the transfer as an unsuccessful delivery attempt.
+     *
+     * @return The updated {@link ModifiedDeliveryOutcome} outcome.
+     */
+    public ModifiedDeliveryOutcome setDeliveryFailed(boolean isDeliveryFailed) {
         this.isDeliveryFailed = isDeliveryFailed;
         return this;
     }
@@ -75,6 +89,13 @@ public final class ModifiedDeliveryOutcome extends DeliveryOutcome {
         return messageAnnotations;
     }
 
+    /**
+     * Sets the message annotations to add to the message.
+     *
+     * @param messageAnnotations the message annotations to add to the message.
+     *
+     * @return The updated {@link ModifiedDeliveryOutcome} object.
+     */
     public ModifiedDeliveryOutcome setMessageAnnotations(Map<String, Object> messageAnnotations) {
         this.messageAnnotations = messageAnnotations;
         return this;

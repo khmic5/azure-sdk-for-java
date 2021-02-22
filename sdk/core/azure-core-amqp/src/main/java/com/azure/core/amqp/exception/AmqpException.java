@@ -6,12 +6,16 @@ package com.azure.core.amqp.exception;
 import com.azure.core.exception.AzureException;
 import com.azure.core.util.CoreUtils;
 
+import java.util.Collections;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * General exception for AMQP related failures.
  *
  * @see AmqpErrorCondition
+ * @see <a href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-error">Amqp
+ *     Error</a>
  * @see <a href="https://docs.microsoft.com/azure/event-hubs/event-hubs-messaging-exceptions">Azure Messaging
  *     Exceptions</a>
  */
@@ -21,6 +25,7 @@ public class AmqpException extends AzureException {
     private final AmqpErrorContext errorContext;
     private final boolean isTransient;
     private final AmqpErrorCondition errorCondition;
+    private Map<String, Object> errorInfo;
 
     /**
      * Initializes a new instance of the AmqpException class.
@@ -45,7 +50,7 @@ public class AmqpException extends AzureException {
      * @param errorContext The context that caused this AMQP error.
      */
     public AmqpException(boolean isTransient, AmqpErrorCondition errorCondition, String message,
-                         AmqpErrorContext errorContext) {
+        AmqpErrorContext errorContext) {
         super(message);
         this.errorCondition = errorCondition;
         this.isTransient = isTransient;
@@ -64,7 +69,7 @@ public class AmqpException extends AzureException {
      * @param errorContext The context that caused this AMQP error.
      */
     public AmqpException(boolean isTransient, AmqpErrorCondition errorCondition, String message, Throwable cause,
-                         AmqpErrorContext errorContext) {
+        AmqpErrorContext errorContext) {
         super(message, cause);
         this.errorCondition = errorCondition;
         this.isTransient = isTransient;
@@ -81,7 +86,7 @@ public class AmqpException extends AzureException {
      * @param errorContext The context that caused this AMQP error.
      */
     public AmqpException(boolean isTransient, AmqpErrorCondition errorCondition, Throwable cause,
-                         AmqpErrorContext errorContext) {
+        AmqpErrorContext errorContext) {
         super(cause.getMessage(), cause);
         this.errorCondition = errorCondition;
         this.isTransient = isTransient;
@@ -122,7 +127,7 @@ public class AmqpException extends AzureException {
      * A boolean indicating if the exception is a transient error or not.
      *
      * @return returns true when user can retry the operation that generated the exception without additional
-     * intervention.
+     *     intervention.
      */
     public boolean isTransient() {
         return this.isTransient;
@@ -144,5 +149,23 @@ public class AmqpException extends AzureException {
      */
     public AmqpErrorContext getContext() {
         return this.errorContext;
+    }
+
+    /**
+     * Gets the map carrying information about the error condition.
+     *
+     * @return Map carrying additional information about the error.
+     */
+    public Map<String, Object> getErrorInfo() {
+        return errorInfo != null ? errorInfo : Collections.emptyMap();
+    }
+
+    /**
+     * Sets map carrying information about the error condition.
+     *
+     * @param errorInfo Map carrying additional information about the error.
+     */
+    public void setErrorInfo(Map<String, Object> errorInfo) {
+        this.errorInfo = errorInfo;
     }
 }

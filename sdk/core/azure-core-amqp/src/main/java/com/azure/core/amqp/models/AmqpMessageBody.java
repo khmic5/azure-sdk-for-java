@@ -34,7 +34,7 @@ public final class AmqpMessageBody {
     private List<byte[]> dataList;
 
     private AmqpMessageBody() {
-        // private constructor so no one outside can create instance of this except classes im this package.
+        // private constructor so no one outside can create instance of this except classes in this package.
     }
 
     /**

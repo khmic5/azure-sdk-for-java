@@ -5,14 +5,19 @@ package com.azure.core.amqp.implementation;
 
 import com.azure.core.amqp.AmqpEndpointState;
 import com.azure.core.amqp.AmqpLink;
+import com.azure.core.amqp.AmqpReceiveLink;
 import com.azure.core.amqp.AmqpRetryOptions;
 import com.azure.core.amqp.AmqpRetryPolicy;
+import com.azure.core.amqp.AmqpSendLink;
 import com.azure.core.amqp.AmqpSession;
 import com.azure.core.amqp.AmqpTransaction;
 import com.azure.core.amqp.ClaimsBasedSecurityNode;
 import com.azure.core.amqp.implementation.handler.ReceiveLinkHandler;
 import com.azure.core.amqp.implementation.handler.SendLinkHandler;
 import com.azure.core.amqp.implementation.handler.SessionHandler;
+import com.azure.core.amqp.models.AmqpLinkSource;
+import com.azure.core.amqp.models.AmqpLinkTarget;
+import com.azure.core.amqp.models.CreateLinkOptions;
 import com.azure.core.util.logging.ClientLogger;
 import org.apache.qpid.proton.amqp.Symbol;
 import org.apache.qpid.proton.amqp.messaging.Source;
@@ -198,7 +203,13 @@ public class ReactorSession implements AmqpSession {
      */
     @Override
     public Mono<AmqpLink> createProducer(String linkName, String entityPath, Duration timeout, AmqpRetryPolicy retry) {
-        return createProducer(linkName, entityPath, timeout, retry, null);
+        return createProducer(linkName, entityPath, timeout, retry, new CreateLinkOptions()).cast(AmqpLink.class);
+    }
+
+    @Override
+    public Mono<AmqpSendLink> createProducer(String linkName, String entityPath, Duration timeout,
+        AmqpRetryPolicy retryPolicy, CreateLinkOptions createLinkOptions) {
+        return null;
     }
 
     /**
@@ -211,6 +222,12 @@ public class ReactorSession implements AmqpSession {
             .cast(AmqpLink.class);
     }
 
+    @Override
+    public Mono<AmqpReceiveLink> createConsumer(String linkName, String entityPath, Duration timeout, AmqpRetryPolicy retryPolicy, CreateLinkOptions createLinkOptions) {
+        return null;
+    }
+
+
     /**
      * {@inheritDoc}
      */
@@ -220,7 +237,6 @@ public class ReactorSession implements AmqpSession {
     }
 
     /**
-     *
      * @return {@link Mono} of {@link TransactionCoordinator}
      */
     private Mono<TransactionCoordinator> createTransactionCoordinator() {
@@ -334,7 +350,7 @@ public class ReactorSession implements AmqpSession {
      * @return A new instance of an {@link AmqpLink} with the correct properties set.
      */
     protected Mono<AmqpLink> createProducer(String linkName, String entityPath, Duration timeout,
-         AmqpRetryPolicy retry, Map<Symbol, Object> linkProperties) {
+        AmqpRetryPolicy retry, Map<Symbol, Object> linkProperties) {
 
         final Target target = new Target();
         target.setAddress(entityPath);
@@ -436,16 +452,16 @@ public class ReactorSession implements AmqpSession {
         //@formatter:off
         final Disposable subscription = reactorSender.getEndpointStates().subscribe(state -> {
         }, error -> {
-                logger.info("linkName[{}]: Error occurred. Removing and disposing send link.",
-                    linkName, error);
-                removeLink(openSendLinks, linkName);
-            }, () -> {
-                logger.info("linkName[{}]: Complete. Removing and disposing send link.", linkName);
-                removeLink(openSendLinks, linkName);
-            });
+            logger.info("linkName[{}]: Error occurred. Removing and disposing send link.",
+                linkName, error);
+            removeLink(openSendLinks, linkName);
+        }, () -> {
+            logger.info("linkName[{}]: Complete. Removing and disposing send link.", linkName);
+            removeLink(openSendLinks, linkName);
+        });
         //@formatter:on
 
-        return new LinkSubscription<>(reactorSender, subscription);
+        return new LinkSubscription<AmqpSendLink>(reactorSender, subscription);
     }
 
     /**
@@ -492,19 +508,19 @@ public class ReactorSession implements AmqpSession {
 
         final Disposable subscription = reactorReceiver.getEndpointStates().subscribe(state -> {
         }, error -> {
-                logger.info(
-                    "linkName[{}] entityPath[{}]: Error occurred. Removing receive link.",
-                    linkName, entityPath, error);
+            logger.info(
+                "linkName[{}] entityPath[{}]: Error occurred. Removing receive link.",
+                linkName, entityPath, error);
 
-                removeLink(openReceiveLinks, linkName);
-            }, () -> {
-                logger.info("linkName[{}] entityPath[{}]: Complete. Removing receive link.",
-                    linkName, entityPath);
+            removeLink(openReceiveLinks, linkName);
+        }, () -> {
+            logger.info("linkName[{}] entityPath[{}]: Complete. Removing receive link.",
+                linkName, entityPath);
 
-                removeLink(openReceiveLinks, linkName);
-            });
+            removeLink(openReceiveLinks, linkName);
+        });
 
-        return new LinkSubscription<>(reactorReceiver, subscription);
+        return new LinkSubscription<AmqpReceiveLink>(reactorReceiver, subscription);
     }
 
     /**

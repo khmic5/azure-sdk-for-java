@@ -6,11 +6,16 @@ package com.azure.core.amqp.implementation;
 import com.azure.core.amqp.AmqpEndpointState;
 import com.azure.core.amqp.AmqpRetryOptions;
 import com.azure.core.amqp.AmqpRetryPolicy;
+import com.azure.core.amqp.AmqpSendLink;
 import com.azure.core.amqp.exception.AmqpErrorCondition;
 import com.azure.core.amqp.exception.AmqpErrorContext;
 import com.azure.core.amqp.exception.AmqpException;
 import com.azure.core.amqp.exception.OperationCancelledException;
 import com.azure.core.amqp.implementation.handler.SendLinkHandler;
+import com.azure.core.amqp.models.AmqpAnnotatedMessage;
+import com.azure.core.amqp.models.DeliveryOutcome;
+import com.azure.core.amqp.models.ReceiverSettleMode;
+import com.azure.core.amqp.models.SenderSettleMode;
 import com.azure.core.util.logging.ClientLogger;
 import org.apache.qpid.proton.Proton;
 import org.apache.qpid.proton.amqp.Binary;
@@ -39,21 +44,13 @@ import java.io.Serializable;
 import java.nio.BufferOverflowException;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Locale;
-import java.util.PriorityQueue;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.azure.core.amqp.implementation.ClientConstants.MAX_AMQP_HEADER_SIZE_BYTES;
-import static com.azure.core.amqp.implementation.ClientConstants.NOT_APPLICABLE;
-import static com.azure.core.amqp.implementation.ClientConstants.SERVER_BUSY_BASE_SLEEP_TIME_IN_SECS;
+import static com.azure.core.amqp.implementation.ClientConstants.*;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
@@ -145,12 +142,37 @@ class ReactorSender implements AmqpSendLink {
     }
 
     @Override
-    public Mono<Void> send(Message message) {
+    public Mono<Long> getMaxMessageSizeInBytes() {
+        return null;
+    }
+
+    @Override
+    public Flux<String> getOfferedCapabilities() {
+        return null;
+    }
+
+    @Override
+    public Iterable<String> getDesiredCapabilities() {
+        return null;
+    }
+
+    @Override
+    public SenderSettleMode getSenderSettleMode() {
+        return null;
+    }
+
+    @Override
+    public ReceiverSettleMode getReceiverSettleMode() {
+        return null;
+    }
+
+    @Override
+    public Mono<DeliveryOutcome> send(AmqpAnnotatedMessage message) {
         return send(message, null);
     }
 
     @Override
-    public Mono<Void> send(Message message, DeliveryState deliveryState) {
+    public Mono<DeliveryOutcome> send(AmqpAnnotatedMessage message, DeliveryOutcome deliveryOutcome) {
         return getLinkSize()
             .flatMap(maxMessageSize -> {
                 final int payloadSize = messageSerializer.getSize(message);
@@ -160,7 +182,8 @@ class ReactorSender implements AmqpSendLink {
 
                 int encodedSize;
                 try {
-                    encodedSize = message.encode(bytes, 0, allocationSize);
+                    encodedSize = 10;
+//                    encodedSize = message.encode(bytes, 0, allocationSize);
                 } catch (BufferOverflowException exception) {
                     final String errorMessage =
                         String.format(Locale.US,
@@ -170,24 +193,25 @@ class ReactorSender implements AmqpSendLink {
                         errorMessage, exception, handler.getErrorContext(sender));
                     return Mono.error(error);
                 }
-                return send(bytes, encodedSize, DeliveryImpl.DEFAULT_MESSAGE_FORMAT, deliveryState);
-            }).then();
+                return send(bytes, encodedSize, DeliveryImpl.DEFAULT_MESSAGE_FORMAT, deliveryOutcome);
+            });
     }
 
     @Override
-    public Mono<Void> send(List<Message> messageBatch) {
+    public Mono<DeliveryOutcome> send(Iterable<AmqpAnnotatedMessage> messageBatch) {
         return send(messageBatch, null);
     }
 
     @Override
-    public Mono<Void> send(List<Message> messageBatch, DeliveryState deliveryState) {
-        if (messageBatch.size() == 1) {
-            return send(messageBatch.get(0), deliveryState);
-        }
+    public Mono<DeliveryOutcome> send(Iterable<AmqpAnnotatedMessage> messageBatch, DeliveryOutcome deliveryOutcome) {
+//        if (messageBatch.size() == 1) {
+//            return send(messageBatch.get(0), deliveryOutcome);
+//        }
 
         return getLinkSize()
             .flatMap(maxMessageSize -> {
-                final Message firstMessage = messageBatch.get(0);
+                final Message firstMessage = Proton.message();
+                    //messageBatch.get(0);
 
                 // proton-j doesn't support multiple dataSections to be part of AmqpMessage
                 // here's the alternate approach provided by them: https://github.com/apache/qpid-proton/pull/54
@@ -200,7 +224,7 @@ class ReactorSender implements AmqpSendLink {
                 int encodedSize = batchMessage.encode(bytes, 0, maxMessageSizeTemp);
                 int byteArrayOffset = encodedSize;
 
-                for (final Message amqpMessage : messageBatch) {
+                for (final AmqpAnnotatedMessage amqpMessage : messageBatch) {
                     final Message messageWrappedByData = Proton.message();
 
                     int payloadSize = messageSerializer.getSize(amqpMessage);
@@ -208,7 +232,8 @@ class ReactorSender implements AmqpSendLink {
                         Math.min(payloadSize + MAX_AMQP_HEADER_SIZE_BYTES, maxMessageSizeTemp);
 
                     byte[] messageBytes = new byte[allocationSize];
-                    int messageSizeBytes = amqpMessage.encode(messageBytes, 0, allocationSize);
+                    int messageSizeBytes = 10;
+                    //amqpMessage.encode(messageBytes, 0, allocationSize);
                     messageWrappedByData.setBody(new Data(new Binary(messageBytes, 0, messageSizeBytes)));
 
                     try {
@@ -230,14 +255,9 @@ class ReactorSender implements AmqpSendLink {
                     byteArrayOffset = byteArrayOffset + encodedSize;
                 }
 
-                return send(bytes, byteArrayOffset, AmqpConstants.AMQP_BATCH_MESSAGE_FORMAT, deliveryState);
-            }).then();
+                return send(bytes, byteArrayOffset, AmqpConstants.AMQP_BATCH_MESSAGE_FORMAT, deliveryOutcome);
+            });
 
-    }
-
-    @Override
-    public AmqpErrorContext getErrorContext() {
-        return handler.getErrorContext(sender);
     }
 
     @Override
@@ -321,15 +341,15 @@ class ReactorSender implements AmqpSendLink {
         sender.close();
     }
 
-    @Override
-    public Mono<DeliveryState> send(byte[] bytes, int arrayOffset, int messageFormat, DeliveryState deliveryState) {
+
+    public Mono<DeliveryOutcome> send(byte[] bytes, int arrayOffset, int messageFormat, DeliveryOutcome deliveryState) {
         final Flux<EndpointState> activeEndpointFlux = RetryUtil.withRetry(
             handler.getEndpointStates().takeUntil(state -> state == EndpointState.ACTIVE), retryOptions,
             activeTimeoutMessage);
 
         return activeEndpointFlux.then(Mono.create(sink -> {
-            sendWork(new RetriableWorkItem(bytes, arrayOffset, messageFormat, sink, retryOptions.getTryTimeout(),
-                deliveryState));
+//            sendWork(new RetriableWorkItem(bytes, arrayOffset, messageFormat, sink, retryOptions.getTryTimeout(),
+//                deliveryState));
         }));
     }
 

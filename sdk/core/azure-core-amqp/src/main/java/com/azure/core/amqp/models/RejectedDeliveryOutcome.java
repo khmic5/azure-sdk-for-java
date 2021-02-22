@@ -1,7 +1,10 @@
 package com.azure.core.amqp.models;
 
-import com.azure.core.amqp.exception.AmqpError;
+import com.azure.core.amqp.exception.AmqpErrorCondition;
 import com.azure.core.annotation.Fluent;
+
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * The rejected delivery outcome.
@@ -15,27 +18,61 @@ import com.azure.core.annotation.Fluent;
  * the source has taken the necessary action. The delivery SHOULD NOT ever spontaneously attain the rejected state at
  * the source.
  * </p>
+ *
  * @see <a href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-rejected">Rejected
- * outcome</a>
+ *     outcome</a>
  */
 @Fluent
 public final class RejectedDeliveryOutcome extends DeliveryOutcome {
-    private AmqpError error;
+    private final AmqpErrorCondition errorCondition;
+    private Map<String, Object> errorInfo;
 
-    public RejectedDeliveryOutcome() {
+    /**
+     * Creates an instance with the given error condition.
+     *
+     * @param errorCondition The error condition.
+     */
+    public RejectedDeliveryOutcome(AmqpErrorCondition errorCondition) {
         super(DeliveryState.REJECTED);
+        this.errorCondition = Objects.requireNonNull(errorCondition, "'errorCondition' cannot be null.");
     }
 
     /**
      * Diagnostic information about the cause of the message rejection.
+     *
      * @return Diagnostic information about the cause of the message rejection.
      */
-    public AmqpError getError() {
-        return error;
+    public AmqpErrorCondition getErrorCondition() {
+        return errorCondition;
     }
 
-    public RejectedDeliveryOutcome setError(AmqpError error) {
-        this.error = error;
+    /**
+     * Gets the error description.
+     *
+     * @return Gets the error condition.
+     */
+    public String getErrorDescription() {
+        return errorCondition.getErrorCondition();
+    }
+
+    /**
+     * Gets a map of additional error information.
+     *
+     * @return Map of additional error information.
+     */
+    public Map<String, Object> getErrorInfo() {
+        return errorInfo;
+    }
+
+    /**
+     * Sets a map with additional error information.
+     *
+     * @param errorInfo Error information associated with the rejection.
+     *
+     * @return The updated {@link RejectedDeliveryOutcome} object.
+     */
+    public RejectedDeliveryOutcome setErrorInfo(Map<String, Object> errorInfo) {
+        this.errorInfo = errorInfo;
         return this;
     }
 }

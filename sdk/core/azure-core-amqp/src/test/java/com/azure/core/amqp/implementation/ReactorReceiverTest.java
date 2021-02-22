@@ -41,6 +41,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -238,10 +239,10 @@ class ReactorReceiverTest {
             .assertNext(message -> {
                 Assertions.assertNotNull(message.getMessageAnnotations());
 
-                final Map<Symbol, Object> values = message.getMessageAnnotations().getValue();
-                Assertions.assertTrue(values.containsKey(Symbol.getSymbol(AmqpMessageConstant.OFFSET_ANNOTATION_NAME.getValue())));
-                Assertions.assertTrue(values.containsKey(Symbol.getSymbol(AmqpMessageConstant.SEQUENCE_NUMBER_ANNOTATION_NAME.getValue())));
-                Assertions.assertTrue(values.containsKey(Symbol.getSymbol(AmqpMessageConstant.ENQUEUED_TIME_UTC_ANNOTATION_NAME.getValue())));
+                final Map<String, Object> values = message.getMessageAnnotations();
+                assertTrue(values.containsKey(AmqpMessageConstant.OFFSET_ANNOTATION_NAME.getValue()));
+                assertTrue(values.containsKey(AmqpMessageConstant.SEQUENCE_NUMBER_ANNOTATION_NAME.getValue()));
+                assertTrue(values.containsKey(AmqpMessageConstant.ENQUEUED_TIME_UTC_ANNOTATION_NAME.getValue()));
             })
             .thenCancel()
             .verify();

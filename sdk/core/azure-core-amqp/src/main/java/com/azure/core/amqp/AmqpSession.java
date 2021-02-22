@@ -4,11 +4,17 @@
 package com.azure.core.amqp;
 
 import com.azure.core.amqp.exception.AmqpException;
+import com.azure.core.amqp.models.AmqpLinkSource;
+import com.azure.core.amqp.models.AmqpLinkTarget;
+import com.azure.core.amqp.models.CreateLinkOptions;
+import com.azure.core.amqp.models.ReceiverSettleMode;
+import com.azure.core.amqp.models.SenderSettleMode;
 import reactor.core.Disposable;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
+import java.util.Map;
 
 /**
  * An AMQP session representing bidirectional communication that supports multiple {@link AmqpLink AMQP links}.
@@ -40,6 +46,9 @@ public interface AmqpSession extends Disposable {
      */
     Mono<AmqpLink> createProducer(String linkName, String entityPath, Duration timeout, AmqpRetryPolicy retryPolicy);
 
+    Mono<AmqpSendLink> createProducer(String linkName, String entityPath, Duration timeout,
+        AmqpRetryPolicy retryPolicy, CreateLinkOptions createLinkOptions);
+
     /**
      * Creates a new AMQP link that consumes events from the message broker.
      *
@@ -51,6 +60,9 @@ public interface AmqpSession extends Disposable {
      * @return A newly created AMQP link.
      */
     Mono<AmqpLink> createConsumer(String linkName, String entityPath, Duration timeout, AmqpRetryPolicy retryPolicy);
+
+    Mono<AmqpReceiveLink> createConsumer(String linkName, String entityPath, Duration timeout,
+        AmqpRetryPolicy retryPolicy, CreateLinkOptions createLinkOptions);
 
     /**
      * Removes an {@link AmqpLink} with the given {@code linkName}.
@@ -80,6 +92,7 @@ public interface AmqpSession extends Disposable {
      * Commit the transaction on the message broker.
      *
      * @param transaction to commit.
+     *
      * @return A completable mono.
      */
     Mono<Void> commitTransaction(AmqpTransaction transaction);
@@ -88,6 +101,7 @@ public interface AmqpSession extends Disposable {
      * Rollback the transaction on the message broker.
      *
      * @param transaction to rollback
+     *
      * @return A completable mono.
      */
     Mono<Void> rollbackTransaction(AmqpTransaction transaction);

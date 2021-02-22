@@ -3,6 +3,7 @@
 
 package com.azure.core.amqp.implementation;
 
+import com.azure.core.amqp.models.AmqpAnnotatedMessage;
 import org.apache.qpid.proton.message.Message;
 
 import java.util.List;
@@ -18,6 +19,8 @@ public interface MessageSerializer {
      * @return The size, in bytes, of the serialized AMQP message.
      */
     int getSize(Message amqpMessage);
+
+    int getSize(AmqpAnnotatedMessage amqpAnnotatedMessage);
 
     /**
      * Serializes the given {@code object} into an AMQP message.

@@ -3,6 +3,7 @@
 
 package com.azure.core.amqp.implementation;
 
+import com.azure.core.amqp.AmqpSendLink;
 import com.azure.core.amqp.AmqpTransaction;
 import com.azure.core.util.logging.ClientLogger;
 import org.apache.qpid.proton.Proton;
@@ -55,18 +56,20 @@ final class TransactionCoordinator {
         final byte[] bytes = new byte[allocationSize];
         final int encodedSize = message.encode(bytes, 0, allocationSize);
 
-        return sendLink.send(bytes, encodedSize, DeliveryImpl.DEFAULT_MESSAGE_FORMAT, null)
-            .handle((outcome, sink) -> {
-                final DeliveryState.DeliveryStateType stateType = outcome.getType();
-                switch (stateType) {
-                    case Accepted:
-                        sink.complete();
-                        break;
-                    default:
-                        sink.error(new IllegalArgumentException("Expected a Accepted, received: " + outcome));
-                        logger.warning("Unknown DeliveryState type: {}", stateType);
-                }
-            });
+        return null;
+//
+//        return sendLink.send(bytes, encodedSize, DeliveryImpl.DEFAULT_MESSAGE_FORMAT, null)
+//            .handle((outcome, sink) -> {
+//                final DeliveryState.DeliveryStateType stateType = outcome.getType();
+//                switch (stateType) {
+//                    case Accepted:
+//                        sink.complete();
+//                        break;
+//                    default:
+//                        sink.error(new IllegalArgumentException("Expected a Accepted, received: " + outcome));
+//                        logger.warning("Unknown DeliveryState type: {}", stateType);
+//                }
+//            });
     }
 
     /**
@@ -84,21 +87,22 @@ final class TransactionCoordinator {
 
         final byte[] bytes = new byte[allocationSize];
         final int encodedSize = message.encode(bytes, 0, allocationSize);
-
-        return sendLink.send(bytes, encodedSize, DeliveryImpl.DEFAULT_MESSAGE_FORMAT, null)
-            .handle((outcome, sink) -> {
-                final DeliveryState.DeliveryStateType stateType = outcome.getType();
-                switch (stateType) {
-                    case Declared:
-                        Binary transactionId;
-                        Declared declared = (Declared) outcome;
-                        transactionId = declared.getTxnId();
-                        sink.next(new AmqpTransaction(transactionId.asByteBuffer()));
-                        break;
-                    default:
-                        sink.error(new IllegalArgumentException("Expected a Declared, received: " + outcome));
-                        logger.warning("Unknown DeliveryState type: {}", stateType);
-                }
-            });
+        return null;
+//
+//        return sendLink.send(bytes, encodedSize, DeliveryImpl.DEFAULT_MESSAGE_FORMAT, null)
+//            .handle((outcome, sink) -> {
+//                final DeliveryState.DeliveryStateType stateType = outcome.getType();
+//                switch (stateType) {
+//                    case Declared:
+//                        Binary transactionId;
+//                        Declared declared = (Declared) outcome;
+//                        transactionId = declared.getTxnId();
+//                        sink.next(new AmqpTransaction(transactionId.asByteBuffer()));
+//                        break;
+//                    default:
+//                        sink.error(new IllegalArgumentException("Expected a Declared, received: " + outcome));
+//                        logger.warning("Unknown DeliveryState type: {}", stateType);
+//                }
+//            });
     }
 }

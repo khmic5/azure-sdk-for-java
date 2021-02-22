@@ -8,6 +8,10 @@ import com.azure.core.amqp.AmqpRetryOptions;
 import com.azure.core.amqp.exception.AmqpException;
 import com.azure.core.amqp.exception.AmqpResponseCode;
 import com.azure.core.amqp.implementation.handler.SendLinkHandler;
+import com.azure.core.amqp.models.AmqpAnnotatedMessage;
+import com.azure.core.amqp.models.AmqpMessageBody;
+import com.azure.core.amqp.models.AmqpMessageId;
+import com.azure.core.amqp.models.TransactionalDeliveryOutcome;
 import org.apache.qpid.proton.Proton;
 import org.apache.qpid.proton.amqp.UnsignedLong;
 import org.apache.qpid.proton.amqp.messaging.Accepted;
@@ -42,6 +46,8 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
@@ -76,7 +82,7 @@ public class ReactorSenderTest {
     @Mock
     private MessageSerializer messageSerializer;
     @Mock
-    private TransactionalState transactionalState;
+    private TransactionalDeliveryOutcome transactionalState;
 
     @Captor
     private ArgumentCaptor<Runnable> dispatcherCaptor;
@@ -84,6 +90,7 @@ public class ReactorSenderTest {
     private  ArgumentCaptor<DeliveryState> deliveryStateArgumentCaptor;
 
     private Message message;
+    private AmqpAnnotatedMessage amqpAnnotatedMessage;
     private AmqpRetryOptions options;
 
     @BeforeEach
@@ -138,6 +145,9 @@ public class ReactorSenderTest {
         message = Proton.message();
         message.setMessageId("id");
         message.setBody(new AmqpValue("hello"));
+
+        amqpAnnotatedMessage = new AmqpAnnotatedMessage(AmqpMessageBody.fromData("hello".getBytes()));
+        amqpAnnotatedMessage.getProperties().setMessageId(new AmqpMessageId("id"));
     }
 
     @AfterEach
@@ -176,7 +186,7 @@ public class ReactorSenderTest {
             eq(transactionalState));
 
         // Act
-        StepVerifier.create(spyReactorSender.send(message, transactionalState))
+        StepVerifier.create(spyReactorSender.send(amqpAnnotatedMessage, transactionalState))
             .verifyErrorMessage(exceptionString);
 
         // Assert
@@ -199,9 +209,9 @@ public class ReactorSenderTest {
             eq(transactionalState));
 
         // Act
-        StepVerifier.create(spyReactorSender.send(message, transactionalState))
+        StepVerifier.create(spyReactorSender.send(amqpAnnotatedMessage, transactionalState))
             .verifyComplete();
-        StepVerifier.create(spyReactorSender.send(message, transactionalState))
+        StepVerifier.create(spyReactorSender.send(amqpAnnotatedMessage, transactionalState))
             .verifyComplete();
 
         // Assert
@@ -233,7 +243,7 @@ public class ReactorSenderTest {
         when(sender.delivery(any(byte[].class))).thenReturn(deliveryToSend);
 
         // Act
-        reactorSender.send(message, transactionalState).subscribe();
+        reactorSender.send(amqpAnnotatedMessage, transactionalState).subscribe();
 
         verify(reactorDispatcherMock).invoke(dispatcherCaptor.capture());
 
@@ -244,7 +254,8 @@ public class ReactorSenderTest {
 
         // Assert
         DeliveryState deliveryState = deliveryStateArgumentCaptor.getValue();
-        Assertions.assertSame(transactionalState, deliveryState);
+        assertTrue(deliveryState instanceof TransactionalState);
+
         verify(sender).getRemoteMaxMessageSize();
         verify(sender).advance();
     }
@@ -259,9 +270,9 @@ public class ReactorSenderTest {
         doReturn(Mono.empty()).when(spyReactorSender).send(any(byte[].class), anyInt(), anyInt(), isNull());
 
         // Act
-        StepVerifier.create(spyReactorSender.send(message))
+        StepVerifier.create(spyReactorSender.send(amqpAnnotatedMessage))
             .verifyComplete();
-        StepVerifier.create(spyReactorSender.send(message))
+        StepVerifier.create(spyReactorSender.send(amqpAnnotatedMessage))
             .verifyComplete();
 
         // Assert
@@ -272,9 +283,9 @@ public class ReactorSenderTest {
     @Test
     public void testSendBatch() {
         // Arrange
-        final Message message2 = Proton.message();
-        message2.setMessageId("id2");
-        message2.setBody(new AmqpValue("world"));
+        final AmqpAnnotatedMessage annotatedMessage2 = new AmqpAnnotatedMessage(
+            AmqpMessageBody.fromData("world".getBytes()));
+        annotatedMessage2.getProperties().setMessageId(new AmqpMessageId("id2"));
 
         final ReactorSender reactorSender = new ReactorSender(ENTITY_PATH, sender, handler, reactorProvider,
             tokenManager, messageSerializer, options);
@@ -283,9 +294,9 @@ public class ReactorSenderTest {
         doReturn(Mono.empty()).when(spyReactorSender).send(any(byte[].class), anyInt(), anyInt(), isNull());
 
         // Act
-        StepVerifier.create(spyReactorSender.send(Arrays.asList(message, message2)))
+        StepVerifier.create(spyReactorSender.send(Arrays.asList(amqpAnnotatedMessage, annotatedMessage2)))
             .verifyComplete();
-        StepVerifier.create(spyReactorSender.send(Arrays.asList(message, message2)))
+        StepVerifier.create(spyReactorSender.send(Arrays.asList(amqpAnnotatedMessage, annotatedMessage2)))
             .verifyComplete();
 
         // Assert
@@ -305,10 +316,10 @@ public class ReactorSenderTest {
         doReturn(Mono.empty()).when(spyReactorSender).send(any(byte[].class), anyInt(), anyInt(), isNull());
 
         // Act
-        StepVerifier.create(spyReactorSender.send(message))
+        StepVerifier.create(spyReactorSender.send(amqpAnnotatedMessage))
             .verifyErrorSatisfies(throwable -> {
-                Assertions.assertTrue(throwable instanceof AmqpException);
-                Assertions.assertTrue(throwable.getMessage().startsWith("Error sending. Size of the payload exceeded "
+                assertTrue(throwable instanceof AmqpException);
+                assertTrue(throwable.getMessage().startsWith("Error sending. Size of the payload exceeded "
                     + "maximum message size"));
             });
 

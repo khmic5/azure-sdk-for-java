@@ -4,7 +4,11 @@
 package com.azure.core.amqp.implementation;
 
 import com.azure.core.amqp.AmqpEndpointState;
+import com.azure.core.amqp.AmqpReceiveLink;
 import com.azure.core.amqp.implementation.handler.ReceiveLinkHandler;
+import com.azure.core.amqp.models.AmqpAnnotatedMessage;
+import com.azure.core.amqp.models.ReceiverSettleMode;
+import com.azure.core.amqp.models.SenderSettleMode;
 import com.azure.core.util.logging.ClientLogger;
 import org.apache.qpid.proton.Proton;
 import org.apache.qpid.proton.amqp.transport.ErrorCondition;
@@ -15,6 +19,7 @@ import org.apache.qpid.proton.message.Message;
 import reactor.core.Disposable;
 import reactor.core.publisher.EmitterProcessor;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import reactor.core.publisher.ReplayProcessor;
 
 import java.io.IOException;
@@ -92,8 +97,34 @@ public class ReactorReceiver implements AmqpReceiveLink {
     }
 
     @Override
-    public Flux<Message> receive() {
-        return messagesProcessor;
+    public Mono<Long> getMaxMessageSizeInBytes() {
+        return null;
+    }
+
+    @Override
+    public Flux<String> getOfferedCapabilities() {
+        return null;
+    }
+
+    @Override
+    public Iterable<String> getDesiredCapabilities() {
+        return null;
+    }
+
+    @Override
+    public SenderSettleMode getSenderSettleMode() {
+        return null;
+    }
+
+    @Override
+    public ReceiverSettleMode getReceiverSettleMode() {
+        return null;
+    }
+
+    @Override
+    public Flux<AmqpAnnotatedMessage> receive() {
+        return null;
+//        return messagesProcessor;
     }
 
     @Override
@@ -107,7 +138,7 @@ public class ReactorReceiver implements AmqpReceiveLink {
         }
     }
 
-    @Override
+//    @Override
     public void addCreditsInstantly(int credits) {
         receiver.flow(credits);
     }
@@ -117,7 +148,6 @@ public class ReactorReceiver implements AmqpReceiveLink {
         return receiver.getRemoteCredit();
     }
 
-    @Override
     public void setEmptyCreditListener(Supplier<Integer> creditSupplier) {
         Objects.requireNonNull(creditSupplier, "'creditSupplier' cannot be null.");
         this.creditSupplier.set(creditSupplier);

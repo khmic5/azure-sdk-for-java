@@ -4,13 +4,14 @@
 package com.azure.core.amqp.implementation;
 
 import com.azure.core.amqp.ClaimsBasedSecurityNode;
+import com.azure.core.amqp.models.CbsAuthorizationType;
 import com.azure.core.credential.AccessToken;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -20,8 +21,11 @@ import reactor.test.StepVerifier;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.Locale;
+import java.util.stream.Stream;
 
 import static com.azure.core.amqp.implementation.AzureTokenManagerProvider.TOKEN_AUDIENCE_FORMAT;
+import static com.azure.core.amqp.models.CbsAuthorizationType.JSON_WEB_TOKEN;
+import static com.azure.core.amqp.models.CbsAuthorizationType.SHARED_ACCESS_SIGNATURE;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.when;
@@ -49,20 +53,23 @@ class AzureTokenManagerProviderTest {
 
     @Test
     void constructorNullHost() {
-        assertThrows(NullPointerException.class, () -> new AzureTokenManagerProvider(CbsAuthorizationType.JSON_WEB_TOKEN, null, "some-scope"));
+        assertThrows(NullPointerException.class, () -> new AzureTokenManagerProvider(JSON_WEB_TOKEN, null, "some-scope"));
     }
 
     @Test
     void constructorNullScope() {
-        assertThrows(NullPointerException.class, () -> new AzureTokenManagerProvider(CbsAuthorizationType.JSON_WEB_TOKEN, HOST_NAME, null));
+        assertThrows(NullPointerException.class, () -> new AzureTokenManagerProvider(JSON_WEB_TOKEN, HOST_NAME, null));
     }
 
+    public static Stream<CbsAuthorizationType> getResourceString() {
+        return Stream.of(JSON_WEB_TOKEN, SHARED_ACCESS_SIGNATURE);
+    }
     /**
      * Verifies that the correct resource string is returned when we pass in different authorization types.
      */
     @ParameterizedTest
-    @EnumSource(CbsAuthorizationType.class)
-    void getResourceString(CbsAuthorizationType authorizationType) {
+    @MethodSource
+    public void getResourceString(CbsAuthorizationType authorizationType) {
         // Arrange
         final String scope = "some-scope";
         final AzureTokenManagerProvider provider = new AzureTokenManagerProvider(authorizationType, HOST_NAME, scope);
@@ -72,16 +79,13 @@ class AzureTokenManagerProviderTest {
         final String actual = provider.getScopesFromResource(entityPath);
 
         // Assert
-        switch (authorizationType) {
-            case SHARED_ACCESS_SIGNATURE:
-                final String expected = "amqp://" + HOST_NAME + "/" + entityPath;
-                Assertions.assertEquals(expected, actual);
-                break;
-            case JSON_WEB_TOKEN:
-                Assertions.assertEquals(scope, actual);
-                break;
-            default:
-                Assertions.fail("This authorization type is unknown: " + authorizationType);
+        if (SHARED_ACCESS_SIGNATURE.equals(authorizationType)) {
+            final String expected = "amqp://" + HOST_NAME + "/" + entityPath;
+            Assertions.assertEquals(expected, actual);
+        } else if (JSON_WEB_TOKEN.equals(authorizationType)) {
+            Assertions.assertEquals(scope, actual);
+        } else {
+            Assertions.fail("This authorization type is unknown: " + authorizationType);
         }
     }
 
@@ -93,7 +97,7 @@ class AzureTokenManagerProviderTest {
     void getCorrectTokenManagerSasToken() {
         // Arrange
         final String aadScope = "some-active-directory-scope";
-        final AzureTokenManagerProvider provider = new AzureTokenManagerProvider(CbsAuthorizationType.SHARED_ACCESS_SIGNATURE, HOST_NAME, aadScope);
+        final AzureTokenManagerProvider provider = new AzureTokenManagerProvider(SHARED_ACCESS_SIGNATURE, HOST_NAME, aadScope);
         final String entityPath = "event-hub-test-2/partition/2";
         final AccessToken token = new AccessToken("a-new-access-token", OffsetDateTime.now().plusMinutes(10));
         final String tokenAudience = String.format(Locale.US, TOKEN_AUDIENCE_FORMAT, HOST_NAME, entityPath);
@@ -118,7 +122,7 @@ class AzureTokenManagerProviderTest {
     void getCorrectTokenManagerJwt() {
         // Arrange
         final String aadScope = "some-active-directory-scope";
-        final AzureTokenManagerProvider provider = new AzureTokenManagerProvider(CbsAuthorizationType.JSON_WEB_TOKEN, HOST_NAME, aadScope);
+        final AzureTokenManagerProvider provider = new AzureTokenManagerProvider(JSON_WEB_TOKEN, HOST_NAME, aadScope);
         final String entityPath = "event-hub-test-2/partition/2";
         final AccessToken token = new AccessToken("a-new-access-token", OffsetDateTime.now().plusMinutes(10));
         final String tokenAudience = String.format(Locale.US, TOKEN_AUDIENCE_FORMAT, HOST_NAME, entityPath);
@@ -144,7 +148,7 @@ class AzureTokenManagerProviderTest {
     void differentInstanceReturned() {
         // Arrange
         final String aadScope = "some-active-directory-scope";
-        final AzureTokenManagerProvider provider = new AzureTokenManagerProvider(CbsAuthorizationType.SHARED_ACCESS_SIGNATURE, HOST_NAME, aadScope);
+        final AzureTokenManagerProvider provider = new AzureTokenManagerProvider(SHARED_ACCESS_SIGNATURE, HOST_NAME, aadScope);
         final String entityPath = "event-hub-test-2/partition/2";
         final String entityPath2 = "event-hub-test-2/partition/2";
         final AccessToken token = new AccessToken("a-new-access-token", OffsetDateTime.now().plusMinutes(10));
