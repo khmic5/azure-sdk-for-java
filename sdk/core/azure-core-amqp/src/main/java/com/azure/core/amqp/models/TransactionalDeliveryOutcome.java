@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
 package com.azure.core.amqp.models;
 
 import com.azure.core.amqp.AmqpTransaction;
@@ -8,6 +11,8 @@ import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
+ * A transaction delivery outcome.
+ *
  * @see <a href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transactions-v1.0-os.html#type-transactional-state">Transactional
  *     state</a>
  */
@@ -20,6 +25,7 @@ public final class TransactionalDeliveryOutcome extends DeliveryOutcome {
      * Creates an outcome with the given transaction.
      *
      * @param transaction The transaction.
+     * @throws NullPointerException if {@code transaction} is {@code null}.
      */
     public TransactionalDeliveryOutcome(AmqpTransaction transaction) {
         super(null);

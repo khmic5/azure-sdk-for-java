@@ -9,7 +9,7 @@ import java.util.Map;
  */
 @Fluent
 public final class AmqpLinkSource {
-    private String address;
+    private AmqpAddress address;
     private Map<String, Object> filters;
 
     /**
@@ -17,7 +17,7 @@ public final class AmqpLinkSource {
      *
      * @return the address of the AMQP terminus to connect to.
      */
-    public String getAddress() {
+    public AmqpAddress getAddress() {
         return this.address;
     }
 
@@ -28,7 +28,7 @@ public final class AmqpLinkSource {
      *
      * @return The updated {@link AmqpLinkSource} object.
      */
-    public AmqpLinkSource setAddress(String address) {
+    public AmqpLinkSource setAddress(AmqpAddress address) {
         this.address = address;
         return this;
     }

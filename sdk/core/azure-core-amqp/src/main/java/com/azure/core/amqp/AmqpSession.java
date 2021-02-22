@@ -4,17 +4,12 @@
 package com.azure.core.amqp;
 
 import com.azure.core.amqp.exception.AmqpException;
-import com.azure.core.amqp.models.AmqpLinkSource;
-import com.azure.core.amqp.models.AmqpLinkTarget;
 import com.azure.core.amqp.models.CreateLinkOptions;
-import com.azure.core.amqp.models.ReceiverSettleMode;
-import com.azure.core.amqp.models.SenderSettleMode;
 import reactor.core.Disposable;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
-import java.util.Map;
 
 /**
  * An AMQP session representing bidirectional communication that supports multiple {@link AmqpLink AMQP links}.
@@ -46,6 +41,17 @@ public interface AmqpSession extends Disposable {
      */
     Mono<AmqpLink> createProducer(String linkName, String entityPath, Duration timeout, AmqpRetryPolicy retryPolicy);
 
+    /**
+     * Creates a new AMQP send link to publish messages.
+     *
+     * @param linkName Name of the link.
+     * @param entityPath The entity path this link connects to when producing events.
+     * @param timeout Timeout required for creating and opening AMQP link.
+     * @param retryPolicy The retry policy to use when sending messages.
+     * @param createLinkOptions Options used for creating link.
+     *
+     * @return A newly created AMQP send link.
+     */
     Mono<AmqpSendLink> createProducer(String linkName, String entityPath, Duration timeout,
         AmqpRetryPolicy retryPolicy, CreateLinkOptions createLinkOptions);
 
@@ -61,6 +67,17 @@ public interface AmqpSession extends Disposable {
      */
     Mono<AmqpLink> createConsumer(String linkName, String entityPath, Duration timeout, AmqpRetryPolicy retryPolicy);
 
+    /**
+     * Creates a new AMQP send link that consumes messages from the AMQP message broker.
+     *
+     * @param linkName Name of the link.
+     * @param entityPath The entity path this link connects to, so that it may read events from the message broker.
+     * @param timeout Timeout required for creating and opening an AMQP link.
+     * @param retryPolicy The retry policy to use when consuming messages.
+     * @param createLinkOptions Options used for creating link.
+     *
+     * @return A newly created AMQP receive link.
+     */
     Mono<AmqpReceiveLink> createConsumer(String linkName, String entityPath, Duration timeout,
         AmqpRetryPolicy retryPolicy, CreateLinkOptions createLinkOptions);
 

@@ -1,11 +1,20 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
 package com.azure.core.amqp.models;
 
+import com.azure.core.amqp.AmqpRetryPolicy;
+import com.azure.core.amqp.AmqpSession;
 import com.azure.core.annotation.Fluent;
 
+import java.time.Duration;
 import java.util.Map;
 
 /**
  * Options when creating a link.
+ * 
+ * @see AmqpSession#createProducer(String, String, Duration, AmqpRetryPolicy, CreateLinkOptions) 
+ * @see AmqpSession#createConsumer(String, String, Duration, AmqpRetryPolicy, CreateLinkOptions) 
  */
 @Fluent
 public class CreateLinkOptions {

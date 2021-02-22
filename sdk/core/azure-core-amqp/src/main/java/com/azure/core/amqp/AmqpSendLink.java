@@ -3,13 +3,10 @@
 
 package com.azure.core.amqp;
 
-import com.azure.core.amqp.exception.AmqpErrorContext;
 import com.azure.core.amqp.exception.AmqpException;
 import com.azure.core.amqp.models.AmqpAnnotatedMessage;
 import com.azure.core.amqp.models.DeliveryOutcome;
 import reactor.core.publisher.Mono;
-
-import java.util.List;
 
 /**
  * An AMQP link that sends information to the remote endpoint.

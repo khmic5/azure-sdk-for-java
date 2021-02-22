@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
 package com.azure.core.amqp;
 
 import com.azure.core.amqp.models.CbsAuthorizationType;
@@ -6,7 +9,6 @@ import com.azure.core.credential.TokenCredential;
 import com.azure.core.http.policy.UserAgentPolicy;
 import com.azure.core.util.ClientOptions;
 import com.azure.core.util.Configuration;
-import reactor.core.scheduler.Scheduler;
 
 import java.net.URL;
 
