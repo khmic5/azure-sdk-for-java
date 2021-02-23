@@ -31,9 +31,10 @@ public interface AmqpConnection extends Disposable {
     /**
      * Gets the management node.
      *
+     * @param entityPath Entity for which to get the management node of.
      * @return Management node.
      */
-    Mono<AmqpManagementNode> getManagementNode();
+    Mono<AmqpManagementNode> getManagementNode(String entityPath);
 
     /**
      * Gets the maximum frame size for the connection.

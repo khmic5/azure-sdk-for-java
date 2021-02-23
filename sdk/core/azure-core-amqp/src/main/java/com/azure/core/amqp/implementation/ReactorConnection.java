@@ -3,7 +3,13 @@
 
 package com.azure.core.amqp.implementation;
 
-import com.azure.core.amqp.*;
+import com.azure.core.amqp.AmqpConnection;
+import com.azure.core.amqp.AmqpEndpointState;
+import com.azure.core.amqp.AmqpManagementNode;
+import com.azure.core.amqp.AmqpRetryPolicy;
+import com.azure.core.amqp.AmqpSession;
+import com.azure.core.amqp.AmqpShutdownSignal;
+import com.azure.core.amqp.ClaimsBasedSecurityNode;
 import com.azure.core.amqp.implementation.handler.ConnectionHandler;
 import com.azure.core.amqp.implementation.handler.SessionHandler;
 import com.azure.core.util.logging.ClientLogger;
@@ -150,7 +156,7 @@ public class ReactorConnection implements AmqpConnection {
     }
 
     @Override
-    public Mono<AmqpManagementNode> getManagementNode() {
+    public Mono<AmqpManagementNode> getManagementNode(String entityPath) {
         return null;
     }
 

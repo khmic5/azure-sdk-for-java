@@ -12,9 +12,9 @@ import java.util.Map;
 
 /**
  * Options when creating a link.
- * 
- * @see AmqpSession#createProducer(String, String, Duration, AmqpRetryPolicy, CreateLinkOptions) 
- * @see AmqpSession#createConsumer(String, String, Duration, AmqpRetryPolicy, CreateLinkOptions) 
+ *
+ * @see AmqpSession#createProducer(String, String, Duration, AmqpRetryPolicy, CreateLinkOptions)
+ * @see AmqpSession#createConsumer(String, String, Duration, AmqpRetryPolicy, CreateLinkOptions)
  */
 @Fluent
 public class CreateLinkOptions {
