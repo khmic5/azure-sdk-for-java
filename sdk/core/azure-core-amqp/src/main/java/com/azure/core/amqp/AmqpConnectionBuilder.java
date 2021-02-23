@@ -59,6 +59,17 @@ public final class AmqpConnectionBuilder {
     }
 
     /**
+     * Connection string for the AMQP message broker.
+     *
+     * @param connectionString Connection string for the AMQP message broker.
+     *
+     * @return The updated {@link AmqpConnectionBuilder} object.
+     */
+    public AmqpConnectionBuilder connectionString(String connectionString) {
+        return this;
+    }
+
+    /**
      * Sets a custom endpoint address when connecting to the AMQP message broker. This can be useful when your network
      * does not allow connecting to the standard endpoint address, but does allow connecting through an intermediary.
      * For example: {@literal https://my.custom.endpoint.com:55300}.
