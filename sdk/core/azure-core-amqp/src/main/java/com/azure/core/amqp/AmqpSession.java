@@ -52,8 +52,10 @@ public interface AmqpSession extends Disposable {
      *
      * @return A newly created AMQP send link.
      */
-    Mono<AmqpSendLink> createProducer(String linkName, String entityPath, Duration timeout,
-        AmqpRetryPolicy retryPolicy, CreateLinkOptions createLinkOptions);
+    default Mono<AmqpSendLink> createProducer(String linkName, String entityPath, Duration timeout,
+        AmqpRetryPolicy retryPolicy, CreateLinkOptions createLinkOptions) {
+        return Mono.empty();
+    }
 
     /**
      * Creates a new AMQP link that consumes events from the message broker.
@@ -78,8 +80,10 @@ public interface AmqpSession extends Disposable {
      *
      * @return A newly created AMQP receive link.
      */
-    Mono<AmqpReceiveLink> createConsumer(String linkName, String entityPath, Duration timeout,
-        AmqpRetryPolicy retryPolicy, CreateLinkOptions createLinkOptions);
+    default Mono<AmqpReceiveLink> createConsumer(String linkName, String entityPath, Duration timeout,
+        AmqpRetryPolicy retryPolicy, CreateLinkOptions createLinkOptions) {
+        return Mono.empty();
+    }
 
     /**
      * Removes an {@link AmqpLink} with the given {@code linkName}.

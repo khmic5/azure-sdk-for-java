@@ -10,6 +10,8 @@ import reactor.core.Disposable;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.Collections;
+
 /**
  * Represents a unidirectional AMQP link.
  */
@@ -48,33 +50,43 @@ public interface AmqpLink extends Disposable {
      *
      * @return the maximum message size supported by the link.
      */
-    Mono<Long> getMaxMessageSizeInBytes();
+    default Mono<Long> getMaxMessageSizeInBytes() {
+        return Mono.empty();
+    }
 
     /**
      * Gets the actual capabilities offered by the link.
      *
      * @return Capabilities offered by the link.
      */
-    Flux<String> getOfferedCapabilities();
+    default Flux<String> getOfferedCapabilities() {
+        return Flux.empty();
+    }
 
     /**
      * Gets the desired capabilities of the link.
      *
      * @return The desired capabilities of the link.
      */
-    Iterable<String> getDesiredCapabilities();
+    default Iterable<String> getDesiredCapabilities() {
+        return Collections.emptyList();
+    }
 
     /**
      * Gets the sender settle mode.
      *
      * @return The sender settle mode.
      */
-    SenderSettleMode getSenderSettleMode();
+    default SenderSettleMode getSenderSettleMode() {
+        return SenderSettleMode.UNSETTLED;
+    }
 
     /**
      * Gets the receiver settle mode.
      *
      * @return The receiver settle mode.
      */
-    ReceiverSettleMode getReceiverSettleMode();
+    default ReceiverSettleMode getReceiverSettleMode() {
+        return ReceiverSettleMode.FIRST;
+    }
 }

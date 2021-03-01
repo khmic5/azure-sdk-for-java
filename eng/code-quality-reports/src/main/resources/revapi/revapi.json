@@ -439,6 +439,14 @@
         "code": "java.method.defaultMethodAddedToInterface",
         "new": "method com.azure.core.util.polling.SyncPoller<T, U> com.azure.core.util.polling.SyncPoller<T, U>::setPollInterval(java.time.Duration)",
         "justification": "Default implementation"
+      },
+      {
+        "code": "java.field.serialVersionUIDChanged",
+        "old": "field com.azure.core.amqp.exception.AmqpErrorContext.serialVersionUID",
+        "new": "field com.azure.core.amqp.exception.AmqpErrorContext.serialVersionUID",
+        "justification": "ErrorInfo was added to the context so additional details for the AMQP exception could be discovered.",
+        "oldSerialVersionUID": "-2819764407122954922",
+        "newSerialVersionUID": "-2819764407122954927"
       }
     ]
   }
