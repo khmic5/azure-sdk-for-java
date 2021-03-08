@@ -7,6 +7,7 @@ import com.azure.core.amqp.exception.AmqpErrorContext;
 import com.azure.core.amqp.implementation.ClientConstants;
 import com.azure.core.amqp.implementation.ConnectionOptions;
 import com.azure.core.amqp.implementation.ExceptionUtil;
+import com.azure.core.amqp.models.SslVerifyMode;
 import com.azure.core.util.ClientOptions;
 import com.azure.core.util.CoreUtils;
 import com.azure.core.util.UserAgentUtil;
@@ -116,10 +117,10 @@ public class ConnectionHandler extends Handler {
         final SslDomain sslDomain = Proton.sslDomain();
         sslDomain.init(SslDomain.Mode.CLIENT);
 
-        final SslDomain.VerifyMode verifyMode = connectionOptions.getSslVerifyMode();
+        final SslVerifyMode verifyMode = connectionOptions.getSslVerifyMode();
         final SSLContext defaultSslContext;
 
-        if (verifyMode == SslDomain.VerifyMode.ANONYMOUS_PEER) {
+        if (verifyMode == SslVerifyMode.NONE) {
             defaultSslContext = null;
         } else {
             try {
@@ -130,7 +131,7 @@ public class ConnectionHandler extends Handler {
             }
         }
 
-        if (verifyMode == SslDomain.VerifyMode.VERIFY_PEER_NAME) {
+        if (verifyMode == SslVerifyMode.VERIFY_PEER_NAME) {
             final StrictTlsContextSpi serviceProvider = new StrictTlsContextSpi(defaultSslContext);
             final SSLContext context = new StrictTlsContext(serviceProvider, defaultSslContext.getProvider(),
                 defaultSslContext.getProtocol());
@@ -140,10 +141,10 @@ public class ConnectionHandler extends Handler {
             return;
         }
 
-        if (verifyMode == SslDomain.VerifyMode.VERIFY_PEER) {
+        if (verifyMode == SslVerifyMode.VERIFY_PEER) {
             sslDomain.setSslContext(defaultSslContext);
             sslDomain.setPeerAuthentication(SslDomain.VerifyMode.VERIFY_PEER);
-        } else if (verifyMode == SslDomain.VerifyMode.ANONYMOUS_PEER) {
+        } else if (verifyMode == SslVerifyMode.NONE) {
             logger.warning("{} is not secure.", verifyMode);
             sslDomain.setPeerAuthentication(SslDomain.VerifyMode.ANONYMOUS_PEER);
         } else {

@@ -7,9 +7,10 @@ import com.azure.core.amqp.AmqpRetryOptions;
 import com.azure.core.amqp.AmqpTransportType;
 import com.azure.core.amqp.ProxyOptions;
 import com.azure.core.amqp.implementation.handler.ConnectionHandler;
+import com.azure.core.amqp.models.CbsAuthorizationType;
+import com.azure.core.amqp.models.SslVerifyMode;
 import com.azure.core.credential.TokenCredential;
 import com.azure.core.util.ClientOptions;
-import org.apache.qpid.proton.engine.SslDomain;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -40,7 +41,7 @@ public class ConnectionOptionsTest {
         final String clientVersion = "1.5.10";
 
         final String hostname = "host-name.com";
-        final SslDomain.VerifyMode verifyMode = SslDomain.VerifyMode.VERIFY_PEER;
+        final SslVerifyMode verifyMode = SslVerifyMode.VERIFY_PEER;
         final AmqpRetryOptions retryOptions = new AmqpRetryOptions();
         final ClientOptions clientOptions = new ClientOptions();
 

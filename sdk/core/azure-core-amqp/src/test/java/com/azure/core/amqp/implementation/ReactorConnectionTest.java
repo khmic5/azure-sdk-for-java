@@ -13,6 +13,7 @@ import com.azure.core.amqp.exception.AmqpException;
 import com.azure.core.amqp.implementation.handler.ConnectionHandler;
 import com.azure.core.amqp.implementation.handler.SessionHandler;
 import com.azure.core.amqp.models.CbsAuthorizationType;
+import com.azure.core.amqp.models.SslVerifyMode;
 import com.azure.core.credential.TokenCredential;
 import com.azure.core.util.ClientOptions;
 import com.azure.core.util.Header;
@@ -27,7 +28,6 @@ import org.apache.qpid.proton.engine.Event;
 import org.apache.qpid.proton.engine.Handler;
 import org.apache.qpid.proton.engine.Record;
 import org.apache.qpid.proton.engine.Session;
-import org.apache.qpid.proton.engine.SslDomain;
 import org.apache.qpid.proton.engine.SslPeerDetails;
 import org.apache.qpid.proton.engine.Transport;
 import org.apache.qpid.proton.reactor.Reactor;
@@ -70,7 +70,7 @@ class ReactorConnectionTest {
     private static final Scheduler SCHEDULER = Schedulers.elastic();
     private static final String PRODUCT = "test";
     private static final String CLIENT_VERSION = "1.0.0-test";
-    private static final SslDomain.VerifyMode VERIFY_MODE = SslDomain.VerifyMode.VERIFY_PEER_NAME;
+    private static final SslVerifyMode VERIFY_MODE = SslVerifyMode.VERIFY_PEER_NAME;
 
     private static final ClientOptions CLIENT_OPTIONS = new ClientOptions().setHeaders(
         Arrays.asList(new Header("name", PRODUCT), new Header("version", CLIENT_VERSION)));

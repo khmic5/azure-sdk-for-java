@@ -9,11 +9,11 @@ import com.azure.core.amqp.ProxyOptions;
 import com.azure.core.amqp.implementation.handler.ConnectionHandler;
 import com.azure.core.amqp.implementation.handler.WebSocketsConnectionHandler;
 import com.azure.core.amqp.models.CbsAuthorizationType;
+import com.azure.core.amqp.models.SslVerifyMode;
 import com.azure.core.annotation.Immutable;
 import com.azure.core.credential.TokenCredential;
 import com.azure.core.util.ClientOptions;
 import com.azure.core.util.logging.ClientLogger;
-import org.apache.qpid.proton.engine.SslDomain;
 import reactor.core.scheduler.Scheduler;
 
 import java.util.Objects;
@@ -38,7 +38,7 @@ public class ConnectionOptions {
     private final ClientOptions clientOptions;
     private final String product;
     private final String clientVersion;
-    private final SslDomain.VerifyMode verifyMode;
+    private final SslVerifyMode verifyMode;
     private final String hostname;
     private final int port;
 
@@ -64,7 +64,7 @@ public class ConnectionOptions {
     public ConnectionOptions(String fullyQualifiedNamespace, TokenCredential tokenCredential,
         CbsAuthorizationType authorizationType, AmqpTransportType transport, AmqpRetryOptions retryOptions,
         ProxyOptions proxyOptions, Scheduler scheduler, ClientOptions clientOptions,
-        SslDomain.VerifyMode verifyMode, String product, String clientVersion) {
+        SslVerifyMode verifyMode, String product, String clientVersion) {
         this(fullyQualifiedNamespace, tokenCredential, authorizationType, transport, retryOptions,
             proxyOptions, scheduler, clientOptions, verifyMode, product, clientVersion, fullyQualifiedNamespace,
             getPort(transport));
@@ -96,7 +96,7 @@ public class ConnectionOptions {
     public ConnectionOptions(String fullyQualifiedNamespace, TokenCredential tokenCredential,
         CbsAuthorizationType authorizationType, AmqpTransportType transport, AmqpRetryOptions retryOptions,
         ProxyOptions proxyOptions, Scheduler scheduler, ClientOptions clientOptions,
-        SslDomain.VerifyMode verifyMode, String product, String clientVersion, String hostname, int port) {
+        SslVerifyMode verifyMode, String product, String clientVersion, String hostname, int port) {
 
         this.fullyQualifiedNamespace = Objects.requireNonNull(fullyQualifiedNamespace,
             "'fullyQualifiedNamespace' is required.");
@@ -188,7 +188,7 @@ public class ConnectionOptions {
      *
      * @return The verification mode for the SSL certificate.
      */
-    public SslDomain.VerifyMode getSslVerifyMode() {
+    public SslVerifyMode getSslVerifyMode() {
         return verifyMode;
     }
 

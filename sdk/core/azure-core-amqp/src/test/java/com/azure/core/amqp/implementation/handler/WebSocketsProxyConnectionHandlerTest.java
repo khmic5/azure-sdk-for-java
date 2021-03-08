@@ -7,13 +7,13 @@ import com.azure.core.amqp.AmqpRetryOptions;
 import com.azure.core.amqp.AmqpTransportType;
 import com.azure.core.amqp.ProxyAuthenticationType;
 import com.azure.core.amqp.ProxyOptions;
-import com.azure.core.amqp.models.CbsAuthorizationType;
 import com.azure.core.amqp.implementation.ConnectionOptions;
+import com.azure.core.amqp.models.CbsAuthorizationType;
+import com.azure.core.amqp.models.SslVerifyMode;
 import com.azure.core.credential.TokenCredential;
 import com.azure.core.util.ClientOptions;
 import com.azure.core.util.Header;
 import org.apache.qpid.proton.Proton;
-import org.apache.qpid.proton.engine.SslDomain;
 import org.apache.qpid.proton.engine.SslPeerDetails;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -47,7 +47,7 @@ public class WebSocketsProxyConnectionHandlerTest {
     private static final String PASSWORD = "test-password";
     private static final ProxyOptions PROXY_OPTIONS =
         new ProxyOptions(ProxyAuthenticationType.DIGEST, PROXY, USERNAME, PASSWORD);
-    private static final SslDomain.VerifyMode VERIFY_MODE = SslDomain.VerifyMode.VERIFY_PEER_NAME;
+    private static final SslVerifyMode VERIFY_MODE = SslVerifyMode.VERIFY_PEER_NAME;
     private static final String PRODUCT = "test";
     private static final String CLIENT_VERSION = "1.0.0-test";
     private static final List<Header> HEADER_LIST = Collections.singletonList(

@@ -6,9 +6,10 @@ package com.azure.core.amqp.implementation.handler;
 import com.azure.core.amqp.AmqpRetryOptions;
 import com.azure.core.amqp.AmqpTransportType;
 import com.azure.core.amqp.ProxyOptions;
-import com.azure.core.amqp.models.CbsAuthorizationType;
 import com.azure.core.amqp.implementation.ClientConstants;
 import com.azure.core.amqp.implementation.ConnectionOptions;
+import com.azure.core.amqp.models.CbsAuthorizationType;
+import com.azure.core.amqp.models.SslVerifyMode;
 import com.azure.core.credential.TokenCredential;
 import com.azure.core.util.ClientOptions;
 import com.azure.core.util.Header;
@@ -65,7 +66,7 @@ public class ConnectionHandlerTest {
         .setApplicationId(APPLICATION_ID)
         .setHeaders(HEADER_LIST);
 
-    private static final SslDomain.VerifyMode VERIFY_MODE = SslDomain.VerifyMode.VERIFY_PEER_NAME;
+    private static final SslVerifyMode VERIFY_MODE = SslVerifyMode.VERIFY_PEER_NAME;
 
     private final SslPeerDetails peerDetails = Proton.sslPeerDetails(HOSTNAME, 2919);
 

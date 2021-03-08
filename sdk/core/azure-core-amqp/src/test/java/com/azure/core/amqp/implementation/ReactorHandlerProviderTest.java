@@ -11,6 +11,7 @@ import com.azure.core.amqp.implementation.handler.ConnectionHandler;
 import com.azure.core.amqp.implementation.handler.WebSocketsConnectionHandler;
 import com.azure.core.amqp.implementation.handler.WebSocketsProxyConnectionHandler;
 import com.azure.core.amqp.models.CbsAuthorizationType;
+import com.azure.core.amqp.models.SslVerifyMode;
 import com.azure.core.credential.TokenCredential;
 import com.azure.core.util.ClientOptions;
 import com.azure.core.util.Header;
@@ -67,7 +68,7 @@ public class ReactorHandlerProviderTest {
     private static final String PASSWORD = "test-password";
     private static final String PRODUCT = "test";
     private static final String CLIENT_VERSION = "1.0.0-test";
-    private static final SslDomain.VerifyMode VERIFY_MODE = SslDomain.VerifyMode.VERIFY_PEER;
+    private static final SslVerifyMode VERIFY_MODE = SslVerifyMode.VERIFY_PEER;
 
     private static final ClientOptions CLIENT_OPTIONS = new ClientOptions().setHeaders(
         Arrays.asList(new Header("name", PRODUCT), new Header("version", CLIENT_VERSION)));
@@ -318,7 +319,7 @@ public class ReactorHandlerProviderTest {
         final ProxyOptions proxyOptions = new ProxyOptions(ProxyAuthenticationType.BASIC, PROXY, USERNAME, PASSWORD);
         final ConnectionOptions connectionOptions = new ConnectionOptions(HOSTNAME, tokenCredential,
             CbsAuthorizationType.SHARED_ACCESS_SIGNATURE, AmqpTransportType.AMQP_WEB_SOCKETS,
-            new AmqpRetryOptions(), proxyOptions, scheduler, CLIENT_OPTIONS, SslDomain.VerifyMode.VERIFY_PEER_NAME,
+            new AmqpRetryOptions(), proxyOptions, scheduler, CLIENT_OPTIONS, SslVerifyMode.VERIFY_PEER_NAME,
             PRODUCT, CLIENT_VERSION);
 
         final Connection connection = mock(Connection.class);
@@ -354,7 +355,7 @@ public class ReactorHandlerProviderTest {
         final ConnectionOptions connectionOptions = new ConnectionOptions(HOSTNAME, tokenCredential,
             CbsAuthorizationType.SHARED_ACCESS_SIGNATURE, AmqpTransportType.AMQP_WEB_SOCKETS,
             new AmqpRetryOptions(), ProxyOptions.SYSTEM_DEFAULTS, scheduler, CLIENT_OPTIONS,
-            SslDomain.VerifyMode.VERIFY_PEER_NAME, PRODUCT, CLIENT_VERSION, customEndpoint.getHost(),
+            SslVerifyMode.VERIFY_PEER_NAME, PRODUCT, CLIENT_VERSION, customEndpoint.getHost(),
             customEndpoint.getDefaultPort());
 
         final Connection connection = mock(Connection.class);
@@ -389,7 +390,7 @@ public class ReactorHandlerProviderTest {
         final String anotherFakeHostname = "hostname.fake";
         final ConnectionOptions connectionOptions = new ConnectionOptions(HOSTNAME, tokenCredential,
             CbsAuthorizationType.SHARED_ACCESS_SIGNATURE, transportType, new AmqpRetryOptions(),
-            ProxyOptions.SYSTEM_DEFAULTS, scheduler, CLIENT_OPTIONS, SslDomain.VerifyMode.VERIFY_PEER_NAME, PRODUCT,
+            ProxyOptions.SYSTEM_DEFAULTS, scheduler, CLIENT_OPTIONS, SslVerifyMode.VERIFY_PEER_NAME, PRODUCT,
             CLIENT_VERSION);
 
         final Connection connection = mock(Connection.class);
