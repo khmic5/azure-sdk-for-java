@@ -12,6 +12,7 @@ import com.azure.core.amqp.AmqpShutdownSignal;
 import com.azure.core.amqp.ClaimsBasedSecurityNode;
 import com.azure.core.amqp.implementation.handler.ConnectionHandler;
 import com.azure.core.amqp.implementation.handler.SessionHandler;
+import com.azure.core.util.CoreUtils;
 import com.azure.core.util.logging.ClientLogger;
 import org.apache.qpid.proton.amqp.Symbol;
 import org.apache.qpid.proton.amqp.transport.ErrorCondition;
@@ -32,6 +33,7 @@ import reactor.core.scheduler.Scheduler;
 import reactor.core.scheduler.Schedulers;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
@@ -45,6 +47,10 @@ public class ReactorConnection implements AmqpConnection {
     private static final String CBS_ADDRESS = "$cbs";
     private static final String CBS_LINK_NAME = "cbs";
 
+    private static final String MANAGEMENT_SESSION_NAME = "mgmt-session";
+    private static final String MANAGEMENT_LINK_NAME = "mgmt";
+    private static final String MANAGEMENT_ADDRESS = "$management";
+
     private final ClientLogger logger = new ClientLogger(ReactorConnection.class);
     private final ConcurrentMap<String, SessionSubscription> sessionMap = new ConcurrentHashMap<>();
 
@@ -52,6 +58,12 @@ public class ReactorConnection implements AmqpConnection {
     private final DirectProcessor<AmqpShutdownSignal> shutdownSignals = DirectProcessor.create();
     private final FluxSink<AmqpShutdownSignal> shutdownSignalsSink = shutdownSignals.sink();
     private final ReplayProcessor<AmqpEndpointState> endpointStates;
+
+    /**
+     * Map containing cached Monos for AmqpManagementNodes.
+     * Key: Link address.
+     */
+    private final ConcurrentMap<String, Mono<AmqpManagementNode>> managementNodes = new ConcurrentHashMap<>();
 
     private final String connectionId;
     private final Mono<Connection> connectionMono;
@@ -137,7 +149,8 @@ public class ReactorConnection implements AmqpConnection {
 
         final Flux<AmqpEndpointState> activeEndpointState = RetryUtil.withRetry(
             getEndpointStates().takeUntil(x -> x == AmqpEndpointState.ACTIVE), connectionOptions.getRetry(),
-            "ReactorConnection: Retries exhausted waiting for ACTIVE endpoint state on CBS node.");
+            String.format("connectionId[%s] ReactorConnection: Retries exhausted waiting for ACTIVE endpoint state"
+                + " on CBS node.", connectionId));
 
         return Mono.when(connectionMono, activeEndpointState).then(Mono.fromCallable(() -> getOrCreateCBSNode()));
     }
@@ -152,12 +165,54 @@ public class ReactorConnection implements AmqpConnection {
      */
     @Override
     public String getFullyQualifiedNamespace() {
-        return handler.getHostname();
+        return connectionOptions.getFullyQualifiedNamespace();
     }
 
+    /**
+     * Gets or creates the management node for the AMQP message broker.
+     *
+     * @param entityPath Entity for which to get the management node of. If {@code entityPath} is null or an empty
+     *      string, the root management node is returned.
+     *
+     * @return A Mono that completes with a reference to the AmqpManagementNode.
+     */
     @Override
     public Mono<AmqpManagementNode> getManagementNode(String entityPath) {
-        return null;
+        final String linkAddress = CoreUtils.isNullOrEmpty(entityPath)
+            ? MANAGEMENT_ADDRESS
+            : entityPath + "/" + MANAGEMENT_ADDRESS;
+        final String postfix = CoreUtils.isNullOrEmpty(entityPath) ? "" : "-" + entityPath;
+
+        return managementNodes.computeIfAbsent(linkAddress, key -> {
+            final TokenManager tokenManager = tokenManagerProvider.getTokenManager(getClaimsBasedSecurityNode(),
+                entityPath);
+
+            return tokenManager.authorize()
+                .then(Mono.fromSupplier(() -> {
+                    final String sessionName = StringUtil.getRandomString(MANAGEMENT_SESSION_NAME  + postfix);
+                    final String linkName = StringUtil.getRandomString(MANAGEMENT_LINK_NAME + postfix);
+                    logger.info("connectionId[{}], address[{}], linkName[{}]: Creating management node. ",
+                        connectionId, linkAddress, linkName);
+                    final Mono<RequestResponseChannel> requestResponseChannel =
+                        createRequestResponseChannel(sessionName, linkName, linkAddress);
+
+                    return (AmqpManagementNode) new ManagementChannel(
+                        requestResponseChannel, getFullyQualifiedNamespace(), entityPath, tokenManager,
+                        connectionOptions.getRetry());
+                })).cache(value -> {
+                    logger.verbose("connectionId[{}], entityPath[{}]: Management node acquired.",
+                        connectionId, linkAddress, linkAddress);
+                    return Duration.ofMillis(Long.MAX_VALUE);
+                }, error -> {
+                    logger.warning("connectionId[{}], entityPath[{}]: Error occurred getting management node.",
+                        connectionId, linkAddress);
+                    return Duration.ZERO;
+                }, () -> {
+                    logger.verbose("connectionId[{}], entityPath[{}]: Completed without an management node.",
+                        connectionId, linkAddress);
+                    return Duration.ZERO;
+                });
+        });
     }
 
     /**

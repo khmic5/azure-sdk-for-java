@@ -28,6 +28,7 @@ import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.URL;
 import java.time.Duration;
+import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -38,6 +39,10 @@ public final class AmqpConnectionBuilder {
     private static final AmqpRetryOptions DEFAULT_RETRY = new AmqpRetryOptions()
         .setTryTimeout(Duration.ofSeconds(60));
     private static final Pattern HOST_PORT_PATTERN = Pattern.compile("^[^:]+:\\d+");
+    private static final String NAME_KEY = "name";
+    private static final String PROPERTIES_FILE = "azure-core-amqp.properties";
+    private static final String UNKNOWN = "UNKNOWN";
+    private static final String VERSION_KEY = "version";
 
     private final ClientLogger logger = new ClientLogger(AmqpConnectionBuilder.class);
 
@@ -291,13 +296,16 @@ public final class AmqpConnectionBuilder {
         }
 
         final ClientOptions clientOptionsToUse = clientOptions != null ? clientOptions : new ClientOptions();
+        final Map<String, String> properties = CoreUtils.getProperties(PROPERTIES_FILE);
+        final String product = properties.getOrDefault(NAME_KEY, UNKNOWN);
+        final String clientVersion = properties.getOrDefault(VERSION_KEY, UNKNOWN);
 
         if (customEndpointAddress == null) {
             return new ConnectionOptions(fullyQualifiedNamespace, credential, authorizationType, transportType,
-                retryOptions, proxyToUse, Schedulers.elastic(), clientOptionsToUse, verifyMode);
+                retryOptions, proxyToUse, Schedulers.elastic(), clientOptionsToUse, verifyMode, product, clientVersion);
         } else {
             return new ConnectionOptions(fullyQualifiedNamespace, credential, authorizationType, transportType,
-                retryOptions, proxyToUse, Schedulers.elastic(), clientOptionsToUse, verifyMode,
+                retryOptions, proxyToUse, Schedulers.elastic(), clientOptionsToUse, verifyMode, product, clientVersion,
                 customEndpointAddress.getHost(), customEndpointAddress.getPort());
         }
     }

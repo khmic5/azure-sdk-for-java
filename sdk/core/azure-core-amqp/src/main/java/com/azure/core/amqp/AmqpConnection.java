@@ -31,8 +31,10 @@ public interface AmqpConnection extends Disposable {
     /**
      * Gets the management node.
      *
-     * @param entityPath Entity for which to get the management node of.
-     * @return Management node.
+     * @param entityPath Entity for which to get the management node of. If {@code entityPath} is null or an empty
+     *      string, the root management node is returned.
+     *
+     * @return A Mono that completes with a reference to the AmqpManagementNode.
      */
     default Mono<AmqpManagementNode> getManagementNode(String entityPath) { return Mono.empty(); }
 
