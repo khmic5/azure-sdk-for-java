@@ -15,8 +15,6 @@ import com.azure.core.amqp.ClaimsBasedSecurityNode;
 import com.azure.core.amqp.implementation.handler.ReceiveLinkHandler;
 import com.azure.core.amqp.implementation.handler.SendLinkHandler;
 import com.azure.core.amqp.implementation.handler.SessionHandler;
-import com.azure.core.amqp.models.AmqpLinkSource;
-import com.azure.core.amqp.models.AmqpLinkTarget;
 import com.azure.core.amqp.models.CreateLinkOptions;
 import com.azure.core.util.logging.ClientLogger;
 import org.apache.qpid.proton.amqp.Symbol;
@@ -203,7 +201,8 @@ public class ReactorSession implements AmqpSession {
      */
     @Override
     public Mono<AmqpLink> createProducer(String linkName, String entityPath, Duration timeout, AmqpRetryPolicy retry) {
-        return createProducer(linkName, entityPath, timeout, retry, new CreateLinkOptions()).cast(AmqpLink.class);
+        return createProducer(linkName, entityPath, timeout, retry, (Map<Symbol, Object>) null)
+            .cast(AmqpLink.class);
     }
 
     @Override
@@ -223,7 +222,9 @@ public class ReactorSession implements AmqpSession {
     }
 
     @Override
-    public Mono<AmqpReceiveLink> createConsumer(String linkName, String entityPath, Duration timeout, AmqpRetryPolicy retryPolicy, CreateLinkOptions createLinkOptions) {
+    public Mono<AmqpReceiveLink> createConsumer(String linkName, String entityPath, Duration timeout,
+        AmqpRetryPolicy retryPolicy, CreateLinkOptions createLinkOptions) {
+
         return null;
     }
 
