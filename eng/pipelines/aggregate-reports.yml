@@ -119,11 +119,11 @@ jobs:
         GdnBreakAllTools: false
         GdnBreakGdnToolCredScan: true
         GdnBreakGdnToolCredScanSeverity: Error
-        GdnBreakBaselineFiles: $(Build.SourcesDirectory)\eng\java.gdnbaselines
-        GdnBreakBaselines: baseline
+        # GdnBreakBaselineFiles: $(Build.SourcesDirectory)\eng\java.gdnbaselines
+        # GdnBreakBaselines: baseline
         # Used for generating baseline file.
-        # GdnBreakOutputBaselineFile: java
-        # GdnBreakOutputBaseline: baseline
+        GdnBreakOutputBaselineFile: java
+        GdnBreakOutputBaseline: baseline
       condition: succeededOrFailed()
       continueOnError: true
     # Run link verification at the end as it will run no matter the pipeline passing or failing.
