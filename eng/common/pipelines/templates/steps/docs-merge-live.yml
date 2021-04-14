@@ -27,11 +27,12 @@ steps:
   workingDirectory: ${{ parameters.workingDirectory }}/repo
 - template: /eng/common/pipelines/templates/steps/git-push-changes.yml
   parameters:
-    BaseRepoBranch: 'for-release'
+    BaseRepoBranch: 'live'
     BaseRepoOwner: ${{ parameters.TargetDocRepoOwner }}
     CommitMsg: "Daily merge updated API to live."
     TargetRepoName: ${{ parameters.TargetDocRepoName }}
     TargetRepoOwner: ${{ parameters.TargetDocRepoOwner }}
     WorkingDirectory: ${{ parameters.WorkingDirectory }}/repo
     ScriptDirectory: ${{ parameters.WorkingDirectory }}/${{ parameters.ScriptDirectory }}
+    SkipCheckingForChanges: true
 
