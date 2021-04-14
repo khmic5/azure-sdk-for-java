@@ -23,7 +23,7 @@ steps:
 - pwsh: |
     git reset --hard $(CICommit)
     git checkout -b for-release
-  displayName: 'Checkout new branch 'for-release''
+  displayName: Checkout new branch 'for-release'
   ignoreLASTEXITCODE: false
 - template: /eng/common/pipelines/templates/steps/git-push-changes.yml
   parameters:
