@@ -6,5 +6,5 @@ jobs:
       -template: \eng\common\pipelines\templates\steps\docs-merge-live.yml
        parameters:
         WorkingDirectory: $(Build.SourcesDirectory)
-        TargetDocRepoName: azure-sdk-for-java
+        TargetDocRepoName: azure-docs-sdk-java
         TargetDocRepoOwner: Azure
