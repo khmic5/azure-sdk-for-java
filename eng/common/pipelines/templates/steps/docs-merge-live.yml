@@ -35,4 +35,5 @@ steps:
     WorkingDirectory: ${{ parameters.WorkingDirectory }}/repo
     ScriptDirectory: ${{ parameters.WorkingDirectory }}/${{ parameters.ScriptDirectory }}
     SkipCheckingForChanges: true
+    PushArgs: -f 
 

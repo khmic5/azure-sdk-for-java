@@ -71,6 +71,8 @@ if ($LASTEXITCODE -eq 0) {
 else {
   Write-Host "git checkout -b $PRBranchName."
   git checkout -b $PRBranchName
+  $a = git log -1
+  Write-Host $a
 }
 if ($LASTEXITCODE -ne 0)
 {
