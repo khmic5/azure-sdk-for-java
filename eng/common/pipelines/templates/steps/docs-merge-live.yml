@@ -17,14 +17,16 @@ steps:
 
 - pwsh: |
     $ciLastCommit = git log --author="VSC-Service-Account" --pretty=format:'%H' -n 1
+    Write-Host $ciLastCommit
     echo "##vso[task.setvariable variable=CICommit]$ciLastCommit"
   displayName: Fetch the last commit for Job CI commits.
-  
+  WorkingDirectory: ${{ parameters.WorkingDirectory }}/repo 
 - pwsh: |
     git reset --hard $(CICommit)
     git checkout -b for-release
   displayName: Checkout new branch 'for-release'
   ignoreLASTEXITCODE: false
+  WorkingDirectory: ${{ parameters.WorkingDirectory }}/repo
 - template: /eng/common/pipelines/templates/steps/git-push-changes.yml
   parameters:
     BaseRepoBranch: 'for-release'
