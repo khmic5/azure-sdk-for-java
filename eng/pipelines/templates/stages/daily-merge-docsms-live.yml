@@ -1,0 +1,10 @@
+jobs:
+  - job: MergeDocMsToLive
+    pool:
+      vmImage: 'ubuntu-18.04'
+    steps:
+      -template: \eng\common\pipelines\templates\steps\docs-merge-live.yml
+       parameters:
+        WorkingDirectory: $(Build.SourcesDirectory)
+        TargetDocRepoName: azure-sdk-for-java
+        TargetDocRepoOwner: Azure
