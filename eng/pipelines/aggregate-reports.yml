@@ -119,8 +119,8 @@ jobs:
         GdnBreakBaselineFiles: $(Build.SourcesDirectory)\eng\java.gdnbaselines
         GdnBreakBaselines: baseline
         # Used for generating baseline file.
-        # GdnBreakOutputBaselineFile: java
-        # GdnBreakOutputBaseline: baseline
+        GdnBreakOutputBaselineFile: java
+        GdnBreakOutputBaseline: baseline
       condition: succeededOrFailed()
       continueOnError: true
     - pwsh: |
