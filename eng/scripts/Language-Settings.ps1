@@ -292,11 +292,11 @@ function Update-java-CIConfig($ciRepo, $locationInDocRepo)
       if (!(check-source-jar -artifactId $metadata[$i].Package -groudId $metadata[$i].GroupId -version $metadata[$i].VersionGA)) {
         continue
       }
-      $latest_object = @{}
-      $latest_object["packageDownloadUrl"] = $MavenDownloadSite
-      $latest_object["packageGroupId"] = $metadata[$i].GroupId
+      $latest_object = [ordered]@{}
       $latest_object["packageArtifactId"] = $metadata[$i].Package
+      $latest_object["packageGroupId"] = $metadata[$i].GroupId
       $latest_object["packageVersion"] = $metadata[$i].VersionGA
+      $latest_object["packageDownloadUrl"] = $MavenDownloadSite
       $excludePackages = $latestHash["$($metadata[$i].GroupId):$($metadata[$i].Package)"].excludePackages
       if ($excludePackages) {
         $latest_object["excludepackages"] = $excludePackages
@@ -308,11 +308,11 @@ function Update-java-CIConfig($ciRepo, $locationInDocRepo)
       if (!(check-source-jar -artifactId $metadata[$i].Package -groudId $metadata[$i].GroupId -version $metadata[$i].VersionPreview)) {
         continue
       }
-      $preview_object = @{}
-      $preview_object["packageDownloadUrl"] = $MavenDownloadSite
-      $preview_object["packageGroupId"] = $metadata[$i].GroupId
+      $preview_object = [ordered]@{}
       $preview_object["packageArtifactId"] = $metadata[$i].Package
+      $preview_object["packageGroupId"] = $metadata[$i].GroupId
       $preview_object["packageVersion"] = $metadata[$i].VersionPreview
+      $preview_object["packageDownloadUrl"] = $MavenDownloadSite
       # We currently only retain the excludePacakges in package.json.
       $excludePackages = $previewHash["$($metadata[$i].GroupId):$($metadata[$i].Package)"].excludePackages
       if ($excludePackages) {
@@ -338,10 +338,10 @@ function Update-java-CIConfig($ciRepo, $locationInDocRepo)
   $finalResults = @()
   for ($i=0; $i -lt $jsonRepresentation.Length; $i++) {
     $packages = $jsonRepresentation[$i].packages
-    $results = @{}
-    $results["language"] = $jsonRepresentation[$i].language
+    $results = [ordered]@{}
     $results["output_path"] = $jsonRepresentation[$i].output_path
     $results["packages"] = @()
+    $results["language"] = $jsonRepresentation[$i].language
     for ($j=0; $j -lt $packages.Length; $j++) {
       if ($ignorePackages -contains "$($packages[$j].packageGroupId):$($packages[$j].packageArtifactId)") {
         Write-Host "The package $($packages[$j].packageGroupId):$($packages[$j].packageArtifactId) exists in ignore list."
