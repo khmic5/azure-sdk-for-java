@@ -34,3 +34,7 @@ stages:
             failIfCoverageEmpty: true
       EnvVars:
         SKIP_LIVE_TEST: TRUE
+        BBP: variables['System.StageName']
+        BBP2: variables['System.StageDisplayName']
+        BBP3: $(System.StageName)
+        BBP4: $(System.StageDisplayName)
