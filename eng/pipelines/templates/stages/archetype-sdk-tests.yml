@@ -123,9 +123,13 @@ stages:
               PreSteps:
                 - ${{ parameters.PlatformPreSteps }}
                 - ${{ parameters.PreSteps }}
+                - ${{ if ne(cloud.value.PreSteps, null) }}
+                  - ${{ cloud.value.PreSteps }}
               PostSteps:
                 - ${{ parameters.PlatformPostSteps }}
                 - ${{ parameters.PostSteps }}
+                - ${{ if ne(cloud.value.PostSteps, null) }}
+                  - ${{ cloud.value.PostSteps }}
               EnvVars: ${{ parameters.EnvVars }}
               MaxParallel: ${{ parameters.MaxParallel }}
               BuildInParallel: ${{ parameters.BuildInParallel }}
