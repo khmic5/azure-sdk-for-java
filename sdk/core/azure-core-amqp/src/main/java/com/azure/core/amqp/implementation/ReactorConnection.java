@@ -422,13 +422,21 @@ public class ReactorConnection implements AmqpConnection {
 
         final Mono<Void> cbsCloseOperation;
         if (cbsChannelProcessor != null) {
-            cbsCloseOperation = cbsChannelProcessor.flatMap(channel -> channel.closeAsync());
+            cbsCloseOperation = cbsChannelProcessor.flatMap(channel -> channel.closeAsync())
+                .onErrorResume(error -> {
+                    logger.info("connectionId[{}] Error occurred while closing cbs channel.", connectionId, error);
+                    return Mono.empty();
+                });
         } else {
             cbsCloseOperation = Mono.empty();
         }
 
         final Mono<Void> managementNodeCloseOperations = Mono.when(
-            Flux.fromStream(managementNodes.values().stream()).flatMap(node -> node.closeAsync()));
+            Flux.fromStream(managementNodes.values().stream()).flatMap(node -> node.closeAsync()))
+            .onErrorResume(error -> {
+                logger.info("connectionId[{}] Error occurred while closing management nodes.", connectionId, error);
+                return Mono.empty();
+            });
 
         final Mono<Void> closeReactor = Mono.fromRunnable(() -> {
             final ReactorDispatcher dispatcher = reactorProvider.getReactorDispatcher();
@@ -446,8 +454,14 @@ public class ReactorConnection implements AmqpConnection {
             }
         });
 
+        final Mono<Void> closeExecutor;
+        synchronized (this) {
+            closeExecutor = executor.closeAsync();
+        }
+
         return Mono.whenDelayError(cbsCloseOperation, managementNodeCloseOperations)
             .then(closeReactor)
+            .then(closeExecutor)
             .then(isClosedMono.asMono());
     }
 
@@ -469,8 +483,6 @@ public class ReactorConnection implements AmqpConnection {
         final ArrayList<Mono<Void>> closingSessions = new ArrayList<>();
         sessionMap.values().forEach(link -> closingSessions.add(link.isClosed()));
 
-        final Mono<Void> closedExecutor = executor != null ? executor.closeAsync() : Mono.empty();
-
         // Close all the children.
         final Mono<Void> closeSessionsMono = Mono.when(closingSessions)
             .timeout(operationTimeout)
@@ -478,7 +490,6 @@ public class ReactorConnection implements AmqpConnection {
                 logger.warning("connectionId[{}]: Timed out waiting for all sessions to close.", connectionId, error);
                 return Mono.empty();
             })
-            .then(closedExecutor)
             .then(Mono.fromRunnable(() -> {
                 isClosedMono.emitEmpty((signalType, result) -> {
                     logger.warning("connectionId[{}] signal[{}] result[{}]: Unable to emit connection closed signal",
@@ -531,19 +542,15 @@ public class ReactorConnection implements AmqpConnection {
 
             // To avoid inconsistent synchronization of executor, we set this field with the closeAsync method.
             // It will not be kicked off until subscribed to.
-            final Mono<Void> executorCloseMono = executor.closeAsync();
             reactorProvider.getReactorDispatcher().getShutdownSignal()
-                .flatMap(signal -> {
+                .subscribe(signal -> {
                     logger.info("Shutdown signal received from reactor provider.");
                     reactorExceptionHandler.onConnectionShutdown(signal);
-                    return executorCloseMono;
-                })
-                .onErrorResume(error -> {
+                },
+                error -> {
                     logger.info("Error received from reactor provider.", error);
                     reactorExceptionHandler.onConnectionError(error);
-                    return executorCloseMono;
-                })
-                .subscribe();
+                });
 
             executor.start();
         }

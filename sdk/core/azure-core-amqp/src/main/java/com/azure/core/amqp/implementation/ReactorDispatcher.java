@@ -114,9 +114,9 @@ public final class ReactorDispatcher {
             if (!isClosed.get()) {
                 logger.warning("connectionId[{}] signalWorkQueue failed before reactor closed.",
                     connectionId, ignorePipeClosedDuringReactorShutdown);
-                shutdownSignal.emitError(new RuntimeException(String.format(
-                    "connectionId[%s] IO Sink was interrupted before reactor closed.", connectionId),
-                    ignorePipeClosedDuringReactorShutdown), Sinks.EmitFailureHandler.FAIL_FAST);
+                shutdownSignal.emitValue(new AmqpShutdownSignal(true, false, String.format(
+                    "connectionId[%s] IO Sink was interrupted before reactor closed.", connectionId)),
+                    Sinks.EmitFailureHandler.FAIL_FAST);
             } else {
                 logger.verbose("connectionId[{}] signalWorkQueue failed with an error after closed. Can be ignored.",
                     connectionId, ignorePipeClosedDuringReactorShutdown);
