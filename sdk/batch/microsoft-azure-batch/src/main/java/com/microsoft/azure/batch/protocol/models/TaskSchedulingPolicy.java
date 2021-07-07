@@ -15,15 +15,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class TaskSchedulingPolicy {
     /**
-     * How Tasks are distributed across Compute Nodes in a Pool.
-     * If not specified, the default is spread. Possible values include:
-     * 'spread', 'pack'.
+     * How Tasks are distributed across Compute Nodes in a Pool. If not
+     * specified, the default is spread. Possible values include: 'spread',
+     * 'pack'.
      */
     @JsonProperty(value = "nodeFillType", required = true)
     private ComputeNodeFillType nodeFillType;
 
     /**
-     * Get if not specified, the default is spread. Possible values include: 'spread', 'pack'.
+     * Get how Tasks are distributed across Compute Nodes in a Pool. If not specified, the default is spread. Possible values include: 'spread', 'pack'.
      *
      * @return the nodeFillType value
      */
@@ -32,7 +32,7 @@ public class TaskSchedulingPolicy {
     }
 
     /**
-     * Set if not specified, the default is spread. Possible values include: 'spread', 'pack'.
+     * Set how Tasks are distributed across Compute Nodes in a Pool. If not specified, the default is spread. Possible values include: 'spread', 'pack'.
      *
      * @param nodeFillType the nodeFillType value to set
      * @return the TaskSchedulingPolicy object itself.

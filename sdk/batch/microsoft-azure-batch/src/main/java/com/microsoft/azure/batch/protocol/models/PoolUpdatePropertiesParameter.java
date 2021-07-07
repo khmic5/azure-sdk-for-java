@@ -18,9 +18,8 @@ public class PoolUpdatePropertiesParameter {
     /**
      * A Task to run on each Compute Node as it joins the Pool. The Task runs
      * when the Compute Node is added to the Pool or when the Compute Node is
-     * restarted.
-     * If this element is present, it overwrites any existing StartTask. If
-     * omitted, any existing StartTask is removed from the Pool.
+     * restarted. If this element is present, it overwrites any existing
+     * StartTask. If omitted, any existing StartTask is removed from the Pool.
      */
     @JsonProperty(value = "startTask")
     private StartTask startTask;
@@ -43,30 +42,29 @@ public class PoolUpdatePropertiesParameter {
 
     /**
      * The list of Application Packages to be installed on each Compute Node in
-     * the Pool.
-     * The list replaces any existing Application Package references on the
-     * Pool. Changes to Application Package references affect all new Compute
-     * Nodes joining the Pool, but do not affect Compute Nodes that are already
-     * in the Pool until they are rebooted or reimaged. There is a maximum of
-     * 10 Application Package references on any given Pool. If omitted, or if
-     * you specify an empty collection, any existing Application Packages
-     * references are removed from the Pool. A maximum of 10 references may be
-     * specified on a given Pool.
+     * the Pool. The list replaces any existing Application Package references
+     * on the Pool. Changes to Application Package references affect all new
+     * Compute Nodes joining the Pool, but do not affect Compute Nodes that are
+     * already in the Pool until they are rebooted or reimaged. There is a
+     * maximum of 10 Application Package references on any given Pool. If
+     * omitted, or if you specify an empty collection, any existing Application
+     * Packages references are removed from the Pool. A maximum of 10
+     * references may be specified on a given Pool.
      */
     @JsonProperty(value = "applicationPackageReferences", required = true)
     private List<ApplicationPackageReference> applicationPackageReferences;
 
     /**
-     * A list of name-value pairs associated with the Pool as metadata.
-     * This list replaces any existing metadata configured on the Pool. If
-     * omitted, or if you specify an empty collection, any existing metadata is
-     * removed from the Pool.
+     * A list of name-value pairs associated with the Pool as metadata. This
+     * list replaces any existing metadata configured on the Pool. If omitted,
+     * or if you specify an empty collection, any existing metadata is removed
+     * from the Pool.
      */
     @JsonProperty(value = "metadata", required = true)
     private List<MetadataItem> metadata;
 
     /**
-     * Get if this element is present, it overwrites any existing StartTask. If omitted, any existing StartTask is removed from the Pool.
+     * Get a Task to run on each Compute Node as it joins the Pool. The Task runs when the Compute Node is added to the Pool or when the Compute Node is restarted. If this element is present, it overwrites any existing StartTask. If omitted, any existing StartTask is removed from the Pool.
      *
      * @return the startTask value
      */
@@ -75,7 +73,7 @@ public class PoolUpdatePropertiesParameter {
     }
 
     /**
-     * Set if this element is present, it overwrites any existing StartTask. If omitted, any existing StartTask is removed from the Pool.
+     * Set a Task to run on each Compute Node as it joins the Pool. The Task runs when the Compute Node is added to the Pool or when the Compute Node is restarted. If this element is present, it overwrites any existing StartTask. If omitted, any existing StartTask is removed from the Pool.
      *
      * @param startTask the startTask value to set
      * @return the PoolUpdatePropertiesParameter object itself.
@@ -86,7 +84,7 @@ public class PoolUpdatePropertiesParameter {
     }
 
     /**
-     * Get this list replaces any existing Certificate references configured on the Pool. If you specify an empty collection, any existing Certificate references are removed from the Pool. For Windows Nodes, the Batch service installs the Certificates to the specified Certificate store and location. For Linux Compute Nodes, the Certificates are stored in a directory inside the Task working directory and an environment variable AZ_BATCH_CERTIFICATES_DIR is supplied to the Task to query for this location. For Certificates with visibility of 'remoteUser', a 'certs' directory is created in the user's home directory (e.g., /home/{user-name}/certs) and Certificates are placed in that directory.
+     * Get a list of Certificates to be installed on each Compute Node in the Pool. This list replaces any existing Certificate references configured on the Pool. If you specify an empty collection, any existing Certificate references are removed from the Pool. For Windows Nodes, the Batch service installs the Certificates to the specified Certificate store and location. For Linux Compute Nodes, the Certificates are stored in a directory inside the Task working directory and an environment variable AZ_BATCH_CERTIFICATES_DIR is supplied to the Task to query for this location. For Certificates with visibility of 'remoteUser', a 'certs' directory is created in the user's home directory (e.g., /home/{user-name}/certs) and Certificates are placed in that directory.
      *
      * @return the certificateReferences value
      */
@@ -95,7 +93,7 @@ public class PoolUpdatePropertiesParameter {
     }
 
     /**
-     * Set this list replaces any existing Certificate references configured on the Pool. If you specify an empty collection, any existing Certificate references are removed from the Pool. For Windows Nodes, the Batch service installs the Certificates to the specified Certificate store and location. For Linux Compute Nodes, the Certificates are stored in a directory inside the Task working directory and an environment variable AZ_BATCH_CERTIFICATES_DIR is supplied to the Task to query for this location. For Certificates with visibility of 'remoteUser', a 'certs' directory is created in the user's home directory (e.g., /home/{user-name}/certs) and Certificates are placed in that directory.
+     * Set a list of Certificates to be installed on each Compute Node in the Pool. This list replaces any existing Certificate references configured on the Pool. If you specify an empty collection, any existing Certificate references are removed from the Pool. For Windows Nodes, the Batch service installs the Certificates to the specified Certificate store and location. For Linux Compute Nodes, the Certificates are stored in a directory inside the Task working directory and an environment variable AZ_BATCH_CERTIFICATES_DIR is supplied to the Task to query for this location. For Certificates with visibility of 'remoteUser', a 'certs' directory is created in the user's home directory (e.g., /home/{user-name}/certs) and Certificates are placed in that directory.
      *
      * @param certificateReferences the certificateReferences value to set
      * @return the PoolUpdatePropertiesParameter object itself.
@@ -106,7 +104,7 @@ public class PoolUpdatePropertiesParameter {
     }
 
     /**
-     * Get the list replaces any existing Application Package references on the Pool. Changes to Application Package references affect all new Compute Nodes joining the Pool, but do not affect Compute Nodes that are already in the Pool until they are rebooted or reimaged. There is a maximum of 10 Application Package references on any given Pool. If omitted, or if you specify an empty collection, any existing Application Packages references are removed from the Pool. A maximum of 10 references may be specified on a given Pool.
+     * Get the list of Application Packages to be installed on each Compute Node in the Pool. The list replaces any existing Application Package references on the Pool. Changes to Application Package references affect all new Compute Nodes joining the Pool, but do not affect Compute Nodes that are already in the Pool until they are rebooted or reimaged. There is a maximum of 10 Application Package references on any given Pool. If omitted, or if you specify an empty collection, any existing Application Packages references are removed from the Pool. A maximum of 10 references may be specified on a given Pool.
      *
      * @return the applicationPackageReferences value
      */
@@ -115,7 +113,7 @@ public class PoolUpdatePropertiesParameter {
     }
 
     /**
-     * Set the list replaces any existing Application Package references on the Pool. Changes to Application Package references affect all new Compute Nodes joining the Pool, but do not affect Compute Nodes that are already in the Pool until they are rebooted or reimaged. There is a maximum of 10 Application Package references on any given Pool. If omitted, or if you specify an empty collection, any existing Application Packages references are removed from the Pool. A maximum of 10 references may be specified on a given Pool.
+     * Set the list of Application Packages to be installed on each Compute Node in the Pool. The list replaces any existing Application Package references on the Pool. Changes to Application Package references affect all new Compute Nodes joining the Pool, but do not affect Compute Nodes that are already in the Pool until they are rebooted or reimaged. There is a maximum of 10 Application Package references on any given Pool. If omitted, or if you specify an empty collection, any existing Application Packages references are removed from the Pool. A maximum of 10 references may be specified on a given Pool.
      *
      * @param applicationPackageReferences the applicationPackageReferences value to set
      * @return the PoolUpdatePropertiesParameter object itself.
@@ -126,7 +124,7 @@ public class PoolUpdatePropertiesParameter {
     }
 
     /**
-     * Get this list replaces any existing metadata configured on the Pool. If omitted, or if you specify an empty collection, any existing metadata is removed from the Pool.
+     * Get a list of name-value pairs associated with the Pool as metadata. This list replaces any existing metadata configured on the Pool. If omitted, or if you specify an empty collection, any existing metadata is removed from the Pool.
      *
      * @return the metadata value
      */
@@ -135,7 +133,7 @@ public class PoolUpdatePropertiesParameter {
     }
 
     /**
-     * Set this list replaces any existing metadata configured on the Pool. If omitted, or if you specify an empty collection, any existing metadata is removed from the Pool.
+     * Set a list of name-value pairs associated with the Pool as metadata. This list replaces any existing metadata configured on the Pool. If omitted, or if you specify an empty collection, any existing metadata is removed from the Pool.
      *
      * @param metadata the metadata value to set
      * @return the PoolUpdatePropertiesParameter object itself.

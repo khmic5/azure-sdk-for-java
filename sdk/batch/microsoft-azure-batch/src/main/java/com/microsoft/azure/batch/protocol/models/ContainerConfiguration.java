@@ -22,17 +22,17 @@ public class ContainerConfiguration {
     private String type;
 
     /**
-     * The collection of container Image names.
-     * This is the full Image reference, as would be specified to "docker
-     * pull". An Image will be sourced from the default Docker registry unless
-     * the Image is fully qualified with an alternative registry.
+     * The collection of container Image names. This is the full Image
+     * reference, as would be specified to "docker pull". An Image will be
+     * sourced from the default Docker registry unless the Image is fully
+     * qualified with an alternative registry.
      */
     @JsonProperty(value = "containerImageNames")
     private List<String> containerImageNames;
 
     /**
-     * Additional private registries from which containers can be pulled.
-     * If any Images must be downloaded from a private registry which requires
+     * Additional private registries from which containers can be pulled. If
+     * any Images must be downloaded from a private registry which requires
      * credentials, then those credentials must be provided here.
      */
     @JsonProperty(value = "containerRegistries")
@@ -46,7 +46,7 @@ public class ContainerConfiguration {
     }
 
     /**
-     * Get the type value.
+     * Get the container technology to be used.
      *
      * @return the type value
      */
@@ -55,7 +55,7 @@ public class ContainerConfiguration {
     }
 
     /**
-     * Set the type value.
+     * Set the container technology to be used.
      *
      * @param type the type value to set
      * @return the ContainerConfiguration object itself.
@@ -66,7 +66,7 @@ public class ContainerConfiguration {
     }
 
     /**
-     * Get this is the full Image reference, as would be specified to "docker pull". An Image will be sourced from the default Docker registry unless the Image is fully qualified with an alternative registry.
+     * Get the collection of container Image names. This is the full Image reference, as would be specified to "docker pull". An Image will be sourced from the default Docker registry unless the Image is fully qualified with an alternative registry.
      *
      * @return the containerImageNames value
      */
@@ -75,7 +75,7 @@ public class ContainerConfiguration {
     }
 
     /**
-     * Set this is the full Image reference, as would be specified to "docker pull". An Image will be sourced from the default Docker registry unless the Image is fully qualified with an alternative registry.
+     * Set the collection of container Image names. This is the full Image reference, as would be specified to "docker pull". An Image will be sourced from the default Docker registry unless the Image is fully qualified with an alternative registry.
      *
      * @param containerImageNames the containerImageNames value to set
      * @return the ContainerConfiguration object itself.
@@ -86,7 +86,7 @@ public class ContainerConfiguration {
     }
 
     /**
-     * Get if any Images must be downloaded from a private registry which requires credentials, then those credentials must be provided here.
+     * Get additional private registries from which containers can be pulled. If any Images must be downloaded from a private registry which requires credentials, then those credentials must be provided here.
      *
      * @return the containerRegistries value
      */
@@ -95,7 +95,7 @@ public class ContainerConfiguration {
     }
 
     /**
-     * Set if any Images must be downloaded from a private registry which requires credentials, then those credentials must be provided here.
+     * Set additional private registries from which containers can be pulled. If any Images must be downloaded from a private registry which requires credentials, then those credentials must be provided here.
      *
      * @param containerRegistries the containerRegistries value to set
      * @return the ContainerConfiguration object itself.

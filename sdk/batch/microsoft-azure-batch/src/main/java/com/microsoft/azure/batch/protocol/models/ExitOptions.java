@@ -17,30 +17,28 @@ public class ExitOptions {
     /**
      * An action to take on the Job containing the Task, if the Task completes
      * with the given exit condition and the Job's onTaskFailed property is
-     * 'performExitOptionsJobAction'.
-     * The default is none for exit code 0 and terminate for all other exit
-     * conditions. If the Job's onTaskFailed property is noaction, then
-     * specifying this property returns an error and the add Task request fails
-     * with an invalid property value error; if you are calling the REST API
-     * directly, the HTTP status code is 400 (Bad Request). Possible values
-     * include: 'none', 'disable', 'terminate'.
+     * 'performExitOptionsJobAction'. The default is none for exit code 0 and
+     * terminate for all other exit conditions. If the Job's onTaskFailed
+     * property is noaction, then specifying this property returns an error and
+     * the add Task request fails with an invalid property value error; if you
+     * are calling the REST API directly, the HTTP status code is 400 (Bad
+     * Request). Possible values include: 'none', 'disable', 'terminate'.
      */
     @JsonProperty(value = "jobAction")
     private JobAction jobAction;
 
     /**
      * An action that the Batch service performs on Tasks that depend on this
-     * Task.
-     * Possible values are 'satisfy' (allowing dependent tasks to progress) and
-     * 'block' (dependent tasks continue to wait). Batch does not yet support
-     * cancellation of dependent tasks. Possible values include: 'satisfy',
-     * 'block'.
+     * Task. Possible values are 'satisfy' (allowing dependent tasks to
+     * progress) and 'block' (dependent tasks continue to wait). Batch does not
+     * yet support cancellation of dependent tasks. Possible values include:
+     * 'satisfy', 'block'.
      */
     @JsonProperty(value = "dependencyAction")
     private DependencyAction dependencyAction;
 
     /**
-     * Get the default is none for exit code 0 and terminate for all other exit conditions. If the Job's onTaskFailed property is noaction, then specifying this property returns an error and the add Task request fails with an invalid property value error; if you are calling the REST API directly, the HTTP status code is 400 (Bad Request). Possible values include: 'none', 'disable', 'terminate'.
+     * Get an action to take on the Job containing the Task, if the Task completes with the given exit condition and the Job's onTaskFailed property is 'performExitOptionsJobAction'. The default is none for exit code 0 and terminate for all other exit conditions. If the Job's onTaskFailed property is noaction, then specifying this property returns an error and the add Task request fails with an invalid property value error; if you are calling the REST API directly, the HTTP status code is 400 (Bad Request). Possible values include: 'none', 'disable', 'terminate'.
      *
      * @return the jobAction value
      */
@@ -49,7 +47,7 @@ public class ExitOptions {
     }
 
     /**
-     * Set the default is none for exit code 0 and terminate for all other exit conditions. If the Job's onTaskFailed property is noaction, then specifying this property returns an error and the add Task request fails with an invalid property value error; if you are calling the REST API directly, the HTTP status code is 400 (Bad Request). Possible values include: 'none', 'disable', 'terminate'.
+     * Set an action to take on the Job containing the Task, if the Task completes with the given exit condition and the Job's onTaskFailed property is 'performExitOptionsJobAction'. The default is none for exit code 0 and terminate for all other exit conditions. If the Job's onTaskFailed property is noaction, then specifying this property returns an error and the add Task request fails with an invalid property value error; if you are calling the REST API directly, the HTTP status code is 400 (Bad Request). Possible values include: 'none', 'disable', 'terminate'.
      *
      * @param jobAction the jobAction value to set
      * @return the ExitOptions object itself.
@@ -60,7 +58,7 @@ public class ExitOptions {
     }
 
     /**
-     * Get possible values are 'satisfy' (allowing dependent tasks to progress) and 'block' (dependent tasks continue to wait). Batch does not yet support cancellation of dependent tasks. Possible values include: 'satisfy', 'block'.
+     * Get an action that the Batch service performs on Tasks that depend on this Task. Possible values are 'satisfy' (allowing dependent tasks to progress) and 'block' (dependent tasks continue to wait). Batch does not yet support cancellation of dependent tasks. Possible values include: 'satisfy', 'block'.
      *
      * @return the dependencyAction value
      */
@@ -69,7 +67,7 @@ public class ExitOptions {
     }
 
     /**
-     * Set possible values are 'satisfy' (allowing dependent tasks to progress) and 'block' (dependent tasks continue to wait). Batch does not yet support cancellation of dependent tasks. Possible values include: 'satisfy', 'block'.
+     * Set an action that the Batch service performs on Tasks that depend on this Task. Possible values are 'satisfy' (allowing dependent tasks to progress) and 'block' (dependent tasks continue to wait). Batch does not yet support cancellation of dependent tasks. Possible values include: 'satisfy', 'block'.
      *
      * @param dependencyAction the dependencyAction value to set
      * @return the ExitOptions object itself.

@@ -42,15 +42,14 @@ public class JobPreparationAndReleaseTaskExecutionInformation {
 
     /**
      * Information about the execution status of the Job Release Task on this
-     * Compute Node.
-     * This property is set only if the Job Release Task has run on the Compute
-     * Node.
+     * Compute Node. This property is set only if the Job Release Task has run
+     * on the Compute Node.
      */
     @JsonProperty(value = "jobReleaseTaskExecutionInfo")
     private JobReleaseTaskExecutionInformation jobReleaseTaskExecutionInfo;
 
     /**
-     * Get the poolId value.
+     * Get the ID of the Pool containing the Compute Node to which this entry refers.
      *
      * @return the poolId value
      */
@@ -59,7 +58,7 @@ public class JobPreparationAndReleaseTaskExecutionInformation {
     }
 
     /**
-     * Set the poolId value.
+     * Set the ID of the Pool containing the Compute Node to which this entry refers.
      *
      * @param poolId the poolId value to set
      * @return the JobPreparationAndReleaseTaskExecutionInformation object itself.
@@ -70,7 +69,7 @@ public class JobPreparationAndReleaseTaskExecutionInformation {
     }
 
     /**
-     * Get the nodeId value.
+     * Get the ID of the Compute Node to which this entry refers.
      *
      * @return the nodeId value
      */
@@ -79,7 +78,7 @@ public class JobPreparationAndReleaseTaskExecutionInformation {
     }
 
     /**
-     * Set the nodeId value.
+     * Set the ID of the Compute Node to which this entry refers.
      *
      * @param nodeId the nodeId value to set
      * @return the JobPreparationAndReleaseTaskExecutionInformation object itself.
@@ -90,7 +89,7 @@ public class JobPreparationAndReleaseTaskExecutionInformation {
     }
 
     /**
-     * Get the nodeUrl value.
+     * Get the URL of the Compute Node to which this entry refers.
      *
      * @return the nodeUrl value
      */
@@ -99,7 +98,7 @@ public class JobPreparationAndReleaseTaskExecutionInformation {
     }
 
     /**
-     * Set the nodeUrl value.
+     * Set the URL of the Compute Node to which this entry refers.
      *
      * @param nodeUrl the nodeUrl value to set
      * @return the JobPreparationAndReleaseTaskExecutionInformation object itself.
@@ -110,7 +109,7 @@ public class JobPreparationAndReleaseTaskExecutionInformation {
     }
 
     /**
-     * Get the jobPreparationTaskExecutionInfo value.
+     * Get information about the execution status of the Job Preparation Task on this Compute Node.
      *
      * @return the jobPreparationTaskExecutionInfo value
      */
@@ -119,7 +118,7 @@ public class JobPreparationAndReleaseTaskExecutionInformation {
     }
 
     /**
-     * Set the jobPreparationTaskExecutionInfo value.
+     * Set information about the execution status of the Job Preparation Task on this Compute Node.
      *
      * @param jobPreparationTaskExecutionInfo the jobPreparationTaskExecutionInfo value to set
      * @return the JobPreparationAndReleaseTaskExecutionInformation object itself.
@@ -130,7 +129,7 @@ public class JobPreparationAndReleaseTaskExecutionInformation {
     }
 
     /**
-     * Get this property is set only if the Job Release Task has run on the Compute Node.
+     * Get information about the execution status of the Job Release Task on this Compute Node. This property is set only if the Job Release Task has run on the Compute Node.
      *
      * @return the jobReleaseTaskExecutionInfo value
      */
@@ -139,7 +138,7 @@ public class JobPreparationAndReleaseTaskExecutionInformation {
     }
 
     /**
-     * Set this property is set only if the Job Release Task has run on the Compute Node.
+     * Set information about the execution status of the Job Release Task on this Compute Node. This property is set only if the Job Release Task has run on the Compute Node.
      *
      * @param jobReleaseTaskExecutionInfo the jobReleaseTaskExecutionInfo value to set
      * @return the JobPreparationAndReleaseTaskExecutionInformation object itself.

@@ -16,26 +16,25 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class StartTaskInformation {
     /**
-     * The state of the StartTask on the Compute Node.
-     * Possible values include: 'running', 'completed'.
+     * The state of the StartTask on the Compute Node. Possible values include:
+     * 'running', 'completed'.
      */
     @JsonProperty(value = "state", required = true)
     private StartTaskState state;
 
     /**
-     * The time at which the StartTask started running.
-     * This value is reset every time the Task is restarted or retried (that
-     * is, this is the most recent time at which the StartTask started
-     * running).
+     * The time at which the StartTask started running. This value is reset
+     * every time the Task is restarted or retried (that is, this is the most
+     * recent time at which the StartTask started running).
      */
     @JsonProperty(value = "startTime", required = true)
     private DateTime startTime;
 
     /**
-     * The time at which the StartTask stopped running.
-     * This is the end time of the most recent run of the StartTask, if that
-     * run has completed (even if that run failed and a retry is pending). This
-     * element is not present if the StartTask is currently running.
+     * The time at which the StartTask stopped running. This is the end time of
+     * the most recent run of the StartTask, if that run has completed (even if
+     * that run failed and a retry is pending). This element is not present if
+     * the StartTask is currently running.
      */
     @JsonProperty(value = "endTime")
     private DateTime endTime;
@@ -55,33 +54,32 @@ public class StartTaskInformation {
     private Integer exitCode;
 
     /**
-     * Information about the container under which the Task is executing.
-     * This property is set only if the Task runs in a container context.
+     * Information about the container under which the Task is executing. This
+     * property is set only if the Task runs in a container context.
      */
     @JsonProperty(value = "containerInfo")
     private TaskContainerExecutionInformation containerInfo;
 
     /**
-     * Information describing the Task failure, if any.
-     * This property is set only if the Task is in the completed state and
-     * encountered a failure.
+     * Information describing the Task failure, if any. This property is set
+     * only if the Task is in the completed state and encountered a failure.
      */
     @JsonProperty(value = "failureInfo")
     private TaskFailureInformation failureInfo;
 
     /**
-     * The number of times the Task has been retried by the Batch service.
-     * Task application failures (non-zero exit code) are retried,
-     * pre-processing errors (the Task could not be run) and file upload errors
-     * are not retried. The Batch service will retry the Task up to the limit
-     * specified by the constraints.
+     * The number of times the Task has been retried by the Batch service. Task
+     * application failures (non-zero exit code) are retried, pre-processing
+     * errors (the Task could not be run) and file upload errors are not
+     * retried. The Batch service will retry the Task up to the limit specified
+     * by the constraints.
      */
     @JsonProperty(value = "retryCount", required = true)
     private int retryCount;
 
     /**
-     * The most recent time at which a retry of the Task started running.
-     * This element is present only if the Task was retried (i.e. retryCount is
+     * The most recent time at which a retry of the Task started running. This
+     * element is present only if the Task was retried (i.e. retryCount is
      * nonzero). If present, this is typically the same as startTime, but may
      * be different if the Task has been restarted for reasons other than
      * retry; for example, if the Compute Node was rebooted during a retry,
@@ -91,16 +89,15 @@ public class StartTaskInformation {
     private DateTime lastRetryTime;
 
     /**
-     * The result of the Task execution.
-     * If the value is 'failed', then the details of the failure can be found
-     * in the failureInfo property. Possible values include: 'success',
-     * 'failure'.
+     * The result of the Task execution. If the value is 'failed', then the
+     * details of the failure can be found in the failureInfo property.
+     * Possible values include: 'success', 'failure'.
      */
     @JsonProperty(value = "result")
     private TaskExecutionResult result;
 
     /**
-     * Get possible values include: 'running', 'completed'.
+     * Get the state of the StartTask on the Compute Node. Possible values include: 'running', 'completed'.
      *
      * @return the state value
      */
@@ -109,7 +106,7 @@ public class StartTaskInformation {
     }
 
     /**
-     * Set possible values include: 'running', 'completed'.
+     * Set the state of the StartTask on the Compute Node. Possible values include: 'running', 'completed'.
      *
      * @param state the state value to set
      * @return the StartTaskInformation object itself.
@@ -120,7 +117,7 @@ public class StartTaskInformation {
     }
 
     /**
-     * Get this value is reset every time the Task is restarted or retried (that is, this is the most recent time at which the StartTask started running).
+     * Get the time at which the StartTask started running. This value is reset every time the Task is restarted or retried (that is, this is the most recent time at which the StartTask started running).
      *
      * @return the startTime value
      */
@@ -129,7 +126,7 @@ public class StartTaskInformation {
     }
 
     /**
-     * Set this value is reset every time the Task is restarted or retried (that is, this is the most recent time at which the StartTask started running).
+     * Set the time at which the StartTask started running. This value is reset every time the Task is restarted or retried (that is, this is the most recent time at which the StartTask started running).
      *
      * @param startTime the startTime value to set
      * @return the StartTaskInformation object itself.
@@ -140,7 +137,7 @@ public class StartTaskInformation {
     }
 
     /**
-     * Get this is the end time of the most recent run of the StartTask, if that run has completed (even if that run failed and a retry is pending). This element is not present if the StartTask is currently running.
+     * Get the time at which the StartTask stopped running. This is the end time of the most recent run of the StartTask, if that run has completed (even if that run failed and a retry is pending). This element is not present if the StartTask is currently running.
      *
      * @return the endTime value
      */
@@ -149,7 +146,7 @@ public class StartTaskInformation {
     }
 
     /**
-     * Set this is the end time of the most recent run of the StartTask, if that run has completed (even if that run failed and a retry is pending). This element is not present if the StartTask is currently running.
+     * Set the time at which the StartTask stopped running. This is the end time of the most recent run of the StartTask, if that run has completed (even if that run failed and a retry is pending). This element is not present if the StartTask is currently running.
      *
      * @param endTime the endTime value to set
      * @return the StartTaskInformation object itself.
@@ -160,7 +157,7 @@ public class StartTaskInformation {
     }
 
     /**
-     * Get this property is set only if the StartTask is in the completed state. In general, the exit code for a process reflects the specific convention implemented by the application developer for that process. If you use the exit code value to make decisions in your code, be sure that you know the exit code convention used by the application process. However, if the Batch service terminates the StartTask (due to timeout, or user termination via the API) you may see an operating system-defined exit code.
+     * Get the exit code of the program specified on the StartTask command line. This property is set only if the StartTask is in the completed state. In general, the exit code for a process reflects the specific convention implemented by the application developer for that process. If you use the exit code value to make decisions in your code, be sure that you know the exit code convention used by the application process. However, if the Batch service terminates the StartTask (due to timeout, or user termination via the API) you may see an operating system-defined exit code.
      *
      * @return the exitCode value
      */
@@ -169,7 +166,7 @@ public class StartTaskInformation {
     }
 
     /**
-     * Set this property is set only if the StartTask is in the completed state. In general, the exit code for a process reflects the specific convention implemented by the application developer for that process. If you use the exit code value to make decisions in your code, be sure that you know the exit code convention used by the application process. However, if the Batch service terminates the StartTask (due to timeout, or user termination via the API) you may see an operating system-defined exit code.
+     * Set the exit code of the program specified on the StartTask command line. This property is set only if the StartTask is in the completed state. In general, the exit code for a process reflects the specific convention implemented by the application developer for that process. If you use the exit code value to make decisions in your code, be sure that you know the exit code convention used by the application process. However, if the Batch service terminates the StartTask (due to timeout, or user termination via the API) you may see an operating system-defined exit code.
      *
      * @param exitCode the exitCode value to set
      * @return the StartTaskInformation object itself.
@@ -180,7 +177,7 @@ public class StartTaskInformation {
     }
 
     /**
-     * Get this property is set only if the Task runs in a container context.
+     * Get information about the container under which the Task is executing. This property is set only if the Task runs in a container context.
      *
      * @return the containerInfo value
      */
@@ -189,7 +186,7 @@ public class StartTaskInformation {
     }
 
     /**
-     * Set this property is set only if the Task runs in a container context.
+     * Set information about the container under which the Task is executing. This property is set only if the Task runs in a container context.
      *
      * @param containerInfo the containerInfo value to set
      * @return the StartTaskInformation object itself.
@@ -200,7 +197,7 @@ public class StartTaskInformation {
     }
 
     /**
-     * Get this property is set only if the Task is in the completed state and encountered a failure.
+     * Get information describing the Task failure, if any. This property is set only if the Task is in the completed state and encountered a failure.
      *
      * @return the failureInfo value
      */
@@ -209,7 +206,7 @@ public class StartTaskInformation {
     }
 
     /**
-     * Set this property is set only if the Task is in the completed state and encountered a failure.
+     * Set information describing the Task failure, if any. This property is set only if the Task is in the completed state and encountered a failure.
      *
      * @param failureInfo the failureInfo value to set
      * @return the StartTaskInformation object itself.
@@ -220,7 +217,7 @@ public class StartTaskInformation {
     }
 
     /**
-     * Get task application failures (non-zero exit code) are retried, pre-processing errors (the Task could not be run) and file upload errors are not retried. The Batch service will retry the Task up to the limit specified by the constraints.
+     * Get the number of times the Task has been retried by the Batch service. Task application failures (non-zero exit code) are retried, pre-processing errors (the Task could not be run) and file upload errors are not retried. The Batch service will retry the Task up to the limit specified by the constraints.
      *
      * @return the retryCount value
      */
@@ -229,7 +226,7 @@ public class StartTaskInformation {
     }
 
     /**
-     * Set task application failures (non-zero exit code) are retried, pre-processing errors (the Task could not be run) and file upload errors are not retried. The Batch service will retry the Task up to the limit specified by the constraints.
+     * Set the number of times the Task has been retried by the Batch service. Task application failures (non-zero exit code) are retried, pre-processing errors (the Task could not be run) and file upload errors are not retried. The Batch service will retry the Task up to the limit specified by the constraints.
      *
      * @param retryCount the retryCount value to set
      * @return the StartTaskInformation object itself.
@@ -240,7 +237,7 @@ public class StartTaskInformation {
     }
 
     /**
-     * Get this element is present only if the Task was retried (i.e. retryCount is nonzero). If present, this is typically the same as startTime, but may be different if the Task has been restarted for reasons other than retry; for example, if the Compute Node was rebooted during a retry, then the startTime is updated but the lastRetryTime is not.
+     * Get the most recent time at which a retry of the Task started running. This element is present only if the Task was retried (i.e. retryCount is nonzero). If present, this is typically the same as startTime, but may be different if the Task has been restarted for reasons other than retry; for example, if the Compute Node was rebooted during a retry, then the startTime is updated but the lastRetryTime is not.
      *
      * @return the lastRetryTime value
      */
@@ -249,7 +246,7 @@ public class StartTaskInformation {
     }
 
     /**
-     * Set this element is present only if the Task was retried (i.e. retryCount is nonzero). If present, this is typically the same as startTime, but may be different if the Task has been restarted for reasons other than retry; for example, if the Compute Node was rebooted during a retry, then the startTime is updated but the lastRetryTime is not.
+     * Set the most recent time at which a retry of the Task started running. This element is present only if the Task was retried (i.e. retryCount is nonzero). If present, this is typically the same as startTime, but may be different if the Task has been restarted for reasons other than retry; for example, if the Compute Node was rebooted during a retry, then the startTime is updated but the lastRetryTime is not.
      *
      * @param lastRetryTime the lastRetryTime value to set
      * @return the StartTaskInformation object itself.
@@ -260,7 +257,7 @@ public class StartTaskInformation {
     }
 
     /**
-     * Get if the value is 'failed', then the details of the failure can be found in the failureInfo property. Possible values include: 'success', 'failure'.
+     * Get the result of the Task execution. If the value is 'failed', then the details of the failure can be found in the failureInfo property. Possible values include: 'success', 'failure'.
      *
      * @return the result value
      */
@@ -269,7 +266,7 @@ public class StartTaskInformation {
     }
 
     /**
-     * Set if the value is 'failed', then the details of the failure can be found in the failureInfo property. Possible values include: 'success', 'failure'.
+     * Set the result of the Task execution. If the value is 'failed', then the details of the failure can be found in the failureInfo property. Possible values include: 'success', 'failure'.
      *
      * @param result the result value to set
      * @return the StartTaskInformation object itself.

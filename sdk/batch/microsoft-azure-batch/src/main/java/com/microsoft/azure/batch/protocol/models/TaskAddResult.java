@@ -16,8 +16,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class TaskAddResult {
     /**
-     * The status of the add Task request.
-     * Possible values include: 'success', 'clientError', 'serverError'.
+     * The status of the add Task request. Possible values include: 'success',
+     * 'clientError', 'serverError'.
      */
     @JsonProperty(value = "status", required = true)
     private TaskAddStatus status;
@@ -29,11 +29,11 @@ public class TaskAddResult {
     private String taskId;
 
     /**
-     * The ETag of the Task, if the Task was successfully added.
-     * You can use this to detect whether the Task has changed between
-     * requests. In particular, you can be pass the ETag with an Update Task
-     * request to specify that your changes should take effect only if nobody
-     * else has modified the Job in the meantime.
+     * The ETag of the Task, if the Task was successfully added. You can use
+     * this to detect whether the Task has changed between requests. In
+     * particular, you can be pass the ETag with an Update Task request to
+     * specify that your changes should take effect only if nobody else has
+     * modified the Job in the meantime.
      */
     @JsonProperty(value = "eTag")
     private String eTag;
@@ -57,7 +57,7 @@ public class TaskAddResult {
     private BatchError error;
 
     /**
-     * Get possible values include: 'success', 'clientError', 'serverError'.
+     * Get the status of the add Task request. Possible values include: 'success', 'clientError', 'serverError'.
      *
      * @return the status value
      */
@@ -66,7 +66,7 @@ public class TaskAddResult {
     }
 
     /**
-     * Set possible values include: 'success', 'clientError', 'serverError'.
+     * Set the status of the add Task request. Possible values include: 'success', 'clientError', 'serverError'.
      *
      * @param status the status value to set
      * @return the TaskAddResult object itself.
@@ -77,7 +77,7 @@ public class TaskAddResult {
     }
 
     /**
-     * Get the taskId value.
+     * Get the ID of the Task for which this is the result.
      *
      * @return the taskId value
      */
@@ -86,7 +86,7 @@ public class TaskAddResult {
     }
 
     /**
-     * Set the taskId value.
+     * Set the ID of the Task for which this is the result.
      *
      * @param taskId the taskId value to set
      * @return the TaskAddResult object itself.
@@ -97,7 +97,7 @@ public class TaskAddResult {
     }
 
     /**
-     * Get you can use this to detect whether the Task has changed between requests. In particular, you can be pass the ETag with an Update Task request to specify that your changes should take effect only if nobody else has modified the Job in the meantime.
+     * Get the ETag of the Task, if the Task was successfully added. You can use this to detect whether the Task has changed between requests. In particular, you can be pass the ETag with an Update Task request to specify that your changes should take effect only if nobody else has modified the Job in the meantime.
      *
      * @return the eTag value
      */
@@ -106,7 +106,7 @@ public class TaskAddResult {
     }
 
     /**
-     * Set you can use this to detect whether the Task has changed between requests. In particular, you can be pass the ETag with an Update Task request to specify that your changes should take effect only if nobody else has modified the Job in the meantime.
+     * Set the ETag of the Task, if the Task was successfully added. You can use this to detect whether the Task has changed between requests. In particular, you can be pass the ETag with an Update Task request to specify that your changes should take effect only if nobody else has modified the Job in the meantime.
      *
      * @param eTag the eTag value to set
      * @return the TaskAddResult object itself.
@@ -117,7 +117,7 @@ public class TaskAddResult {
     }
 
     /**
-     * Get the lastModified value.
+     * Get the last modified time of the Task.
      *
      * @return the lastModified value
      */
@@ -126,7 +126,7 @@ public class TaskAddResult {
     }
 
     /**
-     * Set the lastModified value.
+     * Set the last modified time of the Task.
      *
      * @param lastModified the lastModified value to set
      * @return the TaskAddResult object itself.
@@ -137,7 +137,7 @@ public class TaskAddResult {
     }
 
     /**
-     * Get the location value.
+     * Get the URL of the Task, if the Task was successfully added.
      *
      * @return the location value
      */
@@ -146,7 +146,7 @@ public class TaskAddResult {
     }
 
     /**
-     * Set the location value.
+     * Set the URL of the Task, if the Task was successfully added.
      *
      * @param location the location value to set
      * @return the TaskAddResult object itself.
@@ -157,7 +157,7 @@ public class TaskAddResult {
     }
 
     /**
-     * Get the error value.
+     * Get the error encountered while attempting to add the Task.
      *
      * @return the error value
      */
@@ -166,7 +166,7 @@ public class TaskAddResult {
     }
 
     /**
-     * Set the error value.
+     * Set the error encountered while attempting to add the Task.
      *
      * @param error the error value to set
      * @return the TaskAddResult object itself.

@@ -35,9 +35,8 @@ public class PoolUsageMetrics {
 
     /**
      * The size of virtual machines in the Pool. All VMs in a Pool are the same
-     * size.
-     * For information about available sizes of virtual machines in Pools, see
-     * Choose a VM size for Compute Nodes in an Azure Batch Pool
+     * size. For information about available sizes of virtual machines in
+     * Pools, see Choose a VM size for Compute Nodes in an Azure Batch Pool
      * (https://docs.microsoft.com/azure/batch/batch-pool-vm-sizes).
      */
     @JsonProperty(value = "vmSize", required = true)
@@ -50,7 +49,7 @@ public class PoolUsageMetrics {
     private double totalCoreHours;
 
     /**
-     * Get the poolId value.
+     * Get the ID of the Pool whose metrics are aggregated in this entry.
      *
      * @return the poolId value
      */
@@ -59,7 +58,7 @@ public class PoolUsageMetrics {
     }
 
     /**
-     * Set the poolId value.
+     * Set the ID of the Pool whose metrics are aggregated in this entry.
      *
      * @param poolId the poolId value to set
      * @return the PoolUsageMetrics object itself.
@@ -70,7 +69,7 @@ public class PoolUsageMetrics {
     }
 
     /**
-     * Get the startTime value.
+     * Get the start time of the aggregation interval covered by this entry.
      *
      * @return the startTime value
      */
@@ -79,7 +78,7 @@ public class PoolUsageMetrics {
     }
 
     /**
-     * Set the startTime value.
+     * Set the start time of the aggregation interval covered by this entry.
      *
      * @param startTime the startTime value to set
      * @return the PoolUsageMetrics object itself.
@@ -90,7 +89,7 @@ public class PoolUsageMetrics {
     }
 
     /**
-     * Get the endTime value.
+     * Get the end time of the aggregation interval covered by this entry.
      *
      * @return the endTime value
      */
@@ -99,7 +98,7 @@ public class PoolUsageMetrics {
     }
 
     /**
-     * Set the endTime value.
+     * Set the end time of the aggregation interval covered by this entry.
      *
      * @param endTime the endTime value to set
      * @return the PoolUsageMetrics object itself.
@@ -110,7 +109,7 @@ public class PoolUsageMetrics {
     }
 
     /**
-     * Get for information about available sizes of virtual machines in Pools, see Choose a VM size for Compute Nodes in an Azure Batch Pool (https://docs.microsoft.com/azure/batch/batch-pool-vm-sizes).
+     * Get the size of virtual machines in the Pool. All VMs in a Pool are the same size. For information about available sizes of virtual machines in Pools, see Choose a VM size for Compute Nodes in an Azure Batch Pool (https://docs.microsoft.com/azure/batch/batch-pool-vm-sizes).
      *
      * @return the vmSize value
      */
@@ -119,7 +118,7 @@ public class PoolUsageMetrics {
     }
 
     /**
-     * Set for information about available sizes of virtual machines in Pools, see Choose a VM size for Compute Nodes in an Azure Batch Pool (https://docs.microsoft.com/azure/batch/batch-pool-vm-sizes).
+     * Set the size of virtual machines in the Pool. All VMs in a Pool are the same size. For information about available sizes of virtual machines in Pools, see Choose a VM size for Compute Nodes in an Azure Batch Pool (https://docs.microsoft.com/azure/batch/batch-pool-vm-sizes).
      *
      * @param vmSize the vmSize value to set
      * @return the PoolUsageMetrics object itself.
@@ -130,7 +129,7 @@ public class PoolUsageMetrics {
     }
 
     /**
-     * Get the totalCoreHours value.
+     * Get the total core hours used in the Pool during this aggregation interval.
      *
      * @return the totalCoreHours value
      */
@@ -139,7 +138,7 @@ public class PoolUsageMetrics {
     }
 
     /**
-     * Set the totalCoreHours value.
+     * Set the total core hours used in the Pool during this aggregation interval.
      *
      * @param totalCoreHours the totalCoreHours value to set
      * @return the PoolUsageMetrics object itself.

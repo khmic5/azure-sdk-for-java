@@ -36,7 +36,7 @@ public class ComputeNodeError {
     private List<NameValuePair> errorDetails;
 
     /**
-     * Get the code value.
+     * Get an identifier for the Compute Node error. Codes are invariant and are intended to be consumed programmatically.
      *
      * @return the code value
      */
@@ -45,7 +45,7 @@ public class ComputeNodeError {
     }
 
     /**
-     * Set the code value.
+     * Set an identifier for the Compute Node error. Codes are invariant and are intended to be consumed programmatically.
      *
      * @param code the code value to set
      * @return the ComputeNodeError object itself.
@@ -56,7 +56,7 @@ public class ComputeNodeError {
     }
 
     /**
-     * Get the message value.
+     * Get a message describing the Compute Node error, intended to be suitable for display in a user interface.
      *
      * @return the message value
      */
@@ -65,7 +65,7 @@ public class ComputeNodeError {
     }
 
     /**
-     * Set the message value.
+     * Set a message describing the Compute Node error, intended to be suitable for display in a user interface.
      *
      * @param message the message value to set
      * @return the ComputeNodeError object itself.
@@ -76,7 +76,7 @@ public class ComputeNodeError {
     }
 
     /**
-     * Get the errorDetails value.
+     * Get the list of additional error details related to the Compute Node error.
      *
      * @return the errorDetails value
      */
@@ -85,7 +85,7 @@ public class ComputeNodeError {
     }
 
     /**
-     * Set the errorDetails value.
+     * Set the list of additional error details related to the Compute Node error.
      *
      * @param errorDetails the errorDetails value to set
      * @return the ComputeNodeError object itself.

@@ -27,7 +27,7 @@ public class RecentJob {
     private String url;
 
     /**
-     * Get the id value.
+     * Get the ID of the Job.
      *
      * @return the id value
      */
@@ -36,7 +36,7 @@ public class RecentJob {
     }
 
     /**
-     * Set the id value.
+     * Set the ID of the Job.
      *
      * @param id the id value to set
      * @return the RecentJob object itself.
@@ -47,7 +47,7 @@ public class RecentJob {
     }
 
     /**
-     * Get the url value.
+     * Get the URL of the Job.
      *
      * @return the url value
      */
@@ -56,7 +56,7 @@ public class RecentJob {
     }
 
     /**
-     * Set the url value.
+     * Set the URL of the Job.
      *
      * @param url the url value to set
      * @return the RecentJob object itself.

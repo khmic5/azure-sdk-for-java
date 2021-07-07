@@ -36,21 +36,20 @@ public class CloudJobSchedule {
     private String url;
 
     /**
-     * The ETag of the Job Schedule.
-     * This is an opaque string. You can use it to detect whether the Job
-     * Schedule has changed between requests. In particular, you can be pass
-     * the ETag with an Update Job Schedule request to specify that your
-     * changes should take effect only if nobody else has modified the schedule
-     * in the meantime.
+     * The ETag of the Job Schedule. This is an opaque string. You can use it
+     * to detect whether the Job Schedule has changed between requests. In
+     * particular, you can be pass the ETag with an Update Job Schedule request
+     * to specify that your changes should take effect only if nobody else has
+     * modified the schedule in the meantime.
      */
     @JsonProperty(value = "eTag")
     private String eTag;
 
     /**
-     * The last modified time of the Job Schedule.
-     * This is the last time at which the schedule level data, such as the Job
-     * specification or recurrence information, changed. It does not factor in
-     * job-level changes such as new Jobs being created or Jobs changing state.
+     * The last modified time of the Job Schedule. This is the last time at
+     * which the schedule level data, such as the Job specification or
+     * recurrence information, changed. It does not factor in job-level changes
+     * such as new Jobs being created or Jobs changing state.
      */
     @JsonProperty(value = "lastModified")
     private DateTime lastModified;
@@ -62,9 +61,8 @@ public class CloudJobSchedule {
     private DateTime creationTime;
 
     /**
-     * The current state of the Job Schedule.
-     * Possible values include: 'active', 'completed', 'disabled',
-     * 'terminating', 'deleting'.
+     * The current state of the Job Schedule. Possible values include:
+     * 'active', 'completed', 'disabled', 'terminating', 'deleting'.
      */
     @JsonProperty(value = "state")
     private JobScheduleState state;
@@ -76,18 +74,17 @@ public class CloudJobSchedule {
     private DateTime stateTransitionTime;
 
     /**
-     * The previous state of the Job Schedule.
-     * This property is not present if the Job Schedule is in its initial
-     * active state. Possible values include: 'active', 'completed',
-     * 'disabled', 'terminating', 'deleting'.
+     * The previous state of the Job Schedule. This property is not present if
+     * the Job Schedule is in its initial active state. Possible values
+     * include: 'active', 'completed', 'disabled', 'terminating', 'deleting'.
      */
     @JsonProperty(value = "previousState")
     private JobScheduleState previousState;
 
     /**
-     * The time at which the Job Schedule entered its previous state.
-     * This property is not present if the Job Schedule is in its initial
-     * active state.
+     * The time at which the Job Schedule entered its previous state. This
+     * property is not present if the Job Schedule is in its initial active
+     * state.
      */
     @JsonProperty(value = "previousStateTransitionTime")
     private DateTime previousStateTransitionTime;
@@ -112,9 +109,9 @@ public class CloudJobSchedule {
     private JobScheduleExecutionInformation executionInfo;
 
     /**
-     * A list of name-value pairs associated with the schedule as metadata.
-     * The Batch service does not assign any meaning to metadata; it is solely
-     * for the use of user code.
+     * A list of name-value pairs associated with the schedule as metadata. The
+     * Batch service does not assign any meaning to metadata; it is solely for
+     * the use of user code.
      */
     @JsonProperty(value = "metadata")
     private List<MetadataItem> metadata;
@@ -128,7 +125,7 @@ public class CloudJobSchedule {
     private JobScheduleStatistics stats;
 
     /**
-     * Get the id value.
+     * Get a string that uniquely identifies the schedule within the Account.
      *
      * @return the id value
      */
@@ -137,7 +134,7 @@ public class CloudJobSchedule {
     }
 
     /**
-     * Set the id value.
+     * Set a string that uniquely identifies the schedule within the Account.
      *
      * @param id the id value to set
      * @return the CloudJobSchedule object itself.
@@ -148,7 +145,7 @@ public class CloudJobSchedule {
     }
 
     /**
-     * Get the displayName value.
+     * Get the display name for the schedule.
      *
      * @return the displayName value
      */
@@ -157,7 +154,7 @@ public class CloudJobSchedule {
     }
 
     /**
-     * Set the displayName value.
+     * Set the display name for the schedule.
      *
      * @param displayName the displayName value to set
      * @return the CloudJobSchedule object itself.
@@ -168,7 +165,7 @@ public class CloudJobSchedule {
     }
 
     /**
-     * Get the url value.
+     * Get the URL of the Job Schedule.
      *
      * @return the url value
      */
@@ -177,7 +174,7 @@ public class CloudJobSchedule {
     }
 
     /**
-     * Set the url value.
+     * Set the URL of the Job Schedule.
      *
      * @param url the url value to set
      * @return the CloudJobSchedule object itself.
@@ -188,7 +185,7 @@ public class CloudJobSchedule {
     }
 
     /**
-     * Get this is an opaque string. You can use it to detect whether the Job Schedule has changed between requests. In particular, you can be pass the ETag with an Update Job Schedule request to specify that your changes should take effect only if nobody else has modified the schedule in the meantime.
+     * Get the ETag of the Job Schedule. This is an opaque string. You can use it to detect whether the Job Schedule has changed between requests. In particular, you can be pass the ETag with an Update Job Schedule request to specify that your changes should take effect only if nobody else has modified the schedule in the meantime.
      *
      * @return the eTag value
      */
@@ -197,7 +194,7 @@ public class CloudJobSchedule {
     }
 
     /**
-     * Set this is an opaque string. You can use it to detect whether the Job Schedule has changed between requests. In particular, you can be pass the ETag with an Update Job Schedule request to specify that your changes should take effect only if nobody else has modified the schedule in the meantime.
+     * Set the ETag of the Job Schedule. This is an opaque string. You can use it to detect whether the Job Schedule has changed between requests. In particular, you can be pass the ETag with an Update Job Schedule request to specify that your changes should take effect only if nobody else has modified the schedule in the meantime.
      *
      * @param eTag the eTag value to set
      * @return the CloudJobSchedule object itself.
@@ -208,7 +205,7 @@ public class CloudJobSchedule {
     }
 
     /**
-     * Get this is the last time at which the schedule level data, such as the Job specification or recurrence information, changed. It does not factor in job-level changes such as new Jobs being created or Jobs changing state.
+     * Get the last modified time of the Job Schedule. This is the last time at which the schedule level data, such as the Job specification or recurrence information, changed. It does not factor in job-level changes such as new Jobs being created or Jobs changing state.
      *
      * @return the lastModified value
      */
@@ -217,7 +214,7 @@ public class CloudJobSchedule {
     }
 
     /**
-     * Set this is the last time at which the schedule level data, such as the Job specification or recurrence information, changed. It does not factor in job-level changes such as new Jobs being created or Jobs changing state.
+     * Set the last modified time of the Job Schedule. This is the last time at which the schedule level data, such as the Job specification or recurrence information, changed. It does not factor in job-level changes such as new Jobs being created or Jobs changing state.
      *
      * @param lastModified the lastModified value to set
      * @return the CloudJobSchedule object itself.
@@ -228,7 +225,7 @@ public class CloudJobSchedule {
     }
 
     /**
-     * Get the creationTime value.
+     * Get the creation time of the Job Schedule.
      *
      * @return the creationTime value
      */
@@ -237,7 +234,7 @@ public class CloudJobSchedule {
     }
 
     /**
-     * Set the creationTime value.
+     * Set the creation time of the Job Schedule.
      *
      * @param creationTime the creationTime value to set
      * @return the CloudJobSchedule object itself.
@@ -248,7 +245,7 @@ public class CloudJobSchedule {
     }
 
     /**
-     * Get possible values include: 'active', 'completed', 'disabled', 'terminating', 'deleting'.
+     * Get the current state of the Job Schedule. Possible values include: 'active', 'completed', 'disabled', 'terminating', 'deleting'.
      *
      * @return the state value
      */
@@ -257,7 +254,7 @@ public class CloudJobSchedule {
     }
 
     /**
-     * Set possible values include: 'active', 'completed', 'disabled', 'terminating', 'deleting'.
+     * Set the current state of the Job Schedule. Possible values include: 'active', 'completed', 'disabled', 'terminating', 'deleting'.
      *
      * @param state the state value to set
      * @return the CloudJobSchedule object itself.
@@ -268,7 +265,7 @@ public class CloudJobSchedule {
     }
 
     /**
-     * Get the stateTransitionTime value.
+     * Get the time at which the Job Schedule entered the current state.
      *
      * @return the stateTransitionTime value
      */
@@ -277,7 +274,7 @@ public class CloudJobSchedule {
     }
 
     /**
-     * Set the stateTransitionTime value.
+     * Set the time at which the Job Schedule entered the current state.
      *
      * @param stateTransitionTime the stateTransitionTime value to set
      * @return the CloudJobSchedule object itself.
@@ -288,7 +285,7 @@ public class CloudJobSchedule {
     }
 
     /**
-     * Get this property is not present if the Job Schedule is in its initial active state. Possible values include: 'active', 'completed', 'disabled', 'terminating', 'deleting'.
+     * Get the previous state of the Job Schedule. This property is not present if the Job Schedule is in its initial active state. Possible values include: 'active', 'completed', 'disabled', 'terminating', 'deleting'.
      *
      * @return the previousState value
      */
@@ -297,7 +294,7 @@ public class CloudJobSchedule {
     }
 
     /**
-     * Set this property is not present if the Job Schedule is in its initial active state. Possible values include: 'active', 'completed', 'disabled', 'terminating', 'deleting'.
+     * Set the previous state of the Job Schedule. This property is not present if the Job Schedule is in its initial active state. Possible values include: 'active', 'completed', 'disabled', 'terminating', 'deleting'.
      *
      * @param previousState the previousState value to set
      * @return the CloudJobSchedule object itself.
@@ -308,7 +305,7 @@ public class CloudJobSchedule {
     }
 
     /**
-     * Get this property is not present if the Job Schedule is in its initial active state.
+     * Get the time at which the Job Schedule entered its previous state. This property is not present if the Job Schedule is in its initial active state.
      *
      * @return the previousStateTransitionTime value
      */
@@ -317,7 +314,7 @@ public class CloudJobSchedule {
     }
 
     /**
-     * Set this property is not present if the Job Schedule is in its initial active state.
+     * Set the time at which the Job Schedule entered its previous state. This property is not present if the Job Schedule is in its initial active state.
      *
      * @param previousStateTransitionTime the previousStateTransitionTime value to set
      * @return the CloudJobSchedule object itself.
@@ -328,7 +325,7 @@ public class CloudJobSchedule {
     }
 
     /**
-     * Get the schedule value.
+     * Get the schedule according to which Jobs will be created.
      *
      * @return the schedule value
      */
@@ -337,7 +334,7 @@ public class CloudJobSchedule {
     }
 
     /**
-     * Set the schedule value.
+     * Set the schedule according to which Jobs will be created.
      *
      * @param schedule the schedule value to set
      * @return the CloudJobSchedule object itself.
@@ -348,7 +345,7 @@ public class CloudJobSchedule {
     }
 
     /**
-     * Get the jobSpecification value.
+     * Get the details of the Jobs to be created on this schedule.
      *
      * @return the jobSpecification value
      */
@@ -357,7 +354,7 @@ public class CloudJobSchedule {
     }
 
     /**
-     * Set the jobSpecification value.
+     * Set the details of the Jobs to be created on this schedule.
      *
      * @param jobSpecification the jobSpecification value to set
      * @return the CloudJobSchedule object itself.
@@ -368,7 +365,7 @@ public class CloudJobSchedule {
     }
 
     /**
-     * Get the executionInfo value.
+     * Get information about Jobs that have been and will be run under this schedule.
      *
      * @return the executionInfo value
      */
@@ -377,7 +374,7 @@ public class CloudJobSchedule {
     }
 
     /**
-     * Set the executionInfo value.
+     * Set information about Jobs that have been and will be run under this schedule.
      *
      * @param executionInfo the executionInfo value to set
      * @return the CloudJobSchedule object itself.
@@ -388,7 +385,7 @@ public class CloudJobSchedule {
     }
 
     /**
-     * Get the Batch service does not assign any meaning to metadata; it is solely for the use of user code.
+     * Get a list of name-value pairs associated with the schedule as metadata. The Batch service does not assign any meaning to metadata; it is solely for the use of user code.
      *
      * @return the metadata value
      */
@@ -397,7 +394,7 @@ public class CloudJobSchedule {
     }
 
     /**
-     * Set the Batch service does not assign any meaning to metadata; it is solely for the use of user code.
+     * Set a list of name-value pairs associated with the schedule as metadata. The Batch service does not assign any meaning to metadata; it is solely for the use of user code.
      *
      * @param metadata the metadata value to set
      * @return the CloudJobSchedule object itself.
@@ -408,7 +405,7 @@ public class CloudJobSchedule {
     }
 
     /**
-     * Get the stats value.
+     * Get the lifetime resource usage statistics for the Job Schedule. The statistics may not be immediately available. The Batch service performs periodic roll-up of statistics. The typical delay is about 30 minutes.
      *
      * @return the stats value
      */
@@ -417,7 +414,7 @@ public class CloudJobSchedule {
     }
 
     /**
-     * Set the stats value.
+     * Set the lifetime resource usage statistics for the Job Schedule. The statistics may not be immediately available. The Batch service performs periodic roll-up of statistics. The typical delay is about 30 minutes.
      *
      * @param stats the stats value to set
      * @return the CloudJobSchedule object itself.

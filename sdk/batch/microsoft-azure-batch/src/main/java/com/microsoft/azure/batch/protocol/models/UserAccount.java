@@ -28,32 +28,31 @@ public class UserAccount {
     private String password;
 
     /**
-     * The elevation level of the user Account.
-     * The default value is nonAdmin. Possible values include: 'nonAdmin',
-     * 'admin'.
+     * The elevation level of the user Account. The default value is nonAdmin.
+     * Possible values include: 'nonAdmin', 'admin'.
      */
     @JsonProperty(value = "elevationLevel")
     private ElevationLevel elevationLevel;
 
     /**
-     * The Linux-specific user configuration for the user Account.
-     * This property is ignored if specified on a Windows Pool. If not
-     * specified, the user is created with the default options.
+     * The Linux-specific user configuration for the user Account. This
+     * property is ignored if specified on a Windows Pool. If not specified,
+     * the user is created with the default options.
      */
     @JsonProperty(value = "linuxUserConfiguration")
     private LinuxUserConfiguration linuxUserConfiguration;
 
     /**
-     * The Windows-specific user configuration for the user Account.
-     * This property can only be specified if the user is on a Windows Pool. If
-     * not specified and on a Windows Pool, the user is created with the
-     * default options.
+     * The Windows-specific user configuration for the user Account. This
+     * property can only be specified if the user is on a Windows Pool. If not
+     * specified and on a Windows Pool, the user is created with the default
+     * options.
      */
     @JsonProperty(value = "windowsUserConfiguration")
     private WindowsUserConfiguration windowsUserConfiguration;
 
     /**
-     * Get the name value.
+     * Get the name of the user Account.
      *
      * @return the name value
      */
@@ -62,7 +61,7 @@ public class UserAccount {
     }
 
     /**
-     * Set the name value.
+     * Set the name of the user Account.
      *
      * @param name the name value to set
      * @return the UserAccount object itself.
@@ -73,7 +72,7 @@ public class UserAccount {
     }
 
     /**
-     * Get the password value.
+     * Get the password for the user Account.
      *
      * @return the password value
      */
@@ -82,7 +81,7 @@ public class UserAccount {
     }
 
     /**
-     * Set the password value.
+     * Set the password for the user Account.
      *
      * @param password the password value to set
      * @return the UserAccount object itself.
@@ -93,7 +92,7 @@ public class UserAccount {
     }
 
     /**
-     * Get the default value is nonAdmin. Possible values include: 'nonAdmin', 'admin'.
+     * Get the elevation level of the user Account. The default value is nonAdmin. Possible values include: 'nonAdmin', 'admin'.
      *
      * @return the elevationLevel value
      */
@@ -102,7 +101,7 @@ public class UserAccount {
     }
 
     /**
-     * Set the default value is nonAdmin. Possible values include: 'nonAdmin', 'admin'.
+     * Set the elevation level of the user Account. The default value is nonAdmin. Possible values include: 'nonAdmin', 'admin'.
      *
      * @param elevationLevel the elevationLevel value to set
      * @return the UserAccount object itself.
@@ -113,7 +112,7 @@ public class UserAccount {
     }
 
     /**
-     * Get this property is ignored if specified on a Windows Pool. If not specified, the user is created with the default options.
+     * Get the Linux-specific user configuration for the user Account. This property is ignored if specified on a Windows Pool. If not specified, the user is created with the default options.
      *
      * @return the linuxUserConfiguration value
      */
@@ -122,7 +121,7 @@ public class UserAccount {
     }
 
     /**
-     * Set this property is ignored if specified on a Windows Pool. If not specified, the user is created with the default options.
+     * Set the Linux-specific user configuration for the user Account. This property is ignored if specified on a Windows Pool. If not specified, the user is created with the default options.
      *
      * @param linuxUserConfiguration the linuxUserConfiguration value to set
      * @return the UserAccount object itself.
@@ -133,7 +132,7 @@ public class UserAccount {
     }
 
     /**
-     * Get this property can only be specified if the user is on a Windows Pool. If not specified and on a Windows Pool, the user is created with the default options.
+     * Get the Windows-specific user configuration for the user Account. This property can only be specified if the user is on a Windows Pool. If not specified and on a Windows Pool, the user is created with the default options.
      *
      * @return the windowsUserConfiguration value
      */
@@ -142,7 +141,7 @@ public class UserAccount {
     }
 
     /**
-     * Set this property can only be specified if the user is on a Windows Pool. If not specified and on a Windows Pool, the user is created with the default options.
+     * Set the Windows-specific user configuration for the user Account. This property can only be specified if the user is on a Windows Pool. If not specified and on a Windows Pool, the user is created with the default options.
      *
      * @param windowsUserConfiguration the windowsUserConfiguration value to set
      * @return the UserAccount object itself.

@@ -17,30 +17,29 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class AutoPoolSpecification {
     /**
      * A prefix to be added to the unique identifier when a Pool is
-     * automatically created.
-     * The Batch service assigns each auto Pool a unique identifier on
-     * creation. To distinguish between Pools created for different purposes,
-     * you can specify this element to add a prefix to the ID that is assigned.
-     * The prefix can be up to 20 characters long.
+     * automatically created. The Batch service assigns each auto Pool a unique
+     * identifier on creation. To distinguish between Pools created for
+     * different purposes, you can specify this element to add a prefix to the
+     * ID that is assigned. The prefix can be up to 20 characters long.
      */
     @JsonProperty(value = "autoPoolIdPrefix")
     private String autoPoolIdPrefix;
 
     /**
      * The minimum lifetime of created auto Pools, and how multiple Jobs on a
-     * schedule are assigned to Pools.
-     * Possible values include: 'jobSchedule', 'job'.
+     * schedule are assigned to Pools. Possible values include: 'jobSchedule',
+     * 'job'.
      */
     @JsonProperty(value = "poolLifetimeOption", required = true)
     private PoolLifetimeOption poolLifetimeOption;
 
     /**
-     * Whether to keep an auto Pool alive after its lifetime expires.
-     * If false, the Batch service deletes the Pool once its lifetime (as
-     * determined by the poolLifetimeOption setting) expires; that is, when the
-     * Job or Job Schedule completes. If true, the Batch service does not
-     * delete the Pool automatically. It is up to the user to delete auto Pools
-     * created with this option.
+     * Whether to keep an auto Pool alive after its lifetime expires. If false,
+     * the Batch service deletes the Pool once its lifetime (as determined by
+     * the poolLifetimeOption setting) expires; that is, when the Job or Job
+     * Schedule completes. If true, the Batch service does not delete the Pool
+     * automatically. It is up to the user to delete auto Pools created with
+     * this option.
      */
     @JsonProperty(value = "keepAlive")
     private Boolean keepAlive;
@@ -52,7 +51,7 @@ public class AutoPoolSpecification {
     private PoolSpecification pool;
 
     /**
-     * Get the Batch service assigns each auto Pool a unique identifier on creation. To distinguish between Pools created for different purposes, you can specify this element to add a prefix to the ID that is assigned. The prefix can be up to 20 characters long.
+     * Get a prefix to be added to the unique identifier when a Pool is automatically created. The Batch service assigns each auto Pool a unique identifier on creation. To distinguish between Pools created for different purposes, you can specify this element to add a prefix to the ID that is assigned. The prefix can be up to 20 characters long.
      *
      * @return the autoPoolIdPrefix value
      */
@@ -61,7 +60,7 @@ public class AutoPoolSpecification {
     }
 
     /**
-     * Set the Batch service assigns each auto Pool a unique identifier on creation. To distinguish between Pools created for different purposes, you can specify this element to add a prefix to the ID that is assigned. The prefix can be up to 20 characters long.
+     * Set a prefix to be added to the unique identifier when a Pool is automatically created. The Batch service assigns each auto Pool a unique identifier on creation. To distinguish between Pools created for different purposes, you can specify this element to add a prefix to the ID that is assigned. The prefix can be up to 20 characters long.
      *
      * @param autoPoolIdPrefix the autoPoolIdPrefix value to set
      * @return the AutoPoolSpecification object itself.
@@ -72,7 +71,7 @@ public class AutoPoolSpecification {
     }
 
     /**
-     * Get possible values include: 'jobSchedule', 'job'.
+     * Get the minimum lifetime of created auto Pools, and how multiple Jobs on a schedule are assigned to Pools. Possible values include: 'jobSchedule', 'job'.
      *
      * @return the poolLifetimeOption value
      */
@@ -81,7 +80,7 @@ public class AutoPoolSpecification {
     }
 
     /**
-     * Set possible values include: 'jobSchedule', 'job'.
+     * Set the minimum lifetime of created auto Pools, and how multiple Jobs on a schedule are assigned to Pools. Possible values include: 'jobSchedule', 'job'.
      *
      * @param poolLifetimeOption the poolLifetimeOption value to set
      * @return the AutoPoolSpecification object itself.
@@ -92,7 +91,7 @@ public class AutoPoolSpecification {
     }
 
     /**
-     * Get if false, the Batch service deletes the Pool once its lifetime (as determined by the poolLifetimeOption setting) expires; that is, when the Job or Job Schedule completes. If true, the Batch service does not delete the Pool automatically. It is up to the user to delete auto Pools created with this option.
+     * Get whether to keep an auto Pool alive after its lifetime expires. If false, the Batch service deletes the Pool once its lifetime (as determined by the poolLifetimeOption setting) expires; that is, when the Job or Job Schedule completes. If true, the Batch service does not delete the Pool automatically. It is up to the user to delete auto Pools created with this option.
      *
      * @return the keepAlive value
      */
@@ -101,7 +100,7 @@ public class AutoPoolSpecification {
     }
 
     /**
-     * Set if false, the Batch service deletes the Pool once its lifetime (as determined by the poolLifetimeOption setting) expires; that is, when the Job or Job Schedule completes. If true, the Batch service does not delete the Pool automatically. It is up to the user to delete auto Pools created with this option.
+     * Set whether to keep an auto Pool alive after its lifetime expires. If false, the Batch service deletes the Pool once its lifetime (as determined by the poolLifetimeOption setting) expires; that is, when the Job or Job Schedule completes. If true, the Batch service does not delete the Pool automatically. It is up to the user to delete auto Pools created with this option.
      *
      * @param keepAlive the keepAlive value to set
      * @return the AutoPoolSpecification object itself.
@@ -112,7 +111,7 @@ public class AutoPoolSpecification {
     }
 
     /**
-     * Get the pool value.
+     * Get the Pool specification for the auto Pool.
      *
      * @return the pool value
      */
@@ -121,7 +120,7 @@ public class AutoPoolSpecification {
     }
 
     /**
-     * Set the pool value.
+     * Set the Pool specification for the auto Pool.
      *
      * @param pool the pool value to set
      * @return the AutoPoolSpecification object itself.

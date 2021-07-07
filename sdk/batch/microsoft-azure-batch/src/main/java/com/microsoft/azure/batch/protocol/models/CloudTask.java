@@ -13,31 +13,29 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * An Azure Batch Task.
- * Batch will retry Tasks when a recovery operation is triggered on a Node.
- * Examples of recovery operations include (but are not limited to) when an
- * unhealthy Node is rebooted or a Compute Node disappeared due to host
- * failure. Retries due to recovery operations are independent of and are not
- * counted against the maxTaskRetryCount. Even if the maxTaskRetryCount is 0,
- * an internal retry due to a recovery operation may occur. Because of this,
- * all Tasks should be idempotent. This means Tasks need to tolerate being
- * interrupted and restarted without causing any corruption or duplicate data.
- * The best practice for long running Tasks is to use some form of
- * checkpointing.
+ * An Azure Batch Task. Batch will retry Tasks when a recovery operation is
+ * triggered on a Node. Examples of recovery operations include (but are not
+ * limited to) when an unhealthy Node is rebooted or a Compute Node disappeared
+ * due to host failure. Retries due to recovery operations are independent of
+ * and are not counted against the maxTaskRetryCount. Even if the
+ * maxTaskRetryCount is 0, an internal retry due to a recovery operation may
+ * occur. Because of this, all Tasks should be idempotent. This means Tasks
+ * need to tolerate being interrupted and restarted without causing any
+ * corruption or duplicate data. The best practice for long running Tasks is to
+ * use some form of checkpointing.
  */
 public class CloudTask {
     /**
-     * A string that uniquely identifies the Task within the Job.
-     * The ID can contain any combination of alphanumeric characters including
-     * hyphens and underscores, and cannot contain more than 64 characters.
+     * A string that uniquely identifies the Task within the Job. The ID can
+     * contain any combination of alphanumeric characters including hyphens and
+     * underscores, and cannot contain more than 64 characters.
      */
     @JsonProperty(value = "id")
     private String id;
 
     /**
-     * A display name for the Task.
-     * The display name need not be unique and can contain any Unicode
-     * characters up to a maximum length of 1024.
+     * A display name for the Task. The display name need not be unique and can
+     * contain any Unicode characters up to a maximum length of 1024.
      */
     @JsonProperty(value = "displayName")
     private String displayName;
@@ -49,11 +47,10 @@ public class CloudTask {
     private String url;
 
     /**
-     * The ETag of the Task.
-     * This is an opaque string. You can use it to detect whether the Task has
-     * changed between requests. In particular, you can be pass the ETag when
-     * updating a Task to specify that your changes should take effect only if
-     * nobody else has modified the Task in the meantime.
+     * The ETag of the Task. This is an opaque string. You can use it to detect
+     * whether the Task has changed between requests. In particular, you can be
+     * pass the ETag when updating a Task to specify that your changes should
+     * take effect only if nobody else has modified the Task in the meantime.
      */
     @JsonProperty(value = "eTag")
     private String eTag;
@@ -77,8 +74,8 @@ public class CloudTask {
     private ExitConditions exitConditions;
 
     /**
-     * The current state of the Task.
-     * Possible values include: 'active', 'preparing', 'running', 'completed'.
+     * The current state of the Task. Possible values include: 'active',
+     * 'preparing', 'running', 'completed'.
      */
     @JsonProperty(value = "state")
     private TaskState state;
@@ -90,41 +87,40 @@ public class CloudTask {
     private DateTime stateTransitionTime;
 
     /**
-     * The previous state of the Task.
-     * This property is not set if the Task is in its initial Active state.
-     * Possible values include: 'active', 'preparing', 'running', 'completed'.
+     * The previous state of the Task. This property is not set if the Task is
+     * in its initial Active state. Possible values include: 'active',
+     * 'preparing', 'running', 'completed'.
      */
     @JsonProperty(value = "previousState")
     private TaskState previousState;
 
     /**
-     * The time at which the Task entered its previous state.
-     * This property is not set if the Task is in its initial Active state.
+     * The time at which the Task entered its previous state. This property is
+     * not set if the Task is in its initial Active state.
      */
     @JsonProperty(value = "previousStateTransitionTime")
     private DateTime previousStateTransitionTime;
 
     /**
-     * The command line of the Task.
-     * For multi-instance Tasks, the command line is executed as the primary
-     * Task, after the primary Task and all subtasks have finished executing
-     * the coordination command line. The command line does not run under a
-     * shell, and therefore cannot take advantage of shell features such as
-     * environment variable expansion. If you want to take advantage of such
-     * features, you should invoke the shell in the command line, for example
-     * using "cmd /c MyCommand" in Windows or "/bin/sh -c MyCommand" in Linux.
-     * If the command line refers to file paths, it should use a relative path
-     * (relative to the Task working directory), or use the Batch provided
-     * environment variable
+     * The command line of the Task. For multi-instance Tasks, the command line
+     * is executed as the primary Task, after the primary Task and all subtasks
+     * have finished executing the coordination command line. The command line
+     * does not run under a shell, and therefore cannot take advantage of shell
+     * features such as environment variable expansion. If you want to take
+     * advantage of such features, you should invoke the shell in the command
+     * line, for example using "cmd /c MyCommand" in Windows or "/bin/sh -c
+     * MyCommand" in Linux. If the command line refers to file paths, it should
+     * use a relative path (relative to the Task working directory), or use the
+     * Batch provided environment variable
      * (https://docs.microsoft.com/en-us/azure/batch/batch-compute-node-environment-variables).
      */
     @JsonProperty(value = "commandLine")
     private String commandLine;
 
     /**
-     * The settings for the container under which the Task runs.
-     * If the Pool that will run this Task has containerConfiguration set, this
-     * must be set as well. If the Pool that will run this Task doesn't have
+     * The settings for the container under which the Task runs. If the Pool
+     * that will run this Task has containerConfiguration set, this must be set
+     * as well. If the Pool that will run this Task doesn't have
      * containerConfiguration set, this must not be set. When this is
      * specified, all directories recursively below the AZ_BATCH_NODE_ROOT_DIR
      * (the root of Azure Batch directories on the node) are mapped into the
@@ -139,23 +135,22 @@ public class CloudTask {
 
     /**
      * A list of files that the Batch service will download to the Compute Node
-     * before running the command line.
-     * For multi-instance Tasks, the resource files will only be downloaded to
-     * the Compute Node on which the primary Task is executed. There is a
-     * maximum size for the list of resource files.  When the max size is
-     * exceeded, the request will fail and the response error code will be
-     * RequestEntityTooLarge. If this occurs, the collection of ResourceFiles
-     * must be reduced in size. This can be achieved using .zip files,
-     * Application Packages, or Docker Containers.
+     * before running the command line. For multi-instance Tasks, the resource
+     * files will only be downloaded to the Compute Node on which the primary
+     * Task is executed. There is a maximum size for the list of resource
+     * files.  When the max size is exceeded, the request will fail and the
+     * response error code will be RequestEntityTooLarge. If this occurs, the
+     * collection of ResourceFiles must be reduced in size. This can be
+     * achieved using .zip files, Application Packages, or Docker Containers.
      */
     @JsonProperty(value = "resourceFiles")
     private List<ResourceFile> resourceFiles;
 
     /**
      * A list of files that the Batch service will upload from the Compute Node
-     * after running the command line.
-     * For multi-instance Tasks, the files will only be uploaded from the
-     * Compute Node on which the primary Task is executed.
+     * after running the command line. For multi-instance Tasks, the files will
+     * only be uploaded from the Compute Node on which the primary Task is
+     * executed.
      */
     @JsonProperty(value = "outputFiles")
     private List<OutputFile> outputFiles;
@@ -180,18 +175,17 @@ public class CloudTask {
     private TaskConstraints constraints;
 
     /**
-     * The number of scheduling slots that the Task requires to run.
-     * The default is 1. A Task can only be scheduled to run on a compute node
-     * if the node has enough free scheduling slots available. For
-     * multi-instance Tasks, this must be 1.
+     * The number of scheduling slots that the Task requires to run. The
+     * default is 1. A Task can only be scheduled to run on a compute node if
+     * the node has enough free scheduling slots available. For multi-instance
+     * Tasks, this must be 1.
      */
     @JsonProperty(value = "requiredSlots")
     private Integer requiredSlots;
 
     /**
-     * The user identity under which the Task runs.
-     * If omitted, the Task runs as a non-administrative user unique to the
-     * Task.
+     * The user identity under which the Task runs. If omitted, the Task runs
+     * as a non-administrative user unique to the Task.
      */
     @JsonProperty(value = "userIdentity")
     private UserIdentity userIdentity;
@@ -222,44 +216,43 @@ public class CloudTask {
     private TaskStatistics stats;
 
     /**
-     * The Tasks that this Task depends on.
-     * This Task will not be scheduled until all Tasks that it depends on have
-     * completed successfully. If any of those Tasks fail and exhaust their
-     * retry counts, this Task will never be scheduled.
+     * The Tasks that this Task depends on. This Task will not be scheduled
+     * until all Tasks that it depends on have completed successfully. If any
+     * of those Tasks fail and exhaust their retry counts, this Task will never
+     * be scheduled.
      */
     @JsonProperty(value = "dependsOn")
     private TaskDependencies dependsOn;
 
     /**
      * A list of Packages that the Batch service will deploy to the Compute
-     * Node before running the command line.
-     * Application packages are downloaded and deployed to a shared directory,
-     * not the Task working directory. Therefore, if a referenced package is
-     * already on the Node, and is up to date, then it is not re-downloaded;
-     * the existing copy on the Compute Node is used. If a referenced Package
-     * cannot be installed, for example because the package has been deleted or
-     * because download failed, the Task fails.
+     * Node before running the command line. Application packages are
+     * downloaded and deployed to a shared directory, not the Task working
+     * directory. Therefore, if a referenced package is already on the Node,
+     * and is up to date, then it is not re-downloaded; the existing copy on
+     * the Compute Node is used. If a referenced Package cannot be installed,
+     * for example because the package has been deleted or because download
+     * failed, the Task fails.
      */
     @JsonProperty(value = "applicationPackageReferences")
     private List<ApplicationPackageReference> applicationPackageReferences;
 
     /**
      * The settings for an authentication token that the Task can use to
-     * perform Batch service operations.
-     * If this property is set, the Batch service provides the Task with an
-     * authentication token which can be used to authenticate Batch service
-     * operations without requiring an Account access key. The token is
-     * provided via the AZ_BATCH_AUTHENTICATION_TOKEN environment variable. The
-     * operations that the Task can carry out using the token depend on the
-     * settings. For example, a Task can request Job permissions in order to
-     * add other Tasks to the Job, or check the status of the Job or of other
-     * Tasks under the Job.
+     * perform Batch service operations. If this property is set, the Batch
+     * service provides the Task with an authentication token which can be used
+     * to authenticate Batch service operations without requiring an Account
+     * access key. The token is provided via the AZ_BATCH_AUTHENTICATION_TOKEN
+     * environment variable. The operations that the Task can carry out using
+     * the token depend on the settings. For example, a Task can request Job
+     * permissions in order to add other Tasks to the Job, or check the status
+     * of the Job or of other Tasks under the Job.
      */
     @JsonProperty(value = "authenticationTokenSettings")
     private AuthenticationTokenSettings authenticationTokenSettings;
 
     /**
-     * Get the ID can contain any combination of alphanumeric characters including hyphens and underscores, and cannot contain more than 64 characters.
+     * Get a string that uniquely identifies the Task within the Job. The ID can contain any combination of alphanumeric characters including hyphens and underscores, and cannot contain more than 64 characters.
      *
      * @return the id value
      */
@@ -268,7 +261,7 @@ public class CloudTask {
     }
 
     /**
-     * Set the ID can contain any combination of alphanumeric characters including hyphens and underscores, and cannot contain more than 64 characters.
+     * Set a string that uniquely identifies the Task within the Job. The ID can contain any combination of alphanumeric characters including hyphens and underscores, and cannot contain more than 64 characters.
      *
      * @param id the id value to set
      * @return the CloudTask object itself.
@@ -279,7 +272,7 @@ public class CloudTask {
     }
 
     /**
-     * Get the display name need not be unique and can contain any Unicode characters up to a maximum length of 1024.
+     * Get a display name for the Task. The display name need not be unique and can contain any Unicode characters up to a maximum length of 1024.
      *
      * @return the displayName value
      */
@@ -288,7 +281,7 @@ public class CloudTask {
     }
 
     /**
-     * Set the display name need not be unique and can contain any Unicode characters up to a maximum length of 1024.
+     * Set a display name for the Task. The display name need not be unique and can contain any Unicode characters up to a maximum length of 1024.
      *
      * @param displayName the displayName value to set
      * @return the CloudTask object itself.
@@ -299,7 +292,7 @@ public class CloudTask {
     }
 
     /**
-     * Get the url value.
+     * Get the URL of the Task.
      *
      * @return the url value
      */
@@ -308,7 +301,7 @@ public class CloudTask {
     }
 
     /**
-     * Set the url value.
+     * Set the URL of the Task.
      *
      * @param url the url value to set
      * @return the CloudTask object itself.
@@ -319,7 +312,7 @@ public class CloudTask {
     }
 
     /**
-     * Get this is an opaque string. You can use it to detect whether the Task has changed between requests. In particular, you can be pass the ETag when updating a Task to specify that your changes should take effect only if nobody else has modified the Task in the meantime.
+     * Get the ETag of the Task. This is an opaque string. You can use it to detect whether the Task has changed between requests. In particular, you can be pass the ETag when updating a Task to specify that your changes should take effect only if nobody else has modified the Task in the meantime.
      *
      * @return the eTag value
      */
@@ -328,7 +321,7 @@ public class CloudTask {
     }
 
     /**
-     * Set this is an opaque string. You can use it to detect whether the Task has changed between requests. In particular, you can be pass the ETag when updating a Task to specify that your changes should take effect only if nobody else has modified the Task in the meantime.
+     * Set the ETag of the Task. This is an opaque string. You can use it to detect whether the Task has changed between requests. In particular, you can be pass the ETag when updating a Task to specify that your changes should take effect only if nobody else has modified the Task in the meantime.
      *
      * @param eTag the eTag value to set
      * @return the CloudTask object itself.
@@ -339,7 +332,7 @@ public class CloudTask {
     }
 
     /**
-     * Get the lastModified value.
+     * Get the last modified time of the Task.
      *
      * @return the lastModified value
      */
@@ -348,7 +341,7 @@ public class CloudTask {
     }
 
     /**
-     * Set the lastModified value.
+     * Set the last modified time of the Task.
      *
      * @param lastModified the lastModified value to set
      * @return the CloudTask object itself.
@@ -359,7 +352,7 @@ public class CloudTask {
     }
 
     /**
-     * Get the creationTime value.
+     * Get the creation time of the Task.
      *
      * @return the creationTime value
      */
@@ -368,7 +361,7 @@ public class CloudTask {
     }
 
     /**
-     * Set the creationTime value.
+     * Set the creation time of the Task.
      *
      * @param creationTime the creationTime value to set
      * @return the CloudTask object itself.
@@ -399,7 +392,7 @@ public class CloudTask {
     }
 
     /**
-     * Get possible values include: 'active', 'preparing', 'running', 'completed'.
+     * Get the current state of the Task. Possible values include: 'active', 'preparing', 'running', 'completed'.
      *
      * @return the state value
      */
@@ -408,7 +401,7 @@ public class CloudTask {
     }
 
     /**
-     * Set possible values include: 'active', 'preparing', 'running', 'completed'.
+     * Set the current state of the Task. Possible values include: 'active', 'preparing', 'running', 'completed'.
      *
      * @param state the state value to set
      * @return the CloudTask object itself.
@@ -419,7 +412,7 @@ public class CloudTask {
     }
 
     /**
-     * Get the stateTransitionTime value.
+     * Get the time at which the Task entered its current state.
      *
      * @return the stateTransitionTime value
      */
@@ -428,7 +421,7 @@ public class CloudTask {
     }
 
     /**
-     * Set the stateTransitionTime value.
+     * Set the time at which the Task entered its current state.
      *
      * @param stateTransitionTime the stateTransitionTime value to set
      * @return the CloudTask object itself.
@@ -439,7 +432,7 @@ public class CloudTask {
     }
 
     /**
-     * Get this property is not set if the Task is in its initial Active state. Possible values include: 'active', 'preparing', 'running', 'completed'.
+     * Get the previous state of the Task. This property is not set if the Task is in its initial Active state. Possible values include: 'active', 'preparing', 'running', 'completed'.
      *
      * @return the previousState value
      */
@@ -448,7 +441,7 @@ public class CloudTask {
     }
 
     /**
-     * Set this property is not set if the Task is in its initial Active state. Possible values include: 'active', 'preparing', 'running', 'completed'.
+     * Set the previous state of the Task. This property is not set if the Task is in its initial Active state. Possible values include: 'active', 'preparing', 'running', 'completed'.
      *
      * @param previousState the previousState value to set
      * @return the CloudTask object itself.
@@ -459,7 +452,7 @@ public class CloudTask {
     }
 
     /**
-     * Get this property is not set if the Task is in its initial Active state.
+     * Get the time at which the Task entered its previous state. This property is not set if the Task is in its initial Active state.
      *
      * @return the previousStateTransitionTime value
      */
@@ -468,7 +461,7 @@ public class CloudTask {
     }
 
     /**
-     * Set this property is not set if the Task is in its initial Active state.
+     * Set the time at which the Task entered its previous state. This property is not set if the Task is in its initial Active state.
      *
      * @param previousStateTransitionTime the previousStateTransitionTime value to set
      * @return the CloudTask object itself.
@@ -479,7 +472,7 @@ public class CloudTask {
     }
 
     /**
-     * Get for multi-instance Tasks, the command line is executed as the primary Task, after the primary Task and all subtasks have finished executing the coordination command line. The command line does not run under a shell, and therefore cannot take advantage of shell features such as environment variable expansion. If you want to take advantage of such features, you should invoke the shell in the command line, for example using "cmd /c MyCommand" in Windows or "/bin/sh -c MyCommand" in Linux. If the command line refers to file paths, it should use a relative path (relative to the Task working directory), or use the Batch provided environment variable (https://docs.microsoft.com/en-us/azure/batch/batch-compute-node-environment-variables).
+     * Get the command line of the Task. For multi-instance Tasks, the command line is executed as the primary Task, after the primary Task and all subtasks have finished executing the coordination command line. The command line does not run under a shell, and therefore cannot take advantage of shell features such as environment variable expansion. If you want to take advantage of such features, you should invoke the shell in the command line, for example using "cmd /c MyCommand" in Windows or "/bin/sh -c MyCommand" in Linux. If the command line refers to file paths, it should use a relative path (relative to the Task working directory), or use the Batch provided environment variable (https://docs.microsoft.com/en-us/azure/batch/batch-compute-node-environment-variables).
      *
      * @return the commandLine value
      */
@@ -488,7 +481,7 @@ public class CloudTask {
     }
 
     /**
-     * Set for multi-instance Tasks, the command line is executed as the primary Task, after the primary Task and all subtasks have finished executing the coordination command line. The command line does not run under a shell, and therefore cannot take advantage of shell features such as environment variable expansion. If you want to take advantage of such features, you should invoke the shell in the command line, for example using "cmd /c MyCommand" in Windows or "/bin/sh -c MyCommand" in Linux. If the command line refers to file paths, it should use a relative path (relative to the Task working directory), or use the Batch provided environment variable (https://docs.microsoft.com/en-us/azure/batch/batch-compute-node-environment-variables).
+     * Set the command line of the Task. For multi-instance Tasks, the command line is executed as the primary Task, after the primary Task and all subtasks have finished executing the coordination command line. The command line does not run under a shell, and therefore cannot take advantage of shell features such as environment variable expansion. If you want to take advantage of such features, you should invoke the shell in the command line, for example using "cmd /c MyCommand" in Windows or "/bin/sh -c MyCommand" in Linux. If the command line refers to file paths, it should use a relative path (relative to the Task working directory), or use the Batch provided environment variable (https://docs.microsoft.com/en-us/azure/batch/batch-compute-node-environment-variables).
      *
      * @param commandLine the commandLine value to set
      * @return the CloudTask object itself.
@@ -499,7 +492,7 @@ public class CloudTask {
     }
 
     /**
-     * Get if the Pool that will run this Task has containerConfiguration set, this must be set as well. If the Pool that will run this Task doesn't have containerConfiguration set, this must not be set. When this is specified, all directories recursively below the AZ_BATCH_NODE_ROOT_DIR (the root of Azure Batch directories on the node) are mapped into the container, all Task environment variables are mapped into the container, and the Task command line is executed in the container. Files produced in the container outside of AZ_BATCH_NODE_ROOT_DIR might not be reflected to the host disk, meaning that Batch file APIs will not be able to access those files.
+     * Get the settings for the container under which the Task runs. If the Pool that will run this Task has containerConfiguration set, this must be set as well. If the Pool that will run this Task doesn't have containerConfiguration set, this must not be set. When this is specified, all directories recursively below the AZ_BATCH_NODE_ROOT_DIR (the root of Azure Batch directories on the node) are mapped into the container, all Task environment variables are mapped into the container, and the Task command line is executed in the container. Files produced in the container outside of AZ_BATCH_NODE_ROOT_DIR might not be reflected to the host disk, meaning that Batch file APIs will not be able to access those files.
      *
      * @return the containerSettings value
      */
@@ -508,7 +501,7 @@ public class CloudTask {
     }
 
     /**
-     * Set if the Pool that will run this Task has containerConfiguration set, this must be set as well. If the Pool that will run this Task doesn't have containerConfiguration set, this must not be set. When this is specified, all directories recursively below the AZ_BATCH_NODE_ROOT_DIR (the root of Azure Batch directories on the node) are mapped into the container, all Task environment variables are mapped into the container, and the Task command line is executed in the container. Files produced in the container outside of AZ_BATCH_NODE_ROOT_DIR might not be reflected to the host disk, meaning that Batch file APIs will not be able to access those files.
+     * Set the settings for the container under which the Task runs. If the Pool that will run this Task has containerConfiguration set, this must be set as well. If the Pool that will run this Task doesn't have containerConfiguration set, this must not be set. When this is specified, all directories recursively below the AZ_BATCH_NODE_ROOT_DIR (the root of Azure Batch directories on the node) are mapped into the container, all Task environment variables are mapped into the container, and the Task command line is executed in the container. Files produced in the container outside of AZ_BATCH_NODE_ROOT_DIR might not be reflected to the host disk, meaning that Batch file APIs will not be able to access those files.
      *
      * @param containerSettings the containerSettings value to set
      * @return the CloudTask object itself.
@@ -519,7 +512,7 @@ public class CloudTask {
     }
 
     /**
-     * Get for multi-instance Tasks, the resource files will only be downloaded to the Compute Node on which the primary Task is executed. There is a maximum size for the list of resource files.  When the max size is exceeded, the request will fail and the response error code will be RequestEntityTooLarge. If this occurs, the collection of ResourceFiles must be reduced in size. This can be achieved using .zip files, Application Packages, or Docker Containers.
+     * Get a list of files that the Batch service will download to the Compute Node before running the command line. For multi-instance Tasks, the resource files will only be downloaded to the Compute Node on which the primary Task is executed. There is a maximum size for the list of resource files.  When the max size is exceeded, the request will fail and the response error code will be RequestEntityTooLarge. If this occurs, the collection of ResourceFiles must be reduced in size. This can be achieved using .zip files, Application Packages, or Docker Containers.
      *
      * @return the resourceFiles value
      */
@@ -528,7 +521,7 @@ public class CloudTask {
     }
 
     /**
-     * Set for multi-instance Tasks, the resource files will only be downloaded to the Compute Node on which the primary Task is executed. There is a maximum size for the list of resource files.  When the max size is exceeded, the request will fail and the response error code will be RequestEntityTooLarge. If this occurs, the collection of ResourceFiles must be reduced in size. This can be achieved using .zip files, Application Packages, or Docker Containers.
+     * Set a list of files that the Batch service will download to the Compute Node before running the command line. For multi-instance Tasks, the resource files will only be downloaded to the Compute Node on which the primary Task is executed. There is a maximum size for the list of resource files.  When the max size is exceeded, the request will fail and the response error code will be RequestEntityTooLarge. If this occurs, the collection of ResourceFiles must be reduced in size. This can be achieved using .zip files, Application Packages, or Docker Containers.
      *
      * @param resourceFiles the resourceFiles value to set
      * @return the CloudTask object itself.
@@ -539,7 +532,7 @@ public class CloudTask {
     }
 
     /**
-     * Get for multi-instance Tasks, the files will only be uploaded from the Compute Node on which the primary Task is executed.
+     * Get a list of files that the Batch service will upload from the Compute Node after running the command line. For multi-instance Tasks, the files will only be uploaded from the Compute Node on which the primary Task is executed.
      *
      * @return the outputFiles value
      */
@@ -548,7 +541,7 @@ public class CloudTask {
     }
 
     /**
-     * Set for multi-instance Tasks, the files will only be uploaded from the Compute Node on which the primary Task is executed.
+     * Set a list of files that the Batch service will upload from the Compute Node after running the command line. For multi-instance Tasks, the files will only be uploaded from the Compute Node on which the primary Task is executed.
      *
      * @param outputFiles the outputFiles value to set
      * @return the CloudTask object itself.
@@ -559,7 +552,7 @@ public class CloudTask {
     }
 
     /**
-     * Get the environmentSettings value.
+     * Get a list of environment variable settings for the Task.
      *
      * @return the environmentSettings value
      */
@@ -568,7 +561,7 @@ public class CloudTask {
     }
 
     /**
-     * Set the environmentSettings value.
+     * Set a list of environment variable settings for the Task.
      *
      * @param environmentSettings the environmentSettings value to set
      * @return the CloudTask object itself.
@@ -579,7 +572,7 @@ public class CloudTask {
     }
 
     /**
-     * Get the affinityInfo value.
+     * Get a locality hint that can be used by the Batch service to select a Compute Node on which to start the new Task.
      *
      * @return the affinityInfo value
      */
@@ -588,7 +581,7 @@ public class CloudTask {
     }
 
     /**
-     * Set the affinityInfo value.
+     * Set a locality hint that can be used by the Batch service to select a Compute Node on which to start the new Task.
      *
      * @param affinityInfo the affinityInfo value to set
      * @return the CloudTask object itself.
@@ -599,7 +592,7 @@ public class CloudTask {
     }
 
     /**
-     * Get the constraints value.
+     * Get the execution constraints that apply to this Task.
      *
      * @return the constraints value
      */
@@ -608,7 +601,7 @@ public class CloudTask {
     }
 
     /**
-     * Set the constraints value.
+     * Set the execution constraints that apply to this Task.
      *
      * @param constraints the constraints value to set
      * @return the CloudTask object itself.
@@ -619,7 +612,7 @@ public class CloudTask {
     }
 
     /**
-     * Get the default is 1. A Task can only be scheduled to run on a compute node if the node has enough free scheduling slots available. For multi-instance Tasks, this must be 1.
+     * Get the number of scheduling slots that the Task requires to run. The default is 1. A Task can only be scheduled to run on a compute node if the node has enough free scheduling slots available. For multi-instance Tasks, this must be 1.
      *
      * @return the requiredSlots value
      */
@@ -628,7 +621,7 @@ public class CloudTask {
     }
 
     /**
-     * Set the default is 1. A Task can only be scheduled to run on a compute node if the node has enough free scheduling slots available. For multi-instance Tasks, this must be 1.
+     * Set the number of scheduling slots that the Task requires to run. The default is 1. A Task can only be scheduled to run on a compute node if the node has enough free scheduling slots available. For multi-instance Tasks, this must be 1.
      *
      * @param requiredSlots the requiredSlots value to set
      * @return the CloudTask object itself.
@@ -639,7 +632,7 @@ public class CloudTask {
     }
 
     /**
-     * Get if omitted, the Task runs as a non-administrative user unique to the Task.
+     * Get the user identity under which the Task runs. If omitted, the Task runs as a non-administrative user unique to the Task.
      *
      * @return the userIdentity value
      */
@@ -648,7 +641,7 @@ public class CloudTask {
     }
 
     /**
-     * Set if omitted, the Task runs as a non-administrative user unique to the Task.
+     * Set the user identity under which the Task runs. If omitted, the Task runs as a non-administrative user unique to the Task.
      *
      * @param userIdentity the userIdentity value to set
      * @return the CloudTask object itself.
@@ -659,7 +652,7 @@ public class CloudTask {
     }
 
     /**
-     * Get the executionInfo value.
+     * Get information about the execution of the Task.
      *
      * @return the executionInfo value
      */
@@ -668,7 +661,7 @@ public class CloudTask {
     }
 
     /**
-     * Set the executionInfo value.
+     * Set information about the execution of the Task.
      *
      * @param executionInfo the executionInfo value to set
      * @return the CloudTask object itself.
@@ -679,7 +672,7 @@ public class CloudTask {
     }
 
     /**
-     * Get the nodeInfo value.
+     * Get information about the Compute Node on which the Task ran.
      *
      * @return the nodeInfo value
      */
@@ -688,7 +681,7 @@ public class CloudTask {
     }
 
     /**
-     * Set the nodeInfo value.
+     * Set information about the Compute Node on which the Task ran.
      *
      * @param nodeInfo the nodeInfo value to set
      * @return the CloudTask object itself.
@@ -699,7 +692,7 @@ public class CloudTask {
     }
 
     /**
-     * Get the multiInstanceSettings value.
+     * Get an object that indicates that the Task is a multi-instance Task, and contains information about how to run the multi-instance Task.
      *
      * @return the multiInstanceSettings value
      */
@@ -708,7 +701,7 @@ public class CloudTask {
     }
 
     /**
-     * Set the multiInstanceSettings value.
+     * Set an object that indicates that the Task is a multi-instance Task, and contains information about how to run the multi-instance Task.
      *
      * @param multiInstanceSettings the multiInstanceSettings value to set
      * @return the CloudTask object itself.
@@ -719,7 +712,7 @@ public class CloudTask {
     }
 
     /**
-     * Get the stats value.
+     * Get resource usage statistics for the Task.
      *
      * @return the stats value
      */
@@ -728,7 +721,7 @@ public class CloudTask {
     }
 
     /**
-     * Set the stats value.
+     * Set resource usage statistics for the Task.
      *
      * @param stats the stats value to set
      * @return the CloudTask object itself.
@@ -739,7 +732,7 @@ public class CloudTask {
     }
 
     /**
-     * Get this Task will not be scheduled until all Tasks that it depends on have completed successfully. If any of those Tasks fail and exhaust their retry counts, this Task will never be scheduled.
+     * Get the Tasks that this Task depends on. This Task will not be scheduled until all Tasks that it depends on have completed successfully. If any of those Tasks fail and exhaust their retry counts, this Task will never be scheduled.
      *
      * @return the dependsOn value
      */
@@ -748,7 +741,7 @@ public class CloudTask {
     }
 
     /**
-     * Set this Task will not be scheduled until all Tasks that it depends on have completed successfully. If any of those Tasks fail and exhaust their retry counts, this Task will never be scheduled.
+     * Set the Tasks that this Task depends on. This Task will not be scheduled until all Tasks that it depends on have completed successfully. If any of those Tasks fail and exhaust their retry counts, this Task will never be scheduled.
      *
      * @param dependsOn the dependsOn value to set
      * @return the CloudTask object itself.
@@ -759,7 +752,7 @@ public class CloudTask {
     }
 
     /**
-     * Get application packages are downloaded and deployed to a shared directory, not the Task working directory. Therefore, if a referenced package is already on the Node, and is up to date, then it is not re-downloaded; the existing copy on the Compute Node is used. If a referenced Package cannot be installed, for example because the package has been deleted or because download failed, the Task fails.
+     * Get a list of Packages that the Batch service will deploy to the Compute Node before running the command line. Application packages are downloaded and deployed to a shared directory, not the Task working directory. Therefore, if a referenced package is already on the Node, and is up to date, then it is not re-downloaded; the existing copy on the Compute Node is used. If a referenced Package cannot be installed, for example because the package has been deleted or because download failed, the Task fails.
      *
      * @return the applicationPackageReferences value
      */
@@ -768,7 +761,7 @@ public class CloudTask {
     }
 
     /**
-     * Set application packages are downloaded and deployed to a shared directory, not the Task working directory. Therefore, if a referenced package is already on the Node, and is up to date, then it is not re-downloaded; the existing copy on the Compute Node is used. If a referenced Package cannot be installed, for example because the package has been deleted or because download failed, the Task fails.
+     * Set a list of Packages that the Batch service will deploy to the Compute Node before running the command line. Application packages are downloaded and deployed to a shared directory, not the Task working directory. Therefore, if a referenced package is already on the Node, and is up to date, then it is not re-downloaded; the existing copy on the Compute Node is used. If a referenced Package cannot be installed, for example because the package has been deleted or because download failed, the Task fails.
      *
      * @param applicationPackageReferences the applicationPackageReferences value to set
      * @return the CloudTask object itself.
@@ -779,7 +772,7 @@ public class CloudTask {
     }
 
     /**
-     * Get if this property is set, the Batch service provides the Task with an authentication token which can be used to authenticate Batch service operations without requiring an Account access key. The token is provided via the AZ_BATCH_AUTHENTICATION_TOKEN environment variable. The operations that the Task can carry out using the token depend on the settings. For example, a Task can request Job permissions in order to add other Tasks to the Job, or check the status of the Job or of other Tasks under the Job.
+     * Get the settings for an authentication token that the Task can use to perform Batch service operations. If this property is set, the Batch service provides the Task with an authentication token which can be used to authenticate Batch service operations without requiring an Account access key. The token is provided via the AZ_BATCH_AUTHENTICATION_TOKEN environment variable. The operations that the Task can carry out using the token depend on the settings. For example, a Task can request Job permissions in order to add other Tasks to the Job, or check the status of the Job or of other Tasks under the Job.
      *
      * @return the authenticationTokenSettings value
      */
@@ -788,7 +781,7 @@ public class CloudTask {
     }
 
     /**
-     * Set if this property is set, the Batch service provides the Task with an authentication token which can be used to authenticate Batch service operations without requiring an Account access key. The token is provided via the AZ_BATCH_AUTHENTICATION_TOKEN environment variable. The operations that the Task can carry out using the token depend on the settings. For example, a Task can request Job permissions in order to add other Tasks to the Job, or check the status of the Job or of other Tasks under the Job.
+     * Set the settings for an authentication token that the Task can use to perform Batch service operations. If this property is set, the Batch service provides the Task with an authentication token which can be used to authenticate Batch service operations without requiring an Account access key. The token is provided via the AZ_BATCH_AUTHENTICATION_TOKEN environment variable. The operations that the Task can carry out using the token depend on the settings. For example, a Task can request Job permissions in order to add other Tasks to the Job, or check the status of the Job or of other Tasks under the Job.
      *
      * @param authenticationTokenSettings the authenticationTokenSettings value to set
      * @return the CloudTask object itself.

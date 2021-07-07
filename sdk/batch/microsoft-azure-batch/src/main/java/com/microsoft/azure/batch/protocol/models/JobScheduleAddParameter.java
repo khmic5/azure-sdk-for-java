@@ -17,8 +17,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class JobScheduleAddParameter {
     /**
-     * A string that uniquely identifies the schedule within the Account.
-     * The ID can contain any combination of alphanumeric characters including
+     * A string that uniquely identifies the schedule within the Account. The
+     * ID can contain any combination of alphanumeric characters including
      * hyphens and underscores, and cannot contain more than 64 characters. The
      * ID is case-preserving and case-insensitive (that is, you may not have
      * two IDs within an Account that differ only by case).
@@ -27,9 +27,8 @@ public class JobScheduleAddParameter {
     private String id;
 
     /**
-     * The display name for the schedule.
-     * The display name need not be unique and can contain any Unicode
-     * characters up to a maximum length of 1024.
+     * The display name for the schedule. The display name need not be unique
+     * and can contain any Unicode characters up to a maximum length of 1024.
      */
     @JsonProperty(value = "displayName")
     private String displayName;
@@ -47,15 +46,15 @@ public class JobScheduleAddParameter {
     private JobSpecification jobSpecification;
 
     /**
-     * A list of name-value pairs associated with the schedule as metadata.
-     * The Batch service does not assign any meaning to metadata; it is solely
-     * for the use of user code.
+     * A list of name-value pairs associated with the schedule as metadata. The
+     * Batch service does not assign any meaning to metadata; it is solely for
+     * the use of user code.
      */
     @JsonProperty(value = "metadata")
     private List<MetadataItem> metadata;
 
     /**
-     * Get the ID can contain any combination of alphanumeric characters including hyphens and underscores, and cannot contain more than 64 characters. The ID is case-preserving and case-insensitive (that is, you may not have two IDs within an Account that differ only by case).
+     * Get a string that uniquely identifies the schedule within the Account. The ID can contain any combination of alphanumeric characters including hyphens and underscores, and cannot contain more than 64 characters. The ID is case-preserving and case-insensitive (that is, you may not have two IDs within an Account that differ only by case).
      *
      * @return the id value
      */
@@ -64,7 +63,7 @@ public class JobScheduleAddParameter {
     }
 
     /**
-     * Set the ID can contain any combination of alphanumeric characters including hyphens and underscores, and cannot contain more than 64 characters. The ID is case-preserving and case-insensitive (that is, you may not have two IDs within an Account that differ only by case).
+     * Set a string that uniquely identifies the schedule within the Account. The ID can contain any combination of alphanumeric characters including hyphens and underscores, and cannot contain more than 64 characters. The ID is case-preserving and case-insensitive (that is, you may not have two IDs within an Account that differ only by case).
      *
      * @param id the id value to set
      * @return the JobScheduleAddParameter object itself.
@@ -75,7 +74,7 @@ public class JobScheduleAddParameter {
     }
 
     /**
-     * Get the display name need not be unique and can contain any Unicode characters up to a maximum length of 1024.
+     * Get the display name for the schedule. The display name need not be unique and can contain any Unicode characters up to a maximum length of 1024.
      *
      * @return the displayName value
      */
@@ -84,7 +83,7 @@ public class JobScheduleAddParameter {
     }
 
     /**
-     * Set the display name need not be unique and can contain any Unicode characters up to a maximum length of 1024.
+     * Set the display name for the schedule. The display name need not be unique and can contain any Unicode characters up to a maximum length of 1024.
      *
      * @param displayName the displayName value to set
      * @return the JobScheduleAddParameter object itself.
@@ -95,7 +94,7 @@ public class JobScheduleAddParameter {
     }
 
     /**
-     * Get the schedule value.
+     * Get the schedule according to which Jobs will be created.
      *
      * @return the schedule value
      */
@@ -104,7 +103,7 @@ public class JobScheduleAddParameter {
     }
 
     /**
-     * Set the schedule value.
+     * Set the schedule according to which Jobs will be created.
      *
      * @param schedule the schedule value to set
      * @return the JobScheduleAddParameter object itself.
@@ -115,7 +114,7 @@ public class JobScheduleAddParameter {
     }
 
     /**
-     * Get the jobSpecification value.
+     * Get the details of the Jobs to be created on this schedule.
      *
      * @return the jobSpecification value
      */
@@ -124,7 +123,7 @@ public class JobScheduleAddParameter {
     }
 
     /**
-     * Set the jobSpecification value.
+     * Set the details of the Jobs to be created on this schedule.
      *
      * @param jobSpecification the jobSpecification value to set
      * @return the JobScheduleAddParameter object itself.
@@ -135,7 +134,7 @@ public class JobScheduleAddParameter {
     }
 
     /**
-     * Get the Batch service does not assign any meaning to metadata; it is solely for the use of user code.
+     * Get a list of name-value pairs associated with the schedule as metadata. The Batch service does not assign any meaning to metadata; it is solely for the use of user code.
      *
      * @return the metadata value
      */
@@ -144,7 +143,7 @@ public class JobScheduleAddParameter {
     }
 
     /**
-     * Set the Batch service does not assign any meaning to metadata; it is solely for the use of user code.
+     * Set a list of name-value pairs associated with the schedule as metadata. The Batch service does not assign any meaning to metadata; it is solely for the use of user code.
      *
      * @param metadata the metadata value to set
      * @return the JobScheduleAddParameter object itself.

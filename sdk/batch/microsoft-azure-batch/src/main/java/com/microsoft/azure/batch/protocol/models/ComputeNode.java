@@ -17,11 +17,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class ComputeNode {
     /**
-     * The ID of the Compute Node.
-     * Every Compute Node that is added to a Pool is assigned a unique ID.
-     * Whenever a Compute Node is removed from a Pool, all of its local files
-     * are deleted, and the ID is reclaimed and could be reused for new Compute
-     * Nodes.
+     * The ID of the Compute Node. Every Compute Node that is added to a Pool
+     * is assigned a unique ID. Whenever a Compute Node is removed from a Pool,
+     * all of its local files are deleted, and the ID is reclaimed and could be
+     * reused for new Compute Nodes.
      */
     @JsonProperty(value = "id")
     private String id;
@@ -33,20 +32,19 @@ public class ComputeNode {
     private String url;
 
     /**
-     * The current state of the Compute Node.
-     * The low-priority Compute Node has been preempted. Tasks which were
-     * running on the Compute Node when it was preempted will be rescheduled
-     * when another Compute Node becomes available. Possible values include:
-     * 'idle', 'rebooting', 'reimaging', 'running', 'unusable', 'creating',
-     * 'starting', 'waitingForStartTask', 'startTaskFailed', 'unknown',
-     * 'leavingPool', 'offline', 'preempted'.
+     * The current state of the Compute Node. The low-priority Compute Node has
+     * been preempted. Tasks which were running on the Compute Node when it was
+     * preempted will be rescheduled when another Compute Node becomes
+     * available. Possible values include: 'idle', 'rebooting', 'reimaging',
+     * 'running', 'unusable', 'creating', 'starting', 'waitingForStartTask',
+     * 'startTaskFailed', 'unknown', 'leavingPool', 'offline', 'preempted'.
      */
     @JsonProperty(value = "state")
     private ComputeNodeState state;
 
     /**
-     * Whether the Compute Node is available for Task scheduling.
-     * Possible values include: 'enabled', 'disabled'.
+     * Whether the Compute Node is available for Task scheduling. Possible
+     * values include: 'enabled', 'disabled'.
      */
     @JsonProperty(value = "schedulingState")
     private SchedulingState schedulingState;
@@ -58,16 +56,15 @@ public class ComputeNode {
     private DateTime stateTransitionTime;
 
     /**
-     * The last time at which the Compute Node was started.
-     * This property may not be present if the Compute Node state is unusable.
+     * The last time at which the Compute Node was started.This property may
+     * not be present if the Compute Node state is unusable.
      */
     @JsonProperty(value = "lastBootTime")
     private DateTime lastBootTime;
 
     /**
-     * The time at which this Compute Node was allocated to the Pool.
-     * This is the time when the Compute Node was initially allocated and
-     * doesn't change once set. It is not updated when the Compute Node is
+     * The time at which this Compute Node was allocated to the Pool. This
+     * doesn't change once set and is not updated when the Compute Node is
      * service healed or preempted.
      */
     @JsonProperty(value = "allocationTime")
@@ -75,8 +72,7 @@ public class ComputeNode {
 
     /**
      * The IP address that other Nodes can use to communicate with this Compute
-     * Node.
-     * Every Compute Node that is added to a Pool is assigned a unique IP
+     * Node. Every Compute Node that is added to a Pool is assigned a unique IP
      * address. Whenever a Compute Node is removed from a Pool, all of its
      * local files are deleted, and the IP address is reclaimed and could be
      * reused for new Compute Nodes.
@@ -86,17 +82,16 @@ public class ComputeNode {
 
     /**
      * An identifier which can be passed when adding a Task to request that the
-     * Task be scheduled on this Compute Node.
-     * Note that this is just a soft affinity. If the target Compute Node is
-     * busy or unavailable at the time the Task is scheduled, then the Task
-     * will be scheduled elsewhere.
+     * Task be scheduled on this Compute Node. Note that this is just a soft
+     * affinity. If the target Compute Node is busy or unavailable at the time
+     * the Task is scheduled, then the Task will be scheduled elsewhere.
      */
     @JsonProperty(value = "affinityId")
     private String affinityId;
 
     /**
-     * The size of the virtual machine hosting the Compute Node.
-     * For information about available sizes of virtual machines in Pools, see
+     * The size of the virtual machine hosting the Compute Node. For
+     * information about available sizes of virtual machines in Pools, see
      * Choose a VM size for Compute Nodes in an Azure Batch Pool
      * (https://docs.microsoft.com/azure/batch/batch-pool-vm-sizes).
      */
@@ -136,9 +131,9 @@ public class ComputeNode {
     private Integer totalTasksSucceeded;
 
     /**
-     * A list of Tasks whose state has recently changed.
-     * This property is present only if at least one Task has run on this
-     * Compute Node since it was assigned to the Pool.
+     * A list of Tasks whose state has recently changed. This property is
+     * present only if at least one Task has run on this Compute Node since it
+     * was assigned to the Pool.
      */
     @JsonProperty(value = "recentTasks")
     private List<TaskInformation> recentTasks;
@@ -157,9 +152,9 @@ public class ComputeNode {
     private StartTaskInformation startTaskInfo;
 
     /**
-     * The list of Certificates installed on the Compute Node.
-     * For Windows Nodes, the Batch service installs the Certificates to the
-     * specified Certificate store and location. For Linux Compute Nodes, the
+     * The list of Certificates installed on the Compute Node. For Windows
+     * Nodes, the Batch service installs the Certificates to the specified
+     * Certificate store and location. For Linux Compute Nodes, the
      * Certificates are stored in a directory inside the Task working directory
      * and an environment variable AZ_BATCH_CERTIFICATES_DIR is supplied to the
      * Task to query for this location. For Certificates with visibility of
@@ -198,7 +193,13 @@ public class ComputeNode {
     private NodeAgentInformation nodeAgentInfo;
 
     /**
-     * Get every Compute Node that is added to a Pool is assigned a unique ID. Whenever a Compute Node is removed from a Pool, all of its local files are deleted, and the ID is reclaimed and could be reused for new Compute Nodes.
+     * Info about the current state of the virtual machine.
+     */
+    @JsonProperty(value = "virtualMachineInfo")
+    private VirtualMachineInfo virtualMachineInfo;
+
+    /**
+     * Get the ID of the Compute Node. Every Compute Node that is added to a Pool is assigned a unique ID. Whenever a Compute Node is removed from a Pool, all of its local files are deleted, and the ID is reclaimed and could be reused for new Compute Nodes.
      *
      * @return the id value
      */
@@ -207,7 +208,7 @@ public class ComputeNode {
     }
 
     /**
-     * Set every Compute Node that is added to a Pool is assigned a unique ID. Whenever a Compute Node is removed from a Pool, all of its local files are deleted, and the ID is reclaimed and could be reused for new Compute Nodes.
+     * Set the ID of the Compute Node. Every Compute Node that is added to a Pool is assigned a unique ID. Whenever a Compute Node is removed from a Pool, all of its local files are deleted, and the ID is reclaimed and could be reused for new Compute Nodes.
      *
      * @param id the id value to set
      * @return the ComputeNode object itself.
@@ -218,7 +219,7 @@ public class ComputeNode {
     }
 
     /**
-     * Get the url value.
+     * Get the URL of the Compute Node.
      *
      * @return the url value
      */
@@ -227,7 +228,7 @@ public class ComputeNode {
     }
 
     /**
-     * Set the url value.
+     * Set the URL of the Compute Node.
      *
      * @param url the url value to set
      * @return the ComputeNode object itself.
@@ -238,7 +239,7 @@ public class ComputeNode {
     }
 
     /**
-     * Get the low-priority Compute Node has been preempted. Tasks which were running on the Compute Node when it was preempted will be rescheduled when another Compute Node becomes available. Possible values include: 'idle', 'rebooting', 'reimaging', 'running', 'unusable', 'creating', 'starting', 'waitingForStartTask', 'startTaskFailed', 'unknown', 'leavingPool', 'offline', 'preempted'.
+     * Get the current state of the Compute Node. The low-priority Compute Node has been preempted. Tasks which were running on the Compute Node when it was preempted will be rescheduled when another Compute Node becomes available. Possible values include: 'idle', 'rebooting', 'reimaging', 'running', 'unusable', 'creating', 'starting', 'waitingForStartTask', 'startTaskFailed', 'unknown', 'leavingPool', 'offline', 'preempted'.
      *
      * @return the state value
      */
@@ -247,7 +248,7 @@ public class ComputeNode {
     }
 
     /**
-     * Set the low-priority Compute Node has been preempted. Tasks which were running on the Compute Node when it was preempted will be rescheduled when another Compute Node becomes available. Possible values include: 'idle', 'rebooting', 'reimaging', 'running', 'unusable', 'creating', 'starting', 'waitingForStartTask', 'startTaskFailed', 'unknown', 'leavingPool', 'offline', 'preempted'.
+     * Set the current state of the Compute Node. The low-priority Compute Node has been preempted. Tasks which were running on the Compute Node when it was preempted will be rescheduled when another Compute Node becomes available. Possible values include: 'idle', 'rebooting', 'reimaging', 'running', 'unusable', 'creating', 'starting', 'waitingForStartTask', 'startTaskFailed', 'unknown', 'leavingPool', 'offline', 'preempted'.
      *
      * @param state the state value to set
      * @return the ComputeNode object itself.
@@ -258,7 +259,7 @@ public class ComputeNode {
     }
 
     /**
-     * Get possible values include: 'enabled', 'disabled'.
+     * Get whether the Compute Node is available for Task scheduling. Possible values include: 'enabled', 'disabled'.
      *
      * @return the schedulingState value
      */
@@ -267,7 +268,7 @@ public class ComputeNode {
     }
 
     /**
-     * Set possible values include: 'enabled', 'disabled'.
+     * Set whether the Compute Node is available for Task scheduling. Possible values include: 'enabled', 'disabled'.
      *
      * @param schedulingState the schedulingState value to set
      * @return the ComputeNode object itself.
@@ -278,7 +279,7 @@ public class ComputeNode {
     }
 
     /**
-     * Get the stateTransitionTime value.
+     * Get the time at which the Compute Node entered its current state.
      *
      * @return the stateTransitionTime value
      */
@@ -287,7 +288,7 @@ public class ComputeNode {
     }
 
     /**
-     * Set the stateTransitionTime value.
+     * Set the time at which the Compute Node entered its current state.
      *
      * @param stateTransitionTime the stateTransitionTime value to set
      * @return the ComputeNode object itself.
@@ -298,7 +299,7 @@ public class ComputeNode {
     }
 
     /**
-     * Get this property may not be present if the Compute Node state is unusable.
+     * Get the last time at which the Compute Node was started.This property may not be present if the Compute Node state is unusable.
      *
      * @return the lastBootTime value
      */
@@ -307,7 +308,7 @@ public class ComputeNode {
     }
 
     /**
-     * Set this property may not be present if the Compute Node state is unusable.
+     * Set the last time at which the Compute Node was started.This property may not be present if the Compute Node state is unusable.
      *
      * @param lastBootTime the lastBootTime value to set
      * @return the ComputeNode object itself.
@@ -318,7 +319,7 @@ public class ComputeNode {
     }
 
     /**
-     * Get this is the time when the Compute Node was initially allocated and doesn't change once set. It is not updated when the Compute Node is service healed or preempted.
+     * Get the time at which this Compute Node was allocated to the Pool. This doesn't change once set and is not updated when the Compute Node is service healed or preempted.
      *
      * @return the allocationTime value
      */
@@ -327,7 +328,7 @@ public class ComputeNode {
     }
 
     /**
-     * Set this is the time when the Compute Node was initially allocated and doesn't change once set. It is not updated when the Compute Node is service healed or preempted.
+     * Set the time at which this Compute Node was allocated to the Pool. This doesn't change once set and is not updated when the Compute Node is service healed or preempted.
      *
      * @param allocationTime the allocationTime value to set
      * @return the ComputeNode object itself.
@@ -338,7 +339,7 @@ public class ComputeNode {
     }
 
     /**
-     * Get every Compute Node that is added to a Pool is assigned a unique IP address. Whenever a Compute Node is removed from a Pool, all of its local files are deleted, and the IP address is reclaimed and could be reused for new Compute Nodes.
+     * Get the IP address that other Nodes can use to communicate with this Compute Node. Every Compute Node that is added to a Pool is assigned a unique IP address. Whenever a Compute Node is removed from a Pool, all of its local files are deleted, and the IP address is reclaimed and could be reused for new Compute Nodes.
      *
      * @return the ipAddress value
      */
@@ -347,7 +348,7 @@ public class ComputeNode {
     }
 
     /**
-     * Set every Compute Node that is added to a Pool is assigned a unique IP address. Whenever a Compute Node is removed from a Pool, all of its local files are deleted, and the IP address is reclaimed and could be reused for new Compute Nodes.
+     * Set the IP address that other Nodes can use to communicate with this Compute Node. Every Compute Node that is added to a Pool is assigned a unique IP address. Whenever a Compute Node is removed from a Pool, all of its local files are deleted, and the IP address is reclaimed and could be reused for new Compute Nodes.
      *
      * @param ipAddress the ipAddress value to set
      * @return the ComputeNode object itself.
@@ -358,7 +359,7 @@ public class ComputeNode {
     }
 
     /**
-     * Get note that this is just a soft affinity. If the target Compute Node is busy or unavailable at the time the Task is scheduled, then the Task will be scheduled elsewhere.
+     * Get an identifier which can be passed when adding a Task to request that the Task be scheduled on this Compute Node. Note that this is just a soft affinity. If the target Compute Node is busy or unavailable at the time the Task is scheduled, then the Task will be scheduled elsewhere.
      *
      * @return the affinityId value
      */
@@ -367,7 +368,7 @@ public class ComputeNode {
     }
 
     /**
-     * Set note that this is just a soft affinity. If the target Compute Node is busy or unavailable at the time the Task is scheduled, then the Task will be scheduled elsewhere.
+     * Set an identifier which can be passed when adding a Task to request that the Task be scheduled on this Compute Node. Note that this is just a soft affinity. If the target Compute Node is busy or unavailable at the time the Task is scheduled, then the Task will be scheduled elsewhere.
      *
      * @param affinityId the affinityId value to set
      * @return the ComputeNode object itself.
@@ -378,7 +379,7 @@ public class ComputeNode {
     }
 
     /**
-     * Get for information about available sizes of virtual machines in Pools, see Choose a VM size for Compute Nodes in an Azure Batch Pool (https://docs.microsoft.com/azure/batch/batch-pool-vm-sizes).
+     * Get the size of the virtual machine hosting the Compute Node. For information about available sizes of virtual machines in Pools, see Choose a VM size for Compute Nodes in an Azure Batch Pool (https://docs.microsoft.com/azure/batch/batch-pool-vm-sizes).
      *
      * @return the vmSize value
      */
@@ -387,7 +388,7 @@ public class ComputeNode {
     }
 
     /**
-     * Set for information about available sizes of virtual machines in Pools, see Choose a VM size for Compute Nodes in an Azure Batch Pool (https://docs.microsoft.com/azure/batch/batch-pool-vm-sizes).
+     * Set the size of the virtual machine hosting the Compute Node. For information about available sizes of virtual machines in Pools, see Choose a VM size for Compute Nodes in an Azure Batch Pool (https://docs.microsoft.com/azure/batch/batch-pool-vm-sizes).
      *
      * @param vmSize the vmSize value to set
      * @return the ComputeNode object itself.
@@ -398,7 +399,7 @@ public class ComputeNode {
     }
 
     /**
-     * Get the totalTasksRun value.
+     * Get the total number of Job Tasks completed on the Compute Node. This includes Job Manager Tasks and normal Tasks, but not Job Preparation, Job Release or Start Tasks.
      *
      * @return the totalTasksRun value
      */
@@ -407,7 +408,7 @@ public class ComputeNode {
     }
 
     /**
-     * Set the totalTasksRun value.
+     * Set the total number of Job Tasks completed on the Compute Node. This includes Job Manager Tasks and normal Tasks, but not Job Preparation, Job Release or Start Tasks.
      *
      * @param totalTasksRun the totalTasksRun value to set
      * @return the ComputeNode object itself.
@@ -418,7 +419,7 @@ public class ComputeNode {
     }
 
     /**
-     * Get the runningTasksCount value.
+     * Get the total number of currently running Job Tasks on the Compute Node. This includes Job Manager Tasks and normal Tasks, but not Job Preparation, Job Release or Start Tasks.
      *
      * @return the runningTasksCount value
      */
@@ -427,7 +428,7 @@ public class ComputeNode {
     }
 
     /**
-     * Set the runningTasksCount value.
+     * Set the total number of currently running Job Tasks on the Compute Node. This includes Job Manager Tasks and normal Tasks, but not Job Preparation, Job Release or Start Tasks.
      *
      * @param runningTasksCount the runningTasksCount value to set
      * @return the ComputeNode object itself.
@@ -438,7 +439,7 @@ public class ComputeNode {
     }
 
     /**
-     * Get the runningTaskSlotsCount value.
+     * Get the total number of scheduling slots used by currently running Job Tasks on the Compute Node. This includes Job Manager Tasks and normal Tasks, but not Job Preparation, Job Release or Start Tasks.
      *
      * @return the runningTaskSlotsCount value
      */
@@ -447,7 +448,7 @@ public class ComputeNode {
     }
 
     /**
-     * Set the runningTaskSlotsCount value.
+     * Set the total number of scheduling slots used by currently running Job Tasks on the Compute Node. This includes Job Manager Tasks and normal Tasks, but not Job Preparation, Job Release or Start Tasks.
      *
      * @param runningTaskSlotsCount the runningTaskSlotsCount value to set
      * @return the ComputeNode object itself.
@@ -458,7 +459,7 @@ public class ComputeNode {
     }
 
     /**
-     * Get the totalTasksSucceeded value.
+     * Get the total number of Job Tasks which completed successfully (with exitCode 0) on the Compute Node. This includes Job Manager Tasks and normal Tasks, but not Job Preparation, Job Release or Start Tasks.
      *
      * @return the totalTasksSucceeded value
      */
@@ -467,7 +468,7 @@ public class ComputeNode {
     }
 
     /**
-     * Set the totalTasksSucceeded value.
+     * Set the total number of Job Tasks which completed successfully (with exitCode 0) on the Compute Node. This includes Job Manager Tasks and normal Tasks, but not Job Preparation, Job Release or Start Tasks.
      *
      * @param totalTasksSucceeded the totalTasksSucceeded value to set
      * @return the ComputeNode object itself.
@@ -478,7 +479,7 @@ public class ComputeNode {
     }
 
     /**
-     * Get this property is present only if at least one Task has run on this Compute Node since it was assigned to the Pool.
+     * Get a list of Tasks whose state has recently changed. This property is present only if at least one Task has run on this Compute Node since it was assigned to the Pool.
      *
      * @return the recentTasks value
      */
@@ -487,7 +488,7 @@ public class ComputeNode {
     }
 
     /**
-     * Set this property is present only if at least one Task has run on this Compute Node since it was assigned to the Pool.
+     * Set a list of Tasks whose state has recently changed. This property is present only if at least one Task has run on this Compute Node since it was assigned to the Pool.
      *
      * @param recentTasks the recentTasks value to set
      * @return the ComputeNode object itself.
@@ -498,7 +499,7 @@ public class ComputeNode {
     }
 
     /**
-     * Get the startTask value.
+     * Get the Task specified to run on the Compute Node as it joins the Pool.
      *
      * @return the startTask value
      */
@@ -507,7 +508,7 @@ public class ComputeNode {
     }
 
     /**
-     * Set the startTask value.
+     * Set the Task specified to run on the Compute Node as it joins the Pool.
      *
      * @param startTask the startTask value to set
      * @return the ComputeNode object itself.
@@ -518,7 +519,7 @@ public class ComputeNode {
     }
 
     /**
-     * Get the startTaskInfo value.
+     * Get runtime information about the execution of the StartTask on the Compute Node.
      *
      * @return the startTaskInfo value
      */
@@ -527,7 +528,7 @@ public class ComputeNode {
     }
 
     /**
-     * Set the startTaskInfo value.
+     * Set runtime information about the execution of the StartTask on the Compute Node.
      *
      * @param startTaskInfo the startTaskInfo value to set
      * @return the ComputeNode object itself.
@@ -538,7 +539,7 @@ public class ComputeNode {
     }
 
     /**
-     * Get for Windows Nodes, the Batch service installs the Certificates to the specified Certificate store and location. For Linux Compute Nodes, the Certificates are stored in a directory inside the Task working directory and an environment variable AZ_BATCH_CERTIFICATES_DIR is supplied to the Task to query for this location. For Certificates with visibility of 'remoteUser', a 'certs' directory is created in the user's home directory (e.g., /home/{user-name}/certs) and Certificates are placed in that directory.
+     * Get the list of Certificates installed on the Compute Node. For Windows Nodes, the Batch service installs the Certificates to the specified Certificate store and location. For Linux Compute Nodes, the Certificates are stored in a directory inside the Task working directory and an environment variable AZ_BATCH_CERTIFICATES_DIR is supplied to the Task to query for this location. For Certificates with visibility of 'remoteUser', a 'certs' directory is created in the user's home directory (e.g., /home/{user-name}/certs) and Certificates are placed in that directory.
      *
      * @return the certificateReferences value
      */
@@ -547,7 +548,7 @@ public class ComputeNode {
     }
 
     /**
-     * Set for Windows Nodes, the Batch service installs the Certificates to the specified Certificate store and location. For Linux Compute Nodes, the Certificates are stored in a directory inside the Task working directory and an environment variable AZ_BATCH_CERTIFICATES_DIR is supplied to the Task to query for this location. For Certificates with visibility of 'remoteUser', a 'certs' directory is created in the user's home directory (e.g., /home/{user-name}/certs) and Certificates are placed in that directory.
+     * Set the list of Certificates installed on the Compute Node. For Windows Nodes, the Batch service installs the Certificates to the specified Certificate store and location. For Linux Compute Nodes, the Certificates are stored in a directory inside the Task working directory and an environment variable AZ_BATCH_CERTIFICATES_DIR is supplied to the Task to query for this location. For Certificates with visibility of 'remoteUser', a 'certs' directory is created in the user's home directory (e.g., /home/{user-name}/certs) and Certificates are placed in that directory.
      *
      * @param certificateReferences the certificateReferences value to set
      * @return the ComputeNode object itself.
@@ -558,7 +559,7 @@ public class ComputeNode {
     }
 
     /**
-     * Get the errors value.
+     * Get the list of errors that are currently being encountered by the Compute Node.
      *
      * @return the errors value
      */
@@ -567,7 +568,7 @@ public class ComputeNode {
     }
 
     /**
-     * Set the errors value.
+     * Set the list of errors that are currently being encountered by the Compute Node.
      *
      * @param errors the errors value to set
      * @return the ComputeNode object itself.
@@ -578,7 +579,7 @@ public class ComputeNode {
     }
 
     /**
-     * Get the isDedicated value.
+     * Get whether this Compute Node is a dedicated Compute Node. If false, the Compute Node is a low-priority Compute Node.
      *
      * @return the isDedicated value
      */
@@ -587,7 +588,7 @@ public class ComputeNode {
     }
 
     /**
-     * Set the isDedicated value.
+     * Set whether this Compute Node is a dedicated Compute Node. If false, the Compute Node is a low-priority Compute Node.
      *
      * @param isDedicated the isDedicated value to set
      * @return the ComputeNode object itself.
@@ -598,7 +599,7 @@ public class ComputeNode {
     }
 
     /**
-     * Get the endpointConfiguration value.
+     * Get the endpoint configuration for the Compute Node.
      *
      * @return the endpointConfiguration value
      */
@@ -607,7 +608,7 @@ public class ComputeNode {
     }
 
     /**
-     * Set the endpointConfiguration value.
+     * Set the endpoint configuration for the Compute Node.
      *
      * @param endpointConfiguration the endpointConfiguration value to set
      * @return the ComputeNode object itself.
@@ -618,7 +619,7 @@ public class ComputeNode {
     }
 
     /**
-     * Get the nodeAgentInfo value.
+     * Get information about the Compute Node agent version and the time the Compute Node upgraded to a new version.
      *
      * @return the nodeAgentInfo value
      */
@@ -627,13 +628,33 @@ public class ComputeNode {
     }
 
     /**
-     * Set the nodeAgentInfo value.
+     * Set information about the Compute Node agent version and the time the Compute Node upgraded to a new version.
      *
      * @param nodeAgentInfo the nodeAgentInfo value to set
      * @return the ComputeNode object itself.
      */
     public ComputeNode withNodeAgentInfo(NodeAgentInformation nodeAgentInfo) {
         this.nodeAgentInfo = nodeAgentInfo;
+        return this;
+    }
+
+    /**
+     * Get info about the current state of the virtual machine.
+     *
+     * @return the virtualMachineInfo value
+     */
+    public VirtualMachineInfo virtualMachineInfo() {
+        return this.virtualMachineInfo;
+    }
+
+    /**
+     * Set info about the current state of the virtual machine.
+     *
+     * @param virtualMachineInfo the virtualMachineInfo value to set
+     * @return the ComputeNode object itself.
+     */
+    public ComputeNode withVirtualMachineInfo(VirtualMachineInfo virtualMachineInfo) {
+        this.virtualMachineInfo = virtualMachineInfo;
         return this;
     }
 

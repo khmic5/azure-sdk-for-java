@@ -22,45 +22,43 @@ public class ComputeNodeUser {
     private String name;
 
     /**
-     * Whether the Account should be an administrator on the Compute Node.
-     * The default value is false.
+     * Whether the Account should be an administrator on the Compute Node. The
+     * default value is false.
      */
     @JsonProperty(value = "isAdmin")
     private Boolean isAdmin;
 
     /**
-     * The time at which the Account should expire.
-     * If omitted, the default is 1 day from the current time. For Linux
-     * Compute Nodes, the expiryTime has a precision up to a day.
+     * The time at which the Account should expire. If omitted, the default is
+     * 1 day from the current time. For Linux Compute Nodes, the expiryTime has
+     * a precision up to a day.
      */
     @JsonProperty(value = "expiryTime")
     private DateTime expiryTime;
 
     /**
-     * The password of the Account.
-     * The password is required for Windows Compute Nodes (those created with
-     * 'cloudServiceConfiguration', or created with
-     * 'virtualMachineConfiguration' using a Windows Image reference). For
-     * Linux Compute Nodes, the password can optionally be specified along with
-     * the sshPublicKey property.
+     * The password of the Account. The password is required for Windows
+     * Compute Nodes (those created with 'cloudServiceConfiguration', or
+     * created with 'virtualMachineConfiguration' using a Windows Image
+     * reference). For Linux Compute Nodes, the password can optionally be
+     * specified along with the sshPublicKey property.
      */
     @JsonProperty(value = "password")
     private String password;
 
     /**
      * The SSH public key that can be used for remote login to the Compute
-     * Node.
-     * The public key should be compatible with OpenSSH encoding and should be
-     * base 64 encoded. This property can be specified only for Linux Compute
-     * Nodes. If this is specified for a Windows Compute Node, then the Batch
-     * service rejects the request; if you are calling the REST API directly,
-     * the HTTP status code is 400 (Bad Request).
+     * Node. The public key should be compatible with OpenSSH encoding and
+     * should be base 64 encoded. This property can be specified only for Linux
+     * Compute Nodes. If this is specified for a Windows Compute Node, then the
+     * Batch service rejects the request; if you are calling the REST API
+     * directly, the HTTP status code is 400 (Bad Request).
      */
     @JsonProperty(value = "sshPublicKey")
     private String sshPublicKey;
 
     /**
-     * Get the name value.
+     * Get the user name of the Account.
      *
      * @return the name value
      */
@@ -69,7 +67,7 @@ public class ComputeNodeUser {
     }
 
     /**
-     * Set the name value.
+     * Set the user name of the Account.
      *
      * @param name the name value to set
      * @return the ComputeNodeUser object itself.
@@ -80,7 +78,7 @@ public class ComputeNodeUser {
     }
 
     /**
-     * Get the default value is false.
+     * Get whether the Account should be an administrator on the Compute Node. The default value is false.
      *
      * @return the isAdmin value
      */
@@ -89,7 +87,7 @@ public class ComputeNodeUser {
     }
 
     /**
-     * Set the default value is false.
+     * Set whether the Account should be an administrator on the Compute Node. The default value is false.
      *
      * @param isAdmin the isAdmin value to set
      * @return the ComputeNodeUser object itself.
@@ -100,7 +98,7 @@ public class ComputeNodeUser {
     }
 
     /**
-     * Get if omitted, the default is 1 day from the current time. For Linux Compute Nodes, the expiryTime has a precision up to a day.
+     * Get the time at which the Account should expire. If omitted, the default is 1 day from the current time. For Linux Compute Nodes, the expiryTime has a precision up to a day.
      *
      * @return the expiryTime value
      */
@@ -109,7 +107,7 @@ public class ComputeNodeUser {
     }
 
     /**
-     * Set if omitted, the default is 1 day from the current time. For Linux Compute Nodes, the expiryTime has a precision up to a day.
+     * Set the time at which the Account should expire. If omitted, the default is 1 day from the current time. For Linux Compute Nodes, the expiryTime has a precision up to a day.
      *
      * @param expiryTime the expiryTime value to set
      * @return the ComputeNodeUser object itself.
@@ -120,7 +118,7 @@ public class ComputeNodeUser {
     }
 
     /**
-     * Get the password is required for Windows Compute Nodes (those created with 'cloudServiceConfiguration', or created with 'virtualMachineConfiguration' using a Windows Image reference). For Linux Compute Nodes, the password can optionally be specified along with the sshPublicKey property.
+     * Get the password of the Account. The password is required for Windows Compute Nodes (those created with 'cloudServiceConfiguration', or created with 'virtualMachineConfiguration' using a Windows Image reference). For Linux Compute Nodes, the password can optionally be specified along with the sshPublicKey property.
      *
      * @return the password value
      */
@@ -129,7 +127,7 @@ public class ComputeNodeUser {
     }
 
     /**
-     * Set the password is required for Windows Compute Nodes (those created with 'cloudServiceConfiguration', or created with 'virtualMachineConfiguration' using a Windows Image reference). For Linux Compute Nodes, the password can optionally be specified along with the sshPublicKey property.
+     * Set the password of the Account. The password is required for Windows Compute Nodes (those created with 'cloudServiceConfiguration', or created with 'virtualMachineConfiguration' using a Windows Image reference). For Linux Compute Nodes, the password can optionally be specified along with the sshPublicKey property.
      *
      * @param password the password value to set
      * @return the ComputeNodeUser object itself.
@@ -140,7 +138,7 @@ public class ComputeNodeUser {
     }
 
     /**
-     * Get the public key should be compatible with OpenSSH encoding and should be base 64 encoded. This property can be specified only for Linux Compute Nodes. If this is specified for a Windows Compute Node, then the Batch service rejects the request; if you are calling the REST API directly, the HTTP status code is 400 (Bad Request).
+     * Get the SSH public key that can be used for remote login to the Compute Node. The public key should be compatible with OpenSSH encoding and should be base 64 encoded. This property can be specified only for Linux Compute Nodes. If this is specified for a Windows Compute Node, then the Batch service rejects the request; if you are calling the REST API directly, the HTTP status code is 400 (Bad Request).
      *
      * @return the sshPublicKey value
      */
@@ -149,7 +147,7 @@ public class ComputeNodeUser {
     }
 
     /**
-     * Set the public key should be compatible with OpenSSH encoding and should be base 64 encoded. This property can be specified only for Linux Compute Nodes. If this is specified for a Windows Compute Node, then the Batch service rejects the request; if you are calling the REST API directly, the HTTP status code is 400 (Bad Request).
+     * Set the SSH public key that can be used for remote login to the Compute Node. The public key should be compatible with OpenSSH encoding and should be base 64 encoded. This property can be specified only for Linux Compute Nodes. If this is specified for a Windows Compute Node, then the Batch service rejects the request; if you are calling the REST API directly, the HTTP status code is 400 (Bad Request).
      *
      * @param sshPublicKey the sshPublicKey value to set
      * @return the ComputeNodeUser object itself.

@@ -28,16 +28,16 @@ public class CIFSMountConfiguration {
 
     /**
      * The relative path on the compute node where the file system will be
-     * mounted.
-     * All file systems are mounted relative to the Batch mounts directory,
-     * accessible via the AZ_BATCH_NODE_MOUNTS_DIR environment variable.
+     * mounted. All file systems are mounted relative to the Batch mounts
+     * directory, accessible via the AZ_BATCH_NODE_MOUNTS_DIR environment
+     * variable.
      */
     @JsonProperty(value = "relativeMountPath", required = true)
     private String relativeMountPath;
 
     /**
-     * Additional command line options to pass to the mount command.
-     * These are 'net use' options in Windows and 'mount' options in Linux.
+     * Additional command line options to pass to the mount command. These are
+     * 'net use' options in Windows and 'mount' options in Linux.
      */
     @JsonProperty(value = "mountOptions")
     private String mountOptions;
@@ -49,7 +49,7 @@ public class CIFSMountConfiguration {
     private String password;
 
     /**
-     * Get the username value.
+     * Get the user to use for authentication against the CIFS file system.
      *
      * @return the username value
      */
@@ -58,7 +58,7 @@ public class CIFSMountConfiguration {
     }
 
     /**
-     * Set the username value.
+     * Set the user to use for authentication against the CIFS file system.
      *
      * @param username the username value to set
      * @return the CIFSMountConfiguration object itself.
@@ -69,7 +69,7 @@ public class CIFSMountConfiguration {
     }
 
     /**
-     * Get the source value.
+     * Get the URI of the file system to mount.
      *
      * @return the source value
      */
@@ -78,7 +78,7 @@ public class CIFSMountConfiguration {
     }
 
     /**
-     * Set the source value.
+     * Set the URI of the file system to mount.
      *
      * @param source the source value to set
      * @return the CIFSMountConfiguration object itself.
@@ -89,7 +89,7 @@ public class CIFSMountConfiguration {
     }
 
     /**
-     * Get all file systems are mounted relative to the Batch mounts directory, accessible via the AZ_BATCH_NODE_MOUNTS_DIR environment variable.
+     * Get the relative path on the compute node where the file system will be mounted. All file systems are mounted relative to the Batch mounts directory, accessible via the AZ_BATCH_NODE_MOUNTS_DIR environment variable.
      *
      * @return the relativeMountPath value
      */
@@ -98,7 +98,7 @@ public class CIFSMountConfiguration {
     }
 
     /**
-     * Set all file systems are mounted relative to the Batch mounts directory, accessible via the AZ_BATCH_NODE_MOUNTS_DIR environment variable.
+     * Set the relative path on the compute node where the file system will be mounted. All file systems are mounted relative to the Batch mounts directory, accessible via the AZ_BATCH_NODE_MOUNTS_DIR environment variable.
      *
      * @param relativeMountPath the relativeMountPath value to set
      * @return the CIFSMountConfiguration object itself.
@@ -109,7 +109,7 @@ public class CIFSMountConfiguration {
     }
 
     /**
-     * Get these are 'net use' options in Windows and 'mount' options in Linux.
+     * Get additional command line options to pass to the mount command. These are 'net use' options in Windows and 'mount' options in Linux.
      *
      * @return the mountOptions value
      */
@@ -118,7 +118,7 @@ public class CIFSMountConfiguration {
     }
 
     /**
-     * Set these are 'net use' options in Windows and 'mount' options in Linux.
+     * Set additional command line options to pass to the mount command. These are 'net use' options in Windows and 'mount' options in Linux.
      *
      * @param mountOptions the mountOptions value to set
      * @return the CIFSMountConfiguration object itself.
@@ -129,7 +129,7 @@ public class CIFSMountConfiguration {
     }
 
     /**
-     * Get the password value.
+     * Get the password to use for authentication against the CIFS file system.
      *
      * @return the password value
      */
@@ -138,7 +138,7 @@ public class CIFSMountConfiguration {
     }
 
     /**
-     * Set the password value.
+     * Set the password to use for authentication against the CIFS file system.
      *
      * @param password the password value to set
      * @return the CIFSMountConfiguration object itself.

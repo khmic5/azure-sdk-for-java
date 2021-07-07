@@ -21,23 +21,21 @@ public class TaskContainerExecutionInformation {
     private String containerId;
 
     /**
-     * The state of the container.
-     * This is the state of the container according to the Docker service. It
-     * is equivalent to the status field returned by "docker inspect".
+     * The state of the container according to the Docker service. It is
+     * equivalent to the status field returned by "docker inspect".
      */
     @JsonProperty(value = "state")
     private String state;
 
     /**
-     * Detailed error information about the container.
-     * This is the detailed error string from the Docker service, if available.
-     * It is equivalent to the error field returned by "docker inspect".
+     * The detailed error string from the Docker service, if available. It is
+     * equivalent to the error field returned by "docker inspect".
      */
     @JsonProperty(value = "error")
     private String error;
 
     /**
-     * Get the containerId value.
+     * Get the ID of the container.
      *
      * @return the containerId value
      */
@@ -46,7 +44,7 @@ public class TaskContainerExecutionInformation {
     }
 
     /**
-     * Set the containerId value.
+     * Set the ID of the container.
      *
      * @param containerId the containerId value to set
      * @return the TaskContainerExecutionInformation object itself.
@@ -57,7 +55,7 @@ public class TaskContainerExecutionInformation {
     }
 
     /**
-     * Get this is the state of the container according to the Docker service. It is equivalent to the status field returned by "docker inspect".
+     * Get the state of the container according to the Docker service. It is equivalent to the status field returned by "docker inspect".
      *
      * @return the state value
      */
@@ -66,7 +64,7 @@ public class TaskContainerExecutionInformation {
     }
 
     /**
-     * Set this is the state of the container according to the Docker service. It is equivalent to the status field returned by "docker inspect".
+     * Set the state of the container according to the Docker service. It is equivalent to the status field returned by "docker inspect".
      *
      * @param state the state value to set
      * @return the TaskContainerExecutionInformation object itself.
@@ -77,7 +75,7 @@ public class TaskContainerExecutionInformation {
     }
 
     /**
-     * Get this is the detailed error string from the Docker service, if available. It is equivalent to the error field returned by "docker inspect".
+     * Get the detailed error string from the Docker service, if available. It is equivalent to the error field returned by "docker inspect".
      *
      * @return the error value
      */
@@ -86,7 +84,7 @@ public class TaskContainerExecutionInformation {
     }
 
     /**
-     * Set this is the detailed error string from the Docker service, if available. It is equivalent to the error field returned by "docker inspect".
+     * Set the detailed error string from the Docker service, if available. It is equivalent to the error field returned by "docker inspect".
      *
      * @param error the error value to set
      * @return the TaskContainerExecutionInformation object itself.

@@ -11,28 +11,27 @@ package com.microsoft.azure.batch.protocol.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * The definition of the user identity under which the Task is run.
- * Specify either the userName or autoUser property, but not both.
+ * The definition of the user identity under which the Task is run. Specify
+ * either the userName or autoUser property, but not both.
  */
 public class UserIdentity {
     /**
-     * The name of the user identity under which the Task is run.
-     * The userName and autoUser properties are mutually exclusive; you must
-     * specify one but not both.
+     * The name of the user identity under which the Task is run. The userName
+     * and autoUser properties are mutually exclusive; you must specify one but
+     * not both.
      */
     @JsonProperty(value = "username")
     private String userName;
 
     /**
-     * The auto user under which the Task is run.
-     * The userName and autoUser properties are mutually exclusive; you must
-     * specify one but not both.
+     * The auto user under which the Task is run. The userName and autoUser
+     * properties are mutually exclusive; you must specify one but not both.
      */
     @JsonProperty(value = "autoUser")
     private AutoUserSpecification autoUser;
 
     /**
-     * Get the userName and autoUser properties are mutually exclusive; you must specify one but not both.
+     * Get the name of the user identity under which the Task is run. The userName and autoUser properties are mutually exclusive; you must specify one but not both.
      *
      * @return the userName value
      */
@@ -41,7 +40,7 @@ public class UserIdentity {
     }
 
     /**
-     * Set the userName and autoUser properties are mutually exclusive; you must specify one but not both.
+     * Set the name of the user identity under which the Task is run. The userName and autoUser properties are mutually exclusive; you must specify one but not both.
      *
      * @param userName the userName value to set
      * @return the UserIdentity object itself.
@@ -52,7 +51,7 @@ public class UserIdentity {
     }
 
     /**
-     * Get the userName and autoUser properties are mutually exclusive; you must specify one but not both.
+     * Get the auto user under which the Task is run. The userName and autoUser properties are mutually exclusive; you must specify one but not both.
      *
      * @return the autoUser value
      */
@@ -61,7 +60,7 @@ public class UserIdentity {
     }
 
     /**
-     * Set the userName and autoUser properties are mutually exclusive; you must specify one but not both.
+     * Set the auto user under which the Task is run. The userName and autoUser properties are mutually exclusive; you must specify one but not both.
      *
      * @param autoUser the autoUser value to set
      * @return the UserIdentity object itself.

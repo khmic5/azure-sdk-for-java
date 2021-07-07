@@ -31,17 +31,16 @@ public class DeleteCertificateError {
 
     /**
      * A list of additional error details related to the Certificate deletion
-     * error.
-     * This list includes details such as the active Pools and Compute Nodes
-     * referencing this Certificate. However, if a large number of resources
-     * reference the Certificate, the list contains only about the first
-     * hundred.
+     * error. This list includes details such as the active Pools and Compute
+     * Nodes referencing this Certificate. However, if a large number of
+     * resources reference the Certificate, the list contains only about the
+     * first hundred.
      */
     @JsonProperty(value = "values")
     private List<NameValuePair> values;
 
     /**
-     * Get the code value.
+     * Get an identifier for the Certificate deletion error. Codes are invariant and are intended to be consumed programmatically.
      *
      * @return the code value
      */
@@ -50,7 +49,7 @@ public class DeleteCertificateError {
     }
 
     /**
-     * Set the code value.
+     * Set an identifier for the Certificate deletion error. Codes are invariant and are intended to be consumed programmatically.
      *
      * @param code the code value to set
      * @return the DeleteCertificateError object itself.
@@ -61,7 +60,7 @@ public class DeleteCertificateError {
     }
 
     /**
-     * Get the message value.
+     * Get a message describing the Certificate deletion error, intended to be suitable for display in a user interface.
      *
      * @return the message value
      */
@@ -70,7 +69,7 @@ public class DeleteCertificateError {
     }
 
     /**
-     * Set the message value.
+     * Set a message describing the Certificate deletion error, intended to be suitable for display in a user interface.
      *
      * @param message the message value to set
      * @return the DeleteCertificateError object itself.
@@ -81,7 +80,7 @@ public class DeleteCertificateError {
     }
 
     /**
-     * Get this list includes details such as the active Pools and Compute Nodes referencing this Certificate. However, if a large number of resources reference the Certificate, the list contains only about the first hundred.
+     * Get a list of additional error details related to the Certificate deletion error. This list includes details such as the active Pools and Compute Nodes referencing this Certificate. However, if a large number of resources reference the Certificate, the list contains only about the first hundred.
      *
      * @return the values value
      */
@@ -90,7 +89,7 @@ public class DeleteCertificateError {
     }
 
     /**
-     * Set this list includes details such as the active Pools and Compute Nodes referencing this Certificate. However, if a large number of resources reference the Certificate, the list contains only about the first hundred.
+     * Set a list of additional error details related to the Certificate deletion error. This list includes details such as the active Pools and Compute Nodes referencing this Certificate. However, if a large number of resources reference the Certificate, the list contains only about the first hundred.
      *
      * @param values the values value to set
      * @return the DeleteCertificateError object itself.

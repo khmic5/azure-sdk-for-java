@@ -16,15 +16,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class NodeRebootParameter {
     /**
      * When to reboot the Compute Node and what to do with currently running
-     * Tasks.
-     * The default value is requeue. Possible values include: 'requeue',
+     * Tasks. The default value is requeue. Possible values include: 'requeue',
      * 'terminate', 'taskCompletion', 'retainedData'.
      */
     @JsonProperty(value = "nodeRebootOption")
     private ComputeNodeRebootOption nodeRebootOption;
 
     /**
-     * Get the default value is requeue. Possible values include: 'requeue', 'terminate', 'taskCompletion', 'retainedData'.
+     * Get when to reboot the Compute Node and what to do with currently running Tasks. The default value is requeue. Possible values include: 'requeue', 'terminate', 'taskCompletion', 'retainedData'.
      *
      * @return the nodeRebootOption value
      */
@@ -33,7 +32,7 @@ public class NodeRebootParameter {
     }
 
     /**
-     * Set the default value is requeue. Possible values include: 'requeue', 'terminate', 'taskCompletion', 'retainedData'.
+     * Set when to reboot the Compute Node and what to do with currently running Tasks. The default value is requeue. Possible values include: 'requeue', 'terminate', 'taskCompletion', 'retainedData'.
      *
      * @param nodeRebootOption the nodeRebootOption value to set
      * @return the NodeRebootParameter object itself.

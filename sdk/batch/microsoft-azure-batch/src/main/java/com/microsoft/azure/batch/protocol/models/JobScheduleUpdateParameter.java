@@ -16,17 +16,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class JobScheduleUpdateParameter {
     /**
-     * The schedule according to which Jobs will be created.
-     * If you do not specify this element, it is equivalent to passing the
-     * default schedule: that is, a single Job scheduled to run immediately.
+     * The schedule according to which Jobs will be created. If you do not
+     * specify this element, it is equivalent to passing the default schedule:
+     * that is, a single Job scheduled to run immediately.
      */
     @JsonProperty(value = "schedule", required = true)
     private Schedule schedule;
 
     /**
-     * Details of the Jobs to be created on this schedule.
-     * Updates affect only Jobs that are started after the update has taken
-     * place. Any currently active Job continues with the older specification.
+     * Details of the Jobs to be created on this schedule. Updates affect only
+     * Jobs that are started after the update has taken place. Any currently
+     * active Job continues with the older specification.
      */
     @JsonProperty(value = "jobSpecification", required = true)
     private JobSpecification jobSpecification;
@@ -40,7 +40,7 @@ public class JobScheduleUpdateParameter {
     private List<MetadataItem> metadata;
 
     /**
-     * Get if you do not specify this element, it is equivalent to passing the default schedule: that is, a single Job scheduled to run immediately.
+     * Get the schedule according to which Jobs will be created. If you do not specify this element, it is equivalent to passing the default schedule: that is, a single Job scheduled to run immediately.
      *
      * @return the schedule value
      */
@@ -49,7 +49,7 @@ public class JobScheduleUpdateParameter {
     }
 
     /**
-     * Set if you do not specify this element, it is equivalent to passing the default schedule: that is, a single Job scheduled to run immediately.
+     * Set the schedule according to which Jobs will be created. If you do not specify this element, it is equivalent to passing the default schedule: that is, a single Job scheduled to run immediately.
      *
      * @param schedule the schedule value to set
      * @return the JobScheduleUpdateParameter object itself.
@@ -60,7 +60,7 @@ public class JobScheduleUpdateParameter {
     }
 
     /**
-     * Get updates affect only Jobs that are started after the update has taken place. Any currently active Job continues with the older specification.
+     * Get details of the Jobs to be created on this schedule. Updates affect only Jobs that are started after the update has taken place. Any currently active Job continues with the older specification.
      *
      * @return the jobSpecification value
      */
@@ -69,7 +69,7 @@ public class JobScheduleUpdateParameter {
     }
 
     /**
-     * Set updates affect only Jobs that are started after the update has taken place. Any currently active Job continues with the older specification.
+     * Set details of the Jobs to be created on this schedule. Updates affect only Jobs that are started after the update has taken place. Any currently active Job continues with the older specification.
      *
      * @param jobSpecification the jobSpecification value to set
      * @return the JobScheduleUpdateParameter object itself.
@@ -80,7 +80,7 @@ public class JobScheduleUpdateParameter {
     }
 
     /**
-     * Get if you do not specify this element, it takes the default value of an empty list; in effect, any existing metadata is deleted.
+     * Get a list of name-value pairs associated with the Job Schedule as metadata. If you do not specify this element, it takes the default value of an empty list; in effect, any existing metadata is deleted.
      *
      * @return the metadata value
      */
@@ -89,7 +89,7 @@ public class JobScheduleUpdateParameter {
     }
 
     /**
-     * Set if you do not specify this element, it takes the default value of an empty list; in effect, any existing metadata is deleted.
+     * Set a list of name-value pairs associated with the Job Schedule as metadata. If you do not specify this element, it takes the default value of an empty list; in effect, any existing metadata is deleted.
      *
      * @param metadata the metadata value to set
      * @return the JobScheduleUpdateParameter object itself.

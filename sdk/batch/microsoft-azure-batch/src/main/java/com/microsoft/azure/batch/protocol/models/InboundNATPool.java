@@ -17,29 +17,26 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class InboundNATPool {
     /**
-     * The name of the endpoint.
-     * The name must be unique within a Batch Pool, can contain letters,
-     * numbers, underscores, periods, and hyphens. Names must start with a
-     * letter or number, must end with a letter, number, or underscore, and
-     * cannot exceed 77 characters.  If any invalid values are provided the
-     * request fails with HTTP status code 400.
+     * The name of the endpoint. This name must be unique within a Batch Pool
+     * and can contain letters, numbers, underscores, periods, and hyphens.
+     * Names must start with a letter or number, must end with a letter,
+     * number, or underscore, and cannot exceed 77 characters.  If any invalid
+     * values are provided the request fails with HTTP status code 400.
      */
     @JsonProperty(value = "name", required = true)
     private String name;
 
     /**
-     * The protocol of the endpoint.
-     * Possible values include: 'tcp', 'udp'.
+     * The protocol of the endpoint. Possible values include: 'tcp', 'udp'.
      */
     @JsonProperty(value = "protocol", required = true)
     private InboundEndpointProtocol protocol;
 
     /**
-     * The port number on the Compute Node.
-     * This must be unique within a Batch Pool. Acceptable values are between 1
-     * and 65535 except for 22, 3389, 29876 and 29877 as these are reserved. If
-     * any reserved values are provided the request fails with HTTP status code
-     * 400.
+     * The port number on the Compute Node. This must be unique within a Batch
+     * Pool. Acceptable values are between 1 and 65535 except for 22, 3389,
+     * 29876 and 29877 as these are reserved. If any reserved values are
+     * provided the request fails with HTTP status code 400.
      */
     @JsonProperty(value = "backendPort", required = true)
     private int backendPort;
@@ -47,12 +44,11 @@ public class InboundNATPool {
     /**
      * The first port number in the range of external ports that will be used
      * to provide inbound access to the backendPort on individual Compute
-     * Nodes.
-     * Acceptable values range between 1 and 65534 except ports from 50000 to
-     * 55000 which are reserved. All ranges within a Pool must be distinct and
-     * cannot overlap. Each range must contain at least 40 ports. If any
-     * reserved or overlapping values are provided the request fails with HTTP
-     * status code 400.
+     * Nodes. Acceptable values range between 1 and 65534 except ports from
+     * 50000 to 55000 which are reserved. All ranges within a Pool must be
+     * distinct and cannot overlap. Each range must contain at least 40 ports.
+     * If any reserved or overlapping values are provided the request fails
+     * with HTTP status code 400.
      */
     @JsonProperty(value = "frontendPortRangeStart", required = true)
     private int frontendPortRangeStart;
@@ -71,18 +67,17 @@ public class InboundNATPool {
 
     /**
      * A list of network security group rules that will be applied to the
-     * endpoint.
-     * The maximum number of rules that can be specified across all the
-     * endpoints on a Batch Pool is 25. If no network security group rules are
-     * specified, a default rule will be created to allow inbound access to the
-     * specified backendPort. If the maximum number of network security group
-     * rules is exceeded the request fails with HTTP status code 400.
+     * endpoint. The maximum number of rules that can be specified across all
+     * the endpoints on a Batch Pool is 25. If no network security group rules
+     * are specified, a default rule will be created to allow inbound access to
+     * the specified backendPort. If the maximum number of network security
+     * group rules is exceeded the request fails with HTTP status code 400.
      */
     @JsonProperty(value = "networkSecurityGroupRules")
     private List<NetworkSecurityGroupRule> networkSecurityGroupRules;
 
     /**
-     * Get the name must be unique within a Batch Pool, can contain letters, numbers, underscores, periods, and hyphens. Names must start with a letter or number, must end with a letter, number, or underscore, and cannot exceed 77 characters.  If any invalid values are provided the request fails with HTTP status code 400.
+     * Get the name of the endpoint. This name must be unique within a Batch Pool and can contain letters, numbers, underscores, periods, and hyphens. Names must start with a letter or number, must end with a letter, number, or underscore, and cannot exceed 77 characters.  If any invalid values are provided the request fails with HTTP status code 400.
      *
      * @return the name value
      */
@@ -91,7 +86,7 @@ public class InboundNATPool {
     }
 
     /**
-     * Set the name must be unique within a Batch Pool, can contain letters, numbers, underscores, periods, and hyphens. Names must start with a letter or number, must end with a letter, number, or underscore, and cannot exceed 77 characters.  If any invalid values are provided the request fails with HTTP status code 400.
+     * Set the name of the endpoint. This name must be unique within a Batch Pool and can contain letters, numbers, underscores, periods, and hyphens. Names must start with a letter or number, must end with a letter, number, or underscore, and cannot exceed 77 characters.  If any invalid values are provided the request fails with HTTP status code 400.
      *
      * @param name the name value to set
      * @return the InboundNATPool object itself.
@@ -102,7 +97,7 @@ public class InboundNATPool {
     }
 
     /**
-     * Get possible values include: 'tcp', 'udp'.
+     * Get the protocol of the endpoint. Possible values include: 'tcp', 'udp'.
      *
      * @return the protocol value
      */
@@ -111,7 +106,7 @@ public class InboundNATPool {
     }
 
     /**
-     * Set possible values include: 'tcp', 'udp'.
+     * Set the protocol of the endpoint. Possible values include: 'tcp', 'udp'.
      *
      * @param protocol the protocol value to set
      * @return the InboundNATPool object itself.
@@ -122,7 +117,7 @@ public class InboundNATPool {
     }
 
     /**
-     * Get this must be unique within a Batch Pool. Acceptable values are between 1 and 65535 except for 22, 3389, 29876 and 29877 as these are reserved. If any reserved values are provided the request fails with HTTP status code 400.
+     * Get the port number on the Compute Node. This must be unique within a Batch Pool. Acceptable values are between 1 and 65535 except for 22, 3389, 29876 and 29877 as these are reserved. If any reserved values are provided the request fails with HTTP status code 400.
      *
      * @return the backendPort value
      */
@@ -131,7 +126,7 @@ public class InboundNATPool {
     }
 
     /**
-     * Set this must be unique within a Batch Pool. Acceptable values are between 1 and 65535 except for 22, 3389, 29876 and 29877 as these are reserved. If any reserved values are provided the request fails with HTTP status code 400.
+     * Set the port number on the Compute Node. This must be unique within a Batch Pool. Acceptable values are between 1 and 65535 except for 22, 3389, 29876 and 29877 as these are reserved. If any reserved values are provided the request fails with HTTP status code 400.
      *
      * @param backendPort the backendPort value to set
      * @return the InboundNATPool object itself.
@@ -142,7 +137,7 @@ public class InboundNATPool {
     }
 
     /**
-     * Get acceptable values range between 1 and 65534 except ports from 50000 to 55000 which are reserved. All ranges within a Pool must be distinct and cannot overlap. Each range must contain at least 40 ports. If any reserved or overlapping values are provided the request fails with HTTP status code 400.
+     * Get the first port number in the range of external ports that will be used to provide inbound access to the backendPort on individual Compute Nodes. Acceptable values range between 1 and 65534 except ports from 50000 to 55000 which are reserved. All ranges within a Pool must be distinct and cannot overlap. Each range must contain at least 40 ports. If any reserved or overlapping values are provided the request fails with HTTP status code 400.
      *
      * @return the frontendPortRangeStart value
      */
@@ -151,7 +146,7 @@ public class InboundNATPool {
     }
 
     /**
-     * Set acceptable values range between 1 and 65534 except ports from 50000 to 55000 which are reserved. All ranges within a Pool must be distinct and cannot overlap. Each range must contain at least 40 ports. If any reserved or overlapping values are provided the request fails with HTTP status code 400.
+     * Set the first port number in the range of external ports that will be used to provide inbound access to the backendPort on individual Compute Nodes. Acceptable values range between 1 and 65534 except ports from 50000 to 55000 which are reserved. All ranges within a Pool must be distinct and cannot overlap. Each range must contain at least 40 ports. If any reserved or overlapping values are provided the request fails with HTTP status code 400.
      *
      * @param frontendPortRangeStart the frontendPortRangeStart value to set
      * @return the InboundNATPool object itself.
@@ -162,7 +157,7 @@ public class InboundNATPool {
     }
 
     /**
-     * Get acceptable values range between 1 and 65534 except ports from 50000 to 55000 which are reserved by the Batch service. All ranges within a Pool must be distinct and cannot overlap. Each range must contain at least 40 ports. If any reserved or overlapping values are provided the request fails with HTTP status code 400.
+     * Get the last port number in the range of external ports that will be used to provide inbound access to the backendPort on individual Compute Nodes. Acceptable values range between 1 and 65534 except ports from 50000 to 55000 which are reserved by the Batch service. All ranges within a Pool must be distinct and cannot overlap. Each range must contain at least 40 ports. If any reserved or overlapping values are provided the request fails with HTTP status code 400.
      *
      * @return the frontendPortRangeEnd value
      */
@@ -171,7 +166,7 @@ public class InboundNATPool {
     }
 
     /**
-     * Set acceptable values range between 1 and 65534 except ports from 50000 to 55000 which are reserved by the Batch service. All ranges within a Pool must be distinct and cannot overlap. Each range must contain at least 40 ports. If any reserved or overlapping values are provided the request fails with HTTP status code 400.
+     * Set the last port number in the range of external ports that will be used to provide inbound access to the backendPort on individual Compute Nodes. Acceptable values range between 1 and 65534 except ports from 50000 to 55000 which are reserved by the Batch service. All ranges within a Pool must be distinct and cannot overlap. Each range must contain at least 40 ports. If any reserved or overlapping values are provided the request fails with HTTP status code 400.
      *
      * @param frontendPortRangeEnd the frontendPortRangeEnd value to set
      * @return the InboundNATPool object itself.
@@ -182,7 +177,7 @@ public class InboundNATPool {
     }
 
     /**
-     * Get the maximum number of rules that can be specified across all the endpoints on a Batch Pool is 25. If no network security group rules are specified, a default rule will be created to allow inbound access to the specified backendPort. If the maximum number of network security group rules is exceeded the request fails with HTTP status code 400.
+     * Get a list of network security group rules that will be applied to the endpoint. The maximum number of rules that can be specified across all the endpoints on a Batch Pool is 25. If no network security group rules are specified, a default rule will be created to allow inbound access to the specified backendPort. If the maximum number of network security group rules is exceeded the request fails with HTTP status code 400.
      *
      * @return the networkSecurityGroupRules value
      */
@@ -191,7 +186,7 @@ public class InboundNATPool {
     }
 
     /**
-     * Set the maximum number of rules that can be specified across all the endpoints on a Batch Pool is 25. If no network security group rules are specified, a default rule will be created to allow inbound access to the specified backendPort. If the maximum number of network security group rules is exceeded the request fails with HTTP status code 400.
+     * Set a list of network security group rules that will be applied to the endpoint. The maximum number of rules that can be specified across all the endpoints on a Batch Pool is 25. If no network security group rules are specified, a default rule will be created to allow inbound access to the specified backendPort. If the maximum number of network security group rules is exceeded the request fails with HTTP status code 400.
      *
      * @param networkSecurityGroupRules the networkSecurityGroupRules value to set
      * @return the InboundNATPool object itself.

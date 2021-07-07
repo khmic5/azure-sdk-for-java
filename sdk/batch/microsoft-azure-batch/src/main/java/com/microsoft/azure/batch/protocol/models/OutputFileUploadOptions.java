@@ -17,15 +17,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class OutputFileUploadOptions {
     /**
      * The conditions under which the Task output file or set of files should
-     * be uploaded.
-     * The default is taskcompletion. Possible values include: 'taskSuccess',
-     * 'taskFailure', 'taskCompletion'.
+     * be uploaded. The default is taskcompletion. Possible values include:
+     * 'taskSuccess', 'taskFailure', 'taskCompletion'.
      */
     @JsonProperty(value = "uploadCondition", required = true)
     private OutputFileUploadCondition uploadCondition;
 
     /**
-     * Get the default is taskcompletion. Possible values include: 'taskSuccess', 'taskFailure', 'taskCompletion'.
+     * Get the conditions under which the Task output file or set of files should be uploaded. The default is taskcompletion. Possible values include: 'taskSuccess', 'taskFailure', 'taskCompletion'.
      *
      * @return the uploadCondition value
      */
@@ -34,7 +33,7 @@ public class OutputFileUploadOptions {
     }
 
     /**
-     * Set the default is taskcompletion. Possible values include: 'taskSuccess', 'taskFailure', 'taskCompletion'.
+     * Set the conditions under which the Task output file or set of files should be uploaded. The default is taskcompletion. Possible values include: 'taskSuccess', 'taskFailure', 'taskCompletion'.
      *
      * @param uploadCondition the uploadCondition value to set
      * @return the OutputFileUploadOptions object itself.

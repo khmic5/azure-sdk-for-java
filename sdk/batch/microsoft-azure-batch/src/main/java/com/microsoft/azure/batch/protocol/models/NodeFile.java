@@ -39,7 +39,7 @@ public class NodeFile {
     private FileProperties properties;
 
     /**
-     * Get the name value.
+     * Get the file path.
      *
      * @return the name value
      */
@@ -48,7 +48,7 @@ public class NodeFile {
     }
 
     /**
-     * Set the name value.
+     * Set the file path.
      *
      * @param name the name value to set
      * @return the NodeFile object itself.
@@ -59,7 +59,7 @@ public class NodeFile {
     }
 
     /**
-     * Get the url value.
+     * Get the URL of the file.
      *
      * @return the url value
      */
@@ -68,7 +68,7 @@ public class NodeFile {
     }
 
     /**
-     * Set the url value.
+     * Set the URL of the file.
      *
      * @param url the url value to set
      * @return the NodeFile object itself.
@@ -79,7 +79,7 @@ public class NodeFile {
     }
 
     /**
-     * Get the isDirectory value.
+     * Get whether the object represents a directory.
      *
      * @return the isDirectory value
      */
@@ -88,7 +88,7 @@ public class NodeFile {
     }
 
     /**
-     * Set the isDirectory value.
+     * Set whether the object represents a directory.
      *
      * @param isDirectory the isDirectory value to set
      * @return the NodeFile object itself.
@@ -99,7 +99,7 @@ public class NodeFile {
     }
 
     /**
-     * Get the properties value.
+     * Get the file properties.
      *
      * @return the properties value
      */
@@ -108,7 +108,7 @@ public class NodeFile {
     }
 
     /**
-     * Set the properties value.
+     * Set the file properties.
      *
      * @param properties the properties value to set
      * @return the NodeFile object itself.

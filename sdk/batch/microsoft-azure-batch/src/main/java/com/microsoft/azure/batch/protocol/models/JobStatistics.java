@@ -50,12 +50,11 @@ public class JobStatistics {
     private Period kernelCPUTime;
 
     /**
-     * The total wall clock time of all Tasks in the Job.
-     * The wall clock time is the elapsed time from when the Task started
-     * running on a Compute Node to when it finished (or to the last time the
-     * statistics were updated, if the Task had not finished by then). If a
-     * Task was retried, this includes the wall clock time of all the Task
-     * retries.
+     * The total wall clock time of all Tasks in the Job. The wall clock time
+     * is the elapsed time from when the Task started running on a Compute Node
+     * to when it finished (or to the last time the statistics were updated, if
+     * the Task had not finished by then). If a Task was retried, this includes
+     * the wall clock time of all the Task retries.
      */
     @JsonProperty(value = "wallClockTime", required = true)
     private Period wallClockTime;
@@ -86,17 +85,16 @@ public class JobStatistics {
 
     /**
      * The total number of Tasks successfully completed in the Job during the
-     * given time range.
-     * A Task completes successfully if it returns exit code 0.
+     * given time range. A Task completes successfully if it returns exit code
+     * 0.
      */
     @JsonProperty(value = "numSucceededTasks", required = true)
     private long numSucceededTasks;
 
     /**
      * The total number of Tasks in the Job that failed during the given time
-     * range.
-     * A Task fails if it exhausts its maximum retry count without returning
-     * exit code 0.
+     * range. A Task fails if it exhausts its maximum retry count without
+     * returning exit code 0.
      */
     @JsonProperty(value = "numFailedTasks", required = true)
     private long numFailedTasks;
@@ -109,18 +107,18 @@ public class JobStatistics {
     private long numTaskRetries;
 
     /**
-     * The total wait time of all Tasks in the Job.
-     * The wait time for a Task is defined as the elapsed time between the
-     * creation of the Task and the start of Task execution. (If the Task is
-     * retried due to failures, the wait time is the time to the most recent
-     * Task execution.) This value is only reported in the Account lifetime
-     * statistics; it is not included in the Job statistics.
+     * The total wait time of all Tasks in the Job. The wait time for a Task is
+     * defined as the elapsed time between the creation of the Task and the
+     * start of Task execution. (If the Task is retried due to failures, the
+     * wait time is the time to the most recent Task execution.) This value is
+     * only reported in the Account lifetime statistics; it is not included in
+     * the Job statistics.
      */
     @JsonProperty(value = "waitTime", required = true)
     private Period waitTime;
 
     /**
-     * Get the url value.
+     * Get the URL of the statistics.
      *
      * @return the url value
      */
@@ -129,7 +127,7 @@ public class JobStatistics {
     }
 
     /**
-     * Set the url value.
+     * Set the URL of the statistics.
      *
      * @param url the url value to set
      * @return the JobStatistics object itself.
@@ -140,7 +138,7 @@ public class JobStatistics {
     }
 
     /**
-     * Get the startTime value.
+     * Get the start time of the time range covered by the statistics.
      *
      * @return the startTime value
      */
@@ -149,7 +147,7 @@ public class JobStatistics {
     }
 
     /**
-     * Set the startTime value.
+     * Set the start time of the time range covered by the statistics.
      *
      * @param startTime the startTime value to set
      * @return the JobStatistics object itself.
@@ -160,7 +158,7 @@ public class JobStatistics {
     }
 
     /**
-     * Get the lastUpdateTime value.
+     * Get the time at which the statistics were last updated. All statistics are limited to the range between startTime and lastUpdateTime.
      *
      * @return the lastUpdateTime value
      */
@@ -169,7 +167,7 @@ public class JobStatistics {
     }
 
     /**
-     * Set the lastUpdateTime value.
+     * Set the time at which the statistics were last updated. All statistics are limited to the range between startTime and lastUpdateTime.
      *
      * @param lastUpdateTime the lastUpdateTime value to set
      * @return the JobStatistics object itself.
@@ -180,7 +178,7 @@ public class JobStatistics {
     }
 
     /**
-     * Get the userCPUTime value.
+     * Get the total user mode CPU time (summed across all cores and all Compute Nodes) consumed by all Tasks in the Job.
      *
      * @return the userCPUTime value
      */
@@ -189,7 +187,7 @@ public class JobStatistics {
     }
 
     /**
-     * Set the userCPUTime value.
+     * Set the total user mode CPU time (summed across all cores and all Compute Nodes) consumed by all Tasks in the Job.
      *
      * @param userCPUTime the userCPUTime value to set
      * @return the JobStatistics object itself.
@@ -200,7 +198,7 @@ public class JobStatistics {
     }
 
     /**
-     * Get the kernelCPUTime value.
+     * Get the total kernel mode CPU time (summed across all cores and all Compute Nodes) consumed by all Tasks in the Job.
      *
      * @return the kernelCPUTime value
      */
@@ -209,7 +207,7 @@ public class JobStatistics {
     }
 
     /**
-     * Set the kernelCPUTime value.
+     * Set the total kernel mode CPU time (summed across all cores and all Compute Nodes) consumed by all Tasks in the Job.
      *
      * @param kernelCPUTime the kernelCPUTime value to set
      * @return the JobStatistics object itself.
@@ -220,7 +218,7 @@ public class JobStatistics {
     }
 
     /**
-     * Get the wall clock time is the elapsed time from when the Task started running on a Compute Node to when it finished (or to the last time the statistics were updated, if the Task had not finished by then). If a Task was retried, this includes the wall clock time of all the Task retries.
+     * Get the total wall clock time of all Tasks in the Job. The wall clock time is the elapsed time from when the Task started running on a Compute Node to when it finished (or to the last time the statistics were updated, if the Task had not finished by then). If a Task was retried, this includes the wall clock time of all the Task retries.
      *
      * @return the wallClockTime value
      */
@@ -229,7 +227,7 @@ public class JobStatistics {
     }
 
     /**
-     * Set the wall clock time is the elapsed time from when the Task started running on a Compute Node to when it finished (or to the last time the statistics were updated, if the Task had not finished by then). If a Task was retried, this includes the wall clock time of all the Task retries.
+     * Set the total wall clock time of all Tasks in the Job. The wall clock time is the elapsed time from when the Task started running on a Compute Node to when it finished (or to the last time the statistics were updated, if the Task had not finished by then). If a Task was retried, this includes the wall clock time of all the Task retries.
      *
      * @param wallClockTime the wallClockTime value to set
      * @return the JobStatistics object itself.
@@ -240,7 +238,7 @@ public class JobStatistics {
     }
 
     /**
-     * Get the readIOps value.
+     * Get the total number of disk read operations made by all Tasks in the Job.
      *
      * @return the readIOps value
      */
@@ -249,7 +247,7 @@ public class JobStatistics {
     }
 
     /**
-     * Set the readIOps value.
+     * Set the total number of disk read operations made by all Tasks in the Job.
      *
      * @param readIOps the readIOps value to set
      * @return the JobStatistics object itself.
@@ -260,7 +258,7 @@ public class JobStatistics {
     }
 
     /**
-     * Get the writeIOps value.
+     * Get the total number of disk write operations made by all Tasks in the Job.
      *
      * @return the writeIOps value
      */
@@ -269,7 +267,7 @@ public class JobStatistics {
     }
 
     /**
-     * Set the writeIOps value.
+     * Set the total number of disk write operations made by all Tasks in the Job.
      *
      * @param writeIOps the writeIOps value to set
      * @return the JobStatistics object itself.
@@ -280,7 +278,7 @@ public class JobStatistics {
     }
 
     /**
-     * Get the readIOGiB value.
+     * Get the total amount of data in GiB read from disk by all Tasks in the Job.
      *
      * @return the readIOGiB value
      */
@@ -289,7 +287,7 @@ public class JobStatistics {
     }
 
     /**
-     * Set the readIOGiB value.
+     * Set the total amount of data in GiB read from disk by all Tasks in the Job.
      *
      * @param readIOGiB the readIOGiB value to set
      * @return the JobStatistics object itself.
@@ -300,7 +298,7 @@ public class JobStatistics {
     }
 
     /**
-     * Get the writeIOGiB value.
+     * Get the total amount of data in GiB written to disk by all Tasks in the Job.
      *
      * @return the writeIOGiB value
      */
@@ -309,7 +307,7 @@ public class JobStatistics {
     }
 
     /**
-     * Set the writeIOGiB value.
+     * Set the total amount of data in GiB written to disk by all Tasks in the Job.
      *
      * @param writeIOGiB the writeIOGiB value to set
      * @return the JobStatistics object itself.
@@ -320,7 +318,7 @@ public class JobStatistics {
     }
 
     /**
-     * Get a Task completes successfully if it returns exit code 0.
+     * Get the total number of Tasks successfully completed in the Job during the given time range. A Task completes successfully if it returns exit code 0.
      *
      * @return the numSucceededTasks value
      */
@@ -329,7 +327,7 @@ public class JobStatistics {
     }
 
     /**
-     * Set a Task completes successfully if it returns exit code 0.
+     * Set the total number of Tasks successfully completed in the Job during the given time range. A Task completes successfully if it returns exit code 0.
      *
      * @param numSucceededTasks the numSucceededTasks value to set
      * @return the JobStatistics object itself.
@@ -340,7 +338,7 @@ public class JobStatistics {
     }
 
     /**
-     * Get a Task fails if it exhausts its maximum retry count without returning exit code 0.
+     * Get the total number of Tasks in the Job that failed during the given time range. A Task fails if it exhausts its maximum retry count without returning exit code 0.
      *
      * @return the numFailedTasks value
      */
@@ -349,7 +347,7 @@ public class JobStatistics {
     }
 
     /**
-     * Set a Task fails if it exhausts its maximum retry count without returning exit code 0.
+     * Set the total number of Tasks in the Job that failed during the given time range. A Task fails if it exhausts its maximum retry count without returning exit code 0.
      *
      * @param numFailedTasks the numFailedTasks value to set
      * @return the JobStatistics object itself.
@@ -360,7 +358,7 @@ public class JobStatistics {
     }
 
     /**
-     * Get the numTaskRetries value.
+     * Get the total number of retries on all the Tasks in the Job during the given time range.
      *
      * @return the numTaskRetries value
      */
@@ -369,7 +367,7 @@ public class JobStatistics {
     }
 
     /**
-     * Set the numTaskRetries value.
+     * Set the total number of retries on all the Tasks in the Job during the given time range.
      *
      * @param numTaskRetries the numTaskRetries value to set
      * @return the JobStatistics object itself.
@@ -380,7 +378,7 @@ public class JobStatistics {
     }
 
     /**
-     * Get the wait time for a Task is defined as the elapsed time between the creation of the Task and the start of Task execution. (If the Task is retried due to failures, the wait time is the time to the most recent Task execution.) This value is only reported in the Account lifetime statistics; it is not included in the Job statistics.
+     * Get the total wait time of all Tasks in the Job. The wait time for a Task is defined as the elapsed time between the creation of the Task and the start of Task execution. (If the Task is retried due to failures, the wait time is the time to the most recent Task execution.) This value is only reported in the Account lifetime statistics; it is not included in the Job statistics.
      *
      * @return the waitTime value
      */
@@ -389,7 +387,7 @@ public class JobStatistics {
     }
 
     /**
-     * Set the wait time for a Task is defined as the elapsed time between the creation of the Task and the start of Task execution. (If the Task is retried due to failures, the wait time is the time to the most recent Task execution.) This value is only reported in the Account lifetime statistics; it is not included in the Job statistics.
+     * Set the total wait time of all Tasks in the Job. The wait time for a Task is defined as the elapsed time between the creation of the Task and the start of Task execution. (If the Task is retried due to failures, the wait time is the time to the most recent Task execution.) This value is only reported in the Account lifetime statistics; it is not included in the Job statistics.
      *
      * @param waitTime the waitTime value to set
      * @return the JobStatistics object itself.

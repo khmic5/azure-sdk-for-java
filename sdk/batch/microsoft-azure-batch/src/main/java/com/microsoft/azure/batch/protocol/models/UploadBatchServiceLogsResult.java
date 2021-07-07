@@ -17,9 +17,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class UploadBatchServiceLogsResult {
     /**
      * The virtual directory within Azure Blob Storage container to which the
-     * Batch Service log file(s) will be uploaded.
-     * The virtual directory name is part of the blob name for each log file
-     * uploaded, and it is built based poolId, nodeId and a unique identifier.
+     * Batch Service log file(s) will be uploaded. The virtual directory name
+     * is part of the blob name for each log file uploaded, and it is built
+     * based poolId, nodeId and a unique identifier.
      */
     @JsonProperty(value = "virtualDirectoryName", required = true)
     private String virtualDirectoryName;
@@ -31,7 +31,7 @@ public class UploadBatchServiceLogsResult {
     private int numberOfFilesUploaded;
 
     /**
-     * Get the virtual directory name is part of the blob name for each log file uploaded, and it is built based poolId, nodeId and a unique identifier.
+     * Get the virtual directory within Azure Blob Storage container to which the Batch Service log file(s) will be uploaded. The virtual directory name is part of the blob name for each log file uploaded, and it is built based poolId, nodeId and a unique identifier.
      *
      * @return the virtualDirectoryName value
      */
@@ -40,7 +40,7 @@ public class UploadBatchServiceLogsResult {
     }
 
     /**
-     * Set the virtual directory name is part of the blob name for each log file uploaded, and it is built based poolId, nodeId and a unique identifier.
+     * Set the virtual directory within Azure Blob Storage container to which the Batch Service log file(s) will be uploaded. The virtual directory name is part of the blob name for each log file uploaded, and it is built based poolId, nodeId and a unique identifier.
      *
      * @param virtualDirectoryName the virtualDirectoryName value to set
      * @return the UploadBatchServiceLogsResult object itself.
@@ -51,7 +51,7 @@ public class UploadBatchServiceLogsResult {
     }
 
     /**
-     * Get the numberOfFilesUploaded value.
+     * Get the number of log files which will be uploaded.
      *
      * @return the numberOfFilesUploaded value
      */
@@ -60,7 +60,7 @@ public class UploadBatchServiceLogsResult {
     }
 
     /**
-     * Set the numberOfFilesUploaded value.
+     * Set the number of log files which will be uploaded.
      *
      * @param numberOfFilesUploaded the numberOfFilesUploaded value to set
      * @return the UploadBatchServiceLogsResult object itself.

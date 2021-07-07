@@ -16,20 +16,31 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class JobSpecification {
     /**
-     * The priority of Jobs created under this schedule.
-     * Priority values can range from -1000 to 1000, with -1000 being the
-     * lowest priority and 1000 being the highest priority. The default value
-     * is 0. This priority is used as the default for all Jobs under the Job
-     * Schedule. You can update a Job's priority after it has been created
-     * using by using the update Job API.
+     * The priority of Jobs created under this schedule. Priority values can
+     * range from -1000 to 1000, with -1000 being the lowest priority and 1000
+     * being the highest priority. The default value is 0. This priority is
+     * used as the default for all Jobs under the Job Schedule. You can update
+     * a Job's priority after it has been created using by using the update Job
+     * API.
      */
     @JsonProperty(value = "priority")
     private Integer priority;
 
     /**
-     * The display name for Jobs created under this schedule.
-     * The name need not be unique and can contain any Unicode characters up to
-     * a maximum length of 1024.
+     * The maximum number of tasks that can be executed in parallel for the
+     * job. The value of maxParallelTasks must be -1 or greater than 0 if
+     * specified. If not specified, the default value is -1, which means
+     * there's no limit to the number of tasks that can be run at once. You can
+     * update a job's maxParallelTasks after it has been created using the
+     * update job API.
+     */
+    @JsonProperty(value = "maxParallelTasks")
+    private Integer maxParallelTasks;
+
+    /**
+     * The display name for Jobs created under this schedule. The name need not
+     * be unique and can contain any Unicode characters up to a maximum length
+     * of 1024.
      */
     @JsonProperty(value = "displayName")
     private String displayName;
@@ -43,14 +54,14 @@ public class JobSpecification {
 
     /**
      * The action the Batch service should take when all Tasks in a Job created
-     * under this schedule are in the completed state.
-     * Note that if a Job contains no Tasks, then all Tasks are considered
-     * complete. This option is therefore most commonly used with a Job Manager
-     * task; if you want to use automatic Job termination without a Job
-     * Manager, you should initially set onAllTasksComplete to noaction and
-     * update the Job properties to set onAllTasksComplete to terminatejob once
-     * you have finished adding Tasks. The default is noaction. Possible values
-     * include: 'noAction', 'terminateJob'.
+     * under this schedule are in the completed state. Note that if a Job
+     * contains no Tasks, then all Tasks are considered complete. This option
+     * is therefore most commonly used with a Job Manager task; if you want to
+     * use automatic Job termination without a Job Manager, you should
+     * initially set onAllTasksComplete to noaction and update the Job
+     * properties to set onAllTasksComplete to terminatejob once you have
+     * finished adding Tasks. The default is noaction. Possible values include:
+     * 'noAction', 'terminateJob'.
      */
     @JsonProperty(value = "onAllTasksComplete")
     private OnAllTasksComplete onAllTasksComplete;
@@ -61,9 +72,8 @@ public class JobSpecification {
      * have failed if has a failureInfo. A failureInfo is set if the Task
      * completes with a non-zero exit code after exhausting its retry count, or
      * if there was an error starting the Task, for example due to a resource
-     * file download error.
-     * The default is noaction. Possible values include: 'noAction',
-     * 'performExitOptionsJobAction'.
+     * file download error. The default is noaction. Possible values include:
+     * 'noAction', 'performExitOptionsJobAction'.
      */
     @JsonProperty(value = "onTaskFailure")
     private OnTaskFailure onTaskFailure;
@@ -82,19 +92,18 @@ public class JobSpecification {
 
     /**
      * The details of a Job Manager Task to be launched when a Job is started
-     * under this schedule.
-     * If the Job does not specify a Job Manager Task, the user must explicitly
-     * add Tasks to the Job using the Task API. If the Job does specify a Job
-     * Manager Task, the Batch service creates the Job Manager Task when the
-     * Job is created, and will try to schedule the Job Manager Task before
-     * scheduling other Tasks in the Job.
+     * under this schedule. If the Job does not specify a Job Manager Task, the
+     * user must explicitly add Tasks to the Job using the Task API. If the Job
+     * does specify a Job Manager Task, the Batch service creates the Job
+     * Manager Task when the Job is created, and will try to schedule the Job
+     * Manager Task before scheduling other Tasks in the Job.
      */
     @JsonProperty(value = "jobManagerTask")
     private JobManagerTask jobManagerTask;
 
     /**
-     * The Job Preparation Task for Jobs created under this schedule.
-     * If a Job has a Job Preparation Task, the Batch service will run the Job
+     * The Job Preparation Task for Jobs created under this schedule. If a Job
+     * has a Job Preparation Task, the Batch service will run the Job
      * Preparation Task on a Node before starting any Tasks of that Job on that
      * Compute Node.
      */
@@ -102,14 +111,13 @@ public class JobSpecification {
     private JobPreparationTask jobPreparationTask;
 
     /**
-     * The Job Release Task for Jobs created under this schedule.
-     * The primary purpose of the Job Release Task is to undo changes to Nodes
-     * made by the Job Preparation Task. Example activities include deleting
-     * local files, or shutting down services that were started as part of Job
-     * preparation. A Job Release Task cannot be specified without also
-     * specifying a Job Preparation Task for the Job. The Batch service runs
-     * the Job Release Task on the Compute Nodes that have run the Job
-     * Preparation Task.
+     * The Job Release Task for Jobs created under this schedule. The primary
+     * purpose of the Job Release Task is to undo changes to Nodes made by the
+     * Job Preparation Task. Example activities include deleting local files,
+     * or shutting down services that were started as part of Job preparation.
+     * A Job Release Task cannot be specified without also specifying a Job
+     * Preparation Task for the Job. The Batch service runs the Job Release
+     * Task on the Compute Nodes that have run the Job Preparation Task.
      */
     @JsonProperty(value = "jobReleaseTask")
     private JobReleaseTask jobReleaseTask;
@@ -133,15 +141,14 @@ public class JobSpecification {
 
     /**
      * A list of name-value pairs associated with each Job created under this
-     * schedule as metadata.
-     * The Batch service does not assign any meaning to metadata; it is solely
-     * for the use of user code.
+     * schedule as metadata. The Batch service does not assign any meaning to
+     * metadata; it is solely for the use of user code.
      */
     @JsonProperty(value = "metadata")
     private List<MetadataItem> metadata;
 
     /**
-     * Get priority values can range from -1000 to 1000, with -1000 being the lowest priority and 1000 being the highest priority. The default value is 0. This priority is used as the default for all Jobs under the Job Schedule. You can update a Job's priority after it has been created using by using the update Job API.
+     * Get the priority of Jobs created under this schedule. Priority values can range from -1000 to 1000, with -1000 being the lowest priority and 1000 being the highest priority. The default value is 0. This priority is used as the default for all Jobs under the Job Schedule. You can update a Job's priority after it has been created using by using the update Job API.
      *
      * @return the priority value
      */
@@ -150,7 +157,7 @@ public class JobSpecification {
     }
 
     /**
-     * Set priority values can range from -1000 to 1000, with -1000 being the lowest priority and 1000 being the highest priority. The default value is 0. This priority is used as the default for all Jobs under the Job Schedule. You can update a Job's priority after it has been created using by using the update Job API.
+     * Set the priority of Jobs created under this schedule. Priority values can range from -1000 to 1000, with -1000 being the lowest priority and 1000 being the highest priority. The default value is 0. This priority is used as the default for all Jobs under the Job Schedule. You can update a Job's priority after it has been created using by using the update Job API.
      *
      * @param priority the priority value to set
      * @return the JobSpecification object itself.
@@ -161,7 +168,27 @@ public class JobSpecification {
     }
 
     /**
-     * Get the name need not be unique and can contain any Unicode characters up to a maximum length of 1024.
+     * Get the maximum number of tasks that can be executed in parallel for the job. The value of maxParallelTasks must be -1 or greater than 0 if specified. If not specified, the default value is -1, which means there's no limit to the number of tasks that can be run at once. You can update a job's maxParallelTasks after it has been created using the update job API.
+     *
+     * @return the maxParallelTasks value
+     */
+    public Integer maxParallelTasks() {
+        return this.maxParallelTasks;
+    }
+
+    /**
+     * Set the maximum number of tasks that can be executed in parallel for the job. The value of maxParallelTasks must be -1 or greater than 0 if specified. If not specified, the default value is -1, which means there's no limit to the number of tasks that can be run at once. You can update a job's maxParallelTasks after it has been created using the update job API.
+     *
+     * @param maxParallelTasks the maxParallelTasks value to set
+     * @return the JobSpecification object itself.
+     */
+    public JobSpecification withMaxParallelTasks(Integer maxParallelTasks) {
+        this.maxParallelTasks = maxParallelTasks;
+        return this;
+    }
+
+    /**
+     * Get the display name for Jobs created under this schedule. The name need not be unique and can contain any Unicode characters up to a maximum length of 1024.
      *
      * @return the displayName value
      */
@@ -170,7 +197,7 @@ public class JobSpecification {
     }
 
     /**
-     * Set the name need not be unique and can contain any Unicode characters up to a maximum length of 1024.
+     * Set the display name for Jobs created under this schedule. The name need not be unique and can contain any Unicode characters up to a maximum length of 1024.
      *
      * @param displayName the displayName value to set
      * @return the JobSpecification object itself.
@@ -181,7 +208,7 @@ public class JobSpecification {
     }
 
     /**
-     * Get the usesTaskDependencies value.
+     * Get whether Tasks in the Job can define dependencies on each other. The default is false.
      *
      * @return the usesTaskDependencies value
      */
@@ -190,7 +217,7 @@ public class JobSpecification {
     }
 
     /**
-     * Set the usesTaskDependencies value.
+     * Set whether Tasks in the Job can define dependencies on each other. The default is false.
      *
      * @param usesTaskDependencies the usesTaskDependencies value to set
      * @return the JobSpecification object itself.
@@ -201,7 +228,7 @@ public class JobSpecification {
     }
 
     /**
-     * Get note that if a Job contains no Tasks, then all Tasks are considered complete. This option is therefore most commonly used with a Job Manager task; if you want to use automatic Job termination without a Job Manager, you should initially set onAllTasksComplete to noaction and update the Job properties to set onAllTasksComplete to terminatejob once you have finished adding Tasks. The default is noaction. Possible values include: 'noAction', 'terminateJob'.
+     * Get the action the Batch service should take when all Tasks in a Job created under this schedule are in the completed state. Note that if a Job contains no Tasks, then all Tasks are considered complete. This option is therefore most commonly used with a Job Manager task; if you want to use automatic Job termination without a Job Manager, you should initially set onAllTasksComplete to noaction and update the Job properties to set onAllTasksComplete to terminatejob once you have finished adding Tasks. The default is noaction. Possible values include: 'noAction', 'terminateJob'.
      *
      * @return the onAllTasksComplete value
      */
@@ -210,7 +237,7 @@ public class JobSpecification {
     }
 
     /**
-     * Set note that if a Job contains no Tasks, then all Tasks are considered complete. This option is therefore most commonly used with a Job Manager task; if you want to use automatic Job termination without a Job Manager, you should initially set onAllTasksComplete to noaction and update the Job properties to set onAllTasksComplete to terminatejob once you have finished adding Tasks. The default is noaction. Possible values include: 'noAction', 'terminateJob'.
+     * Set the action the Batch service should take when all Tasks in a Job created under this schedule are in the completed state. Note that if a Job contains no Tasks, then all Tasks are considered complete. This option is therefore most commonly used with a Job Manager task; if you want to use automatic Job termination without a Job Manager, you should initially set onAllTasksComplete to noaction and update the Job properties to set onAllTasksComplete to terminatejob once you have finished adding Tasks. The default is noaction. Possible values include: 'noAction', 'terminateJob'.
      *
      * @param onAllTasksComplete the onAllTasksComplete value to set
      * @return the JobSpecification object itself.
@@ -221,7 +248,7 @@ public class JobSpecification {
     }
 
     /**
-     * Get the default is noaction. Possible values include: 'noAction', 'performExitOptionsJobAction'.
+     * Get the action the Batch service should take when any Task fails in a Job created under this schedule. A Task is considered to have failed if it have failed if has a failureInfo. A failureInfo is set if the Task completes with a non-zero exit code after exhausting its retry count, or if there was an error starting the Task, for example due to a resource file download error. The default is noaction. Possible values include: 'noAction', 'performExitOptionsJobAction'.
      *
      * @return the onTaskFailure value
      */
@@ -230,7 +257,7 @@ public class JobSpecification {
     }
 
     /**
-     * Set the default is noaction. Possible values include: 'noAction', 'performExitOptionsJobAction'.
+     * Set the action the Batch service should take when any Task fails in a Job created under this schedule. A Task is considered to have failed if it have failed if has a failureInfo. A failureInfo is set if the Task completes with a non-zero exit code after exhausting its retry count, or if there was an error starting the Task, for example due to a resource file download error. The default is noaction. Possible values include: 'noAction', 'performExitOptionsJobAction'.
      *
      * @param onTaskFailure the onTaskFailure value to set
      * @return the JobSpecification object itself.
@@ -241,7 +268,7 @@ public class JobSpecification {
     }
 
     /**
-     * Get the networkConfiguration value.
+     * Get the network configuration for the Job.
      *
      * @return the networkConfiguration value
      */
@@ -250,7 +277,7 @@ public class JobSpecification {
     }
 
     /**
-     * Set the networkConfiguration value.
+     * Set the network configuration for the Job.
      *
      * @param networkConfiguration the networkConfiguration value to set
      * @return the JobSpecification object itself.
@@ -261,7 +288,7 @@ public class JobSpecification {
     }
 
     /**
-     * Get the constraints value.
+     * Get the execution constraints for Jobs created under this schedule.
      *
      * @return the constraints value
      */
@@ -270,7 +297,7 @@ public class JobSpecification {
     }
 
     /**
-     * Set the constraints value.
+     * Set the execution constraints for Jobs created under this schedule.
      *
      * @param constraints the constraints value to set
      * @return the JobSpecification object itself.
@@ -281,7 +308,7 @@ public class JobSpecification {
     }
 
     /**
-     * Get if the Job does not specify a Job Manager Task, the user must explicitly add Tasks to the Job using the Task API. If the Job does specify a Job Manager Task, the Batch service creates the Job Manager Task when the Job is created, and will try to schedule the Job Manager Task before scheduling other Tasks in the Job.
+     * Get the details of a Job Manager Task to be launched when a Job is started under this schedule. If the Job does not specify a Job Manager Task, the user must explicitly add Tasks to the Job using the Task API. If the Job does specify a Job Manager Task, the Batch service creates the Job Manager Task when the Job is created, and will try to schedule the Job Manager Task before scheduling other Tasks in the Job.
      *
      * @return the jobManagerTask value
      */
@@ -290,7 +317,7 @@ public class JobSpecification {
     }
 
     /**
-     * Set if the Job does not specify a Job Manager Task, the user must explicitly add Tasks to the Job using the Task API. If the Job does specify a Job Manager Task, the Batch service creates the Job Manager Task when the Job is created, and will try to schedule the Job Manager Task before scheduling other Tasks in the Job.
+     * Set the details of a Job Manager Task to be launched when a Job is started under this schedule. If the Job does not specify a Job Manager Task, the user must explicitly add Tasks to the Job using the Task API. If the Job does specify a Job Manager Task, the Batch service creates the Job Manager Task when the Job is created, and will try to schedule the Job Manager Task before scheduling other Tasks in the Job.
      *
      * @param jobManagerTask the jobManagerTask value to set
      * @return the JobSpecification object itself.
@@ -301,7 +328,7 @@ public class JobSpecification {
     }
 
     /**
-     * Get if a Job has a Job Preparation Task, the Batch service will run the Job Preparation Task on a Node before starting any Tasks of that Job on that Compute Node.
+     * Get the Job Preparation Task for Jobs created under this schedule. If a Job has a Job Preparation Task, the Batch service will run the Job Preparation Task on a Node before starting any Tasks of that Job on that Compute Node.
      *
      * @return the jobPreparationTask value
      */
@@ -310,7 +337,7 @@ public class JobSpecification {
     }
 
     /**
-     * Set if a Job has a Job Preparation Task, the Batch service will run the Job Preparation Task on a Node before starting any Tasks of that Job on that Compute Node.
+     * Set the Job Preparation Task for Jobs created under this schedule. If a Job has a Job Preparation Task, the Batch service will run the Job Preparation Task on a Node before starting any Tasks of that Job on that Compute Node.
      *
      * @param jobPreparationTask the jobPreparationTask value to set
      * @return the JobSpecification object itself.
@@ -321,7 +348,7 @@ public class JobSpecification {
     }
 
     /**
-     * Get the primary purpose of the Job Release Task is to undo changes to Nodes made by the Job Preparation Task. Example activities include deleting local files, or shutting down services that were started as part of Job preparation. A Job Release Task cannot be specified without also specifying a Job Preparation Task for the Job. The Batch service runs the Job Release Task on the Compute Nodes that have run the Job Preparation Task.
+     * Get the Job Release Task for Jobs created under this schedule. The primary purpose of the Job Release Task is to undo changes to Nodes made by the Job Preparation Task. Example activities include deleting local files, or shutting down services that were started as part of Job preparation. A Job Release Task cannot be specified without also specifying a Job Preparation Task for the Job. The Batch service runs the Job Release Task on the Compute Nodes that have run the Job Preparation Task.
      *
      * @return the jobReleaseTask value
      */
@@ -330,7 +357,7 @@ public class JobSpecification {
     }
 
     /**
-     * Set the primary purpose of the Job Release Task is to undo changes to Nodes made by the Job Preparation Task. Example activities include deleting local files, or shutting down services that were started as part of Job preparation. A Job Release Task cannot be specified without also specifying a Job Preparation Task for the Job. The Batch service runs the Job Release Task on the Compute Nodes that have run the Job Preparation Task.
+     * Set the Job Release Task for Jobs created under this schedule. The primary purpose of the Job Release Task is to undo changes to Nodes made by the Job Preparation Task. Example activities include deleting local files, or shutting down services that were started as part of Job preparation. A Job Release Task cannot be specified without also specifying a Job Preparation Task for the Job. The Batch service runs the Job Release Task on the Compute Nodes that have run the Job Preparation Task.
      *
      * @param jobReleaseTask the jobReleaseTask value to set
      * @return the JobSpecification object itself.
@@ -341,7 +368,7 @@ public class JobSpecification {
     }
 
     /**
-     * Get individual Tasks can override an environment setting specified here by specifying the same setting name with a different value.
+     * Get a list of common environment variable settings. These environment variables are set for all Tasks in Jobs created under this schedule (including the Job Manager, Job Preparation and Job Release Tasks). Individual Tasks can override an environment setting specified here by specifying the same setting name with a different value.
      *
      * @return the commonEnvironmentSettings value
      */
@@ -350,7 +377,7 @@ public class JobSpecification {
     }
 
     /**
-     * Set individual Tasks can override an environment setting specified here by specifying the same setting name with a different value.
+     * Set a list of common environment variable settings. These environment variables are set for all Tasks in Jobs created under this schedule (including the Job Manager, Job Preparation and Job Release Tasks). Individual Tasks can override an environment setting specified here by specifying the same setting name with a different value.
      *
      * @param commonEnvironmentSettings the commonEnvironmentSettings value to set
      * @return the JobSpecification object itself.
@@ -361,7 +388,7 @@ public class JobSpecification {
     }
 
     /**
-     * Get the poolInfo value.
+     * Get the Pool on which the Batch service runs the Tasks of Jobs created under this schedule.
      *
      * @return the poolInfo value
      */
@@ -370,7 +397,7 @@ public class JobSpecification {
     }
 
     /**
-     * Set the poolInfo value.
+     * Set the Pool on which the Batch service runs the Tasks of Jobs created under this schedule.
      *
      * @param poolInfo the poolInfo value to set
      * @return the JobSpecification object itself.
@@ -381,7 +408,7 @@ public class JobSpecification {
     }
 
     /**
-     * Get the Batch service does not assign any meaning to metadata; it is solely for the use of user code.
+     * Get a list of name-value pairs associated with each Job created under this schedule as metadata. The Batch service does not assign any meaning to metadata; it is solely for the use of user code.
      *
      * @return the metadata value
      */
@@ -390,7 +417,7 @@ public class JobSpecification {
     }
 
     /**
-     * Set the Batch service does not assign any meaning to metadata; it is solely for the use of user code.
+     * Set a list of name-value pairs associated with each Job created under this schedule as metadata. The Batch service does not assign any meaning to metadata; it is solely for the use of user code.
      *
      * @param metadata the metadata value to set
      * @return the JobSpecification object itself.

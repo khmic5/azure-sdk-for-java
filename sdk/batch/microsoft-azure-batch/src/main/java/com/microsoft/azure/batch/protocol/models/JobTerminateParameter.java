@@ -22,7 +22,7 @@ public class JobTerminateParameter {
     private String terminateReason;
 
     /**
-     * Get the terminateReason value.
+     * Get the text you want to appear as the Job's TerminateReason. The default is 'UserTerminate'.
      *
      * @return the terminateReason value
      */
@@ -31,7 +31,7 @@ public class JobTerminateParameter {
     }
 
     /**
-     * Set the terminateReason value.
+     * Set the text you want to appear as the Job's TerminateReason. The default is 'UserTerminate'.
      *
      * @param terminateReason the terminateReason value to set
      * @return the JobTerminateParameter object itself.

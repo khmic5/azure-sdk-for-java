@@ -27,7 +27,7 @@ public class EnvironmentSetting {
     private String value;
 
     /**
-     * Get the name value.
+     * Get the name of the environment variable.
      *
      * @return the name value
      */
@@ -36,7 +36,7 @@ public class EnvironmentSetting {
     }
 
     /**
-     * Set the name value.
+     * Set the name of the environment variable.
      *
      * @param name the name value to set
      * @return the EnvironmentSetting object itself.
@@ -47,7 +47,7 @@ public class EnvironmentSetting {
     }
 
     /**
-     * Get the value value.
+     * Get the value of the environment variable.
      *
      * @return the value value
      */
@@ -56,7 +56,7 @@ public class EnvironmentSetting {
     }
 
     /**
-     * Set the value value.
+     * Set the value of the environment variable.
      *
      * @param value the value value to set
      * @return the EnvironmentSetting object itself.

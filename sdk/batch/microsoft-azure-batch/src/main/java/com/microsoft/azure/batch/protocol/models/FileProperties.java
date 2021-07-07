@@ -16,8 +16,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class FileProperties {
     /**
-     * The file creation time.
-     * The creation time is not returned for files on Linux Compute Nodes.
+     * The file creation time. Creation time is not returned for files on Linux
+     * Compute Nodes.
      */
     @JsonProperty(value = "creationTime")
     private DateTime creationTime;
@@ -41,14 +41,14 @@ public class FileProperties {
     private String contentType;
 
     /**
-     * The file mode attribute in octal format.
-     * The file mode is returned only for files on Linux Compute Nodes.
+     * The file mode attribute in octal format. The file mode is returned only
+     * for files on Linux Compute Nodes.
      */
     @JsonProperty(value = "fileMode")
     private String fileMode;
 
     /**
-     * Get the creation time is not returned for files on Linux Compute Nodes.
+     * Get the file creation time. Creation time is not returned for files on Linux Compute Nodes.
      *
      * @return the creationTime value
      */
@@ -57,7 +57,7 @@ public class FileProperties {
     }
 
     /**
-     * Set the creation time is not returned for files on Linux Compute Nodes.
+     * Set the file creation time. Creation time is not returned for files on Linux Compute Nodes.
      *
      * @param creationTime the creationTime value to set
      * @return the FileProperties object itself.
@@ -68,7 +68,7 @@ public class FileProperties {
     }
 
     /**
-     * Get the lastModified value.
+     * Get the time at which the file was last modified.
      *
      * @return the lastModified value
      */
@@ -77,7 +77,7 @@ public class FileProperties {
     }
 
     /**
-     * Set the lastModified value.
+     * Set the time at which the file was last modified.
      *
      * @param lastModified the lastModified value to set
      * @return the FileProperties object itself.
@@ -88,7 +88,7 @@ public class FileProperties {
     }
 
     /**
-     * Get the contentLength value.
+     * Get the length of the file.
      *
      * @return the contentLength value
      */
@@ -97,7 +97,7 @@ public class FileProperties {
     }
 
     /**
-     * Set the contentLength value.
+     * Set the length of the file.
      *
      * @param contentLength the contentLength value to set
      * @return the FileProperties object itself.
@@ -108,7 +108,7 @@ public class FileProperties {
     }
 
     /**
-     * Get the contentType value.
+     * Get the content type of the file.
      *
      * @return the contentType value
      */
@@ -117,7 +117,7 @@ public class FileProperties {
     }
 
     /**
-     * Set the contentType value.
+     * Set the content type of the file.
      *
      * @param contentType the contentType value to set
      * @return the FileProperties object itself.
@@ -128,7 +128,7 @@ public class FileProperties {
     }
 
     /**
-     * Get the file mode is returned only for files on Linux Compute Nodes.
+     * Get the file mode attribute in octal format. The file mode is returned only for files on Linux Compute Nodes.
      *
      * @return the fileMode value
      */
@@ -137,7 +137,7 @@ public class FileProperties {
     }
 
     /**
-     * Set the file mode is returned only for files on Linux Compute Nodes.
+     * Set the file mode attribute in octal format. The file mode is returned only for files on Linux Compute Nodes.
      *
      * @param fileMode the fileMode value to set
      * @return the FileProperties object itself.

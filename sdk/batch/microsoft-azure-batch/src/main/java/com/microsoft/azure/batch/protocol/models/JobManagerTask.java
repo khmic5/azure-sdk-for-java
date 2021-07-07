@@ -12,26 +12,26 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * Specifies details of a Job Manager Task.
- * The Job Manager Task is automatically started when the Job is created. The
- * Batch service tries to schedule the Job Manager Task before any other Tasks
- * in the Job. When shrinking a Pool, the Batch service tries to preserve Nodes
- * where Job Manager Tasks are running for as long as possible (that is,
- * Compute Nodes running 'normal' Tasks are removed before Compute Nodes
- * running Job Manager Tasks). When a Job Manager Task fails and needs to be
- * restarted, the system tries to schedule it at the highest priority. If there
- * are no idle Compute Nodes available, the system may terminate one of the
- * running Tasks in the Pool and return it to the queue in order to make room
- * for the Job Manager Task to restart. Note that a Job Manager Task in one Job
- * does not have priority over Tasks in other Jobs. Across Jobs, only Job level
- * priorities are observed. For example, if a Job Manager in a priority 0 Job
- * needs to be restarted, it will not displace Tasks of a priority 1 Job. Batch
- * will retry Tasks when a recovery operation is triggered on a Node. Examples
- * of recovery operations include (but are not limited to) when an unhealthy
- * Node is rebooted or a Compute Node disappeared due to host failure. Retries
- * due to recovery operations are independent of and are not counted against
- * the maxTaskRetryCount. Even if the maxTaskRetryCount is 0, an internal retry
- * due to a recovery operation may occur. Because of this, all Tasks should be
+ * Specifies details of a Job Manager Task. The Job Manager Task is
+ * automatically started when the Job is created. The Batch service tries to
+ * schedule the Job Manager Task before any other Tasks in the Job. When
+ * shrinking a Pool, the Batch service tries to preserve Nodes where Job
+ * Manager Tasks are running for as long as possible (that is, Compute Nodes
+ * running 'normal' Tasks are removed before Compute Nodes running Job Manager
+ * Tasks). When a Job Manager Task fails and needs to be restarted, the system
+ * tries to schedule it at the highest priority. If there are no idle Compute
+ * Nodes available, the system may terminate one of the running Tasks in the
+ * Pool and return it to the queue in order to make room for the Job Manager
+ * Task to restart. Note that a Job Manager Task in one Job does not have
+ * priority over Tasks in other Jobs. Across Jobs, only Job level priorities
+ * are observed. For example, if a Job Manager in a priority 0 Job needs to be
+ * restarted, it will not displace Tasks of a priority 1 Job. Batch will retry
+ * Tasks when a recovery operation is triggered on a Node. Examples of recovery
+ * operations include (but are not limited to) when an unhealthy Node is
+ * rebooted or a Compute Node disappeared due to host failure. Retries due to
+ * recovery operations are independent of and are not counted against the
+ * maxTaskRetryCount. Even if the maxTaskRetryCount is 0, an internal retry due
+ * to a recovery operation may occur. Because of this, all Tasks should be
  * idempotent. This means Tasks need to tolerate being interrupted and
  * restarted without causing any corruption or duplicate data. The best
  * practice for long running Tasks is to use some form of checkpointing.
@@ -46,30 +46,29 @@ public class JobManagerTask {
     private String id;
 
     /**
-     * The display name of the Job Manager Task.
-     * It need not be unique and can contain any Unicode characters up to a
-     * maximum length of 1024.
+     * The display name of the Job Manager Task. It need not be unique and can
+     * contain any Unicode characters up to a maximum length of 1024.
      */
     @JsonProperty(value = "displayName")
     private String displayName;
 
     /**
-     * The command line of the Job Manager Task.
-     * The command line does not run under a shell, and therefore cannot take
-     * advantage of shell features such as environment variable expansion. If
-     * you want to take advantage of such features, you should invoke the shell
-     * in the command line, for example using "cmd /c MyCommand" in Windows or
-     * "/bin/sh -c MyCommand" in Linux. If the command line refers to file
-     * paths, it should use a relative path (relative to the Task working
-     * directory), or use the Batch provided environment variable
+     * The command line of the Job Manager Task. The command line does not run
+     * under a shell, and therefore cannot take advantage of shell features
+     * such as environment variable expansion. If you want to take advantage of
+     * such features, you should invoke the shell in the command line, for
+     * example using "cmd /c MyCommand" in Windows or "/bin/sh -c MyCommand" in
+     * Linux. If the command line refers to file paths, it should use a
+     * relative path (relative to the Task working directory), or use the Batch
+     * provided environment variable
      * (https://docs.microsoft.com/en-us/azure/batch/batch-compute-node-environment-variables).
      */
     @JsonProperty(value = "commandLine", required = true)
     private String commandLine;
 
     /**
-     * The settings for the container under which the Job Manager Task runs.
-     * If the Pool that will run this Task has containerConfiguration set, this
+     * The settings for the container under which the Job Manager Task runs. If
+     * the Pool that will run this Task has containerConfiguration set, this
      * must be set as well. If the Pool that will run this Task doesn't have
      * containerConfiguration set, this must not be set. When this is
      * specified, all directories recursively below the AZ_BATCH_NODE_ROOT_DIR
@@ -85,22 +84,22 @@ public class JobManagerTask {
 
     /**
      * A list of files that the Batch service will download to the Compute Node
-     * before running the command line.
-     * Files listed under this element are located in the Task's working
-     * directory. There is a maximum size for the list of resource files.  When
-     * the max size is exceeded, the request will fail and the response error
-     * code will be RequestEntityTooLarge. If this occurs, the collection of
-     * ResourceFiles must be reduced in size. This can be achieved using .zip
-     * files, Application Packages, or Docker Containers.
+     * before running the command line. Files listed under this element are
+     * located in the Task's working directory. There is a maximum size for the
+     * list of resource files.  When the max size is exceeded, the request will
+     * fail and the response error code will be RequestEntityTooLarge. If this
+     * occurs, the collection of ResourceFiles must be reduced in size. This
+     * can be achieved using .zip files, Application Packages, or Docker
+     * Containers.
      */
     @JsonProperty(value = "resourceFiles")
     private List<ResourceFile> resourceFiles;
 
     /**
      * A list of files that the Batch service will upload from the Compute Node
-     * after running the command line.
-     * For multi-instance Tasks, the files will only be uploaded from the
-     * Compute Node on which the primary Task is executed.
+     * after running the command line. For multi-instance Tasks, the files will
+     * only be uploaded from the Compute Node on which the primary Task is
+     * executed.
      */
     @JsonProperty(value = "outputFiles")
     private List<OutputFile> outputFiles;
@@ -118,91 +117,87 @@ public class JobManagerTask {
     private TaskConstraints constraints;
 
     /**
-     * The number of scheduling slots that the Task requires to run.
-     * The default is 1. A Task can only be scheduled to run on a compute node
-     * if the node has enough free scheduling slots available. For
-     * multi-instance Tasks, this must be 1.
+     * The number of scheduling slots that the Task requires to run. The
+     * default is 1. A Task can only be scheduled to run on a compute node if
+     * the node has enough free scheduling slots available. For multi-instance
+     * Tasks, this property is not supported and must not be specified.
      */
     @JsonProperty(value = "requiredSlots")
     private Integer requiredSlots;
 
     /**
      * Whether completion of the Job Manager Task signifies completion of the
-     * entire Job.
-     * If true, when the Job Manager Task completes, the Batch service marks
-     * the Job as complete. If any Tasks are still running at this time (other
-     * than Job Release), those Tasks are terminated. If false, the completion
-     * of the Job Manager Task does not affect the Job status. In this case,
-     * you should either use the onAllTasksComplete attribute to terminate the
-     * Job, or have a client or user terminate the Job explicitly. An example
-     * of this is if the Job Manager creates a set of Tasks but then takes no
-     * further role in their execution. The default value is true. If you are
-     * using the onAllTasksComplete and onTaskFailure attributes to control Job
-     * lifetime, and using the Job Manager Task only to create the Tasks for
-     * the Job (not to monitor progress), then it is important to set
-     * killJobOnCompletion to false.
+     * entire Job. If true, when the Job Manager Task completes, the Batch
+     * service marks the Job as complete. If any Tasks are still running at
+     * this time (other than Job Release), those Tasks are terminated. If
+     * false, the completion of the Job Manager Task does not affect the Job
+     * status. In this case, you should either use the onAllTasksComplete
+     * attribute to terminate the Job, or have a client or user terminate the
+     * Job explicitly. An example of this is if the Job Manager creates a set
+     * of Tasks but then takes no further role in their execution. The default
+     * value is true. If you are using the onAllTasksComplete and onTaskFailure
+     * attributes to control Job lifetime, and using the Job Manager Task only
+     * to create the Tasks for the Job (not to monitor progress), then it is
+     * important to set killJobOnCompletion to false.
      */
     @JsonProperty(value = "killJobOnCompletion")
     private Boolean killJobOnCompletion;
 
     /**
-     * The user identity under which the Job Manager Task runs.
-     * If omitted, the Task runs as a non-administrative user unique to the
-     * Task.
+     * The user identity under which the Job Manager Task runs. If omitted, the
+     * Task runs as a non-administrative user unique to the Task.
      */
     @JsonProperty(value = "userIdentity")
     private UserIdentity userIdentity;
 
     /**
      * Whether the Job Manager Task requires exclusive use of the Compute Node
-     * where it runs.
-     * If true, no other Tasks will run on the same Node for as long as the Job
-     * Manager is running. If false, other Tasks can run simultaneously with
-     * the Job Manager on a Compute Node. The Job Manager Task counts normally
-     * against the Compute Node's concurrent Task limit, so this is only
-     * relevant if the Compute Node allows multiple concurrent Tasks. The
-     * default value is true.
+     * where it runs. If true, no other Tasks will run on the same Node for as
+     * long as the Job Manager is running. If false, other Tasks can run
+     * simultaneously with the Job Manager on a Compute Node. The Job Manager
+     * Task counts normally against the Compute Node's concurrent Task limit,
+     * so this is only relevant if the Compute Node allows multiple concurrent
+     * Tasks. The default value is true.
      */
     @JsonProperty(value = "runExclusive")
     private Boolean runExclusive;
 
     /**
      * A list of Application Packages that the Batch service will deploy to the
-     * Compute Node before running the command line.
-     * Application Packages are downloaded and deployed to a shared directory,
-     * not the Task working directory. Therefore, if a referenced Application
-     * Package is already on the Compute Node, and is up to date, then it is
-     * not re-downloaded; the existing copy on the Compute Node is used. If a
-     * referenced Application Package cannot be installed, for example because
-     * the package has been deleted or because download failed, the Task fails.
+     * Compute Node before running the command line. Application Packages are
+     * downloaded and deployed to a shared directory, not the Task working
+     * directory. Therefore, if a referenced Application Package is already on
+     * the Compute Node, and is up to date, then it is not re-downloaded; the
+     * existing copy on the Compute Node is used. If a referenced Application
+     * Package cannot be installed, for example because the package has been
+     * deleted or because download failed, the Task fails.
      */
     @JsonProperty(value = "applicationPackageReferences")
     private List<ApplicationPackageReference> applicationPackageReferences;
 
     /**
      * The settings for an authentication token that the Task can use to
-     * perform Batch service operations.
-     * If this property is set, the Batch service provides the Task with an
-     * authentication token which can be used to authenticate Batch service
-     * operations without requiring an Account access key. The token is
-     * provided via the AZ_BATCH_AUTHENTICATION_TOKEN environment variable. The
-     * operations that the Task can carry out using the token depend on the
-     * settings. For example, a Task can request Job permissions in order to
-     * add other Tasks to the Job, or check the status of the Job or of other
-     * Tasks under the Job.
+     * perform Batch service operations. If this property is set, the Batch
+     * service provides the Task with an authentication token which can be used
+     * to authenticate Batch service operations without requiring an Account
+     * access key. The token is provided via the AZ_BATCH_AUTHENTICATION_TOKEN
+     * environment variable. The operations that the Task can carry out using
+     * the token depend on the settings. For example, a Task can request Job
+     * permissions in order to add other Tasks to the Job, or check the status
+     * of the Job or of other Tasks under the Job.
      */
     @JsonProperty(value = "authenticationTokenSettings")
     private AuthenticationTokenSettings authenticationTokenSettings;
 
     /**
-     * Whether the Job Manager Task may run on a low-priority Compute Node.
-     * The default value is true.
+     * Whether the Job Manager Task may run on a low-priority Compute Node. The
+     * default value is true.
      */
     @JsonProperty(value = "allowLowPriorityNode")
     private Boolean allowLowPriorityNode;
 
     /**
-     * Get the ID can contain any combination of alphanumeric characters including hyphens and underscores and cannot contain more than 64 characters.
+     * Get a string that uniquely identifies the Job Manager Task within the Job. The ID can contain any combination of alphanumeric characters including hyphens and underscores and cannot contain more than 64 characters.
      *
      * @return the id value
      */
@@ -211,7 +206,7 @@ public class JobManagerTask {
     }
 
     /**
-     * Set the ID can contain any combination of alphanumeric characters including hyphens and underscores and cannot contain more than 64 characters.
+     * Set a string that uniquely identifies the Job Manager Task within the Job. The ID can contain any combination of alphanumeric characters including hyphens and underscores and cannot contain more than 64 characters.
      *
      * @param id the id value to set
      * @return the JobManagerTask object itself.
@@ -222,7 +217,7 @@ public class JobManagerTask {
     }
 
     /**
-     * Get it need not be unique and can contain any Unicode characters up to a maximum length of 1024.
+     * Get the display name of the Job Manager Task. It need not be unique and can contain any Unicode characters up to a maximum length of 1024.
      *
      * @return the displayName value
      */
@@ -231,7 +226,7 @@ public class JobManagerTask {
     }
 
     /**
-     * Set it need not be unique and can contain any Unicode characters up to a maximum length of 1024.
+     * Set the display name of the Job Manager Task. It need not be unique and can contain any Unicode characters up to a maximum length of 1024.
      *
      * @param displayName the displayName value to set
      * @return the JobManagerTask object itself.
@@ -242,7 +237,7 @@ public class JobManagerTask {
     }
 
     /**
-     * Get the command line does not run under a shell, and therefore cannot take advantage of shell features such as environment variable expansion. If you want to take advantage of such features, you should invoke the shell in the command line, for example using "cmd /c MyCommand" in Windows or "/bin/sh -c MyCommand" in Linux. If the command line refers to file paths, it should use a relative path (relative to the Task working directory), or use the Batch provided environment variable (https://docs.microsoft.com/en-us/azure/batch/batch-compute-node-environment-variables).
+     * Get the command line of the Job Manager Task. The command line does not run under a shell, and therefore cannot take advantage of shell features such as environment variable expansion. If you want to take advantage of such features, you should invoke the shell in the command line, for example using "cmd /c MyCommand" in Windows or "/bin/sh -c MyCommand" in Linux. If the command line refers to file paths, it should use a relative path (relative to the Task working directory), or use the Batch provided environment variable (https://docs.microsoft.com/en-us/azure/batch/batch-compute-node-environment-variables).
      *
      * @return the commandLine value
      */
@@ -251,7 +246,7 @@ public class JobManagerTask {
     }
 
     /**
-     * Set the command line does not run under a shell, and therefore cannot take advantage of shell features such as environment variable expansion. If you want to take advantage of such features, you should invoke the shell in the command line, for example using "cmd /c MyCommand" in Windows or "/bin/sh -c MyCommand" in Linux. If the command line refers to file paths, it should use a relative path (relative to the Task working directory), or use the Batch provided environment variable (https://docs.microsoft.com/en-us/azure/batch/batch-compute-node-environment-variables).
+     * Set the command line of the Job Manager Task. The command line does not run under a shell, and therefore cannot take advantage of shell features such as environment variable expansion. If you want to take advantage of such features, you should invoke the shell in the command line, for example using "cmd /c MyCommand" in Windows or "/bin/sh -c MyCommand" in Linux. If the command line refers to file paths, it should use a relative path (relative to the Task working directory), or use the Batch provided environment variable (https://docs.microsoft.com/en-us/azure/batch/batch-compute-node-environment-variables).
      *
      * @param commandLine the commandLine value to set
      * @return the JobManagerTask object itself.
@@ -262,7 +257,7 @@ public class JobManagerTask {
     }
 
     /**
-     * Get if the Pool that will run this Task has containerConfiguration set, this must be set as well. If the Pool that will run this Task doesn't have containerConfiguration set, this must not be set. When this is specified, all directories recursively below the AZ_BATCH_NODE_ROOT_DIR (the root of Azure Batch directories on the node) are mapped into the container, all Task environment variables are mapped into the container, and the Task command line is executed in the container. Files produced in the container outside of AZ_BATCH_NODE_ROOT_DIR might not be reflected to the host disk, meaning that Batch file APIs will not be able to access those files.
+     * Get the settings for the container under which the Job Manager Task runs. If the Pool that will run this Task has containerConfiguration set, this must be set as well. If the Pool that will run this Task doesn't have containerConfiguration set, this must not be set. When this is specified, all directories recursively below the AZ_BATCH_NODE_ROOT_DIR (the root of Azure Batch directories on the node) are mapped into the container, all Task environment variables are mapped into the container, and the Task command line is executed in the container. Files produced in the container outside of AZ_BATCH_NODE_ROOT_DIR might not be reflected to the host disk, meaning that Batch file APIs will not be able to access those files.
      *
      * @return the containerSettings value
      */
@@ -271,7 +266,7 @@ public class JobManagerTask {
     }
 
     /**
-     * Set if the Pool that will run this Task has containerConfiguration set, this must be set as well. If the Pool that will run this Task doesn't have containerConfiguration set, this must not be set. When this is specified, all directories recursively below the AZ_BATCH_NODE_ROOT_DIR (the root of Azure Batch directories on the node) are mapped into the container, all Task environment variables are mapped into the container, and the Task command line is executed in the container. Files produced in the container outside of AZ_BATCH_NODE_ROOT_DIR might not be reflected to the host disk, meaning that Batch file APIs will not be able to access those files.
+     * Set the settings for the container under which the Job Manager Task runs. If the Pool that will run this Task has containerConfiguration set, this must be set as well. If the Pool that will run this Task doesn't have containerConfiguration set, this must not be set. When this is specified, all directories recursively below the AZ_BATCH_NODE_ROOT_DIR (the root of Azure Batch directories on the node) are mapped into the container, all Task environment variables are mapped into the container, and the Task command line is executed in the container. Files produced in the container outside of AZ_BATCH_NODE_ROOT_DIR might not be reflected to the host disk, meaning that Batch file APIs will not be able to access those files.
      *
      * @param containerSettings the containerSettings value to set
      * @return the JobManagerTask object itself.
@@ -282,7 +277,7 @@ public class JobManagerTask {
     }
 
     /**
-     * Get files listed under this element are located in the Task's working directory. There is a maximum size for the list of resource files.  When the max size is exceeded, the request will fail and the response error code will be RequestEntityTooLarge. If this occurs, the collection of ResourceFiles must be reduced in size. This can be achieved using .zip files, Application Packages, or Docker Containers.
+     * Get a list of files that the Batch service will download to the Compute Node before running the command line. Files listed under this element are located in the Task's working directory. There is a maximum size for the list of resource files.  When the max size is exceeded, the request will fail and the response error code will be RequestEntityTooLarge. If this occurs, the collection of ResourceFiles must be reduced in size. This can be achieved using .zip files, Application Packages, or Docker Containers.
      *
      * @return the resourceFiles value
      */
@@ -291,7 +286,7 @@ public class JobManagerTask {
     }
 
     /**
-     * Set files listed under this element are located in the Task's working directory. There is a maximum size for the list of resource files.  When the max size is exceeded, the request will fail and the response error code will be RequestEntityTooLarge. If this occurs, the collection of ResourceFiles must be reduced in size. This can be achieved using .zip files, Application Packages, or Docker Containers.
+     * Set a list of files that the Batch service will download to the Compute Node before running the command line. Files listed under this element are located in the Task's working directory. There is a maximum size for the list of resource files.  When the max size is exceeded, the request will fail and the response error code will be RequestEntityTooLarge. If this occurs, the collection of ResourceFiles must be reduced in size. This can be achieved using .zip files, Application Packages, or Docker Containers.
      *
      * @param resourceFiles the resourceFiles value to set
      * @return the JobManagerTask object itself.
@@ -302,7 +297,7 @@ public class JobManagerTask {
     }
 
     /**
-     * Get for multi-instance Tasks, the files will only be uploaded from the Compute Node on which the primary Task is executed.
+     * Get a list of files that the Batch service will upload from the Compute Node after running the command line. For multi-instance Tasks, the files will only be uploaded from the Compute Node on which the primary Task is executed.
      *
      * @return the outputFiles value
      */
@@ -311,7 +306,7 @@ public class JobManagerTask {
     }
 
     /**
-     * Set for multi-instance Tasks, the files will only be uploaded from the Compute Node on which the primary Task is executed.
+     * Set a list of files that the Batch service will upload from the Compute Node after running the command line. For multi-instance Tasks, the files will only be uploaded from the Compute Node on which the primary Task is executed.
      *
      * @param outputFiles the outputFiles value to set
      * @return the JobManagerTask object itself.
@@ -322,7 +317,7 @@ public class JobManagerTask {
     }
 
     /**
-     * Get the environmentSettings value.
+     * Get a list of environment variable settings for the Job Manager Task.
      *
      * @return the environmentSettings value
      */
@@ -331,7 +326,7 @@ public class JobManagerTask {
     }
 
     /**
-     * Set the environmentSettings value.
+     * Set a list of environment variable settings for the Job Manager Task.
      *
      * @param environmentSettings the environmentSettings value to set
      * @return the JobManagerTask object itself.
@@ -342,7 +337,7 @@ public class JobManagerTask {
     }
 
     /**
-     * Get the constraints value.
+     * Get constraints that apply to the Job Manager Task.
      *
      * @return the constraints value
      */
@@ -351,7 +346,7 @@ public class JobManagerTask {
     }
 
     /**
-     * Set the constraints value.
+     * Set constraints that apply to the Job Manager Task.
      *
      * @param constraints the constraints value to set
      * @return the JobManagerTask object itself.
@@ -362,7 +357,7 @@ public class JobManagerTask {
     }
 
     /**
-     * Get the default is 1. A Task can only be scheduled to run on a compute node if the node has enough free scheduling slots available. For multi-instance Tasks, this must be 1.
+     * Get the number of scheduling slots that the Task requires to run. The default is 1. A Task can only be scheduled to run on a compute node if the node has enough free scheduling slots available. For multi-instance Tasks, this property is not supported and must not be specified.
      *
      * @return the requiredSlots value
      */
@@ -371,7 +366,7 @@ public class JobManagerTask {
     }
 
     /**
-     * Set the default is 1. A Task can only be scheduled to run on a compute node if the node has enough free scheduling slots available. For multi-instance Tasks, this must be 1.
+     * Set the number of scheduling slots that the Task requires to run. The default is 1. A Task can only be scheduled to run on a compute node if the node has enough free scheduling slots available. For multi-instance Tasks, this property is not supported and must not be specified.
      *
      * @param requiredSlots the requiredSlots value to set
      * @return the JobManagerTask object itself.
@@ -382,7 +377,7 @@ public class JobManagerTask {
     }
 
     /**
-     * Get if true, when the Job Manager Task completes, the Batch service marks the Job as complete. If any Tasks are still running at this time (other than Job Release), those Tasks are terminated. If false, the completion of the Job Manager Task does not affect the Job status. In this case, you should either use the onAllTasksComplete attribute to terminate the Job, or have a client or user terminate the Job explicitly. An example of this is if the Job Manager creates a set of Tasks but then takes no further role in their execution. The default value is true. If you are using the onAllTasksComplete and onTaskFailure attributes to control Job lifetime, and using the Job Manager Task only to create the Tasks for the Job (not to monitor progress), then it is important to set killJobOnCompletion to false.
+     * Get whether completion of the Job Manager Task signifies completion of the entire Job. If true, when the Job Manager Task completes, the Batch service marks the Job as complete. If any Tasks are still running at this time (other than Job Release), those Tasks are terminated. If false, the completion of the Job Manager Task does not affect the Job status. In this case, you should either use the onAllTasksComplete attribute to terminate the Job, or have a client or user terminate the Job explicitly. An example of this is if the Job Manager creates a set of Tasks but then takes no further role in their execution. The default value is true. If you are using the onAllTasksComplete and onTaskFailure attributes to control Job lifetime, and using the Job Manager Task only to create the Tasks for the Job (not to monitor progress), then it is important to set killJobOnCompletion to false.
      *
      * @return the killJobOnCompletion value
      */
@@ -391,7 +386,7 @@ public class JobManagerTask {
     }
 
     /**
-     * Set if true, when the Job Manager Task completes, the Batch service marks the Job as complete. If any Tasks are still running at this time (other than Job Release), those Tasks are terminated. If false, the completion of the Job Manager Task does not affect the Job status. In this case, you should either use the onAllTasksComplete attribute to terminate the Job, or have a client or user terminate the Job explicitly. An example of this is if the Job Manager creates a set of Tasks but then takes no further role in their execution. The default value is true. If you are using the onAllTasksComplete and onTaskFailure attributes to control Job lifetime, and using the Job Manager Task only to create the Tasks for the Job (not to monitor progress), then it is important to set killJobOnCompletion to false.
+     * Set whether completion of the Job Manager Task signifies completion of the entire Job. If true, when the Job Manager Task completes, the Batch service marks the Job as complete. If any Tasks are still running at this time (other than Job Release), those Tasks are terminated. If false, the completion of the Job Manager Task does not affect the Job status. In this case, you should either use the onAllTasksComplete attribute to terminate the Job, or have a client or user terminate the Job explicitly. An example of this is if the Job Manager creates a set of Tasks but then takes no further role in their execution. The default value is true. If you are using the onAllTasksComplete and onTaskFailure attributes to control Job lifetime, and using the Job Manager Task only to create the Tasks for the Job (not to monitor progress), then it is important to set killJobOnCompletion to false.
      *
      * @param killJobOnCompletion the killJobOnCompletion value to set
      * @return the JobManagerTask object itself.
@@ -402,7 +397,7 @@ public class JobManagerTask {
     }
 
     /**
-     * Get if omitted, the Task runs as a non-administrative user unique to the Task.
+     * Get the user identity under which the Job Manager Task runs. If omitted, the Task runs as a non-administrative user unique to the Task.
      *
      * @return the userIdentity value
      */
@@ -411,7 +406,7 @@ public class JobManagerTask {
     }
 
     /**
-     * Set if omitted, the Task runs as a non-administrative user unique to the Task.
+     * Set the user identity under which the Job Manager Task runs. If omitted, the Task runs as a non-administrative user unique to the Task.
      *
      * @param userIdentity the userIdentity value to set
      * @return the JobManagerTask object itself.
@@ -422,7 +417,7 @@ public class JobManagerTask {
     }
 
     /**
-     * Get if true, no other Tasks will run on the same Node for as long as the Job Manager is running. If false, other Tasks can run simultaneously with the Job Manager on a Compute Node. The Job Manager Task counts normally against the Compute Node's concurrent Task limit, so this is only relevant if the Compute Node allows multiple concurrent Tasks. The default value is true.
+     * Get whether the Job Manager Task requires exclusive use of the Compute Node where it runs. If true, no other Tasks will run on the same Node for as long as the Job Manager is running. If false, other Tasks can run simultaneously with the Job Manager on a Compute Node. The Job Manager Task counts normally against the Compute Node's concurrent Task limit, so this is only relevant if the Compute Node allows multiple concurrent Tasks. The default value is true.
      *
      * @return the runExclusive value
      */
@@ -431,7 +426,7 @@ public class JobManagerTask {
     }
 
     /**
-     * Set if true, no other Tasks will run on the same Node for as long as the Job Manager is running. If false, other Tasks can run simultaneously with the Job Manager on a Compute Node. The Job Manager Task counts normally against the Compute Node's concurrent Task limit, so this is only relevant if the Compute Node allows multiple concurrent Tasks. The default value is true.
+     * Set whether the Job Manager Task requires exclusive use of the Compute Node where it runs. If true, no other Tasks will run on the same Node for as long as the Job Manager is running. If false, other Tasks can run simultaneously with the Job Manager on a Compute Node. The Job Manager Task counts normally against the Compute Node's concurrent Task limit, so this is only relevant if the Compute Node allows multiple concurrent Tasks. The default value is true.
      *
      * @param runExclusive the runExclusive value to set
      * @return the JobManagerTask object itself.
@@ -442,7 +437,7 @@ public class JobManagerTask {
     }
 
     /**
-     * Get application Packages are downloaded and deployed to a shared directory, not the Task working directory. Therefore, if a referenced Application Package is already on the Compute Node, and is up to date, then it is not re-downloaded; the existing copy on the Compute Node is used. If a referenced Application Package cannot be installed, for example because the package has been deleted or because download failed, the Task fails.
+     * Get a list of Application Packages that the Batch service will deploy to the Compute Node before running the command line. Application Packages are downloaded and deployed to a shared directory, not the Task working directory. Therefore, if a referenced Application Package is already on the Compute Node, and is up to date, then it is not re-downloaded; the existing copy on the Compute Node is used. If a referenced Application Package cannot be installed, for example because the package has been deleted or because download failed, the Task fails.
      *
      * @return the applicationPackageReferences value
      */
@@ -451,7 +446,7 @@ public class JobManagerTask {
     }
 
     /**
-     * Set application Packages are downloaded and deployed to a shared directory, not the Task working directory. Therefore, if a referenced Application Package is already on the Compute Node, and is up to date, then it is not re-downloaded; the existing copy on the Compute Node is used. If a referenced Application Package cannot be installed, for example because the package has been deleted or because download failed, the Task fails.
+     * Set a list of Application Packages that the Batch service will deploy to the Compute Node before running the command line. Application Packages are downloaded and deployed to a shared directory, not the Task working directory. Therefore, if a referenced Application Package is already on the Compute Node, and is up to date, then it is not re-downloaded; the existing copy on the Compute Node is used. If a referenced Application Package cannot be installed, for example because the package has been deleted or because download failed, the Task fails.
      *
      * @param applicationPackageReferences the applicationPackageReferences value to set
      * @return the JobManagerTask object itself.
@@ -462,7 +457,7 @@ public class JobManagerTask {
     }
 
     /**
-     * Get if this property is set, the Batch service provides the Task with an authentication token which can be used to authenticate Batch service operations without requiring an Account access key. The token is provided via the AZ_BATCH_AUTHENTICATION_TOKEN environment variable. The operations that the Task can carry out using the token depend on the settings. For example, a Task can request Job permissions in order to add other Tasks to the Job, or check the status of the Job or of other Tasks under the Job.
+     * Get the settings for an authentication token that the Task can use to perform Batch service operations. If this property is set, the Batch service provides the Task with an authentication token which can be used to authenticate Batch service operations without requiring an Account access key. The token is provided via the AZ_BATCH_AUTHENTICATION_TOKEN environment variable. The operations that the Task can carry out using the token depend on the settings. For example, a Task can request Job permissions in order to add other Tasks to the Job, or check the status of the Job or of other Tasks under the Job.
      *
      * @return the authenticationTokenSettings value
      */
@@ -471,7 +466,7 @@ public class JobManagerTask {
     }
 
     /**
-     * Set if this property is set, the Batch service provides the Task with an authentication token which can be used to authenticate Batch service operations without requiring an Account access key. The token is provided via the AZ_BATCH_AUTHENTICATION_TOKEN environment variable. The operations that the Task can carry out using the token depend on the settings. For example, a Task can request Job permissions in order to add other Tasks to the Job, or check the status of the Job or of other Tasks under the Job.
+     * Set the settings for an authentication token that the Task can use to perform Batch service operations. If this property is set, the Batch service provides the Task with an authentication token which can be used to authenticate Batch service operations without requiring an Account access key. The token is provided via the AZ_BATCH_AUTHENTICATION_TOKEN environment variable. The operations that the Task can carry out using the token depend on the settings. For example, a Task can request Job permissions in order to add other Tasks to the Job, or check the status of the Job or of other Tasks under the Job.
      *
      * @param authenticationTokenSettings the authenticationTokenSettings value to set
      * @return the JobManagerTask object itself.
@@ -482,7 +477,7 @@ public class JobManagerTask {
     }
 
     /**
-     * Get the default value is true.
+     * Get whether the Job Manager Task may run on a low-priority Compute Node. The default value is true.
      *
      * @return the allowLowPriorityNode value
      */
@@ -491,7 +486,7 @@ public class JobManagerTask {
     }
 
     /**
-     * Set the default value is true.
+     * Set whether the Job Manager Task may run on a low-priority Compute Node. The default value is true.
      *
      * @param allowLowPriorityNode the allowLowPriorityNode value to set
      * @return the JobManagerTask object itself.

@@ -29,26 +29,24 @@ public class PoolResizeParameter {
 
     /**
      * The timeout for allocation of Nodes to the Pool or removal of Compute
-     * Nodes from the Pool.
-     * The default value is 15 minutes. The minimum value is 5 minutes. If you
-     * specify a value less than 5 minutes, the Batch service returns an error;
-     * if you are calling the REST API directly, the HTTP status code is 400
-     * (Bad Request).
+     * Nodes from the Pool. The default value is 15 minutes. The minimum value
+     * is 5 minutes. If you specify a value less than 5 minutes, the Batch
+     * service returns an error; if you are calling the REST API directly, the
+     * HTTP status code is 400 (Bad Request).
      */
     @JsonProperty(value = "resizeTimeout")
     private Period resizeTimeout;
 
     /**
      * Determines what to do with a Compute Node and its running task(s) if the
-     * Pool size is decreasing.
-     * The default value is requeue. Possible values include: 'requeue',
-     * 'terminate', 'taskCompletion', 'retainedData'.
+     * Pool size is decreasing. The default value is requeue. Possible values
+     * include: 'requeue', 'terminate', 'taskCompletion', 'retainedData'.
      */
     @JsonProperty(value = "nodeDeallocationOption")
     private ComputeNodeDeallocationOption nodeDeallocationOption;
 
     /**
-     * Get the targetDedicatedNodes value.
+     * Get the desired number of dedicated Compute Nodes in the Pool.
      *
      * @return the targetDedicatedNodes value
      */
@@ -57,7 +55,7 @@ public class PoolResizeParameter {
     }
 
     /**
-     * Set the targetDedicatedNodes value.
+     * Set the desired number of dedicated Compute Nodes in the Pool.
      *
      * @param targetDedicatedNodes the targetDedicatedNodes value to set
      * @return the PoolResizeParameter object itself.
@@ -68,7 +66,7 @@ public class PoolResizeParameter {
     }
 
     /**
-     * Get the targetLowPriorityNodes value.
+     * Get the desired number of low-priority Compute Nodes in the Pool.
      *
      * @return the targetLowPriorityNodes value
      */
@@ -77,7 +75,7 @@ public class PoolResizeParameter {
     }
 
     /**
-     * Set the targetLowPriorityNodes value.
+     * Set the desired number of low-priority Compute Nodes in the Pool.
      *
      * @param targetLowPriorityNodes the targetLowPriorityNodes value to set
      * @return the PoolResizeParameter object itself.
@@ -88,7 +86,7 @@ public class PoolResizeParameter {
     }
 
     /**
-     * Get the default value is 15 minutes. The minimum value is 5 minutes. If you specify a value less than 5 minutes, the Batch service returns an error; if you are calling the REST API directly, the HTTP status code is 400 (Bad Request).
+     * Get the timeout for allocation of Nodes to the Pool or removal of Compute Nodes from the Pool. The default value is 15 minutes. The minimum value is 5 minutes. If you specify a value less than 5 minutes, the Batch service returns an error; if you are calling the REST API directly, the HTTP status code is 400 (Bad Request).
      *
      * @return the resizeTimeout value
      */
@@ -97,7 +95,7 @@ public class PoolResizeParameter {
     }
 
     /**
-     * Set the default value is 15 minutes. The minimum value is 5 minutes. If you specify a value less than 5 minutes, the Batch service returns an error; if you are calling the REST API directly, the HTTP status code is 400 (Bad Request).
+     * Set the timeout for allocation of Nodes to the Pool or removal of Compute Nodes from the Pool. The default value is 15 minutes. The minimum value is 5 minutes. If you specify a value less than 5 minutes, the Batch service returns an error; if you are calling the REST API directly, the HTTP status code is 400 (Bad Request).
      *
      * @param resizeTimeout the resizeTimeout value to set
      * @return the PoolResizeParameter object itself.
@@ -108,7 +106,7 @@ public class PoolResizeParameter {
     }
 
     /**
-     * Get the default value is requeue. Possible values include: 'requeue', 'terminate', 'taskCompletion', 'retainedData'.
+     * Get determines what to do with a Compute Node and its running task(s) if the Pool size is decreasing. The default value is requeue. Possible values include: 'requeue', 'terminate', 'taskCompletion', 'retainedData'.
      *
      * @return the nodeDeallocationOption value
      */
@@ -117,7 +115,7 @@ public class PoolResizeParameter {
     }
 
     /**
-     * Set the default value is requeue. Possible values include: 'requeue', 'terminate', 'taskCompletion', 'retainedData'.
+     * Set determines what to do with a Compute Node and its running task(s) if the Pool size is decreasing. The default value is requeue. Possible values include: 'requeue', 'terminate', 'taskCompletion', 'retainedData'.
      *
      * @param nodeDeallocationOption the nodeDeallocationOption value to set
      * @return the PoolResizeParameter object itself.

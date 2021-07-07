@@ -22,7 +22,7 @@ public class TaskAddCollectionResult {
     private List<TaskAddResult> value;
 
     /**
-     * Get the value value.
+     * Get the results of the add Task collection operation.
      *
      * @return the value value
      */
@@ -31,7 +31,7 @@ public class TaskAddCollectionResult {
     }
 
     /**
-     * Set the value value.
+     * Set the results of the add Task collection operation.
      *
      * @param value the value value to set
      * @return the TaskAddCollectionResult object itself.

@@ -22,7 +22,7 @@ public class ComputeNodeEndpointConfiguration {
     private List<InboundEndpoint> inboundEndpoints;
 
     /**
-     * Get the inboundEndpoints value.
+     * Get the list of inbound endpoints that are accessible on the Compute Node.
      *
      * @return the inboundEndpoints value
      */
@@ -31,7 +31,7 @@ public class ComputeNodeEndpointConfiguration {
     }
 
     /**
-     * Set the inboundEndpoints value.
+     * Set the list of inbound endpoints that are accessible on the Compute Node.
      *
      * @param inboundEndpoints the inboundEndpoints value to set
      * @return the ComputeNodeEndpointConfiguration object itself.

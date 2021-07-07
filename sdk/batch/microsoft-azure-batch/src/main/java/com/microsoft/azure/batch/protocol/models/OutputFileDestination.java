@@ -21,7 +21,7 @@ public class OutputFileDestination {
     private OutputFileBlobContainerDestination container;
 
     /**
-     * Get the container value.
+     * Get a location in Azure blob storage to which files are uploaded.
      *
      * @return the container value
      */
@@ -30,7 +30,7 @@ public class OutputFileDestination {
     }
 
     /**
-     * Set the container value.
+     * Set a location in Azure blob storage to which files are uploaded.
      *
      * @param container the container value to set
      * @return the OutputFileDestination object itself.

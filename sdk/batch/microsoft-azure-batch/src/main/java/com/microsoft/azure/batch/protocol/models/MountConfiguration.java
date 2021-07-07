@@ -15,35 +15,35 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class MountConfiguration {
     /**
-     * The Azure Storage Container to mount using blob FUSE on each node.
-     * This property is mutually exclusive with all other properties.
+     * The Azure Storage Container to mount using blob FUSE on each node. This
+     * property is mutually exclusive with all other properties.
      */
     @JsonProperty(value = "azureBlobFileSystemConfiguration")
     private AzureBlobFileSystemConfiguration azureBlobFileSystemConfiguration;
 
     /**
-     * The NFS file system to mount on each node.
-     * This property is mutually exclusive with all other properties.
+     * The NFS file system to mount on each node. This property is mutually
+     * exclusive with all other properties.
      */
     @JsonProperty(value = "nfsMountConfiguration")
     private NFSMountConfiguration nfsMountConfiguration;
 
     /**
-     * The CIFS/SMB file system to mount on each node.
-     * This property is mutually exclusive with all other properties.
+     * The CIFS/SMB file system to mount on each node. This property is
+     * mutually exclusive with all other properties.
      */
     @JsonProperty(value = "cifsMountConfiguration")
     private CIFSMountConfiguration cifsMountConfiguration;
 
     /**
-     * The Azure File Share to mount on each node.
-     * This property is mutually exclusive with all other properties.
+     * The Azure File Share to mount on each node. This property is mutually
+     * exclusive with all other properties.
      */
     @JsonProperty(value = "azureFileShareConfiguration")
     private AzureFileShareConfiguration azureFileShareConfiguration;
 
     /**
-     * Get this property is mutually exclusive with all other properties.
+     * Get the Azure Storage Container to mount using blob FUSE on each node. This property is mutually exclusive with all other properties.
      *
      * @return the azureBlobFileSystemConfiguration value
      */
@@ -52,7 +52,7 @@ public class MountConfiguration {
     }
 
     /**
-     * Set this property is mutually exclusive with all other properties.
+     * Set the Azure Storage Container to mount using blob FUSE on each node. This property is mutually exclusive with all other properties.
      *
      * @param azureBlobFileSystemConfiguration the azureBlobFileSystemConfiguration value to set
      * @return the MountConfiguration object itself.
@@ -63,7 +63,7 @@ public class MountConfiguration {
     }
 
     /**
-     * Get this property is mutually exclusive with all other properties.
+     * Get the NFS file system to mount on each node. This property is mutually exclusive with all other properties.
      *
      * @return the nfsMountConfiguration value
      */
@@ -72,7 +72,7 @@ public class MountConfiguration {
     }
 
     /**
-     * Set this property is mutually exclusive with all other properties.
+     * Set the NFS file system to mount on each node. This property is mutually exclusive with all other properties.
      *
      * @param nfsMountConfiguration the nfsMountConfiguration value to set
      * @return the MountConfiguration object itself.
@@ -83,7 +83,7 @@ public class MountConfiguration {
     }
 
     /**
-     * Get this property is mutually exclusive with all other properties.
+     * Get the CIFS/SMB file system to mount on each node. This property is mutually exclusive with all other properties.
      *
      * @return the cifsMountConfiguration value
      */
@@ -92,7 +92,7 @@ public class MountConfiguration {
     }
 
     /**
-     * Set this property is mutually exclusive with all other properties.
+     * Set the CIFS/SMB file system to mount on each node. This property is mutually exclusive with all other properties.
      *
      * @param cifsMountConfiguration the cifsMountConfiguration value to set
      * @return the MountConfiguration object itself.
@@ -103,7 +103,7 @@ public class MountConfiguration {
     }
 
     /**
-     * Get this property is mutually exclusive with all other properties.
+     * Get the Azure File Share to mount on each node. This property is mutually exclusive with all other properties.
      *
      * @return the azureFileShareConfiguration value
      */
@@ -112,7 +112,7 @@ public class MountConfiguration {
     }
 
     /**
-     * Set this property is mutually exclusive with all other properties.
+     * Set the Azure File Share to mount on each node. This property is mutually exclusive with all other properties.
      *
      * @param azureFileShareConfiguration the azureFileShareConfiguration value to set
      * @return the MountConfiguration object itself.

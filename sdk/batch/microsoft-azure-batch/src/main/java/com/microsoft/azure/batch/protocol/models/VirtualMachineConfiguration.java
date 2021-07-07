@@ -25,37 +25,35 @@ public class VirtualMachineConfiguration {
 
     /**
      * The SKU of the Batch Compute Node agent to be provisioned on Compute
-     * Nodes in the Pool.
-     * The Batch Compute Node agent is a program that runs on each Compute Node
-     * in the Pool, and provides the command-and-control interface between the
-     * Compute Node and the Batch service. There are different implementations
-     * of the Compute Node agent, known as SKUs, for different operating
-     * systems. You must specify a Compute Node agent SKU which matches the
-     * selected Image reference. To get the list of supported Compute Node
-     * agent SKUs along with their list of verified Image references, see the
-     * 'List supported Compute Node agent SKUs' operation.
+     * Nodes in the Pool. The Batch Compute Node agent is a program that runs
+     * on each Compute Node in the Pool, and provides the command-and-control
+     * interface between the Compute Node and the Batch service. There are
+     * different implementations of the Compute Node agent, known as SKUs, for
+     * different operating systems. You must specify a Compute Node agent SKU
+     * which matches the selected Image reference. To get the list of supported
+     * Compute Node agent SKUs along with their list of verified Image
+     * references, see the 'List supported Compute Node agent SKUs' operation.
      */
     @JsonProperty(value = "nodeAgentSKUId", required = true)
     private String nodeAgentSKUId;
 
     /**
-     * Windows operating system settings on the virtual machine.
-     * This property must not be specified if the imageReference property
-     * specifies a Linux OS Image.
+     * Windows operating system settings on the virtual machine. This property
+     * must not be specified if the imageReference property specifies a Linux
+     * OS Image.
      */
     @JsonProperty(value = "windowsConfiguration")
     private WindowsConfiguration windowsConfiguration;
 
     /**
      * The configuration for data disks attached to the Compute Nodes in the
-     * Pool.
-     * This property must be specified if the Compute Nodes in the Pool need to
-     * have empty data disks attached to them. This cannot be updated. Each
-     * Compute Node gets its own disk (the disk is not a file share). Existing
-     * disks cannot be attached, each attached disk is empty. When the Compute
-     * Node is removed from the Pool, the disk and all data associated with it
-     * is also deleted. The disk is not formatted after being attached, it must
-     * be formatted before use - for more information see
+     * Pool. This property must be specified if the Compute Nodes in the Pool
+     * need to have empty data disks attached to them. This cannot be updated.
+     * Each Compute Node gets its own disk (the disk is not a file share).
+     * Existing disks cannot be attached, each attached disk is empty. When the
+     * Compute Node is removed from the Pool, the disk and all data associated
+     * with it is also deleted. The disk is not formatted after being attached,
+     * it must be formatted before use - for more information see
      * https://docs.microsoft.com/en-us/azure/virtual-machines/linux/classic/attach-disk#initialize-a-new-data-disk-in-linux
      * and
      * https://docs.microsoft.com/en-us/azure/virtual-machines/windows/attach-disk-ps#add-an-empty-data-disk-to-a-virtual-machine.
@@ -65,10 +63,9 @@ public class VirtualMachineConfiguration {
 
     /**
      * The type of on-premises license to be used when deploying the operating
-     * system.
-     * This only applies to Images that contain the Windows operating system,
-     * and should only be used when you hold valid on-premises licenses for the
-     * Compute Nodes which will be deployed. If omitted, no on-premises
+     * system. This only applies to Images that contain the Windows operating
+     * system, and should only be used when you hold valid on-premises licenses
+     * for the Compute Nodes which will be deployed. If omitted, no on-premises
      * licensing discount is applied. Values are:
      *
      * Windows_Server - The on-premises license is for Windows Server.
@@ -78,25 +75,44 @@ public class VirtualMachineConfiguration {
     private String licenseType;
 
     /**
-     * The container configuration for the Pool.
-     * If specified, setup is performed on each Compute Node in the Pool to
-     * allow Tasks to run in containers. All regular Tasks and Job manager
-     * Tasks run on this Pool must specify the containerSettings property, and
-     * all other Tasks may specify it.
+     * The container configuration for the Pool. If specified, setup is
+     * performed on each Compute Node in the Pool to allow Tasks to run in
+     * containers. All regular Tasks and Job manager Tasks run on this Pool
+     * must specify the containerSettings property, and all other Tasks may
+     * specify it.
      */
     @JsonProperty(value = "containerConfiguration")
     private ContainerConfiguration containerConfiguration;
 
     /**
-     * The disk encryption configuration for the pool.
-     * If specified, encryption is performed on each node in the pool during
-     * node provisioning.
+     * The disk encryption configuration for the pool. If specified, encryption
+     * is performed on each node in the pool during node provisioning.
      */
     @JsonProperty(value = "diskEncryptionConfiguration")
     private DiskEncryptionConfiguration diskEncryptionConfiguration;
 
     /**
-     * Get the imageReference value.
+     * The node placement configuration for the pool. This configuration will
+     * specify rules on how nodes in the pool will be physically allocated.
+     */
+    @JsonProperty(value = "nodePlacementConfiguration")
+    private NodePlacementConfiguration nodePlacementConfiguration;
+
+    /**
+     * The virtual machine extension for the pool. If specified, the extensions
+     * mentioned in this configuration will be installed on each node.
+     */
+    @JsonProperty(value = "extensions")
+    private List<VMExtension> extensions;
+
+    /**
+     * Settings for the operating system disk of the Virtual Machine.
+     */
+    @JsonProperty(value = "osDisk")
+    private OSDisk osDisk;
+
+    /**
+     * Get a reference to the Azure Virtual Machines Marketplace Image or the custom Virtual Machine Image to use.
      *
      * @return the imageReference value
      */
@@ -105,7 +121,7 @@ public class VirtualMachineConfiguration {
     }
 
     /**
-     * Set the imageReference value.
+     * Set a reference to the Azure Virtual Machines Marketplace Image or the custom Virtual Machine Image to use.
      *
      * @param imageReference the imageReference value to set
      * @return the VirtualMachineConfiguration object itself.
@@ -116,7 +132,7 @@ public class VirtualMachineConfiguration {
     }
 
     /**
-     * Get the Batch Compute Node agent is a program that runs on each Compute Node in the Pool, and provides the command-and-control interface between the Compute Node and the Batch service. There are different implementations of the Compute Node agent, known as SKUs, for different operating systems. You must specify a Compute Node agent SKU which matches the selected Image reference. To get the list of supported Compute Node agent SKUs along with their list of verified Image references, see the 'List supported Compute Node agent SKUs' operation.
+     * Get the SKU of the Batch Compute Node agent to be provisioned on Compute Nodes in the Pool. The Batch Compute Node agent is a program that runs on each Compute Node in the Pool, and provides the command-and-control interface between the Compute Node and the Batch service. There are different implementations of the Compute Node agent, known as SKUs, for different operating systems. You must specify a Compute Node agent SKU which matches the selected Image reference. To get the list of supported Compute Node agent SKUs along with their list of verified Image references, see the 'List supported Compute Node agent SKUs' operation.
      *
      * @return the nodeAgentSKUId value
      */
@@ -125,7 +141,7 @@ public class VirtualMachineConfiguration {
     }
 
     /**
-     * Set the Batch Compute Node agent is a program that runs on each Compute Node in the Pool, and provides the command-and-control interface between the Compute Node and the Batch service. There are different implementations of the Compute Node agent, known as SKUs, for different operating systems. You must specify a Compute Node agent SKU which matches the selected Image reference. To get the list of supported Compute Node agent SKUs along with their list of verified Image references, see the 'List supported Compute Node agent SKUs' operation.
+     * Set the SKU of the Batch Compute Node agent to be provisioned on Compute Nodes in the Pool. The Batch Compute Node agent is a program that runs on each Compute Node in the Pool, and provides the command-and-control interface between the Compute Node and the Batch service. There are different implementations of the Compute Node agent, known as SKUs, for different operating systems. You must specify a Compute Node agent SKU which matches the selected Image reference. To get the list of supported Compute Node agent SKUs along with their list of verified Image references, see the 'List supported Compute Node agent SKUs' operation.
      *
      * @param nodeAgentSKUId the nodeAgentSKUId value to set
      * @return the VirtualMachineConfiguration object itself.
@@ -136,7 +152,7 @@ public class VirtualMachineConfiguration {
     }
 
     /**
-     * Get this property must not be specified if the imageReference property specifies a Linux OS Image.
+     * Get windows operating system settings on the virtual machine. This property must not be specified if the imageReference property specifies a Linux OS Image.
      *
      * @return the windowsConfiguration value
      */
@@ -145,7 +161,7 @@ public class VirtualMachineConfiguration {
     }
 
     /**
-     * Set this property must not be specified if the imageReference property specifies a Linux OS Image.
+     * Set windows operating system settings on the virtual machine. This property must not be specified if the imageReference property specifies a Linux OS Image.
      *
      * @param windowsConfiguration the windowsConfiguration value to set
      * @return the VirtualMachineConfiguration object itself.
@@ -156,7 +172,7 @@ public class VirtualMachineConfiguration {
     }
 
     /**
-     * Get this property must be specified if the Compute Nodes in the Pool need to have empty data disks attached to them. This cannot be updated. Each Compute Node gets its own disk (the disk is not a file share). Existing disks cannot be attached, each attached disk is empty. When the Compute Node is removed from the Pool, the disk and all data associated with it is also deleted. The disk is not formatted after being attached, it must be formatted before use - for more information see https://docs.microsoft.com/en-us/azure/virtual-machines/linux/classic/attach-disk#initialize-a-new-data-disk-in-linux and https://docs.microsoft.com/en-us/azure/virtual-machines/windows/attach-disk-ps#add-an-empty-data-disk-to-a-virtual-machine.
+     * Get the configuration for data disks attached to the Compute Nodes in the Pool. This property must be specified if the Compute Nodes in the Pool need to have empty data disks attached to them. This cannot be updated. Each Compute Node gets its own disk (the disk is not a file share). Existing disks cannot be attached, each attached disk is empty. When the Compute Node is removed from the Pool, the disk and all data associated with it is also deleted. The disk is not formatted after being attached, it must be formatted before use - for more information see https://docs.microsoft.com/en-us/azure/virtual-machines/linux/classic/attach-disk#initialize-a-new-data-disk-in-linux and https://docs.microsoft.com/en-us/azure/virtual-machines/windows/attach-disk-ps#add-an-empty-data-disk-to-a-virtual-machine.
      *
      * @return the dataDisks value
      */
@@ -165,7 +181,7 @@ public class VirtualMachineConfiguration {
     }
 
     /**
-     * Set this property must be specified if the Compute Nodes in the Pool need to have empty data disks attached to them. This cannot be updated. Each Compute Node gets its own disk (the disk is not a file share). Existing disks cannot be attached, each attached disk is empty. When the Compute Node is removed from the Pool, the disk and all data associated with it is also deleted. The disk is not formatted after being attached, it must be formatted before use - for more information see https://docs.microsoft.com/en-us/azure/virtual-machines/linux/classic/attach-disk#initialize-a-new-data-disk-in-linux and https://docs.microsoft.com/en-us/azure/virtual-machines/windows/attach-disk-ps#add-an-empty-data-disk-to-a-virtual-machine.
+     * Set the configuration for data disks attached to the Compute Nodes in the Pool. This property must be specified if the Compute Nodes in the Pool need to have empty data disks attached to them. This cannot be updated. Each Compute Node gets its own disk (the disk is not a file share). Existing disks cannot be attached, each attached disk is empty. When the Compute Node is removed from the Pool, the disk and all data associated with it is also deleted. The disk is not formatted after being attached, it must be formatted before use - for more information see https://docs.microsoft.com/en-us/azure/virtual-machines/linux/classic/attach-disk#initialize-a-new-data-disk-in-linux and https://docs.microsoft.com/en-us/azure/virtual-machines/windows/attach-disk-ps#add-an-empty-data-disk-to-a-virtual-machine.
      *
      * @param dataDisks the dataDisks value to set
      * @return the VirtualMachineConfiguration object itself.
@@ -176,7 +192,7 @@ public class VirtualMachineConfiguration {
     }
 
     /**
-     * Get this only applies to Images that contain the Windows operating system, and should only be used when you hold valid on-premises licenses for the Compute Nodes which will be deployed. If omitted, no on-premises licensing discount is applied. Values are:
+     * Get the type of on-premises license to be used when deploying the operating system. This only applies to Images that contain the Windows operating system, and should only be used when you hold valid on-premises licenses for the Compute Nodes which will be deployed. If omitted, no on-premises licensing discount is applied. Values are:
       Windows_Server - The on-premises license is for Windows Server.
       Windows_Client - The on-premises license is for Windows Client.
      *
@@ -187,7 +203,7 @@ public class VirtualMachineConfiguration {
     }
 
     /**
-     * Set this only applies to Images that contain the Windows operating system, and should only be used when you hold valid on-premises licenses for the Compute Nodes which will be deployed. If omitted, no on-premises licensing discount is applied. Values are:
+     * Set the type of on-premises license to be used when deploying the operating system. This only applies to Images that contain the Windows operating system, and should only be used when you hold valid on-premises licenses for the Compute Nodes which will be deployed. If omitted, no on-premises licensing discount is applied. Values are:
       Windows_Server - The on-premises license is for Windows Server.
       Windows_Client - The on-premises license is for Windows Client.
      *
@@ -200,7 +216,7 @@ public class VirtualMachineConfiguration {
     }
 
     /**
-     * Get if specified, setup is performed on each Compute Node in the Pool to allow Tasks to run in containers. All regular Tasks and Job manager Tasks run on this Pool must specify the containerSettings property, and all other Tasks may specify it.
+     * Get the container configuration for the Pool. If specified, setup is performed on each Compute Node in the Pool to allow Tasks to run in containers. All regular Tasks and Job manager Tasks run on this Pool must specify the containerSettings property, and all other Tasks may specify it.
      *
      * @return the containerConfiguration value
      */
@@ -209,7 +225,7 @@ public class VirtualMachineConfiguration {
     }
 
     /**
-     * Set if specified, setup is performed on each Compute Node in the Pool to allow Tasks to run in containers. All regular Tasks and Job manager Tasks run on this Pool must specify the containerSettings property, and all other Tasks may specify it.
+     * Set the container configuration for the Pool. If specified, setup is performed on each Compute Node in the Pool to allow Tasks to run in containers. All regular Tasks and Job manager Tasks run on this Pool must specify the containerSettings property, and all other Tasks may specify it.
      *
      * @param containerConfiguration the containerConfiguration value to set
      * @return the VirtualMachineConfiguration object itself.
@@ -220,7 +236,7 @@ public class VirtualMachineConfiguration {
     }
 
     /**
-     * Get if specified, encryption is performed on each node in the pool during node provisioning.
+     * Get the disk encryption configuration for the pool. If specified, encryption is performed on each node in the pool during node provisioning.
      *
      * @return the diskEncryptionConfiguration value
      */
@@ -229,13 +245,73 @@ public class VirtualMachineConfiguration {
     }
 
     /**
-     * Set if specified, encryption is performed on each node in the pool during node provisioning.
+     * Set the disk encryption configuration for the pool. If specified, encryption is performed on each node in the pool during node provisioning.
      *
      * @param diskEncryptionConfiguration the diskEncryptionConfiguration value to set
      * @return the VirtualMachineConfiguration object itself.
      */
     public VirtualMachineConfiguration withDiskEncryptionConfiguration(DiskEncryptionConfiguration diskEncryptionConfiguration) {
         this.diskEncryptionConfiguration = diskEncryptionConfiguration;
+        return this;
+    }
+
+    /**
+     * Get the node placement configuration for the pool. This configuration will specify rules on how nodes in the pool will be physically allocated.
+     *
+     * @return the nodePlacementConfiguration value
+     */
+    public NodePlacementConfiguration nodePlacementConfiguration() {
+        return this.nodePlacementConfiguration;
+    }
+
+    /**
+     * Set the node placement configuration for the pool. This configuration will specify rules on how nodes in the pool will be physically allocated.
+     *
+     * @param nodePlacementConfiguration the nodePlacementConfiguration value to set
+     * @return the VirtualMachineConfiguration object itself.
+     */
+    public VirtualMachineConfiguration withNodePlacementConfiguration(NodePlacementConfiguration nodePlacementConfiguration) {
+        this.nodePlacementConfiguration = nodePlacementConfiguration;
+        return this;
+    }
+
+    /**
+     * Get the virtual machine extension for the pool. If specified, the extensions mentioned in this configuration will be installed on each node.
+     *
+     * @return the extensions value
+     */
+    public List<VMExtension> extensions() {
+        return this.extensions;
+    }
+
+    /**
+     * Set the virtual machine extension for the pool. If specified, the extensions mentioned in this configuration will be installed on each node.
+     *
+     * @param extensions the extensions value to set
+     * @return the VirtualMachineConfiguration object itself.
+     */
+    public VirtualMachineConfiguration withExtensions(List<VMExtension> extensions) {
+        this.extensions = extensions;
+        return this;
+    }
+
+    /**
+     * Get settings for the operating system disk of the Virtual Machine.
+     *
+     * @return the osDisk value
+     */
+    public OSDisk osDisk() {
+        return this.osDisk;
+    }
+
+    /**
+     * Set settings for the operating system disk of the Virtual Machine.
+     *
+     * @param osDisk the osDisk value to set
+     * @return the VirtualMachineConfiguration object itself.
+     */
+    public VirtualMachineConfiguration withOsDisk(OSDisk osDisk) {
+        this.osDisk = osDisk;
         return this;
     }
 

@@ -23,9 +23,8 @@ public class AutoScaleRun {
 
     /**
      * The final values of all variables used in the evaluation of the
-     * autoscale formula.
-     * Each variable value is returned in the form $variable=value, and
-     * variables are separated by semicolons.
+     * autoscale formula. Each variable value is returned in the form
+     * $variable=value, and variables are separated by semicolons.
      */
     @JsonProperty(value = "results")
     private String results;
@@ -38,7 +37,7 @@ public class AutoScaleRun {
     private AutoScaleRunError error;
 
     /**
-     * Get the timestamp value.
+     * Get the time at which the autoscale formula was last evaluated.
      *
      * @return the timestamp value
      */
@@ -47,7 +46,7 @@ public class AutoScaleRun {
     }
 
     /**
-     * Set the timestamp value.
+     * Set the time at which the autoscale formula was last evaluated.
      *
      * @param timestamp the timestamp value to set
      * @return the AutoScaleRun object itself.
@@ -58,7 +57,7 @@ public class AutoScaleRun {
     }
 
     /**
-     * Get each variable value is returned in the form $variable=value, and variables are separated by semicolons.
+     * Get the final values of all variables used in the evaluation of the autoscale formula. Each variable value is returned in the form $variable=value, and variables are separated by semicolons.
      *
      * @return the results value
      */
@@ -67,7 +66,7 @@ public class AutoScaleRun {
     }
 
     /**
-     * Set each variable value is returned in the form $variable=value, and variables are separated by semicolons.
+     * Set the final values of all variables used in the evaluation of the autoscale formula. Each variable value is returned in the form $variable=value, and variables are separated by semicolons.
      *
      * @param results the results value to set
      * @return the AutoScaleRun object itself.
@@ -78,7 +77,7 @@ public class AutoScaleRun {
     }
 
     /**
-     * Get the error value.
+     * Get details of the error encountered evaluating the autoscale formula on the Pool, if the evaluation was unsuccessful.
      *
      * @return the error value
      */
@@ -87,7 +86,7 @@ public class AutoScaleRun {
     }
 
     /**
-     * Set the error value.
+     * Set details of the error encountered evaluating the autoscale formula on the Pool, if the evaluation was unsuccessful.
      *
      * @param error the error value to set
      * @return the AutoScaleRun object itself.

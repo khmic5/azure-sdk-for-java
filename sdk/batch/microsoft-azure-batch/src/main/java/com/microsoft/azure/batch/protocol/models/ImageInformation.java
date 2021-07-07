@@ -37,10 +37,10 @@ public class ImageInformation {
     private OSType osType;
 
     /**
-     * The capabilities or features which the Image supports.
-     * Not every capability of the Image is listed. Capabilities in this list
-     * are considered of special interest and are generally related to
-     * integration with other features in the Azure Batch service.
+     * The capabilities or features which the Image supports. Not every
+     * capability of the Image is listed. Capabilities in this list are
+     * considered of special interest and are generally related to integration
+     * with other features in the Azure Batch service.
      */
     @JsonProperty(value = "capabilities")
     private List<String> capabilities;
@@ -54,14 +54,14 @@ public class ImageInformation {
 
     /**
      * Whether the Azure Batch service actively verifies that the Image is
-     * compatible with the associated Compute Node agent SKU.
-     * Possible values include: 'verified', 'unverified'.
+     * compatible with the associated Compute Node agent SKU. Possible values
+     * include: 'verified', 'unverified'.
      */
     @JsonProperty(value = "verificationType", required = true)
     private VerificationType verificationType;
 
     /**
-     * Get the nodeAgentSKUId value.
+     * Get the ID of the Compute Node agent SKU which the Image supports.
      *
      * @return the nodeAgentSKUId value
      */
@@ -70,7 +70,7 @@ public class ImageInformation {
     }
 
     /**
-     * Set the nodeAgentSKUId value.
+     * Set the ID of the Compute Node agent SKU which the Image supports.
      *
      * @param nodeAgentSKUId the nodeAgentSKUId value to set
      * @return the ImageInformation object itself.
@@ -81,7 +81,7 @@ public class ImageInformation {
     }
 
     /**
-     * Get the imageReference value.
+     * Get the reference to the Azure Virtual Machine's Marketplace Image.
      *
      * @return the imageReference value
      */
@@ -90,7 +90,7 @@ public class ImageInformation {
     }
 
     /**
-     * Set the imageReference value.
+     * Set the reference to the Azure Virtual Machine's Marketplace Image.
      *
      * @param imageReference the imageReference value to set
      * @return the ImageInformation object itself.
@@ -101,7 +101,7 @@ public class ImageInformation {
     }
 
     /**
-     * Get possible values include: 'linux', 'windows'.
+     * Get the type of operating system (e.g. Windows or Linux) of the Image. Possible values include: 'linux', 'windows'.
      *
      * @return the osType value
      */
@@ -110,7 +110,7 @@ public class ImageInformation {
     }
 
     /**
-     * Set possible values include: 'linux', 'windows'.
+     * Set the type of operating system (e.g. Windows or Linux) of the Image. Possible values include: 'linux', 'windows'.
      *
      * @param osType the osType value to set
      * @return the ImageInformation object itself.
@@ -121,7 +121,7 @@ public class ImageInformation {
     }
 
     /**
-     * Get not every capability of the Image is listed. Capabilities in this list are considered of special interest and are generally related to integration with other features in the Azure Batch service.
+     * Get the capabilities or features which the Image supports. Not every capability of the Image is listed. Capabilities in this list are considered of special interest and are generally related to integration with other features in the Azure Batch service.
      *
      * @return the capabilities value
      */
@@ -130,7 +130,7 @@ public class ImageInformation {
     }
 
     /**
-     * Set not every capability of the Image is listed. Capabilities in this list are considered of special interest and are generally related to integration with other features in the Azure Batch service.
+     * Set the capabilities or features which the Image supports. Not every capability of the Image is listed. Capabilities in this list are considered of special interest and are generally related to integration with other features in the Azure Batch service.
      *
      * @param capabilities the capabilities value to set
      * @return the ImageInformation object itself.
@@ -141,7 +141,7 @@ public class ImageInformation {
     }
 
     /**
-     * Get the batchSupportEndOfLife value.
+     * Get the time when the Azure Batch service will stop accepting create Pool requests for the Image.
      *
      * @return the batchSupportEndOfLife value
      */
@@ -150,7 +150,7 @@ public class ImageInformation {
     }
 
     /**
-     * Set the batchSupportEndOfLife value.
+     * Set the time when the Azure Batch service will stop accepting create Pool requests for the Image.
      *
      * @param batchSupportEndOfLife the batchSupportEndOfLife value to set
      * @return the ImageInformation object itself.
@@ -161,7 +161,7 @@ public class ImageInformation {
     }
 
     /**
-     * Get possible values include: 'verified', 'unverified'.
+     * Get whether the Azure Batch service actively verifies that the Image is compatible with the associated Compute Node agent SKU. Possible values include: 'verified', 'unverified'.
      *
      * @return the verificationType value
      */
@@ -170,7 +170,7 @@ public class ImageInformation {
     }
 
     /**
-     * Set possible values include: 'verified', 'unverified'.
+     * Set whether the Azure Batch service actively verifies that the Image is compatible with the associated Compute Node agent SKU. Possible values include: 'verified', 'unverified'.
      *
      * @param verificationType the verificationType value to set
      * @return the ImageInformation object itself.

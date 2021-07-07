@@ -17,17 +17,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class AuthenticationTokenSettings {
     /**
-     * The Batch resources to which the token grants access.
-     * The authentication token grants access to a limited set of Batch service
-     * operations. Currently the only supported value for the access property
-     * is 'job', which grants access to all operations related to the Job which
-     * contains the Task.
+     * The Batch resources to which the token grants access. The authentication
+     * token grants access to a limited set of Batch service operations.
+     * Currently the only supported value for the access property is 'job',
+     * which grants access to all operations related to the Job which contains
+     * the Task.
      */
     @JsonProperty(value = "access")
     private List<AccessScope> access;
 
     /**
-     * Get the authentication token grants access to a limited set of Batch service operations. Currently the only supported value for the access property is 'job', which grants access to all operations related to the Job which contains the Task.
+     * Get the Batch resources to which the token grants access. The authentication token grants access to a limited set of Batch service operations. Currently the only supported value for the access property is 'job', which grants access to all operations related to the Job which contains the Task.
      *
      * @return the access value
      */
@@ -36,7 +36,7 @@ public class AuthenticationTokenSettings {
     }
 
     /**
-     * Set the authentication token grants access to a limited set of Batch service operations. Currently the only supported value for the access property is 'job', which grants access to all operations related to the Job which contains the Task.
+     * Set the Batch resources to which the token grants access. The authentication token grants access to a limited set of Batch service operations. Currently the only supported value for the access property is 'job', which grants access to all operations related to the Job which contains the Task.
      *
      * @param access the access value to set
      * @return the AuthenticationTokenSettings object itself.

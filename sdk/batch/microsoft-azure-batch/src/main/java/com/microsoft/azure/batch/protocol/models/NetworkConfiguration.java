@@ -47,15 +47,15 @@ public class NetworkConfiguration {
     private String subnetId;
 
     /**
-     * The scope of dynamic vnet assignment.
-     * Possible values include: 'none', 'job'.
+     * The scope of dynamic vnet assignment. Possible values include: 'none',
+     * 'job'.
      */
     @JsonProperty(value = "dynamicVNetAssignmentScope")
     private DynamicVNetAssignmentScope dynamicVNetAssignmentScope;
 
     /**
-     * The configuration for endpoints on Compute Nodes in the Batch Pool.
-     * Pool endpoint configuration is only supported on Pools with the
+     * The configuration for endpoints on Compute Nodes in the Batch Pool. Pool
+     * endpoint configuration is only supported on Pools with the
      * virtualMachineConfiguration property.
      */
     @JsonProperty(value = "endpointConfiguration")
@@ -70,7 +70,7 @@ public class NetworkConfiguration {
     private PublicIPAddressConfiguration publicIPAddressConfiguration;
 
     /**
-     * Get the virtual network must be in the same region and subscription as the Azure Batch Account. The specified subnet should have enough free IP addresses to accommodate the number of Compute Nodes in the Pool. If the subnet doesn't have enough free IP addresses, the Pool will partially allocate Nodes and a resize error will occur. The 'MicrosoftAzureBatch' service principal must have the 'Classic Virtual Machine Contributor' Role-Based Access Control (RBAC) role for the specified VNet. The specified subnet must allow communication from the Azure Batch service to be able to schedule Tasks on the Nodes. This can be verified by checking if the specified VNet has any associated Network Security Groups (NSG). If communication to the Nodes in the specified subnet is denied by an NSG, then the Batch service will set the state of the Compute Nodes to unusable. For Pools created with virtualMachineConfiguration only ARM virtual networks ('Microsoft.Network/virtualNetworks') are supported, but for Pools created with cloudServiceConfiguration both ARM and classic virtual networks are supported. If the specified VNet has any associated Network Security Groups (NSG), then a few reserved system ports must be enabled for inbound communication. For Pools created with a virtual machine configuration, enable ports 29876 and 29877, as well as port 22 for Linux and port 3389 for Windows. For Pools created with a cloud service configuration, enable ports 10100, 20100, and 30100. Also enable outbound connections to Azure Storage on port 443. For more details see: https://docs.microsoft.com/en-us/azure/batch/batch-api-basics#virtual-network-vnet-and-firewall-configuration.
+     * Get the ARM resource identifier of the virtual network subnet which the Compute Nodes of the Pool will join. This is of the form /subscriptions/{subscription}/resourceGroups/{group}/providers/{provider}/virtualNetworks/{network}/subnets/{subnet}. The virtual network must be in the same region and subscription as the Azure Batch Account. The specified subnet should have enough free IP addresses to accommodate the number of Compute Nodes in the Pool. If the subnet doesn't have enough free IP addresses, the Pool will partially allocate Nodes and a resize error will occur. The 'MicrosoftAzureBatch' service principal must have the 'Classic Virtual Machine Contributor' Role-Based Access Control (RBAC) role for the specified VNet. The specified subnet must allow communication from the Azure Batch service to be able to schedule Tasks on the Nodes. This can be verified by checking if the specified VNet has any associated Network Security Groups (NSG). If communication to the Nodes in the specified subnet is denied by an NSG, then the Batch service will set the state of the Compute Nodes to unusable. For Pools created with virtualMachineConfiguration only ARM virtual networks ('Microsoft.Network/virtualNetworks') are supported, but for Pools created with cloudServiceConfiguration both ARM and classic virtual networks are supported. If the specified VNet has any associated Network Security Groups (NSG), then a few reserved system ports must be enabled for inbound communication. For Pools created with a virtual machine configuration, enable ports 29876 and 29877, as well as port 22 for Linux and port 3389 for Windows. For Pools created with a cloud service configuration, enable ports 10100, 20100, and 30100. Also enable outbound connections to Azure Storage on port 443. For more details see: https://docs.microsoft.com/en-us/azure/batch/batch-api-basics#virtual-network-vnet-and-firewall-configuration.
      *
      * @return the subnetId value
      */
@@ -79,7 +79,7 @@ public class NetworkConfiguration {
     }
 
     /**
-     * Set the virtual network must be in the same region and subscription as the Azure Batch Account. The specified subnet should have enough free IP addresses to accommodate the number of Compute Nodes in the Pool. If the subnet doesn't have enough free IP addresses, the Pool will partially allocate Nodes and a resize error will occur. The 'MicrosoftAzureBatch' service principal must have the 'Classic Virtual Machine Contributor' Role-Based Access Control (RBAC) role for the specified VNet. The specified subnet must allow communication from the Azure Batch service to be able to schedule Tasks on the Nodes. This can be verified by checking if the specified VNet has any associated Network Security Groups (NSG). If communication to the Nodes in the specified subnet is denied by an NSG, then the Batch service will set the state of the Compute Nodes to unusable. For Pools created with virtualMachineConfiguration only ARM virtual networks ('Microsoft.Network/virtualNetworks') are supported, but for Pools created with cloudServiceConfiguration both ARM and classic virtual networks are supported. If the specified VNet has any associated Network Security Groups (NSG), then a few reserved system ports must be enabled for inbound communication. For Pools created with a virtual machine configuration, enable ports 29876 and 29877, as well as port 22 for Linux and port 3389 for Windows. For Pools created with a cloud service configuration, enable ports 10100, 20100, and 30100. Also enable outbound connections to Azure Storage on port 443. For more details see: https://docs.microsoft.com/en-us/azure/batch/batch-api-basics#virtual-network-vnet-and-firewall-configuration.
+     * Set the ARM resource identifier of the virtual network subnet which the Compute Nodes of the Pool will join. This is of the form /subscriptions/{subscription}/resourceGroups/{group}/providers/{provider}/virtualNetworks/{network}/subnets/{subnet}. The virtual network must be in the same region and subscription as the Azure Batch Account. The specified subnet should have enough free IP addresses to accommodate the number of Compute Nodes in the Pool. If the subnet doesn't have enough free IP addresses, the Pool will partially allocate Nodes and a resize error will occur. The 'MicrosoftAzureBatch' service principal must have the 'Classic Virtual Machine Contributor' Role-Based Access Control (RBAC) role for the specified VNet. The specified subnet must allow communication from the Azure Batch service to be able to schedule Tasks on the Nodes. This can be verified by checking if the specified VNet has any associated Network Security Groups (NSG). If communication to the Nodes in the specified subnet is denied by an NSG, then the Batch service will set the state of the Compute Nodes to unusable. For Pools created with virtualMachineConfiguration only ARM virtual networks ('Microsoft.Network/virtualNetworks') are supported, but for Pools created with cloudServiceConfiguration both ARM and classic virtual networks are supported. If the specified VNet has any associated Network Security Groups (NSG), then a few reserved system ports must be enabled for inbound communication. For Pools created with a virtual machine configuration, enable ports 29876 and 29877, as well as port 22 for Linux and port 3389 for Windows. For Pools created with a cloud service configuration, enable ports 10100, 20100, and 30100. Also enable outbound connections to Azure Storage on port 443. For more details see: https://docs.microsoft.com/en-us/azure/batch/batch-api-basics#virtual-network-vnet-and-firewall-configuration.
      *
      * @param subnetId the subnetId value to set
      * @return the NetworkConfiguration object itself.
@@ -90,7 +90,7 @@ public class NetworkConfiguration {
     }
 
     /**
-     * Get possible values include: 'none', 'job'.
+     * Get the scope of dynamic vnet assignment. Possible values include: 'none', 'job'.
      *
      * @return the dynamicVNetAssignmentScope value
      */
@@ -99,7 +99,7 @@ public class NetworkConfiguration {
     }
 
     /**
-     * Set possible values include: 'none', 'job'.
+     * Set the scope of dynamic vnet assignment. Possible values include: 'none', 'job'.
      *
      * @param dynamicVNetAssignmentScope the dynamicVNetAssignmentScope value to set
      * @return the NetworkConfiguration object itself.
@@ -110,7 +110,7 @@ public class NetworkConfiguration {
     }
 
     /**
-     * Get pool endpoint configuration is only supported on Pools with the virtualMachineConfiguration property.
+     * Get the configuration for endpoints on Compute Nodes in the Batch Pool. Pool endpoint configuration is only supported on Pools with the virtualMachineConfiguration property.
      *
      * @return the endpointConfiguration value
      */
@@ -119,7 +119,7 @@ public class NetworkConfiguration {
     }
 
     /**
-     * Set pool endpoint configuration is only supported on Pools with the virtualMachineConfiguration property.
+     * Set the configuration for endpoints on Compute Nodes in the Batch Pool. Pool endpoint configuration is only supported on Pools with the virtualMachineConfiguration property.
      *
      * @param endpointConfiguration the endpointConfiguration value to set
      * @return the NetworkConfiguration object itself.
@@ -130,7 +130,7 @@ public class NetworkConfiguration {
     }
 
     /**
-     * Get public IP configuration property is only supported on Pools with the virtualMachineConfiguration property.
+     * Get the Public IPAddress configuration for Compute Nodes in the Batch Pool. Public IP configuration property is only supported on Pools with the virtualMachineConfiguration property.
      *
      * @return the publicIPAddressConfiguration value
      */
@@ -139,7 +139,7 @@ public class NetworkConfiguration {
     }
 
     /**
-     * Set public IP configuration property is only supported on Pools with the virtualMachineConfiguration property.
+     * Set the Public IPAddress configuration for Compute Nodes in the Batch Pool. Public IP configuration property is only supported on Pools with the virtualMachineConfiguration property.
      *
      * @param publicIPAddressConfiguration the publicIPAddressConfiguration value to set
      * @return the NetworkConfiguration object itself.

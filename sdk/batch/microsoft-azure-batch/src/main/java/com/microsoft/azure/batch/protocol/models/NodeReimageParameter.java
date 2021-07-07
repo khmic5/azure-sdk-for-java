@@ -16,15 +16,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class NodeReimageParameter {
     /**
      * When to reimage the Compute Node and what to do with currently running
-     * Tasks.
-     * The default value is requeue. Possible values include: 'requeue',
+     * Tasks. The default value is requeue. Possible values include: 'requeue',
      * 'terminate', 'taskCompletion', 'retainedData'.
      */
     @JsonProperty(value = "nodeReimageOption")
     private ComputeNodeReimageOption nodeReimageOption;
 
     /**
-     * Get the default value is requeue. Possible values include: 'requeue', 'terminate', 'taskCompletion', 'retainedData'.
+     * Get when to reimage the Compute Node and what to do with currently running Tasks. The default value is requeue. Possible values include: 'requeue', 'terminate', 'taskCompletion', 'retainedData'.
      *
      * @return the nodeReimageOption value
      */
@@ -33,7 +32,7 @@ public class NodeReimageParameter {
     }
 
     /**
-     * Set the default value is requeue. Possible values include: 'requeue', 'terminate', 'taskCompletion', 'retainedData'.
+     * Set when to reimage the Compute Node and what to do with currently running Tasks. The default value is requeue. Possible values include: 'requeue', 'terminate', 'taskCompletion', 'retainedData'.
      *
      * @param nodeReimageOption the nodeReimageOption value to set
      * @return the NodeReimageParameter object itself.

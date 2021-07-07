@@ -17,18 +17,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class DataDisk {
     /**
-     * The logical unit number.
-     * The lun is used to uniquely identify each data disk. If attaching
-     * multiple disks, each should have a distinct lun. The value must be
-     * between 0 and 63, inclusive.
+     * The logical unit number. The lun is used to uniquely identify each data
+     * disk. If attaching multiple disks, each should have a distinct lun. The
+     * value must be between 0 and 63, inclusive.
      */
     @JsonProperty(value = "lun", required = true)
     private int lun;
 
     /**
-     * The type of caching to be enabled for the data disks.
-     * The default value for caching is readwrite. For information about the
-     * caching options see:
+     * The type of caching to be enabled for the data disks. The default value
+     * for caching is readwrite. For information about the caching options see:
      * https://blogs.msdn.microsoft.com/windowsazurestorage/2012/06/27/exploring-windows-azure-drives-disks-and-images/.
      * Possible values include: 'none', 'readOnly', 'readWrite'.
      */
@@ -42,15 +40,15 @@ public class DataDisk {
     private int diskSizeGB;
 
     /**
-     * The storage Account type to be used for the data disk.
-     * If omitted, the default is "standard_lrs". Possible values include:
-     * 'StandardLRS', 'PremiumLRS'.
+     * The storage Account type to be used for the data disk. If omitted, the
+     * default is "standard_lrs". Possible values include: 'StandardLRS',
+     * 'PremiumLRS'.
      */
     @JsonProperty(value = "storageAccountType")
     private StorageAccountType storageAccountType;
 
     /**
-     * Get the lun is used to uniquely identify each data disk. If attaching multiple disks, each should have a distinct lun. The value must be between 0 and 63, inclusive.
+     * Get the logical unit number. The lun is used to uniquely identify each data disk. If attaching multiple disks, each should have a distinct lun. The value must be between 0 and 63, inclusive.
      *
      * @return the lun value
      */
@@ -59,7 +57,7 @@ public class DataDisk {
     }
 
     /**
-     * Set the lun is used to uniquely identify each data disk. If attaching multiple disks, each should have a distinct lun. The value must be between 0 and 63, inclusive.
+     * Set the logical unit number. The lun is used to uniquely identify each data disk. If attaching multiple disks, each should have a distinct lun. The value must be between 0 and 63, inclusive.
      *
      * @param lun the lun value to set
      * @return the DataDisk object itself.
@@ -70,7 +68,7 @@ public class DataDisk {
     }
 
     /**
-     * Get the default value for caching is readwrite. For information about the caching options see: https://blogs.msdn.microsoft.com/windowsazurestorage/2012/06/27/exploring-windows-azure-drives-disks-and-images/. Possible values include: 'none', 'readOnly', 'readWrite'.
+     * Get the type of caching to be enabled for the data disks. The default value for caching is readwrite. For information about the caching options see: https://blogs.msdn.microsoft.com/windowsazurestorage/2012/06/27/exploring-windows-azure-drives-disks-and-images/. Possible values include: 'none', 'readOnly', 'readWrite'.
      *
      * @return the caching value
      */
@@ -79,7 +77,7 @@ public class DataDisk {
     }
 
     /**
-     * Set the default value for caching is readwrite. For information about the caching options see: https://blogs.msdn.microsoft.com/windowsazurestorage/2012/06/27/exploring-windows-azure-drives-disks-and-images/. Possible values include: 'none', 'readOnly', 'readWrite'.
+     * Set the type of caching to be enabled for the data disks. The default value for caching is readwrite. For information about the caching options see: https://blogs.msdn.microsoft.com/windowsazurestorage/2012/06/27/exploring-windows-azure-drives-disks-and-images/. Possible values include: 'none', 'readOnly', 'readWrite'.
      *
      * @param caching the caching value to set
      * @return the DataDisk object itself.
@@ -90,7 +88,7 @@ public class DataDisk {
     }
 
     /**
-     * Get the diskSizeGB value.
+     * Get the initial disk size in gigabytes.
      *
      * @return the diskSizeGB value
      */
@@ -99,7 +97,7 @@ public class DataDisk {
     }
 
     /**
-     * Set the diskSizeGB value.
+     * Set the initial disk size in gigabytes.
      *
      * @param diskSizeGB the diskSizeGB value to set
      * @return the DataDisk object itself.
@@ -110,7 +108,7 @@ public class DataDisk {
     }
 
     /**
-     * Get if omitted, the default is "standard_lrs". Possible values include: 'StandardLRS', 'PremiumLRS'.
+     * Get the storage Account type to be used for the data disk. If omitted, the default is "standard_lrs". Possible values include: 'StandardLRS', 'PremiumLRS'.
      *
      * @return the storageAccountType value
      */
@@ -119,7 +117,7 @@ public class DataDisk {
     }
 
     /**
-     * Set if omitted, the default is "standard_lrs". Possible values include: 'StandardLRS', 'PremiumLRS'.
+     * Set the storage Account type to be used for the data disk. If omitted, the default is "standard_lrs". Possible values include: 'StandardLRS', 'PremiumLRS'.
      *
      * @param storageAccountType the storageAccountType value to set
      * @return the DataDisk object itself.

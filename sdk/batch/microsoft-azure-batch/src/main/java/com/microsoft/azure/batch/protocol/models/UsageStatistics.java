@@ -37,7 +37,7 @@ public class UsageStatistics {
     private Period dedicatedCoreTime;
 
     /**
-     * Get the startTime value.
+     * Get the start time of the time range covered by the statistics.
      *
      * @return the startTime value
      */
@@ -46,7 +46,7 @@ public class UsageStatistics {
     }
 
     /**
-     * Set the startTime value.
+     * Set the start time of the time range covered by the statistics.
      *
      * @param startTime the startTime value to set
      * @return the UsageStatistics object itself.
@@ -57,7 +57,7 @@ public class UsageStatistics {
     }
 
     /**
-     * Get the lastUpdateTime value.
+     * Get the time at which the statistics were last updated. All statistics are limited to the range between startTime and lastUpdateTime.
      *
      * @return the lastUpdateTime value
      */
@@ -66,7 +66,7 @@ public class UsageStatistics {
     }
 
     /**
-     * Set the lastUpdateTime value.
+     * Set the time at which the statistics were last updated. All statistics are limited to the range between startTime and lastUpdateTime.
      *
      * @param lastUpdateTime the lastUpdateTime value to set
      * @return the UsageStatistics object itself.
@@ -77,7 +77,7 @@ public class UsageStatistics {
     }
 
     /**
-     * Get the dedicatedCoreTime value.
+     * Get the aggregated wall-clock time of the dedicated Compute Node cores being part of the Pool.
      *
      * @return the dedicatedCoreTime value
      */
@@ -86,7 +86,7 @@ public class UsageStatistics {
     }
 
     /**
-     * Set the dedicatedCoreTime value.
+     * Set the aggregated wall-clock time of the dedicated Compute Node cores being part of the Pool.
      *
      * @param dedicatedCoreTime the dedicatedCoreTime value to set
      * @return the UsageStatistics object itself.

@@ -11,9 +11,9 @@ package com.microsoft.azure.batch.protocol.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * A name-value pair associated with a Batch service resource.
- * The Batch service does not assign any meaning to this metadata; it is solely
- * for the use of user code.
+ * A name-value pair associated with a Batch service resource. The Batch
+ * service does not assign any meaning to this metadata; it is solely for the
+ * use of user code.
  */
 public class MetadataItem {
     /**
@@ -29,7 +29,7 @@ public class MetadataItem {
     private String value;
 
     /**
-     * Get the name value.
+     * Get the name of the metadata item.
      *
      * @return the name value
      */
@@ -38,7 +38,7 @@ public class MetadataItem {
     }
 
     /**
-     * Set the name value.
+     * Set the name of the metadata item.
      *
      * @param name the name value to set
      * @return the MetadataItem object itself.
@@ -49,7 +49,7 @@ public class MetadataItem {
     }
 
     /**
-     * Get the value value.
+     * Get the value of the metadata item.
      *
      * @return the value value
      */
@@ -58,7 +58,7 @@ public class MetadataItem {
     }
 
     /**
-     * Set the value value.
+     * Set the value of the metadata item.
      *
      * @param value the value value to set
      * @return the MetadataItem object itself.

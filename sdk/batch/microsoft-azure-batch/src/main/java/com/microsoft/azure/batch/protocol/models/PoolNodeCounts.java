@@ -27,13 +27,13 @@ public class PoolNodeCounts {
     private NodeCounts dedicated;
 
     /**
-     * The number of low priority Compute Nodes in each state.
+     * The number of low-priority Compute Nodes in each state.
      */
     @JsonProperty(value = "lowPriority")
     private NodeCounts lowPriority;
 
     /**
-     * Get the poolId value.
+     * Get the ID of the Pool.
      *
      * @return the poolId value
      */
@@ -42,7 +42,7 @@ public class PoolNodeCounts {
     }
 
     /**
-     * Set the poolId value.
+     * Set the ID of the Pool.
      *
      * @param poolId the poolId value to set
      * @return the PoolNodeCounts object itself.
@@ -53,7 +53,7 @@ public class PoolNodeCounts {
     }
 
     /**
-     * Get the dedicated value.
+     * Get the number of dedicated Compute Nodes in each state.
      *
      * @return the dedicated value
      */
@@ -62,7 +62,7 @@ public class PoolNodeCounts {
     }
 
     /**
-     * Set the dedicated value.
+     * Set the number of dedicated Compute Nodes in each state.
      *
      * @param dedicated the dedicated value to set
      * @return the PoolNodeCounts object itself.
@@ -73,7 +73,7 @@ public class PoolNodeCounts {
     }
 
     /**
-     * Get the lowPriority value.
+     * Get the number of low-priority Compute Nodes in each state.
      *
      * @return the lowPriority value
      */
@@ -82,7 +82,7 @@ public class PoolNodeCounts {
     }
 
     /**
-     * Set the lowPriority value.
+     * Set the number of low-priority Compute Nodes in each state.
      *
      * @param lowPriority the lowPriority value to set
      * @return the PoolNodeCounts object itself.

@@ -18,9 +18,8 @@ public class PoolPatchParameter {
     /**
      * A Task to run on each Compute Node as it joins the Pool. The Task runs
      * when the Compute Node is added to the Pool or when the Compute Node is
-     * restarted.
-     * If this element is present, it overwrites any existing StartTask. If
-     * omitted, any existing StartTask is left unchanged.
+     * restarted. If this element is present, it overwrites any existing
+     * StartTask. If omitted, any existing StartTask is left unchanged.
      */
     @JsonProperty(value = "startTask")
     private StartTask startTask;
@@ -54,16 +53,16 @@ public class PoolPatchParameter {
     private List<ApplicationPackageReference> applicationPackageReferences;
 
     /**
-     * A list of name-value pairs associated with the Pool as metadata.
-     * If this element is present, it replaces any existing metadata configured
-     * on the Pool. If you specify an empty collection, any metadata is removed
-     * from the Pool. If omitted, any existing metadata is left unchanged.
+     * A list of name-value pairs associated with the Pool as metadata. If this
+     * element is present, it replaces any existing metadata configured on the
+     * Pool. If you specify an empty collection, any metadata is removed from
+     * the Pool. If omitted, any existing metadata is left unchanged.
      */
     @JsonProperty(value = "metadata")
     private List<MetadataItem> metadata;
 
     /**
-     * Get if this element is present, it overwrites any existing StartTask. If omitted, any existing StartTask is left unchanged.
+     * Get a Task to run on each Compute Node as it joins the Pool. The Task runs when the Compute Node is added to the Pool or when the Compute Node is restarted. If this element is present, it overwrites any existing StartTask. If omitted, any existing StartTask is left unchanged.
      *
      * @return the startTask value
      */
@@ -72,7 +71,7 @@ public class PoolPatchParameter {
     }
 
     /**
-     * Set if this element is present, it overwrites any existing StartTask. If omitted, any existing StartTask is left unchanged.
+     * Set a Task to run on each Compute Node as it joins the Pool. The Task runs when the Compute Node is added to the Pool or when the Compute Node is restarted. If this element is present, it overwrites any existing StartTask. If omitted, any existing StartTask is left unchanged.
      *
      * @param startTask the startTask value to set
      * @return the PoolPatchParameter object itself.
@@ -83,7 +82,7 @@ public class PoolPatchParameter {
     }
 
     /**
-     * Get if this element is present, it replaces any existing Certificate references configured on the Pool. If omitted, any existing Certificate references are left unchanged. For Windows Nodes, the Batch service installs the Certificates to the specified Certificate store and location. For Linux Compute Nodes, the Certificates are stored in a directory inside the Task working directory and an environment variable AZ_BATCH_CERTIFICATES_DIR is supplied to the Task to query for this location. For Certificates with visibility of 'remoteUser', a 'certs' directory is created in the user's home directory (e.g., /home/{user-name}/certs) and Certificates are placed in that directory.
+     * Get a list of Certificates to be installed on each Compute Node in the Pool. If this element is present, it replaces any existing Certificate references configured on the Pool. If omitted, any existing Certificate references are left unchanged. For Windows Nodes, the Batch service installs the Certificates to the specified Certificate store and location. For Linux Compute Nodes, the Certificates are stored in a directory inside the Task working directory and an environment variable AZ_BATCH_CERTIFICATES_DIR is supplied to the Task to query for this location. For Certificates with visibility of 'remoteUser', a 'certs' directory is created in the user's home directory (e.g., /home/{user-name}/certs) and Certificates are placed in that directory.
      *
      * @return the certificateReferences value
      */
@@ -92,7 +91,7 @@ public class PoolPatchParameter {
     }
 
     /**
-     * Set if this element is present, it replaces any existing Certificate references configured on the Pool. If omitted, any existing Certificate references are left unchanged. For Windows Nodes, the Batch service installs the Certificates to the specified Certificate store and location. For Linux Compute Nodes, the Certificates are stored in a directory inside the Task working directory and an environment variable AZ_BATCH_CERTIFICATES_DIR is supplied to the Task to query for this location. For Certificates with visibility of 'remoteUser', a 'certs' directory is created in the user's home directory (e.g., /home/{user-name}/certs) and Certificates are placed in that directory.
+     * Set a list of Certificates to be installed on each Compute Node in the Pool. If this element is present, it replaces any existing Certificate references configured on the Pool. If omitted, any existing Certificate references are left unchanged. For Windows Nodes, the Batch service installs the Certificates to the specified Certificate store and location. For Linux Compute Nodes, the Certificates are stored in a directory inside the Task working directory and an environment variable AZ_BATCH_CERTIFICATES_DIR is supplied to the Task to query for this location. For Certificates with visibility of 'remoteUser', a 'certs' directory is created in the user's home directory (e.g., /home/{user-name}/certs) and Certificates are placed in that directory.
      *
      * @param certificateReferences the certificateReferences value to set
      * @return the PoolPatchParameter object itself.
@@ -103,7 +102,7 @@ public class PoolPatchParameter {
     }
 
     /**
-     * Get changes to Package references affect all new Nodes joining the Pool, but do not affect Compute Nodes that are already in the Pool until they are rebooted or reimaged. If this element is present, it replaces any existing Package references. If you specify an empty collection, then all Package references are removed from the Pool. If omitted, any existing Package references are left unchanged.
+     * Get a list of Packages to be installed on each Compute Node in the Pool. Changes to Package references affect all new Nodes joining the Pool, but do not affect Compute Nodes that are already in the Pool until they are rebooted or reimaged. If this element is present, it replaces any existing Package references. If you specify an empty collection, then all Package references are removed from the Pool. If omitted, any existing Package references are left unchanged.
      *
      * @return the applicationPackageReferences value
      */
@@ -112,7 +111,7 @@ public class PoolPatchParameter {
     }
 
     /**
-     * Set changes to Package references affect all new Nodes joining the Pool, but do not affect Compute Nodes that are already in the Pool until they are rebooted or reimaged. If this element is present, it replaces any existing Package references. If you specify an empty collection, then all Package references are removed from the Pool. If omitted, any existing Package references are left unchanged.
+     * Set a list of Packages to be installed on each Compute Node in the Pool. Changes to Package references affect all new Nodes joining the Pool, but do not affect Compute Nodes that are already in the Pool until they are rebooted or reimaged. If this element is present, it replaces any existing Package references. If you specify an empty collection, then all Package references are removed from the Pool. If omitted, any existing Package references are left unchanged.
      *
      * @param applicationPackageReferences the applicationPackageReferences value to set
      * @return the PoolPatchParameter object itself.
@@ -123,7 +122,7 @@ public class PoolPatchParameter {
     }
 
     /**
-     * Get if this element is present, it replaces any existing metadata configured on the Pool. If you specify an empty collection, any metadata is removed from the Pool. If omitted, any existing metadata is left unchanged.
+     * Get a list of name-value pairs associated with the Pool as metadata. If this element is present, it replaces any existing metadata configured on the Pool. If you specify an empty collection, any metadata is removed from the Pool. If omitted, any existing metadata is left unchanged.
      *
      * @return the metadata value
      */
@@ -132,7 +131,7 @@ public class PoolPatchParameter {
     }
 
     /**
-     * Set if this element is present, it replaces any existing metadata configured on the Pool. If you specify an empty collection, any metadata is removed from the Pool. If omitted, any existing metadata is left unchanged.
+     * Set a list of name-value pairs associated with the Pool as metadata. If this element is present, it replaces any existing metadata configured on the Pool. If you specify an empty collection, any metadata is removed from the Pool. If omitted, any existing metadata is left unchanged.
      *
      * @param metadata the metadata value to set
      * @return the PoolPatchParameter object itself.

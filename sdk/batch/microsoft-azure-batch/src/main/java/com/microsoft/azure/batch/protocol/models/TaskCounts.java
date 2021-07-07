@@ -47,7 +47,7 @@ public class TaskCounts {
     private int failed;
 
     /**
-     * Get the active value.
+     * Get the number of Tasks in the active state.
      *
      * @return the active value
      */
@@ -56,7 +56,7 @@ public class TaskCounts {
     }
 
     /**
-     * Set the active value.
+     * Set the number of Tasks in the active state.
      *
      * @param active the active value to set
      * @return the TaskCounts object itself.
@@ -67,7 +67,7 @@ public class TaskCounts {
     }
 
     /**
-     * Get the running value.
+     * Get the number of Tasks in the running or preparing state.
      *
      * @return the running value
      */
@@ -76,7 +76,7 @@ public class TaskCounts {
     }
 
     /**
-     * Set the running value.
+     * Set the number of Tasks in the running or preparing state.
      *
      * @param running the running value to set
      * @return the TaskCounts object itself.
@@ -87,7 +87,7 @@ public class TaskCounts {
     }
 
     /**
-     * Get the completed value.
+     * Get the number of Tasks in the completed state.
      *
      * @return the completed value
      */
@@ -96,7 +96,7 @@ public class TaskCounts {
     }
 
     /**
-     * Set the completed value.
+     * Set the number of Tasks in the completed state.
      *
      * @param completed the completed value to set
      * @return the TaskCounts object itself.
@@ -107,7 +107,7 @@ public class TaskCounts {
     }
 
     /**
-     * Get the succeeded value.
+     * Get the number of Tasks which succeeded. A Task succeeds if its result (found in the executionInfo property) is 'success'.
      *
      * @return the succeeded value
      */
@@ -116,7 +116,7 @@ public class TaskCounts {
     }
 
     /**
-     * Set the succeeded value.
+     * Set the number of Tasks which succeeded. A Task succeeds if its result (found in the executionInfo property) is 'success'.
      *
      * @param succeeded the succeeded value to set
      * @return the TaskCounts object itself.
@@ -127,7 +127,7 @@ public class TaskCounts {
     }
 
     /**
-     * Get the failed value.
+     * Get the number of Tasks which failed. A Task fails if its result (found in the executionInfo property) is 'failure'.
      *
      * @return the failed value
      */
@@ -136,7 +136,7 @@ public class TaskCounts {
     }
 
     /**
-     * Set the failed value.
+     * Set the number of Tasks which failed. A Task fails if its result (found in the executionInfo property) is 'failure'.
      *
      * @param failed the failed value to set
      * @return the TaskCounts object itself.

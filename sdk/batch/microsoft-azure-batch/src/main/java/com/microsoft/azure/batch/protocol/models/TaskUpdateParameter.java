@@ -15,16 +15,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class TaskUpdateParameter {
     /**
-     * Constraints that apply to this Task.
-     * If omitted, the Task is given the default constraints. For
-     * multi-instance Tasks, updating the retention time applies only to the
-     * primary Task and not subtasks.
+     * Constraints that apply to this Task. If omitted, the Task is given the
+     * default constraints. For multi-instance Tasks, updating the retention
+     * time applies only to the primary Task and not subtasks.
      */
     @JsonProperty(value = "constraints")
     private TaskConstraints constraints;
 
     /**
-     * Get if omitted, the Task is given the default constraints. For multi-instance Tasks, updating the retention time applies only to the primary Task and not subtasks.
+     * Get constraints that apply to this Task. If omitted, the Task is given the default constraints. For multi-instance Tasks, updating the retention time applies only to the primary Task and not subtasks.
      *
      * @return the constraints value
      */
@@ -33,7 +32,7 @@ public class TaskUpdateParameter {
     }
 
     /**
-     * Set if omitted, the Task is given the default constraints. For multi-instance Tasks, updating the retention time applies only to the primary Task and not subtasks.
+     * Set constraints that apply to this Task. If omitted, the Task is given the default constraints. For multi-instance Tasks, updating the retention time applies only to the primary Task and not subtasks.
      *
      * @param constraints the constraints value to set
      * @return the TaskUpdateParameter object itself.

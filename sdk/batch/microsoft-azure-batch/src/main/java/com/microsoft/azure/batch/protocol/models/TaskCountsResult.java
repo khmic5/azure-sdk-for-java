@@ -27,7 +27,7 @@ public class TaskCountsResult {
     private TaskSlotCounts taskSlotCounts;
 
     /**
-     * Get the taskCounts value.
+     * Get the number of Tasks per state.
      *
      * @return the taskCounts value
      */
@@ -36,7 +36,7 @@ public class TaskCountsResult {
     }
 
     /**
-     * Set the taskCounts value.
+     * Set the number of Tasks per state.
      *
      * @param taskCounts the taskCounts value to set
      * @return the TaskCountsResult object itself.
@@ -47,7 +47,7 @@ public class TaskCountsResult {
     }
 
     /**
-     * Get the taskSlotCounts value.
+     * Get the number of TaskSlots required by Tasks per state.
      *
      * @return the taskSlotCounts value
      */
@@ -56,7 +56,7 @@ public class TaskCountsResult {
     }
 
     /**
-     * Set the taskSlotCounts value.
+     * Set the number of TaskSlots required by Tasks per state.
      *
      * @param taskSlotCounts the taskSlotCounts value to set
      * @return the TaskCountsResult object itself.

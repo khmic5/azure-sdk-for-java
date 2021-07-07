@@ -17,9 +17,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class CloudJob {
     /**
-     * A string that uniquely identifies the Job within the Account.
-     * The ID is case-preserving and case-insensitive (that is, you may not
-     * have two IDs within an Account that differ only by case).
+     * A string that uniquely identifies the Job within the Account. The ID is
+     * case-preserving and case-insensitive (that is, you may not have two IDs
+     * within an Account that differ only by case).
      */
     @JsonProperty(value = "id")
     private String id;
@@ -44,20 +44,19 @@ public class CloudJob {
     private String url;
 
     /**
-     * The ETag of the Job.
-     * This is an opaque string. You can use it to detect whether the Job has
-     * changed between requests. In particular, you can be pass the ETag when
-     * updating a Job to specify that your changes should take effect only if
-     * nobody else has modified the Job in the meantime.
+     * The ETag of the Job. This is an opaque string. You can use it to detect
+     * whether the Job has changed between requests. In particular, you can be
+     * pass the ETag when updating a Job to specify that your changes should
+     * take effect only if nobody else has modified the Job in the meantime.
      */
     @JsonProperty(value = "eTag")
     private String eTag;
 
     /**
-     * The last modified time of the Job.
-     * This is the last time at which the Job level data, such as the Job state
-     * or priority, changed. It does not factor in task-level changes such as
-     * adding new Tasks or Tasks changing state.
+     * The last modified time of the Job. This is the last time at which the
+     * Job level data, such as the Job state or priority, changed. It does not
+     * factor in task-level changes such as adding new Tasks or Tasks changing
+     * state.
      */
     @JsonProperty(value = "lastModified")
     private DateTime lastModified;
@@ -69,9 +68,9 @@ public class CloudJob {
     private DateTime creationTime;
 
     /**
-     * The current state of the Job.
-     * Possible values include: 'active', 'disabling', 'disabled', 'enabling',
-     * 'terminating', 'completed', 'deleting'.
+     * The current state of the Job. Possible values include: 'active',
+     * 'disabling', 'disabled', 'enabling', 'terminating', 'completed',
+     * 'deleting'.
      */
     @JsonProperty(value = "state")
     private JobState state;
@@ -83,29 +82,39 @@ public class CloudJob {
     private DateTime stateTransitionTime;
 
     /**
-     * The previous state of the Job.
-     * This property is not set if the Job is in its initial Active state.
-     * Possible values include: 'active', 'disabling', 'disabled', 'enabling',
-     * 'terminating', 'completed', 'deleting'.
+     * The previous state of the Job. This property is not set if the Job is in
+     * its initial Active state. Possible values include: 'active',
+     * 'disabling', 'disabled', 'enabling', 'terminating', 'completed',
+     * 'deleting'.
      */
     @JsonProperty(value = "previousState")
     private JobState previousState;
 
     /**
-     * The time at which the Job entered its previous state.
-     * This property is not set if the Job is in its initial Active state.
+     * The time at which the Job entered its previous state. This property is
+     * not set if the Job is in its initial Active state.
      */
     @JsonProperty(value = "previousStateTransitionTime")
     private DateTime previousStateTransitionTime;
 
     /**
-     * The priority of the Job.
-     * Priority values can range from -1000 to 1000, with -1000 being the
-     * lowest priority and 1000 being the highest priority. The default value
-     * is 0.
+     * The priority of the Job. Priority values can range from -1000 to 1000,
+     * with -1000 being the lowest priority and 1000 being the highest
+     * priority. The default value is 0.
      */
     @JsonProperty(value = "priority")
     private Integer priority;
+
+    /**
+     * The maximum number of tasks that can be executed in parallel for the
+     * job. The value of maxParallelTasks must be -1 or greater than 0 if
+     * specified. If not specified, the default value is -1, which means
+     * there's no limit to the number of tasks that can be run at once. You can
+     * update a job's maxParallelTasks after it has been created using the
+     * update job API.
+     */
+    @JsonProperty(value = "maxParallelTasks")
+    private Integer maxParallelTasks;
 
     /**
      * The execution constraints for the Job.
@@ -120,17 +129,15 @@ public class CloudJob {
     private JobManagerTask jobManagerTask;
 
     /**
-     * The Job Preparation Task.
-     * The Job Preparation Task is a special Task run on each Compute Node
-     * before any other Task of the Job.
+     * The Job Preparation Task. This is a special Task run on each Compute
+     * Node before any other Task of the Job.
      */
     @JsonProperty(value = "jobPreparationTask")
     private JobPreparationTask jobPreparationTask;
 
     /**
-     * The Job Release Task.
-     * The Job Release Task is a special Task run at the end of the Job on each
-     * Compute Node that has run any other Task of the Job.
+     * The Job Release Task. This is a special Task run at the end of the Job
+     * on each Compute Node that has run any other Task of the Job.
      */
     @JsonProperty(value = "jobReleaseTask")
     private JobReleaseTask jobReleaseTask;
@@ -138,9 +145,9 @@ public class CloudJob {
     /**
      * The list of common environment variable settings. These environment
      * variables are set for all Tasks in the Job (including the Job Manager,
-     * Job Preparation and Job Release Tasks).
-     * Individual Tasks can override an environment setting specified here by
-     * specifying the same setting name with a different value.
+     * Job Preparation and Job Release Tasks). Individual Tasks can override an
+     * environment setting specified here by specifying the same setting name
+     * with a different value.
      */
     @JsonProperty(value = "commonEnvironmentSettings")
     private List<EnvironmentSetting> commonEnvironmentSettings;
@@ -153,9 +160,8 @@ public class CloudJob {
 
     /**
      * The action the Batch service should take when all Tasks in the Job are
-     * in the completed state.
-     * The default is noaction. Possible values include: 'noAction',
-     * 'terminateJob'.
+     * in the completed state. The default is noaction. Possible values
+     * include: 'noAction', 'terminateJob'.
      */
     @JsonProperty(value = "onAllTasksComplete")
     private OnAllTasksComplete onAllTasksComplete;
@@ -178,9 +184,9 @@ public class CloudJob {
     private JobNetworkConfiguration networkConfiguration;
 
     /**
-     * A list of name-value pairs associated with the Job as metadata.
-     * The Batch service does not assign any meaning to metadata; it is solely
-     * for the use of user code.
+     * A list of name-value pairs associated with the Job as metadata. The
+     * Batch service does not assign any meaning to metadata; it is solely for
+     * the use of user code.
      */
     @JsonProperty(value = "metadata")
     private List<MetadataItem> metadata;
@@ -192,9 +198,9 @@ public class CloudJob {
     private JobExecutionInformation executionInfo;
 
     /**
-     * Resource usage statistics for the entire lifetime of the Job.
-     * This property is populated only if the CloudJob was retrieved with an
-     * expand clause including the 'stats' attribute; otherwise it is null. The
+     * Resource usage statistics for the entire lifetime of the Job. This
+     * property is populated only if the CloudJob was retrieved with an expand
+     * clause including the 'stats' attribute; otherwise it is null. The
      * statistics may not be immediately available. The Batch service performs
      * periodic roll-up of statistics. The typical delay is about 30 minutes.
      */
@@ -202,7 +208,7 @@ public class CloudJob {
     private JobStatistics stats;
 
     /**
-     * Get the ID is case-preserving and case-insensitive (that is, you may not have two IDs within an Account that differ only by case).
+     * Get a string that uniquely identifies the Job within the Account. The ID is case-preserving and case-insensitive (that is, you may not have two IDs within an Account that differ only by case).
      *
      * @return the id value
      */
@@ -211,7 +217,7 @@ public class CloudJob {
     }
 
     /**
-     * Set the ID is case-preserving and case-insensitive (that is, you may not have two IDs within an Account that differ only by case).
+     * Set a string that uniquely identifies the Job within the Account. The ID is case-preserving and case-insensitive (that is, you may not have two IDs within an Account that differ only by case).
      *
      * @param id the id value to set
      * @return the CloudJob object itself.
@@ -222,7 +228,7 @@ public class CloudJob {
     }
 
     /**
-     * Get the displayName value.
+     * Get the display name for the Job.
      *
      * @return the displayName value
      */
@@ -231,7 +237,7 @@ public class CloudJob {
     }
 
     /**
-     * Set the displayName value.
+     * Set the display name for the Job.
      *
      * @param displayName the displayName value to set
      * @return the CloudJob object itself.
@@ -242,7 +248,7 @@ public class CloudJob {
     }
 
     /**
-     * Get the usesTaskDependencies value.
+     * Get whether Tasks in the Job can define dependencies on each other. The default is false.
      *
      * @return the usesTaskDependencies value
      */
@@ -251,7 +257,7 @@ public class CloudJob {
     }
 
     /**
-     * Set the usesTaskDependencies value.
+     * Set whether Tasks in the Job can define dependencies on each other. The default is false.
      *
      * @param usesTaskDependencies the usesTaskDependencies value to set
      * @return the CloudJob object itself.
@@ -262,7 +268,7 @@ public class CloudJob {
     }
 
     /**
-     * Get the url value.
+     * Get the URL of the Job.
      *
      * @return the url value
      */
@@ -271,7 +277,7 @@ public class CloudJob {
     }
 
     /**
-     * Set the url value.
+     * Set the URL of the Job.
      *
      * @param url the url value to set
      * @return the CloudJob object itself.
@@ -282,7 +288,7 @@ public class CloudJob {
     }
 
     /**
-     * Get this is an opaque string. You can use it to detect whether the Job has changed between requests. In particular, you can be pass the ETag when updating a Job to specify that your changes should take effect only if nobody else has modified the Job in the meantime.
+     * Get the ETag of the Job. This is an opaque string. You can use it to detect whether the Job has changed between requests. In particular, you can be pass the ETag when updating a Job to specify that your changes should take effect only if nobody else has modified the Job in the meantime.
      *
      * @return the eTag value
      */
@@ -291,7 +297,7 @@ public class CloudJob {
     }
 
     /**
-     * Set this is an opaque string. You can use it to detect whether the Job has changed between requests. In particular, you can be pass the ETag when updating a Job to specify that your changes should take effect only if nobody else has modified the Job in the meantime.
+     * Set the ETag of the Job. This is an opaque string. You can use it to detect whether the Job has changed between requests. In particular, you can be pass the ETag when updating a Job to specify that your changes should take effect only if nobody else has modified the Job in the meantime.
      *
      * @param eTag the eTag value to set
      * @return the CloudJob object itself.
@@ -302,7 +308,7 @@ public class CloudJob {
     }
 
     /**
-     * Get this is the last time at which the Job level data, such as the Job state or priority, changed. It does not factor in task-level changes such as adding new Tasks or Tasks changing state.
+     * Get the last modified time of the Job. This is the last time at which the Job level data, such as the Job state or priority, changed. It does not factor in task-level changes such as adding new Tasks or Tasks changing state.
      *
      * @return the lastModified value
      */
@@ -311,7 +317,7 @@ public class CloudJob {
     }
 
     /**
-     * Set this is the last time at which the Job level data, such as the Job state or priority, changed. It does not factor in task-level changes such as adding new Tasks or Tasks changing state.
+     * Set the last modified time of the Job. This is the last time at which the Job level data, such as the Job state or priority, changed. It does not factor in task-level changes such as adding new Tasks or Tasks changing state.
      *
      * @param lastModified the lastModified value to set
      * @return the CloudJob object itself.
@@ -322,7 +328,7 @@ public class CloudJob {
     }
 
     /**
-     * Get the creationTime value.
+     * Get the creation time of the Job.
      *
      * @return the creationTime value
      */
@@ -331,7 +337,7 @@ public class CloudJob {
     }
 
     /**
-     * Set the creationTime value.
+     * Set the creation time of the Job.
      *
      * @param creationTime the creationTime value to set
      * @return the CloudJob object itself.
@@ -342,7 +348,7 @@ public class CloudJob {
     }
 
     /**
-     * Get possible values include: 'active', 'disabling', 'disabled', 'enabling', 'terminating', 'completed', 'deleting'.
+     * Get the current state of the Job. Possible values include: 'active', 'disabling', 'disabled', 'enabling', 'terminating', 'completed', 'deleting'.
      *
      * @return the state value
      */
@@ -351,7 +357,7 @@ public class CloudJob {
     }
 
     /**
-     * Set possible values include: 'active', 'disabling', 'disabled', 'enabling', 'terminating', 'completed', 'deleting'.
+     * Set the current state of the Job. Possible values include: 'active', 'disabling', 'disabled', 'enabling', 'terminating', 'completed', 'deleting'.
      *
      * @param state the state value to set
      * @return the CloudJob object itself.
@@ -362,7 +368,7 @@ public class CloudJob {
     }
 
     /**
-     * Get the stateTransitionTime value.
+     * Get the time at which the Job entered its current state.
      *
      * @return the stateTransitionTime value
      */
@@ -371,7 +377,7 @@ public class CloudJob {
     }
 
     /**
-     * Set the stateTransitionTime value.
+     * Set the time at which the Job entered its current state.
      *
      * @param stateTransitionTime the stateTransitionTime value to set
      * @return the CloudJob object itself.
@@ -382,7 +388,7 @@ public class CloudJob {
     }
 
     /**
-     * Get this property is not set if the Job is in its initial Active state. Possible values include: 'active', 'disabling', 'disabled', 'enabling', 'terminating', 'completed', 'deleting'.
+     * Get the previous state of the Job. This property is not set if the Job is in its initial Active state. Possible values include: 'active', 'disabling', 'disabled', 'enabling', 'terminating', 'completed', 'deleting'.
      *
      * @return the previousState value
      */
@@ -391,7 +397,7 @@ public class CloudJob {
     }
 
     /**
-     * Set this property is not set if the Job is in its initial Active state. Possible values include: 'active', 'disabling', 'disabled', 'enabling', 'terminating', 'completed', 'deleting'.
+     * Set the previous state of the Job. This property is not set if the Job is in its initial Active state. Possible values include: 'active', 'disabling', 'disabled', 'enabling', 'terminating', 'completed', 'deleting'.
      *
      * @param previousState the previousState value to set
      * @return the CloudJob object itself.
@@ -402,7 +408,7 @@ public class CloudJob {
     }
 
     /**
-     * Get this property is not set if the Job is in its initial Active state.
+     * Get the time at which the Job entered its previous state. This property is not set if the Job is in its initial Active state.
      *
      * @return the previousStateTransitionTime value
      */
@@ -411,7 +417,7 @@ public class CloudJob {
     }
 
     /**
-     * Set this property is not set if the Job is in its initial Active state.
+     * Set the time at which the Job entered its previous state. This property is not set if the Job is in its initial Active state.
      *
      * @param previousStateTransitionTime the previousStateTransitionTime value to set
      * @return the CloudJob object itself.
@@ -422,7 +428,7 @@ public class CloudJob {
     }
 
     /**
-     * Get priority values can range from -1000 to 1000, with -1000 being the lowest priority and 1000 being the highest priority. The default value is 0.
+     * Get the priority of the Job. Priority values can range from -1000 to 1000, with -1000 being the lowest priority and 1000 being the highest priority. The default value is 0.
      *
      * @return the priority value
      */
@@ -431,7 +437,7 @@ public class CloudJob {
     }
 
     /**
-     * Set priority values can range from -1000 to 1000, with -1000 being the lowest priority and 1000 being the highest priority. The default value is 0.
+     * Set the priority of the Job. Priority values can range from -1000 to 1000, with -1000 being the lowest priority and 1000 being the highest priority. The default value is 0.
      *
      * @param priority the priority value to set
      * @return the CloudJob object itself.
@@ -442,7 +448,27 @@ public class CloudJob {
     }
 
     /**
-     * Get the constraints value.
+     * Get the maximum number of tasks that can be executed in parallel for the job. The value of maxParallelTasks must be -1 or greater than 0 if specified. If not specified, the default value is -1, which means there's no limit to the number of tasks that can be run at once. You can update a job's maxParallelTasks after it has been created using the update job API.
+     *
+     * @return the maxParallelTasks value
+     */
+    public Integer maxParallelTasks() {
+        return this.maxParallelTasks;
+    }
+
+    /**
+     * Set the maximum number of tasks that can be executed in parallel for the job. The value of maxParallelTasks must be -1 or greater than 0 if specified. If not specified, the default value is -1, which means there's no limit to the number of tasks that can be run at once. You can update a job's maxParallelTasks after it has been created using the update job API.
+     *
+     * @param maxParallelTasks the maxParallelTasks value to set
+     * @return the CloudJob object itself.
+     */
+    public CloudJob withMaxParallelTasks(Integer maxParallelTasks) {
+        this.maxParallelTasks = maxParallelTasks;
+        return this;
+    }
+
+    /**
+     * Get the execution constraints for the Job.
      *
      * @return the constraints value
      */
@@ -451,7 +477,7 @@ public class CloudJob {
     }
 
     /**
-     * Set the constraints value.
+     * Set the execution constraints for the Job.
      *
      * @param constraints the constraints value to set
      * @return the CloudJob object itself.
@@ -462,7 +488,7 @@ public class CloudJob {
     }
 
     /**
-     * Get the jobManagerTask value.
+     * Get details of a Job Manager Task to be launched when the Job is started.
      *
      * @return the jobManagerTask value
      */
@@ -471,7 +497,7 @@ public class CloudJob {
     }
 
     /**
-     * Set the jobManagerTask value.
+     * Set details of a Job Manager Task to be launched when the Job is started.
      *
      * @param jobManagerTask the jobManagerTask value to set
      * @return the CloudJob object itself.
@@ -482,7 +508,7 @@ public class CloudJob {
     }
 
     /**
-     * Get the Job Preparation Task is a special Task run on each Compute Node before any other Task of the Job.
+     * Get the Job Preparation Task. This is a special Task run on each Compute Node before any other Task of the Job.
      *
      * @return the jobPreparationTask value
      */
@@ -491,7 +517,7 @@ public class CloudJob {
     }
 
     /**
-     * Set the Job Preparation Task is a special Task run on each Compute Node before any other Task of the Job.
+     * Set the Job Preparation Task. This is a special Task run on each Compute Node before any other Task of the Job.
      *
      * @param jobPreparationTask the jobPreparationTask value to set
      * @return the CloudJob object itself.
@@ -502,7 +528,7 @@ public class CloudJob {
     }
 
     /**
-     * Get the Job Release Task is a special Task run at the end of the Job on each Compute Node that has run any other Task of the Job.
+     * Get the Job Release Task. This is a special Task run at the end of the Job on each Compute Node that has run any other Task of the Job.
      *
      * @return the jobReleaseTask value
      */
@@ -511,7 +537,7 @@ public class CloudJob {
     }
 
     /**
-     * Set the Job Release Task is a special Task run at the end of the Job on each Compute Node that has run any other Task of the Job.
+     * Set the Job Release Task. This is a special Task run at the end of the Job on each Compute Node that has run any other Task of the Job.
      *
      * @param jobReleaseTask the jobReleaseTask value to set
      * @return the CloudJob object itself.
@@ -522,7 +548,7 @@ public class CloudJob {
     }
 
     /**
-     * Get individual Tasks can override an environment setting specified here by specifying the same setting name with a different value.
+     * Get the list of common environment variable settings. These environment variables are set for all Tasks in the Job (including the Job Manager, Job Preparation and Job Release Tasks). Individual Tasks can override an environment setting specified here by specifying the same setting name with a different value.
      *
      * @return the commonEnvironmentSettings value
      */
@@ -531,7 +557,7 @@ public class CloudJob {
     }
 
     /**
-     * Set individual Tasks can override an environment setting specified here by specifying the same setting name with a different value.
+     * Set the list of common environment variable settings. These environment variables are set for all Tasks in the Job (including the Job Manager, Job Preparation and Job Release Tasks). Individual Tasks can override an environment setting specified here by specifying the same setting name with a different value.
      *
      * @param commonEnvironmentSettings the commonEnvironmentSettings value to set
      * @return the CloudJob object itself.
@@ -542,7 +568,7 @@ public class CloudJob {
     }
 
     /**
-     * Get the poolInfo value.
+     * Get the Pool settings associated with the Job.
      *
      * @return the poolInfo value
      */
@@ -551,7 +577,7 @@ public class CloudJob {
     }
 
     /**
-     * Set the poolInfo value.
+     * Set the Pool settings associated with the Job.
      *
      * @param poolInfo the poolInfo value to set
      * @return the CloudJob object itself.
@@ -562,7 +588,7 @@ public class CloudJob {
     }
 
     /**
-     * Get the default is noaction. Possible values include: 'noAction', 'terminateJob'.
+     * Get the action the Batch service should take when all Tasks in the Job are in the completed state. The default is noaction. Possible values include: 'noAction', 'terminateJob'.
      *
      * @return the onAllTasksComplete value
      */
@@ -571,7 +597,7 @@ public class CloudJob {
     }
 
     /**
-     * Set the default is noaction. Possible values include: 'noAction', 'terminateJob'.
+     * Set the action the Batch service should take when all Tasks in the Job are in the completed state. The default is noaction. Possible values include: 'noAction', 'terminateJob'.
      *
      * @param onAllTasksComplete the onAllTasksComplete value to set
      * @return the CloudJob object itself.
@@ -582,7 +608,7 @@ public class CloudJob {
     }
 
     /**
-     * Get a Task is considered to have failed if has a failureInfo. A failureInfo is set if the Task completes with a non-zero exit code after exhausting its retry count, or if there was an error starting the Task, for example due to a resource file download error. The default is noaction. Possible values include: 'noAction', 'performExitOptionsJobAction'.
+     * Get the action the Batch service should take when any Task in the Job fails. A Task is considered to have failed if has a failureInfo. A failureInfo is set if the Task completes with a non-zero exit code after exhausting its retry count, or if there was an error starting the Task, for example due to a resource file download error. The default is noaction. Possible values include: 'noAction', 'performExitOptionsJobAction'.
      *
      * @return the onTaskFailure value
      */
@@ -591,7 +617,7 @@ public class CloudJob {
     }
 
     /**
-     * Set a Task is considered to have failed if has a failureInfo. A failureInfo is set if the Task completes with a non-zero exit code after exhausting its retry count, or if there was an error starting the Task, for example due to a resource file download error. The default is noaction. Possible values include: 'noAction', 'performExitOptionsJobAction'.
+     * Set the action the Batch service should take when any Task in the Job fails. A Task is considered to have failed if has a failureInfo. A failureInfo is set if the Task completes with a non-zero exit code after exhausting its retry count, or if there was an error starting the Task, for example due to a resource file download error. The default is noaction. Possible values include: 'noAction', 'performExitOptionsJobAction'.
      *
      * @param onTaskFailure the onTaskFailure value to set
      * @return the CloudJob object itself.
@@ -602,7 +628,7 @@ public class CloudJob {
     }
 
     /**
-     * Get the networkConfiguration value.
+     * Get the network configuration for the Job.
      *
      * @return the networkConfiguration value
      */
@@ -611,7 +637,7 @@ public class CloudJob {
     }
 
     /**
-     * Set the networkConfiguration value.
+     * Set the network configuration for the Job.
      *
      * @param networkConfiguration the networkConfiguration value to set
      * @return the CloudJob object itself.
@@ -622,7 +648,7 @@ public class CloudJob {
     }
 
     /**
-     * Get the Batch service does not assign any meaning to metadata; it is solely for the use of user code.
+     * Get a list of name-value pairs associated with the Job as metadata. The Batch service does not assign any meaning to metadata; it is solely for the use of user code.
      *
      * @return the metadata value
      */
@@ -631,7 +657,7 @@ public class CloudJob {
     }
 
     /**
-     * Set the Batch service does not assign any meaning to metadata; it is solely for the use of user code.
+     * Set a list of name-value pairs associated with the Job as metadata. The Batch service does not assign any meaning to metadata; it is solely for the use of user code.
      *
      * @param metadata the metadata value to set
      * @return the CloudJob object itself.
@@ -642,7 +668,7 @@ public class CloudJob {
     }
 
     /**
-     * Get the executionInfo value.
+     * Get the execution information for the Job.
      *
      * @return the executionInfo value
      */
@@ -651,7 +677,7 @@ public class CloudJob {
     }
 
     /**
-     * Set the executionInfo value.
+     * Set the execution information for the Job.
      *
      * @param executionInfo the executionInfo value to set
      * @return the CloudJob object itself.
@@ -662,7 +688,7 @@ public class CloudJob {
     }
 
     /**
-     * Get this property is populated only if the CloudJob was retrieved with an expand clause including the 'stats' attribute; otherwise it is null. The statistics may not be immediately available. The Batch service performs periodic roll-up of statistics. The typical delay is about 30 minutes.
+     * Get resource usage statistics for the entire lifetime of the Job. This property is populated only if the CloudJob was retrieved with an expand clause including the 'stats' attribute; otherwise it is null. The statistics may not be immediately available. The Batch service performs periodic roll-up of statistics. The typical delay is about 30 minutes.
      *
      * @return the stats value
      */
@@ -671,7 +697,7 @@ public class CloudJob {
     }
 
     /**
-     * Set this property is populated only if the CloudJob was retrieved with an expand clause including the 'stats' attribute; otherwise it is null. The statistics may not be immediately available. The Batch service performs periodic roll-up of statistics. The typical delay is about 30 minutes.
+     * Set resource usage statistics for the entire lifetime of the Job. This property is populated only if the CloudJob was retrieved with an expand clause including the 'stats' attribute; otherwise it is null. The statistics may not be immediately available. The Batch service performs periodic roll-up of statistics. The typical delay is about 30 minutes.
      *
      * @param stats the stats value to set
      * @return the CloudJob object itself.

@@ -16,15 +16,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class NodeDisableSchedulingParameter {
     /**
      * What to do with currently running Tasks when disabling Task scheduling
-     * on the Compute Node.
-     * The default value is requeue. Possible values include: 'requeue',
-     * 'terminate', 'taskCompletion'.
+     * on the Compute Node. The default value is requeue. Possible values
+     * include: 'requeue', 'terminate', 'taskCompletion'.
      */
     @JsonProperty(value = "nodeDisableSchedulingOption")
     private DisableComputeNodeSchedulingOption nodeDisableSchedulingOption;
 
     /**
-     * Get the default value is requeue. Possible values include: 'requeue', 'terminate', 'taskCompletion'.
+     * Get what to do with currently running Tasks when disabling Task scheduling on the Compute Node. The default value is requeue. Possible values include: 'requeue', 'terminate', 'taskCompletion'.
      *
      * @return the nodeDisableSchedulingOption value
      */
@@ -33,7 +32,7 @@ public class NodeDisableSchedulingParameter {
     }
 
     /**
-     * Set the default value is requeue. Possible values include: 'requeue', 'terminate', 'taskCompletion'.
+     * Set what to do with currently running Tasks when disabling Task scheduling on the Compute Node. The default value is requeue. Possible values include: 'requeue', 'terminate', 'taskCompletion'.
      *
      * @param nodeDisableSchedulingOption the nodeDisableSchedulingOption value to set
      * @return the NodeDisableSchedulingParameter object itself.

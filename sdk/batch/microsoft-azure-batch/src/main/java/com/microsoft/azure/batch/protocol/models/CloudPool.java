@@ -18,19 +18,18 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class CloudPool {
     /**
-     * A string that uniquely identifies the Pool within the Account.
-     * The ID can contain any combination of alphanumeric characters including
-     * hyphens and underscores, and cannot contain more than 64 characters. The
-     * ID is case-preserving and case-insensitive (that is, you may not have
-     * two IDs within an Account that differ only by case).
+     * A string that uniquely identifies the Pool within the Account. The ID
+     * can contain any combination of alphanumeric characters including hyphens
+     * and underscores, and cannot contain more than 64 characters. The ID is
+     * case-preserving and case-insensitive (that is, you may not have two IDs
+     * within an Account that differ only by case).
      */
     @JsonProperty(value = "id")
     private String id;
 
     /**
-     * The display name for the Pool.
-     * The display name need not be unique and can contain any Unicode
-     * characters up to a maximum length of 1024.
+     * The display name for the Pool. The name need not be unique and can
+     * contain any Unicode characters up to a maximum length of 1024.
      */
     @JsonProperty(value = "displayName")
     private String displayName;
@@ -42,20 +41,19 @@ public class CloudPool {
     private String url;
 
     /**
-     * The ETag of the Pool.
-     * This is an opaque string. You can use it to detect whether the Pool has
-     * changed between requests. In particular, you can be pass the ETag when
-     * updating a Pool to specify that your changes should take effect only if
-     * nobody else has modified the Pool in the meantime.
+     * The ETag of the Pool. This is an opaque string. You can use it to detect
+     * whether the Pool has changed between requests. In particular, you can be
+     * pass the ETag when updating a Pool to specify that your changes should
+     * take effect only if nobody else has modified the Pool in the meantime.
      */
     @JsonProperty(value = "eTag")
     private String eTag;
 
     /**
-     * The last modified time of the Pool.
-     * This is the last time at which the Pool level data, such as the
-     * targetDedicatedNodes or enableAutoscale settings, changed. It does not
-     * factor in node-level changes such as a Compute Node changing state.
+     * The last modified time of the Pool. This is the last time at which the
+     * Pool level data, such as the targetDedicatedNodes or enableAutoscale
+     * settings, changed. It does not factor in node-level changes such as a
+     * Compute Node changing state.
      */
     @JsonProperty(value = "lastModified")
     private DateTime lastModified;
@@ -67,8 +65,8 @@ public class CloudPool {
     private DateTime creationTime;
 
     /**
-     * The current state of the Pool.
-     * Possible values include: 'active', 'deleting'.
+     * The current state of the Pool. Possible values include: 'active',
+     * 'deleting'.
      */
     @JsonProperty(value = "state")
     private PoolState state;
@@ -80,8 +78,8 @@ public class CloudPool {
     private DateTime stateTransitionTime;
 
     /**
-     * Whether the Pool is resizing.
-     * Possible values include: 'steady', 'resizing', 'stopping'.
+     * Whether the Pool is resizing. Possible values include: 'steady',
+     * 'resizing', 'stopping'.
      */
     @JsonProperty(value = "allocationState")
     private AllocationState allocationState;
@@ -94,46 +92,44 @@ public class CloudPool {
 
     /**
      * The size of virtual machines in the Pool. All virtual machines in a Pool
-     * are the same size.
-     * For information about available sizes of virtual machines in Pools, see
-     * Choose a VM size for Compute Nodes in an Azure Batch Pool
-     * (https://docs.microsoft.com/azure/batch/batch-pool-vm-sizes).
+     * are the same size. For information about available sizes of virtual
+     * machines in Pools, see Choose a VM size for Compute Nodes in an Azure
+     * Batch Pool (https://docs.microsoft.com/azure/batch/batch-pool-vm-sizes).
      */
     @JsonProperty(value = "vmSize")
     private String vmSize;
 
     /**
-     * The cloud service configuration for the Pool.
-     * This property and virtualMachineConfiguration are mutually exclusive and
-     * one of the properties must be specified. This property cannot be
-     * specified if the Batch Account was created with its poolAllocationMode
-     * property set to 'UserSubscription'.
+     * The cloud service configuration for the Pool. This property and
+     * virtualMachineConfiguration are mutually exclusive and one of the
+     * properties must be specified. This property cannot be specified if the
+     * Batch Account was created with its poolAllocationMode property set to
+     * 'UserSubscription'.
      */
     @JsonProperty(value = "cloudServiceConfiguration")
     private CloudServiceConfiguration cloudServiceConfiguration;
 
     /**
-     * The virtual machine configuration for the Pool.
-     * This property and cloudServiceConfiguration are mutually exclusive and
-     * one of the properties must be specified.
+     * The virtual machine configuration for the Pool. This property and
+     * cloudServiceConfiguration are mutually exclusive and one of the
+     * properties must be specified.
      */
     @JsonProperty(value = "virtualMachineConfiguration")
     private VirtualMachineConfiguration virtualMachineConfiguration;
 
     /**
-     * The timeout for allocation of Compute Nodes to the Pool.
-     * This is the timeout for the most recent resize operation. (The initial
-     * sizing when the Pool is created counts as a resize.) The default value
-     * is 15 minutes.
+     * The timeout for allocation of Compute Nodes to the Pool. This is the
+     * timeout for the most recent resize operation. (The initial sizing when
+     * the Pool is created counts as a resize.) The default value is 15
+     * minutes.
      */
     @JsonProperty(value = "resizeTimeout")
     private Period resizeTimeout;
 
     /**
      * A list of errors encountered while performing the last resize on the
-     * Pool.
-     * This property is set only if one or more errors occurred during the last
-     * Pool resize, and only when the Pool allocationState is Steady.
+     * Pool. This property is set only if one or more errors occurred during
+     * the last Pool resize, and only when the Pool allocationState is Steady.
      */
     @JsonProperty(value = "resizeErrors")
     private List<ResizeError> resizeErrors;
@@ -165,18 +161,18 @@ public class CloudPool {
     private Integer targetLowPriorityNodes;
 
     /**
-     * Whether the Pool size should automatically adjust over time.
-     * If false, at least one of targetDedicateNodes and targetLowPriorityNodes
-     * must be specified. If true, the autoScaleFormula property is required
-     * and the Pool automatically resizes according to the formula. The default
-     * value is false.
+     * Whether the Pool size should automatically adjust over time. If false,
+     * at least one of targetDedicatedNodes and targetLowPriorityNodes must be
+     * specified. If true, the autoScaleFormula property is required and the
+     * Pool automatically resizes according to the formula. The default value
+     * is false.
      */
     @JsonProperty(value = "enableAutoScale")
     private Boolean enableAutoScale;
 
     /**
-     * A formula for the desired number of Compute Nodes in the Pool.
-     * This property is set only if the Pool automatically scales, i.e.
+     * A formula for the desired number of Compute Nodes in the Pool. This
+     * property is set only if the Pool automatically scales, i.e.
      * enableAutoScale is true.
      */
     @JsonProperty(value = "autoScaleFormula")
@@ -184,9 +180,8 @@ public class CloudPool {
 
     /**
      * The time interval at which to automatically adjust the Pool size
-     * according to the autoscale formula.
-     * This property is set only if the Pool automatically scales, i.e.
-     * enableAutoScale is true.
+     * according to the autoscale formula. This property is set only if the
+     * Pool automatically scales, i.e. enableAutoScale is true.
      */
     @JsonProperty(value = "autoScaleEvaluationInterval")
     private Period autoScaleEvaluationInterval;
@@ -222,15 +217,14 @@ public class CloudPool {
 
     /**
      * The list of Certificates to be installed on each Compute Node in the
-     * Pool.
-     * For Windows Nodes, the Batch service installs the Certificates to the
-     * specified Certificate store and location. For Linux Compute Nodes, the
-     * Certificates are stored in a directory inside the Task working directory
-     * and an environment variable AZ_BATCH_CERTIFICATES_DIR is supplied to the
-     * Task to query for this location. For Certificates with visibility of
-     * 'remoteUser', a 'certs' directory is created in the user's home
-     * directory (e.g., /home/{user-name}/certs) and Certificates are placed in
-     * that directory.
+     * Pool. For Windows Nodes, the Batch service installs the Certificates to
+     * the specified Certificate store and location. For Linux Compute Nodes,
+     * the Certificates are stored in a directory inside the Task working
+     * directory and an environment variable AZ_BATCH_CERTIFICATES_DIR is
+     * supplied to the Task to query for this location. For Certificates with
+     * visibility of 'remoteUser', a 'certs' directory is created in the user's
+     * home directory (e.g., /home/{user-name}/certs) and Certificates are
+     * placed in that directory.
      */
     @JsonProperty(value = "certificateReferences")
     private List<CertificateReference> certificateReferences;
@@ -247,26 +241,25 @@ public class CloudPool {
 
     /**
      * The list of application licenses the Batch service will make available
-     * on each Compute Node in the Pool.
-     * The list of application licenses must be a subset of available Batch
-     * service application licenses. If a license is requested which is not
-     * supported, Pool creation will fail.
+     * on each Compute Node in the Pool. This must be a subset of available
+     * Batch service application licenses. If a license is requested which is
+     * not supported, Pool creation will fail.
      */
     @JsonProperty(value = "applicationLicenses")
     private List<String> applicationLicenses;
 
     /**
      * The number of task slots that can be used to run concurrent tasks on a
-     * single compute node in the pool.
-     * The default value is 1. The maximum value is the smaller of 4 times the
-     * number of cores of the vmSize of the pool or 256.
+     * single compute node in the pool. The default value is 1. The maximum
+     * value is the smaller of 4 times the number of cores of the vmSize of the
+     * pool or 256.
      */
     @JsonProperty(value = "taskSlotsPerNode")
     private Integer taskSlotsPerNode;
 
     /**
-     * How Tasks are distributed across Compute Nodes in a Pool.
-     * If not specified, the default is spread.
+     * How Tasks are distributed across Compute Nodes in a Pool. If not
+     * specified, the default is spread.
      */
     @JsonProperty(value = "taskSchedulingPolicy")
     private TaskSchedulingPolicy taskSchedulingPolicy;
@@ -286,24 +279,33 @@ public class CloudPool {
 
     /**
      * Utilization and resource usage statistics for the entire lifetime of the
-     * Pool.
-     * This property is populated only if the CloudPool was retrieved with an
-     * expand clause including the 'stats' attribute; otherwise it is null. The
-     * statistics may not be immediately available. The Batch service performs
-     * periodic roll-up of statistics. The typical delay is about 30 minutes.
+     * Pool. This property is populated only if the CloudPool was retrieved
+     * with an expand clause including the 'stats' attribute; otherwise it is
+     * null. The statistics may not be immediately available. The Batch service
+     * performs periodic roll-up of statistics. The typical delay is about 30
+     * minutes.
      */
     @JsonProperty(value = "stats")
     private PoolStatistics stats;
 
     /**
-     * A list of file systems to mount on each node in the pool.
-     * This supports Azure Files, NFS, CIFS/SMB, and Blobfuse.
+     * A list of file systems to mount on each node in the pool. This supports
+     * Azure Files, NFS, CIFS/SMB, and Blobfuse.
      */
     @JsonProperty(value = "mountConfiguration")
     private List<MountConfiguration> mountConfiguration;
 
     /**
-     * Get the ID can contain any combination of alphanumeric characters including hyphens and underscores, and cannot contain more than 64 characters. The ID is case-preserving and case-insensitive (that is, you may not have two IDs within an Account that differ only by case).
+     * The identity of the Batch pool, if configured. The list of user
+     * identities associated with the Batch pool. The user identity dictionary
+     * key references will be ARM resource ids in the form:
+     * '/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ManagedIdentity/userAssignedIdentities/{identityName}'.
+     */
+    @JsonProperty(value = "identity")
+    private BatchPoolIdentity identity;
+
+    /**
+     * Get a string that uniquely identifies the Pool within the Account. The ID can contain any combination of alphanumeric characters including hyphens and underscores, and cannot contain more than 64 characters. The ID is case-preserving and case-insensitive (that is, you may not have two IDs within an Account that differ only by case).
      *
      * @return the id value
      */
@@ -312,7 +314,7 @@ public class CloudPool {
     }
 
     /**
-     * Set the ID can contain any combination of alphanumeric characters including hyphens and underscores, and cannot contain more than 64 characters. The ID is case-preserving and case-insensitive (that is, you may not have two IDs within an Account that differ only by case).
+     * Set a string that uniquely identifies the Pool within the Account. The ID can contain any combination of alphanumeric characters including hyphens and underscores, and cannot contain more than 64 characters. The ID is case-preserving and case-insensitive (that is, you may not have two IDs within an Account that differ only by case).
      *
      * @param id the id value to set
      * @return the CloudPool object itself.
@@ -323,7 +325,7 @@ public class CloudPool {
     }
 
     /**
-     * Get the display name need not be unique and can contain any Unicode characters up to a maximum length of 1024.
+     * Get the display name for the Pool. The name need not be unique and can contain any Unicode characters up to a maximum length of 1024.
      *
      * @return the displayName value
      */
@@ -332,7 +334,7 @@ public class CloudPool {
     }
 
     /**
-     * Set the display name need not be unique and can contain any Unicode characters up to a maximum length of 1024.
+     * Set the display name for the Pool. The name need not be unique and can contain any Unicode characters up to a maximum length of 1024.
      *
      * @param displayName the displayName value to set
      * @return the CloudPool object itself.
@@ -343,7 +345,7 @@ public class CloudPool {
     }
 
     /**
-     * Get the url value.
+     * Get the URL of the Pool.
      *
      * @return the url value
      */
@@ -352,7 +354,7 @@ public class CloudPool {
     }
 
     /**
-     * Set the url value.
+     * Set the URL of the Pool.
      *
      * @param url the url value to set
      * @return the CloudPool object itself.
@@ -363,7 +365,7 @@ public class CloudPool {
     }
 
     /**
-     * Get this is an opaque string. You can use it to detect whether the Pool has changed between requests. In particular, you can be pass the ETag when updating a Pool to specify that your changes should take effect only if nobody else has modified the Pool in the meantime.
+     * Get the ETag of the Pool. This is an opaque string. You can use it to detect whether the Pool has changed between requests. In particular, you can be pass the ETag when updating a Pool to specify that your changes should take effect only if nobody else has modified the Pool in the meantime.
      *
      * @return the eTag value
      */
@@ -372,7 +374,7 @@ public class CloudPool {
     }
 
     /**
-     * Set this is an opaque string. You can use it to detect whether the Pool has changed between requests. In particular, you can be pass the ETag when updating a Pool to specify that your changes should take effect only if nobody else has modified the Pool in the meantime.
+     * Set the ETag of the Pool. This is an opaque string. You can use it to detect whether the Pool has changed between requests. In particular, you can be pass the ETag when updating a Pool to specify that your changes should take effect only if nobody else has modified the Pool in the meantime.
      *
      * @param eTag the eTag value to set
      * @return the CloudPool object itself.
@@ -383,7 +385,7 @@ public class CloudPool {
     }
 
     /**
-     * Get this is the last time at which the Pool level data, such as the targetDedicatedNodes or enableAutoscale settings, changed. It does not factor in node-level changes such as a Compute Node changing state.
+     * Get the last modified time of the Pool. This is the last time at which the Pool level data, such as the targetDedicatedNodes or enableAutoscale settings, changed. It does not factor in node-level changes such as a Compute Node changing state.
      *
      * @return the lastModified value
      */
@@ -392,7 +394,7 @@ public class CloudPool {
     }
 
     /**
-     * Set this is the last time at which the Pool level data, such as the targetDedicatedNodes or enableAutoscale settings, changed. It does not factor in node-level changes such as a Compute Node changing state.
+     * Set the last modified time of the Pool. This is the last time at which the Pool level data, such as the targetDedicatedNodes or enableAutoscale settings, changed. It does not factor in node-level changes such as a Compute Node changing state.
      *
      * @param lastModified the lastModified value to set
      * @return the CloudPool object itself.
@@ -403,7 +405,7 @@ public class CloudPool {
     }
 
     /**
-     * Get the creationTime value.
+     * Get the creation time of the Pool.
      *
      * @return the creationTime value
      */
@@ -412,7 +414,7 @@ public class CloudPool {
     }
 
     /**
-     * Set the creationTime value.
+     * Set the creation time of the Pool.
      *
      * @param creationTime the creationTime value to set
      * @return the CloudPool object itself.
@@ -423,7 +425,7 @@ public class CloudPool {
     }
 
     /**
-     * Get possible values include: 'active', 'deleting'.
+     * Get the current state of the Pool. Possible values include: 'active', 'deleting'.
      *
      * @return the state value
      */
@@ -432,7 +434,7 @@ public class CloudPool {
     }
 
     /**
-     * Set possible values include: 'active', 'deleting'.
+     * Set the current state of the Pool. Possible values include: 'active', 'deleting'.
      *
      * @param state the state value to set
      * @return the CloudPool object itself.
@@ -443,7 +445,7 @@ public class CloudPool {
     }
 
     /**
-     * Get the stateTransitionTime value.
+     * Get the time at which the Pool entered its current state.
      *
      * @return the stateTransitionTime value
      */
@@ -452,7 +454,7 @@ public class CloudPool {
     }
 
     /**
-     * Set the stateTransitionTime value.
+     * Set the time at which the Pool entered its current state.
      *
      * @param stateTransitionTime the stateTransitionTime value to set
      * @return the CloudPool object itself.
@@ -463,7 +465,7 @@ public class CloudPool {
     }
 
     /**
-     * Get possible values include: 'steady', 'resizing', 'stopping'.
+     * Get whether the Pool is resizing. Possible values include: 'steady', 'resizing', 'stopping'.
      *
      * @return the allocationState value
      */
@@ -472,7 +474,7 @@ public class CloudPool {
     }
 
     /**
-     * Set possible values include: 'steady', 'resizing', 'stopping'.
+     * Set whether the Pool is resizing. Possible values include: 'steady', 'resizing', 'stopping'.
      *
      * @param allocationState the allocationState value to set
      * @return the CloudPool object itself.
@@ -483,7 +485,7 @@ public class CloudPool {
     }
 
     /**
-     * Get the allocationStateTransitionTime value.
+     * Get the time at which the Pool entered its current allocation state.
      *
      * @return the allocationStateTransitionTime value
      */
@@ -492,7 +494,7 @@ public class CloudPool {
     }
 
     /**
-     * Set the allocationStateTransitionTime value.
+     * Set the time at which the Pool entered its current allocation state.
      *
      * @param allocationStateTransitionTime the allocationStateTransitionTime value to set
      * @return the CloudPool object itself.
@@ -503,7 +505,7 @@ public class CloudPool {
     }
 
     /**
-     * Get for information about available sizes of virtual machines in Pools, see Choose a VM size for Compute Nodes in an Azure Batch Pool (https://docs.microsoft.com/azure/batch/batch-pool-vm-sizes).
+     * Get the size of virtual machines in the Pool. All virtual machines in a Pool are the same size. For information about available sizes of virtual machines in Pools, see Choose a VM size for Compute Nodes in an Azure Batch Pool (https://docs.microsoft.com/azure/batch/batch-pool-vm-sizes).
      *
      * @return the vmSize value
      */
@@ -512,7 +514,7 @@ public class CloudPool {
     }
 
     /**
-     * Set for information about available sizes of virtual machines in Pools, see Choose a VM size for Compute Nodes in an Azure Batch Pool (https://docs.microsoft.com/azure/batch/batch-pool-vm-sizes).
+     * Set the size of virtual machines in the Pool. All virtual machines in a Pool are the same size. For information about available sizes of virtual machines in Pools, see Choose a VM size for Compute Nodes in an Azure Batch Pool (https://docs.microsoft.com/azure/batch/batch-pool-vm-sizes).
      *
      * @param vmSize the vmSize value to set
      * @return the CloudPool object itself.
@@ -523,7 +525,7 @@ public class CloudPool {
     }
 
     /**
-     * Get this property and virtualMachineConfiguration are mutually exclusive and one of the properties must be specified. This property cannot be specified if the Batch Account was created with its poolAllocationMode property set to 'UserSubscription'.
+     * Get the cloud service configuration for the Pool. This property and virtualMachineConfiguration are mutually exclusive and one of the properties must be specified. This property cannot be specified if the Batch Account was created with its poolAllocationMode property set to 'UserSubscription'.
      *
      * @return the cloudServiceConfiguration value
      */
@@ -532,7 +534,7 @@ public class CloudPool {
     }
 
     /**
-     * Set this property and virtualMachineConfiguration are mutually exclusive and one of the properties must be specified. This property cannot be specified if the Batch Account was created with its poolAllocationMode property set to 'UserSubscription'.
+     * Set the cloud service configuration for the Pool. This property and virtualMachineConfiguration are mutually exclusive and one of the properties must be specified. This property cannot be specified if the Batch Account was created with its poolAllocationMode property set to 'UserSubscription'.
      *
      * @param cloudServiceConfiguration the cloudServiceConfiguration value to set
      * @return the CloudPool object itself.
@@ -543,7 +545,7 @@ public class CloudPool {
     }
 
     /**
-     * Get this property and cloudServiceConfiguration are mutually exclusive and one of the properties must be specified.
+     * Get the virtual machine configuration for the Pool. This property and cloudServiceConfiguration are mutually exclusive and one of the properties must be specified.
      *
      * @return the virtualMachineConfiguration value
      */
@@ -552,7 +554,7 @@ public class CloudPool {
     }
 
     /**
-     * Set this property and cloudServiceConfiguration are mutually exclusive and one of the properties must be specified.
+     * Set the virtual machine configuration for the Pool. This property and cloudServiceConfiguration are mutually exclusive and one of the properties must be specified.
      *
      * @param virtualMachineConfiguration the virtualMachineConfiguration value to set
      * @return the CloudPool object itself.
@@ -563,7 +565,7 @@ public class CloudPool {
     }
 
     /**
-     * Get this is the timeout for the most recent resize operation. (The initial sizing when the Pool is created counts as a resize.) The default value is 15 minutes.
+     * Get the timeout for allocation of Compute Nodes to the Pool. This is the timeout for the most recent resize operation. (The initial sizing when the Pool is created counts as a resize.) The default value is 15 minutes.
      *
      * @return the resizeTimeout value
      */
@@ -572,7 +574,7 @@ public class CloudPool {
     }
 
     /**
-     * Set this is the timeout for the most recent resize operation. (The initial sizing when the Pool is created counts as a resize.) The default value is 15 minutes.
+     * Set the timeout for allocation of Compute Nodes to the Pool. This is the timeout for the most recent resize operation. (The initial sizing when the Pool is created counts as a resize.) The default value is 15 minutes.
      *
      * @param resizeTimeout the resizeTimeout value to set
      * @return the CloudPool object itself.
@@ -583,7 +585,7 @@ public class CloudPool {
     }
 
     /**
-     * Get this property is set only if one or more errors occurred during the last Pool resize, and only when the Pool allocationState is Steady.
+     * Get a list of errors encountered while performing the last resize on the Pool. This property is set only if one or more errors occurred during the last Pool resize, and only when the Pool allocationState is Steady.
      *
      * @return the resizeErrors value
      */
@@ -592,7 +594,7 @@ public class CloudPool {
     }
 
     /**
-     * Set this property is set only if one or more errors occurred during the last Pool resize, and only when the Pool allocationState is Steady.
+     * Set a list of errors encountered while performing the last resize on the Pool. This property is set only if one or more errors occurred during the last Pool resize, and only when the Pool allocationState is Steady.
      *
      * @param resizeErrors the resizeErrors value to set
      * @return the CloudPool object itself.
@@ -603,7 +605,7 @@ public class CloudPool {
     }
 
     /**
-     * Get the currentDedicatedNodes value.
+     * Get the number of dedicated Compute Nodes currently in the Pool.
      *
      * @return the currentDedicatedNodes value
      */
@@ -612,7 +614,7 @@ public class CloudPool {
     }
 
     /**
-     * Set the currentDedicatedNodes value.
+     * Set the number of dedicated Compute Nodes currently in the Pool.
      *
      * @param currentDedicatedNodes the currentDedicatedNodes value to set
      * @return the CloudPool object itself.
@@ -623,7 +625,7 @@ public class CloudPool {
     }
 
     /**
-     * Get low-priority Compute Nodes which have been preempted are included in this count.
+     * Get the number of low-priority Compute Nodes currently in the Pool. Low-priority Compute Nodes which have been preempted are included in this count.
      *
      * @return the currentLowPriorityNodes value
      */
@@ -632,7 +634,7 @@ public class CloudPool {
     }
 
     /**
-     * Set low-priority Compute Nodes which have been preempted are included in this count.
+     * Set the number of low-priority Compute Nodes currently in the Pool. Low-priority Compute Nodes which have been preempted are included in this count.
      *
      * @param currentLowPriorityNodes the currentLowPriorityNodes value to set
      * @return the CloudPool object itself.
@@ -643,7 +645,7 @@ public class CloudPool {
     }
 
     /**
-     * Get the targetDedicatedNodes value.
+     * Get the desired number of dedicated Compute Nodes in the Pool.
      *
      * @return the targetDedicatedNodes value
      */
@@ -652,7 +654,7 @@ public class CloudPool {
     }
 
     /**
-     * Set the targetDedicatedNodes value.
+     * Set the desired number of dedicated Compute Nodes in the Pool.
      *
      * @param targetDedicatedNodes the targetDedicatedNodes value to set
      * @return the CloudPool object itself.
@@ -663,7 +665,7 @@ public class CloudPool {
     }
 
     /**
-     * Get the targetLowPriorityNodes value.
+     * Get the desired number of low-priority Compute Nodes in the Pool.
      *
      * @return the targetLowPriorityNodes value
      */
@@ -672,7 +674,7 @@ public class CloudPool {
     }
 
     /**
-     * Set the targetLowPriorityNodes value.
+     * Set the desired number of low-priority Compute Nodes in the Pool.
      *
      * @param targetLowPriorityNodes the targetLowPriorityNodes value to set
      * @return the CloudPool object itself.
@@ -683,7 +685,7 @@ public class CloudPool {
     }
 
     /**
-     * Get if false, at least one of targetDedicateNodes and targetLowPriorityNodes must be specified. If true, the autoScaleFormula property is required and the Pool automatically resizes according to the formula. The default value is false.
+     * Get whether the Pool size should automatically adjust over time. If false, at least one of targetDedicatedNodes and targetLowPriorityNodes must be specified. If true, the autoScaleFormula property is required and the Pool automatically resizes according to the formula. The default value is false.
      *
      * @return the enableAutoScale value
      */
@@ -692,7 +694,7 @@ public class CloudPool {
     }
 
     /**
-     * Set if false, at least one of targetDedicateNodes and targetLowPriorityNodes must be specified. If true, the autoScaleFormula property is required and the Pool automatically resizes according to the formula. The default value is false.
+     * Set whether the Pool size should automatically adjust over time. If false, at least one of targetDedicatedNodes and targetLowPriorityNodes must be specified. If true, the autoScaleFormula property is required and the Pool automatically resizes according to the formula. The default value is false.
      *
      * @param enableAutoScale the enableAutoScale value to set
      * @return the CloudPool object itself.
@@ -703,7 +705,7 @@ public class CloudPool {
     }
 
     /**
-     * Get this property is set only if the Pool automatically scales, i.e. enableAutoScale is true.
+     * Get a formula for the desired number of Compute Nodes in the Pool. This property is set only if the Pool automatically scales, i.e. enableAutoScale is true.
      *
      * @return the autoScaleFormula value
      */
@@ -712,7 +714,7 @@ public class CloudPool {
     }
 
     /**
-     * Set this property is set only if the Pool automatically scales, i.e. enableAutoScale is true.
+     * Set a formula for the desired number of Compute Nodes in the Pool. This property is set only if the Pool automatically scales, i.e. enableAutoScale is true.
      *
      * @param autoScaleFormula the autoScaleFormula value to set
      * @return the CloudPool object itself.
@@ -723,7 +725,7 @@ public class CloudPool {
     }
 
     /**
-     * Get this property is set only if the Pool automatically scales, i.e. enableAutoScale is true.
+     * Get the time interval at which to automatically adjust the Pool size according to the autoscale formula. This property is set only if the Pool automatically scales, i.e. enableAutoScale is true.
      *
      * @return the autoScaleEvaluationInterval value
      */
@@ -732,7 +734,7 @@ public class CloudPool {
     }
 
     /**
-     * Set this property is set only if the Pool automatically scales, i.e. enableAutoScale is true.
+     * Set the time interval at which to automatically adjust the Pool size according to the autoscale formula. This property is set only if the Pool automatically scales, i.e. enableAutoScale is true.
      *
      * @param autoScaleEvaluationInterval the autoScaleEvaluationInterval value to set
      * @return the CloudPool object itself.
@@ -743,7 +745,7 @@ public class CloudPool {
     }
 
     /**
-     * Get this property is set only if the Pool automatically scales, i.e. enableAutoScale is true.
+     * Get the results and errors from the last execution of the autoscale formula. This property is set only if the Pool automatically scales, i.e. enableAutoScale is true.
      *
      * @return the autoScaleRun value
      */
@@ -752,7 +754,7 @@ public class CloudPool {
     }
 
     /**
-     * Set this property is set only if the Pool automatically scales, i.e. enableAutoScale is true.
+     * Set the results and errors from the last execution of the autoscale formula. This property is set only if the Pool automatically scales, i.e. enableAutoScale is true.
      *
      * @param autoScaleRun the autoScaleRun value to set
      * @return the CloudPool object itself.
@@ -763,7 +765,7 @@ public class CloudPool {
     }
 
     /**
-     * Get this imposes restrictions on which Compute Nodes can be assigned to the Pool. Specifying this value can reduce the chance of the requested number of Compute Nodes to be allocated in the Pool.
+     * Get whether the Pool permits direct communication between Compute Nodes. This imposes restrictions on which Compute Nodes can be assigned to the Pool. Specifying this value can reduce the chance of the requested number of Compute Nodes to be allocated in the Pool.
      *
      * @return the enableInterNodeCommunication value
      */
@@ -772,7 +774,7 @@ public class CloudPool {
     }
 
     /**
-     * Set this imposes restrictions on which Compute Nodes can be assigned to the Pool. Specifying this value can reduce the chance of the requested number of Compute Nodes to be allocated in the Pool.
+     * Set whether the Pool permits direct communication between Compute Nodes. This imposes restrictions on which Compute Nodes can be assigned to the Pool. Specifying this value can reduce the chance of the requested number of Compute Nodes to be allocated in the Pool.
      *
      * @param enableInterNodeCommunication the enableInterNodeCommunication value to set
      * @return the CloudPool object itself.
@@ -783,7 +785,7 @@ public class CloudPool {
     }
 
     /**
-     * Get the networkConfiguration value.
+     * Get the network configuration for the Pool.
      *
      * @return the networkConfiguration value
      */
@@ -792,7 +794,7 @@ public class CloudPool {
     }
 
     /**
-     * Set the networkConfiguration value.
+     * Set the network configuration for the Pool.
      *
      * @param networkConfiguration the networkConfiguration value to set
      * @return the CloudPool object itself.
@@ -803,7 +805,7 @@ public class CloudPool {
     }
 
     /**
-     * Get the startTask value.
+     * Get a Task specified to run on each Compute Node as it joins the Pool.
      *
      * @return the startTask value
      */
@@ -812,7 +814,7 @@ public class CloudPool {
     }
 
     /**
-     * Set the startTask value.
+     * Set a Task specified to run on each Compute Node as it joins the Pool.
      *
      * @param startTask the startTask value to set
      * @return the CloudPool object itself.
@@ -823,7 +825,7 @@ public class CloudPool {
     }
 
     /**
-     * Get for Windows Nodes, the Batch service installs the Certificates to the specified Certificate store and location. For Linux Compute Nodes, the Certificates are stored in a directory inside the Task working directory and an environment variable AZ_BATCH_CERTIFICATES_DIR is supplied to the Task to query for this location. For Certificates with visibility of 'remoteUser', a 'certs' directory is created in the user's home directory (e.g., /home/{user-name}/certs) and Certificates are placed in that directory.
+     * Get the list of Certificates to be installed on each Compute Node in the Pool. For Windows Nodes, the Batch service installs the Certificates to the specified Certificate store and location. For Linux Compute Nodes, the Certificates are stored in a directory inside the Task working directory and an environment variable AZ_BATCH_CERTIFICATES_DIR is supplied to the Task to query for this location. For Certificates with visibility of 'remoteUser', a 'certs' directory is created in the user's home directory (e.g., /home/{user-name}/certs) and Certificates are placed in that directory.
      *
      * @return the certificateReferences value
      */
@@ -832,7 +834,7 @@ public class CloudPool {
     }
 
     /**
-     * Set for Windows Nodes, the Batch service installs the Certificates to the specified Certificate store and location. For Linux Compute Nodes, the Certificates are stored in a directory inside the Task working directory and an environment variable AZ_BATCH_CERTIFICATES_DIR is supplied to the Task to query for this location. For Certificates with visibility of 'remoteUser', a 'certs' directory is created in the user's home directory (e.g., /home/{user-name}/certs) and Certificates are placed in that directory.
+     * Set the list of Certificates to be installed on each Compute Node in the Pool. For Windows Nodes, the Batch service installs the Certificates to the specified Certificate store and location. For Linux Compute Nodes, the Certificates are stored in a directory inside the Task working directory and an environment variable AZ_BATCH_CERTIFICATES_DIR is supplied to the Task to query for this location. For Certificates with visibility of 'remoteUser', a 'certs' directory is created in the user's home directory (e.g., /home/{user-name}/certs) and Certificates are placed in that directory.
      *
      * @param certificateReferences the certificateReferences value to set
      * @return the CloudPool object itself.
@@ -843,7 +845,7 @@ public class CloudPool {
     }
 
     /**
-     * Get changes to Package references affect all new Nodes joining the Pool, but do not affect Compute Nodes that are already in the Pool until they are rebooted or reimaged. There is a maximum of 10 Package references on any given Pool.
+     * Get the list of Packages to be installed on each Compute Node in the Pool. Changes to Package references affect all new Nodes joining the Pool, but do not affect Compute Nodes that are already in the Pool until they are rebooted or reimaged. There is a maximum of 10 Package references on any given Pool.
      *
      * @return the applicationPackageReferences value
      */
@@ -852,7 +854,7 @@ public class CloudPool {
     }
 
     /**
-     * Set changes to Package references affect all new Nodes joining the Pool, but do not affect Compute Nodes that are already in the Pool until they are rebooted or reimaged. There is a maximum of 10 Package references on any given Pool.
+     * Set the list of Packages to be installed on each Compute Node in the Pool. Changes to Package references affect all new Nodes joining the Pool, but do not affect Compute Nodes that are already in the Pool until they are rebooted or reimaged. There is a maximum of 10 Package references on any given Pool.
      *
      * @param applicationPackageReferences the applicationPackageReferences value to set
      * @return the CloudPool object itself.
@@ -863,7 +865,7 @@ public class CloudPool {
     }
 
     /**
-     * Get the list of application licenses must be a subset of available Batch service application licenses. If a license is requested which is not supported, Pool creation will fail.
+     * Get the list of application licenses the Batch service will make available on each Compute Node in the Pool. This must be a subset of available Batch service application licenses. If a license is requested which is not supported, Pool creation will fail.
      *
      * @return the applicationLicenses value
      */
@@ -872,7 +874,7 @@ public class CloudPool {
     }
 
     /**
-     * Set the list of application licenses must be a subset of available Batch service application licenses. If a license is requested which is not supported, Pool creation will fail.
+     * Set the list of application licenses the Batch service will make available on each Compute Node in the Pool. This must be a subset of available Batch service application licenses. If a license is requested which is not supported, Pool creation will fail.
      *
      * @param applicationLicenses the applicationLicenses value to set
      * @return the CloudPool object itself.
@@ -883,7 +885,7 @@ public class CloudPool {
     }
 
     /**
-     * Get the default value is 1. The maximum value is the smaller of 4 times the number of cores of the vmSize of the pool or 256.
+     * Get the number of task slots that can be used to run concurrent tasks on a single compute node in the pool. The default value is 1. The maximum value is the smaller of 4 times the number of cores of the vmSize of the pool or 256.
      *
      * @return the taskSlotsPerNode value
      */
@@ -892,7 +894,7 @@ public class CloudPool {
     }
 
     /**
-     * Set the default value is 1. The maximum value is the smaller of 4 times the number of cores of the vmSize of the pool or 256.
+     * Set the number of task slots that can be used to run concurrent tasks on a single compute node in the pool. The default value is 1. The maximum value is the smaller of 4 times the number of cores of the vmSize of the pool or 256.
      *
      * @param taskSlotsPerNode the taskSlotsPerNode value to set
      * @return the CloudPool object itself.
@@ -903,7 +905,7 @@ public class CloudPool {
     }
 
     /**
-     * Get if not specified, the default is spread.
+     * Get how Tasks are distributed across Compute Nodes in a Pool. If not specified, the default is spread.
      *
      * @return the taskSchedulingPolicy value
      */
@@ -912,7 +914,7 @@ public class CloudPool {
     }
 
     /**
-     * Set if not specified, the default is spread.
+     * Set how Tasks are distributed across Compute Nodes in a Pool. If not specified, the default is spread.
      *
      * @param taskSchedulingPolicy the taskSchedulingPolicy value to set
      * @return the CloudPool object itself.
@@ -923,7 +925,7 @@ public class CloudPool {
     }
 
     /**
-     * Get the userAccounts value.
+     * Get the list of user Accounts to be created on each Compute Node in the Pool.
      *
      * @return the userAccounts value
      */
@@ -932,7 +934,7 @@ public class CloudPool {
     }
 
     /**
-     * Set the userAccounts value.
+     * Set the list of user Accounts to be created on each Compute Node in the Pool.
      *
      * @param userAccounts the userAccounts value to set
      * @return the CloudPool object itself.
@@ -943,7 +945,7 @@ public class CloudPool {
     }
 
     /**
-     * Get the metadata value.
+     * Get a list of name-value pairs associated with the Pool as metadata.
      *
      * @return the metadata value
      */
@@ -952,7 +954,7 @@ public class CloudPool {
     }
 
     /**
-     * Set the metadata value.
+     * Set a list of name-value pairs associated with the Pool as metadata.
      *
      * @param metadata the metadata value to set
      * @return the CloudPool object itself.
@@ -963,7 +965,7 @@ public class CloudPool {
     }
 
     /**
-     * Get this property is populated only if the CloudPool was retrieved with an expand clause including the 'stats' attribute; otherwise it is null. The statistics may not be immediately available. The Batch service performs periodic roll-up of statistics. The typical delay is about 30 minutes.
+     * Get utilization and resource usage statistics for the entire lifetime of the Pool. This property is populated only if the CloudPool was retrieved with an expand clause including the 'stats' attribute; otherwise it is null. The statistics may not be immediately available. The Batch service performs periodic roll-up of statistics. The typical delay is about 30 minutes.
      *
      * @return the stats value
      */
@@ -972,7 +974,7 @@ public class CloudPool {
     }
 
     /**
-     * Set this property is populated only if the CloudPool was retrieved with an expand clause including the 'stats' attribute; otherwise it is null. The statistics may not be immediately available. The Batch service performs periodic roll-up of statistics. The typical delay is about 30 minutes.
+     * Set utilization and resource usage statistics for the entire lifetime of the Pool. This property is populated only if the CloudPool was retrieved with an expand clause including the 'stats' attribute; otherwise it is null. The statistics may not be immediately available. The Batch service performs periodic roll-up of statistics. The typical delay is about 30 minutes.
      *
      * @param stats the stats value to set
      * @return the CloudPool object itself.
@@ -983,7 +985,7 @@ public class CloudPool {
     }
 
     /**
-     * Get this supports Azure Files, NFS, CIFS/SMB, and Blobfuse.
+     * Get a list of file systems to mount on each node in the pool. This supports Azure Files, NFS, CIFS/SMB, and Blobfuse.
      *
      * @return the mountConfiguration value
      */
@@ -992,13 +994,33 @@ public class CloudPool {
     }
 
     /**
-     * Set this supports Azure Files, NFS, CIFS/SMB, and Blobfuse.
+     * Set a list of file systems to mount on each node in the pool. This supports Azure Files, NFS, CIFS/SMB, and Blobfuse.
      *
      * @param mountConfiguration the mountConfiguration value to set
      * @return the CloudPool object itself.
      */
     public CloudPool withMountConfiguration(List<MountConfiguration> mountConfiguration) {
         this.mountConfiguration = mountConfiguration;
+        return this;
+    }
+
+    /**
+     * Get the identity of the Batch pool, if configured. The list of user identities associated with the Batch pool. The user identity dictionary key references will be ARM resource ids in the form: '/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ManagedIdentity/userAssignedIdentities/{identityName}'.
+     *
+     * @return the identity value
+     */
+    public BatchPoolIdentity identity() {
+        return this.identity;
+    }
+
+    /**
+     * Set the identity of the Batch pool, if configured. The list of user identities associated with the Batch pool. The user identity dictionary key references will be ARM resource ids in the form: '/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ManagedIdentity/userAssignedIdentities/{identityName}'.
+     *
+     * @param identity the identity value to set
+     * @return the CloudPool object itself.
+     */
+    public CloudPool withIdentity(BatchPoolIdentity identity) {
+        this.identity = identity;
         return this;
     }
 

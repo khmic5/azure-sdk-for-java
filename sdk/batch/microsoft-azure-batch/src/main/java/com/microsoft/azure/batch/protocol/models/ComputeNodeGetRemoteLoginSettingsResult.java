@@ -27,7 +27,7 @@ public class ComputeNodeGetRemoteLoginSettingsResult {
     private int remoteLoginPort;
 
     /**
-     * Get the remoteLoginIPAddress value.
+     * Get the IP address used for remote login to the Compute Node.
      *
      * @return the remoteLoginIPAddress value
      */
@@ -36,7 +36,7 @@ public class ComputeNodeGetRemoteLoginSettingsResult {
     }
 
     /**
-     * Set the remoteLoginIPAddress value.
+     * Set the IP address used for remote login to the Compute Node.
      *
      * @param remoteLoginIPAddress the remoteLoginIPAddress value to set
      * @return the ComputeNodeGetRemoteLoginSettingsResult object itself.
@@ -47,7 +47,7 @@ public class ComputeNodeGetRemoteLoginSettingsResult {
     }
 
     /**
-     * Get the remoteLoginPort value.
+     * Get the port used for remote login to the Compute Node.
      *
      * @return the remoteLoginPort value
      */
@@ -56,7 +56,7 @@ public class ComputeNodeGetRemoteLoginSettingsResult {
     }
 
     /**
-     * Set the remoteLoginPort value.
+     * Set the port used for remote login to the Compute Node.
      *
      * @param remoteLoginPort the remoteLoginPort value to set
      * @return the ComputeNodeGetRemoteLoginSettingsResult object itself.

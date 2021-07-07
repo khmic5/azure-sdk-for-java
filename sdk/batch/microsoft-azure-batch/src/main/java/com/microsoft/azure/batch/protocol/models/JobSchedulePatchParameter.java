@@ -16,17 +16,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class JobSchedulePatchParameter {
     /**
-     * The schedule according to which Jobs will be created.
-     * If you do not specify this element, the existing schedule is left
-     * unchanged.
+     * The schedule according to which Jobs will be created. If you do not
+     * specify this element, the existing schedule is left unchanged.
      */
     @JsonProperty(value = "schedule")
     private Schedule schedule;
 
     /**
-     * The details of the Jobs to be created on this schedule.
-     * Updates affect only Jobs that are started after the update has taken
-     * place. Any currently active Job continues with the older specification.
+     * The details of the Jobs to be created on this schedule. Updates affect
+     * only Jobs that are started after the update has taken place. Any
+     * currently active Job continues with the older specification.
      */
     @JsonProperty(value = "jobSpecification")
     private JobSpecification jobSpecification;
@@ -39,7 +38,7 @@ public class JobSchedulePatchParameter {
     private List<MetadataItem> metadata;
 
     /**
-     * Get if you do not specify this element, the existing schedule is left unchanged.
+     * Get the schedule according to which Jobs will be created. If you do not specify this element, the existing schedule is left unchanged.
      *
      * @return the schedule value
      */
@@ -48,7 +47,7 @@ public class JobSchedulePatchParameter {
     }
 
     /**
-     * Set if you do not specify this element, the existing schedule is left unchanged.
+     * Set the schedule according to which Jobs will be created. If you do not specify this element, the existing schedule is left unchanged.
      *
      * @param schedule the schedule value to set
      * @return the JobSchedulePatchParameter object itself.
@@ -59,7 +58,7 @@ public class JobSchedulePatchParameter {
     }
 
     /**
-     * Get updates affect only Jobs that are started after the update has taken place. Any currently active Job continues with the older specification.
+     * Get the details of the Jobs to be created on this schedule. Updates affect only Jobs that are started after the update has taken place. Any currently active Job continues with the older specification.
      *
      * @return the jobSpecification value
      */
@@ -68,7 +67,7 @@ public class JobSchedulePatchParameter {
     }
 
     /**
-     * Set updates affect only Jobs that are started after the update has taken place. Any currently active Job continues with the older specification.
+     * Set the details of the Jobs to be created on this schedule. Updates affect only Jobs that are started after the update has taken place. Any currently active Job continues with the older specification.
      *
      * @param jobSpecification the jobSpecification value to set
      * @return the JobSchedulePatchParameter object itself.
@@ -79,7 +78,7 @@ public class JobSchedulePatchParameter {
     }
 
     /**
-     * Get if you do not specify this element, existing metadata is left unchanged.
+     * Get a list of name-value pairs associated with the Job Schedule as metadata. If you do not specify this element, existing metadata is left unchanged.
      *
      * @return the metadata value
      */
@@ -88,7 +87,7 @@ public class JobSchedulePatchParameter {
     }
 
     /**
-     * Set if you do not specify this element, existing metadata is left unchanged.
+     * Set a list of name-value pairs associated with the Job Schedule as metadata. If you do not specify this element, existing metadata is left unchanged.
      *
      * @param metadata the metadata value to set
      * @return the JobSchedulePatchParameter object itself.

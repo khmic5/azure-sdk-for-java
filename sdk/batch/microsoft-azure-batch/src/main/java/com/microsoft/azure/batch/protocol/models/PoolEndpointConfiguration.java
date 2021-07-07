@@ -17,17 +17,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class PoolEndpointConfiguration {
     /**
      * A list of inbound NAT Pools that can be used to address specific ports
-     * on an individual Compute Node externally.
-     * The maximum number of inbound NAT Pools per Batch Pool is 5. If the
-     * maximum number of inbound NAT Pools is exceeded the request fails with
-     * HTTP status code 400. This cannot be specified if the
-     * IPAddressProvisioningType is NoPublicIPAddresses.
+     * on an individual Compute Node externally. The maximum number of inbound
+     * NAT Pools per Batch Pool is 5. If the maximum number of inbound NAT
+     * Pools is exceeded the request fails with HTTP status code 400. This
+     * cannot be specified if the IPAddressProvisioningType is
+     * NoPublicIPAddresses.
      */
     @JsonProperty(value = "inboundNATPools", required = true)
     private List<InboundNATPool> inboundNATPools;
 
     /**
-     * Get the maximum number of inbound NAT Pools per Batch Pool is 5. If the maximum number of inbound NAT Pools is exceeded the request fails with HTTP status code 400. This cannot be specified if the IPAddressProvisioningType is NoPublicIPAddresses.
+     * Get a list of inbound NAT Pools that can be used to address specific ports on an individual Compute Node externally. The maximum number of inbound NAT Pools per Batch Pool is 5. If the maximum number of inbound NAT Pools is exceeded the request fails with HTTP status code 400. This cannot be specified if the IPAddressProvisioningType is NoPublicIPAddresses.
      *
      * @return the inboundNATPools value
      */
@@ -36,7 +36,7 @@ public class PoolEndpointConfiguration {
     }
 
     /**
-     * Set the maximum number of inbound NAT Pools per Batch Pool is 5. If the maximum number of inbound NAT Pools is exceeded the request fails with HTTP status code 400. This cannot be specified if the IPAddressProvisioningType is NoPublicIPAddresses.
+     * Set a list of inbound NAT Pools that can be used to address specific ports on an individual Compute Node externally. The maximum number of inbound NAT Pools per Batch Pool is 5. If the maximum number of inbound NAT Pools is exceeded the request fails with HTTP status code 400. This cannot be specified if the IPAddressProvisioningType is NoPublicIPAddresses.
      *
      * @param inboundNATPools the inboundNATPools value to set
      * @return the PoolEndpointConfiguration object itself.

@@ -17,19 +17,18 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class UploadBatchServiceLogsConfiguration {
     /**
      * The URL of the container within Azure Blob Storage to which to upload
-     * the Batch Service log file(s).
-     * The URL must include a Shared Access Signature (SAS) granting write
-     * permissions to the container. The SAS duration must allow enough time
-     * for the upload to finish. The start time for SAS is optional and
-     * recommended to not be specified.
+     * the Batch Service log file(s). If a user assigned managed identity is
+     * not being used, the URL must include a Shared Access Signature (SAS)
+     * granting write permissions to the container. The SAS duration must allow
+     * enough time for the upload to finish. The start time for SAS is optional
+     * and recommended to not be specified.
      */
     @JsonProperty(value = "containerUrl", required = true)
     private String containerUrl;
 
     /**
      * The start of the time range from which to upload Batch Service log
-     * file(s).
-     * Any log file containing a log message in the time range will be
+     * file(s). Any log file containing a log message in the time range will be
      * uploaded. This means that the operation might retrieve more logs than
      * have been requested since the entire log file is always uploaded, but
      * the operation should not retrieve fewer logs than have been requested.
@@ -39,8 +38,7 @@ public class UploadBatchServiceLogsConfiguration {
 
     /**
      * The end of the time range from which to upload Batch Service log
-     * file(s).
-     * Any log file containing a log message in the time range will be
+     * file(s). Any log file containing a log message in the time range will be
      * uploaded. This means that the operation might retrieve more logs than
      * have been requested since the entire log file is always uploaded, but
      * the operation should not retrieve fewer logs than have been requested.
@@ -51,7 +49,15 @@ public class UploadBatchServiceLogsConfiguration {
     private DateTime endTime;
 
     /**
-     * Get the URL must include a Shared Access Signature (SAS) granting write permissions to the container. The SAS duration must allow enough time for the upload to finish. The start time for SAS is optional and recommended to not be specified.
+     * The reference to the user assigned identity to use to access Azure Blob
+     * Storage specified by containerUrl. The identity must have write access
+     * to the Azure Blob Storage container.
+     */
+    @JsonProperty(value = "identityReference")
+    private ComputeNodeIdentityReference identityReference;
+
+    /**
+     * Get the URL of the container within Azure Blob Storage to which to upload the Batch Service log file(s). If a user assigned managed identity is not being used, the URL must include a Shared Access Signature (SAS) granting write permissions to the container. The SAS duration must allow enough time for the upload to finish. The start time for SAS is optional and recommended to not be specified.
      *
      * @return the containerUrl value
      */
@@ -60,7 +66,7 @@ public class UploadBatchServiceLogsConfiguration {
     }
 
     /**
-     * Set the URL must include a Shared Access Signature (SAS) granting write permissions to the container. The SAS duration must allow enough time for the upload to finish. The start time for SAS is optional and recommended to not be specified.
+     * Set the URL of the container within Azure Blob Storage to which to upload the Batch Service log file(s). If a user assigned managed identity is not being used, the URL must include a Shared Access Signature (SAS) granting write permissions to the container. The SAS duration must allow enough time for the upload to finish. The start time for SAS is optional and recommended to not be specified.
      *
      * @param containerUrl the containerUrl value to set
      * @return the UploadBatchServiceLogsConfiguration object itself.
@@ -71,7 +77,7 @@ public class UploadBatchServiceLogsConfiguration {
     }
 
     /**
-     * Get any log file containing a log message in the time range will be uploaded. This means that the operation might retrieve more logs than have been requested since the entire log file is always uploaded, but the operation should not retrieve fewer logs than have been requested.
+     * Get the start of the time range from which to upload Batch Service log file(s). Any log file containing a log message in the time range will be uploaded. This means that the operation might retrieve more logs than have been requested since the entire log file is always uploaded, but the operation should not retrieve fewer logs than have been requested.
      *
      * @return the startTime value
      */
@@ -80,7 +86,7 @@ public class UploadBatchServiceLogsConfiguration {
     }
 
     /**
-     * Set any log file containing a log message in the time range will be uploaded. This means that the operation might retrieve more logs than have been requested since the entire log file is always uploaded, but the operation should not retrieve fewer logs than have been requested.
+     * Set the start of the time range from which to upload Batch Service log file(s). Any log file containing a log message in the time range will be uploaded. This means that the operation might retrieve more logs than have been requested since the entire log file is always uploaded, but the operation should not retrieve fewer logs than have been requested.
      *
      * @param startTime the startTime value to set
      * @return the UploadBatchServiceLogsConfiguration object itself.
@@ -91,7 +97,7 @@ public class UploadBatchServiceLogsConfiguration {
     }
 
     /**
-     * Get any log file containing a log message in the time range will be uploaded. This means that the operation might retrieve more logs than have been requested since the entire log file is always uploaded, but the operation should not retrieve fewer logs than have been requested. If omitted, the default is to upload all logs available after the startTime.
+     * Get the end of the time range from which to upload Batch Service log file(s). Any log file containing a log message in the time range will be uploaded. This means that the operation might retrieve more logs than have been requested since the entire log file is always uploaded, but the operation should not retrieve fewer logs than have been requested. If omitted, the default is to upload all logs available after the startTime.
      *
      * @return the endTime value
      */
@@ -100,13 +106,33 @@ public class UploadBatchServiceLogsConfiguration {
     }
 
     /**
-     * Set any log file containing a log message in the time range will be uploaded. This means that the operation might retrieve more logs than have been requested since the entire log file is always uploaded, but the operation should not retrieve fewer logs than have been requested. If omitted, the default is to upload all logs available after the startTime.
+     * Set the end of the time range from which to upload Batch Service log file(s). Any log file containing a log message in the time range will be uploaded. This means that the operation might retrieve more logs than have been requested since the entire log file is always uploaded, but the operation should not retrieve fewer logs than have been requested. If omitted, the default is to upload all logs available after the startTime.
      *
      * @param endTime the endTime value to set
      * @return the UploadBatchServiceLogsConfiguration object itself.
      */
     public UploadBatchServiceLogsConfiguration withEndTime(DateTime endTime) {
         this.endTime = endTime;
+        return this;
+    }
+
+    /**
+     * Get the reference to the user assigned identity to use to access Azure Blob Storage specified by containerUrl. The identity must have write access to the Azure Blob Storage container.
+     *
+     * @return the identityReference value
+     */
+    public ComputeNodeIdentityReference identityReference() {
+        return this.identityReference;
+    }
+
+    /**
+     * Set the reference to the user assigned identity to use to access Azure Blob Storage specified by containerUrl. The identity must have write access to the Azure Blob Storage container.
+     *
+     * @param identityReference the identityReference value to set
+     * @return the UploadBatchServiceLogsConfiguration object itself.
+     */
+    public UploadBatchServiceLogsConfiguration withIdentityReference(ComputeNodeIdentityReference identityReference) {
+        this.identityReference = identityReference;
         return this;
     }
 

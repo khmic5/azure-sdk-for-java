@@ -16,27 +16,26 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class AutoUserSpecification {
     /**
-     * The scope for the auto user.
-     * The default value is pool. If the pool is running Windows a value of
-     * Task should be specified if stricter isolation between tasks is
-     * required. For example, if the task mutates the registry in a way which
-     * could impact other tasks, or if certificates have been specified on the
-     * pool which should not be accessible by normal tasks but should be
-     * accessible by StartTasks. Possible values include: 'task', 'pool'.
+     * The scope for the auto user. The default value is pool. If the pool is
+     * running Windows a value of Task should be specified if stricter
+     * isolation between tasks is required. For example, if the task mutates
+     * the registry in a way which could impact other tasks, or if certificates
+     * have been specified on the pool which should not be accessible by normal
+     * tasks but should be accessible by StartTasks. Possible values include:
+     * 'task', 'pool'.
      */
     @JsonProperty(value = "scope")
     private AutoUserScope scope;
 
     /**
-     * The elevation level of the auto user.
-     * The default value is nonAdmin. Possible values include: 'nonAdmin',
-     * 'admin'.
+     * The elevation level of the auto user. The default value is nonAdmin.
+     * Possible values include: 'nonAdmin', 'admin'.
      */
     @JsonProperty(value = "elevationLevel")
     private ElevationLevel elevationLevel;
 
     /**
-     * Get the default value is pool. If the pool is running Windows a value of Task should be specified if stricter isolation between tasks is required. For example, if the task mutates the registry in a way which could impact other tasks, or if certificates have been specified on the pool which should not be accessible by normal tasks but should be accessible by StartTasks. Possible values include: 'task', 'pool'.
+     * Get the scope for the auto user. The default value is pool. If the pool is running Windows a value of Task should be specified if stricter isolation between tasks is required. For example, if the task mutates the registry in a way which could impact other tasks, or if certificates have been specified on the pool which should not be accessible by normal tasks but should be accessible by StartTasks. Possible values include: 'task', 'pool'.
      *
      * @return the scope value
      */
@@ -45,7 +44,7 @@ public class AutoUserSpecification {
     }
 
     /**
-     * Set the default value is pool. If the pool is running Windows a value of Task should be specified if stricter isolation between tasks is required. For example, if the task mutates the registry in a way which could impact other tasks, or if certificates have been specified on the pool which should not be accessible by normal tasks but should be accessible by StartTasks. Possible values include: 'task', 'pool'.
+     * Set the scope for the auto user. The default value is pool. If the pool is running Windows a value of Task should be specified if stricter isolation between tasks is required. For example, if the task mutates the registry in a way which could impact other tasks, or if certificates have been specified on the pool which should not be accessible by normal tasks but should be accessible by StartTasks. Possible values include: 'task', 'pool'.
      *
      * @param scope the scope value to set
      * @return the AutoUserSpecification object itself.
@@ -56,7 +55,7 @@ public class AutoUserSpecification {
     }
 
     /**
-     * Get the default value is nonAdmin. Possible values include: 'nonAdmin', 'admin'.
+     * Get the elevation level of the auto user. The default value is nonAdmin. Possible values include: 'nonAdmin', 'admin'.
      *
      * @return the elevationLevel value
      */
@@ -65,7 +64,7 @@ public class AutoUserSpecification {
     }
 
     /**
-     * Set the default value is nonAdmin. Possible values include: 'nonAdmin', 'admin'.
+     * Set the elevation level of the auto user. The default value is nonAdmin. Possible values include: 'nonAdmin', 'admin'.
      *
      * @param elevationLevel the elevationLevel value to set
      * @return the AutoUserSpecification object itself.

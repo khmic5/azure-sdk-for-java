@@ -39,8 +39,8 @@ public class TaskInformation {
     private Integer subtaskId;
 
     /**
-     * The current state of the Task.
-     * Possible values include: 'active', 'preparing', 'running', 'completed'.
+     * The current state of the Task. Possible values include: 'active',
+     * 'preparing', 'running', 'completed'.
      */
     @JsonProperty(value = "taskState", required = true)
     private TaskState taskState;
@@ -52,7 +52,7 @@ public class TaskInformation {
     private TaskExecutionInformation executionInfo;
 
     /**
-     * Get the taskUrl value.
+     * Get the URL of the Task.
      *
      * @return the taskUrl value
      */
@@ -61,7 +61,7 @@ public class TaskInformation {
     }
 
     /**
-     * Set the taskUrl value.
+     * Set the URL of the Task.
      *
      * @param taskUrl the taskUrl value to set
      * @return the TaskInformation object itself.
@@ -72,7 +72,7 @@ public class TaskInformation {
     }
 
     /**
-     * Get the jobId value.
+     * Get the ID of the Job to which the Task belongs.
      *
      * @return the jobId value
      */
@@ -81,7 +81,7 @@ public class TaskInformation {
     }
 
     /**
-     * Set the jobId value.
+     * Set the ID of the Job to which the Task belongs.
      *
      * @param jobId the jobId value to set
      * @return the TaskInformation object itself.
@@ -92,7 +92,7 @@ public class TaskInformation {
     }
 
     /**
-     * Get the taskId value.
+     * Get the ID of the Task.
      *
      * @return the taskId value
      */
@@ -101,7 +101,7 @@ public class TaskInformation {
     }
 
     /**
-     * Set the taskId value.
+     * Set the ID of the Task.
      *
      * @param taskId the taskId value to set
      * @return the TaskInformation object itself.
@@ -112,7 +112,7 @@ public class TaskInformation {
     }
 
     /**
-     * Get the subtaskId value.
+     * Get the ID of the subtask if the Task is a multi-instance Task.
      *
      * @return the subtaskId value
      */
@@ -121,7 +121,7 @@ public class TaskInformation {
     }
 
     /**
-     * Set the subtaskId value.
+     * Set the ID of the subtask if the Task is a multi-instance Task.
      *
      * @param subtaskId the subtaskId value to set
      * @return the TaskInformation object itself.
@@ -132,7 +132,7 @@ public class TaskInformation {
     }
 
     /**
-     * Get possible values include: 'active', 'preparing', 'running', 'completed'.
+     * Get the current state of the Task. Possible values include: 'active', 'preparing', 'running', 'completed'.
      *
      * @return the taskState value
      */
@@ -141,7 +141,7 @@ public class TaskInformation {
     }
 
     /**
-     * Set possible values include: 'active', 'preparing', 'running', 'completed'.
+     * Set the current state of the Task. Possible values include: 'active', 'preparing', 'running', 'completed'.
      *
      * @param taskState the taskState value to set
      * @return the TaskInformation object itself.
@@ -152,7 +152,7 @@ public class TaskInformation {
     }
 
     /**
-     * Get the executionInfo value.
+     * Get information about the execution of the Task.
      *
      * @return the executionInfo value
      */
@@ -161,7 +161,7 @@ public class TaskInformation {
     }
 
     /**
-     * Set the executionInfo value.
+     * Set information about the execution of the Task.
      *
      * @param executionInfo the executionInfo value to set
      * @return the TaskInformation object itself.

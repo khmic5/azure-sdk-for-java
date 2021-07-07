@@ -102,7 +102,7 @@ public class ResourceStatistics {
     private double networkWriteGiB;
 
     /**
-     * Get the startTime value.
+     * Get the start time of the time range covered by the statistics.
      *
      * @return the startTime value
      */
@@ -111,7 +111,7 @@ public class ResourceStatistics {
     }
 
     /**
-     * Set the startTime value.
+     * Set the start time of the time range covered by the statistics.
      *
      * @param startTime the startTime value to set
      * @return the ResourceStatistics object itself.
@@ -122,7 +122,7 @@ public class ResourceStatistics {
     }
 
     /**
-     * Get the lastUpdateTime value.
+     * Get the time at which the statistics were last updated. All statistics are limited to the range between startTime and lastUpdateTime.
      *
      * @return the lastUpdateTime value
      */
@@ -131,7 +131,7 @@ public class ResourceStatistics {
     }
 
     /**
-     * Set the lastUpdateTime value.
+     * Set the time at which the statistics were last updated. All statistics are limited to the range between startTime and lastUpdateTime.
      *
      * @param lastUpdateTime the lastUpdateTime value to set
      * @return the ResourceStatistics object itself.
@@ -142,7 +142,7 @@ public class ResourceStatistics {
     }
 
     /**
-     * Get the avgCPUPercentage value.
+     * Get the average CPU usage across all Compute Nodes in the Pool (percentage per node).
      *
      * @return the avgCPUPercentage value
      */
@@ -151,7 +151,7 @@ public class ResourceStatistics {
     }
 
     /**
-     * Set the avgCPUPercentage value.
+     * Set the average CPU usage across all Compute Nodes in the Pool (percentage per node).
      *
      * @param avgCPUPercentage the avgCPUPercentage value to set
      * @return the ResourceStatistics object itself.
@@ -162,7 +162,7 @@ public class ResourceStatistics {
     }
 
     /**
-     * Get the avgMemoryGiB value.
+     * Get the average memory usage in GiB across all Compute Nodes in the Pool.
      *
      * @return the avgMemoryGiB value
      */
@@ -171,7 +171,7 @@ public class ResourceStatistics {
     }
 
     /**
-     * Set the avgMemoryGiB value.
+     * Set the average memory usage in GiB across all Compute Nodes in the Pool.
      *
      * @param avgMemoryGiB the avgMemoryGiB value to set
      * @return the ResourceStatistics object itself.
@@ -182,7 +182,7 @@ public class ResourceStatistics {
     }
 
     /**
-     * Get the peakMemoryGiB value.
+     * Get the peak memory usage in GiB across all Compute Nodes in the Pool.
      *
      * @return the peakMemoryGiB value
      */
@@ -191,7 +191,7 @@ public class ResourceStatistics {
     }
 
     /**
-     * Set the peakMemoryGiB value.
+     * Set the peak memory usage in GiB across all Compute Nodes in the Pool.
      *
      * @param peakMemoryGiB the peakMemoryGiB value to set
      * @return the ResourceStatistics object itself.
@@ -202,7 +202,7 @@ public class ResourceStatistics {
     }
 
     /**
-     * Get the avgDiskGiB value.
+     * Get the average used disk space in GiB across all Compute Nodes in the Pool.
      *
      * @return the avgDiskGiB value
      */
@@ -211,7 +211,7 @@ public class ResourceStatistics {
     }
 
     /**
-     * Set the avgDiskGiB value.
+     * Set the average used disk space in GiB across all Compute Nodes in the Pool.
      *
      * @param avgDiskGiB the avgDiskGiB value to set
      * @return the ResourceStatistics object itself.
@@ -222,7 +222,7 @@ public class ResourceStatistics {
     }
 
     /**
-     * Get the peakDiskGiB value.
+     * Get the peak used disk space in GiB across all Compute Nodes in the Pool.
      *
      * @return the peakDiskGiB value
      */
@@ -231,7 +231,7 @@ public class ResourceStatistics {
     }
 
     /**
-     * Set the peakDiskGiB value.
+     * Set the peak used disk space in GiB across all Compute Nodes in the Pool.
      *
      * @param peakDiskGiB the peakDiskGiB value to set
      * @return the ResourceStatistics object itself.
@@ -242,7 +242,7 @@ public class ResourceStatistics {
     }
 
     /**
-     * Get the diskReadIOps value.
+     * Get the total number of disk read operations across all Compute Nodes in the Pool.
      *
      * @return the diskReadIOps value
      */
@@ -251,7 +251,7 @@ public class ResourceStatistics {
     }
 
     /**
-     * Set the diskReadIOps value.
+     * Set the total number of disk read operations across all Compute Nodes in the Pool.
      *
      * @param diskReadIOps the diskReadIOps value to set
      * @return the ResourceStatistics object itself.
@@ -262,7 +262,7 @@ public class ResourceStatistics {
     }
 
     /**
-     * Get the diskWriteIOps value.
+     * Get the total number of disk write operations across all Compute Nodes in the Pool.
      *
      * @return the diskWriteIOps value
      */
@@ -271,7 +271,7 @@ public class ResourceStatistics {
     }
 
     /**
-     * Set the diskWriteIOps value.
+     * Set the total number of disk write operations across all Compute Nodes in the Pool.
      *
      * @param diskWriteIOps the diskWriteIOps value to set
      * @return the ResourceStatistics object itself.
@@ -282,7 +282,7 @@ public class ResourceStatistics {
     }
 
     /**
-     * Get the diskReadGiB value.
+     * Get the total amount of data in GiB of disk reads across all Compute Nodes in the Pool.
      *
      * @return the diskReadGiB value
      */
@@ -291,7 +291,7 @@ public class ResourceStatistics {
     }
 
     /**
-     * Set the diskReadGiB value.
+     * Set the total amount of data in GiB of disk reads across all Compute Nodes in the Pool.
      *
      * @param diskReadGiB the diskReadGiB value to set
      * @return the ResourceStatistics object itself.
@@ -302,7 +302,7 @@ public class ResourceStatistics {
     }
 
     /**
-     * Get the diskWriteGiB value.
+     * Get the total amount of data in GiB of disk writes across all Compute Nodes in the Pool.
      *
      * @return the diskWriteGiB value
      */
@@ -311,7 +311,7 @@ public class ResourceStatistics {
     }
 
     /**
-     * Set the diskWriteGiB value.
+     * Set the total amount of data in GiB of disk writes across all Compute Nodes in the Pool.
      *
      * @param diskWriteGiB the diskWriteGiB value to set
      * @return the ResourceStatistics object itself.
@@ -322,7 +322,7 @@ public class ResourceStatistics {
     }
 
     /**
-     * Get the networkReadGiB value.
+     * Get the total amount of data in GiB of network reads across all Compute Nodes in the Pool.
      *
      * @return the networkReadGiB value
      */
@@ -331,7 +331,7 @@ public class ResourceStatistics {
     }
 
     /**
-     * Set the networkReadGiB value.
+     * Set the total amount of data in GiB of network reads across all Compute Nodes in the Pool.
      *
      * @param networkReadGiB the networkReadGiB value to set
      * @return the ResourceStatistics object itself.
@@ -342,7 +342,7 @@ public class ResourceStatistics {
     }
 
     /**
-     * Get the networkWriteGiB value.
+     * Get the total amount of data in GiB of network writes across all Compute Nodes in the Pool.
      *
      * @return the networkWriteGiB value
      */
@@ -351,7 +351,7 @@ public class ResourceStatistics {
     }
 
     /**
-     * Set the networkWriteGiB value.
+     * Set the total amount of data in GiB of network writes across all Compute Nodes in the Pool.
      *
      * @param networkWriteGiB the networkWriteGiB value to set
      * @return the ResourceStatistics object itself.

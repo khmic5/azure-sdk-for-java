@@ -50,12 +50,11 @@ public class TaskStatistics {
     private Period kernelCPUTime;
 
     /**
-     * The total wall clock time of the Task.
-     * The wall clock time is the elapsed time from when the Task started
-     * running on a Compute Node to when it finished (or to the last time the
-     * statistics were updated, if the Task had not finished by then). If the
-     * Task was retried, this includes the wall clock time of all the Task
-     * retries.
+     * The total wall clock time of the Task. The wall clock time is the
+     * elapsed time from when the Task started running on a Compute Node to
+     * when it finished (or to the last time the statistics were updated, if
+     * the Task had not finished by then). If the Task was retried, this
+     * includes the wall clock time of all the Task retries.
      */
     @JsonProperty(value = "wallClockTime", required = true)
     private Period wallClockTime;
@@ -94,7 +93,7 @@ public class TaskStatistics {
     private Period waitTime;
 
     /**
-     * Get the url value.
+     * Get the URL of the statistics.
      *
      * @return the url value
      */
@@ -103,7 +102,7 @@ public class TaskStatistics {
     }
 
     /**
-     * Set the url value.
+     * Set the URL of the statistics.
      *
      * @param url the url value to set
      * @return the TaskStatistics object itself.
@@ -114,7 +113,7 @@ public class TaskStatistics {
     }
 
     /**
-     * Get the startTime value.
+     * Get the start time of the time range covered by the statistics.
      *
      * @return the startTime value
      */
@@ -123,7 +122,7 @@ public class TaskStatistics {
     }
 
     /**
-     * Set the startTime value.
+     * Set the start time of the time range covered by the statistics.
      *
      * @param startTime the startTime value to set
      * @return the TaskStatistics object itself.
@@ -134,7 +133,7 @@ public class TaskStatistics {
     }
 
     /**
-     * Get the lastUpdateTime value.
+     * Get the time at which the statistics were last updated. All statistics are limited to the range between startTime and lastUpdateTime.
      *
      * @return the lastUpdateTime value
      */
@@ -143,7 +142,7 @@ public class TaskStatistics {
     }
 
     /**
-     * Set the lastUpdateTime value.
+     * Set the time at which the statistics were last updated. All statistics are limited to the range between startTime and lastUpdateTime.
      *
      * @param lastUpdateTime the lastUpdateTime value to set
      * @return the TaskStatistics object itself.
@@ -154,7 +153,7 @@ public class TaskStatistics {
     }
 
     /**
-     * Get the userCPUTime value.
+     * Get the total user mode CPU time (summed across all cores and all Compute Nodes) consumed by the Task.
      *
      * @return the userCPUTime value
      */
@@ -163,7 +162,7 @@ public class TaskStatistics {
     }
 
     /**
-     * Set the userCPUTime value.
+     * Set the total user mode CPU time (summed across all cores and all Compute Nodes) consumed by the Task.
      *
      * @param userCPUTime the userCPUTime value to set
      * @return the TaskStatistics object itself.
@@ -174,7 +173,7 @@ public class TaskStatistics {
     }
 
     /**
-     * Get the kernelCPUTime value.
+     * Get the total kernel mode CPU time (summed across all cores and all Compute Nodes) consumed by the Task.
      *
      * @return the kernelCPUTime value
      */
@@ -183,7 +182,7 @@ public class TaskStatistics {
     }
 
     /**
-     * Set the kernelCPUTime value.
+     * Set the total kernel mode CPU time (summed across all cores and all Compute Nodes) consumed by the Task.
      *
      * @param kernelCPUTime the kernelCPUTime value to set
      * @return the TaskStatistics object itself.
@@ -194,7 +193,7 @@ public class TaskStatistics {
     }
 
     /**
-     * Get the wall clock time is the elapsed time from when the Task started running on a Compute Node to when it finished (or to the last time the statistics were updated, if the Task had not finished by then). If the Task was retried, this includes the wall clock time of all the Task retries.
+     * Get the total wall clock time of the Task. The wall clock time is the elapsed time from when the Task started running on a Compute Node to when it finished (or to the last time the statistics were updated, if the Task had not finished by then). If the Task was retried, this includes the wall clock time of all the Task retries.
      *
      * @return the wallClockTime value
      */
@@ -203,7 +202,7 @@ public class TaskStatistics {
     }
 
     /**
-     * Set the wall clock time is the elapsed time from when the Task started running on a Compute Node to when it finished (or to the last time the statistics were updated, if the Task had not finished by then). If the Task was retried, this includes the wall clock time of all the Task retries.
+     * Set the total wall clock time of the Task. The wall clock time is the elapsed time from when the Task started running on a Compute Node to when it finished (or to the last time the statistics were updated, if the Task had not finished by then). If the Task was retried, this includes the wall clock time of all the Task retries.
      *
      * @param wallClockTime the wallClockTime value to set
      * @return the TaskStatistics object itself.
@@ -214,7 +213,7 @@ public class TaskStatistics {
     }
 
     /**
-     * Get the readIOps value.
+     * Get the total number of disk read operations made by the Task.
      *
      * @return the readIOps value
      */
@@ -223,7 +222,7 @@ public class TaskStatistics {
     }
 
     /**
-     * Set the readIOps value.
+     * Set the total number of disk read operations made by the Task.
      *
      * @param readIOps the readIOps value to set
      * @return the TaskStatistics object itself.
@@ -234,7 +233,7 @@ public class TaskStatistics {
     }
 
     /**
-     * Get the writeIOps value.
+     * Get the total number of disk write operations made by the Task.
      *
      * @return the writeIOps value
      */
@@ -243,7 +242,7 @@ public class TaskStatistics {
     }
 
     /**
-     * Set the writeIOps value.
+     * Set the total number of disk write operations made by the Task.
      *
      * @param writeIOps the writeIOps value to set
      * @return the TaskStatistics object itself.
@@ -254,7 +253,7 @@ public class TaskStatistics {
     }
 
     /**
-     * Get the readIOGiB value.
+     * Get the total gibibytes read from disk by the Task.
      *
      * @return the readIOGiB value
      */
@@ -263,7 +262,7 @@ public class TaskStatistics {
     }
 
     /**
-     * Set the readIOGiB value.
+     * Set the total gibibytes read from disk by the Task.
      *
      * @param readIOGiB the readIOGiB value to set
      * @return the TaskStatistics object itself.
@@ -274,7 +273,7 @@ public class TaskStatistics {
     }
 
     /**
-     * Get the writeIOGiB value.
+     * Get the total gibibytes written to disk by the Task.
      *
      * @return the writeIOGiB value
      */
@@ -283,7 +282,7 @@ public class TaskStatistics {
     }
 
     /**
-     * Set the writeIOGiB value.
+     * Set the total gibibytes written to disk by the Task.
      *
      * @param writeIOGiB the writeIOGiB value to set
      * @return the TaskStatistics object itself.
@@ -294,7 +293,7 @@ public class TaskStatistics {
     }
 
     /**
-     * Get the waitTime value.
+     * Get the total wait time of the Task. The wait time for a Task is defined as the elapsed time between the creation of the Task and the start of Task execution. (If the Task is retried due to failures, the wait time is the time to the most recent Task execution.).
      *
      * @return the waitTime value
      */
@@ -303,7 +302,7 @@ public class TaskStatistics {
     }
 
     /**
-     * Set the waitTime value.
+     * Set the total wait time of the Task. The wait time for a Task is defined as the elapsed time between the creation of the Task and the start of Task execution. (If the Task is retried due to failures, the wait time is the time to the most recent Task execution.).
      *
      * @param waitTime the waitTime value to set
      * @return the TaskStatistics object itself.

@@ -53,7 +53,7 @@ public class ComputeNodeInformation {
     private String taskRootDirectoryUrl;
 
     /**
-     * Get the affinityId value.
+     * Get an identifier for the Node on which the Task ran, which can be passed when adding a Task to request that the Task be scheduled on this Compute Node.
      *
      * @return the affinityId value
      */
@@ -62,7 +62,7 @@ public class ComputeNodeInformation {
     }
 
     /**
-     * Set the affinityId value.
+     * Set an identifier for the Node on which the Task ran, which can be passed when adding a Task to request that the Task be scheduled on this Compute Node.
      *
      * @param affinityId the affinityId value to set
      * @return the ComputeNodeInformation object itself.
@@ -73,7 +73,7 @@ public class ComputeNodeInformation {
     }
 
     /**
-     * Get the nodeUrl value.
+     * Get the URL of the Compute Node on which the Task ran.
      *
      * @return the nodeUrl value
      */
@@ -82,7 +82,7 @@ public class ComputeNodeInformation {
     }
 
     /**
-     * Set the nodeUrl value.
+     * Set the URL of the Compute Node on which the Task ran.
      *
      * @param nodeUrl the nodeUrl value to set
      * @return the ComputeNodeInformation object itself.
@@ -93,7 +93,7 @@ public class ComputeNodeInformation {
     }
 
     /**
-     * Get the poolId value.
+     * Get the ID of the Pool on which the Task ran.
      *
      * @return the poolId value
      */
@@ -102,7 +102,7 @@ public class ComputeNodeInformation {
     }
 
     /**
-     * Set the poolId value.
+     * Set the ID of the Pool on which the Task ran.
      *
      * @param poolId the poolId value to set
      * @return the ComputeNodeInformation object itself.
@@ -113,7 +113,7 @@ public class ComputeNodeInformation {
     }
 
     /**
-     * Get the nodeId value.
+     * Get the ID of the Compute Node on which the Task ran.
      *
      * @return the nodeId value
      */
@@ -122,7 +122,7 @@ public class ComputeNodeInformation {
     }
 
     /**
-     * Set the nodeId value.
+     * Set the ID of the Compute Node on which the Task ran.
      *
      * @param nodeId the nodeId value to set
      * @return the ComputeNodeInformation object itself.
@@ -133,7 +133,7 @@ public class ComputeNodeInformation {
     }
 
     /**
-     * Get the taskRootDirectory value.
+     * Get the root directory of the Task on the Compute Node.
      *
      * @return the taskRootDirectory value
      */
@@ -142,7 +142,7 @@ public class ComputeNodeInformation {
     }
 
     /**
-     * Set the taskRootDirectory value.
+     * Set the root directory of the Task on the Compute Node.
      *
      * @param taskRootDirectory the taskRootDirectory value to set
      * @return the ComputeNodeInformation object itself.
@@ -153,7 +153,7 @@ public class ComputeNodeInformation {
     }
 
     /**
-     * Get the taskRootDirectoryUrl value.
+     * Get the URL to the root directory of the Task on the Compute Node.
      *
      * @return the taskRootDirectoryUrl value
      */
@@ -162,7 +162,7 @@ public class ComputeNodeInformation {
     }
 
     /**
-     * Set the taskRootDirectoryUrl value.
+     * Set the URL to the root directory of the Task on the Compute Node.
      *
      * @param taskRootDirectoryUrl the taskRootDirectoryUrl value to set
      * @return the ComputeNodeInformation object itself.

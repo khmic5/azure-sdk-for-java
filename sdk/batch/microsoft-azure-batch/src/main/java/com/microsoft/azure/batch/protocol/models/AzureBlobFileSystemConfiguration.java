@@ -27,39 +27,45 @@ public class AzureBlobFileSystemConfiguration {
     private String containerName;
 
     /**
-     * The Azure Storage Account key.
-     * This property is mutually exclusive with sasKey and one must be
-     * specified.
+     * The Azure Storage Account key. This property is mutually exclusive with
+     * both sasKey and identity; exactly one must be specified.
      */
     @JsonProperty(value = "accountKey")
     private String accountKey;
 
     /**
-     * The Azure Storage SAS token.
-     * This property is mutually exclusive with accountKey and one must be
-     * specified.
+     * The Azure Storage SAS token. This property is mutually exclusive with
+     * both accountKey and identity; exactly one must be specified.
      */
     @JsonProperty(value = "sasKey")
     private String sasKey;
 
     /**
-     * Additional command line options to pass to the mount command.
-     * These are 'net use' options in Windows and 'mount' options in Linux.
+     * Additional command line options to pass to the mount command. These are
+     * 'net use' options in Windows and 'mount' options in Linux.
      */
     @JsonProperty(value = "blobfuseOptions")
     private String blobfuseOptions;
 
     /**
      * The relative path on the compute node where the file system will be
-     * mounted.
-     * All file systems are mounted relative to the Batch mounts directory,
-     * accessible via the AZ_BATCH_NODE_MOUNTS_DIR environment variable.
+     * mounted. All file systems are mounted relative to the Batch mounts
+     * directory, accessible via the AZ_BATCH_NODE_MOUNTS_DIR environment
+     * variable.
      */
     @JsonProperty(value = "relativeMountPath", required = true)
     private String relativeMountPath;
 
     /**
-     * Get the accountName value.
+     * The reference to the user assigned identity to use to access
+     * containerName. This property is mutually exclusive with both accountKey
+     * and sasKey; exactly one must be specified.
+     */
+    @JsonProperty(value = "identityReference")
+    private ComputeNodeIdentityReference identityReference;
+
+    /**
+     * Get the Azure Storage Account name.
      *
      * @return the accountName value
      */
@@ -68,7 +74,7 @@ public class AzureBlobFileSystemConfiguration {
     }
 
     /**
-     * Set the accountName value.
+     * Set the Azure Storage Account name.
      *
      * @param accountName the accountName value to set
      * @return the AzureBlobFileSystemConfiguration object itself.
@@ -79,7 +85,7 @@ public class AzureBlobFileSystemConfiguration {
     }
 
     /**
-     * Get the containerName value.
+     * Get the Azure Blob Storage Container name.
      *
      * @return the containerName value
      */
@@ -88,7 +94,7 @@ public class AzureBlobFileSystemConfiguration {
     }
 
     /**
-     * Set the containerName value.
+     * Set the Azure Blob Storage Container name.
      *
      * @param containerName the containerName value to set
      * @return the AzureBlobFileSystemConfiguration object itself.
@@ -99,7 +105,7 @@ public class AzureBlobFileSystemConfiguration {
     }
 
     /**
-     * Get this property is mutually exclusive with sasKey and one must be specified.
+     * Get the Azure Storage Account key. This property is mutually exclusive with both sasKey and identity; exactly one must be specified.
      *
      * @return the accountKey value
      */
@@ -108,7 +114,7 @@ public class AzureBlobFileSystemConfiguration {
     }
 
     /**
-     * Set this property is mutually exclusive with sasKey and one must be specified.
+     * Set the Azure Storage Account key. This property is mutually exclusive with both sasKey and identity; exactly one must be specified.
      *
      * @param accountKey the accountKey value to set
      * @return the AzureBlobFileSystemConfiguration object itself.
@@ -119,7 +125,7 @@ public class AzureBlobFileSystemConfiguration {
     }
 
     /**
-     * Get this property is mutually exclusive with accountKey and one must be specified.
+     * Get the Azure Storage SAS token. This property is mutually exclusive with both accountKey and identity; exactly one must be specified.
      *
      * @return the sasKey value
      */
@@ -128,7 +134,7 @@ public class AzureBlobFileSystemConfiguration {
     }
 
     /**
-     * Set this property is mutually exclusive with accountKey and one must be specified.
+     * Set the Azure Storage SAS token. This property is mutually exclusive with both accountKey and identity; exactly one must be specified.
      *
      * @param sasKey the sasKey value to set
      * @return the AzureBlobFileSystemConfiguration object itself.
@@ -139,7 +145,7 @@ public class AzureBlobFileSystemConfiguration {
     }
 
     /**
-     * Get these are 'net use' options in Windows and 'mount' options in Linux.
+     * Get additional command line options to pass to the mount command. These are 'net use' options in Windows and 'mount' options in Linux.
      *
      * @return the blobfuseOptions value
      */
@@ -148,7 +154,7 @@ public class AzureBlobFileSystemConfiguration {
     }
 
     /**
-     * Set these are 'net use' options in Windows and 'mount' options in Linux.
+     * Set additional command line options to pass to the mount command. These are 'net use' options in Windows and 'mount' options in Linux.
      *
      * @param blobfuseOptions the blobfuseOptions value to set
      * @return the AzureBlobFileSystemConfiguration object itself.
@@ -159,7 +165,7 @@ public class AzureBlobFileSystemConfiguration {
     }
 
     /**
-     * Get all file systems are mounted relative to the Batch mounts directory, accessible via the AZ_BATCH_NODE_MOUNTS_DIR environment variable.
+     * Get the relative path on the compute node where the file system will be mounted. All file systems are mounted relative to the Batch mounts directory, accessible via the AZ_BATCH_NODE_MOUNTS_DIR environment variable.
      *
      * @return the relativeMountPath value
      */
@@ -168,13 +174,33 @@ public class AzureBlobFileSystemConfiguration {
     }
 
     /**
-     * Set all file systems are mounted relative to the Batch mounts directory, accessible via the AZ_BATCH_NODE_MOUNTS_DIR environment variable.
+     * Set the relative path on the compute node where the file system will be mounted. All file systems are mounted relative to the Batch mounts directory, accessible via the AZ_BATCH_NODE_MOUNTS_DIR environment variable.
      *
      * @param relativeMountPath the relativeMountPath value to set
      * @return the AzureBlobFileSystemConfiguration object itself.
      */
     public AzureBlobFileSystemConfiguration withRelativeMountPath(String relativeMountPath) {
         this.relativeMountPath = relativeMountPath;
+        return this;
+    }
+
+    /**
+     * Get the reference to the user assigned identity to use to access containerName. This property is mutually exclusive with both accountKey and sasKey; exactly one must be specified.
+     *
+     * @return the identityReference value
+     */
+    public ComputeNodeIdentityReference identityReference() {
+        return this.identityReference;
+    }
+
+    /**
+     * Set the reference to the user assigned identity to use to access containerName. This property is mutually exclusive with both accountKey and sasKey; exactly one must be specified.
+     *
+     * @param identityReference the identityReference value to set
+     * @return the AzureBlobFileSystemConfiguration object itself.
+     */
+    public AzureBlobFileSystemConfiguration withIdentityReference(ComputeNodeIdentityReference identityReference) {
+        this.identityReference = identityReference;
         return this;
     }
 

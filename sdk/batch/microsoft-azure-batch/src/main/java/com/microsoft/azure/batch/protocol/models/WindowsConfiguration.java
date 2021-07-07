@@ -15,14 +15,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class WindowsConfiguration {
     /**
-     * Whether automatic updates are enabled on the virtual machine.
-     * If omitted, the default value is true.
+     * Whether automatic updates are enabled on the virtual machine. If
+     * omitted, the default value is true.
      */
     @JsonProperty(value = "enableAutomaticUpdates")
     private Boolean enableAutomaticUpdates;
 
     /**
-     * Get if omitted, the default value is true.
+     * Get whether automatic updates are enabled on the virtual machine. If omitted, the default value is true.
      *
      * @return the enableAutomaticUpdates value
      */
@@ -31,7 +31,7 @@ public class WindowsConfiguration {
     }
 
     /**
-     * Set if omitted, the default value is true.
+     * Set whether automatic updates are enabled on the virtual machine. If omitted, the default value is true.
      *
      * @param enableAutomaticUpdates the enableAutomaticUpdates value to set
      * @return the WindowsConfiguration object itself.

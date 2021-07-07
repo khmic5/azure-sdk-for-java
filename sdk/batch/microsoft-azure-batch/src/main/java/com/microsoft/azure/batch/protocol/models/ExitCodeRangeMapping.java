@@ -35,7 +35,7 @@ public class ExitCodeRangeMapping {
     private ExitOptions exitOptions;
 
     /**
-     * Get the start value.
+     * Get the first exit code in the range.
      *
      * @return the start value
      */
@@ -44,7 +44,7 @@ public class ExitCodeRangeMapping {
     }
 
     /**
-     * Set the start value.
+     * Set the first exit code in the range.
      *
      * @param start the start value to set
      * @return the ExitCodeRangeMapping object itself.
@@ -55,7 +55,7 @@ public class ExitCodeRangeMapping {
     }
 
     /**
-     * Get the end value.
+     * Get the last exit code in the range.
      *
      * @return the end value
      */
@@ -64,7 +64,7 @@ public class ExitCodeRangeMapping {
     }
 
     /**
-     * Set the end value.
+     * Set the last exit code in the range.
      *
      * @param end the end value to set
      * @return the ExitCodeRangeMapping object itself.
@@ -75,7 +75,7 @@ public class ExitCodeRangeMapping {
     }
 
     /**
-     * Get the exitOptions value.
+     * Get how the Batch service should respond if the Task exits with an exit code in the range start to end (inclusive).
      *
      * @return the exitOptions value
      */
@@ -84,7 +84,7 @@ public class ExitCodeRangeMapping {
     }
 
     /**
-     * Set the exitOptions value.
+     * Set how the Batch service should respond if the Task exits with an exit code in the range start to end (inclusive).
      *
      * @param exitOptions the exitOptions value to set
      * @return the ExitCodeRangeMapping object itself.

@@ -99,7 +99,7 @@ public class NodeCounts {
     private int total;
 
     /**
-     * Get the creating value.
+     * Get the number of Compute Nodes in the creating state.
      *
      * @return the creating value
      */
@@ -108,7 +108,7 @@ public class NodeCounts {
     }
 
     /**
-     * Set the creating value.
+     * Set the number of Compute Nodes in the creating state.
      *
      * @param creating the creating value to set
      * @return the NodeCounts object itself.
@@ -119,7 +119,7 @@ public class NodeCounts {
     }
 
     /**
-     * Get the idle value.
+     * Get the number of Compute Nodes in the idle state.
      *
      * @return the idle value
      */
@@ -128,7 +128,7 @@ public class NodeCounts {
     }
 
     /**
-     * Set the idle value.
+     * Set the number of Compute Nodes in the idle state.
      *
      * @param idle the idle value to set
      * @return the NodeCounts object itself.
@@ -139,7 +139,7 @@ public class NodeCounts {
     }
 
     /**
-     * Get the offline value.
+     * Get the number of Compute Nodes in the offline state.
      *
      * @return the offline value
      */
@@ -148,7 +148,7 @@ public class NodeCounts {
     }
 
     /**
-     * Set the offline value.
+     * Set the number of Compute Nodes in the offline state.
      *
      * @param offline the offline value to set
      * @return the NodeCounts object itself.
@@ -159,7 +159,7 @@ public class NodeCounts {
     }
 
     /**
-     * Get the preempted value.
+     * Get the number of Compute Nodes in the preempted state.
      *
      * @return the preempted value
      */
@@ -168,7 +168,7 @@ public class NodeCounts {
     }
 
     /**
-     * Set the preempted value.
+     * Set the number of Compute Nodes in the preempted state.
      *
      * @param preempted the preempted value to set
      * @return the NodeCounts object itself.
@@ -179,7 +179,7 @@ public class NodeCounts {
     }
 
     /**
-     * Get the rebooting value.
+     * Get the count of Compute Nodes in the rebooting state.
      *
      * @return the rebooting value
      */
@@ -188,7 +188,7 @@ public class NodeCounts {
     }
 
     /**
-     * Set the rebooting value.
+     * Set the count of Compute Nodes in the rebooting state.
      *
      * @param rebooting the rebooting value to set
      * @return the NodeCounts object itself.
@@ -199,7 +199,7 @@ public class NodeCounts {
     }
 
     /**
-     * Get the reimaging value.
+     * Get the number of Compute Nodes in the reimaging state.
      *
      * @return the reimaging value
      */
@@ -208,7 +208,7 @@ public class NodeCounts {
     }
 
     /**
-     * Set the reimaging value.
+     * Set the number of Compute Nodes in the reimaging state.
      *
      * @param reimaging the reimaging value to set
      * @return the NodeCounts object itself.
@@ -219,7 +219,7 @@ public class NodeCounts {
     }
 
     /**
-     * Get the running value.
+     * Get the number of Compute Nodes in the running state.
      *
      * @return the running value
      */
@@ -228,7 +228,7 @@ public class NodeCounts {
     }
 
     /**
-     * Set the running value.
+     * Set the number of Compute Nodes in the running state.
      *
      * @param running the running value to set
      * @return the NodeCounts object itself.
@@ -239,7 +239,7 @@ public class NodeCounts {
     }
 
     /**
-     * Get the starting value.
+     * Get the number of Compute Nodes in the starting state.
      *
      * @return the starting value
      */
@@ -248,7 +248,7 @@ public class NodeCounts {
     }
 
     /**
-     * Set the starting value.
+     * Set the number of Compute Nodes in the starting state.
      *
      * @param starting the starting value to set
      * @return the NodeCounts object itself.
@@ -259,7 +259,7 @@ public class NodeCounts {
     }
 
     /**
-     * Get the startTaskFailed value.
+     * Get the number of Compute Nodes in the startTaskFailed state.
      *
      * @return the startTaskFailed value
      */
@@ -268,7 +268,7 @@ public class NodeCounts {
     }
 
     /**
-     * Set the startTaskFailed value.
+     * Set the number of Compute Nodes in the startTaskFailed state.
      *
      * @param startTaskFailed the startTaskFailed value to set
      * @return the NodeCounts object itself.
@@ -279,7 +279,7 @@ public class NodeCounts {
     }
 
     /**
-     * Get the leavingPool value.
+     * Get the number of Compute Nodes in the leavingPool state.
      *
      * @return the leavingPool value
      */
@@ -288,7 +288,7 @@ public class NodeCounts {
     }
 
     /**
-     * Set the leavingPool value.
+     * Set the number of Compute Nodes in the leavingPool state.
      *
      * @param leavingPool the leavingPool value to set
      * @return the NodeCounts object itself.
@@ -299,7 +299,7 @@ public class NodeCounts {
     }
 
     /**
-     * Get the unknown value.
+     * Get the number of Compute Nodes in the unknown state.
      *
      * @return the unknown value
      */
@@ -308,7 +308,7 @@ public class NodeCounts {
     }
 
     /**
-     * Set the unknown value.
+     * Set the number of Compute Nodes in the unknown state.
      *
      * @param unknown the unknown value to set
      * @return the NodeCounts object itself.
@@ -319,7 +319,7 @@ public class NodeCounts {
     }
 
     /**
-     * Get the unusable value.
+     * Get the number of Compute Nodes in the unusable state.
      *
      * @return the unusable value
      */
@@ -328,7 +328,7 @@ public class NodeCounts {
     }
 
     /**
-     * Set the unusable value.
+     * Set the number of Compute Nodes in the unusable state.
      *
      * @param unusable the unusable value to set
      * @return the NodeCounts object itself.
@@ -339,7 +339,7 @@ public class NodeCounts {
     }
 
     /**
-     * Get the waitingForStartTask value.
+     * Get the number of Compute Nodes in the waitingForStartTask state.
      *
      * @return the waitingForStartTask value
      */
@@ -348,7 +348,7 @@ public class NodeCounts {
     }
 
     /**
-     * Set the waitingForStartTask value.
+     * Set the number of Compute Nodes in the waitingForStartTask state.
      *
      * @param waitingForStartTask the waitingForStartTask value to set
      * @return the NodeCounts object itself.
@@ -359,7 +359,7 @@ public class NodeCounts {
     }
 
     /**
-     * Get the total value.
+     * Get the total number of Compute Nodes.
      *
      * @return the total value
      */
@@ -368,7 +368,7 @@ public class NodeCounts {
     }
 
     /**
-     * Set the total value.
+     * Set the total number of Compute Nodes.
      *
      * @param total the total value to set
      * @return the NodeCounts object itself.

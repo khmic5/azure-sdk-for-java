@@ -22,7 +22,7 @@ public class CloudTaskListSubtasksResult {
     private List<SubtaskInformation> value;
 
     /**
-     * Get the value value.
+     * Get the list of subtasks.
      *
      * @return the value value
      */
@@ -31,7 +31,7 @@ public class CloudTaskListSubtasksResult {
     }
 
     /**
-     * Set the value value.
+     * Set the list of subtasks.
      *
      * @param value the value value to set
      * @return the CloudTaskListSubtasksResult object itself.

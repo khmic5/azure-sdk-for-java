@@ -36,21 +36,21 @@ public class CertificateAddParameter {
     private String data;
 
     /**
-     * The format of the Certificate data.
-     * Possible values include: 'pfx', 'cer'.
+     * The format of the Certificate data. Possible values include: 'pfx',
+     * 'cer'.
      */
     @JsonProperty(value = "certificateFormat")
     private CertificateFormat certificateFormat;
 
     /**
-     * The password to access the Certificate's private key.
-     * This must be omitted if the Certificate format is cer.
+     * The password to access the Certificate's private key. This must be
+     * omitted if the Certificate format is cer.
      */
     @JsonProperty(value = "password")
     private String password;
 
     /**
-     * Get the thumbprint value.
+     * Get the X.509 thumbprint of the Certificate. This is a sequence of up to 40 hex digits (it may include spaces but these are removed).
      *
      * @return the thumbprint value
      */
@@ -59,7 +59,7 @@ public class CertificateAddParameter {
     }
 
     /**
-     * Set the thumbprint value.
+     * Set the X.509 thumbprint of the Certificate. This is a sequence of up to 40 hex digits (it may include spaces but these are removed).
      *
      * @param thumbprint the thumbprint value to set
      * @return the CertificateAddParameter object itself.
@@ -70,7 +70,7 @@ public class CertificateAddParameter {
     }
 
     /**
-     * Get the thumbprintAlgorithm value.
+     * Get the algorithm used to derive the thumbprint. This must be sha1.
      *
      * @return the thumbprintAlgorithm value
      */
@@ -79,7 +79,7 @@ public class CertificateAddParameter {
     }
 
     /**
-     * Set the thumbprintAlgorithm value.
+     * Set the algorithm used to derive the thumbprint. This must be sha1.
      *
      * @param thumbprintAlgorithm the thumbprintAlgorithm value to set
      * @return the CertificateAddParameter object itself.
@@ -90,7 +90,7 @@ public class CertificateAddParameter {
     }
 
     /**
-     * Get the data value.
+     * Get the base64-encoded contents of the Certificate. The maximum size is 10KB.
      *
      * @return the data value
      */
@@ -99,7 +99,7 @@ public class CertificateAddParameter {
     }
 
     /**
-     * Set the data value.
+     * Set the base64-encoded contents of the Certificate. The maximum size is 10KB.
      *
      * @param data the data value to set
      * @return the CertificateAddParameter object itself.
@@ -110,7 +110,7 @@ public class CertificateAddParameter {
     }
 
     /**
-     * Get possible values include: 'pfx', 'cer'.
+     * Get the format of the Certificate data. Possible values include: 'pfx', 'cer'.
      *
      * @return the certificateFormat value
      */
@@ -119,7 +119,7 @@ public class CertificateAddParameter {
     }
 
     /**
-     * Set possible values include: 'pfx', 'cer'.
+     * Set the format of the Certificate data. Possible values include: 'pfx', 'cer'.
      *
      * @param certificateFormat the certificateFormat value to set
      * @return the CertificateAddParameter object itself.
@@ -130,7 +130,7 @@ public class CertificateAddParameter {
     }
 
     /**
-     * Get this must be omitted if the Certificate format is cer.
+     * Get the password to access the Certificate's private key. This must be omitted if the Certificate format is cer.
      *
      * @return the password value
      */
@@ -139,7 +139,7 @@ public class CertificateAddParameter {
     }
 
     /**
-     * Set this must be omitted if the Certificate format is cer.
+     * Set the password to access the Certificate's private key. This must be omitted if the Certificate format is cer.
      *
      * @param password the password value to set
      * @return the CertificateAddParameter object itself.

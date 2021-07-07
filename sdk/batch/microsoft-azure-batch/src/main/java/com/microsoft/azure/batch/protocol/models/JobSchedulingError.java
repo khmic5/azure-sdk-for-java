@@ -16,8 +16,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class JobSchedulingError {
     /**
-     * The category of the Job scheduling error.
-     * Possible values include: 'userError', 'serverError'.
+     * The category of the Job scheduling error. Possible values include:
+     * 'userError', 'serverError'.
      */
     @JsonProperty(value = "category", required = true)
     private ErrorCategory category;
@@ -43,7 +43,7 @@ public class JobSchedulingError {
     private List<NameValuePair> details;
 
     /**
-     * Get possible values include: 'userError', 'serverError'.
+     * Get the category of the Job scheduling error. Possible values include: 'userError', 'serverError'.
      *
      * @return the category value
      */
@@ -52,7 +52,7 @@ public class JobSchedulingError {
     }
 
     /**
-     * Set possible values include: 'userError', 'serverError'.
+     * Set the category of the Job scheduling error. Possible values include: 'userError', 'serverError'.
      *
      * @param category the category value to set
      * @return the JobSchedulingError object itself.
@@ -63,7 +63,7 @@ public class JobSchedulingError {
     }
 
     /**
-     * Get the code value.
+     * Get an identifier for the Job scheduling error. Codes are invariant and are intended to be consumed programmatically.
      *
      * @return the code value
      */
@@ -72,7 +72,7 @@ public class JobSchedulingError {
     }
 
     /**
-     * Set the code value.
+     * Set an identifier for the Job scheduling error. Codes are invariant and are intended to be consumed programmatically.
      *
      * @param code the code value to set
      * @return the JobSchedulingError object itself.
@@ -83,7 +83,7 @@ public class JobSchedulingError {
     }
 
     /**
-     * Get the message value.
+     * Get a message describing the Job scheduling error, intended to be suitable for display in a user interface.
      *
      * @return the message value
      */
@@ -92,7 +92,7 @@ public class JobSchedulingError {
     }
 
     /**
-     * Set the message value.
+     * Set a message describing the Job scheduling error, intended to be suitable for display in a user interface.
      *
      * @param message the message value to set
      * @return the JobSchedulingError object itself.
@@ -103,7 +103,7 @@ public class JobSchedulingError {
     }
 
     /**
-     * Get the details value.
+     * Get a list of additional error details related to the scheduling error.
      *
      * @return the details value
      */
@@ -112,7 +112,7 @@ public class JobSchedulingError {
     }
 
     /**
-     * Set the details value.
+     * Set a list of additional error details related to the scheduling error.
      *
      * @param details the details value to set
      * @return the JobSchedulingError object itself.

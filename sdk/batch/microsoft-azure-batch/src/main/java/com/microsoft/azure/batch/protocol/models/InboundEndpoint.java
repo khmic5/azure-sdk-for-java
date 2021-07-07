@@ -21,8 +21,7 @@ public class InboundEndpoint {
     private String name;
 
     /**
-     * The protocol of the endpoint.
-     * Possible values include: 'tcp', 'udp'.
+     * The protocol of the endpoint. Possible values include: 'tcp', 'udp'.
      */
     @JsonProperty(value = "protocol", required = true)
     private InboundEndpointProtocol protocol;
@@ -52,7 +51,7 @@ public class InboundEndpoint {
     private int backendPort;
 
     /**
-     * Get the name value.
+     * Get the name of the endpoint.
      *
      * @return the name value
      */
@@ -61,7 +60,7 @@ public class InboundEndpoint {
     }
 
     /**
-     * Set the name value.
+     * Set the name of the endpoint.
      *
      * @param name the name value to set
      * @return the InboundEndpoint object itself.
@@ -72,7 +71,7 @@ public class InboundEndpoint {
     }
 
     /**
-     * Get possible values include: 'tcp', 'udp'.
+     * Get the protocol of the endpoint. Possible values include: 'tcp', 'udp'.
      *
      * @return the protocol value
      */
@@ -81,7 +80,7 @@ public class InboundEndpoint {
     }
 
     /**
-     * Set possible values include: 'tcp', 'udp'.
+     * Set the protocol of the endpoint. Possible values include: 'tcp', 'udp'.
      *
      * @param protocol the protocol value to set
      * @return the InboundEndpoint object itself.
@@ -92,7 +91,7 @@ public class InboundEndpoint {
     }
 
     /**
-     * Get the publicIPAddress value.
+     * Get the public IP address of the Compute Node.
      *
      * @return the publicIPAddress value
      */
@@ -101,7 +100,7 @@ public class InboundEndpoint {
     }
 
     /**
-     * Set the publicIPAddress value.
+     * Set the public IP address of the Compute Node.
      *
      * @param publicIPAddress the publicIPAddress value to set
      * @return the InboundEndpoint object itself.
@@ -112,7 +111,7 @@ public class InboundEndpoint {
     }
 
     /**
-     * Get the publicFQDN value.
+     * Get the public fully qualified domain name for the Compute Node.
      *
      * @return the publicFQDN value
      */
@@ -121,7 +120,7 @@ public class InboundEndpoint {
     }
 
     /**
-     * Set the publicFQDN value.
+     * Set the public fully qualified domain name for the Compute Node.
      *
      * @param publicFQDN the publicFQDN value to set
      * @return the InboundEndpoint object itself.
@@ -132,7 +131,7 @@ public class InboundEndpoint {
     }
 
     /**
-     * Get the frontendPort value.
+     * Get the public port number of the endpoint.
      *
      * @return the frontendPort value
      */
@@ -141,7 +140,7 @@ public class InboundEndpoint {
     }
 
     /**
-     * Set the frontendPort value.
+     * Set the public port number of the endpoint.
      *
      * @param frontendPort the frontendPort value to set
      * @return the InboundEndpoint object itself.
@@ -152,7 +151,7 @@ public class InboundEndpoint {
     }
 
     /**
-     * Get the backendPort value.
+     * Get the backend port number of the endpoint.
      *
      * @return the backendPort value
      */
@@ -161,7 +160,7 @@ public class InboundEndpoint {
     }
 
     /**
-     * Set the backendPort value.
+     * Set the backend port number of the endpoint.
      *
      * @param backendPort the backendPort value to set
      * @return the InboundEndpoint object itself.

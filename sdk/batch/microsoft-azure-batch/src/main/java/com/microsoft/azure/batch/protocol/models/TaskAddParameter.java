@@ -12,58 +12,55 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * An Azure Batch Task to add.
- * Batch will retry Tasks when a recovery operation is triggered on a Node.
- * Examples of recovery operations include (but are not limited to) when an
- * unhealthy Node is rebooted or a Compute Node disappeared due to host
- * failure. Retries due to recovery operations are independent of and are not
- * counted against the maxTaskRetryCount. Even if the maxTaskRetryCount is 0,
- * an internal retry due to a recovery operation may occur. Because of this,
- * all Tasks should be idempotent. This means Tasks need to tolerate being
- * interrupted and restarted without causing any corruption or duplicate data.
- * The best practice for long running Tasks is to use some form of
- * checkpointing.
+ * An Azure Batch Task to add. Batch will retry Tasks when a recovery operation
+ * is triggered on a Node. Examples of recovery operations include (but are not
+ * limited to) when an unhealthy Node is rebooted or a Compute Node disappeared
+ * due to host failure. Retries due to recovery operations are independent of
+ * and are not counted against the maxTaskRetryCount. Even if the
+ * maxTaskRetryCount is 0, an internal retry due to a recovery operation may
+ * occur. Because of this, all Tasks should be idempotent. This means Tasks
+ * need to tolerate being interrupted and restarted without causing any
+ * corruption or duplicate data. The best practice for long running Tasks is to
+ * use some form of checkpointing.
  */
 public class TaskAddParameter {
     /**
-     * A string that uniquely identifies the Task within the Job.
-     * The ID can contain any combination of alphanumeric characters including
-     * hyphens and underscores, and cannot contain more than 64 characters. The
-     * ID is case-preserving and case-insensitive (that is, you may not have
-     * two IDs within a Job that differ only by case).
+     * A string that uniquely identifies the Task within the Job. The ID can
+     * contain any combination of alphanumeric characters including hyphens and
+     * underscores, and cannot contain more than 64 characters. The ID is
+     * case-preserving and case-insensitive (that is, you may not have two IDs
+     * within a Job that differ only by case).
      */
     @JsonProperty(value = "id", required = true)
     private String id;
 
     /**
-     * A display name for the Task.
-     * The display name need not be unique and can contain any Unicode
-     * characters up to a maximum length of 1024.
+     * A display name for the Task. The display name need not be unique and can
+     * contain any Unicode characters up to a maximum length of 1024.
      */
     @JsonProperty(value = "displayName")
     private String displayName;
 
     /**
-     * The command line of the Task.
-     * For multi-instance Tasks, the command line is executed as the primary
-     * Task, after the primary Task and all subtasks have finished executing
-     * the coordination command line. The command line does not run under a
-     * shell, and therefore cannot take advantage of shell features such as
-     * environment variable expansion. If you want to take advantage of such
-     * features, you should invoke the shell in the command line, for example
-     * using "cmd /c MyCommand" in Windows or "/bin/sh -c MyCommand" in Linux.
-     * If the command line refers to file paths, it should use a relative path
-     * (relative to the Task working directory), or use the Batch provided
-     * environment variable
+     * The command line of the Task. For multi-instance Tasks, the command line
+     * is executed as the primary Task, after the primary Task and all subtasks
+     * have finished executing the coordination command line. The command line
+     * does not run under a shell, and therefore cannot take advantage of shell
+     * features such as environment variable expansion. If you want to take
+     * advantage of such features, you should invoke the shell in the command
+     * line, for example using "cmd /c MyCommand" in Windows or "/bin/sh -c
+     * MyCommand" in Linux. If the command line refers to file paths, it should
+     * use a relative path (relative to the Task working directory), or use the
+     * Batch provided environment variable
      * (https://docs.microsoft.com/en-us/azure/batch/batch-compute-node-environment-variables).
      */
     @JsonProperty(value = "commandLine", required = true)
     private String commandLine;
 
     /**
-     * The settings for the container under which the Task runs.
-     * If the Pool that will run this Task has containerConfiguration set, this
-     * must be set as well. If the Pool that will run this Task doesn't have
+     * The settings for the container under which the Task runs. If the Pool
+     * that will run this Task has containerConfiguration set, this must be set
+     * as well. If the Pool that will run this Task doesn't have
      * containerConfiguration set, this must not be set. When this is
      * specified, all directories recursively below the AZ_BATCH_NODE_ROOT_DIR
      * (the root of Azure Batch directories on the node) are mapped into the
@@ -84,23 +81,22 @@ public class TaskAddParameter {
 
     /**
      * A list of files that the Batch service will download to the Compute Node
-     * before running the command line.
-     * For multi-instance Tasks, the resource files will only be downloaded to
-     * the Compute Node on which the primary Task is executed. There is a
-     * maximum size for the list of resource files.  When the max size is
-     * exceeded, the request will fail and the response error code will be
-     * RequestEntityTooLarge. If this occurs, the collection of ResourceFiles
-     * must be reduced in size. This can be achieved using .zip files,
-     * Application Packages, or Docker Containers.
+     * before running the command line. For multi-instance Tasks, the resource
+     * files will only be downloaded to the Compute Node on which the primary
+     * Task is executed. There is a maximum size for the list of resource
+     * files.  When the max size is exceeded, the request will fail and the
+     * response error code will be RequestEntityTooLarge. If this occurs, the
+     * collection of ResourceFiles must be reduced in size. This can be
+     * achieved using .zip files, Application Packages, or Docker Containers.
      */
     @JsonProperty(value = "resourceFiles")
     private List<ResourceFile> resourceFiles;
 
     /**
      * A list of files that the Batch service will upload from the Compute Node
-     * after running the command line.
-     * For multi-instance Tasks, the files will only be uploaded from the
-     * Compute Node on which the primary Task is executed.
+     * after running the command line. For multi-instance Tasks, the files will
+     * only be uploaded from the Compute Node on which the primary Task is
+     * executed.
      */
     @JsonProperty(value = "outputFiles")
     private List<OutputFile> outputFiles;
@@ -119,27 +115,26 @@ public class TaskAddParameter {
     private AffinityInformation affinityInfo;
 
     /**
-     * The execution constraints that apply to this Task.
-     * If you do not specify constraints, the maxTaskRetryCount is the
-     * maxTaskRetryCount specified for the Job, the maxWallClockTime is
-     * infinite, and the retentionTime is 7 days.
+     * The execution constraints that apply to this Task. If you do not specify
+     * constraints, the maxTaskRetryCount is the maxTaskRetryCount specified
+     * for the Job, the maxWallClockTime is infinite, and the retentionTime is
+     * 7 days.
      */
     @JsonProperty(value = "constraints")
     private TaskConstraints constraints;
 
     /**
-     * The number of scheduling slots that the Task required to run.
-     * The default is 1. A Task can only be scheduled to run on a compute node
-     * if the node has enough free scheduling slots available. For
-     * multi-instance Tasks, this must be 1.
+     * The number of scheduling slots that the Task required to run. The
+     * default is 1. A Task can only be scheduled to run on a compute node if
+     * the node has enough free scheduling slots available. For multi-instance
+     * Tasks, this must be 1.
      */
     @JsonProperty(value = "requiredSlots")
     private Integer requiredSlots;
 
     /**
-     * The user identity under which the Task runs.
-     * If omitted, the Task runs as a non-administrative user unique to the
-     * Task.
+     * The user identity under which the Task runs. If omitted, the Task runs
+     * as a non-administrative user unique to the Task.
      */
     @JsonProperty(value = "userIdentity")
     private UserIdentity userIdentity;
@@ -152,46 +147,45 @@ public class TaskAddParameter {
     private MultiInstanceSettings multiInstanceSettings;
 
     /**
-     * The Tasks that this Task depends on.
-     * This Task will not be scheduled until all Tasks that it depends on have
-     * completed successfully. If any of those Tasks fail and exhaust their
-     * retry counts, this Task will never be scheduled. If the Job does not
-     * have usesTaskDependencies set to true, and this element is present, the
-     * request fails with error code TaskDependenciesNotSpecifiedOnJob.
+     * The Tasks that this Task depends on. This Task will not be scheduled
+     * until all Tasks that it depends on have completed successfully. If any
+     * of those Tasks fail and exhaust their retry counts, this Task will never
+     * be scheduled. If the Job does not have usesTaskDependencies set to true,
+     * and this element is present, the request fails with error code
+     * TaskDependenciesNotSpecifiedOnJob.
      */
     @JsonProperty(value = "dependsOn")
     private TaskDependencies dependsOn;
 
     /**
      * A list of Packages that the Batch service will deploy to the Compute
-     * Node before running the command line.
-     * Application packages are downloaded and deployed to a shared directory,
-     * not the Task working directory. Therefore, if a referenced package is
-     * already on the Node, and is up to date, then it is not re-downloaded;
-     * the existing copy on the Compute Node is used. If a referenced Package
-     * cannot be installed, for example because the package has been deleted or
-     * because download failed, the Task fails.
+     * Node before running the command line. Application packages are
+     * downloaded and deployed to a shared directory, not the Task working
+     * directory. Therefore, if a referenced package is already on the Node,
+     * and is up to date, then it is not re-downloaded; the existing copy on
+     * the Compute Node is used. If a referenced Package cannot be installed,
+     * for example because the package has been deleted or because download
+     * failed, the Task fails.
      */
     @JsonProperty(value = "applicationPackageReferences")
     private List<ApplicationPackageReference> applicationPackageReferences;
 
     /**
      * The settings for an authentication token that the Task can use to
-     * perform Batch service operations.
-     * If this property is set, the Batch service provides the Task with an
-     * authentication token which can be used to authenticate Batch service
-     * operations without requiring an Account access key. The token is
-     * provided via the AZ_BATCH_AUTHENTICATION_TOKEN environment variable. The
-     * operations that the Task can carry out using the token depend on the
-     * settings. For example, a Task can request Job permissions in order to
-     * add other Tasks to the Job, or check the status of the Job or of other
-     * Tasks under the Job.
+     * perform Batch service operations. If this property is set, the Batch
+     * service provides the Task with an authentication token which can be used
+     * to authenticate Batch service operations without requiring an Account
+     * access key. The token is provided via the AZ_BATCH_AUTHENTICATION_TOKEN
+     * environment variable. The operations that the Task can carry out using
+     * the token depend on the settings. For example, a Task can request Job
+     * permissions in order to add other Tasks to the Job, or check the status
+     * of the Job or of other Tasks under the Job.
      */
     @JsonProperty(value = "authenticationTokenSettings")
     private AuthenticationTokenSettings authenticationTokenSettings;
 
     /**
-     * Get the ID can contain any combination of alphanumeric characters including hyphens and underscores, and cannot contain more than 64 characters. The ID is case-preserving and case-insensitive (that is, you may not have two IDs within a Job that differ only by case).
+     * Get a string that uniquely identifies the Task within the Job. The ID can contain any combination of alphanumeric characters including hyphens and underscores, and cannot contain more than 64 characters. The ID is case-preserving and case-insensitive (that is, you may not have two IDs within a Job that differ only by case).
      *
      * @return the id value
      */
@@ -200,7 +194,7 @@ public class TaskAddParameter {
     }
 
     /**
-     * Set the ID can contain any combination of alphanumeric characters including hyphens and underscores, and cannot contain more than 64 characters. The ID is case-preserving and case-insensitive (that is, you may not have two IDs within a Job that differ only by case).
+     * Set a string that uniquely identifies the Task within the Job. The ID can contain any combination of alphanumeric characters including hyphens and underscores, and cannot contain more than 64 characters. The ID is case-preserving and case-insensitive (that is, you may not have two IDs within a Job that differ only by case).
      *
      * @param id the id value to set
      * @return the TaskAddParameter object itself.
@@ -211,7 +205,7 @@ public class TaskAddParameter {
     }
 
     /**
-     * Get the display name need not be unique and can contain any Unicode characters up to a maximum length of 1024.
+     * Get a display name for the Task. The display name need not be unique and can contain any Unicode characters up to a maximum length of 1024.
      *
      * @return the displayName value
      */
@@ -220,7 +214,7 @@ public class TaskAddParameter {
     }
 
     /**
-     * Set the display name need not be unique and can contain any Unicode characters up to a maximum length of 1024.
+     * Set a display name for the Task. The display name need not be unique and can contain any Unicode characters up to a maximum length of 1024.
      *
      * @param displayName the displayName value to set
      * @return the TaskAddParameter object itself.
@@ -231,7 +225,7 @@ public class TaskAddParameter {
     }
 
     /**
-     * Get for multi-instance Tasks, the command line is executed as the primary Task, after the primary Task and all subtasks have finished executing the coordination command line. The command line does not run under a shell, and therefore cannot take advantage of shell features such as environment variable expansion. If you want to take advantage of such features, you should invoke the shell in the command line, for example using "cmd /c MyCommand" in Windows or "/bin/sh -c MyCommand" in Linux. If the command line refers to file paths, it should use a relative path (relative to the Task working directory), or use the Batch provided environment variable (https://docs.microsoft.com/en-us/azure/batch/batch-compute-node-environment-variables).
+     * Get the command line of the Task. For multi-instance Tasks, the command line is executed as the primary Task, after the primary Task and all subtasks have finished executing the coordination command line. The command line does not run under a shell, and therefore cannot take advantage of shell features such as environment variable expansion. If you want to take advantage of such features, you should invoke the shell in the command line, for example using "cmd /c MyCommand" in Windows or "/bin/sh -c MyCommand" in Linux. If the command line refers to file paths, it should use a relative path (relative to the Task working directory), or use the Batch provided environment variable (https://docs.microsoft.com/en-us/azure/batch/batch-compute-node-environment-variables).
      *
      * @return the commandLine value
      */
@@ -240,7 +234,7 @@ public class TaskAddParameter {
     }
 
     /**
-     * Set for multi-instance Tasks, the command line is executed as the primary Task, after the primary Task and all subtasks have finished executing the coordination command line. The command line does not run under a shell, and therefore cannot take advantage of shell features such as environment variable expansion. If you want to take advantage of such features, you should invoke the shell in the command line, for example using "cmd /c MyCommand" in Windows or "/bin/sh -c MyCommand" in Linux. If the command line refers to file paths, it should use a relative path (relative to the Task working directory), or use the Batch provided environment variable (https://docs.microsoft.com/en-us/azure/batch/batch-compute-node-environment-variables).
+     * Set the command line of the Task. For multi-instance Tasks, the command line is executed as the primary Task, after the primary Task and all subtasks have finished executing the coordination command line. The command line does not run under a shell, and therefore cannot take advantage of shell features such as environment variable expansion. If you want to take advantage of such features, you should invoke the shell in the command line, for example using "cmd /c MyCommand" in Windows or "/bin/sh -c MyCommand" in Linux. If the command line refers to file paths, it should use a relative path (relative to the Task working directory), or use the Batch provided environment variable (https://docs.microsoft.com/en-us/azure/batch/batch-compute-node-environment-variables).
      *
      * @param commandLine the commandLine value to set
      * @return the TaskAddParameter object itself.
@@ -251,7 +245,7 @@ public class TaskAddParameter {
     }
 
     /**
-     * Get if the Pool that will run this Task has containerConfiguration set, this must be set as well. If the Pool that will run this Task doesn't have containerConfiguration set, this must not be set. When this is specified, all directories recursively below the AZ_BATCH_NODE_ROOT_DIR (the root of Azure Batch directories on the node) are mapped into the container, all Task environment variables are mapped into the container, and the Task command line is executed in the container. Files produced in the container outside of AZ_BATCH_NODE_ROOT_DIR might not be reflected to the host disk, meaning that Batch file APIs will not be able to access those files.
+     * Get the settings for the container under which the Task runs. If the Pool that will run this Task has containerConfiguration set, this must be set as well. If the Pool that will run this Task doesn't have containerConfiguration set, this must not be set. When this is specified, all directories recursively below the AZ_BATCH_NODE_ROOT_DIR (the root of Azure Batch directories on the node) are mapped into the container, all Task environment variables are mapped into the container, and the Task command line is executed in the container. Files produced in the container outside of AZ_BATCH_NODE_ROOT_DIR might not be reflected to the host disk, meaning that Batch file APIs will not be able to access those files.
      *
      * @return the containerSettings value
      */
@@ -260,7 +254,7 @@ public class TaskAddParameter {
     }
 
     /**
-     * Set if the Pool that will run this Task has containerConfiguration set, this must be set as well. If the Pool that will run this Task doesn't have containerConfiguration set, this must not be set. When this is specified, all directories recursively below the AZ_BATCH_NODE_ROOT_DIR (the root of Azure Batch directories on the node) are mapped into the container, all Task environment variables are mapped into the container, and the Task command line is executed in the container. Files produced in the container outside of AZ_BATCH_NODE_ROOT_DIR might not be reflected to the host disk, meaning that Batch file APIs will not be able to access those files.
+     * Set the settings for the container under which the Task runs. If the Pool that will run this Task has containerConfiguration set, this must be set as well. If the Pool that will run this Task doesn't have containerConfiguration set, this must not be set. When this is specified, all directories recursively below the AZ_BATCH_NODE_ROOT_DIR (the root of Azure Batch directories on the node) are mapped into the container, all Task environment variables are mapped into the container, and the Task command line is executed in the container. Files produced in the container outside of AZ_BATCH_NODE_ROOT_DIR might not be reflected to the host disk, meaning that Batch file APIs will not be able to access those files.
      *
      * @param containerSettings the containerSettings value to set
      * @return the TaskAddParameter object itself.
@@ -291,7 +285,7 @@ public class TaskAddParameter {
     }
 
     /**
-     * Get for multi-instance Tasks, the resource files will only be downloaded to the Compute Node on which the primary Task is executed. There is a maximum size for the list of resource files.  When the max size is exceeded, the request will fail and the response error code will be RequestEntityTooLarge. If this occurs, the collection of ResourceFiles must be reduced in size. This can be achieved using .zip files, Application Packages, or Docker Containers.
+     * Get a list of files that the Batch service will download to the Compute Node before running the command line. For multi-instance Tasks, the resource files will only be downloaded to the Compute Node on which the primary Task is executed. There is a maximum size for the list of resource files.  When the max size is exceeded, the request will fail and the response error code will be RequestEntityTooLarge. If this occurs, the collection of ResourceFiles must be reduced in size. This can be achieved using .zip files, Application Packages, or Docker Containers.
      *
      * @return the resourceFiles value
      */
@@ -300,7 +294,7 @@ public class TaskAddParameter {
     }
 
     /**
-     * Set for multi-instance Tasks, the resource files will only be downloaded to the Compute Node on which the primary Task is executed. There is a maximum size for the list of resource files.  When the max size is exceeded, the request will fail and the response error code will be RequestEntityTooLarge. If this occurs, the collection of ResourceFiles must be reduced in size. This can be achieved using .zip files, Application Packages, or Docker Containers.
+     * Set a list of files that the Batch service will download to the Compute Node before running the command line. For multi-instance Tasks, the resource files will only be downloaded to the Compute Node on which the primary Task is executed. There is a maximum size for the list of resource files.  When the max size is exceeded, the request will fail and the response error code will be RequestEntityTooLarge. If this occurs, the collection of ResourceFiles must be reduced in size. This can be achieved using .zip files, Application Packages, or Docker Containers.
      *
      * @param resourceFiles the resourceFiles value to set
      * @return the TaskAddParameter object itself.
@@ -311,7 +305,7 @@ public class TaskAddParameter {
     }
 
     /**
-     * Get for multi-instance Tasks, the files will only be uploaded from the Compute Node on which the primary Task is executed.
+     * Get a list of files that the Batch service will upload from the Compute Node after running the command line. For multi-instance Tasks, the files will only be uploaded from the Compute Node on which the primary Task is executed.
      *
      * @return the outputFiles value
      */
@@ -320,7 +314,7 @@ public class TaskAddParameter {
     }
 
     /**
-     * Set for multi-instance Tasks, the files will only be uploaded from the Compute Node on which the primary Task is executed.
+     * Set a list of files that the Batch service will upload from the Compute Node after running the command line. For multi-instance Tasks, the files will only be uploaded from the Compute Node on which the primary Task is executed.
      *
      * @param outputFiles the outputFiles value to set
      * @return the TaskAddParameter object itself.
@@ -331,7 +325,7 @@ public class TaskAddParameter {
     }
 
     /**
-     * Get the environmentSettings value.
+     * Get a list of environment variable settings for the Task.
      *
      * @return the environmentSettings value
      */
@@ -340,7 +334,7 @@ public class TaskAddParameter {
     }
 
     /**
-     * Set the environmentSettings value.
+     * Set a list of environment variable settings for the Task.
      *
      * @param environmentSettings the environmentSettings value to set
      * @return the TaskAddParameter object itself.
@@ -351,7 +345,7 @@ public class TaskAddParameter {
     }
 
     /**
-     * Get the affinityInfo value.
+     * Get a locality hint that can be used by the Batch service to select a Compute Node on which to start the new Task.
      *
      * @return the affinityInfo value
      */
@@ -360,7 +354,7 @@ public class TaskAddParameter {
     }
 
     /**
-     * Set the affinityInfo value.
+     * Set a locality hint that can be used by the Batch service to select a Compute Node on which to start the new Task.
      *
      * @param affinityInfo the affinityInfo value to set
      * @return the TaskAddParameter object itself.
@@ -371,7 +365,7 @@ public class TaskAddParameter {
     }
 
     /**
-     * Get if you do not specify constraints, the maxTaskRetryCount is the maxTaskRetryCount specified for the Job, the maxWallClockTime is infinite, and the retentionTime is 7 days.
+     * Get the execution constraints that apply to this Task. If you do not specify constraints, the maxTaskRetryCount is the maxTaskRetryCount specified for the Job, the maxWallClockTime is infinite, and the retentionTime is 7 days.
      *
      * @return the constraints value
      */
@@ -380,7 +374,7 @@ public class TaskAddParameter {
     }
 
     /**
-     * Set if you do not specify constraints, the maxTaskRetryCount is the maxTaskRetryCount specified for the Job, the maxWallClockTime is infinite, and the retentionTime is 7 days.
+     * Set the execution constraints that apply to this Task. If you do not specify constraints, the maxTaskRetryCount is the maxTaskRetryCount specified for the Job, the maxWallClockTime is infinite, and the retentionTime is 7 days.
      *
      * @param constraints the constraints value to set
      * @return the TaskAddParameter object itself.
@@ -391,7 +385,7 @@ public class TaskAddParameter {
     }
 
     /**
-     * Get the default is 1. A Task can only be scheduled to run on a compute node if the node has enough free scheduling slots available. For multi-instance Tasks, this must be 1.
+     * Get the number of scheduling slots that the Task required to run. The default is 1. A Task can only be scheduled to run on a compute node if the node has enough free scheduling slots available. For multi-instance Tasks, this must be 1.
      *
      * @return the requiredSlots value
      */
@@ -400,7 +394,7 @@ public class TaskAddParameter {
     }
 
     /**
-     * Set the default is 1. A Task can only be scheduled to run on a compute node if the node has enough free scheduling slots available. For multi-instance Tasks, this must be 1.
+     * Set the number of scheduling slots that the Task required to run. The default is 1. A Task can only be scheduled to run on a compute node if the node has enough free scheduling slots available. For multi-instance Tasks, this must be 1.
      *
      * @param requiredSlots the requiredSlots value to set
      * @return the TaskAddParameter object itself.
@@ -411,7 +405,7 @@ public class TaskAddParameter {
     }
 
     /**
-     * Get if omitted, the Task runs as a non-administrative user unique to the Task.
+     * Get the user identity under which the Task runs. If omitted, the Task runs as a non-administrative user unique to the Task.
      *
      * @return the userIdentity value
      */
@@ -420,7 +414,7 @@ public class TaskAddParameter {
     }
 
     /**
-     * Set if omitted, the Task runs as a non-administrative user unique to the Task.
+     * Set the user identity under which the Task runs. If omitted, the Task runs as a non-administrative user unique to the Task.
      *
      * @param userIdentity the userIdentity value to set
      * @return the TaskAddParameter object itself.
@@ -431,7 +425,7 @@ public class TaskAddParameter {
     }
 
     /**
-     * Get the multiInstanceSettings value.
+     * Get an object that indicates that the Task is a multi-instance Task, and contains information about how to run the multi-instance Task.
      *
      * @return the multiInstanceSettings value
      */
@@ -440,7 +434,7 @@ public class TaskAddParameter {
     }
 
     /**
-     * Set the multiInstanceSettings value.
+     * Set an object that indicates that the Task is a multi-instance Task, and contains information about how to run the multi-instance Task.
      *
      * @param multiInstanceSettings the multiInstanceSettings value to set
      * @return the TaskAddParameter object itself.
@@ -451,7 +445,7 @@ public class TaskAddParameter {
     }
 
     /**
-     * Get this Task will not be scheduled until all Tasks that it depends on have completed successfully. If any of those Tasks fail and exhaust their retry counts, this Task will never be scheduled. If the Job does not have usesTaskDependencies set to true, and this element is present, the request fails with error code TaskDependenciesNotSpecifiedOnJob.
+     * Get the Tasks that this Task depends on. This Task will not be scheduled until all Tasks that it depends on have completed successfully. If any of those Tasks fail and exhaust their retry counts, this Task will never be scheduled. If the Job does not have usesTaskDependencies set to true, and this element is present, the request fails with error code TaskDependenciesNotSpecifiedOnJob.
      *
      * @return the dependsOn value
      */
@@ -460,7 +454,7 @@ public class TaskAddParameter {
     }
 
     /**
-     * Set this Task will not be scheduled until all Tasks that it depends on have completed successfully. If any of those Tasks fail and exhaust their retry counts, this Task will never be scheduled. If the Job does not have usesTaskDependencies set to true, and this element is present, the request fails with error code TaskDependenciesNotSpecifiedOnJob.
+     * Set the Tasks that this Task depends on. This Task will not be scheduled until all Tasks that it depends on have completed successfully. If any of those Tasks fail and exhaust their retry counts, this Task will never be scheduled. If the Job does not have usesTaskDependencies set to true, and this element is present, the request fails with error code TaskDependenciesNotSpecifiedOnJob.
      *
      * @param dependsOn the dependsOn value to set
      * @return the TaskAddParameter object itself.
@@ -471,7 +465,7 @@ public class TaskAddParameter {
     }
 
     /**
-     * Get application packages are downloaded and deployed to a shared directory, not the Task working directory. Therefore, if a referenced package is already on the Node, and is up to date, then it is not re-downloaded; the existing copy on the Compute Node is used. If a referenced Package cannot be installed, for example because the package has been deleted or because download failed, the Task fails.
+     * Get a list of Packages that the Batch service will deploy to the Compute Node before running the command line. Application packages are downloaded and deployed to a shared directory, not the Task working directory. Therefore, if a referenced package is already on the Node, and is up to date, then it is not re-downloaded; the existing copy on the Compute Node is used. If a referenced Package cannot be installed, for example because the package has been deleted or because download failed, the Task fails.
      *
      * @return the applicationPackageReferences value
      */
@@ -480,7 +474,7 @@ public class TaskAddParameter {
     }
 
     /**
-     * Set application packages are downloaded and deployed to a shared directory, not the Task working directory. Therefore, if a referenced package is already on the Node, and is up to date, then it is not re-downloaded; the existing copy on the Compute Node is used. If a referenced Package cannot be installed, for example because the package has been deleted or because download failed, the Task fails.
+     * Set a list of Packages that the Batch service will deploy to the Compute Node before running the command line. Application packages are downloaded and deployed to a shared directory, not the Task working directory. Therefore, if a referenced package is already on the Node, and is up to date, then it is not re-downloaded; the existing copy on the Compute Node is used. If a referenced Package cannot be installed, for example because the package has been deleted or because download failed, the Task fails.
      *
      * @param applicationPackageReferences the applicationPackageReferences value to set
      * @return the TaskAddParameter object itself.
@@ -491,7 +485,7 @@ public class TaskAddParameter {
     }
 
     /**
-     * Get if this property is set, the Batch service provides the Task with an authentication token which can be used to authenticate Batch service operations without requiring an Account access key. The token is provided via the AZ_BATCH_AUTHENTICATION_TOKEN environment variable. The operations that the Task can carry out using the token depend on the settings. For example, a Task can request Job permissions in order to add other Tasks to the Job, or check the status of the Job or of other Tasks under the Job.
+     * Get the settings for an authentication token that the Task can use to perform Batch service operations. If this property is set, the Batch service provides the Task with an authentication token which can be used to authenticate Batch service operations without requiring an Account access key. The token is provided via the AZ_BATCH_AUTHENTICATION_TOKEN environment variable. The operations that the Task can carry out using the token depend on the settings. For example, a Task can request Job permissions in order to add other Tasks to the Job, or check the status of the Job or of other Tasks under the Job.
      *
      * @return the authenticationTokenSettings value
      */
@@ -500,7 +494,7 @@ public class TaskAddParameter {
     }
 
     /**
-     * Set if this property is set, the Batch service provides the Task with an authentication token which can be used to authenticate Batch service operations without requiring an Account access key. The token is provided via the AZ_BATCH_AUTHENTICATION_TOKEN environment variable. The operations that the Task can carry out using the token depend on the settings. For example, a Task can request Job permissions in order to add other Tasks to the Job, or check the status of the Job or of other Tasks under the Job.
+     * Set the settings for an authentication token that the Task can use to perform Batch service operations. If this property is set, the Batch service provides the Task with an authentication token which can be used to authenticate Batch service operations without requiring an Account access key. The token is provided via the AZ_BATCH_AUTHENTICATION_TOKEN environment variable. The operations that the Task can carry out using the token depend on the settings. For example, a Task can request Job permissions in order to add other Tasks to the Job, or check the status of the Job or of other Tasks under the Job.
      *
      * @param authenticationTokenSettings the authenticationTokenSettings value to set
      * @return the TaskAddParameter object itself.

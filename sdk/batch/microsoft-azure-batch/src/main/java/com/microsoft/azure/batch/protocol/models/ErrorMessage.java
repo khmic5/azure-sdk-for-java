@@ -27,7 +27,7 @@ public class ErrorMessage {
     private String value;
 
     /**
-     * Get the lang value.
+     * Get the language code of the error message.
      *
      * @return the lang value
      */
@@ -36,7 +36,7 @@ public class ErrorMessage {
     }
 
     /**
-     * Set the lang value.
+     * Set the language code of the error message.
      *
      * @param lang the lang value to set
      * @return the ErrorMessage object itself.
@@ -47,7 +47,7 @@ public class ErrorMessage {
     }
 
     /**
-     * Get the value value.
+     * Get the text of the message.
      *
      * @return the value value
      */
@@ -56,7 +56,7 @@ public class ErrorMessage {
     }
 
     /**
-     * Set the value value.
+     * Set the text of the message.
      *
      * @param value the value value to set
      * @return the ErrorMessage object itself.

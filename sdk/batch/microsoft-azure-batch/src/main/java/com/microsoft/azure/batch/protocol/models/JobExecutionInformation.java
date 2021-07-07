@@ -17,28 +17,27 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class JobExecutionInformation {
     /**
-     * The start time of the Job.
-     * This is the time at which the Job was created.
+     * The start time of the Job. This is the time at which the Job was
+     * created.
      */
     @JsonProperty(value = "startTime", required = true)
     private DateTime startTime;
 
     /**
-     * The completion time of the Job.
-     * This property is set only if the Job is in the completed state.
+     * The completion time of the Job. This property is set only if the Job is
+     * in the completed state.
      */
     @JsonProperty(value = "endTime")
     private DateTime endTime;
 
     /**
-     * The ID of the Pool to which this Job is assigned.
-     * This element contains the actual Pool where the Job is assigned. When
-     * you get Job details from the service, they also contain a poolInfo
-     * element, which contains the Pool configuration data from when the Job
-     * was added or updated. That poolInfo element may also contain a poolId
-     * element. If it does, the two IDs are the same. If it does not, it means
-     * the Job ran on an auto Pool, and this property contains the ID of that
-     * auto Pool.
+     * The ID of the Pool to which this Job is assigned. This element contains
+     * the actual Pool where the Job is assigned. When you get Job details from
+     * the service, they also contain a poolInfo element, which contains the
+     * Pool configuration data from when the Job was added or updated. That
+     * poolInfo element may also contain a poolId element. If it does, the two
+     * IDs are the same. If it does not, it means the Job ran on an auto Pool,
+     * and this property contains the ID of that auto Pool.
      */
     @JsonProperty(value = "poolId")
     private String poolId;
@@ -51,13 +50,13 @@ public class JobExecutionInformation {
     private JobSchedulingError schedulingError;
 
     /**
-     * A string describing the reason the Job ended.
-     * This property is set only if the Job is in the completed state. If the
-     * Batch service terminates the Job, it sets the reason as follows:
-     * JMComplete - the Job Manager Task completed, and killJobOnCompletion was
-     * set to true. MaxWallClockTimeExpiry - the Job reached its
-     * maxWallClockTime constraint. TerminateJobSchedule - the Job ran as part
-     * of a schedule, and the schedule terminated. AllTasksComplete - the Job's
+     * A string describing the reason the Job ended. This property is set only
+     * if the Job is in the completed state. If the Batch service terminates
+     * the Job, it sets the reason as follows: JMComplete - the Job Manager
+     * Task completed, and killJobOnCompletion was set to true.
+     * MaxWallClockTimeExpiry - the Job reached its maxWallClockTime
+     * constraint. TerminateJobSchedule - the Job ran as part of a schedule,
+     * and the schedule terminated. AllTasksComplete - the Job's
      * onAllTasksComplete attribute is set to terminatejob, and all Tasks in
      * the Job are complete. TaskFailed - the Job's onTaskFailure attribute is
      * set to performExitOptionsJobAction, and a Task in the Job failed with an
@@ -69,7 +68,7 @@ public class JobExecutionInformation {
     private String terminateReason;
 
     /**
-     * Get this is the time at which the Job was created.
+     * Get the start time of the Job. This is the time at which the Job was created.
      *
      * @return the startTime value
      */
@@ -78,7 +77,7 @@ public class JobExecutionInformation {
     }
 
     /**
-     * Set this is the time at which the Job was created.
+     * Set the start time of the Job. This is the time at which the Job was created.
      *
      * @param startTime the startTime value to set
      * @return the JobExecutionInformation object itself.
@@ -89,7 +88,7 @@ public class JobExecutionInformation {
     }
 
     /**
-     * Get this property is set only if the Job is in the completed state.
+     * Get the completion time of the Job. This property is set only if the Job is in the completed state.
      *
      * @return the endTime value
      */
@@ -98,7 +97,7 @@ public class JobExecutionInformation {
     }
 
     /**
-     * Set this property is set only if the Job is in the completed state.
+     * Set the completion time of the Job. This property is set only if the Job is in the completed state.
      *
      * @param endTime the endTime value to set
      * @return the JobExecutionInformation object itself.
@@ -109,7 +108,7 @@ public class JobExecutionInformation {
     }
 
     /**
-     * Get this element contains the actual Pool where the Job is assigned. When you get Job details from the service, they also contain a poolInfo element, which contains the Pool configuration data from when the Job was added or updated. That poolInfo element may also contain a poolId element. If it does, the two IDs are the same. If it does not, it means the Job ran on an auto Pool, and this property contains the ID of that auto Pool.
+     * Get the ID of the Pool to which this Job is assigned. This element contains the actual Pool where the Job is assigned. When you get Job details from the service, they also contain a poolInfo element, which contains the Pool configuration data from when the Job was added or updated. That poolInfo element may also contain a poolId element. If it does, the two IDs are the same. If it does not, it means the Job ran on an auto Pool, and this property contains the ID of that auto Pool.
      *
      * @return the poolId value
      */
@@ -118,7 +117,7 @@ public class JobExecutionInformation {
     }
 
     /**
-     * Set this element contains the actual Pool where the Job is assigned. When you get Job details from the service, they also contain a poolInfo element, which contains the Pool configuration data from when the Job was added or updated. That poolInfo element may also contain a poolId element. If it does, the two IDs are the same. If it does not, it means the Job ran on an auto Pool, and this property contains the ID of that auto Pool.
+     * Set the ID of the Pool to which this Job is assigned. This element contains the actual Pool where the Job is assigned. When you get Job details from the service, they also contain a poolInfo element, which contains the Pool configuration data from when the Job was added or updated. That poolInfo element may also contain a poolId element. If it does, the two IDs are the same. If it does not, it means the Job ran on an auto Pool, and this property contains the ID of that auto Pool.
      *
      * @param poolId the poolId value to set
      * @return the JobExecutionInformation object itself.
@@ -129,7 +128,7 @@ public class JobExecutionInformation {
     }
 
     /**
-     * Get this property is not set if there was no error starting the Job.
+     * Get details of any error encountered by the service in starting the Job. This property is not set if there was no error starting the Job.
      *
      * @return the schedulingError value
      */
@@ -138,7 +137,7 @@ public class JobExecutionInformation {
     }
 
     /**
-     * Set this property is not set if there was no error starting the Job.
+     * Set details of any error encountered by the service in starting the Job. This property is not set if there was no error starting the Job.
      *
      * @param schedulingError the schedulingError value to set
      * @return the JobExecutionInformation object itself.
@@ -149,7 +148,7 @@ public class JobExecutionInformation {
     }
 
     /**
-     * Get this property is set only if the Job is in the completed state. If the Batch service terminates the Job, it sets the reason as follows: JMComplete - the Job Manager Task completed, and killJobOnCompletion was set to true. MaxWallClockTimeExpiry - the Job reached its maxWallClockTime constraint. TerminateJobSchedule - the Job ran as part of a schedule, and the schedule terminated. AllTasksComplete - the Job's onAllTasksComplete attribute is set to terminatejob, and all Tasks in the Job are complete. TaskFailed - the Job's onTaskFailure attribute is set to performExitOptionsJobAction, and a Task in the Job failed with an exit condition that specified a jobAction of terminatejob. Any other string is a user-defined reason specified in a call to the 'Terminate a Job' operation.
+     * Get a string describing the reason the Job ended. This property is set only if the Job is in the completed state. If the Batch service terminates the Job, it sets the reason as follows: JMComplete - the Job Manager Task completed, and killJobOnCompletion was set to true. MaxWallClockTimeExpiry - the Job reached its maxWallClockTime constraint. TerminateJobSchedule - the Job ran as part of a schedule, and the schedule terminated. AllTasksComplete - the Job's onAllTasksComplete attribute is set to terminatejob, and all Tasks in the Job are complete. TaskFailed - the Job's onTaskFailure attribute is set to performExitOptionsJobAction, and a Task in the Job failed with an exit condition that specified a jobAction of terminatejob. Any other string is a user-defined reason specified in a call to the 'Terminate a Job' operation.
      *
      * @return the terminateReason value
      */
@@ -158,7 +157,7 @@ public class JobExecutionInformation {
     }
 
     /**
-     * Set this property is set only if the Job is in the completed state. If the Batch service terminates the Job, it sets the reason as follows: JMComplete - the Job Manager Task completed, and killJobOnCompletion was set to true. MaxWallClockTimeExpiry - the Job reached its maxWallClockTime constraint. TerminateJobSchedule - the Job ran as part of a schedule, and the schedule terminated. AllTasksComplete - the Job's onAllTasksComplete attribute is set to terminatejob, and all Tasks in the Job are complete. TaskFailed - the Job's onTaskFailure attribute is set to performExitOptionsJobAction, and a Task in the Job failed with an exit condition that specified a jobAction of terminatejob. Any other string is a user-defined reason specified in a call to the 'Terminate a Job' operation.
+     * Set a string describing the reason the Job ended. This property is set only if the Job is in the completed state. If the Batch service terminates the Job, it sets the reason as follows: JMComplete - the Job Manager Task completed, and killJobOnCompletion was set to true. MaxWallClockTimeExpiry - the Job reached its maxWallClockTime constraint. TerminateJobSchedule - the Job ran as part of a schedule, and the schedule terminated. AllTasksComplete - the Job's onAllTasksComplete attribute is set to terminatejob, and all Tasks in the Job are complete. TaskFailed - the Job's onTaskFailure attribute is set to performExitOptionsJobAction, and a Task in the Job failed with an exit condition that specified a jobAction of terminatejob. Any other string is a user-defined reason specified in a call to the 'Terminate a Job' operation.
      *
      * @param terminateReason the terminateReason value to set
      * @return the JobExecutionInformation object itself.

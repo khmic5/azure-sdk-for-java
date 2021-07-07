@@ -12,9 +12,9 @@ import org.joda.time.DateTime;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * Information about the Compute Node agent.
- * The Batch Compute Node agent is a program that runs on each Compute Node in
- * the Pool and provides Batch capability on the Compute Node.
+ * Information about the Compute Node agent. The Batch Compute Node agent is a
+ * program that runs on each Compute Node in the Pool and provides Batch
+ * capability on the Compute Node.
  */
 public class NodeAgentInformation {
     /**
@@ -27,15 +27,14 @@ public class NodeAgentInformation {
     private String version;
 
     /**
-     * The time when the Compute Node agent was updated on the Compute Node.
-     * This is the most recent time that the Compute Node agent was updated to
-     * a new version.
+     * The most recent time that the Compute Node agent was updated to a new
+     * version.
      */
     @JsonProperty(value = "lastUpdateTime", required = true)
     private DateTime lastUpdateTime;
 
     /**
-     * Get this version number can be checked against the Compute Node agent release notes located at https://github.com/Azure/Batch/blob/master/changelogs/nodeagent/CHANGELOG.md.
+     * Get the version of the Batch Compute Node agent running on the Compute Node. This version number can be checked against the Compute Node agent release notes located at https://github.com/Azure/Batch/blob/master/changelogs/nodeagent/CHANGELOG.md.
      *
      * @return the version value
      */
@@ -44,7 +43,7 @@ public class NodeAgentInformation {
     }
 
     /**
-     * Set this version number can be checked against the Compute Node agent release notes located at https://github.com/Azure/Batch/blob/master/changelogs/nodeagent/CHANGELOG.md.
+     * Set the version of the Batch Compute Node agent running on the Compute Node. This version number can be checked against the Compute Node agent release notes located at https://github.com/Azure/Batch/blob/master/changelogs/nodeagent/CHANGELOG.md.
      *
      * @param version the version value to set
      * @return the NodeAgentInformation object itself.
@@ -55,7 +54,7 @@ public class NodeAgentInformation {
     }
 
     /**
-     * Get this is the most recent time that the Compute Node agent was updated to a new version.
+     * Get the most recent time that the Compute Node agent was updated to a new version.
      *
      * @return the lastUpdateTime value
      */
@@ -64,7 +63,7 @@ public class NodeAgentInformation {
     }
 
     /**
-     * Set this is the most recent time that the Compute Node agent was updated to a new version.
+     * Set the most recent time that the Compute Node agent was updated to a new version.
      *
      * @param lastUpdateTime the lastUpdateTime value to set
      * @return the NodeAgentInformation object itself.

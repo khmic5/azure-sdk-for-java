@@ -36,15 +36,15 @@ public class SubtaskInformation {
     private DateTime startTime;
 
     /**
-     * The time at which the subtask completed.
-     * This property is set only if the subtask is in the Completed state.
+     * The time at which the subtask completed. This property is set only if
+     * the subtask is in the Completed state.
      */
     @JsonProperty(value = "endTime")
     private DateTime endTime;
 
     /**
-     * The exit code of the program specified on the subtask command line.
-     * This property is set only if the subtask is in the completed state. In
+     * The exit code of the program specified on the subtask command line. This
+     * property is set only if the subtask is in the completed state. In
      * general, the exit code for a process reflects the specific convention
      * implemented by the application developer for that process. If you use
      * the exit code value to make decisions in your code, be sure that you
@@ -57,23 +57,22 @@ public class SubtaskInformation {
     private Integer exitCode;
 
     /**
-     * Information about the container under which the Task is executing.
-     * This property is set only if the Task runs in a container context.
+     * Information about the container under which the Task is executing. This
+     * property is set only if the Task runs in a container context.
      */
     @JsonProperty(value = "containerInfo")
     private TaskContainerExecutionInformation containerInfo;
 
     /**
-     * Information describing the Task failure, if any.
-     * This property is set only if the Task is in the completed state and
-     * encountered a failure.
+     * Information describing the Task failure, if any. This property is set
+     * only if the Task is in the completed state and encountered a failure.
      */
     @JsonProperty(value = "failureInfo")
     private TaskFailureInformation failureInfo;
 
     /**
-     * The current state of the subtask.
-     * Possible values include: 'preparing', 'running', 'completed'.
+     * The current state of the subtask. Possible values include: 'preparing',
+     * 'running', 'completed'.
      */
     @JsonProperty(value = "state")
     private SubtaskState state;
@@ -85,31 +84,30 @@ public class SubtaskInformation {
     private DateTime stateTransitionTime;
 
     /**
-     * The previous state of the subtask.
-     * This property is not set if the subtask is in its initial running state.
-     * Possible values include: 'preparing', 'running', 'completed'.
+     * The previous state of the subtask. This property is not set if the
+     * subtask is in its initial running state. Possible values include:
+     * 'preparing', 'running', 'completed'.
      */
     @JsonProperty(value = "previousState")
     private SubtaskState previousState;
 
     /**
-     * The time at which the subtask entered its previous state.
-     * This property is not set if the subtask is in its initial running state.
+     * The time at which the subtask entered its previous state. This property
+     * is not set if the subtask is in its initial running state.
      */
     @JsonProperty(value = "previousStateTransitionTime")
     private DateTime previousStateTransitionTime;
 
     /**
-     * The result of the Task execution.
-     * If the value is 'failed', then the details of the failure can be found
-     * in the failureInfo property. Possible values include: 'success',
-     * 'failure'.
+     * The result of the Task execution. If the value is 'failed', then the
+     * details of the failure can be found in the failureInfo property.
+     * Possible values include: 'success', 'failure'.
      */
     @JsonProperty(value = "result")
     private TaskExecutionResult result;
 
     /**
-     * Get the id value.
+     * Get the ID of the subtask.
      *
      * @return the id value
      */
@@ -118,7 +116,7 @@ public class SubtaskInformation {
     }
 
     /**
-     * Set the id value.
+     * Set the ID of the subtask.
      *
      * @param id the id value to set
      * @return the SubtaskInformation object itself.
@@ -129,7 +127,7 @@ public class SubtaskInformation {
     }
 
     /**
-     * Get the nodeInfo value.
+     * Get information about the Compute Node on which the subtask ran.
      *
      * @return the nodeInfo value
      */
@@ -138,7 +136,7 @@ public class SubtaskInformation {
     }
 
     /**
-     * Set the nodeInfo value.
+     * Set information about the Compute Node on which the subtask ran.
      *
      * @param nodeInfo the nodeInfo value to set
      * @return the SubtaskInformation object itself.
@@ -149,7 +147,7 @@ public class SubtaskInformation {
     }
 
     /**
-     * Get the startTime value.
+     * Get the time at which the subtask started running. If the subtask has been restarted or retried, this is the most recent time at which the subtask started running.
      *
      * @return the startTime value
      */
@@ -158,7 +156,7 @@ public class SubtaskInformation {
     }
 
     /**
-     * Set the startTime value.
+     * Set the time at which the subtask started running. If the subtask has been restarted or retried, this is the most recent time at which the subtask started running.
      *
      * @param startTime the startTime value to set
      * @return the SubtaskInformation object itself.
@@ -169,7 +167,7 @@ public class SubtaskInformation {
     }
 
     /**
-     * Get this property is set only if the subtask is in the Completed state.
+     * Get the time at which the subtask completed. This property is set only if the subtask is in the Completed state.
      *
      * @return the endTime value
      */
@@ -178,7 +176,7 @@ public class SubtaskInformation {
     }
 
     /**
-     * Set this property is set only if the subtask is in the Completed state.
+     * Set the time at which the subtask completed. This property is set only if the subtask is in the Completed state.
      *
      * @param endTime the endTime value to set
      * @return the SubtaskInformation object itself.
@@ -189,7 +187,7 @@ public class SubtaskInformation {
     }
 
     /**
-     * Get this property is set only if the subtask is in the completed state. In general, the exit code for a process reflects the specific convention implemented by the application developer for that process. If you use the exit code value to make decisions in your code, be sure that you know the exit code convention used by the application process. However, if the Batch service terminates the subtask (due to timeout, or user termination via the API) you may see an operating system-defined exit code.
+     * Get the exit code of the program specified on the subtask command line. This property is set only if the subtask is in the completed state. In general, the exit code for a process reflects the specific convention implemented by the application developer for that process. If you use the exit code value to make decisions in your code, be sure that you know the exit code convention used by the application process. However, if the Batch service terminates the subtask (due to timeout, or user termination via the API) you may see an operating system-defined exit code.
      *
      * @return the exitCode value
      */
@@ -198,7 +196,7 @@ public class SubtaskInformation {
     }
 
     /**
-     * Set this property is set only if the subtask is in the completed state. In general, the exit code for a process reflects the specific convention implemented by the application developer for that process. If you use the exit code value to make decisions in your code, be sure that you know the exit code convention used by the application process. However, if the Batch service terminates the subtask (due to timeout, or user termination via the API) you may see an operating system-defined exit code.
+     * Set the exit code of the program specified on the subtask command line. This property is set only if the subtask is in the completed state. In general, the exit code for a process reflects the specific convention implemented by the application developer for that process. If you use the exit code value to make decisions in your code, be sure that you know the exit code convention used by the application process. However, if the Batch service terminates the subtask (due to timeout, or user termination via the API) you may see an operating system-defined exit code.
      *
      * @param exitCode the exitCode value to set
      * @return the SubtaskInformation object itself.
@@ -209,7 +207,7 @@ public class SubtaskInformation {
     }
 
     /**
-     * Get this property is set only if the Task runs in a container context.
+     * Get information about the container under which the Task is executing. This property is set only if the Task runs in a container context.
      *
      * @return the containerInfo value
      */
@@ -218,7 +216,7 @@ public class SubtaskInformation {
     }
 
     /**
-     * Set this property is set only if the Task runs in a container context.
+     * Set information about the container under which the Task is executing. This property is set only if the Task runs in a container context.
      *
      * @param containerInfo the containerInfo value to set
      * @return the SubtaskInformation object itself.
@@ -229,7 +227,7 @@ public class SubtaskInformation {
     }
 
     /**
-     * Get this property is set only if the Task is in the completed state and encountered a failure.
+     * Get information describing the Task failure, if any. This property is set only if the Task is in the completed state and encountered a failure.
      *
      * @return the failureInfo value
      */
@@ -238,7 +236,7 @@ public class SubtaskInformation {
     }
 
     /**
-     * Set this property is set only if the Task is in the completed state and encountered a failure.
+     * Set information describing the Task failure, if any. This property is set only if the Task is in the completed state and encountered a failure.
      *
      * @param failureInfo the failureInfo value to set
      * @return the SubtaskInformation object itself.
@@ -249,7 +247,7 @@ public class SubtaskInformation {
     }
 
     /**
-     * Get possible values include: 'preparing', 'running', 'completed'.
+     * Get the current state of the subtask. Possible values include: 'preparing', 'running', 'completed'.
      *
      * @return the state value
      */
@@ -258,7 +256,7 @@ public class SubtaskInformation {
     }
 
     /**
-     * Set possible values include: 'preparing', 'running', 'completed'.
+     * Set the current state of the subtask. Possible values include: 'preparing', 'running', 'completed'.
      *
      * @param state the state value to set
      * @return the SubtaskInformation object itself.
@@ -269,7 +267,7 @@ public class SubtaskInformation {
     }
 
     /**
-     * Get the stateTransitionTime value.
+     * Get the time at which the subtask entered its current state.
      *
      * @return the stateTransitionTime value
      */
@@ -278,7 +276,7 @@ public class SubtaskInformation {
     }
 
     /**
-     * Set the stateTransitionTime value.
+     * Set the time at which the subtask entered its current state.
      *
      * @param stateTransitionTime the stateTransitionTime value to set
      * @return the SubtaskInformation object itself.
@@ -289,7 +287,7 @@ public class SubtaskInformation {
     }
 
     /**
-     * Get this property is not set if the subtask is in its initial running state. Possible values include: 'preparing', 'running', 'completed'.
+     * Get the previous state of the subtask. This property is not set if the subtask is in its initial running state. Possible values include: 'preparing', 'running', 'completed'.
      *
      * @return the previousState value
      */
@@ -298,7 +296,7 @@ public class SubtaskInformation {
     }
 
     /**
-     * Set this property is not set if the subtask is in its initial running state. Possible values include: 'preparing', 'running', 'completed'.
+     * Set the previous state of the subtask. This property is not set if the subtask is in its initial running state. Possible values include: 'preparing', 'running', 'completed'.
      *
      * @param previousState the previousState value to set
      * @return the SubtaskInformation object itself.
@@ -309,7 +307,7 @@ public class SubtaskInformation {
     }
 
     /**
-     * Get this property is not set if the subtask is in its initial running state.
+     * Get the time at which the subtask entered its previous state. This property is not set if the subtask is in its initial running state.
      *
      * @return the previousStateTransitionTime value
      */
@@ -318,7 +316,7 @@ public class SubtaskInformation {
     }
 
     /**
-     * Set this property is not set if the subtask is in its initial running state.
+     * Set the time at which the subtask entered its previous state. This property is not set if the subtask is in its initial running state.
      *
      * @param previousStateTransitionTime the previousStateTransitionTime value to set
      * @return the SubtaskInformation object itself.
@@ -329,7 +327,7 @@ public class SubtaskInformation {
     }
 
     /**
-     * Get if the value is 'failed', then the details of the failure can be found in the failureInfo property. Possible values include: 'success', 'failure'.
+     * Get the result of the Task execution. If the value is 'failed', then the details of the failure can be found in the failureInfo property. Possible values include: 'success', 'failure'.
      *
      * @return the result value
      */
@@ -338,7 +336,7 @@ public class SubtaskInformation {
     }
 
     /**
-     * Set if the value is 'failed', then the details of the failure can be found in the failureInfo property. Possible values include: 'success', 'failure'.
+     * Set the result of the Task execution. If the value is 'failed', then the details of the failure can be found in the failureInfo property. Possible values include: 'success', 'failure'.
      *
      * @param result the result value to set
      * @return the SubtaskInformation object itself.

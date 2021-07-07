@@ -14,11 +14,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * A Job Release Task to run on Job completion on any Compute Node where the
- * Job has run.
- * The Job Release Task runs when the Job ends, because of one of the
- * following: The user calls the Terminate Job API, or the Delete Job API while
- * the Job is still active, the Job's maximum wall clock time constraint is
- * reached, and the Job is still active, or the Job's Job Manager Task
+ * Job has run. The Job Release Task runs when the Job ends, because of one of
+ * the following: The user calls the Terminate Job API, or the Delete Job API
+ * while the Job is still active, the Job's maximum wall clock time constraint
+ * is reached, and the Job is still active, or the Job's Job Manager Task
  * completed, and the Job is configured to terminate when the Job Manager
  * completes. The Job Release Task runs on each Node where Tasks of the Job
  * have run and the Job Preparation Task ran and completed. If you reimage a
@@ -48,14 +47,14 @@ public class JobReleaseTask {
     private String id;
 
     /**
-     * The command line of the Job Release Task.
-     * The command line does not run under a shell, and therefore cannot take
-     * advantage of shell features such as environment variable expansion. If
-     * you want to take advantage of such features, you should invoke the shell
-     * in the command line, for example using "cmd /c MyCommand" in Windows or
-     * "/bin/sh -c MyCommand" in Linux. If the command line refers to file
-     * paths, it should use a relative path (relative to the Task working
-     * directory), or use the Batch provided environment variable
+     * The command line of the Job Release Task. The command line does not run
+     * under a shell, and therefore cannot take advantage of shell features
+     * such as environment variable expansion. If you want to take advantage of
+     * such features, you should invoke the shell in the command line, for
+     * example using "cmd /c MyCommand" in Windows or "/bin/sh -c MyCommand" in
+     * Linux. If the command line refers to file paths, it should use a
+     * relative path (relative to the Task working directory), or use the Batch
+     * provided environment variable
      * (https://docs.microsoft.com/en-us/azure/batch/batch-compute-node-environment-variables).
      */
     @JsonProperty(value = "commandLine", required = true)
@@ -81,9 +80,8 @@ public class JobReleaseTask {
      * and the response error code will be RequestEntityTooLarge. If this
      * occurs, the collection of ResourceFiles must be reduced in size. This
      * can be achieved using .zip files, Application Packages, or Docker
-     * Containers.
-     * Files listed under this element are located in the Task's working
-     * directory.
+     * Containers. Files listed under this element are located in the Task's
+     * working directory.
      */
     @JsonProperty(value = "resourceFiles")
     private List<ResourceFile> resourceFiles;
@@ -109,23 +107,22 @@ public class JobReleaseTask {
     /**
      * The minimum time to retain the Task directory for the Job Release Task
      * on the Compute Node. After this time, the Batch service may delete the
-     * Task directory and all its contents.
-     * The default is 7 days, i.e. the Task directory will be retained for 7
-     * days unless the Compute Node is removed or the Job is deleted.
+     * Task directory and all its contents. The default is 7 days, i.e. the
+     * Task directory will be retained for 7 days unless the Compute Node is
+     * removed or the Job is deleted.
      */
     @JsonProperty(value = "retentionTime")
     private Period retentionTime;
 
     /**
-     * The user identity under which the Job Release Task runs.
-     * If omitted, the Task runs as a non-administrative user unique to the
-     * Task.
+     * The user identity under which the Job Release Task runs. If omitted, the
+     * Task runs as a non-administrative user unique to the Task.
      */
     @JsonProperty(value = "userIdentity")
     private UserIdentity userIdentity;
 
     /**
-     * Get the ID can contain any combination of alphanumeric characters including hyphens and underscores and cannot contain more than 64 characters. If you do not specify this property, the Batch service assigns a default value of 'jobrelease'. No other Task in the Job can have the same ID as the Job Release Task. If you try to submit a Task with the same id, the Batch service rejects the request with error code TaskIdSameAsJobReleaseTask; if you are calling the REST API directly, the HTTP status code is 409 (Conflict).
+     * Get a string that uniquely identifies the Job Release Task within the Job. The ID can contain any combination of alphanumeric characters including hyphens and underscores and cannot contain more than 64 characters. If you do not specify this property, the Batch service assigns a default value of 'jobrelease'. No other Task in the Job can have the same ID as the Job Release Task. If you try to submit a Task with the same id, the Batch service rejects the request with error code TaskIdSameAsJobReleaseTask; if you are calling the REST API directly, the HTTP status code is 409 (Conflict).
      *
      * @return the id value
      */
@@ -134,7 +131,7 @@ public class JobReleaseTask {
     }
 
     /**
-     * Set the ID can contain any combination of alphanumeric characters including hyphens and underscores and cannot contain more than 64 characters. If you do not specify this property, the Batch service assigns a default value of 'jobrelease'. No other Task in the Job can have the same ID as the Job Release Task. If you try to submit a Task with the same id, the Batch service rejects the request with error code TaskIdSameAsJobReleaseTask; if you are calling the REST API directly, the HTTP status code is 409 (Conflict).
+     * Set a string that uniquely identifies the Job Release Task within the Job. The ID can contain any combination of alphanumeric characters including hyphens and underscores and cannot contain more than 64 characters. If you do not specify this property, the Batch service assigns a default value of 'jobrelease'. No other Task in the Job can have the same ID as the Job Release Task. If you try to submit a Task with the same id, the Batch service rejects the request with error code TaskIdSameAsJobReleaseTask; if you are calling the REST API directly, the HTTP status code is 409 (Conflict).
      *
      * @param id the id value to set
      * @return the JobReleaseTask object itself.
@@ -145,7 +142,7 @@ public class JobReleaseTask {
     }
 
     /**
-     * Get the command line does not run under a shell, and therefore cannot take advantage of shell features such as environment variable expansion. If you want to take advantage of such features, you should invoke the shell in the command line, for example using "cmd /c MyCommand" in Windows or "/bin/sh -c MyCommand" in Linux. If the command line refers to file paths, it should use a relative path (relative to the Task working directory), or use the Batch provided environment variable (https://docs.microsoft.com/en-us/azure/batch/batch-compute-node-environment-variables).
+     * Get the command line of the Job Release Task. The command line does not run under a shell, and therefore cannot take advantage of shell features such as environment variable expansion. If you want to take advantage of such features, you should invoke the shell in the command line, for example using "cmd /c MyCommand" in Windows or "/bin/sh -c MyCommand" in Linux. If the command line refers to file paths, it should use a relative path (relative to the Task working directory), or use the Batch provided environment variable (https://docs.microsoft.com/en-us/azure/batch/batch-compute-node-environment-variables).
      *
      * @return the commandLine value
      */
@@ -154,7 +151,7 @@ public class JobReleaseTask {
     }
 
     /**
-     * Set the command line does not run under a shell, and therefore cannot take advantage of shell features such as environment variable expansion. If you want to take advantage of such features, you should invoke the shell in the command line, for example using "cmd /c MyCommand" in Windows or "/bin/sh -c MyCommand" in Linux. If the command line refers to file paths, it should use a relative path (relative to the Task working directory), or use the Batch provided environment variable (https://docs.microsoft.com/en-us/azure/batch/batch-compute-node-environment-variables).
+     * Set the command line of the Job Release Task. The command line does not run under a shell, and therefore cannot take advantage of shell features such as environment variable expansion. If you want to take advantage of such features, you should invoke the shell in the command line, for example using "cmd /c MyCommand" in Windows or "/bin/sh -c MyCommand" in Linux. If the command line refers to file paths, it should use a relative path (relative to the Task working directory), or use the Batch provided environment variable (https://docs.microsoft.com/en-us/azure/batch/batch-compute-node-environment-variables).
      *
      * @param commandLine the commandLine value to set
      * @return the JobReleaseTask object itself.
@@ -165,7 +162,7 @@ public class JobReleaseTask {
     }
 
     /**
-     * Get when this is specified, all directories recursively below the AZ_BATCH_NODE_ROOT_DIR (the root of Azure Batch directories on the node) are mapped into the container, all Task environment variables are mapped into the container, and the Task command line is executed in the container. Files produced in the container outside of AZ_BATCH_NODE_ROOT_DIR might not be reflected to the host disk, meaning that Batch file APIs will not be able to access those files.
+     * Get the settings for the container under which the Job Release Task runs. When this is specified, all directories recursively below the AZ_BATCH_NODE_ROOT_DIR (the root of Azure Batch directories on the node) are mapped into the container, all Task environment variables are mapped into the container, and the Task command line is executed in the container. Files produced in the container outside of AZ_BATCH_NODE_ROOT_DIR might not be reflected to the host disk, meaning that Batch file APIs will not be able to access those files.
      *
      * @return the containerSettings value
      */
@@ -174,7 +171,7 @@ public class JobReleaseTask {
     }
 
     /**
-     * Set when this is specified, all directories recursively below the AZ_BATCH_NODE_ROOT_DIR (the root of Azure Batch directories on the node) are mapped into the container, all Task environment variables are mapped into the container, and the Task command line is executed in the container. Files produced in the container outside of AZ_BATCH_NODE_ROOT_DIR might not be reflected to the host disk, meaning that Batch file APIs will not be able to access those files.
+     * Set the settings for the container under which the Job Release Task runs. When this is specified, all directories recursively below the AZ_BATCH_NODE_ROOT_DIR (the root of Azure Batch directories on the node) are mapped into the container, all Task environment variables are mapped into the container, and the Task command line is executed in the container. Files produced in the container outside of AZ_BATCH_NODE_ROOT_DIR might not be reflected to the host disk, meaning that Batch file APIs will not be able to access those files.
      *
      * @param containerSettings the containerSettings value to set
      * @return the JobReleaseTask object itself.
@@ -185,7 +182,7 @@ public class JobReleaseTask {
     }
 
     /**
-     * Get files listed under this element are located in the Task's working directory.
+     * Get a list of files that the Batch service will download to the Compute Node before running the command line.  There is a maximum size for the list of resource files.  When the max size is exceeded, the request will fail and the response error code will be RequestEntityTooLarge. If this occurs, the collection of ResourceFiles must be reduced in size. This can be achieved using .zip files, Application Packages, or Docker Containers. Files listed under this element are located in the Task's working directory.
      *
      * @return the resourceFiles value
      */
@@ -194,7 +191,7 @@ public class JobReleaseTask {
     }
 
     /**
-     * Set files listed under this element are located in the Task's working directory.
+     * Set a list of files that the Batch service will download to the Compute Node before running the command line.  There is a maximum size for the list of resource files.  When the max size is exceeded, the request will fail and the response error code will be RequestEntityTooLarge. If this occurs, the collection of ResourceFiles must be reduced in size. This can be achieved using .zip files, Application Packages, or Docker Containers. Files listed under this element are located in the Task's working directory.
      *
      * @param resourceFiles the resourceFiles value to set
      * @return the JobReleaseTask object itself.
@@ -205,7 +202,7 @@ public class JobReleaseTask {
     }
 
     /**
-     * Get the environmentSettings value.
+     * Get a list of environment variable settings for the Job Release Task.
      *
      * @return the environmentSettings value
      */
@@ -214,7 +211,7 @@ public class JobReleaseTask {
     }
 
     /**
-     * Set the environmentSettings value.
+     * Set a list of environment variable settings for the Job Release Task.
      *
      * @param environmentSettings the environmentSettings value to set
      * @return the JobReleaseTask object itself.
@@ -225,7 +222,7 @@ public class JobReleaseTask {
     }
 
     /**
-     * Get the maxWallClockTime value.
+     * Get the maximum elapsed time that the Job Release Task may run on a given Compute Node, measured from the time the Task starts. If the Task does not complete within the time limit, the Batch service terminates it. The default value is 15 minutes. You may not specify a timeout longer than 15 minutes. If you do, the Batch service rejects it with an error; if you are calling the REST API directly, the HTTP status code is 400 (Bad Request).
      *
      * @return the maxWallClockTime value
      */
@@ -234,7 +231,7 @@ public class JobReleaseTask {
     }
 
     /**
-     * Set the maxWallClockTime value.
+     * Set the maximum elapsed time that the Job Release Task may run on a given Compute Node, measured from the time the Task starts. If the Task does not complete within the time limit, the Batch service terminates it. The default value is 15 minutes. You may not specify a timeout longer than 15 minutes. If you do, the Batch service rejects it with an error; if you are calling the REST API directly, the HTTP status code is 400 (Bad Request).
      *
      * @param maxWallClockTime the maxWallClockTime value to set
      * @return the JobReleaseTask object itself.
@@ -245,7 +242,7 @@ public class JobReleaseTask {
     }
 
     /**
-     * Get the default is 7 days, i.e. the Task directory will be retained for 7 days unless the Compute Node is removed or the Job is deleted.
+     * Get the minimum time to retain the Task directory for the Job Release Task on the Compute Node. After this time, the Batch service may delete the Task directory and all its contents. The default is 7 days, i.e. the Task directory will be retained for 7 days unless the Compute Node is removed or the Job is deleted.
      *
      * @return the retentionTime value
      */
@@ -254,7 +251,7 @@ public class JobReleaseTask {
     }
 
     /**
-     * Set the default is 7 days, i.e. the Task directory will be retained for 7 days unless the Compute Node is removed or the Job is deleted.
+     * Set the minimum time to retain the Task directory for the Job Release Task on the Compute Node. After this time, the Batch service may delete the Task directory and all its contents. The default is 7 days, i.e. the Task directory will be retained for 7 days unless the Compute Node is removed or the Job is deleted.
      *
      * @param retentionTime the retentionTime value to set
      * @return the JobReleaseTask object itself.
@@ -265,7 +262,7 @@ public class JobReleaseTask {
     }
 
     /**
-     * Get if omitted, the Task runs as a non-administrative user unique to the Task.
+     * Get the user identity under which the Job Release Task runs. If omitted, the Task runs as a non-administrative user unique to the Task.
      *
      * @return the userIdentity value
      */
@@ -274,7 +271,7 @@ public class JobReleaseTask {
     }
 
     /**
-     * Set if omitted, the Task runs as a non-administrative user unique to the Task.
+     * Set the user identity under which the Job Release Task runs. If omitted, the Task runs as a non-administrative user unique to the Task.
      *
      * @param userIdentity the userIdentity value to set
      * @return the JobReleaseTask object itself.

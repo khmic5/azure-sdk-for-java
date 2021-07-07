@@ -22,18 +22,17 @@ public class ApplicationPackageReference {
 
     /**
      * The version of the application to deploy. If omitted, the default
-     * version is deployed.
-     * If this is omitted on a Pool, and no default version is specified for
-     * this application, the request fails with the error code
-     * InvalidApplicationPackageReferences and HTTP status code 409. If this is
-     * omitted on a Task, and no default version is specified for this
-     * application, the Task fails with a pre-processing error.
+     * version is deployed. If this is omitted on a Pool, and no default
+     * version is specified for this application, the request fails with the
+     * error code InvalidApplicationPackageReferences and HTTP status code 409.
+     * If this is omitted on a Task, and no default version is specified for
+     * this application, the Task fails with a pre-processing error.
      */
     @JsonProperty(value = "version")
     private String version;
 
     /**
-     * Get the applicationId value.
+     * Get the ID of the application to deploy.
      *
      * @return the applicationId value
      */
@@ -42,7 +41,7 @@ public class ApplicationPackageReference {
     }
 
     /**
-     * Set the applicationId value.
+     * Set the ID of the application to deploy.
      *
      * @param applicationId the applicationId value to set
      * @return the ApplicationPackageReference object itself.
@@ -53,7 +52,7 @@ public class ApplicationPackageReference {
     }
 
     /**
-     * Get if this is omitted on a Pool, and no default version is specified for this application, the request fails with the error code InvalidApplicationPackageReferences and HTTP status code 409. If this is omitted on a Task, and no default version is specified for this application, the Task fails with a pre-processing error.
+     * Get the version of the application to deploy. If omitted, the default version is deployed. If this is omitted on a Pool, and no default version is specified for this application, the request fails with the error code InvalidApplicationPackageReferences and HTTP status code 409. If this is omitted on a Task, and no default version is specified for this application, the Task fails with a pre-processing error.
      *
      * @return the version value
      */
@@ -62,7 +61,7 @@ public class ApplicationPackageReference {
     }
 
     /**
-     * Set if this is omitted on a Pool, and no default version is specified for this application, the request fails with the error code InvalidApplicationPackageReferences and HTTP status code 409. If this is omitted on a Task, and no default version is specified for this application, the Task fails with a pre-processing error.
+     * Set the version of the application to deploy. If omitted, the default version is deployed. If this is omitted on a Pool, and no default version is specified for this application, the request fails with the error code InvalidApplicationPackageReferences and HTTP status code 409. If this is omitted on a Task, and no default version is specified for this application, the Task fails with a pre-processing error.
      *
      * @param version the version value to set
      * @return the ApplicationPackageReference object itself.

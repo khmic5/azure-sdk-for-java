@@ -34,7 +34,7 @@ public class ApplicationSummary {
     private List<String> versions;
 
     /**
-     * Get the id value.
+     * Get a string that uniquely identifies the application within the Account.
      *
      * @return the id value
      */
@@ -43,7 +43,7 @@ public class ApplicationSummary {
     }
 
     /**
-     * Set the id value.
+     * Set a string that uniquely identifies the application within the Account.
      *
      * @param id the id value to set
      * @return the ApplicationSummary object itself.
@@ -54,7 +54,7 @@ public class ApplicationSummary {
     }
 
     /**
-     * Get the displayName value.
+     * Get the display name for the application.
      *
      * @return the displayName value
      */
@@ -63,7 +63,7 @@ public class ApplicationSummary {
     }
 
     /**
-     * Set the displayName value.
+     * Set the display name for the application.
      *
      * @param displayName the displayName value to set
      * @return the ApplicationSummary object itself.
@@ -74,7 +74,7 @@ public class ApplicationSummary {
     }
 
     /**
-     * Get the versions value.
+     * Get the list of available versions of the application.
      *
      * @return the versions value
      */
@@ -83,7 +83,7 @@ public class ApplicationSummary {
     }
 
     /**
-     * Set the versions value.
+     * Set the list of available versions of the application.
      *
      * @param versions the versions value to set
      * @return the ApplicationSummary object itself.

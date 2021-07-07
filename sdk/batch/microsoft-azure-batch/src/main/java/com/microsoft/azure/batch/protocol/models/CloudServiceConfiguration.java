@@ -17,8 +17,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class CloudServiceConfiguration {
     /**
      * The Azure Guest OS family to be installed on the virtual machines in the
-     * Pool.
-     * Possible values are:
+     * Pool. Possible values are:
      * 2 - OS Family 2, equivalent to Windows Server 2008 R2 SP1.
      * 3 - OS Family 3, equivalent to Windows Server 2012.
      * 4 - OS Family 4, equivalent to Windows Server 2012 R2.
@@ -32,15 +31,14 @@ public class CloudServiceConfiguration {
 
     /**
      * The Azure Guest OS version to be installed on the virtual machines in
-     * the Pool.
-     * The default value is * which specifies the latest operating system
-     * version for the specified OS family.
+     * the Pool. The default value is * which specifies the latest operating
+     * system version for the specified OS family.
      */
     @JsonProperty(value = "osVersion")
     private String osVersion;
 
     /**
-     * Get possible values are:
+     * Get the Azure Guest OS family to be installed on the virtual machines in the Pool. Possible values are:
      2 - OS Family 2, equivalent to Windows Server 2008 R2 SP1.
      3 - OS Family 3, equivalent to Windows Server 2012.
      4 - OS Family 4, equivalent to Windows Server 2012 R2.
@@ -54,7 +52,7 @@ public class CloudServiceConfiguration {
     }
 
     /**
-     * Set possible values are:
+     * Set the Azure Guest OS family to be installed on the virtual machines in the Pool. Possible values are:
      2 - OS Family 2, equivalent to Windows Server 2008 R2 SP1.
      3 - OS Family 3, equivalent to Windows Server 2012.
      4 - OS Family 4, equivalent to Windows Server 2012 R2.
@@ -70,7 +68,7 @@ public class CloudServiceConfiguration {
     }
 
     /**
-     * Get the default value is * which specifies the latest operating system version for the specified OS family.
+     * Get the Azure Guest OS version to be installed on the virtual machines in the Pool. The default value is * which specifies the latest operating system version for the specified OS family.
      *
      * @return the osVersion value
      */
@@ -79,7 +77,7 @@ public class CloudServiceConfiguration {
     }
 
     /**
-     * Set the default value is * which specifies the latest operating system version for the specified OS family.
+     * Set the Azure Guest OS version to be installed on the virtual machines in the Pool. The default value is * which specifies the latest operating system version for the specified OS family.
      *
      * @param osVersion the osVersion value to set
      * @return the CloudServiceConfiguration object itself.

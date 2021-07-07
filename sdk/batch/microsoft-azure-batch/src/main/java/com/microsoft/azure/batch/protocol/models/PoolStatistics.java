@@ -48,7 +48,7 @@ public class PoolStatistics {
     private ResourceStatistics resourceStats;
 
     /**
-     * Get the url value.
+     * Get the URL for the statistics.
      *
      * @return the url value
      */
@@ -57,7 +57,7 @@ public class PoolStatistics {
     }
 
     /**
-     * Set the url value.
+     * Set the URL for the statistics.
      *
      * @param url the url value to set
      * @return the PoolStatistics object itself.
@@ -68,7 +68,7 @@ public class PoolStatistics {
     }
 
     /**
-     * Get the startTime value.
+     * Get the start time of the time range covered by the statistics.
      *
      * @return the startTime value
      */
@@ -77,7 +77,7 @@ public class PoolStatistics {
     }
 
     /**
-     * Set the startTime value.
+     * Set the start time of the time range covered by the statistics.
      *
      * @param startTime the startTime value to set
      * @return the PoolStatistics object itself.
@@ -88,7 +88,7 @@ public class PoolStatistics {
     }
 
     /**
-     * Get the lastUpdateTime value.
+     * Get the time at which the statistics were last updated. All statistics are limited to the range between startTime and lastUpdateTime.
      *
      * @return the lastUpdateTime value
      */
@@ -97,7 +97,7 @@ public class PoolStatistics {
     }
 
     /**
-     * Set the lastUpdateTime value.
+     * Set the time at which the statistics were last updated. All statistics are limited to the range between startTime and lastUpdateTime.
      *
      * @param lastUpdateTime the lastUpdateTime value to set
      * @return the PoolStatistics object itself.
@@ -108,7 +108,7 @@ public class PoolStatistics {
     }
 
     /**
-     * Get the usageStats value.
+     * Get statistics related to Pool usage, such as the amount of core-time used.
      *
      * @return the usageStats value
      */
@@ -117,7 +117,7 @@ public class PoolStatistics {
     }
 
     /**
-     * Set the usageStats value.
+     * Set statistics related to Pool usage, such as the amount of core-time used.
      *
      * @param usageStats the usageStats value to set
      * @return the PoolStatistics object itself.
@@ -128,7 +128,7 @@ public class PoolStatistics {
     }
 
     /**
-     * Get the resourceStats value.
+     * Get statistics related to resource consumption by Compute Nodes in the Pool.
      *
      * @return the resourceStats value
      */
@@ -137,7 +137,7 @@ public class PoolStatistics {
     }
 
     /**
-     * Set the resourceStats value.
+     * Set statistics related to resource consumption by Compute Nodes in the Pool.
      *
      * @param resourceStats the resourceStats value to set
      * @return the PoolStatistics object itself.

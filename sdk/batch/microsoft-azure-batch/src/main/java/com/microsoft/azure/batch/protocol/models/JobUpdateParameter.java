@@ -16,37 +16,35 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class JobUpdateParameter {
     /**
-     * The priority of the Job.
-     * Priority values can range from -1000 to 1000, with -1000 being the
-     * lowest priority and 1000 being the highest priority. If omitted, it is
-     * set to the default value 0.
+     * The priority of the Job. Values can range from -1000 to 1000, with -1000
+     * being the lowest priority and 1000 being the highest priority. If
+     * omitted, it is set to the default value 0.
      */
     @JsonProperty(value = "priority")
     private Integer priority;
 
     /**
-     * The execution constraints for the Job.
-     * If omitted, the constraints are cleared.
+     * The execution constraints for the Job. If omitted, the constraints are
+     * cleared.
      */
     @JsonProperty(value = "constraints")
     private JobConstraints constraints;
 
     /**
-     * The Pool on which the Batch service runs the Job's Tasks.
-     * You may change the Pool for a Job only when the Job is disabled. The
-     * Update Job call will fail if you include the poolInfo element and the
-     * Job is not disabled. If you specify an autoPoolSpecification in the
-     * poolInfo, only the keepAlive property of the autoPoolSpecification can
-     * be updated, and then only if the autoPoolSpecification has a
-     * poolLifetimeOption of Job (other job properties can be updated as
-     * normal).
+     * The Pool on which the Batch service runs the Job's Tasks. You may change
+     * the Pool for a Job only when the Job is disabled. The Update Job call
+     * will fail if you include the poolInfo element and the Job is not
+     * disabled. If you specify an autoPoolSpecification in the poolInfo, only
+     * the keepAlive property of the autoPoolSpecification can be updated, and
+     * then only if the autoPoolSpecification has a poolLifetimeOption of Job
+     * (other job properties can be updated as normal).
      */
     @JsonProperty(value = "poolInfo", required = true)
     private PoolInformation poolInfo;
 
     /**
-     * A list of name-value pairs associated with the Job as metadata.
-     * If omitted, it takes the default value of an empty list; in effect, any
+     * A list of name-value pairs associated with the Job as metadata. If
+     * omitted, it takes the default value of an empty list; in effect, any
      * existing metadata is deleted.
      */
     @JsonProperty(value = "metadata")
@@ -54,23 +52,22 @@ public class JobUpdateParameter {
 
     /**
      * The action the Batch service should take when all Tasks in the Job are
-     * in the completed state.
-     * If omitted, the completion behavior is set to noaction. If the current
-     * value is terminatejob, this is an error because a Job's completion
-     * behavior may not be changed from terminatejob to noaction. You may not
-     * change the value from terminatejob to noaction - that is, once you have
-     * engaged automatic Job termination, you cannot turn it off again. If you
-     * try to do this, the request fails and Batch returns status code 400 (Bad
-     * Request) and an 'invalid property value' error response. If you do not
-     * specify this element in a PUT request, it is equivalent to passing
-     * noaction. This is an error if the current value is terminatejob.
-     * Possible values include: 'noAction', 'terminateJob'.
+     * in the completed state. If omitted, the completion behavior is set to
+     * noaction. If the current value is terminatejob, this is an error because
+     * a Job's completion behavior may not be changed from terminatejob to
+     * noaction. You may not change the value from terminatejob to noaction -
+     * that is, once you have engaged automatic Job termination, you cannot
+     * turn it off again. If you try to do this, the request fails and Batch
+     * returns status code 400 (Bad Request) and an 'invalid property value'
+     * error response. If you do not specify this element in a PUT request, it
+     * is equivalent to passing noaction. This is an error if the current value
+     * is terminatejob. Possible values include: 'noAction', 'terminateJob'.
      */
     @JsonProperty(value = "onAllTasksComplete")
     private OnAllTasksComplete onAllTasksComplete;
 
     /**
-     * Get priority values can range from -1000 to 1000, with -1000 being the lowest priority and 1000 being the highest priority. If omitted, it is set to the default value 0.
+     * Get the priority of the Job. Values can range from -1000 to 1000, with -1000 being the lowest priority and 1000 being the highest priority. If omitted, it is set to the default value 0.
      *
      * @return the priority value
      */
@@ -79,7 +76,7 @@ public class JobUpdateParameter {
     }
 
     /**
-     * Set priority values can range from -1000 to 1000, with -1000 being the lowest priority and 1000 being the highest priority. If omitted, it is set to the default value 0.
+     * Set the priority of the Job. Values can range from -1000 to 1000, with -1000 being the lowest priority and 1000 being the highest priority. If omitted, it is set to the default value 0.
      *
      * @param priority the priority value to set
      * @return the JobUpdateParameter object itself.
@@ -90,7 +87,7 @@ public class JobUpdateParameter {
     }
 
     /**
-     * Get if omitted, the constraints are cleared.
+     * Get the execution constraints for the Job. If omitted, the constraints are cleared.
      *
      * @return the constraints value
      */
@@ -99,7 +96,7 @@ public class JobUpdateParameter {
     }
 
     /**
-     * Set if omitted, the constraints are cleared.
+     * Set the execution constraints for the Job. If omitted, the constraints are cleared.
      *
      * @param constraints the constraints value to set
      * @return the JobUpdateParameter object itself.
@@ -110,7 +107,7 @@ public class JobUpdateParameter {
     }
 
     /**
-     * Get you may change the Pool for a Job only when the Job is disabled. The Update Job call will fail if you include the poolInfo element and the Job is not disabled. If you specify an autoPoolSpecification in the poolInfo, only the keepAlive property of the autoPoolSpecification can be updated, and then only if the autoPoolSpecification has a poolLifetimeOption of Job (other job properties can be updated as normal).
+     * Get the Pool on which the Batch service runs the Job's Tasks. You may change the Pool for a Job only when the Job is disabled. The Update Job call will fail if you include the poolInfo element and the Job is not disabled. If you specify an autoPoolSpecification in the poolInfo, only the keepAlive property of the autoPoolSpecification can be updated, and then only if the autoPoolSpecification has a poolLifetimeOption of Job (other job properties can be updated as normal).
      *
      * @return the poolInfo value
      */
@@ -119,7 +116,7 @@ public class JobUpdateParameter {
     }
 
     /**
-     * Set you may change the Pool for a Job only when the Job is disabled. The Update Job call will fail if you include the poolInfo element and the Job is not disabled. If you specify an autoPoolSpecification in the poolInfo, only the keepAlive property of the autoPoolSpecification can be updated, and then only if the autoPoolSpecification has a poolLifetimeOption of Job (other job properties can be updated as normal).
+     * Set the Pool on which the Batch service runs the Job's Tasks. You may change the Pool for a Job only when the Job is disabled. The Update Job call will fail if you include the poolInfo element and the Job is not disabled. If you specify an autoPoolSpecification in the poolInfo, only the keepAlive property of the autoPoolSpecification can be updated, and then only if the autoPoolSpecification has a poolLifetimeOption of Job (other job properties can be updated as normal).
      *
      * @param poolInfo the poolInfo value to set
      * @return the JobUpdateParameter object itself.
@@ -130,7 +127,7 @@ public class JobUpdateParameter {
     }
 
     /**
-     * Get if omitted, it takes the default value of an empty list; in effect, any existing metadata is deleted.
+     * Get a list of name-value pairs associated with the Job as metadata. If omitted, it takes the default value of an empty list; in effect, any existing metadata is deleted.
      *
      * @return the metadata value
      */
@@ -139,7 +136,7 @@ public class JobUpdateParameter {
     }
 
     /**
-     * Set if omitted, it takes the default value of an empty list; in effect, any existing metadata is deleted.
+     * Set a list of name-value pairs associated with the Job as metadata. If omitted, it takes the default value of an empty list; in effect, any existing metadata is deleted.
      *
      * @param metadata the metadata value to set
      * @return the JobUpdateParameter object itself.
@@ -150,7 +147,7 @@ public class JobUpdateParameter {
     }
 
     /**
-     * Get if omitted, the completion behavior is set to noaction. If the current value is terminatejob, this is an error because a Job's completion behavior may not be changed from terminatejob to noaction. You may not change the value from terminatejob to noaction - that is, once you have engaged automatic Job termination, you cannot turn it off again. If you try to do this, the request fails and Batch returns status code 400 (Bad Request) and an 'invalid property value' error response. If you do not specify this element in a PUT request, it is equivalent to passing noaction. This is an error if the current value is terminatejob. Possible values include: 'noAction', 'terminateJob'.
+     * Get the action the Batch service should take when all Tasks in the Job are in the completed state. If omitted, the completion behavior is set to noaction. If the current value is terminatejob, this is an error because a Job's completion behavior may not be changed from terminatejob to noaction. You may not change the value from terminatejob to noaction - that is, once you have engaged automatic Job termination, you cannot turn it off again. If you try to do this, the request fails and Batch returns status code 400 (Bad Request) and an 'invalid property value' error response. If you do not specify this element in a PUT request, it is equivalent to passing noaction. This is an error if the current value is terminatejob. Possible values include: 'noAction', 'terminateJob'.
      *
      * @return the onAllTasksComplete value
      */
@@ -159,7 +156,7 @@ public class JobUpdateParameter {
     }
 
     /**
-     * Set if omitted, the completion behavior is set to noaction. If the current value is terminatejob, this is an error because a Job's completion behavior may not be changed from terminatejob to noaction. You may not change the value from terminatejob to noaction - that is, once you have engaged automatic Job termination, you cannot turn it off again. If you try to do this, the request fails and Batch returns status code 400 (Bad Request) and an 'invalid property value' error response. If you do not specify this element in a PUT request, it is equivalent to passing noaction. This is an error if the current value is terminatejob. Possible values include: 'noAction', 'terminateJob'.
+     * Set the action the Batch service should take when all Tasks in the Job are in the completed state. If omitted, the completion behavior is set to noaction. If the current value is terminatejob, this is an error because a Job's completion behavior may not be changed from terminatejob to noaction. You may not change the value from terminatejob to noaction - that is, once you have engaged automatic Job termination, you cannot turn it off again. If you try to do this, the request fails and Batch returns status code 400 (Bad Request) and an 'invalid property value' error response. If you do not specify this element in a PUT request, it is equivalent to passing noaction. This is an error if the current value is terminatejob. Possible values include: 'noAction', 'terminateJob'.
      *
      * @param onAllTasksComplete the onAllTasksComplete value to set
      * @return the JobUpdateParameter object itself.

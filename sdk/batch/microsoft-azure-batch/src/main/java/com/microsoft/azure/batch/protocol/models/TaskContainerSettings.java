@@ -15,9 +15,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class TaskContainerSettings {
     /**
-     * Additional options to the container create command.
-     * These additional options are supplied as arguments to the "docker
-     * create" command, in addition to those controlled by the Batch Service.
+     * Additional options to the container create command. These additional
+     * options are supplied as arguments to the "docker create" command, in
+     * addition to those controlled by the Batch Service.
      */
     @JsonProperty(value = "containerRunOptions")
     private String containerRunOptions;
@@ -32,22 +32,22 @@ public class TaskContainerSettings {
     private String imageName;
 
     /**
-     * The private registry which contains the container Image.
-     * This setting can be omitted if was already provided at Pool creation.
+     * The private registry which contains the container Image. This setting
+     * can be omitted if was already provided at Pool creation.
      */
     @JsonProperty(value = "registry")
     private ContainerRegistry registry;
 
     /**
-     * The location of the container Task working directory.
-     * The default is 'taskWorkingDirectory'. Possible values include:
-     * 'taskWorkingDirectory', 'containerImageDefault'.
+     * The location of the container Task working directory. The default is
+     * 'taskWorkingDirectory'. Possible values include: 'taskWorkingDirectory',
+     * 'containerImageDefault'.
      */
     @JsonProperty(value = "workingDirectory")
     private ContainerWorkingDirectory workingDirectory;
 
     /**
-     * Get these additional options are supplied as arguments to the "docker create" command, in addition to those controlled by the Batch Service.
+     * Get additional options to the container create command. These additional options are supplied as arguments to the "docker create" command, in addition to those controlled by the Batch Service.
      *
      * @return the containerRunOptions value
      */
@@ -56,7 +56,7 @@ public class TaskContainerSettings {
     }
 
     /**
-     * Set these additional options are supplied as arguments to the "docker create" command, in addition to those controlled by the Batch Service.
+     * Set additional options to the container create command. These additional options are supplied as arguments to the "docker create" command, in addition to those controlled by the Batch Service.
      *
      * @param containerRunOptions the containerRunOptions value to set
      * @return the TaskContainerSettings object itself.
@@ -67,7 +67,7 @@ public class TaskContainerSettings {
     }
 
     /**
-     * Get this is the full Image reference, as would be specified to "docker pull". If no tag is provided as part of the Image name, the tag ":latest" is used as a default.
+     * Get the Image to use to create the container in which the Task will run. This is the full Image reference, as would be specified to "docker pull". If no tag is provided as part of the Image name, the tag ":latest" is used as a default.
      *
      * @return the imageName value
      */
@@ -76,7 +76,7 @@ public class TaskContainerSettings {
     }
 
     /**
-     * Set this is the full Image reference, as would be specified to "docker pull". If no tag is provided as part of the Image name, the tag ":latest" is used as a default.
+     * Set the Image to use to create the container in which the Task will run. This is the full Image reference, as would be specified to "docker pull". If no tag is provided as part of the Image name, the tag ":latest" is used as a default.
      *
      * @param imageName the imageName value to set
      * @return the TaskContainerSettings object itself.
@@ -87,7 +87,7 @@ public class TaskContainerSettings {
     }
 
     /**
-     * Get this setting can be omitted if was already provided at Pool creation.
+     * Get the private registry which contains the container Image. This setting can be omitted if was already provided at Pool creation.
      *
      * @return the registry value
      */
@@ -96,7 +96,7 @@ public class TaskContainerSettings {
     }
 
     /**
-     * Set this setting can be omitted if was already provided at Pool creation.
+     * Set the private registry which contains the container Image. This setting can be omitted if was already provided at Pool creation.
      *
      * @param registry the registry value to set
      * @return the TaskContainerSettings object itself.
@@ -107,7 +107,7 @@ public class TaskContainerSettings {
     }
 
     /**
-     * Get the default is 'taskWorkingDirectory'. Possible values include: 'taskWorkingDirectory', 'containerImageDefault'.
+     * Get the location of the container Task working directory. The default is 'taskWorkingDirectory'. Possible values include: 'taskWorkingDirectory', 'containerImageDefault'.
      *
      * @return the workingDirectory value
      */
@@ -116,7 +116,7 @@ public class TaskContainerSettings {
     }
 
     /**
-     * Set the default is 'taskWorkingDirectory'. Possible values include: 'taskWorkingDirectory', 'containerImageDefault'.
+     * Set the location of the container Task working directory. The default is 'taskWorkingDirectory'. Possible values include: 'taskWorkingDirectory', 'containerImageDefault'.
      *
      * @param workingDirectory the workingDirectory value to set
      * @return the TaskContainerSettings object itself.

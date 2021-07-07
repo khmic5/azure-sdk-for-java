@@ -45,7 +45,7 @@ public class TaskSlotCounts {
     private int failed;
 
     /**
-     * Get the active value.
+     * Get the number of TaskSlots for active Tasks.
      *
      * @return the active value
      */
@@ -54,7 +54,7 @@ public class TaskSlotCounts {
     }
 
     /**
-     * Set the active value.
+     * Set the number of TaskSlots for active Tasks.
      *
      * @param active the active value to set
      * @return the TaskSlotCounts object itself.
@@ -65,7 +65,7 @@ public class TaskSlotCounts {
     }
 
     /**
-     * Get the running value.
+     * Get the number of TaskSlots for running Tasks.
      *
      * @return the running value
      */
@@ -74,7 +74,7 @@ public class TaskSlotCounts {
     }
 
     /**
-     * Set the running value.
+     * Set the number of TaskSlots for running Tasks.
      *
      * @param running the running value to set
      * @return the TaskSlotCounts object itself.
@@ -85,7 +85,7 @@ public class TaskSlotCounts {
     }
 
     /**
-     * Get the completed value.
+     * Get the number of TaskSlots for completed Tasks.
      *
      * @return the completed value
      */
@@ -94,7 +94,7 @@ public class TaskSlotCounts {
     }
 
     /**
-     * Set the completed value.
+     * Set the number of TaskSlots for completed Tasks.
      *
      * @param completed the completed value to set
      * @return the TaskSlotCounts object itself.
@@ -105,7 +105,7 @@ public class TaskSlotCounts {
     }
 
     /**
-     * Get the succeeded value.
+     * Get the number of TaskSlots for succeeded Tasks.
      *
      * @return the succeeded value
      */
@@ -114,7 +114,7 @@ public class TaskSlotCounts {
     }
 
     /**
-     * Set the succeeded value.
+     * Set the number of TaskSlots for succeeded Tasks.
      *
      * @param succeeded the succeeded value to set
      * @return the TaskSlotCounts object itself.
@@ -125,7 +125,7 @@ public class TaskSlotCounts {
     }
 
     /**
-     * Get the failed value.
+     * Get the number of TaskSlots for failed Tasks.
      *
      * @return the failed value
      */
@@ -134,7 +134,7 @@ public class TaskSlotCounts {
     }
 
     /**
-     * Set the failed value.
+     * Set the number of TaskSlots for failed Tasks.
      *
      * @param failed the failed value to set
      * @return the TaskSlotCounts object itself.

@@ -37,7 +37,7 @@ public class AutoScaleRunError {
     private List<NameValuePair> values;
 
     /**
-     * Get the code value.
+     * Get an identifier for the autoscale error. Codes are invariant and are intended to be consumed programmatically.
      *
      * @return the code value
      */
@@ -46,7 +46,7 @@ public class AutoScaleRunError {
     }
 
     /**
-     * Set the code value.
+     * Set an identifier for the autoscale error. Codes are invariant and are intended to be consumed programmatically.
      *
      * @param code the code value to set
      * @return the AutoScaleRunError object itself.
@@ -57,7 +57,7 @@ public class AutoScaleRunError {
     }
 
     /**
-     * Get the message value.
+     * Get a message describing the autoscale error, intended to be suitable for display in a user interface.
      *
      * @return the message value
      */
@@ -66,7 +66,7 @@ public class AutoScaleRunError {
     }
 
     /**
-     * Set the message value.
+     * Set a message describing the autoscale error, intended to be suitable for display in a user interface.
      *
      * @param message the message value to set
      * @return the AutoScaleRunError object itself.
@@ -77,7 +77,7 @@ public class AutoScaleRunError {
     }
 
     /**
-     * Get the values value.
+     * Get a list of additional error details related to the autoscale error.
      *
      * @return the values value
      */
@@ -86,7 +86,7 @@ public class AutoScaleRunError {
     }
 
     /**
-     * Set the values value.
+     * Set a list of additional error details related to the autoscale error.
      *
      * @param values the values value to set
      * @return the AutoScaleRunError object itself.

@@ -18,32 +18,32 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class NodeRemoveParameter {
     /**
      * A list containing the IDs of the Compute Nodes to be removed from the
-     * specified Pool.
+     * specified Pool. A maximum of 100 nodes may be removed per request.
      */
     @JsonProperty(value = "nodeList", required = true)
     private List<String> nodeList;
 
     /**
-     * The timeout for removal of Compute Nodes to the Pool.
-     * The default value is 15 minutes. The minimum value is 5 minutes. If you
-     * specify a value less than 5 minutes, the Batch service returns an error;
-     * if you are calling the REST API directly, the HTTP status code is 400
-     * (Bad Request).
+     * The timeout for removal of Compute Nodes to the Pool. The default value
+     * is 15 minutes. The minimum value is 5 minutes. If you specify a value
+     * less than 5 minutes, the Batch service returns an error; if you are
+     * calling the REST API directly, the HTTP status code is 400 (Bad
+     * Request).
      */
     @JsonProperty(value = "resizeTimeout")
     private Period resizeTimeout;
 
     /**
      * Determines what to do with a Compute Node and its running task(s) after
-     * it has been selected for deallocation.
-     * The default value is requeue. Possible values include: 'requeue',
-     * 'terminate', 'taskCompletion', 'retainedData'.
+     * it has been selected for deallocation. The default value is requeue.
+     * Possible values include: 'requeue', 'terminate', 'taskCompletion',
+     * 'retainedData'.
      */
     @JsonProperty(value = "nodeDeallocationOption")
     private ComputeNodeDeallocationOption nodeDeallocationOption;
 
     /**
-     * Get the nodeList value.
+     * Get a list containing the IDs of the Compute Nodes to be removed from the specified Pool. A maximum of 100 nodes may be removed per request.
      *
      * @return the nodeList value
      */
@@ -52,7 +52,7 @@ public class NodeRemoveParameter {
     }
 
     /**
-     * Set the nodeList value.
+     * Set a list containing the IDs of the Compute Nodes to be removed from the specified Pool. A maximum of 100 nodes may be removed per request.
      *
      * @param nodeList the nodeList value to set
      * @return the NodeRemoveParameter object itself.
@@ -63,7 +63,7 @@ public class NodeRemoveParameter {
     }
 
     /**
-     * Get the default value is 15 minutes. The minimum value is 5 minutes. If you specify a value less than 5 minutes, the Batch service returns an error; if you are calling the REST API directly, the HTTP status code is 400 (Bad Request).
+     * Get the timeout for removal of Compute Nodes to the Pool. The default value is 15 minutes. The minimum value is 5 minutes. If you specify a value less than 5 minutes, the Batch service returns an error; if you are calling the REST API directly, the HTTP status code is 400 (Bad Request).
      *
      * @return the resizeTimeout value
      */
@@ -72,7 +72,7 @@ public class NodeRemoveParameter {
     }
 
     /**
-     * Set the default value is 15 minutes. The minimum value is 5 minutes. If you specify a value less than 5 minutes, the Batch service returns an error; if you are calling the REST API directly, the HTTP status code is 400 (Bad Request).
+     * Set the timeout for removal of Compute Nodes to the Pool. The default value is 15 minutes. The minimum value is 5 minutes. If you specify a value less than 5 minutes, the Batch service returns an error; if you are calling the REST API directly, the HTTP status code is 400 (Bad Request).
      *
      * @param resizeTimeout the resizeTimeout value to set
      * @return the NodeRemoveParameter object itself.
@@ -83,7 +83,7 @@ public class NodeRemoveParameter {
     }
 
     /**
-     * Get the default value is requeue. Possible values include: 'requeue', 'terminate', 'taskCompletion', 'retainedData'.
+     * Get determines what to do with a Compute Node and its running task(s) after it has been selected for deallocation. The default value is requeue. Possible values include: 'requeue', 'terminate', 'taskCompletion', 'retainedData'.
      *
      * @return the nodeDeallocationOption value
      */
@@ -92,7 +92,7 @@ public class NodeRemoveParameter {
     }
 
     /**
-     * Set the default value is requeue. Possible values include: 'requeue', 'terminate', 'taskCompletion', 'retainedData'.
+     * Set determines what to do with a Compute Node and its running task(s) after it has been selected for deallocation. The default value is requeue. Possible values include: 'requeue', 'terminate', 'taskCompletion', 'retainedData'.
      *
      * @param nodeDeallocationOption the nodeDeallocationOption value to set
      * @return the NodeRemoveParameter object itself.

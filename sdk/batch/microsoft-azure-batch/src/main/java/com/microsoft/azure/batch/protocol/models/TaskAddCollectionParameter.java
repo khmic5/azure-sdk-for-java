@@ -16,17 +16,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class TaskAddCollectionParameter {
     /**
-     * The collection of Tasks to add. The maximum count of Tasks is 100.
-     * The total serialized size of this collection must be less than 1MB. If
-     * it is greater than 1MB (for example if each Task has 100's of resource
-     * files or environment variables), the request will fail with code
+     * The collection of Tasks to add. The maximum count of Tasks is 100. The
+     * total serialized size of this collection must be less than 1MB. If it is
+     * greater than 1MB (for example if each Task has 100's of resource files
+     * or environment variables), the request will fail with code
      * 'RequestBodyTooLarge' and should be retried again with fewer Tasks.
      */
     @JsonProperty(value = "value", required = true)
     private List<TaskAddParameter> value;
 
     /**
-     * Get the total serialized size of this collection must be less than 1MB. If it is greater than 1MB (for example if each Task has 100's of resource files or environment variables), the request will fail with code 'RequestBodyTooLarge' and should be retried again with fewer Tasks.
+     * Get the collection of Tasks to add. The maximum count of Tasks is 100. The total serialized size of this collection must be less than 1MB. If it is greater than 1MB (for example if each Task has 100's of resource files or environment variables), the request will fail with code 'RequestBodyTooLarge' and should be retried again with fewer Tasks.
      *
      * @return the value value
      */
@@ -35,7 +35,7 @@ public class TaskAddCollectionParameter {
     }
 
     /**
-     * Set the total serialized size of this collection must be less than 1MB. If it is greater than 1MB (for example if each Task has 100's of resource files or environment variables), the request will fail with code 'RequestBodyTooLarge' and should be retried again with fewer Tasks.
+     * Set the collection of Tasks to add. The maximum count of Tasks is 100. The total serialized size of this collection must be less than 1MB. If it is greater than 1MB (for example if each Task has 100's of resource files or environment variables), the request will fail with code 'RequestBodyTooLarge' and should be retried again with fewer Tasks.
      *
      * @param value the value value to set
      * @return the TaskAddCollectionParameter object itself.

@@ -15,8 +15,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class ContainerRegistry {
     /**
-     * The registry URL.
-     * If omitted, the default is "docker.io".
+     * The registry URL. If omitted, the default is "docker.io".
      */
     @JsonProperty(value = "registryServer")
     private String registryServer;
@@ -24,17 +23,24 @@ public class ContainerRegistry {
     /**
      * The user name to log into the registry server.
      */
-    @JsonProperty(value = "username", required = true)
+    @JsonProperty(value = "username")
     private String userName;
 
     /**
      * The password to log into the registry server.
      */
-    @JsonProperty(value = "password", required = true)
+    @JsonProperty(value = "password")
     private String password;
 
     /**
-     * Get if omitted, the default is "docker.io".
+     * The reference to the user assigned identity to use to access an Azure
+     * Container Registry instead of username and password.
+     */
+    @JsonProperty(value = "identityReference")
+    private ComputeNodeIdentityReference identityReference;
+
+    /**
+     * Get the registry URL. If omitted, the default is "docker.io".
      *
      * @return the registryServer value
      */
@@ -43,7 +49,7 @@ public class ContainerRegistry {
     }
 
     /**
-     * Set if omitted, the default is "docker.io".
+     * Set the registry URL. If omitted, the default is "docker.io".
      *
      * @param registryServer the registryServer value to set
      * @return the ContainerRegistry object itself.
@@ -54,7 +60,7 @@ public class ContainerRegistry {
     }
 
     /**
-     * Get the userName value.
+     * Get the user name to log into the registry server.
      *
      * @return the userName value
      */
@@ -63,7 +69,7 @@ public class ContainerRegistry {
     }
 
     /**
-     * Set the userName value.
+     * Set the user name to log into the registry server.
      *
      * @param userName the userName value to set
      * @return the ContainerRegistry object itself.
@@ -74,7 +80,7 @@ public class ContainerRegistry {
     }
 
     /**
-     * Get the password value.
+     * Get the password to log into the registry server.
      *
      * @return the password value
      */
@@ -83,13 +89,33 @@ public class ContainerRegistry {
     }
 
     /**
-     * Set the password value.
+     * Set the password to log into the registry server.
      *
      * @param password the password value to set
      * @return the ContainerRegistry object itself.
      */
     public ContainerRegistry withPassword(String password) {
         this.password = password;
+        return this;
+    }
+
+    /**
+     * Get the reference to the user assigned identity to use to access an Azure Container Registry instead of username and password.
+     *
+     * @return the identityReference value
+     */
+    public ComputeNodeIdentityReference identityReference() {
+        return this.identityReference;
+    }
+
+    /**
+     * Set the reference to the user assigned identity to use to access an Azure Container Registry instead of username and password.
+     *
+     * @param identityReference the identityReference value to set
+     * @return the ContainerRegistry object itself.
+     */
+    public ContainerRegistry withIdentityReference(ComputeNodeIdentityReference identityReference) {
+        this.identityReference = identityReference;
         return this;
     }
 

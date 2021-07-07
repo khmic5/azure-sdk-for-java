@@ -27,7 +27,7 @@ public class DiskEncryptionConfiguration {
     private List<DiskEncryptionTarget> targets;
 
     /**
-     * Get if omitted, no disks on the compute nodes in the pool will be encrypted. On Linux pool, only "TemporaryDisk" is supported; on Windows pool, "OsDisk" and "TemporaryDisk" must be specified.
+     * Get the list of disk targets Batch Service will encrypt on the compute node. If omitted, no disks on the compute nodes in the pool will be encrypted. On Linux pool, only "TemporaryDisk" is supported; on Windows pool, "OsDisk" and "TemporaryDisk" must be specified.
      *
      * @return the targets value
      */
@@ -36,7 +36,7 @@ public class DiskEncryptionConfiguration {
     }
 
     /**
-     * Set if omitted, no disks on the compute nodes in the pool will be encrypted. On Linux pool, only "TemporaryDisk" is supported; on Windows pool, "OsDisk" and "TemporaryDisk" must be specified.
+     * Set the list of disk targets Batch Service will encrypt on the compute node. If omitted, no disks on the compute nodes in the pool will be encrypted. On Linux pool, only "TemporaryDisk" is supported; on Windows pool, "OsDisk" and "TemporaryDisk" must be specified.
      *
      * @param targets the targets value to set
      * @return the DiskEncryptionConfiguration object itself.

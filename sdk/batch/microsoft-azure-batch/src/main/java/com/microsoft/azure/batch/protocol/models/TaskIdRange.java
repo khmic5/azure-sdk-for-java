@@ -30,7 +30,7 @@ public class TaskIdRange {
     private int end;
 
     /**
-     * Get the start value.
+     * Get the first Task ID in the range.
      *
      * @return the start value
      */
@@ -39,7 +39,7 @@ public class TaskIdRange {
     }
 
     /**
-     * Set the start value.
+     * Set the first Task ID in the range.
      *
      * @param start the start value to set
      * @return the TaskIdRange object itself.
@@ -50,7 +50,7 @@ public class TaskIdRange {
     }
 
     /**
-     * Get the end value.
+     * Get the last Task ID in the range.
      *
      * @return the end value
      */
@@ -59,7 +59,7 @@ public class TaskIdRange {
     }
 
     /**
-     * Set the end value.
+     * Set the last Task ID in the range.
      *
      * @param end the end value to set
      * @return the TaskIdRange object itself.

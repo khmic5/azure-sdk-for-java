@@ -29,7 +29,7 @@ public class ExitCodeMapping {
     private ExitOptions exitOptions;
 
     /**
-     * Get the code value.
+     * Get a process exit code.
      *
      * @return the code value
      */
@@ -38,7 +38,7 @@ public class ExitCodeMapping {
     }
 
     /**
-     * Set the code value.
+     * Set a process exit code.
      *
      * @param code the code value to set
      * @return the ExitCodeMapping object itself.
@@ -49,7 +49,7 @@ public class ExitCodeMapping {
     }
 
     /**
-     * Get the exitOptions value.
+     * Get how the Batch service should respond if the Task exits with this exit code.
      *
      * @return the exitOptions value
      */
@@ -58,7 +58,7 @@ public class ExitCodeMapping {
     }
 
     /**
-     * Set the exitOptions value.
+     * Set how the Batch service should respond if the Task exits with this exit code.
      *
      * @param exitOptions the exitOptions value to set
      * @return the ExitCodeMapping object itself.

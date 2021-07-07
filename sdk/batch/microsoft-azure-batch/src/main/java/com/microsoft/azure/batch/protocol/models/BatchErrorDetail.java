@@ -27,7 +27,7 @@ public class BatchErrorDetail {
     private String value;
 
     /**
-     * Get the key value.
+     * Get an identifier specifying the meaning of the Value property.
      *
      * @return the key value
      */
@@ -36,7 +36,7 @@ public class BatchErrorDetail {
     }
 
     /**
-     * Set the key value.
+     * Set an identifier specifying the meaning of the Value property.
      *
      * @param key the key value to set
      * @return the BatchErrorDetail object itself.
@@ -47,7 +47,7 @@ public class BatchErrorDetail {
     }
 
     /**
-     * Get the value value.
+     * Get the additional information included with the error response.
      *
      * @return the value value
      */
@@ -56,7 +56,7 @@ public class BatchErrorDetail {
     }
 
     /**
-     * Set the value value.
+     * Set the additional information included with the error response.
      *
      * @param value the value value to set
      * @return the BatchErrorDetail object itself.

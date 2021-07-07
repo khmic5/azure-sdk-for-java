@@ -36,8 +36,8 @@ public class Certificate {
     private String url;
 
     /**
-     * The current state of the Certificate.
-     * Possible values include: 'active', 'deleting', 'deleteFailed'.
+     * The current state of the Certificate. Possible values include: 'active',
+     * 'deleting', 'deleteFailed'.
      */
     @JsonProperty(value = "state")
     private CertificateState state;
@@ -49,17 +49,16 @@ public class Certificate {
     private DateTime stateTransitionTime;
 
     /**
-     * The previous state of the Certificate.
-     * This property is not set if the Certificate is in its initial active
-     * state. Possible values include: 'active', 'deleting', 'deleteFailed'.
+     * The previous state of the Certificate. This property is not set if the
+     * Certificate is in its initial active state. Possible values include:
+     * 'active', 'deleting', 'deleteFailed'.
      */
     @JsonProperty(value = "previousState")
     private CertificateState previousState;
 
     /**
-     * The time at which the Certificate entered its previous state.
-     * This property is not set if the Certificate is in its initial Active
-     * state.
+     * The time at which the Certificate entered its previous state. This
+     * property is not set if the Certificate is in its initial Active state.
      */
     @JsonProperty(value = "previousStateTransitionTime")
     private DateTime previousStateTransitionTime;
@@ -79,7 +78,7 @@ public class Certificate {
     private DeleteCertificateError deleteCertificateError;
 
     /**
-     * Get the thumbprint value.
+     * Get the X.509 thumbprint of the Certificate. This is a sequence of up to 40 hex digits.
      *
      * @return the thumbprint value
      */
@@ -88,7 +87,7 @@ public class Certificate {
     }
 
     /**
-     * Set the thumbprint value.
+     * Set the X.509 thumbprint of the Certificate. This is a sequence of up to 40 hex digits.
      *
      * @param thumbprint the thumbprint value to set
      * @return the Certificate object itself.
@@ -99,7 +98,7 @@ public class Certificate {
     }
 
     /**
-     * Get the thumbprintAlgorithm value.
+     * Get the algorithm used to derive the thumbprint.
      *
      * @return the thumbprintAlgorithm value
      */
@@ -108,7 +107,7 @@ public class Certificate {
     }
 
     /**
-     * Set the thumbprintAlgorithm value.
+     * Set the algorithm used to derive the thumbprint.
      *
      * @param thumbprintAlgorithm the thumbprintAlgorithm value to set
      * @return the Certificate object itself.
@@ -119,7 +118,7 @@ public class Certificate {
     }
 
     /**
-     * Get the url value.
+     * Get the URL of the Certificate.
      *
      * @return the url value
      */
@@ -128,7 +127,7 @@ public class Certificate {
     }
 
     /**
-     * Set the url value.
+     * Set the URL of the Certificate.
      *
      * @param url the url value to set
      * @return the Certificate object itself.
@@ -139,7 +138,7 @@ public class Certificate {
     }
 
     /**
-     * Get possible values include: 'active', 'deleting', 'deleteFailed'.
+     * Get the current state of the Certificate. Possible values include: 'active', 'deleting', 'deleteFailed'.
      *
      * @return the state value
      */
@@ -148,7 +147,7 @@ public class Certificate {
     }
 
     /**
-     * Set possible values include: 'active', 'deleting', 'deleteFailed'.
+     * Set the current state of the Certificate. Possible values include: 'active', 'deleting', 'deleteFailed'.
      *
      * @param state the state value to set
      * @return the Certificate object itself.
@@ -159,7 +158,7 @@ public class Certificate {
     }
 
     /**
-     * Get the stateTransitionTime value.
+     * Get the time at which the Certificate entered its current state.
      *
      * @return the stateTransitionTime value
      */
@@ -168,7 +167,7 @@ public class Certificate {
     }
 
     /**
-     * Set the stateTransitionTime value.
+     * Set the time at which the Certificate entered its current state.
      *
      * @param stateTransitionTime the stateTransitionTime value to set
      * @return the Certificate object itself.
@@ -179,7 +178,7 @@ public class Certificate {
     }
 
     /**
-     * Get this property is not set if the Certificate is in its initial active state. Possible values include: 'active', 'deleting', 'deleteFailed'.
+     * Get the previous state of the Certificate. This property is not set if the Certificate is in its initial active state. Possible values include: 'active', 'deleting', 'deleteFailed'.
      *
      * @return the previousState value
      */
@@ -188,7 +187,7 @@ public class Certificate {
     }
 
     /**
-     * Set this property is not set if the Certificate is in its initial active state. Possible values include: 'active', 'deleting', 'deleteFailed'.
+     * Set the previous state of the Certificate. This property is not set if the Certificate is in its initial active state. Possible values include: 'active', 'deleting', 'deleteFailed'.
      *
      * @param previousState the previousState value to set
      * @return the Certificate object itself.
@@ -199,7 +198,7 @@ public class Certificate {
     }
 
     /**
-     * Get this property is not set if the Certificate is in its initial Active state.
+     * Get the time at which the Certificate entered its previous state. This property is not set if the Certificate is in its initial Active state.
      *
      * @return the previousStateTransitionTime value
      */
@@ -208,7 +207,7 @@ public class Certificate {
     }
 
     /**
-     * Set this property is not set if the Certificate is in its initial Active state.
+     * Set the time at which the Certificate entered its previous state. This property is not set if the Certificate is in its initial Active state.
      *
      * @param previousStateTransitionTime the previousStateTransitionTime value to set
      * @return the Certificate object itself.
@@ -219,7 +218,7 @@ public class Certificate {
     }
 
     /**
-     * Get the publicData value.
+     * Get the public part of the Certificate as a base-64 encoded .cer file.
      *
      * @return the publicData value
      */
@@ -228,7 +227,7 @@ public class Certificate {
     }
 
     /**
-     * Set the publicData value.
+     * Set the public part of the Certificate as a base-64 encoded .cer file.
      *
      * @param publicData the publicData value to set
      * @return the Certificate object itself.
@@ -239,7 +238,7 @@ public class Certificate {
     }
 
     /**
-     * Get this property is set only if the Certificate is in the DeleteFailed state.
+     * Get the error that occurred on the last attempt to delete this Certificate. This property is set only if the Certificate is in the DeleteFailed state.
      *
      * @return the deleteCertificateError value
      */
@@ -248,7 +247,7 @@ public class Certificate {
     }
 
     /**
-     * Set this property is set only if the Certificate is in the DeleteFailed state.
+     * Set the error that occurred on the last attempt to delete this Certificate. This property is set only if the Certificate is in the DeleteFailed state.
      *
      * @param deleteCertificateError the deleteCertificateError value to set
      * @return the Certificate object itself.
