@@ -83,6 +83,13 @@
     </dependency>
 
     <dependency>
+      <groupId>com.azure</groupId>
+      <artifactId>azure-core</artifactId>
+      <version>1.18.0</version> <!-- {x-version-update;com.microsoft.azure:azure-storage;external_dependency} -->
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
       <groupId>com.microsoft.azure</groupId>
       <artifactId>azure-mgmt-network</artifactId>
       <version>1.33.0</version> <!-- {x-version-update;com.microsoft.azure:azure-mgmt-network;external_dependency} -->
@@ -169,6 +176,20 @@
               <directory>${basedir}/src/test/resources/test-recordings</directory>
             </resource>
           </resources>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.0.0-M3</version><!-- {x-version-update;org.apache.maven.plugins:maven-surefire-plugin;external_dependency} -->
+        <configuration>
+          <argLine>
+            --add-exports com.azure.core/com.azure.core.implementation.http=ALL-UNNAMED
+            --add-opens com.microsoft.azure.batch/com.microsoft.azure.batch=ALL-UNNAMED
+            --add-opens java.base/java.util=ALL-UNNAMED
+          </argLine>
+          <!-- <test>TaskTests#failIfPoisonTaskTooLarge</test> -->
         </configuration>
       </plugin>
 
