@@ -23,13 +23,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class ContainerRepositoryAnonymousAccessTests extends ContainerRegistryClientsTestBase {
     @BeforeEach
     void beforeEach() {
-        TestUtils.importImageAsync(ImplUtils.getTestMode(), ANONYMOUS_REGISTRY_NAME, HELLO_WORLD_REPOSITORY_NAME, Arrays.asList("latest", "v1", "v2", "v3", "v4")).block();
+        TestUtils.importImageAsync(ImplUtils.getTestMode(), ANONYMOUS_REGISTRY_NAME, HELLO_WORLD_REPOSITORY_NAME, Arrays.asList("latest", "v1", "v2", "v3", "v4"), ANONYMOUS_REGISTRY_ENDPOINT).block();
     }
 
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("getHttpClients")
     public void listAnonymousRepositories(HttpClient httpClient) {
-        if(getAuthority(ANONYMOUS_REGISTRY_ENDPOINT) == AzureAuthorityHosts.AZURE_PUBLIC_CLOUD) {
+        if(TestUtils.getAuthority(ANONYMOUS_REGISTRY_ENDPOINT) == AzureAuthorityHosts.AZURE_PUBLIC_CLOUD) {
             ContainerRegistryClient client = getContainerRegistryBuilder(httpClient, null, ANONYMOUS_REGISTRY_ENDPOINT).buildClient();
             List<String> repositories = client.listRepositoryNames().stream().collect(Collectors.toList());
             assertTrue(repositories.stream().anyMatch(a -> HELLO_WORLD_REPOSITORY_NAME.equals(a)));

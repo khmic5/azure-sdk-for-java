@@ -1,5 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
 
 package com.azure.containers.containerregistry;
 
@@ -17,7 +19,6 @@ import com.azure.core.http.rest.PagedResponse;
 import com.azure.core.http.rest.Response;
 import com.azure.core.test.TestBase;
 import com.azure.core.util.CoreUtils;
-import com.azure.identity.AzureAuthorityHosts;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -87,7 +88,7 @@ public class ContainerRegistryClientsTestBase extends TestBase {
         .setTeleportEnabled(false);
 
     ContainerRegistryClientBuilder getContainerRegistryBuilder(HttpClient httpClient) {
-        TokenCredential credential = getCredential(getTestMode());
+        TokenCredential credential = getCredential(getTestMode(), REGISTRY_ENDPOINT);
         return getContainerRegistryBuilder(httpClient, credential);
     }
 
@@ -95,7 +96,7 @@ public class ContainerRegistryClientsTestBase extends TestBase {
         List<Function<String, String>> redactors = new ArrayList<>();
         redactors.add(data -> redact(data, JSON_PROPERTY_VALUE_REDACTION_PATTERN.matcher(data), "REDACTED"));
 
-        String authenticationScope = getAuthenticationScope(endpoint);
+        String authenticationScope = TestUtils.getAuthenticationScope(endpoint);
 
         ContainerRegistryClientBuilder builder = new ContainerRegistryClientBuilder()
             .endpoint(getEndpoint(endpoint))
@@ -121,39 +122,6 @@ public class ContainerRegistryClientsTestBase extends TestBase {
 
     String getChildArtifactDigest(Collection<ArtifactManifestPlatform> artifacts) {
         return getChildArtifacts(artifacts).get(0);
-    }
-
-    String getAuthority(String endpoint) {
-        if(endpoint.contains(".azurecr.io")) {
-            return AzureAuthorityHosts.AZURE_PUBLIC_CLOUD;
-        }
-
-        if(endpoint.contains(".azurecr.cn")) {
-            return AzureAuthorityHosts.AZURE_CHINA;
-        }
-
-        if(endpoint.contains(".azurecr.us")) {
-            return AzureAuthorityHosts.AZURE_GOVERNMENT;
-        }
-
-        return null;
-    }
-
-    public String getAuthenticationScope(String endpoint) {
-        String authority = getAuthority(endpoint);
-        switch(authority) {
-            case AzureAuthorityHosts.AZURE_PUBLIC_CLOUD:
-                return "https://management.core.windows.net/.default";
-
-            case AzureAuthorityHosts.AZURE_CHINA:
-                return "https://management.chinacloudapi.cn/.default";
-
-            case AzureAuthorityHosts.AZURE_GOVERNMENT:
-                return "https://management.usgovcloudapi.net/.default";
-
-            default:
-                return null;
-        }
     }
 
     void validateProperties(ContainerRepositoryProperties properties) {

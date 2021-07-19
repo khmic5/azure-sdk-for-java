@@ -11,6 +11,9 @@ import com.azure.core.management.AzureEnvironment;
 import com.azure.core.management.profile.AzureProfile;
 import com.azure.core.test.TestMode;
 import com.azure.core.util.Configuration;
+import com.azure.identity.AzureAuthorityHosts;
+import com.azure.identity.ClientSecretCredential;
+import com.azure.identity.ClientSecretCredentialBuilder;
 import com.azure.identity.DefaultAzureCredentialBuilder;
 import com.azure.resourcemanager.containerregistry.ContainerRegistryManager;
 import com.azure.resourcemanager.containerregistry.models.ImportImageParameters;
@@ -48,6 +51,8 @@ public class TestUtils {
     public static final String REGISTRY_NAME;
     public static final String RESOURCE_GROUP;
     public static final String SUBSCRIPTION_ID;
+    public static final String TENANT_ID;
+    public static final String CLIENT_ID;
     public static final String REGISTRY_URI;
     public static final String REGISTRY_ENDPOINT;
     public static final String ANONYMOUS_REGISTRY_ENDPOINT;
@@ -61,6 +66,7 @@ public class TestUtils {
     public static final int HTTP_STATUS_CODE_202;
     public static final String AZURE_GLOBAL_AUTHENTICATION_SCOPE;
     public static final String AZURE_GOV_AUTHENTICATION_SCOPE;
+    public static final String CONTAINERREGISTRY_CLIENT_SECRET;
 
     static {
         CONFIGURATION = Configuration.getGlobalConfiguration().clone();
@@ -85,12 +91,15 @@ public class TestUtils {
         WINDOWS_OPERATING_SYSTEM = "windows";
         RESOURCE_GROUP = CONFIGURATION.get("CONTAINERREGISTRY_RESOURCE_GROUP");
         SUBSCRIPTION_ID = CONFIGURATION.get("CONTAINERREGISTRY_SUBSCRIPTION_ID");
+        TENANT_ID = CONFIGURATION.get("CONTAINERREGISTRY_TENANT_ID");
+        CLIENT_ID = CONFIGURATION.get("CONTAINERREGISTRY_CLIENT_ID");
         REGISTRY_NAME = CONFIGURATION.get("CONTAINERREGISTRY_REGISTRY_NAME");
         REGISTRY_ENDPOINT = CONFIGURATION.get("CONTAINERREGISTRY_ENDPOINT");
         REGISTRY_URI = "registry.hub.docker.com";
         SLEEP_TIME_IN_MILLISECONDS = 5000;
         ANONYMOUS_REGISTRY_NAME = CONFIGURATION.get("CONTAINERREGISTRY_ANONREGISTRY_NAME");
         ANONYMOUS_REGISTRY_ENDPOINT = CONFIGURATION.get("CONTAINERREGISTRY_ANONREGISTRY_ENDPOINT");
+        CONTAINERREGISTRY_CLIENT_SECRET = CONFIGURATION.get("CONTAINERREGISTRY_CLIENT_SECRET");
         LOGIN_SERVER_SUFFIX = "azurecr.io";
         REGISTRY_ENDPOINT_PLAYBACK = "https://pallavitcontainerregistry.azurecr.io";
         REGISTRY_NAME_PLAYBACK = "pallavitcontainerregistry";
@@ -124,12 +133,22 @@ public class TestUtils {
         return true;
     }
 
-    static TokenCredential getCredential(TestMode testMode) {
+    static TokenCredential getCredential(TestMode testMode, String endpoint) {
         if (testMode == TestMode.PLAYBACK) {
             return new FakeCredentials();
         }
 
-        return new DefaultAzureCredentialBuilder().build();
+        String authority = getAuthority(endpoint);
+
+        if(authority == AzureAuthorityHosts.AZURE_PUBLIC_CLOUD) {
+            return new DefaultAzureCredentialBuilder().build();
+        } else {
+            return new ClientSecretCredentialBuilder()
+                .tenantId(TENANT_ID)
+                .clientId(CLIENT_ID)
+                .clientSecret(CONTAINERREGISTRY_CLIENT_SECRET)
+                .authorityHost(authority).build();
+        }
     }
 
     static void importImage(TestMode mode, String repository, List<String> tags) {
@@ -145,16 +164,49 @@ public class TestUtils {
         }
     }
 
-    static Mono<Void> importImageAsync(TestMode mode, String repository, List<String> tags) {
-        return importImageAsync(mode, REGISTRY_NAME, repository, tags);
+    public static String getAuthority(String endpoint) {
+        if(endpoint.contains(".azurecr.io")) {
+            return AzureAuthorityHosts.AZURE_PUBLIC_CLOUD;
+        }
+
+        if(endpoint.contains(".azurecr.cn")) {
+            return AzureAuthorityHosts.AZURE_CHINA;
+        }
+
+        if(endpoint.contains(".azurecr.us")) {
+            return AzureAuthorityHosts.AZURE_GOVERNMENT;
+        }
+
+        return null;
     }
 
-    static Mono<Void> importImageAsync(TestMode mode, String registryName, String repository, List<String> tags) {
+    public static String getAuthenticationScope(String endpoint) {
+        String authority = getAuthority(endpoint);
+        switch(authority) {
+            case AzureAuthorityHosts.AZURE_PUBLIC_CLOUD:
+                return "https://management.core.windows.net/.default";
+
+            case AzureAuthorityHosts.AZURE_CHINA:
+                return "https://management.chinacloudapi.cn/.default";
+
+            case AzureAuthorityHosts.AZURE_GOVERNMENT:
+                return "https://management.usgovcloudapi.net/.default";
+
+            default:
+                return null;
+        }
+    }
+
+    static Mono<Void> importImageAsync(TestMode mode, String repository, List<String> tags) {
+        return importImageAsync(mode, REGISTRY_NAME, repository, tags, REGISTRY_ENDPOINT);
+    }
+
+    static Mono<Void> importImageAsync(TestMode mode, String registryName, String repository, List<String> tags, String endpoint) {
         if (mode == TestMode.PLAYBACK) {
             return Mono.empty();
         }
 
-        TokenCredential credential = getCredential(mode);
+        TokenCredential credential = getCredential(mode, endpoint);
 
         tags = tags.stream().map(tag -> String.format("%1$s:%2$s", repository, tag)).collect(Collectors.toList());
 
