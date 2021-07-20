@@ -133,12 +133,19 @@ public class TestUtils {
         return true;
     }
 
-    static TokenCredential getCredential(TestMode testMode, String endpoint) {
+    static TokenCredential getCredentialsByEndpoint(TestMode testMode, String endpoint) {
         if (testMode == TestMode.PLAYBACK) {
             return new FakeCredentials();
         }
 
         String authority = getAuthority(endpoint);
+        return getCredentialByAuthority(testMode, authority);
+    }
+
+    static TokenCredential getCredentialByAuthority(TestMode testMode, String authority) {
+        if (testMode == TestMode.PLAYBACK) {
+            return new FakeCredentials();
+        }
 
         if(authority == AzureAuthorityHosts.AZURE_PUBLIC_CLOUD) {
             return new DefaultAzureCredentialBuilder().build();
@@ -197,6 +204,15 @@ public class TestUtils {
         }
     }
 
+    static AzureProfile getAzureProfile(String authority) {
+        switch(authority) {
+            case AzureAuthorityHosts.AZURE_PUBLIC_CLOUD: return new AzureProfile(AzureEnvironment.AZURE);
+            case AzureAuthorityHosts.AZURE_CHINA: return new AzureProfile(AzureEnvironment.AZURE_CHINA);
+            case AzureAuthorityHosts.AZURE_GOVERNMENT: return new AzureProfile(AzureEnvironment.AZURE_US_GOVERNMENT);
+            default: return null;
+        }
+    }
+
     static Mono<Void> importImageAsync(TestMode mode, String repository, List<String> tags) {
         return importImageAsync(mode, REGISTRY_NAME, repository, tags, REGISTRY_ENDPOINT);
     }
@@ -206,11 +222,13 @@ public class TestUtils {
             return Mono.empty();
         }
 
-        TokenCredential credential = getCredential(mode, endpoint);
+        String authority = getAuthority(endpoint);
 
+        TokenCredential credential = getCredentialByAuthority(mode, authority);
         tags = tags.stream().map(tag -> String.format("%1$s:%2$s", repository, tag)).collect(Collectors.toList());
+        AzureProfile profile = getAzureProfile(authority);
 
-        ContainerRegistryManager manager = ContainerRegistryManager.authenticate(credential, new AzureProfile(AzureEnvironment.AZURE));
+        ContainerRegistryManager manager = ContainerRegistryManager.authenticate(credential, profile);
 
         return manager.serviceClient().getRegistries().importImageAsync(
             RESOURCE_GROUP,
