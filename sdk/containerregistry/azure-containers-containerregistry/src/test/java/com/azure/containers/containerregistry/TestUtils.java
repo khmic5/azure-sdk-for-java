@@ -12,7 +12,6 @@ import com.azure.core.management.profile.AzureProfile;
 import com.azure.core.test.TestMode;
 import com.azure.core.util.Configuration;
 import com.azure.identity.AzureAuthorityHosts;
-import com.azure.identity.ClientSecretCredential;
 import com.azure.identity.ClientSecretCredentialBuilder;
 import com.azure.identity.DefaultAzureCredentialBuilder;
 import com.azure.resourcemanager.containerregistry.ContainerRegistryManager;
@@ -147,7 +146,7 @@ public class TestUtils {
             return new FakeCredentials();
         }
 
-        if(authority == AzureAuthorityHosts.AZURE_PUBLIC_CLOUD) {
+        if (authority == AzureAuthorityHosts.AZURE_PUBLIC_CLOUD) {
             return new DefaultAzureCredentialBuilder().build();
         } else {
             return new ClientSecretCredentialBuilder()
@@ -172,15 +171,15 @@ public class TestUtils {
     }
 
     public static String getAuthority(String endpoint) {
-        if(endpoint.contains(".azurecr.io")) {
+        if (endpoint.contains(".azurecr.io")) {
             return AzureAuthorityHosts.AZURE_PUBLIC_CLOUD;
         }
 
-        if(endpoint.contains(".azurecr.cn")) {
+        if (endpoint.contains(".azurecr.cn")) {
             return AzureAuthorityHosts.AZURE_CHINA;
         }
 
-        if(endpoint.contains(".azurecr.us")) {
+        if (endpoint.contains(".azurecr.us")) {
             return AzureAuthorityHosts.AZURE_GOVERNMENT;
         }
 
@@ -189,7 +188,7 @@ public class TestUtils {
 
     public static String getAuthenticationScope(String endpoint) {
         String authority = getAuthority(endpoint);
-        switch(authority) {
+        switch (authority) {
             case AzureAuthorityHosts.AZURE_PUBLIC_CLOUD:
                 return "https://management.core.windows.net/.default";
 
@@ -205,7 +204,7 @@ public class TestUtils {
     }
 
     static AzureProfile getAzureProfile(String authority) {
-        switch(authority) {
+        switch (authority) {
             case AzureAuthorityHosts.AZURE_PUBLIC_CLOUD: return new AzureProfile(AzureEnvironment.AZURE);
             case AzureAuthorityHosts.AZURE_CHINA: return new AzureProfile(AzureEnvironment.AZURE_CHINA);
             case AzureAuthorityHosts.AZURE_GOVERNMENT: return new AzureProfile(AzureEnvironment.AZURE_US_GOVERNMENT);
@@ -239,8 +238,7 @@ public class TestUtils {
                     .withSource(new ImportSource().withSourceImage(repository)
                         .withRegistryUri(REGISTRY_URI))
                     .withTargetTags(tags));
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             System.out.println(TENANT_ID == null);
             System.out.println(CLIENT_ID == null);
             System.out.println(CONTAINERREGISTRY_CLIENT_SECRET == null);

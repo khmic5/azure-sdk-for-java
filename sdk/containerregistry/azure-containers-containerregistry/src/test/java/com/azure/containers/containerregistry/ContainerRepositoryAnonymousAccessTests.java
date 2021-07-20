@@ -29,7 +29,7 @@ public class ContainerRepositoryAnonymousAccessTests extends ContainerRegistryCl
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("getHttpClients")
     public void listAnonymousRepositories(HttpClient httpClient) {
-        if(TestUtils.getAuthority(ANONYMOUS_REGISTRY_ENDPOINT) == AzureAuthorityHosts.AZURE_PUBLIC_CLOUD) {
+        if (TestUtils.getAuthority(ANONYMOUS_REGISTRY_ENDPOINT) == AzureAuthorityHosts.AZURE_PUBLIC_CLOUD) {
             ContainerRegistryClient client = getContainerRegistryBuilder(httpClient, null, ANONYMOUS_REGISTRY_ENDPOINT).buildClient();
             List<String> repositories = client.listRepositoryNames().stream().collect(Collectors.toList());
             assertTrue(repositories.stream().anyMatch(a -> HELLO_WORLD_REPOSITORY_NAME.equals(a)));
