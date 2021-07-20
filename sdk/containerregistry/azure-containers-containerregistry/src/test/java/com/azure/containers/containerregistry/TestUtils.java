@@ -230,13 +230,25 @@ public class TestUtils {
 
         ContainerRegistryManager manager = ContainerRegistryManager.authenticate(credential, profile);
 
-        return manager.serviceClient().getRegistries().importImageAsync(
-            RESOURCE_GROUP,
-            registryName,
-            new ImportImageParameters()
-                .withMode(ImportMode.FORCE)
-                .withSource(new ImportSource().withSourceImage(repository)
-                    .withRegistryUri(REGISTRY_URI))
-                .withTargetTags(tags));
+        try {
+            return manager.serviceClient().getRegistries().importImageAsync(
+                RESOURCE_GROUP,
+                registryName,
+                new ImportImageParameters()
+                    .withMode(ImportMode.FORCE)
+                    .withSource(new ImportSource().withSourceImage(repository)
+                        .withRegistryUri(REGISTRY_URI))
+                    .withTargetTags(tags));
+        }
+        catch (Exception ex) {
+            System.out.println(TENANT_ID == null);
+            System.out.println(CLIENT_ID == null);
+            System.out.println(CONTAINERREGISTRY_CLIENT_SECRET == null);
+            System.out.println(authority);
+            System.out.println(profile);
+            System.out.println(ex);
+        }
+
+        return null;
     }
 }
