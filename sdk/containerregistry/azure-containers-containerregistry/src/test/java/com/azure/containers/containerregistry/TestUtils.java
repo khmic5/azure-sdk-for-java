@@ -205,9 +205,9 @@ public class TestUtils {
 
     static AzureProfile getAzureProfile(String authority) {
         switch (authority) {
-            case AzureAuthorityHosts.AZURE_PUBLIC_CLOUD: return new AzureProfile(AzureEnvironment.AZURE);
-            case AzureAuthorityHosts.AZURE_CHINA: return new AzureProfile(AzureEnvironment.AZURE_CHINA);
-            case AzureAuthorityHosts.AZURE_GOVERNMENT: return new AzureProfile(AzureEnvironment.AZURE_US_GOVERNMENT);
+            case AzureAuthorityHosts.AZURE_PUBLIC_CLOUD: return new AzureProfile(TENANT_ID, SUBSCRIPTION_ID, AzureEnvironment.AZURE);
+            case AzureAuthorityHosts.AZURE_CHINA: return new AzureProfile(TENANT_ID, SUBSCRIPTION_ID, AzureEnvironment.AZURE_CHINA);
+            case AzureAuthorityHosts.AZURE_GOVERNMENT: return new AzureProfile(TENANT_ID, SUBSCRIPTION_ID, AzureEnvironment.AZURE_US_GOVERNMENT);
             default: return null;
         }
     }
@@ -237,7 +237,11 @@ public class TestUtils {
                     .withMode(ImportMode.FORCE)
                     .withSource(new ImportSource().withSourceImage(repository)
                         .withRegistryUri(REGISTRY_URI))
-                    .withTargetTags(tags));
+                    .withTargetTags(tags))
+                .onErrorResume(error -> {
+                    System.out.println(error);
+                    return Mono.empty();
+                });
         } catch (Exception ex) {
             System.out.println(TENANT_ID == null);
             System.out.println(CLIENT_ID == null);
