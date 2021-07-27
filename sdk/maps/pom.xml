@@ -37,6 +37,15 @@
         <activeByDefault>true</activeByDefault>
       </activation>
       <modules>
+        <module>azure-maps-creator</module>
+        <module>azure-maps-elevation</module>
+        <module>azure-maps-geolocation</module>
+        <module>azure-maps-route</module>
+        <module>azure-maps-search</module>
+        <module>azure-maps-timezone</module>
+        <module>azure-maps-traffic</module>
+        <module>azure-maps-weather</module>
+        <module>azure-maps-service</module>
         <module>azure-resourcemanager-maps</module>
       </modules>
     </profile>
