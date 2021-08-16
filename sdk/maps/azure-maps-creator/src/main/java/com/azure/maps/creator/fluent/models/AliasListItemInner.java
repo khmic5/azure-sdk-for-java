@@ -8,6 +8,7 @@ import com.azure.core.annotation.Immutable;
 import com.azure.core.util.logging.ClientLogger;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.time.OffsetDateTime;
 
 /** Detailed information for the alias. */
 @Immutable
@@ -37,7 +38,7 @@ public final class AliasListItemInner {
      * The timestamp of the last time the alias was assigned.
      */
     @JsonProperty(value = "lastUpdatedTimestamp", access = JsonProperty.Access.WRITE_ONLY)
-    private String lastUpdatedTimestamp;
+    private OffsetDateTime lastUpdatedTimestamp;
 
     /**
      * Get the createdTimestamp property: The created timestamp for the alias.
@@ -72,7 +73,7 @@ public final class AliasListItemInner {
      *
      * @return the lastUpdatedTimestamp value.
      */
-    public String lastUpdatedTimestamp() {
+    public OffsetDateTime lastUpdatedTimestamp() {
         return this.lastUpdatedTimestamp;
     }
 

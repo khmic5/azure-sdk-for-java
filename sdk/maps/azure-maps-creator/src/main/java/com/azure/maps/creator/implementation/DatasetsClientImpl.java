@@ -74,6 +74,7 @@ public final class DatasetsClientImpl implements DatasetsClient {
         @UnexpectedResponseExceptionType(ManagementException.class)
         Mono<Response<Flux<ByteBuffer>>> create(
             @HostParam("geography") Geography geography,
+            @HeaderParam("x-ms-client-id") String xMsClientId,
             @QueryParam("api-version") String apiVersion,
             @QueryParam("conversionId") String conversionId,
             @QueryParam("datasetId") String datasetId,
@@ -87,6 +88,7 @@ public final class DatasetsClientImpl implements DatasetsClient {
         @UnexpectedResponseExceptionType(ManagementException.class)
         Mono<Response<DatasetListResponse>> list(
             @HostParam("geography") Geography geography,
+            @HeaderParam("x-ms-client-id") String xMsClientId,
             @QueryParam("api-version") String apiVersion,
             @HeaderParam("Accept") String accept,
             Context context);
@@ -97,6 +99,7 @@ public final class DatasetsClientImpl implements DatasetsClient {
         @UnexpectedResponseExceptionType(ManagementException.class)
         Mono<Response<DatasetDetailInfoInner>> get(
             @HostParam("geography") Geography geography,
+            @HeaderParam("x-ms-client-id") String xMsClientId,
             @PathParam("datasetId") String datasetId,
             @QueryParam("api-version") String apiVersion,
             @HeaderParam("Accept") String accept,
@@ -108,6 +111,7 @@ public final class DatasetsClientImpl implements DatasetsClient {
         @UnexpectedResponseExceptionType(ManagementException.class)
         Mono<Response<Void>> delete(
             @HostParam("geography") Geography geography,
+            @HeaderParam("x-ms-client-id") String xMsClientId,
             @QueryParam("api-version") String apiVersion,
             @PathParam("datasetId") String datasetId,
             @HeaderParam("Accept") String accept,
@@ -119,6 +123,7 @@ public final class DatasetsClientImpl implements DatasetsClient {
         @UnexpectedResponseExceptionType(ManagementException.class)
         Mono<DatasetsGetOperationResponse> getOperation(
             @HostParam("geography") Geography geography,
+            @HeaderParam("x-ms-client-id") String xMsClientId,
             @QueryParam("api-version") String apiVersion,
             @PathParam("operationId") String operationId,
             @HeaderParam("Accept") String accept,
@@ -131,6 +136,7 @@ public final class DatasetsClientImpl implements DatasetsClient {
         Mono<Response<DatasetListResponse>> listNext(
             @PathParam(value = "nextLink", encoded = true) String nextLink,
             @HostParam("geography") Geography geography,
+            @HeaderParam("x-ms-client-id") String xMsClientId,
             @HeaderParam("Accept") String accept,
             Context context);
     }
@@ -160,8 +166,9 @@ public final class DatasetsClientImpl implements DatasetsClient {
      * <p>The Create API is a [long-running request](https://aka.ms/am-creator-lrt-v2).
      *
      * @param conversionId The unique ID used to create the dataset. The `conversionId` must have been obtained from a
-     *     successful call to the Conversion Service Convert API and may be provided with multiple query parameters with
-     *     same name (if more than one is provided).
+     *     successful call to the Conversion Service [Convert
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/v2/conversion/convert) and may be provided with multiple
+     *     query parameters with same name (if more than one is provided).
      * @param datasetId The ID for the dataset to append with. The dataset must originate from a previous dataset
      *     creation call that matches the datasetId.
      * @param descriptionDataset The description to be given to the dataset.
@@ -190,6 +197,7 @@ public final class DatasetsClientImpl implements DatasetsClient {
                     service
                         .create(
                             this.client.getGeography(),
+                            this.client.getXMsClientId(),
                             apiVersion,
                             conversionId,
                             datasetId,
@@ -224,8 +232,9 @@ public final class DatasetsClientImpl implements DatasetsClient {
      * <p>The Create API is a [long-running request](https://aka.ms/am-creator-lrt-v2).
      *
      * @param conversionId The unique ID used to create the dataset. The `conversionId` must have been obtained from a
-     *     successful call to the Conversion Service Convert API and may be provided with multiple query parameters with
-     *     same name (if more than one is provided).
+     *     successful call to the Conversion Service [Convert
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/v2/conversion/convert) and may be provided with multiple
+     *     query parameters with same name (if more than one is provided).
      * @param datasetId The ID for the dataset to append with. The dataset must originate from a previous dataset
      *     creation call that matches the datasetId.
      * @param descriptionDataset The description to be given to the dataset.
@@ -252,7 +261,14 @@ public final class DatasetsClientImpl implements DatasetsClient {
         context = this.client.mergeContext(context);
         return service
             .create(
-                this.client.getGeography(), apiVersion, conversionId, datasetId, descriptionDataset, accept, context);
+                this.client.getGeography(),
+                this.client.getXMsClientId(),
+                apiVersion,
+                conversionId,
+                datasetId,
+                descriptionDataset,
+                accept,
+                context);
     }
 
     /**
@@ -280,8 +296,9 @@ public final class DatasetsClientImpl implements DatasetsClient {
      * <p>The Create API is a [long-running request](https://aka.ms/am-creator-lrt-v2).
      *
      * @param conversionId The unique ID used to create the dataset. The `conversionId` must have been obtained from a
-     *     successful call to the Conversion Service Convert API and may be provided with multiple query parameters with
-     *     same name (if more than one is provided).
+     *     successful call to the Conversion Service [Convert
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/v2/conversion/convert) and may be provided with multiple
+     *     query parameters with same name (if more than one is provided).
      * @param datasetId The ID for the dataset to append with. The dataset must originate from a previous dataset
      *     creation call that matches the datasetId.
      * @param descriptionDataset The description to be given to the dataset.
@@ -329,8 +346,9 @@ public final class DatasetsClientImpl implements DatasetsClient {
      * <p>The Create API is a [long-running request](https://aka.ms/am-creator-lrt-v2).
      *
      * @param conversionId The unique ID used to create the dataset. The `conversionId` must have been obtained from a
-     *     successful call to the Conversion Service Convert API and may be provided with multiple query parameters with
-     *     same name (if more than one is provided).
+     *     successful call to the Conversion Service [Convert
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/v2/conversion/convert) and may be provided with multiple
+     *     query parameters with same name (if more than one is provided).
      * @param datasetId The ID for the dataset to append with. The dataset must originate from a previous dataset
      *     creation call that matches the datasetId.
      * @param descriptionDataset The description to be given to the dataset.
@@ -381,8 +399,9 @@ public final class DatasetsClientImpl implements DatasetsClient {
      * <p>The Create API is a [long-running request](https://aka.ms/am-creator-lrt-v2).
      *
      * @param conversionId The unique ID used to create the dataset. The `conversionId` must have been obtained from a
-     *     successful call to the Conversion Service Convert API and may be provided with multiple query parameters with
-     *     same name (if more than one is provided).
+     *     successful call to the Conversion Service [Convert
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/v2/conversion/convert) and may be provided with multiple
+     *     query parameters with same name (if more than one is provided).
      * @param datasetId The ID for the dataset to append with. The dataset must originate from a previous dataset
      *     creation call that matches the datasetId.
      * @param descriptionDataset The description to be given to the dataset.
@@ -422,8 +441,9 @@ public final class DatasetsClientImpl implements DatasetsClient {
      * <p>The Create API is a [long-running request](https://aka.ms/am-creator-lrt-v2).
      *
      * @param conversionId The unique ID used to create the dataset. The `conversionId` must have been obtained from a
-     *     successful call to the Conversion Service Convert API and may be provided with multiple query parameters with
-     *     same name (if more than one is provided).
+     *     successful call to the Conversion Service [Convert
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/v2/conversion/convert) and may be provided with multiple
+     *     query parameters with same name (if more than one is provided).
      * @param datasetId The ID for the dataset to append with. The dataset must originate from a previous dataset
      *     creation call that matches the datasetId.
      * @param descriptionDataset The description to be given to the dataset.
@@ -464,8 +484,9 @@ public final class DatasetsClientImpl implements DatasetsClient {
      * <p>The Create API is a [long-running request](https://aka.ms/am-creator-lrt-v2).
      *
      * @param conversionId The unique ID used to create the dataset. The `conversionId` must have been obtained from a
-     *     successful call to the Conversion Service Convert API and may be provided with multiple query parameters with
-     *     same name (if more than one is provided).
+     *     successful call to the Conversion Service [Convert
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/v2/conversion/convert) and may be provided with multiple
+     *     query parameters with same name (if more than one is provided).
      * @param datasetId The ID for the dataset to append with. The dataset must originate from a previous dataset
      *     creation call that matches the datasetId.
      * @param descriptionDataset The description to be given to the dataset.
@@ -507,8 +528,9 @@ public final class DatasetsClientImpl implements DatasetsClient {
      * <p>The Create API is a [long-running request](https://aka.ms/am-creator-lrt-v2).
      *
      * @param conversionId The unique ID used to create the dataset. The `conversionId` must have been obtained from a
-     *     successful call to the Conversion Service Convert API and may be provided with multiple query parameters with
-     *     same name (if more than one is provided).
+     *     successful call to the Conversion Service [Convert
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/v2/conversion/convert) and may be provided with multiple
+     *     query parameters with same name (if more than one is provided).
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -548,8 +570,9 @@ public final class DatasetsClientImpl implements DatasetsClient {
      * <p>The Create API is a [long-running request](https://aka.ms/am-creator-lrt-v2).
      *
      * @param conversionId The unique ID used to create the dataset. The `conversionId` must have been obtained from a
-     *     successful call to the Conversion Service Convert API and may be provided with multiple query parameters with
-     *     same name (if more than one is provided).
+     *     successful call to the Conversion Service [Convert
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/v2/conversion/convert) and may be provided with multiple
+     *     query parameters with same name (if more than one is provided).
      * @param datasetId The ID for the dataset to append with. The dataset must originate from a previous dataset
      *     creation call that matches the datasetId.
      * @param descriptionDataset The description to be given to the dataset.
@@ -592,8 +615,9 @@ public final class DatasetsClientImpl implements DatasetsClient {
      * <p>The Create API is a [long-running request](https://aka.ms/am-creator-lrt-v2).
      *
      * @param conversionId The unique ID used to create the dataset. The `conversionId` must have been obtained from a
-     *     successful call to the Conversion Service Convert API and may be provided with multiple query parameters with
-     *     same name (if more than one is provided).
+     *     successful call to the Conversion Service [Convert
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/v2/conversion/convert) and may be provided with multiple
+     *     query parameters with same name (if more than one is provided).
      * @param datasetId The ID for the dataset to append with. The dataset must originate from a previous dataset
      *     creation call that matches the datasetId.
      * @param descriptionDataset The description to be given to the dataset.
@@ -632,8 +656,9 @@ public final class DatasetsClientImpl implements DatasetsClient {
      * <p>The Create API is a [long-running request](https://aka.ms/am-creator-lrt-v2).
      *
      * @param conversionId The unique ID used to create the dataset. The `conversionId` must have been obtained from a
-     *     successful call to the Conversion Service Convert API and may be provided with multiple query parameters with
-     *     same name (if more than one is provided).
+     *     successful call to the Conversion Service [Convert
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/v2/conversion/convert) and may be provided with multiple
+     *     query parameters with same name (if more than one is provided).
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -671,8 +696,9 @@ public final class DatasetsClientImpl implements DatasetsClient {
      * <p>The Create API is a [long-running request](https://aka.ms/am-creator-lrt-v2).
      *
      * @param conversionId The unique ID used to create the dataset. The `conversionId` must have been obtained from a
-     *     successful call to the Conversion Service Convert API and may be provided with multiple query parameters with
-     *     same name (if more than one is provided).
+     *     successful call to the Conversion Service [Convert
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/v2/conversion/convert) and may be provided with multiple
+     *     query parameters with same name (if more than one is provided).
      * @param datasetId The ID for the dataset to append with. The dataset must originate from a previous dataset
      *     creation call that matches the datasetId.
      * @param descriptionDataset The description to be given to the dataset.
@@ -746,7 +772,9 @@ public final class DatasetsClientImpl implements DatasetsClient {
         final String apiVersion = "2.0";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(context -> service.list(this.client.getGeography(), apiVersion, accept, context))
+            .withContext(
+                context ->
+                    service.list(this.client.getGeography(), this.client.getXMsClientId(), apiVersion, accept, context))
             .<PagedResponse<DatasetDetailInfoInner>>map(
                 res ->
                     new PagedResponseBase<>(
@@ -820,7 +848,7 @@ public final class DatasetsClientImpl implements DatasetsClient {
         final String accept = "application/json";
         context = this.client.mergeContext(context);
         return service
-            .list(this.client.getGeography(), apiVersion, accept, context)
+            .list(this.client.getGeography(), this.client.getXMsClientId(), apiVersion, accept, context)
             .map(
                 res ->
                     new PagedResponseBase<>(
@@ -1102,7 +1130,16 @@ public final class DatasetsClientImpl implements DatasetsClient {
         final String apiVersion = "2.0";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(context -> service.get(this.client.getGeography(), datasetId, apiVersion, accept, context))
+            .withContext(
+                context ->
+                    service
+                        .get(
+                            this.client.getGeography(),
+                            this.client.getXMsClientId(),
+                            datasetId,
+                            apiVersion,
+                            accept,
+                            context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
@@ -1164,7 +1201,8 @@ public final class DatasetsClientImpl implements DatasetsClient {
         final String apiVersion = "2.0";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service.get(this.client.getGeography(), datasetId, apiVersion, accept, context);
+        return service
+            .get(this.client.getGeography(), this.client.getXMsClientId(), datasetId, apiVersion, accept, context);
     }
 
     /**
@@ -1354,7 +1392,16 @@ public final class DatasetsClientImpl implements DatasetsClient {
         final String apiVersion = "2.0";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(context -> service.delete(this.client.getGeography(), apiVersion, datasetId, accept, context))
+            .withContext(
+                context ->
+                    service
+                        .delete(
+                            this.client.getGeography(),
+                            this.client.getXMsClientId(),
+                            apiVersion,
+                            datasetId,
+                            accept,
+                            context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
@@ -1393,7 +1440,8 @@ public final class DatasetsClientImpl implements DatasetsClient {
         final String apiVersion = "2.0";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service.delete(this.client.getGeography(), apiVersion, datasetId, accept, context);
+        return service
+            .delete(this.client.getGeography(), this.client.getXMsClientId(), apiVersion, datasetId, accept, context);
     }
 
     /**
@@ -1506,7 +1554,15 @@ public final class DatasetsClientImpl implements DatasetsClient {
         final String accept = "application/json";
         return FluxUtil
             .withContext(
-                context -> service.getOperation(this.client.getGeography(), apiVersion, operationId, accept, context))
+                context ->
+                    service
+                        .getOperation(
+                            this.client.getGeography(),
+                            this.client.getXMsClientId(),
+                            apiVersion,
+                            operationId,
+                            accept,
+                            context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
@@ -1545,7 +1601,9 @@ public final class DatasetsClientImpl implements DatasetsClient {
         final String apiVersion = "2.0";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service.getOperation(this.client.getGeography(), apiVersion, operationId, accept, context);
+        return service
+            .getOperation(
+                this.client.getGeography(), this.client.getXMsClientId(), apiVersion, operationId, accept, context);
     }
 
     /**
@@ -1654,7 +1712,10 @@ public final class DatasetsClientImpl implements DatasetsClient {
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(context -> service.listNext(nextLink, this.client.getGeography(), accept, context))
+            .withContext(
+                context ->
+                    service
+                        .listNext(nextLink, this.client.getGeography(), this.client.getXMsClientId(), accept, context))
             .<PagedResponse<DatasetDetailInfoInner>>map(
                 res ->
                     new PagedResponseBase<>(
@@ -1691,7 +1752,7 @@ public final class DatasetsClientImpl implements DatasetsClient {
         final String accept = "application/json";
         context = this.client.mergeContext(context);
         return service
-            .listNext(nextLink, this.client.getGeography(), accept, context)
+            .listNext(nextLink, this.client.getGeography(), this.client.getXMsClientId(), accept, context)
             .map(
                 res ->
                     new PagedResponseBase<>(

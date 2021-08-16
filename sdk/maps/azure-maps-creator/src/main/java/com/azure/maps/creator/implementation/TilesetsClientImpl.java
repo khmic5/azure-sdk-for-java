@@ -162,7 +162,7 @@ public final class TilesetsClientImpl implements TilesetsClient {
      *
      * @param datasetId The unique `datasetId` that the tileset create API uses to retrieve features to generate tiles.
      *     The `datasetId` must have been obtained from a successful [Dataset Create
-     *     API](/en-us/rest/api/maps/dataset/createpreview) call.
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create) call.
      * @param description User provided description of the tileset.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -220,7 +220,7 @@ public final class TilesetsClientImpl implements TilesetsClient {
      *
      * @param datasetId The unique `datasetId` that the tileset create API uses to retrieve features to generate tiles.
      *     The `datasetId` must have been obtained from a successful [Dataset Create
-     *     API](/en-us/rest/api/maps/dataset/createpreview) call.
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create) call.
      * @param description User provided description of the tileset.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -277,7 +277,7 @@ public final class TilesetsClientImpl implements TilesetsClient {
      *
      * @param datasetId The unique `datasetId` that the tileset create API uses to retrieve features to generate tiles.
      *     The `datasetId` must have been obtained from a successful [Dataset Create
-     *     API](/en-us/rest/api/maps/dataset/createpreview) call.
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create) call.
      * @param description User provided description of the tileset.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -321,7 +321,7 @@ public final class TilesetsClientImpl implements TilesetsClient {
      *
      * @param datasetId The unique `datasetId` that the tileset create API uses to retrieve features to generate tiles.
      *     The `datasetId` must have been obtained from a successful [Dataset Create
-     *     API](/en-us/rest/api/maps/dataset/createpreview) call.
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create) call.
      * @param description User provided description of the tileset.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -367,7 +367,7 @@ public final class TilesetsClientImpl implements TilesetsClient {
      *
      * @param datasetId The unique `datasetId` that the tileset create API uses to retrieve features to generate tiles.
      *     The `datasetId` must have been obtained from a successful [Dataset Create
-     *     API](/en-us/rest/api/maps/dataset/createpreview) call.
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create) call.
      * @param description User provided description of the tileset.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -403,7 +403,7 @@ public final class TilesetsClientImpl implements TilesetsClient {
      *
      * @param datasetId The unique `datasetId` that the tileset create API uses to retrieve features to generate tiles.
      *     The `datasetId` must have been obtained from a successful [Dataset Create
-     *     API](/en-us/rest/api/maps/dataset/createpreview) call.
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create) call.
      * @param description User provided description of the tileset.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -440,7 +440,7 @@ public final class TilesetsClientImpl implements TilesetsClient {
      *
      * @param datasetId The unique `datasetId` that the tileset create API uses to retrieve features to generate tiles.
      *     The `datasetId` must have been obtained from a successful [Dataset Create
-     *     API](/en-us/rest/api/maps/dataset/createpreview) call.
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create) call.
      * @param description User provided description of the tileset.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -475,7 +475,7 @@ public final class TilesetsClientImpl implements TilesetsClient {
      *
      * @param datasetId The unique `datasetId` that the tileset create API uses to retrieve features to generate tiles.
      *     The `datasetId` must have been obtained from a successful [Dataset Create
-     *     API](/en-us/rest/api/maps/dataset/createpreview) call.
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create) call.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -510,7 +510,7 @@ public final class TilesetsClientImpl implements TilesetsClient {
      *
      * @param datasetId The unique `datasetId` that the tileset create API uses to retrieve features to generate tiles.
      *     The `datasetId` must have been obtained from a successful [Dataset Create
-     *     API](/en-us/rest/api/maps/dataset/createpreview) call.
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create) call.
      * @param description User provided description of the tileset.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -546,7 +546,7 @@ public final class TilesetsClientImpl implements TilesetsClient {
      *
      * @param datasetId The unique `datasetId` that the tileset create API uses to retrieve features to generate tiles.
      *     The `datasetId` must have been obtained from a successful [Dataset Create
-     *     API](/en-us/rest/api/maps/dataset/createpreview) call.
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create) call.
      * @param description User provided description of the tileset.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -581,7 +581,7 @@ public final class TilesetsClientImpl implements TilesetsClient {
      *
      * @param datasetId The unique `datasetId` that the tileset create API uses to retrieve features to generate tiles.
      *     The `datasetId` must have been obtained from a successful [Dataset Create
-     *     API](/en-us/rest/api/maps/dataset/createpreview) call.
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create) call.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -616,7 +616,7 @@ public final class TilesetsClientImpl implements TilesetsClient {
      *
      * @param datasetId The unique `datasetId` that the tileset create API uses to retrieve features to generate tiles.
      *     The `datasetId` must have been obtained from a successful [Dataset Create
-     *     API](/en-us/rest/api/maps/dataset/createpreview) call.
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create) call.
      * @param description User provided description of the tileset.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1184,7 +1184,7 @@ public final class TilesetsClientImpl implements TilesetsClient {
      * This path will be obtained from a call to /tilesets/create. While in progress, an http200 will be returned with
      * no extra headers - followed by an http200 with Resource-Location header once successfully completed.
      *
-     * @param operationId The ID to query the status for the dataset create/import request.
+     * @param operationId The ID to query the status for the tileset create/import request.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -1213,7 +1213,7 @@ public final class TilesetsClientImpl implements TilesetsClient {
      * This path will be obtained from a call to /tilesets/create. While in progress, an http200 will be returned with
      * no extra headers - followed by an http200 with Resource-Location header once successfully completed.
      *
-     * @param operationId The ID to query the status for the dataset create/import request.
+     * @param operationId The ID to query the status for the tileset create/import request.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -1241,7 +1241,7 @@ public final class TilesetsClientImpl implements TilesetsClient {
      * This path will be obtained from a call to /tilesets/create. While in progress, an http200 will be returned with
      * no extra headers - followed by an http200 with Resource-Location header once successfully completed.
      *
-     * @param operationId The ID to query the status for the dataset create/import request.
+     * @param operationId The ID to query the status for the tileset create/import request.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -1264,7 +1264,7 @@ public final class TilesetsClientImpl implements TilesetsClient {
      * This path will be obtained from a call to /tilesets/create. While in progress, an http200 will be returned with
      * no extra headers - followed by an http200 with Resource-Location header once successfully completed.
      *
-     * @param operationId The ID to query the status for the dataset create/import request.
+     * @param operationId The ID to query the status for the tileset create/import request.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -1279,7 +1279,7 @@ public final class TilesetsClientImpl implements TilesetsClient {
      * This path will be obtained from a call to /tilesets/create. While in progress, an http200 will be returned with
      * no extra headers - followed by an http200 with Resource-Location header once successfully completed.
      *
-     * @param operationId The ID to query the status for the dataset create/import request.
+     * @param operationId The ID to query the status for the tileset create/import request.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.

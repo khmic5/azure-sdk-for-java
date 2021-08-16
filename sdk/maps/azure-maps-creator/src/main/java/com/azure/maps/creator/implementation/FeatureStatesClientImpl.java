@@ -74,6 +74,7 @@ public final class FeatureStatesClientImpl implements FeatureStatesClient {
         @UnexpectedResponseExceptionType(ManagementException.class)
         Mono<Response<StatesetCreatedResponseInner>> createStateset(
             @HostParam("geography") Geography geography,
+            @HeaderParam("x-ms-client-id") String xMsClientId,
             @QueryParam("api-version") String apiVersion,
             @QueryParam("datasetId") String datasetId,
             @QueryParam("description") String description,
@@ -87,6 +88,7 @@ public final class FeatureStatesClientImpl implements FeatureStatesClient {
         @UnexpectedResponseExceptionType(ManagementException.class)
         Mono<Response<StatesetListResponse>> listStateset(
             @HostParam("geography") Geography geography,
+            @HeaderParam("x-ms-client-id") String xMsClientId,
             @QueryParam("api-version") String apiVersion,
             @HeaderParam("Accept") String accept,
             Context context);
@@ -97,6 +99,7 @@ public final class FeatureStatesClientImpl implements FeatureStatesClient {
         @UnexpectedResponseExceptionType(ManagementException.class)
         Mono<Response<Void>> putStateset(
             @HostParam("geography") Geography geography,
+            @HeaderParam("x-ms-client-id") String xMsClientId,
             @QueryParam("api-version") String apiVersion,
             @PathParam("statesetId") String statesetId,
             @BodyParam("application/json") StylesObject statesetStyleUpdateRequestBody,
@@ -109,6 +112,7 @@ public final class FeatureStatesClientImpl implements FeatureStatesClient {
         @UnexpectedResponseExceptionType(ManagementException.class)
         Mono<Response<Void>> deleteStateset(
             @HostParam("geography") Geography geography,
+            @HeaderParam("x-ms-client-id") String xMsClientId,
             @QueryParam("api-version") String apiVersion,
             @PathParam("statesetId") String statesetId,
             @HeaderParam("Accept") String accept,
@@ -120,6 +124,7 @@ public final class FeatureStatesClientImpl implements FeatureStatesClient {
         @UnexpectedResponseExceptionType(ManagementException.class)
         Mono<Response<StatesetGetResponseInner>> getStateset(
             @HostParam("geography") Geography geography,
+            @HeaderParam("x-ms-client-id") String xMsClientId,
             @QueryParam("api-version") String apiVersion,
             @PathParam("statesetId") String statesetId,
             @HeaderParam("Accept") String accept,
@@ -131,6 +136,7 @@ public final class FeatureStatesClientImpl implements FeatureStatesClient {
         @UnexpectedResponseExceptionType(ManagementException.class)
         Mono<Response<Void>> updateStates(
             @HostParam("geography") Geography geography,
+            @HeaderParam("x-ms-client-id") String xMsClientId,
             @QueryParam("api-version") String apiVersion,
             @PathParam("statesetId") String statesetId,
             @PathParam("featureId") String featureId,
@@ -144,6 +150,7 @@ public final class FeatureStatesClientImpl implements FeatureStatesClient {
         @UnexpectedResponseExceptionType(ManagementException.class)
         Mono<Response<Void>> deleteState(
             @HostParam("geography") Geography geography,
+            @HeaderParam("x-ms-client-id") String xMsClientId,
             @QueryParam("api-version") String apiVersion,
             @PathParam("statesetId") String statesetId,
             @PathParam("featureId") String featureId,
@@ -157,6 +164,7 @@ public final class FeatureStatesClientImpl implements FeatureStatesClient {
         @UnexpectedResponseExceptionType(ManagementException.class)
         Mono<Response<FeatureStatesStructureInner>> getStates(
             @HostParam("geography") Geography geography,
+            @HeaderParam("x-ms-client-id") String xMsClientId,
             @QueryParam("api-version") String apiVersion,
             @PathParam("statesetId") String statesetId,
             @PathParam("featureId") String featureId,
@@ -170,6 +178,7 @@ public final class FeatureStatesClientImpl implements FeatureStatesClient {
         Mono<Response<StatesetListResponse>> listStatesetNext(
             @PathParam(value = "nextLink", encoded = true) String nextLink,
             @HostParam("geography") Geography geography,
+            @HeaderParam("x-ms-client-id") String xMsClientId,
             @HeaderParam("Accept") String accept,
             Context context);
     }
@@ -200,7 +209,8 @@ public final class FeatureStatesClientImpl implements FeatureStatesClient {
      * timestamp.
      *
      * <p>Azure Maps MapControl provides a way to use these feature states to style the features. Please refer to the
-     * State Tile documentation for more information.
+     * [State Tile documentation](https://docs.microsoft.com/en-us/rest/api/maps/render/get-map-state-tile-preview) for
+     * more information.
      *
      * @param datasetId The datasetId must have been obtained from a successful [Dataset Create
      *     API](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create) call.
@@ -239,6 +249,7 @@ public final class FeatureStatesClientImpl implements FeatureStatesClient {
                     service
                         .createStateset(
                             this.client.getGeography(),
+                            this.client.getXMsClientId(),
                             apiVersion,
                             datasetId,
                             description,
@@ -274,7 +285,8 @@ public final class FeatureStatesClientImpl implements FeatureStatesClient {
      * timestamp.
      *
      * <p>Azure Maps MapControl provides a way to use these feature states to style the features. Please refer to the
-     * State Tile documentation for more information.
+     * [State Tile documentation](https://docs.microsoft.com/en-us/rest/api/maps/render/get-map-state-tile-preview) for
+     * more information.
      *
      * @param datasetId The datasetId must have been obtained from a successful [Dataset Create
      *     API](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create) call.
@@ -312,6 +324,7 @@ public final class FeatureStatesClientImpl implements FeatureStatesClient {
         return service
             .createStateset(
                 this.client.getGeography(),
+                this.client.getXMsClientId(),
                 apiVersion,
                 datasetId,
                 description,
@@ -346,7 +359,8 @@ public final class FeatureStatesClientImpl implements FeatureStatesClient {
      * timestamp.
      *
      * <p>Azure Maps MapControl provides a way to use these feature states to style the features. Please refer to the
-     * State Tile documentation for more information.
+     * [State Tile documentation](https://docs.microsoft.com/en-us/rest/api/maps/render/get-map-state-tile-preview) for
+     * more information.
      *
      * @param datasetId The datasetId must have been obtained from a successful [Dataset Create
      *     API](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create) call.
@@ -397,7 +411,8 @@ public final class FeatureStatesClientImpl implements FeatureStatesClient {
      * timestamp.
      *
      * <p>Azure Maps MapControl provides a way to use these feature states to style the features. Please refer to the
-     * State Tile documentation for more information.
+     * [State Tile documentation](https://docs.microsoft.com/en-us/rest/api/maps/render/get-map-state-tile-preview) for
+     * more information.
      *
      * @param datasetId The datasetId must have been obtained from a successful [Dataset Create
      *     API](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create) call.
@@ -448,7 +463,8 @@ public final class FeatureStatesClientImpl implements FeatureStatesClient {
      * timestamp.
      *
      * <p>Azure Maps MapControl provides a way to use these feature states to style the features. Please refer to the
-     * State Tile documentation for more information.
+     * [State Tile documentation](https://docs.microsoft.com/en-us/rest/api/maps/render/get-map-state-tile-preview) for
+     * more information.
      *
      * @param datasetId The datasetId must have been obtained from a successful [Dataset Create
      *     API](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create) call.
@@ -490,7 +506,8 @@ public final class FeatureStatesClientImpl implements FeatureStatesClient {
      * timestamp.
      *
      * <p>Azure Maps MapControl provides a way to use these feature states to style the features. Please refer to the
-     * State Tile documentation for more information.
+     * [State Tile documentation](https://docs.microsoft.com/en-us/rest/api/maps/render/get-map-state-tile-preview) for
+     * more information.
      *
      * @param datasetId The datasetId must have been obtained from a successful [Dataset Create
      *     API](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create) call.
@@ -532,7 +549,11 @@ public final class FeatureStatesClientImpl implements FeatureStatesClient {
         final String apiVersion = "2.0";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(context -> service.listStateset(this.client.getGeography(), apiVersion, accept, context))
+            .withContext(
+                context ->
+                    service
+                        .listStateset(
+                            this.client.getGeography(), this.client.getXMsClientId(), apiVersion, accept, context))
             .<PagedResponse<StatesetInfoObject>>map(
                 res ->
                     new PagedResponseBase<>(
@@ -572,7 +593,7 @@ public final class FeatureStatesClientImpl implements FeatureStatesClient {
         final String accept = "application/json";
         context = this.client.mergeContext(context);
         return service
-            .listStateset(this.client.getGeography(), apiVersion, accept, context)
+            .listStateset(this.client.getGeography(), this.client.getXMsClientId(), apiVersion, accept, context)
             .map(
                 res ->
                     new PagedResponseBase<>(
@@ -707,6 +728,7 @@ public final class FeatureStatesClientImpl implements FeatureStatesClient {
                     service
                         .putStateset(
                             this.client.getGeography(),
+                            this.client.getXMsClientId(),
                             apiVersion,
                             statesetId,
                             statesetStyleUpdateRequestBody,
@@ -758,7 +780,13 @@ public final class FeatureStatesClientImpl implements FeatureStatesClient {
         context = this.client.mergeContext(context);
         return service
             .putStateset(
-                this.client.getGeography(), apiVersion, statesetId, statesetStyleUpdateRequestBody, accept, context);
+                this.client.getGeography(),
+                this.client.getXMsClientId(),
+                apiVersion,
+                statesetId,
+                statesetStyleUpdateRequestBody,
+                accept,
+                context);
     }
 
     /**
@@ -859,7 +887,15 @@ public final class FeatureStatesClientImpl implements FeatureStatesClient {
         final String accept = "application/json";
         return FluxUtil
             .withContext(
-                context -> service.deleteStateset(this.client.getGeography(), apiVersion, statesetId, accept, context))
+                context ->
+                    service
+                        .deleteStateset(
+                            this.client.getGeography(),
+                            this.client.getXMsClientId(),
+                            apiVersion,
+                            statesetId,
+                            accept,
+                            context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
@@ -893,7 +929,9 @@ public final class FeatureStatesClientImpl implements FeatureStatesClient {
         final String apiVersion = "2.0";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service.deleteStateset(this.client.getGeography(), apiVersion, statesetId, accept, context);
+        return service
+            .deleteStateset(
+                this.client.getGeography(), this.client.getXMsClientId(), apiVersion, statesetId, accept, context);
     }
 
     /**
@@ -988,7 +1026,15 @@ public final class FeatureStatesClientImpl implements FeatureStatesClient {
         final String accept = "application/json";
         return FluxUtil
             .withContext(
-                context -> service.getStateset(this.client.getGeography(), apiVersion, statesetId, accept, context))
+                context ->
+                    service
+                        .getStateset(
+                            this.client.getGeography(),
+                            this.client.getXMsClientId(),
+                            apiVersion,
+                            statesetId,
+                            accept,
+                            context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
@@ -1024,7 +1070,9 @@ public final class FeatureStatesClientImpl implements FeatureStatesClient {
         final String apiVersion = "2.0";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service.getStateset(this.client.getGeography(), apiVersion, statesetId, accept, context);
+        return service
+            .getStateset(
+                this.client.getGeography(), this.client.getXMsClientId(), apiVersion, statesetId, accept, context);
     }
 
     /**
@@ -1152,6 +1200,7 @@ public final class FeatureStatesClientImpl implements FeatureStatesClient {
                     service
                         .updateStates(
                             this.client.getGeography(),
+                            this.client.getXMsClientId(),
                             apiVersion,
                             statesetId,
                             featureId,
@@ -1213,6 +1262,7 @@ public final class FeatureStatesClientImpl implements FeatureStatesClient {
         return service
             .updateStates(
                 this.client.getGeography(),
+                this.client.getXMsClientId(),
                 apiVersion,
                 statesetId,
                 featureId,
@@ -1345,6 +1395,7 @@ public final class FeatureStatesClientImpl implements FeatureStatesClient {
                     service
                         .deleteState(
                             this.client.getGeography(),
+                            this.client.getXMsClientId(),
                             apiVersion,
                             statesetId,
                             featureId,
@@ -1396,7 +1447,15 @@ public final class FeatureStatesClientImpl implements FeatureStatesClient {
         final String accept = "application/json";
         context = this.client.mergeContext(context);
         return service
-            .deleteState(this.client.getGeography(), apiVersion, statesetId, featureId, stateKeyName, accept, context);
+            .deleteState(
+                this.client.getGeography(),
+                this.client.getXMsClientId(),
+                apiVersion,
+                statesetId,
+                featureId,
+                stateKeyName,
+                accept,
+                context);
     }
 
     /**
@@ -1510,7 +1569,15 @@ public final class FeatureStatesClientImpl implements FeatureStatesClient {
         return FluxUtil
             .withContext(
                 context ->
-                    service.getStates(this.client.getGeography(), apiVersion, statesetId, featureId, accept, context))
+                    service
+                        .getStates(
+                            this.client.getGeography(),
+                            this.client.getXMsClientId(),
+                            apiVersion,
+                            statesetId,
+                            featureId,
+                            accept,
+                            context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
@@ -1550,7 +1617,15 @@ public final class FeatureStatesClientImpl implements FeatureStatesClient {
         final String apiVersion = "2.0";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service.getStates(this.client.getGeography(), apiVersion, statesetId, featureId, accept, context);
+        return service
+            .getStates(
+                this.client.getGeography(),
+                this.client.getXMsClientId(),
+                apiVersion,
+                statesetId,
+                featureId,
+                accept,
+                context);
     }
 
     /**
@@ -1651,7 +1726,11 @@ public final class FeatureStatesClientImpl implements FeatureStatesClient {
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(context -> service.listStatesetNext(nextLink, this.client.getGeography(), accept, context))
+            .withContext(
+                context ->
+                    service
+                        .listStatesetNext(
+                            nextLink, this.client.getGeography(), this.client.getXMsClientId(), accept, context))
             .<PagedResponse<StatesetInfoObject>>map(
                 res ->
                     new PagedResponseBase<>(
@@ -1688,7 +1767,7 @@ public final class FeatureStatesClientImpl implements FeatureStatesClient {
         final String accept = "application/json";
         context = this.client.mergeContext(context);
         return service
-            .listStatesetNext(nextLink, this.client.getGeography(), accept, context)
+            .listStatesetNext(nextLink, this.client.getGeography(), this.client.getXMsClientId(), accept, context)
             .map(
                 res ->
                     new PagedResponseBase<>(

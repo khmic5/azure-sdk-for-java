@@ -37,7 +37,8 @@ public interface FeatureStates {
      * timestamp.
      *
      * <p>Azure Maps MapControl provides a way to use these feature states to style the features. Please refer to the
-     * State Tile documentation for more information.
+     * [State Tile documentation](https://docs.microsoft.com/en-us/rest/api/maps/render/get-map-state-tile-preview) for
+     * more information.
      *
      * @param datasetId The datasetId must have been obtained from a successful [Dataset Create
      *     API](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create) call.
@@ -75,7 +76,8 @@ public interface FeatureStates {
      * timestamp.
      *
      * <p>Azure Maps MapControl provides a way to use these feature states to style the features. Please refer to the
-     * State Tile documentation for more information.
+     * [State Tile documentation](https://docs.microsoft.com/en-us/rest/api/maps/render/get-map-state-tile-preview) for
+     * more information.
      *
      * @param datasetId The datasetId must have been obtained from a successful [Dataset Create
      *     API](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create) call.

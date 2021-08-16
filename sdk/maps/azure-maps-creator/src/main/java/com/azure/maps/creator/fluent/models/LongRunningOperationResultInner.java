@@ -10,6 +10,7 @@ import com.azure.core.util.logging.ClientLogger;
 import com.azure.maps.creator.models.LroStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.time.OffsetDateTime;
 
 /** The response model for a Long-Running Operations API. */
 @Fluent
@@ -32,7 +33,7 @@ public final class LongRunningOperationResultInner {
      * The created timestamp.
      */
     @JsonProperty(value = "created", access = JsonProperty.Access.WRITE_ONLY)
-    private String created;
+    private OffsetDateTime created;
 
     /*
      * The error detail.
@@ -80,7 +81,7 @@ public final class LongRunningOperationResultInner {
      *
      * @return the created value.
      */
-    public String created() {
+    public OffsetDateTime created() {
         return this.created;
     }
 

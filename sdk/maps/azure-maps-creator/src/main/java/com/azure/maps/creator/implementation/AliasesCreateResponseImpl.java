@@ -6,6 +6,7 @@ package com.azure.maps.creator.implementation;
 
 import com.azure.maps.creator.fluent.models.AliasesCreateResponseInner;
 import com.azure.maps.creator.models.AliasesCreateResponse;
+import java.time.OffsetDateTime;
 
 public final class AliasesCreateResponseImpl implements AliasesCreateResponse {
     private AliasesCreateResponseInner innerObject;
@@ -18,7 +19,7 @@ public final class AliasesCreateResponseImpl implements AliasesCreateResponse {
         this.serviceManager = serviceManager;
     }
 
-    public String createdTimestamp() {
+    public OffsetDateTime createdTimestamp() {
         return this.innerModel().createdTimestamp();
     }
 
@@ -30,7 +31,7 @@ public final class AliasesCreateResponseImpl implements AliasesCreateResponse {
         return this.innerModel().creatorDataItemId();
     }
 
-    public String lastUpdatedTimestamp() {
+    public OffsetDateTime lastUpdatedTimestamp() {
         return this.innerModel().lastUpdatedTimestamp();
     }
 

@@ -27,7 +27,7 @@ public interface WfsClient {
      *
      * <p>The Web Feature Service (WFS) API is part of Creator. WFS API follows the [Open Geospatial Consortium API
      * standard for Features](http://docs.opengeospatial.org/is/17-069r3/17-069r3.html) to query
-     * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/dataset/createpreview). A dataset consists of multiple
+     * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create). A dataset consists of multiple
      * feature collections. A feature collection is a collection of features of a similar type, based on a common
      * schema. The Get Landing Page API provides links to the API definition, the Conformance statements and the
      * metadata about the feature data in this dataset.
@@ -50,7 +50,7 @@ public interface WfsClient {
      *
      * <p>The Web Feature Service (WFS) API is part of Creator. WFS API follows the [Open Geospatial Consortium API
      * standard for Features](http://docs.opengeospatial.org/is/17-069r3/17-069r3.html) to query
-     * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/dataset/createpreview). A dataset consists of multiple
+     * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create). A dataset consists of multiple
      * feature collections. A feature collection is a collection of features of a similar type, based on a common
      * schema. The Get Landing Page API provides links to the API definition, the Conformance statements and the
      * metadata about the feature data in this dataset.
@@ -74,7 +74,7 @@ public interface WfsClient {
      *
      * <p>The Web Feature Service (WFS) API is part of Creator. WFS API follows the [Open Geospatial Consortium API
      * standard for Features](http://docs.opengeospatial.org/is/17-069r3/17-069r3.html) to query
-     * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/dataset/createpreview). A dataset consists of multiple
+     * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create). A dataset consists of multiple
      * feature collections. A feature collection is a collection of features of a similar type, based on a common
      * schema. The Get Requirements Classes lists all requirements classes specified in the standard that the server
      * conforms to.
@@ -97,7 +97,7 @@ public interface WfsClient {
      *
      * <p>The Web Feature Service (WFS) API is part of Creator. WFS API follows the [Open Geospatial Consortium API
      * standard for Features](http://docs.opengeospatial.org/is/17-069r3/17-069r3.html) to query
-     * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/dataset/createpreview). A dataset consists of multiple
+     * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create). A dataset consists of multiple
      * feature collections. A feature collection is a collection of features of a similar type, based on a common
      * schema. The Get Requirements Classes lists all requirements classes specified in the standard that the server
      * conforms to.
@@ -121,7 +121,7 @@ public interface WfsClient {
      *
      * <p>The Web Feature Service (WFS) API is part of Creator. WFS API follows the [Open Geospatial Consortium API
      * standard for Features](http://docs.opengeospatial.org/is/17-069r3/17-069r3.html) to query
-     * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/dataset/createpreview). A dataset consists of multiple
+     * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create). A dataset consists of multiple
      * feature collections. A feature collection is a collection of features of a similar type, based on a common
      * schema. The Collections Description API provides descriptions of all the collections in a given dataset.
      *
@@ -143,7 +143,7 @@ public interface WfsClient {
      *
      * <p>The Web Feature Service (WFS) API is part of Creator. WFS API follows the [Open Geospatial Consortium API
      * standard for Features](http://docs.opengeospatial.org/is/17-069r3/17-069r3.html) to query
-     * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/dataset/createpreview). A dataset consists of multiple
+     * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create). A dataset consists of multiple
      * feature collections. A feature collection is a collection of features of a similar type, based on a common
      * schema. The Collections Description API provides descriptions of all the collections in a given dataset.
      *
@@ -166,7 +166,7 @@ public interface WfsClient {
      *
      * <p>The Web Feature Service (WFS) API is part of Creator. WFS API follows the [Open Geospatial Consortium API
      * standard for Features](http://docs.opengeospatial.org/is/17-069r3/17-069r3.html) to query
-     * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/dataset/createpreview). A dataset consists of multiple
+     * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create). A dataset consists of multiple
      * feature collections. A feature collection is a collection of features of a similar type, based on a common
      * schema.
      *
@@ -192,7 +192,7 @@ public interface WfsClient {
      *
      * <p>The Web Feature Service (WFS) API is part of Creator. WFS API follows the [Open Geospatial Consortium API
      * standard for Features](http://docs.opengeospatial.org/is/17-069r3/17-069r3.html) to query
-     * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/dataset/createpreview). A dataset consists of multiple
+     * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create). A dataset consists of multiple
      * feature collections. A feature collection is a collection of features of a similar type, based on a common
      * schema.
      *
@@ -220,7 +220,7 @@ public interface WfsClient {
      * <p>[This](https://docs.microsoft.com/en-us/azure/azure-maps/creator-indoor-maps) article introduces concepts and
      * tools that apply to Azure Maps Creator. WFS API follows the [Open Geospatial Consortium API standard for
      * Features](http://docs.opengeospatial.org/is/17-069r3/17-069r3.html) to query
-     * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/dataset/createpreview). A dataset consists of multiple
+     * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create). A dataset consists of multiple
      * feature collections. A feature collection is a collection of features of a similar type, based on a common
      * schema.
      *
@@ -246,7 +246,7 @@ public interface WfsClient {
      * <p>[This](https://docs.microsoft.com/en-us/azure/azure-maps/creator-indoor-maps) article introduces concepts and
      * tools that apply to Azure Maps Creator. WFS API follows the [Open Geospatial Consortium API standard for
      * Features](http://docs.opengeospatial.org/is/17-069r3/17-069r3.html) to query
-     * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/dataset/createpreview). A dataset consists of multiple
+     * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create). A dataset consists of multiple
      * feature collections. A feature collection is a collection of features of a similar type, based on a common
      * schema.
      *
@@ -273,7 +273,7 @@ public interface WfsClient {
      *
      * <p>The Web Feature Service (WFS) API is part of Creator. WFS API follows the [Open Geospatial Consortium API
      * standard for Features](http://docs.opengeospatial.org/is/17-069r3/17-069r3.html) to query
-     * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/dataset/createpreview). A dataset consists of multiple
+     * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create). A dataset consists of multiple
      * feature collections. A feature collection is a collection of features of a similar type, based on a common
      * schema. The Get Features API returns the list of features in the given collection.
      *
@@ -296,7 +296,7 @@ public interface WfsClient {
      *
      * <p>The Web Feature Service (WFS) API is part of Creator. WFS API follows the [Open Geospatial Consortium API
      * standard for Features](http://docs.opengeospatial.org/is/17-069r3/17-069r3.html) to query
-     * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/dataset/createpreview). A dataset consists of multiple
+     * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create). A dataset consists of multiple
      * feature collections. A feature collection is a collection of features of a similar type, based on a common
      * schema. The Get Features API returns the list of features in the given collection.
      *
@@ -305,7 +305,7 @@ public interface WfsClient {
      * @param limit The optional limit parameter limits the number of features that are presented in the response
      *     document. Only features that are on the first level of the collection in the response document are counted.
      *     Nested objects contained within the explicitly requested features shall not be counted. * Minimum = 1 *
-     *     Maximum = 50 * Default = 10.
+     *     Maximum = 500 * Default = 10.
      * @param bbox Only features that have a geometry that intersects the supplied bounding box are selected. * Lower
      *     left corner, coordinate axis 1 * Lower left corner, coordinate axis 2 * Upper right corner, coordinate axis 1
      *     * Upper right corner, coordinate axis 2 The coordinate reference system of the values is WGS84
@@ -340,7 +340,7 @@ public interface WfsClient {
      *
      * <p>The Web Feature Service (WFS) API is part of Creator. WFS API follows the [Open Geospatial Consortium API
      * standard for Features](http://docs.opengeospatial.org/is/17-069r3/17-069r3.html) to query
-     * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/dataset/createpreview). A dataset consists of multiple
+     * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create). A dataset consists of multiple
      * feature collections. A feature collection is a collection of features of a similar type, based on a common
      * schema. The Get Feature API returns the feature identified by the provided id in the given collection.
      *
@@ -364,7 +364,7 @@ public interface WfsClient {
      *
      * <p>The Web Feature Service (WFS) API is part of Creator. WFS API follows the [Open Geospatial Consortium API
      * standard for Features](http://docs.opengeospatial.org/is/17-069r3/17-069r3.html) to query
-     * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/dataset/createpreview). A dataset consists of multiple
+     * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create). A dataset consists of multiple
      * feature collections. A feature collection is a collection of features of a similar type, based on a common
      * schema. The Get Feature API returns the feature identified by the provided id in the given collection.
      *
@@ -390,7 +390,7 @@ public interface WfsClient {
      *
      * <p>The Web Feature Service (WFS) API is part of Creator. WFS API follows the [Open Geospatial Consortium API
      * standard for Features](http://docs.opengeospatial.org/is/17-069r3/17-069r3.html) to query
-     * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/dataset/createpreview). A dataset consists of multiple
+     * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create). A dataset consists of multiple
      * feature collections. A feature collection is a collection of features of a similar type, based on a common
      * schema. The Delete Feature API deletes the feature identified by the provided id in the given collection. At this
      * point this API supports only facility features. Deleting a facility feature deletes all the child features of
@@ -415,7 +415,7 @@ public interface WfsClient {
      *
      * <p>The Web Feature Service (WFS) API is part of Creator. WFS API follows the [Open Geospatial Consortium API
      * standard for Features](http://docs.opengeospatial.org/is/17-069r3/17-069r3.html) to query
-     * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/dataset/createpreview). A dataset consists of multiple
+     * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create). A dataset consists of multiple
      * feature collections. A feature collection is a collection of features of a similar type, based on a common
      * schema. The Delete Feature API deletes the feature identified by the provided id in the given collection. At this
      * point this API supports only facility features. Deleting a facility feature deletes all the child features of

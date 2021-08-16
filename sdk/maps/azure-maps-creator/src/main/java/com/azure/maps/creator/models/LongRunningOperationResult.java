@@ -6,6 +6,7 @@ package com.azure.maps.creator.models;
 
 import com.azure.core.management.exception.ManagementError;
 import com.azure.maps.creator.fluent.models.LongRunningOperationResultInner;
+import java.time.OffsetDateTime;
 
 /** An immutable client-side representation of LongRunningOperationResult. */
 public interface LongRunningOperationResult {
@@ -28,7 +29,7 @@ public interface LongRunningOperationResult {
      *
      * @return the created value.
      */
-    String created();
+    OffsetDateTime created();
 
     /**
      * Gets the error property: The error detail.

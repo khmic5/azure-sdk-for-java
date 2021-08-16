@@ -53,7 +53,7 @@ public interface DatasClient {
      * <p>Please, be aware that currently every Azure Maps account has a [data storage
      * limit](https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/azure-subscription-service-limits#azure-maps-limits).
      * Once the storage limit is reached, all the new upload API calls will return a `409 Conflict` http error response.
-     * You can always use the [Data Delete API](https://docs.microsoft.com/rest/api/maps/data%20v2/deletepreview) to
+     * You can always use the [Data Delete API](https://docs.microsoft.com/rest/api/maps/data-v2/delete-preview) to
      * delete old/unused content and create space for new uploads.
      *
      * @param uploadDataFormat Data format of the content being uploaded.
@@ -104,7 +104,7 @@ public interface DatasClient {
      * <p>Please, be aware that currently every Azure Maps account has a [data storage
      * limit](https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/azure-subscription-service-limits#azure-maps-limits).
      * Once the storage limit is reached, all the new upload API calls will return a `409 Conflict` http error response.
-     * You can always use the [Data Delete API](https://docs.microsoft.com/rest/api/maps/data%20v2/deletepreview) to
+     * You can always use the [Data Delete API](https://docs.microsoft.com/rest/api/maps/data-v2/delete-preview) to
      * delete old/unused content and create space for new uploads.
      *
      * @param uploadDataFormat Data format of the content being uploaded.
@@ -157,7 +157,7 @@ public interface DatasClient {
      * <p>Please, be aware that currently every Azure Maps account has a [data storage
      * limit](https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/azure-subscription-service-limits#azure-maps-limits).
      * Once the storage limit is reached, all the new upload API calls will return a `409 Conflict` http error response.
-     * You can always use the [Data Delete API](https://docs.microsoft.com/rest/api/maps/data%20v2/deletepreview) to
+     * You can always use the [Data Delete API](https://docs.microsoft.com/rest/api/maps/data-v2/delete-preview) to
      * delete old/unused content and create space for new uploads.
      *
      * @param uploadDataFormat Data format of the content being uploaded.
@@ -208,7 +208,7 @@ public interface DatasClient {
      * <p>Please, be aware that currently every Azure Maps account has a [data storage
      * limit](https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/azure-subscription-service-limits#azure-maps-limits).
      * Once the storage limit is reached, all the new upload API calls will return a `409 Conflict` http error response.
-     * You can always use the [Data Delete API](https://docs.microsoft.com/rest/api/maps/data%20v2/deletepreview) to
+     * You can always use the [Data Delete API](https://docs.microsoft.com/rest/api/maps/data-v2/delete-preview) to
      * delete old/unused content and create space for new uploads.
      *
      * @param uploadDataFormat Data format of the content being uploaded.
@@ -255,7 +255,7 @@ public interface DatasClient {
      * <p>Please, be aware that currently every Azure Maps account has a [data storage
      * limit](https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/azure-subscription-service-limits#azure-maps-limits).
      * Once the storage limit is reached, all the new upload API calls will return a `409 Conflict` http error response.
-     * You can always use the [Data Delete API](https://docs.microsoft.com/rest/api/maps/data%20v2/deletepreview) to
+     * You can always use the [Data Delete API](https://docs.microsoft.com/rest/api/maps/data-v2/delete-preview) to
      * delete old/unused content and create space for new uploads.
      *
      * @param uploadDataFormat Data format of the content being uploaded.
@@ -308,7 +308,7 @@ public interface DatasClient {
      * <p>Please, be aware that currently every Azure Maps account has a [data storage
      * limit](https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/azure-subscription-service-limits#azure-maps-limits).
      * Once the storage limit is reached, all the new upload API calls will return a `409 Conflict` http error response.
-     * You can always use the [Data Delete API](https://docs.microsoft.com/rest/api/maps/data%20v2/deletepreview) to
+     * You can always use the [Data Delete API](https://docs.microsoft.com/rest/api/maps/data-v2/delete-preview) to
      * delete old/unused content and create space for new uploads.
      *
      * @param uploadDataFormat Data format of the content being uploaded.
@@ -355,7 +355,7 @@ public interface DatasClient {
      * <p>Please, be aware that currently every Azure Maps account has a [data storage
      * limit](https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/azure-subscription-service-limits#azure-maps-limits).
      * Once the storage limit is reached, all the new upload API calls will return a `409 Conflict` http error response.
-     * You can always use the [Data Delete API](https://docs.microsoft.com/rest/api/maps/data%20v2/deletepreview) to
+     * You can always use the [Data Delete API](https://docs.microsoft.com/rest/api/maps/data-v2/delete-preview) to
      * delete old/unused content and create space for new uploads.
      *
      * @param uploadDataFormat Data format of the content being uploaded.
@@ -403,7 +403,7 @@ public interface DatasClient {
      * <p>Please, be aware that currently every Azure Maps account has a [data storage
      * limit](https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/azure-subscription-service-limits#azure-maps-limits).
      * Once the storage limit is reached, all the new upload API calls will return a `409 Conflict` http error response.
-     * You can always use the [Data Delete API](https://docs.microsoft.com/rest/api/maps/data%20v2/deletepreview) to
+     * You can always use the [Data Delete API](https://docs.microsoft.com/rest/api/maps/data-v2/delete-preview) to
      * delete old/unused content and create space for new uploads.
      *
      * @param uploadDataFormat Data format of the content being uploaded.
@@ -450,7 +450,7 @@ public interface DatasClient {
      * <p>Please, be aware that currently every Azure Maps account has a [data storage
      * limit](https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/azure-subscription-service-limits#azure-maps-limits).
      * Once the storage limit is reached, all the new upload API calls will return a `409 Conflict` http error response.
-     * You can always use the [Data Delete API](https://docs.microsoft.com/rest/api/maps/data%20v2/deletepreview) to
+     * You can always use the [Data Delete API](https://docs.microsoft.com/rest/api/maps/data-v2/delete-preview) to
      * delete old/unused content and create space for new uploads.
      *
      * @param uploadDataFormat Data format of the content being uploaded.
@@ -495,7 +495,7 @@ public interface DatasClient {
      * <p>Please, be aware that currently every Azure Maps account has a [data storage
      * limit](https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/azure-subscription-service-limits#azure-maps-limits).
      * Once the storage limit is reached, all the new upload API calls will return a `409 Conflict` http error response.
-     * You can always use the [Data Delete API](https://docs.microsoft.com/rest/api/maps/data%20v2/deletepreview) to
+     * You can always use the [Data Delete API](https://docs.microsoft.com/rest/api/maps/data-v2/delete-preview) to
      * delete old/unused content and create space for new uploads.
      *
      * @param uploadDataFormat Data format of the content being uploaded.
@@ -515,7 +515,7 @@ public interface DatasClient {
      * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>This API allows the caller to fetch a list of all content uploaded previously using the [Data Upload
-     * API](https://docs.microsoft.com/en-us/rest/api/maps/data%20v2/uploadpreview).
+     * API](https://docs.microsoft.com/en-us/rest/api/maps/data-v2/upload-preview).
      *
      * <p>### Submit List Request
      *
@@ -555,7 +555,7 @@ public interface DatasClient {
      * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>This API allows the caller to fetch a list of all content uploaded previously using the [Data Upload
-     * API](https://docs.microsoft.com/en-us/rest/api/maps/data%20v2/uploadpreview).
+     * API](https://docs.microsoft.com/en-us/rest/api/maps/data-v2/upload-preview).
      *
      * <p>### Submit List Request
      *
@@ -600,7 +600,7 @@ public interface DatasClient {
      *
      * <p>You can use this API in a scenario like adding or removing geofences to or from an existing collection of
      * geofences. Geofences are uploaded using the [Data Upload
-     * API](https://docs.microsoft.com/rest/api/maps/data%20v2/uploadpreview), for use in the [Azure Maps Geofencing
+     * API](https://docs.microsoft.com/rest/api/maps/data-v2/upload-preview), for use in the [Azure Maps Geofencing
      * Service](https://docs.microsoft.com/rest/api/maps/spatial).
      *
      * <p>Please note that the Update API will *replace* and *override* the existing data content.
@@ -632,11 +632,11 @@ public interface DatasClient {
      * <p>Please, be aware that currently every Azure Maps account has a [data storage
      * limit](https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/azure-subscription-service-limits#azure-maps-limits).
      * Once the storage limit is reached, all the new upload API calls will return a `409 Conflict` http error response.
-     * You can always use the [Data Delete API](https://docs.microsoft.com/rest/api/maps/data%20v2/deletepreview) to
+     * You can always use the [Data Delete API](https://docs.microsoft.com/rest/api/maps/data-v2/delete-preview) to
      * delete old/unused content and create space for new uploads.
      *
      * @param uniqueDataId The unique data id for the content. The `udid` must have been obtained from a successful
-     *     [Data Upload API](https://docs.microsoft.com/en-us/rest/api/maps/data%20v2/uploadpreview) call.
+     *     [Data Upload API](https://docs.microsoft.com/en-us/rest/api/maps/data-v2/upload-preview) call.
      * @param updateContent The new content that will update/replace the previously uploaded content.
      * @param uploadDataDescription The description to be given to the upload.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -655,7 +655,7 @@ public interface DatasClient {
      *
      * <p>You can use this API in a scenario like adding or removing geofences to or from an existing collection of
      * geofences. Geofences are uploaded using the [Data Upload
-     * API](https://docs.microsoft.com/rest/api/maps/data%20v2/uploadpreview), for use in the [Azure Maps Geofencing
+     * API](https://docs.microsoft.com/rest/api/maps/data-v2/upload-preview), for use in the [Azure Maps Geofencing
      * Service](https://docs.microsoft.com/rest/api/maps/spatial).
      *
      * <p>Please note that the Update API will *replace* and *override* the existing data content.
@@ -687,11 +687,11 @@ public interface DatasClient {
      * <p>Please, be aware that currently every Azure Maps account has a [data storage
      * limit](https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/azure-subscription-service-limits#azure-maps-limits).
      * Once the storage limit is reached, all the new upload API calls will return a `409 Conflict` http error response.
-     * You can always use the [Data Delete API](https://docs.microsoft.com/rest/api/maps/data%20v2/deletepreview) to
+     * You can always use the [Data Delete API](https://docs.microsoft.com/rest/api/maps/data-v2/delete-preview) to
      * delete old/unused content and create space for new uploads.
      *
      * @param uniqueDataId The unique data id for the content. The `udid` must have been obtained from a successful
-     *     [Data Upload API](https://docs.microsoft.com/en-us/rest/api/maps/data%20v2/uploadpreview) call.
+     *     [Data Upload API](https://docs.microsoft.com/en-us/rest/api/maps/data-v2/upload-preview) call.
      * @param updateContent The new content that will update/replace the previously uploaded content.
      * @param uploadDataDescription The description to be given to the upload.
      * @param context The context to associate with this operation.
@@ -711,7 +711,7 @@ public interface DatasClient {
      *
      * <p>You can use this API in a scenario like adding or removing geofences to or from an existing collection of
      * geofences. Geofences are uploaded using the [Data Upload
-     * API](https://docs.microsoft.com/rest/api/maps/data%20v2/uploadpreview), for use in the [Azure Maps Geofencing
+     * API](https://docs.microsoft.com/rest/api/maps/data-v2/upload-preview), for use in the [Azure Maps Geofencing
      * Service](https://docs.microsoft.com/rest/api/maps/spatial).
      *
      * <p>Please note that the Update API will *replace* and *override* the existing data content.
@@ -743,11 +743,11 @@ public interface DatasClient {
      * <p>Please, be aware that currently every Azure Maps account has a [data storage
      * limit](https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/azure-subscription-service-limits#azure-maps-limits).
      * Once the storage limit is reached, all the new upload API calls will return a `409 Conflict` http error response.
-     * You can always use the [Data Delete API](https://docs.microsoft.com/rest/api/maps/data%20v2/deletepreview) to
+     * You can always use the [Data Delete API](https://docs.microsoft.com/rest/api/maps/data-v2/delete-preview) to
      * delete old/unused content and create space for new uploads.
      *
      * @param uniqueDataId The unique data id for the content. The `udid` must have been obtained from a successful
-     *     [Data Upload API](https://docs.microsoft.com/en-us/rest/api/maps/data%20v2/uploadpreview) call.
+     *     [Data Upload API](https://docs.microsoft.com/en-us/rest/api/maps/data-v2/upload-preview) call.
      * @param updateContent The new content that will update/replace the previously uploaded content.
      * @param uploadDataDescription The description to be given to the upload.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -766,7 +766,7 @@ public interface DatasClient {
      *
      * <p>You can use this API in a scenario like adding or removing geofences to or from an existing collection of
      * geofences. Geofences are uploaded using the [Data Upload
-     * API](https://docs.microsoft.com/rest/api/maps/data%20v2/uploadpreview), for use in the [Azure Maps Geofencing
+     * API](https://docs.microsoft.com/rest/api/maps/data-v2/upload-preview), for use in the [Azure Maps Geofencing
      * Service](https://docs.microsoft.com/rest/api/maps/spatial).
      *
      * <p>Please note that the Update API will *replace* and *override* the existing data content.
@@ -798,11 +798,11 @@ public interface DatasClient {
      * <p>Please, be aware that currently every Azure Maps account has a [data storage
      * limit](https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/azure-subscription-service-limits#azure-maps-limits).
      * Once the storage limit is reached, all the new upload API calls will return a `409 Conflict` http error response.
-     * You can always use the [Data Delete API](https://docs.microsoft.com/rest/api/maps/data%20v2/deletepreview) to
+     * You can always use the [Data Delete API](https://docs.microsoft.com/rest/api/maps/data-v2/delete-preview) to
      * delete old/unused content and create space for new uploads.
      *
      * @param uniqueDataId The unique data id for the content. The `udid` must have been obtained from a successful
-     *     [Data Upload API](https://docs.microsoft.com/en-us/rest/api/maps/data%20v2/uploadpreview) call.
+     *     [Data Upload API](https://docs.microsoft.com/en-us/rest/api/maps/data-v2/upload-preview) call.
      * @param updateContent The new content that will update/replace the previously uploaded content.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
@@ -819,7 +819,7 @@ public interface DatasClient {
      *
      * <p>You can use this API in a scenario like adding or removing geofences to or from an existing collection of
      * geofences. Geofences are uploaded using the [Data Upload
-     * API](https://docs.microsoft.com/rest/api/maps/data%20v2/uploadpreview), for use in the [Azure Maps Geofencing
+     * API](https://docs.microsoft.com/rest/api/maps/data-v2/upload-preview), for use in the [Azure Maps Geofencing
      * Service](https://docs.microsoft.com/rest/api/maps/spatial).
      *
      * <p>Please note that the Update API will *replace* and *override* the existing data content.
@@ -851,11 +851,11 @@ public interface DatasClient {
      * <p>Please, be aware that currently every Azure Maps account has a [data storage
      * limit](https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/azure-subscription-service-limits#azure-maps-limits).
      * Once the storage limit is reached, all the new upload API calls will return a `409 Conflict` http error response.
-     * You can always use the [Data Delete API](https://docs.microsoft.com/rest/api/maps/data%20v2/deletepreview) to
+     * You can always use the [Data Delete API](https://docs.microsoft.com/rest/api/maps/data-v2/delete-preview) to
      * delete old/unused content and create space for new uploads.
      *
      * @param uniqueDataId The unique data id for the content. The `udid` must have been obtained from a successful
-     *     [Data Upload API](https://docs.microsoft.com/en-us/rest/api/maps/data%20v2/uploadpreview) call.
+     *     [Data Upload API](https://docs.microsoft.com/en-us/rest/api/maps/data-v2/upload-preview) call.
      * @param updateContent The new content that will update/replace the previously uploaded content.
      * @param uploadDataDescription The description to be given to the upload.
      * @param context The context to associate with this operation.
@@ -873,8 +873,8 @@ public interface DatasClient {
      *
      * <p>This API allows the caller to download a previously uploaded data content.&lt;br&gt; You can use this API in a
      * scenario like downloading an existing collection of geofences uploaded previously using the [Data Upload
-     * API](https://docs.microsoft.com/en-us/rest/api/maps/data%20v2/uploadpreview) for use in our [Azure Maps
-     * Geofencing Service](https://docs.microsoft.com/en-us/rest/api/maps/spatial).
+     * API](https://docs.microsoft.com/en-us/rest/api/maps/data-v2/upload-preview) for use in our [Azure Maps Geofencing
+     * Service](https://docs.microsoft.com/en-us/rest/api/maps/spatial).
      *
      * <p>### Submit Download Request
      *
@@ -899,7 +899,7 @@ public interface DatasClient {
      * "coordinates": [-122.126986, 47.639754] }, "properties": { "geometryId": "001", "radius": 500 } }] } ```.
      *
      * @param uniqueDataId The unique data id for the content. The `udid` must have been obtained from a successful
-     *     [Data Upload API](https://docs.microsoft.com/en-us/rest/api/maps/data%20v2/uploadpreview) call.
+     *     [Data Upload API](https://docs.microsoft.com/en-us/rest/api/maps/data-v2/upload-preview) call.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -913,8 +913,8 @@ public interface DatasClient {
      *
      * <p>This API allows the caller to download a previously uploaded data content.&lt;br&gt; You can use this API in a
      * scenario like downloading an existing collection of geofences uploaded previously using the [Data Upload
-     * API](https://docs.microsoft.com/en-us/rest/api/maps/data%20v2/uploadpreview) for use in our [Azure Maps
-     * Geofencing Service](https://docs.microsoft.com/en-us/rest/api/maps/spatial).
+     * API](https://docs.microsoft.com/en-us/rest/api/maps/data-v2/upload-preview) for use in our [Azure Maps Geofencing
+     * Service](https://docs.microsoft.com/en-us/rest/api/maps/spatial).
      *
      * <p>### Submit Download Request
      *
@@ -939,7 +939,7 @@ public interface DatasClient {
      * "coordinates": [-122.126986, 47.639754] }, "properties": { "geometryId": "001", "radius": 500 } }] } ```.
      *
      * @param uniqueDataId The unique data id for the content. The `udid` must have been obtained from a successful
-     *     [Data Upload API](https://docs.microsoft.com/en-us/rest/api/maps/data%20v2/uploadpreview) call.
+     *     [Data Upload API](https://docs.microsoft.com/en-us/rest/api/maps/data-v2/upload-preview) call.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
@@ -954,9 +954,9 @@ public interface DatasClient {
      *
      * <p>This API allows the caller to delete a previously uploaded data content.&lt;br&gt; You can use this API in a
      * scenario like removing geofences previously uploaded using the [Data Upload
-     * API](https://docs.microsoft.com/en-us/rest/api/maps/data%20v2/uploadpreview) for use in our [Azure Maps
-     * Geofencing Service](https://docs.microsoft.com/en-us/rest/api/maps/spatial). You can also use this API to delete
-     * old/unused uploaded content and create space for new content.
+     * API](https://docs.microsoft.com/en-us/rest/api/maps/data-v2/upload-preview) for use in our [Azure Maps Geofencing
+     * Service](https://docs.microsoft.com/en-us/rest/api/maps/spatial). You can also use this API to delete old/unused
+     * uploaded content and create space for new content.
      *
      * <p>### Submit Delete Request
      *
@@ -971,7 +971,7 @@ public interface DatasClient {
      * with the passed-in `udid` is not found.
      *
      * @param uniqueDataId The unique data id for the content. The `udid` must have been obtained from a successful
-     *     [Data Upload API](https://docs.microsoft.com/en-us/rest/api/maps/data%20v2/uploadpreview) call.
+     *     [Data Upload API](https://docs.microsoft.com/en-us/rest/api/maps/data-v2/upload-preview) call.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -984,9 +984,9 @@ public interface DatasClient {
      *
      * <p>This API allows the caller to delete a previously uploaded data content.&lt;br&gt; You can use this API in a
      * scenario like removing geofences previously uploaded using the [Data Upload
-     * API](https://docs.microsoft.com/en-us/rest/api/maps/data%20v2/uploadpreview) for use in our [Azure Maps
-     * Geofencing Service](https://docs.microsoft.com/en-us/rest/api/maps/spatial). You can also use this API to delete
-     * old/unused uploaded content and create space for new content.
+     * API](https://docs.microsoft.com/en-us/rest/api/maps/data-v2/upload-preview) for use in our [Azure Maps Geofencing
+     * Service](https://docs.microsoft.com/en-us/rest/api/maps/spatial). You can also use this API to delete old/unused
+     * uploaded content and create space for new content.
      *
      * <p>### Submit Delete Request
      *
@@ -1001,7 +1001,7 @@ public interface DatasClient {
      * with the passed-in `udid` is not found.
      *
      * @param uniqueDataId The unique data id for the content. The `udid` must have been obtained from a successful
-     *     [Data Upload API](https://docs.microsoft.com/en-us/rest/api/maps/data%20v2/uploadpreview) call.
+     *     [Data Upload API](https://docs.microsoft.com/en-us/rest/api/maps/data-v2/upload-preview) call.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.

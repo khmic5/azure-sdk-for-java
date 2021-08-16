@@ -5,6 +5,7 @@
 package com.azure.maps.creator.models;
 
 import com.azure.maps.creator.fluent.models.AliasesCreateResponseInner;
+import java.time.OffsetDateTime;
 
 /** An immutable client-side representation of AliasesCreateResponse. */
 public interface AliasesCreateResponse {
@@ -13,7 +14,7 @@ public interface AliasesCreateResponse {
      *
      * @return the createdTimestamp value.
      */
-    String createdTimestamp();
+    OffsetDateTime createdTimestamp();
 
     /**
      * Gets the aliasId property: The id for the alias.
@@ -35,7 +36,7 @@ public interface AliasesCreateResponse {
      *
      * @return the lastUpdatedTimestamp value.
      */
-    String lastUpdatedTimestamp();
+    OffsetDateTime lastUpdatedTimestamp();
 
     /**
      * Gets the inner com.azure.maps.creator.fluent.models.AliasesCreateResponseInner object.

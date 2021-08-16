@@ -21,7 +21,7 @@ public interface Conversions {
      * Package](https://aka.ms/am-drawing-package) into Azure Maps. The [Drawing
      * Package](https://aka.ms/am-drawing-package) should first be uploaded using the [Azure Maps Data
      * Service](https://docs.microsoft.com/rest/api/maps/data). Once uploaded, use the `udid` returned by the [Data
-     * Upload API](https://docs.microsoft.com/rest/api/maps/data/uploadpreview) to call this Conversion API.
+     * Upload API](https://docs.microsoft.com/rest/api/maps/data-v2/upload-preview) to call this Conversion API.
      *
      * <p>## Convert DWG package
      *
@@ -48,7 +48,7 @@ public interface Conversions {
      * *failed* if any errors are encountered.
      *
      * @param udid The unique data id for the content. The `udid` must have been obtained from a successful [Data Upload
-     *     API](https://docs.microsoft.com/en-us/rest/api/maps/data%20v2/uploadpreview) call.
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/data-v2/upload-preview) call.
      * @param outputOntology Output ontology version. "facility-2.0" is the only supported value at this time. Please
      *     refer to this [article](https://docs.microsoft.com/en-us/azure/azure-maps/creator-facility-ontology) for more
      *     information about Azure Maps Creator ontologies.
@@ -71,7 +71,7 @@ public interface Conversions {
      * Package](https://aka.ms/am-drawing-package) into Azure Maps. The [Drawing
      * Package](https://aka.ms/am-drawing-package) should first be uploaded using the [Azure Maps Data
      * Service](https://docs.microsoft.com/rest/api/maps/data). Once uploaded, use the `udid` returned by the [Data
-     * Upload API](https://docs.microsoft.com/rest/api/maps/data/uploadpreview) to call this Conversion API.
+     * Upload API](https://docs.microsoft.com/rest/api/maps/data-v2/upload-preview) to call this Conversion API.
      *
      * <p>## Convert DWG package
      *
@@ -98,7 +98,7 @@ public interface Conversions {
      * *failed* if any errors are encountered.
      *
      * @param udid The unique data id for the content. The `udid` must have been obtained from a successful [Data Upload
-     *     API](https://docs.microsoft.com/en-us/rest/api/maps/data%20v2/uploadpreview) call.
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/data-v2/upload-preview) call.
      * @param outputOntology Output ontology version. "facility-2.0" is the only supported value at this time. Please
      *     refer to this [article](https://docs.microsoft.com/en-us/azure/azure-maps/creator-facility-ontology) for more
      *     information about Azure Maps Creator ontologies.
@@ -120,7 +120,7 @@ public interface Conversions {
      * Package](https://aka.ms/am-drawing-package) into Azure Maps. The [Drawing
      * Package](https://aka.ms/am-drawing-package) should first be uploaded using the [Azure Maps Data
      * Service](https://docs.microsoft.com/rest/api/maps/data). Once uploaded, use the `udid` returned by the [Data
-     * Upload API](https://docs.microsoft.com/rest/api/maps/data/uploadpreview) to call this Conversion API.
+     * Upload API](https://docs.microsoft.com/rest/api/maps/data-v2/upload-preview) to call this Conversion API.
      *
      * <p>## Convert DWG package
      *
@@ -147,7 +147,7 @@ public interface Conversions {
      * *failed* if any errors are encountered.
      *
      * @param udid The unique data id for the content. The `udid` must have been obtained from a successful [Data Upload
-     *     API](https://docs.microsoft.com/en-us/rest/api/maps/data%20v2/uploadpreview) call.
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/data-v2/upload-preview) call.
      * @param outputOntology Output ontology version. "facility-2.0" is the only supported value at this time. Please
      *     refer to this [article](https://docs.microsoft.com/en-us/azure/azure-maps/creator-facility-ontology) for more
      *     information about Azure Maps Creator ontologies.
@@ -168,7 +168,7 @@ public interface Conversions {
      * tools that apply to Azure Maps Creator.
      *
      * <p>This API allows the caller to fetch a list of all successful data conversions submitted previously using the
-     * [Conversion API](https://docs.microsoft.com/en-us/rest/api/maps/conversion/convertpreview).
+     * [Conversion API](https://docs.microsoft.com/en-us/rest/api/maps/v2/conversion/convert).
      *
      * <p>### Submit List Request
      *
@@ -205,7 +205,7 @@ public interface Conversions {
      * tools that apply to Azure Maps Creator.
      *
      * <p>This API allows the caller to fetch a list of all successful data conversions submitted previously using the
-     * [Conversion API](https://docs.microsoft.com/en-us/rest/api/maps/conversion/convertpreview).
+     * [Conversion API](https://docs.microsoft.com/en-us/rest/api/maps/v2/conversion/convert).
      *
      * <p>### Submit List Request
      *
@@ -244,7 +244,7 @@ public interface Conversions {
      * tools that apply to Azure Maps Creator.
      *
      * <p>This API allows the caller to fetch a successful data conversion submitted previously using the [Conversion
-     * API](https://docs.microsoft.com/en-us/rest/api/maps/conversion/convertpreview).
+     * API](https://docs.microsoft.com/en-us/rest/api/maps/v2/conversion/convert).
      *
      * @param conversionId The conversion id for the content. The `conversionId` must have been obtained from a
      *     successful [Conversion API](https://docs.microsoft.com/en-us/rest/api/maps/v2/conversion/convert) call.
@@ -263,7 +263,7 @@ public interface Conversions {
      * tools that apply to Azure Maps Creator.
      *
      * <p>This API allows the caller to fetch a successful data conversion submitted previously using the [Conversion
-     * API](https://docs.microsoft.com/en-us/rest/api/maps/conversion/convertpreview).
+     * API](https://docs.microsoft.com/en-us/rest/api/maps/v2/conversion/convert).
      *
      * @param conversionId The conversion id for the content. The `conversionId` must have been obtained from a
      *     successful [Conversion API](https://docs.microsoft.com/en-us/rest/api/maps/v2/conversion/convert) call.
@@ -283,7 +283,7 @@ public interface Conversions {
      * tools that apply to Azure Maps Creator.
      *
      * <p>This API allows the caller to delete any data conversions created previously using the [Conversion
-     * API](https://docs.microsoft.com/en-us/rest/api/maps/conversion/convertpreview).
+     * API](https://docs.microsoft.com/en-us/rest/api/maps/v2/conversion/convert).
      *
      * <p>### Submit Delete Request
      *
@@ -312,7 +312,7 @@ public interface Conversions {
      * tools that apply to Azure Maps Creator.
      *
      * <p>This API allows the caller to delete any data conversions created previously using the [Conversion
-     * API](https://docs.microsoft.com/en-us/rest/api/maps/conversion/convertpreview).
+     * API](https://docs.microsoft.com/en-us/rest/api/maps/v2/conversion/convert).
      *
      * <p>### Submit Delete Request
      *
@@ -339,7 +339,7 @@ public interface Conversions {
      * This path will be obtained from a call to POST /conversions. While in progress, an http200 will be returned with
      * no extra headers - followed by an http200 with Resource-Location header once successfully completed.
      *
-     * @param operationId The ID to query the status for the dataset create/import request.
+     * @param operationId The ID to query the status for the Conversion create/import request.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -351,7 +351,7 @@ public interface Conversions {
      * This path will be obtained from a call to POST /conversions. While in progress, an http200 will be returned with
      * no extra headers - followed by an http200 with Resource-Location header once successfully completed.
      *
-     * @param operationId The ID to query the status for the dataset create/import request.
+     * @param operationId The ID to query the status for the Conversion create/import request.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
