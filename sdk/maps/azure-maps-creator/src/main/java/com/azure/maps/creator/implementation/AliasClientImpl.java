@@ -70,6 +70,7 @@ public final class AliasClientImpl implements AliasClient {
         @UnexpectedResponseExceptionType(ManagementException.class)
         Mono<AliasCreateResponse> create(
             @HostParam("geography") Geography geography,
+            @HeaderParam("x-ms-client-id") String xMsClientId,
             @QueryParam("api-version") String apiVersion,
             @QueryParam("creatorDataItemId") String creatorDataItemId,
             @HeaderParam("Accept") String accept,
@@ -81,6 +82,7 @@ public final class AliasClientImpl implements AliasClient {
         @UnexpectedResponseExceptionType(ManagementException.class)
         Mono<Response<AliasListResponse>> list(
             @HostParam("geography") Geography geography,
+            @HeaderParam("x-ms-client-id") String xMsClientId,
             @QueryParam("api-version") String apiVersion,
             @HeaderParam("Accept") String accept,
             Context context);
@@ -91,6 +93,7 @@ public final class AliasClientImpl implements AliasClient {
         @UnexpectedResponseExceptionType(ManagementException.class)
         Mono<Response<AliasListItemInner>> assign(
             @HostParam("geography") Geography geography,
+            @HeaderParam("x-ms-client-id") String xMsClientId,
             @PathParam("aliasId") String aliasId,
             @QueryParam("api-version") String apiVersion,
             @QueryParam("creatorDataItemId") String creatorDataItemId,
@@ -103,6 +106,7 @@ public final class AliasClientImpl implements AliasClient {
         @UnexpectedResponseExceptionType(ManagementException.class)
         Mono<Response<Void>> delete(
             @HostParam("geography") Geography geography,
+            @HeaderParam("x-ms-client-id") String xMsClientId,
             @PathParam("aliasId") String aliasId,
             @QueryParam("api-version") String apiVersion,
             @HeaderParam("Accept") String accept,
@@ -114,6 +118,7 @@ public final class AliasClientImpl implements AliasClient {
         @UnexpectedResponseExceptionType(ManagementException.class)
         Mono<Response<AliasListItemInner>> getDetails(
             @HostParam("geography") Geography geography,
+            @HeaderParam("x-ms-client-id") String xMsClientId,
             @PathParam("aliasId") String aliasId,
             @QueryParam("api-version") String apiVersion,
             @HeaderParam("Accept") String accept,
@@ -126,6 +131,7 @@ public final class AliasClientImpl implements AliasClient {
         Mono<Response<AliasListResponse>> listNext(
             @PathParam(value = "nextLink", encoded = true) String nextLink,
             @HostParam("geography") Geography geography,
+            @HeaderParam("x-ms-client-id") String xMsClientId,
             @HeaderParam("Accept") String accept,
             Context context);
     }
@@ -173,7 +179,15 @@ public final class AliasClientImpl implements AliasClient {
         final String accept = "application/json";
         return FluxUtil
             .withContext(
-                context -> service.create(this.client.getGeography(), apiVersion, creatorDataItemId, accept, context))
+                context ->
+                    service
+                        .create(
+                            this.client.getGeography(),
+                            this.client.getXMsClientId(),
+                            apiVersion,
+                            creatorDataItemId,
+                            accept,
+                            context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
@@ -220,7 +234,14 @@ public final class AliasClientImpl implements AliasClient {
         final String apiVersion = "2.0";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service.create(this.client.getGeography(), apiVersion, creatorDataItemId, accept, context);
+        return service
+            .create(
+                this.client.getGeography(),
+                this.client.getXMsClientId(),
+                apiVersion,
+                creatorDataItemId,
+                accept,
+                context);
     }
 
     /**
@@ -426,7 +447,9 @@ public final class AliasClientImpl implements AliasClient {
         final String apiVersion = "2.0";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(context -> service.list(this.client.getGeography(), apiVersion, accept, context))
+            .withContext(
+                context ->
+                    service.list(this.client.getGeography(), this.client.getXMsClientId(), apiVersion, accept, context))
             .<PagedResponse<AliasListItemInner>>map(
                 res ->
                     new PagedResponseBase<>(
@@ -486,7 +509,7 @@ public final class AliasClientImpl implements AliasClient {
         final String accept = "application/json";
         context = this.client.mergeContext(context);
         return service
-            .list(this.client.getGeography(), apiVersion, accept, context)
+            .list(this.client.getGeography(), this.client.getXMsClientId(), apiVersion, accept, context)
             .map(
                 res ->
                     new PagedResponseBase<>(
@@ -705,7 +728,15 @@ public final class AliasClientImpl implements AliasClient {
         return FluxUtil
             .withContext(
                 context ->
-                    service.assign(this.client.getGeography(), aliasId, apiVersion, creatorDataItemId, accept, context))
+                    service
+                        .assign(
+                            this.client.getGeography(),
+                            this.client.getXMsClientId(),
+                            aliasId,
+                            apiVersion,
+                            creatorDataItemId,
+                            accept,
+                            context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
@@ -759,7 +790,15 @@ public final class AliasClientImpl implements AliasClient {
         final String apiVersion = "2.0";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service.assign(this.client.getGeography(), aliasId, apiVersion, creatorDataItemId, accept, context);
+        return service
+            .assign(
+                this.client.getGeography(),
+                this.client.getXMsClientId(),
+                aliasId,
+                apiVersion,
+                creatorDataItemId,
+                accept,
+                context);
     }
 
     /**
@@ -917,7 +956,16 @@ public final class AliasClientImpl implements AliasClient {
         final String apiVersion = "2.0";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(context -> service.delete(this.client.getGeography(), aliasId, apiVersion, accept, context))
+            .withContext(
+                context ->
+                    service
+                        .delete(
+                            this.client.getGeography(),
+                            this.client.getXMsClientId(),
+                            aliasId,
+                            apiVersion,
+                            accept,
+                            context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
@@ -963,7 +1011,8 @@ public final class AliasClientImpl implements AliasClient {
         final String apiVersion = "2.0";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service.delete(this.client.getGeography(), aliasId, apiVersion, accept, context);
+        return service
+            .delete(this.client.getGeography(), this.client.getXMsClientId(), aliasId, apiVersion, accept, context);
     }
 
     /**
@@ -1108,7 +1157,15 @@ public final class AliasClientImpl implements AliasClient {
         final String accept = "application/json";
         return FluxUtil
             .withContext(
-                context -> service.getDetails(this.client.getGeography(), aliasId, apiVersion, accept, context))
+                context ->
+                    service
+                        .getDetails(
+                            this.client.getGeography(),
+                            this.client.getXMsClientId(),
+                            aliasId,
+                            apiVersion,
+                            accept,
+                            context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
@@ -1158,7 +1215,8 @@ public final class AliasClientImpl implements AliasClient {
         final String apiVersion = "2.0";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service.getDetails(this.client.getGeography(), aliasId, apiVersion, accept, context);
+        return service
+            .getDetails(this.client.getGeography(), this.client.getXMsClientId(), aliasId, apiVersion, accept, context);
     }
 
     /**
@@ -1300,7 +1358,10 @@ public final class AliasClientImpl implements AliasClient {
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(context -> service.listNext(nextLink, this.client.getGeography(), accept, context))
+            .withContext(
+                context ->
+                    service
+                        .listNext(nextLink, this.client.getGeography(), this.client.getXMsClientId(), accept, context))
             .<PagedResponse<AliasListItemInner>>map(
                 res ->
                     new PagedResponseBase<>(
@@ -1337,7 +1398,7 @@ public final class AliasClientImpl implements AliasClient {
         final String accept = "application/json";
         context = this.client.mergeContext(context);
         return service
-            .listNext(nextLink, this.client.getGeography(), accept, context)
+            .listNext(nextLink, this.client.getGeography(), this.client.getXMsClientId(), accept, context)
             .map(
                 res ->
                     new PagedResponseBase<>(

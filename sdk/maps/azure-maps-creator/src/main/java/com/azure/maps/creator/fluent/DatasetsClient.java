@@ -42,8 +42,9 @@ public interface DatasetsClient {
      * <p>The Create API is a [long-running request](https://aka.ms/am-creator-lrt-v2).
      *
      * @param conversionId The unique ID used to create the dataset. The `conversionId` must have been obtained from a
-     *     successful call to the Conversion Service Convert API and may be provided with multiple query parameters with
-     *     same name (if more than one is provided).
+     *     successful call to the Conversion Service [Convert
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/v2/conversion/convert) and may be provided with multiple
+     *     query parameters with same name (if more than one is provided).
      * @param datasetId The ID for the dataset to append with. The dataset must originate from a previous dataset
      *     creation call that matches the datasetId.
      * @param descriptionDataset The description to be given to the dataset.
@@ -81,8 +82,9 @@ public interface DatasetsClient {
      * <p>The Create API is a [long-running request](https://aka.ms/am-creator-lrt-v2).
      *
      * @param conversionId The unique ID used to create the dataset. The `conversionId` must have been obtained from a
-     *     successful call to the Conversion Service Convert API and may be provided with multiple query parameters with
-     *     same name (if more than one is provided).
+     *     successful call to the Conversion Service [Convert
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/v2/conversion/convert) and may be provided with multiple
+     *     query parameters with same name (if more than one is provided).
      * @param datasetId The ID for the dataset to append with. The dataset must originate from a previous dataset
      *     creation call that matches the datasetId.
      * @param descriptionDataset The description to be given to the dataset.
@@ -121,8 +123,9 @@ public interface DatasetsClient {
      * <p>The Create API is a [long-running request](https://aka.ms/am-creator-lrt-v2).
      *
      * @param conversionId The unique ID used to create the dataset. The `conversionId` must have been obtained from a
-     *     successful call to the Conversion Service Convert API and may be provided with multiple query parameters with
-     *     same name (if more than one is provided).
+     *     successful call to the Conversion Service [Convert
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/v2/conversion/convert) and may be provided with multiple
+     *     query parameters with same name (if more than one is provided).
      * @param datasetId The ID for the dataset to append with. The dataset must originate from a previous dataset
      *     creation call that matches the datasetId.
      * @param descriptionDataset The description to be given to the dataset.
@@ -159,8 +162,9 @@ public interface DatasetsClient {
      * <p>The Create API is a [long-running request](https://aka.ms/am-creator-lrt-v2).
      *
      * @param conversionId The unique ID used to create the dataset. The `conversionId` must have been obtained from a
-     *     successful call to the Conversion Service Convert API and may be provided with multiple query parameters with
-     *     same name (if more than one is provided).
+     *     successful call to the Conversion Service [Convert
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/v2/conversion/convert) and may be provided with multiple
+     *     query parameters with same name (if more than one is provided).
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -194,8 +198,9 @@ public interface DatasetsClient {
      * <p>The Create API is a [long-running request](https://aka.ms/am-creator-lrt-v2).
      *
      * @param conversionId The unique ID used to create the dataset. The `conversionId` must have been obtained from a
-     *     successful call to the Conversion Service Convert API and may be provided with multiple query parameters with
-     *     same name (if more than one is provided).
+     *     successful call to the Conversion Service [Convert
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/v2/conversion/convert) and may be provided with multiple
+     *     query parameters with same name (if more than one is provided).
      * @param datasetId The ID for the dataset to append with. The dataset must originate from a previous dataset
      *     creation call that matches the datasetId.
      * @param descriptionDataset The description to be given to the dataset.

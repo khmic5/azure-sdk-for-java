@@ -6,6 +6,7 @@ package com.azure.maps.creator.implementation;
 
 import com.azure.maps.creator.fluent.models.AliasListItemInner;
 import com.azure.maps.creator.models.AliasListItem;
+import java.time.OffsetDateTime;
 
 public final class AliasListItemImpl implements AliasListItem {
     private AliasListItemInner innerObject;
@@ -29,7 +30,7 @@ public final class AliasListItemImpl implements AliasListItem {
         return this.innerModel().creatorDataItemId();
     }
 
-    public String lastUpdatedTimestamp() {
+    public OffsetDateTime lastUpdatedTimestamp() {
         return this.innerModel().lastUpdatedTimestamp();
     }
 

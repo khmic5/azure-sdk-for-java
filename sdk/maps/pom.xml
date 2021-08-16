@@ -39,6 +39,7 @@
       <modules>
         <module>azure-maps-creator</module>
         <module>azure-maps-elevation</module>
+        <module>azure-maps-examples</module>
         <module>azure-maps-geolocation</module>
         <module>azure-maps-route</module>
         <module>azure-maps-search</module>

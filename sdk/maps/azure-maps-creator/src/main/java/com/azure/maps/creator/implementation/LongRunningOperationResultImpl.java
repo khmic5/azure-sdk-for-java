@@ -8,6 +8,7 @@ import com.azure.core.management.exception.ManagementError;
 import com.azure.maps.creator.fluent.models.LongRunningOperationResultInner;
 import com.azure.maps.creator.models.LongRunningOperationResult;
 import com.azure.maps.creator.models.LroStatus;
+import java.time.OffsetDateTime;
 
 public final class LongRunningOperationResultImpl implements LongRunningOperationResult {
     private LongRunningOperationResultInner innerObject;
@@ -28,7 +29,7 @@ public final class LongRunningOperationResultImpl implements LongRunningOperatio
         return this.innerModel().status();
     }
 
-    public String created() {
+    public OffsetDateTime created() {
         return this.innerModel().created();
     }
 

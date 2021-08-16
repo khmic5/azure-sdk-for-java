@@ -5,6 +5,7 @@
 package com.azure.maps.creator.models;
 
 import com.azure.maps.creator.fluent.models.AliasListItemInner;
+import java.time.OffsetDateTime;
 
 /** An immutable client-side representation of AliasListItem. */
 public interface AliasListItem {
@@ -35,7 +36,7 @@ public interface AliasListItem {
      *
      * @return the lastUpdatedTimestamp value.
      */
-    String lastUpdatedTimestamp();
+    OffsetDateTime lastUpdatedTimestamp();
 
     /**
      * Gets the inner com.azure.maps.creator.fluent.models.AliasListItemInner object.

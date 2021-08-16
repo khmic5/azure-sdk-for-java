@@ -8,6 +8,7 @@ import com.azure.core.annotation.Immutable;
 import com.azure.core.util.logging.ClientLogger;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.time.OffsetDateTime;
 
 /** The response model for the Alias Create API for the case when the alias was successfully created. */
 @Immutable
@@ -18,7 +19,7 @@ public final class AliasesCreateResponseInner {
      * The created timestamp for the alias.
      */
     @JsonProperty(value = "createdTimestamp", access = JsonProperty.Access.WRITE_ONLY)
-    private String createdTimestamp;
+    private OffsetDateTime createdTimestamp;
 
     /*
      * The id for the alias.
@@ -37,14 +38,14 @@ public final class AliasesCreateResponseInner {
      * The timestamp of the last time the alias was assigned.
      */
     @JsonProperty(value = "lastUpdatedTimestamp", access = JsonProperty.Access.WRITE_ONLY)
-    private String lastUpdatedTimestamp;
+    private OffsetDateTime lastUpdatedTimestamp;
 
     /**
      * Get the createdTimestamp property: The created timestamp for the alias.
      *
      * @return the createdTimestamp value.
      */
-    public String createdTimestamp() {
+    public OffsetDateTime createdTimestamp() {
         return this.createdTimestamp;
     }
 
@@ -72,7 +73,7 @@ public final class AliasesCreateResponseInner {
      *
      * @return the lastUpdatedTimestamp value.
      */
-    public String lastUpdatedTimestamp() {
+    public OffsetDateTime lastUpdatedTimestamp() {
         return this.lastUpdatedTimestamp;
     }
 
