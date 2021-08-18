@@ -1,4 +1,4 @@
-package com.azure.maps.service;
+package com.azure.maps.examples;
 
 import java.io.InputStream;
 import java.util.Scanner;
