@@ -1,4 +1,4 @@
-package com.azure.maps.service;
+package com.azure.maps.examples;
 
 import java.io.IOException;
 import java.util.HashMap;
