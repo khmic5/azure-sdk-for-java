@@ -15,22 +15,28 @@ import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceInterface;
 import com.azure.core.annotation.ServiceMethod;
 import com.azure.core.annotation.UnexpectedResponseExceptionType;
+import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.RestProxy;
 import com.azure.core.http.rest.StreamResponse;
 import com.azure.core.management.exception.ManagementException;
 import com.azure.core.util.Context;
 import com.azure.core.util.FluxUtil;
 import com.azure.core.util.logging.ClientLogger;
+import com.azure.core.util.serializer.CollectionFormat;
+import com.azure.core.util.serializer.JacksonAdapter;
 import com.azure.maps.render.fluent.RenderV2sClient;
-import com.azure.maps.render.models.Geography;
+import com.azure.maps.render.fluent.models.MapAttributionResultV2Inner;
+import com.azure.maps.render.fluent.models.MapTilesetResultV2Inner;
 import com.azure.maps.render.models.TileSize;
 import com.azure.maps.render.models.TilesetId;
 import com.fasterxml.jackson.databind.util.ByteBufferBackedInputStream;
 import java.io.InputStream;
 import java.io.SequenceInputStream;
 import java.nio.ByteBuffer;
+import java.time.OffsetDateTime;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.List;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -59,7 +65,7 @@ public final class RenderV2sClientImpl implements RenderV2sClient {
      * The interface defining all the services for RenderClientRenderV2s to be used by the proxy service to perform REST
      * calls.
      */
-    @Host("https://{geography}.atlas.microsoft.com")
+    @Host("{$host}")
     @ServiceInterface(name = "RenderClientRenderV2")
     private interface RenderV2sService {
         @Headers({"Content-Type: application/json"})
@@ -67,17 +73,43 @@ public final class RenderV2sClientImpl implements RenderV2sClient {
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ManagementException.class)
         Mono<StreamResponse> getMapTilePreview(
-            @HostParam("geography") Geography geography,
+            @HostParam("$host") String endpoint,
             @HeaderParam("x-ms-client-id") String xMsClientId,
             @QueryParam("api-version") String apiVersion,
             @QueryParam("tilesetId") TilesetId tilesetId,
             @QueryParam("zoom") int zoom,
             @QueryParam("x") int xTileIndex,
             @QueryParam("y") int yTileIndex,
-            @QueryParam("timeStamp") String timestamp,
+            @QueryParam("timeStamp") OffsetDateTime timestamp,
             @QueryParam("tileSize") TileSize tileSize,
             @QueryParam("language") String language,
             @QueryParam("view") String view,
+            @HeaderParam("Accept") String accept,
+            Context context);
+
+        @Headers({"Content-Type: application/json"})
+        @Get("/map/tileset")
+        @ExpectedResponses({200})
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Mono<Response<MapTilesetResultV2Inner>> getMapTileset(
+            @HostParam("$host") String endpoint,
+            @HeaderParam("x-ms-client-id") String xMsClientId,
+            @QueryParam("api-version") String apiVersion,
+            @QueryParam("tilesetId") TilesetId tilesetId,
+            @HeaderParam("Accept") String accept,
+            Context context);
+
+        @Headers({"Content-Type: application/json"})
+        @Get("/map/attribution")
+        @ExpectedResponses({200})
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Mono<Response<MapAttributionResultV2Inner>> getMapAttribution(
+            @HostParam("$host") String endpoint,
+            @HeaderParam("x-ms-client-id") String xMsClientId,
+            @QueryParam("api-version") String apiVersion,
+            @QueryParam("tilesetId") TilesetId tilesetId,
+            @QueryParam("zoom") int zoom,
+            @QueryParam("bounds") String bounds,
             @HeaderParam("Accept") String accept,
             Context context);
     }
@@ -143,27 +175,27 @@ public final class RenderV2sClientImpl implements RenderV2sClient {
         int zoom,
         int xTileIndex,
         int yTileIndex,
-        String timestamp,
+        OffsetDateTime timestamp,
         TileSize tileSize,
         String language,
         String view) {
-        if (this.client.getGeography() == null) {
+        if (this.client.getEndpoint() == null) {
             return Mono
                 .error(
                     new IllegalArgumentException(
-                        "Parameter this.client.getGeography() is required and cannot be null."));
+                        "Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (tilesetId == null) {
             return Mono.error(new IllegalArgumentException("Parameter tilesetId is required and cannot be null."));
         }
-        final String apiVersion = "2.0";
+        final String apiVersion = "2.1";
         final String accept = "application/json, image/jpeg, image/png, image/pbf, application/vnd.mapbox-vector-tile";
         return FluxUtil
             .withContext(
                 context ->
                     service
                         .getMapTilePreview(
-                            this.client.getGeography(),
+                            this.client.getEndpoint(),
                             this.client.getXMsClientId(),
                             apiVersion,
                             tilesetId,
@@ -241,26 +273,26 @@ public final class RenderV2sClientImpl implements RenderV2sClient {
         int zoom,
         int xTileIndex,
         int yTileIndex,
-        String timestamp,
+        OffsetDateTime timestamp,
         TileSize tileSize,
         String language,
         String view,
         Context context) {
-        if (this.client.getGeography() == null) {
+        if (this.client.getEndpoint() == null) {
             return Mono
                 .error(
                     new IllegalArgumentException(
-                        "Parameter this.client.getGeography() is required and cannot be null."));
+                        "Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (tilesetId == null) {
             return Mono.error(new IllegalArgumentException("Parameter tilesetId is required and cannot be null."));
         }
-        final String apiVersion = "2.0";
+        final String apiVersion = "2.1";
         final String accept = "application/json, image/jpeg, image/png, image/pbf, application/vnd.mapbox-vector-tile";
         context = this.client.mergeContext(context);
         return service
             .getMapTilePreview(
-                this.client.getGeography(),
+                this.client.getEndpoint(),
                 this.client.getXMsClientId(),
                 apiVersion,
                 tilesetId,
@@ -336,7 +368,7 @@ public final class RenderV2sClientImpl implements RenderV2sClient {
         int zoom,
         int xTileIndex,
         int yTileIndex,
-        String timestamp,
+        OffsetDateTime timestamp,
         TileSize tileSize,
         String language,
         String view) {
@@ -377,7 +409,7 @@ public final class RenderV2sClientImpl implements RenderV2sClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Flux<ByteBuffer> getMapTilePreviewAsync(TilesetId tilesetId, int zoom, int xTileIndex, int yTileIndex) {
-        final String timestamp = null;
+        final OffsetDateTime timestamp = null;
         final TileSize tileSize = null;
         final String language = null;
         final String view = null;
@@ -418,7 +450,7 @@ public final class RenderV2sClientImpl implements RenderV2sClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public InputStream getMapTilePreview(TilesetId tilesetId, int zoom, int xTileIndex, int yTileIndex) {
-        final String timestamp = null;
+        final OffsetDateTime timestamp = null;
         final TileSize tileSize = null;
         final String language = null;
         final String view = null;
@@ -504,7 +536,7 @@ public final class RenderV2sClientImpl implements RenderV2sClient {
         int zoom,
         int xTileIndex,
         int yTileIndex,
-        String timestamp,
+        OffsetDateTime timestamp,
         TileSize tileSize,
         String language,
         String view,
@@ -512,5 +544,366 @@ public final class RenderV2sClientImpl implements RenderV2sClient {
         return getMapTilePreviewWithResponseAsync(
                 tilesetId, zoom, xTileIndex, yTileIndex, timestamp, tileSize, language, view, context)
             .block();
+    }
+
+    /**
+     * **Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>The Get Map Tileset API allows users to request metadata for a tileset.
+     *
+     * @param tilesetId A tileset is a collection of raster or vector data broken up into a uniform grid of square tiles
+     *     at preset zoom levels. Every tileset has a **tilesetId** to use when making requests. The **tilesetId** for
+     *     tilesets created using [Azure Maps Creator](https://aka.ms/amcreator) are generated through the [Tileset
+     *     Create API](https://docs.microsoft.com/en-us/rest/api/maps/tileset). The ready-to-use tilesets supplied by
+     *     Azure Maps are listed below. For example, microsoft.base.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return metadata for a tileset in the TileJSON format.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Mono<Response<MapTilesetResultV2Inner>> getMapTilesetWithResponseAsync(TilesetId tilesetId) {
+        if (this.client.getEndpoint() == null) {
+            return Mono
+                .error(
+                    new IllegalArgumentException(
+                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (tilesetId == null) {
+            return Mono.error(new IllegalArgumentException("Parameter tilesetId is required and cannot be null."));
+        }
+        final String apiVersion = "2.1";
+        final String accept = "application/json";
+        return FluxUtil
+            .withContext(
+                context ->
+                    service
+                        .getMapTileset(
+                            this.client.getEndpoint(),
+                            this.client.getXMsClientId(),
+                            apiVersion,
+                            tilesetId,
+                            accept,
+                            context))
+            .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
+    }
+
+    /**
+     * **Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>The Get Map Tileset API allows users to request metadata for a tileset.
+     *
+     * @param tilesetId A tileset is a collection of raster or vector data broken up into a uniform grid of square tiles
+     *     at preset zoom levels. Every tileset has a **tilesetId** to use when making requests. The **tilesetId** for
+     *     tilesets created using [Azure Maps Creator](https://aka.ms/amcreator) are generated through the [Tileset
+     *     Create API](https://docs.microsoft.com/en-us/rest/api/maps/tileset). The ready-to-use tilesets supplied by
+     *     Azure Maps are listed below. For example, microsoft.base.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return metadata for a tileset in the TileJSON format.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Mono<Response<MapTilesetResultV2Inner>> getMapTilesetWithResponseAsync(
+        TilesetId tilesetId, Context context) {
+        if (this.client.getEndpoint() == null) {
+            return Mono
+                .error(
+                    new IllegalArgumentException(
+                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (tilesetId == null) {
+            return Mono.error(new IllegalArgumentException("Parameter tilesetId is required and cannot be null."));
+        }
+        final String apiVersion = "2.1";
+        final String accept = "application/json";
+        context = this.client.mergeContext(context);
+        return service
+            .getMapTileset(
+                this.client.getEndpoint(), this.client.getXMsClientId(), apiVersion, tilesetId, accept, context);
+    }
+
+    /**
+     * **Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>The Get Map Tileset API allows users to request metadata for a tileset.
+     *
+     * @param tilesetId A tileset is a collection of raster or vector data broken up into a uniform grid of square tiles
+     *     at preset zoom levels. Every tileset has a **tilesetId** to use when making requests. The **tilesetId** for
+     *     tilesets created using [Azure Maps Creator](https://aka.ms/amcreator) are generated through the [Tileset
+     *     Create API](https://docs.microsoft.com/en-us/rest/api/maps/tileset). The ready-to-use tilesets supplied by
+     *     Azure Maps are listed below. For example, microsoft.base.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return metadata for a tileset in the TileJSON format.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Mono<MapTilesetResultV2Inner> getMapTilesetAsync(TilesetId tilesetId) {
+        return getMapTilesetWithResponseAsync(tilesetId)
+            .flatMap(
+                (Response<MapTilesetResultV2Inner> res) -> {
+                    if (res.getValue() != null) {
+                        return Mono.just(res.getValue());
+                    } else {
+                        return Mono.empty();
+                    }
+                });
+    }
+
+    /**
+     * **Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>The Get Map Tileset API allows users to request metadata for a tileset.
+     *
+     * @param tilesetId A tileset is a collection of raster or vector data broken up into a uniform grid of square tiles
+     *     at preset zoom levels. Every tileset has a **tilesetId** to use when making requests. The **tilesetId** for
+     *     tilesets created using [Azure Maps Creator](https://aka.ms/amcreator) are generated through the [Tileset
+     *     Create API](https://docs.microsoft.com/en-us/rest/api/maps/tileset). The ready-to-use tilesets supplied by
+     *     Azure Maps are listed below. For example, microsoft.base.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return metadata for a tileset in the TileJSON format.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public MapTilesetResultV2Inner getMapTileset(TilesetId tilesetId) {
+        return getMapTilesetAsync(tilesetId).block();
+    }
+
+    /**
+     * **Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>The Get Map Tileset API allows users to request metadata for a tileset.
+     *
+     * @param tilesetId A tileset is a collection of raster or vector data broken up into a uniform grid of square tiles
+     *     at preset zoom levels. Every tileset has a **tilesetId** to use when making requests. The **tilesetId** for
+     *     tilesets created using [Azure Maps Creator](https://aka.ms/amcreator) are generated through the [Tileset
+     *     Create API](https://docs.microsoft.com/en-us/rest/api/maps/tileset). The ready-to-use tilesets supplied by
+     *     Azure Maps are listed below. For example, microsoft.base.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return metadata for a tileset in the TileJSON format.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<MapTilesetResultV2Inner> getMapTilesetWithResponse(TilesetId tilesetId, Context context) {
+        return getMapTilesetWithResponseAsync(tilesetId, context).block();
+    }
+
+    /**
+     * **Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>The Get Map Attribution API allows users to request map copyright attribution information for a section of a
+     * tileset.
+     *
+     * @param tilesetId A tileset is a collection of raster or vector data broken up into a uniform grid of square tiles
+     *     at preset zoom levels. Every tileset has a **tilesetId** to use when making requests. The **tilesetId** for
+     *     tilesets created using [Azure Maps Creator](https://aka.ms/amcreator) are generated through the [Tileset
+     *     Create API](https://docs.microsoft.com/en-us/rest/api/maps/tileset). The ready-to-use tilesets supplied by
+     *     Azure Maps are listed below. For example, microsoft.base.
+     * @param zoom Zoom level for the desired tile. Please find TilesetID list below for more details on supported zoom
+     *     level for each tilesetId.&lt;br&gt;
+     *     <p>Please see [Zoom Levels and Tile
+     *     Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
+     * @param bounds The string that represents the rectangular area of a bounding box. The bounds parameter is defined
+     *     by the 4 bounding box coordinates, with WGS84 longitude and latitude of the southwest corner followed by
+     *     WGS84 longitude and latitude of the northeast corner. The string is presented in the following format:
+     *     `[SouthwestCorner_Longitude, SouthwestCorner_Latitude, NortheastCorner_Longitude, NortheastCorner_Latitude]`.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return copyright attribution for the requested section of a tileset.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Mono<Response<MapAttributionResultV2Inner>> getMapAttributionWithResponseAsync(
+        TilesetId tilesetId, int zoom, List<String> bounds) {
+        if (this.client.getEndpoint() == null) {
+            return Mono
+                .error(
+                    new IllegalArgumentException(
+                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (tilesetId == null) {
+            return Mono.error(new IllegalArgumentException("Parameter tilesetId is required and cannot be null."));
+        }
+        if (bounds == null) {
+            return Mono.error(new IllegalArgumentException("Parameter bounds is required and cannot be null."));
+        }
+        final String apiVersion = "2.1";
+        final String accept = "application/json";
+        String boundsConverted =
+            JacksonAdapter.createDefaultSerializerAdapter().serializeList(bounds, CollectionFormat.CSV);
+        return FluxUtil
+            .withContext(
+                context ->
+                    service
+                        .getMapAttribution(
+                            this.client.getEndpoint(),
+                            this.client.getXMsClientId(),
+                            apiVersion,
+                            tilesetId,
+                            zoom,
+                            boundsConverted,
+                            accept,
+                            context))
+            .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
+    }
+
+    /**
+     * **Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>The Get Map Attribution API allows users to request map copyright attribution information for a section of a
+     * tileset.
+     *
+     * @param tilesetId A tileset is a collection of raster or vector data broken up into a uniform grid of square tiles
+     *     at preset zoom levels. Every tileset has a **tilesetId** to use when making requests. The **tilesetId** for
+     *     tilesets created using [Azure Maps Creator](https://aka.ms/amcreator) are generated through the [Tileset
+     *     Create API](https://docs.microsoft.com/en-us/rest/api/maps/tileset). The ready-to-use tilesets supplied by
+     *     Azure Maps are listed below. For example, microsoft.base.
+     * @param zoom Zoom level for the desired tile. Please find TilesetID list below for more details on supported zoom
+     *     level for each tilesetId.&lt;br&gt;
+     *     <p>Please see [Zoom Levels and Tile
+     *     Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
+     * @param bounds The string that represents the rectangular area of a bounding box. The bounds parameter is defined
+     *     by the 4 bounding box coordinates, with WGS84 longitude and latitude of the southwest corner followed by
+     *     WGS84 longitude and latitude of the northeast corner. The string is presented in the following format:
+     *     `[SouthwestCorner_Longitude, SouthwestCorner_Latitude, NortheastCorner_Longitude, NortheastCorner_Latitude]`.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return copyright attribution for the requested section of a tileset.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Mono<Response<MapAttributionResultV2Inner>> getMapAttributionWithResponseAsync(
+        TilesetId tilesetId, int zoom, List<String> bounds, Context context) {
+        if (this.client.getEndpoint() == null) {
+            return Mono
+                .error(
+                    new IllegalArgumentException(
+                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (tilesetId == null) {
+            return Mono.error(new IllegalArgumentException("Parameter tilesetId is required and cannot be null."));
+        }
+        if (bounds == null) {
+            return Mono.error(new IllegalArgumentException("Parameter bounds is required and cannot be null."));
+        }
+        final String apiVersion = "2.1";
+        final String accept = "application/json";
+        String boundsConverted =
+            JacksonAdapter.createDefaultSerializerAdapter().serializeList(bounds, CollectionFormat.CSV);
+        context = this.client.mergeContext(context);
+        return service
+            .getMapAttribution(
+                this.client.getEndpoint(),
+                this.client.getXMsClientId(),
+                apiVersion,
+                tilesetId,
+                zoom,
+                boundsConverted,
+                accept,
+                context);
+    }
+
+    /**
+     * **Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>The Get Map Attribution API allows users to request map copyright attribution information for a section of a
+     * tileset.
+     *
+     * @param tilesetId A tileset is a collection of raster or vector data broken up into a uniform grid of square tiles
+     *     at preset zoom levels. Every tileset has a **tilesetId** to use when making requests. The **tilesetId** for
+     *     tilesets created using [Azure Maps Creator](https://aka.ms/amcreator) are generated through the [Tileset
+     *     Create API](https://docs.microsoft.com/en-us/rest/api/maps/tileset). The ready-to-use tilesets supplied by
+     *     Azure Maps are listed below. For example, microsoft.base.
+     * @param zoom Zoom level for the desired tile. Please find TilesetID list below for more details on supported zoom
+     *     level for each tilesetId.&lt;br&gt;
+     *     <p>Please see [Zoom Levels and Tile
+     *     Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
+     * @param bounds The string that represents the rectangular area of a bounding box. The bounds parameter is defined
+     *     by the 4 bounding box coordinates, with WGS84 longitude and latitude of the southwest corner followed by
+     *     WGS84 longitude and latitude of the northeast corner. The string is presented in the following format:
+     *     `[SouthwestCorner_Longitude, SouthwestCorner_Latitude, NortheastCorner_Longitude, NortheastCorner_Latitude]`.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return copyright attribution for the requested section of a tileset.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Mono<MapAttributionResultV2Inner> getMapAttributionAsync(
+        TilesetId tilesetId, int zoom, List<String> bounds) {
+        return getMapAttributionWithResponseAsync(tilesetId, zoom, bounds)
+            .flatMap(
+                (Response<MapAttributionResultV2Inner> res) -> {
+                    if (res.getValue() != null) {
+                        return Mono.just(res.getValue());
+                    } else {
+                        return Mono.empty();
+                    }
+                });
+    }
+
+    /**
+     * **Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>The Get Map Attribution API allows users to request map copyright attribution information for a section of a
+     * tileset.
+     *
+     * @param tilesetId A tileset is a collection of raster or vector data broken up into a uniform grid of square tiles
+     *     at preset zoom levels. Every tileset has a **tilesetId** to use when making requests. The **tilesetId** for
+     *     tilesets created using [Azure Maps Creator](https://aka.ms/amcreator) are generated through the [Tileset
+     *     Create API](https://docs.microsoft.com/en-us/rest/api/maps/tileset). The ready-to-use tilesets supplied by
+     *     Azure Maps are listed below. For example, microsoft.base.
+     * @param zoom Zoom level for the desired tile. Please find TilesetID list below for more details on supported zoom
+     *     level for each tilesetId.&lt;br&gt;
+     *     <p>Please see [Zoom Levels and Tile
+     *     Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
+     * @param bounds The string that represents the rectangular area of a bounding box. The bounds parameter is defined
+     *     by the 4 bounding box coordinates, with WGS84 longitude and latitude of the southwest corner followed by
+     *     WGS84 longitude and latitude of the northeast corner. The string is presented in the following format:
+     *     `[SouthwestCorner_Longitude, SouthwestCorner_Latitude, NortheastCorner_Longitude, NortheastCorner_Latitude]`.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return copyright attribution for the requested section of a tileset.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public MapAttributionResultV2Inner getMapAttribution(TilesetId tilesetId, int zoom, List<String> bounds) {
+        return getMapAttributionAsync(tilesetId, zoom, bounds).block();
+    }
+
+    /**
+     * **Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>The Get Map Attribution API allows users to request map copyright attribution information for a section of a
+     * tileset.
+     *
+     * @param tilesetId A tileset is a collection of raster or vector data broken up into a uniform grid of square tiles
+     *     at preset zoom levels. Every tileset has a **tilesetId** to use when making requests. The **tilesetId** for
+     *     tilesets created using [Azure Maps Creator](https://aka.ms/amcreator) are generated through the [Tileset
+     *     Create API](https://docs.microsoft.com/en-us/rest/api/maps/tileset). The ready-to-use tilesets supplied by
+     *     Azure Maps are listed below. For example, microsoft.base.
+     * @param zoom Zoom level for the desired tile. Please find TilesetID list below for more details on supported zoom
+     *     level for each tilesetId.&lt;br&gt;
+     *     <p>Please see [Zoom Levels and Tile
+     *     Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
+     * @param bounds The string that represents the rectangular area of a bounding box. The bounds parameter is defined
+     *     by the 4 bounding box coordinates, with WGS84 longitude and latitude of the southwest corner followed by
+     *     WGS84 longitude and latitude of the northeast corner. The string is presented in the following format:
+     *     `[SouthwestCorner_Longitude, SouthwestCorner_Latitude, NortheastCorner_Longitude, NortheastCorner_Latitude]`.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return copyright attribution for the requested section of a tileset.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<MapAttributionResultV2Inner> getMapAttributionWithResponse(
+        TilesetId tilesetId, int zoom, List<String> bounds, Context context) {
+        return getMapAttributionWithResponseAsync(tilesetId, zoom, bounds, context).block();
     }
 }

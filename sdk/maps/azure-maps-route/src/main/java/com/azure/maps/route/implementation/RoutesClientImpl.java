@@ -8521,10 +8521,10 @@ public final class RoutesClientImpl implements RoutesClient {
      * <p>3. If the batch request was accepted successfully, the `Location` header in the response contains the URL to
      * download the results of the batch request. This status URI looks like following:
      *
-     * <p>``` GET https://atlas.microsoft.com/batch/{batch-id}?api-version=1.0 ``` Note:- Please remember to add AUTH
-     * information (subscription-key/azure_auth - See [Security](#security)) to the _status URI_ before running it.
-     * &lt;br&gt; 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to download the batch
-     * results.
+     * <p>``` GET https://atlas.microsoft.com/route/directions/batch/{batch-id}?api-version=1.0 ``` Note:- Please
+     * remember to add AUTH information (subscription-key/azure_auth - See [Security](#security)) to the _status URI_
+     * before running it. &lt;br&gt; 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to
+     * download the batch results.
      *
      * <p>### POST Body for Batch Request To send the _route directions_ queries you will use a `POST` request where the
      * request body will contain the `batchItems` array in `json` format and the `Content-Type` header will be set to
@@ -8548,8 +8548,9 @@ public final class RoutesClientImpl implements RoutesClient {
      * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
      * `POST` batch request and looks like the following:
      *
-     * <p>``` https://atlas.microsoft.com/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key} ```
-     * Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
+     * <p>```
+     * https://atlas.microsoft.com/route/directions/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
+     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
      * using the _download URL_. 2. The server will respond with one of the following:
      *
      * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
@@ -8665,10 +8666,10 @@ public final class RoutesClientImpl implements RoutesClient {
      * <p>3. If the batch request was accepted successfully, the `Location` header in the response contains the URL to
      * download the results of the batch request. This status URI looks like following:
      *
-     * <p>``` GET https://atlas.microsoft.com/batch/{batch-id}?api-version=1.0 ``` Note:- Please remember to add AUTH
-     * information (subscription-key/azure_auth - See [Security](#security)) to the _status URI_ before running it.
-     * &lt;br&gt; 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to download the batch
-     * results.
+     * <p>``` GET https://atlas.microsoft.com/route/directions/batch/{batch-id}?api-version=1.0 ``` Note:- Please
+     * remember to add AUTH information (subscription-key/azure_auth - See [Security](#security)) to the _status URI_
+     * before running it. &lt;br&gt; 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to
+     * download the batch results.
      *
      * <p>### POST Body for Batch Request To send the _route directions_ queries you will use a `POST` request where the
      * request body will contain the `batchItems` array in `json` format and the `Content-Type` header will be set to
@@ -8692,8 +8693,9 @@ public final class RoutesClientImpl implements RoutesClient {
      * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
      * `POST` batch request and looks like the following:
      *
-     * <p>``` https://atlas.microsoft.com/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key} ```
-     * Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
+     * <p>```
+     * https://atlas.microsoft.com/route/directions/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
+     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
      * using the _download URL_. 2. The server will respond with one of the following:
      *
      * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
@@ -8807,10 +8809,10 @@ public final class RoutesClientImpl implements RoutesClient {
      * <p>3. If the batch request was accepted successfully, the `Location` header in the response contains the URL to
      * download the results of the batch request. This status URI looks like following:
      *
-     * <p>``` GET https://atlas.microsoft.com/batch/{batch-id}?api-version=1.0 ``` Note:- Please remember to add AUTH
-     * information (subscription-key/azure_auth - See [Security](#security)) to the _status URI_ before running it.
-     * &lt;br&gt; 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to download the batch
-     * results.
+     * <p>``` GET https://atlas.microsoft.com/route/directions/batch/{batch-id}?api-version=1.0 ``` Note:- Please
+     * remember to add AUTH information (subscription-key/azure_auth - See [Security](#security)) to the _status URI_
+     * before running it. &lt;br&gt; 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to
+     * download the batch results.
      *
      * <p>### POST Body for Batch Request To send the _route directions_ queries you will use a `POST` request where the
      * request body will contain the `batchItems` array in `json` format and the `Content-Type` header will be set to
@@ -8834,8 +8836,9 @@ public final class RoutesClientImpl implements RoutesClient {
      * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
      * `POST` batch request and looks like the following:
      *
-     * <p>``` https://atlas.microsoft.com/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key} ```
-     * Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
+     * <p>```
+     * https://atlas.microsoft.com/route/directions/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
+     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
      * using the _download URL_. 2. The server will respond with one of the following:
      *
      * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
@@ -8931,10 +8934,10 @@ public final class RoutesClientImpl implements RoutesClient {
      * <p>3. If the batch request was accepted successfully, the `Location` header in the response contains the URL to
      * download the results of the batch request. This status URI looks like following:
      *
-     * <p>``` GET https://atlas.microsoft.com/batch/{batch-id}?api-version=1.0 ``` Note:- Please remember to add AUTH
-     * information (subscription-key/azure_auth - See [Security](#security)) to the _status URI_ before running it.
-     * &lt;br&gt; 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to download the batch
-     * results.
+     * <p>``` GET https://atlas.microsoft.com/route/directions/batch/{batch-id}?api-version=1.0 ``` Note:- Please
+     * remember to add AUTH information (subscription-key/azure_auth - See [Security](#security)) to the _status URI_
+     * before running it. &lt;br&gt; 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to
+     * download the batch results.
      *
      * <p>### POST Body for Batch Request To send the _route directions_ queries you will use a `POST` request where the
      * request body will contain the `batchItems` array in `json` format and the `Content-Type` header will be set to
@@ -8958,8 +8961,9 @@ public final class RoutesClientImpl implements RoutesClient {
      * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
      * `POST` batch request and looks like the following:
      *
-     * <p>``` https://atlas.microsoft.com/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key} ```
-     * Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
+     * <p>```
+     * https://atlas.microsoft.com/route/directions/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
+     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
      * using the _download URL_. 2. The server will respond with one of the following:
      *
      * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
@@ -9057,10 +9061,10 @@ public final class RoutesClientImpl implements RoutesClient {
      * <p>3. If the batch request was accepted successfully, the `Location` header in the response contains the URL to
      * download the results of the batch request. This status URI looks like following:
      *
-     * <p>``` GET https://atlas.microsoft.com/batch/{batch-id}?api-version=1.0 ``` Note:- Please remember to add AUTH
-     * information (subscription-key/azure_auth - See [Security](#security)) to the _status URI_ before running it.
-     * &lt;br&gt; 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to download the batch
-     * results.
+     * <p>``` GET https://atlas.microsoft.com/route/directions/batch/{batch-id}?api-version=1.0 ``` Note:- Please
+     * remember to add AUTH information (subscription-key/azure_auth - See [Security](#security)) to the _status URI_
+     * before running it. &lt;br&gt; 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to
+     * download the batch results.
      *
      * <p>### POST Body for Batch Request To send the _route directions_ queries you will use a `POST` request where the
      * request body will contain the `batchItems` array in `json` format and the `Content-Type` header will be set to
@@ -9084,8 +9088,9 @@ public final class RoutesClientImpl implements RoutesClient {
      * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
      * `POST` batch request and looks like the following:
      *
-     * <p>``` https://atlas.microsoft.com/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key} ```
-     * Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
+     * <p>```
+     * https://atlas.microsoft.com/route/directions/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
+     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
      * using the _download URL_. 2. The server will respond with one of the following:
      *
      * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
@@ -9171,10 +9176,10 @@ public final class RoutesClientImpl implements RoutesClient {
      * <p>3. If the batch request was accepted successfully, the `Location` header in the response contains the URL to
      * download the results of the batch request. This status URI looks like following:
      *
-     * <p>``` GET https://atlas.microsoft.com/batch/{batch-id}?api-version=1.0 ``` Note:- Please remember to add AUTH
-     * information (subscription-key/azure_auth - See [Security](#security)) to the _status URI_ before running it.
-     * &lt;br&gt; 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to download the batch
-     * results.
+     * <p>``` GET https://atlas.microsoft.com/route/directions/batch/{batch-id}?api-version=1.0 ``` Note:- Please
+     * remember to add AUTH information (subscription-key/azure_auth - See [Security](#security)) to the _status URI_
+     * before running it. &lt;br&gt; 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to
+     * download the batch results.
      *
      * <p>### POST Body for Batch Request To send the _route directions_ queries you will use a `POST` request where the
      * request body will contain the `batchItems` array in `json` format and the `Content-Type` header will be set to
@@ -9198,8 +9203,9 @@ public final class RoutesClientImpl implements RoutesClient {
      * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
      * `POST` batch request and looks like the following:
      *
-     * <p>``` https://atlas.microsoft.com/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key} ```
-     * Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
+     * <p>```
+     * https://atlas.microsoft.com/route/directions/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
+     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
      * using the _download URL_. 2. The server will respond with one of the following:
      *
      * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
@@ -9287,10 +9293,10 @@ public final class RoutesClientImpl implements RoutesClient {
      * <p>3. If the batch request was accepted successfully, the `Location` header in the response contains the URL to
      * download the results of the batch request. This status URI looks like following:
      *
-     * <p>``` GET https://atlas.microsoft.com/batch/{batch-id}?api-version=1.0 ``` Note:- Please remember to add AUTH
-     * information (subscription-key/azure_auth - See [Security](#security)) to the _status URI_ before running it.
-     * &lt;br&gt; 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to download the batch
-     * results.
+     * <p>``` GET https://atlas.microsoft.com/route/directions/batch/{batch-id}?api-version=1.0 ``` Note:- Please
+     * remember to add AUTH information (subscription-key/azure_auth - See [Security](#security)) to the _status URI_
+     * before running it. &lt;br&gt; 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to
+     * download the batch results.
      *
      * <p>### POST Body for Batch Request To send the _route directions_ queries you will use a `POST` request where the
      * request body will contain the `batchItems` array in `json` format and the `Content-Type` header will be set to
@@ -9314,8 +9320,9 @@ public final class RoutesClientImpl implements RoutesClient {
      * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
      * `POST` batch request and looks like the following:
      *
-     * <p>``` https://atlas.microsoft.com/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key} ```
-     * Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
+     * <p>```
+     * https://atlas.microsoft.com/route/directions/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
+     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
      * using the _download URL_. 2. The server will respond with one of the following:
      *
      * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
@@ -9403,10 +9410,10 @@ public final class RoutesClientImpl implements RoutesClient {
      * <p>3. If the batch request was accepted successfully, the `Location` header in the response contains the URL to
      * download the results of the batch request. This status URI looks like following:
      *
-     * <p>``` GET https://atlas.microsoft.com/batch/{batch-id}?api-version=1.0 ``` Note:- Please remember to add AUTH
-     * information (subscription-key/azure_auth - See [Security](#security)) to the _status URI_ before running it.
-     * &lt;br&gt; 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to download the batch
-     * results.
+     * <p>``` GET https://atlas.microsoft.com/route/directions/batch/{batch-id}?api-version=1.0 ``` Note:- Please
+     * remember to add AUTH information (subscription-key/azure_auth - See [Security](#security)) to the _status URI_
+     * before running it. &lt;br&gt; 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to
+     * download the batch results.
      *
      * <p>### POST Body for Batch Request To send the _route directions_ queries you will use a `POST` request where the
      * request body will contain the `batchItems` array in `json` format and the `Content-Type` header will be set to
@@ -9430,8 +9437,9 @@ public final class RoutesClientImpl implements RoutesClient {
      * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
      * `POST` batch request and looks like the following:
      *
-     * <p>``` https://atlas.microsoft.com/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key} ```
-     * Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
+     * <p>```
+     * https://atlas.microsoft.com/route/directions/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
+     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
      * using the _download URL_. 2. The server will respond with one of the following:
      *
      * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
@@ -9520,10 +9528,10 @@ public final class RoutesClientImpl implements RoutesClient {
      * <p>3. If the batch request was accepted successfully, the `Location` header in the response contains the URL to
      * download the results of the batch request. This status URI looks like following:
      *
-     * <p>``` GET https://atlas.microsoft.com/batch/{batch-id}?api-version=1.0 ``` Note:- Please remember to add AUTH
-     * information (subscription-key/azure_auth - See [Security](#security)) to the _status URI_ before running it.
-     * &lt;br&gt; 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to download the batch
-     * results.
+     * <p>``` GET https://atlas.microsoft.com/route/directions/batch/{batch-id}?api-version=1.0 ``` Note:- Please
+     * remember to add AUTH information (subscription-key/azure_auth - See [Security](#security)) to the _status URI_
+     * before running it. &lt;br&gt; 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to
+     * download the batch results.
      *
      * <p>### POST Body for Batch Request To send the _route directions_ queries you will use a `POST` request where the
      * request body will contain the `batchItems` array in `json` format and the `Content-Type` header will be set to
@@ -9547,8 +9555,9 @@ public final class RoutesClientImpl implements RoutesClient {
      * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
      * `POST` batch request and looks like the following:
      *
-     * <p>``` https://atlas.microsoft.com/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key} ```
-     * Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
+     * <p>```
+     * https://atlas.microsoft.com/route/directions/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
+     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
      * using the _download URL_. 2. The server will respond with one of the following:
      *
      * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
@@ -9634,10 +9643,10 @@ public final class RoutesClientImpl implements RoutesClient {
      * <p>3. If the batch request was accepted successfully, the `Location` header in the response contains the URL to
      * download the results of the batch request. This status URI looks like following:
      *
-     * <p>``` GET https://atlas.microsoft.com/batch/{batch-id}?api-version=1.0 ``` Note:- Please remember to add AUTH
-     * information (subscription-key/azure_auth - See [Security](#security)) to the _status URI_ before running it.
-     * &lt;br&gt; 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to download the batch
-     * results.
+     * <p>``` GET https://atlas.microsoft.com/route/directions/batch/{batch-id}?api-version=1.0 ``` Note:- Please
+     * remember to add AUTH information (subscription-key/azure_auth - See [Security](#security)) to the _status URI_
+     * before running it. &lt;br&gt; 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to
+     * download the batch results.
      *
      * <p>### POST Body for Batch Request To send the _route directions_ queries you will use a `POST` request where the
      * request body will contain the `batchItems` array in `json` format and the `Content-Type` header will be set to
@@ -9661,8 +9670,9 @@ public final class RoutesClientImpl implements RoutesClient {
      * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
      * `POST` batch request and looks like the following:
      *
-     * <p>``` https://atlas.microsoft.com/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key} ```
-     * Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
+     * <p>```
+     * https://atlas.microsoft.com/route/directions/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
+     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
      * using the _download URL_. 2. The server will respond with one of the following:
      *
      * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
@@ -9718,8 +9728,9 @@ public final class RoutesClientImpl implements RoutesClient {
      * batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful `POST`
      * batch request and looks like the following:
      *
-     * <p>``` https://atlas.microsoft.com/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key} ```
-     * Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
+     * <p>```
+     * https://atlas.microsoft.com/route/directions/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
+     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
      * using the _download URL_. 2. The server will respond with one of the following:
      *
      * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
@@ -9792,8 +9803,9 @@ public final class RoutesClientImpl implements RoutesClient {
      * batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful `POST`
      * batch request and looks like the following:
      *
-     * <p>``` https://atlas.microsoft.com/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key} ```
-     * Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
+     * <p>```
+     * https://atlas.microsoft.com/route/directions/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
+     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
      * using the _download URL_. 2. The server will respond with one of the following:
      *
      * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
@@ -9864,8 +9876,9 @@ public final class RoutesClientImpl implements RoutesClient {
      * batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful `POST`
      * batch request and looks like the following:
      *
-     * <p>``` https://atlas.microsoft.com/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key} ```
-     * Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
+     * <p>```
+     * https://atlas.microsoft.com/route/directions/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
+     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
      * using the _download URL_. 2. The server will respond with one of the following:
      *
      * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
@@ -9926,8 +9939,9 @@ public final class RoutesClientImpl implements RoutesClient {
      * batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful `POST`
      * batch request and looks like the following:
      *
-     * <p>``` https://atlas.microsoft.com/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key} ```
-     * Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
+     * <p>```
+     * https://atlas.microsoft.com/route/directions/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
+     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
      * using the _download URL_. 2. The server will respond with one of the following:
      *
      * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
@@ -9990,8 +10004,9 @@ public final class RoutesClientImpl implements RoutesClient {
      * batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful `POST`
      * batch request and looks like the following:
      *
-     * <p>``` https://atlas.microsoft.com/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key} ```
-     * Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
+     * <p>```
+     * https://atlas.microsoft.com/route/directions/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
+     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
      * using the _download URL_. 2. The server will respond with one of the following:
      *
      * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
@@ -10044,8 +10059,9 @@ public final class RoutesClientImpl implements RoutesClient {
      * batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful `POST`
      * batch request and looks like the following:
      *
-     * <p>``` https://atlas.microsoft.com/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key} ```
-     * Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
+     * <p>```
+     * https://atlas.microsoft.com/route/directions/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
+     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
      * using the _download URL_. 2. The server will respond with one of the following:
      *
      * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
@@ -10099,8 +10115,9 @@ public final class RoutesClientImpl implements RoutesClient {
      * batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful `POST`
      * batch request and looks like the following:
      *
-     * <p>``` https://atlas.microsoft.com/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key} ```
-     * Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
+     * <p>```
+     * https://atlas.microsoft.com/route/directions/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
+     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
      * using the _download URL_. 2. The server will respond with one of the following:
      *
      * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
@@ -10152,8 +10169,9 @@ public final class RoutesClientImpl implements RoutesClient {
      * batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful `POST`
      * batch request and looks like the following:
      *
-     * <p>``` https://atlas.microsoft.com/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key} ```
-     * Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
+     * <p>```
+     * https://atlas.microsoft.com/route/directions/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
+     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
      * using the _download URL_. 2. The server will respond with one of the following:
      *
      * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
@@ -10206,8 +10224,9 @@ public final class RoutesClientImpl implements RoutesClient {
      * batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful `POST`
      * batch request and looks like the following:
      *
-     * <p>``` https://atlas.microsoft.com/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key} ```
-     * Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
+     * <p>```
+     * https://atlas.microsoft.com/route/directions/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
+     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
      * using the _download URL_. 2. The server will respond with one of the following:
      *
      * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
@@ -10259,8 +10278,9 @@ public final class RoutesClientImpl implements RoutesClient {
      * batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful `POST`
      * batch request and looks like the following:
      *
-     * <p>``` https://atlas.microsoft.com/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key} ```
-     * Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
+     * <p>```
+     * https://atlas.microsoft.com/route/directions/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
+     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
      * using the _download URL_. 2. The server will respond with one of the following:
      *
      * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
@@ -10344,10 +10364,10 @@ public final class RoutesClientImpl implements RoutesClient {
      * <p>3. If the batch request was accepted successfully, the `Location` header in the response contains the URL to
      * download the results of the batch request. This status URI looks like following:
      *
-     * <p>``` GET https://atlas.microsoft.com/batch/{batch-id}?api-version=1.0 ``` Note:- Please remember to add AUTH
-     * information (subscription-key/azure_auth - See [Security](#security)) to the _status URI_ before running it.
-     * &lt;br&gt; 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to download the batch
-     * results.
+     * <p>``` GET https://atlas.microsoft.com/route/directions/batch/{batch-id}?api-version=1.0 ``` Note:- Please
+     * remember to add AUTH information (subscription-key/azure_auth - See [Security](#security)) to the _status URI_
+     * before running it. &lt;br&gt; 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to
+     * download the batch results.
      *
      * <p>### POST Body for Batch Request To send the _route directions_ queries you will use a `POST` request where the
      * request body will contain the `batchItems` array in `json` format and the `Content-Type` header will be set to
@@ -10371,8 +10391,9 @@ public final class RoutesClientImpl implements RoutesClient {
      * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
      * `POST` batch request and looks like the following:
      *
-     * <p>``` https://atlas.microsoft.com/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key} ```
-     * Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
+     * <p>```
+     * https://atlas.microsoft.com/route/directions/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
+     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
      * using the _download URL_. 2. The server will respond with one of the following:
      *
      * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
@@ -10488,10 +10509,10 @@ public final class RoutesClientImpl implements RoutesClient {
      * <p>3. If the batch request was accepted successfully, the `Location` header in the response contains the URL to
      * download the results of the batch request. This status URI looks like following:
      *
-     * <p>``` GET https://atlas.microsoft.com/batch/{batch-id}?api-version=1.0 ``` Note:- Please remember to add AUTH
-     * information (subscription-key/azure_auth - See [Security](#security)) to the _status URI_ before running it.
-     * &lt;br&gt; 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to download the batch
-     * results.
+     * <p>``` GET https://atlas.microsoft.com/route/directions/batch/{batch-id}?api-version=1.0 ``` Note:- Please
+     * remember to add AUTH information (subscription-key/azure_auth - See [Security](#security)) to the _status URI_
+     * before running it. &lt;br&gt; 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to
+     * download the batch results.
      *
      * <p>### POST Body for Batch Request To send the _route directions_ queries you will use a `POST` request where the
      * request body will contain the `batchItems` array in `json` format and the `Content-Type` header will be set to
@@ -10515,8 +10536,9 @@ public final class RoutesClientImpl implements RoutesClient {
      * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
      * `POST` batch request and looks like the following:
      *
-     * <p>``` https://atlas.microsoft.com/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key} ```
-     * Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
+     * <p>```
+     * https://atlas.microsoft.com/route/directions/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
+     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
      * using the _download URL_. 2. The server will respond with one of the following:
      *
      * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
@@ -10630,10 +10652,10 @@ public final class RoutesClientImpl implements RoutesClient {
      * <p>3. If the batch request was accepted successfully, the `Location` header in the response contains the URL to
      * download the results of the batch request. This status URI looks like following:
      *
-     * <p>``` GET https://atlas.microsoft.com/batch/{batch-id}?api-version=1.0 ``` Note:- Please remember to add AUTH
-     * information (subscription-key/azure_auth - See [Security](#security)) to the _status URI_ before running it.
-     * &lt;br&gt; 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to download the batch
-     * results.
+     * <p>``` GET https://atlas.microsoft.com/route/directions/batch/{batch-id}?api-version=1.0 ``` Note:- Please
+     * remember to add AUTH information (subscription-key/azure_auth - See [Security](#security)) to the _status URI_
+     * before running it. &lt;br&gt; 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to
+     * download the batch results.
      *
      * <p>### POST Body for Batch Request To send the _route directions_ queries you will use a `POST` request where the
      * request body will contain the `batchItems` array in `json` format and the `Content-Type` header will be set to
@@ -10657,8 +10679,9 @@ public final class RoutesClientImpl implements RoutesClient {
      * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
      * `POST` batch request and looks like the following:
      *
-     * <p>``` https://atlas.microsoft.com/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key} ```
-     * Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
+     * <p>```
+     * https://atlas.microsoft.com/route/directions/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
+     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
      * using the _download URL_. 2. The server will respond with one of the following:
      *
      * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
@@ -10752,10 +10775,10 @@ public final class RoutesClientImpl implements RoutesClient {
      * <p>3. If the batch request was accepted successfully, the `Location` header in the response contains the URL to
      * download the results of the batch request. This status URI looks like following:
      *
-     * <p>``` GET https://atlas.microsoft.com/batch/{batch-id}?api-version=1.0 ``` Note:- Please remember to add AUTH
-     * information (subscription-key/azure_auth - See [Security](#security)) to the _status URI_ before running it.
-     * &lt;br&gt; 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to download the batch
-     * results.
+     * <p>``` GET https://atlas.microsoft.com/route/directions/batch/{batch-id}?api-version=1.0 ``` Note:- Please
+     * remember to add AUTH information (subscription-key/azure_auth - See [Security](#security)) to the _status URI_
+     * before running it. &lt;br&gt; 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to
+     * download the batch results.
      *
      * <p>### POST Body for Batch Request To send the _route directions_ queries you will use a `POST` request where the
      * request body will contain the `batchItems` array in `json` format and the `Content-Type` header will be set to
@@ -10779,8 +10802,9 @@ public final class RoutesClientImpl implements RoutesClient {
      * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
      * `POST` batch request and looks like the following:
      *
-     * <p>``` https://atlas.microsoft.com/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key} ```
-     * Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
+     * <p>```
+     * https://atlas.microsoft.com/route/directions/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
+     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
      * using the _download URL_. 2. The server will respond with one of the following:
      *
      * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
@@ -10866,10 +10890,10 @@ public final class RoutesClientImpl implements RoutesClient {
      * <p>3. If the batch request was accepted successfully, the `Location` header in the response contains the URL to
      * download the results of the batch request. This status URI looks like following:
      *
-     * <p>``` GET https://atlas.microsoft.com/batch/{batch-id}?api-version=1.0 ``` Note:- Please remember to add AUTH
-     * information (subscription-key/azure_auth - See [Security](#security)) to the _status URI_ before running it.
-     * &lt;br&gt; 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to download the batch
-     * results.
+     * <p>``` GET https://atlas.microsoft.com/route/directions/batch/{batch-id}?api-version=1.0 ``` Note:- Please
+     * remember to add AUTH information (subscription-key/azure_auth - See [Security](#security)) to the _status URI_
+     * before running it. &lt;br&gt; 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to
+     * download the batch results.
      *
      * <p>### POST Body for Batch Request To send the _route directions_ queries you will use a `POST` request where the
      * request body will contain the `batchItems` array in `json` format and the `Content-Type` header will be set to
@@ -10893,8 +10917,9 @@ public final class RoutesClientImpl implements RoutesClient {
      * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
      * `POST` batch request and looks like the following:
      *
-     * <p>``` https://atlas.microsoft.com/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key} ```
-     * Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
+     * <p>```
+     * https://atlas.microsoft.com/route/directions/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
+     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
      * using the _download URL_. 2. The server will respond with one of the following:
      *
      * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some

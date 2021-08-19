@@ -1,5 +1,6 @@
 # Release History
 
-## 1.0.0-beta.1 (2021-07-27)
+## 1.0.0-beta.1 (2021-08-19)
 
 - Azure Resource Manager Elevation client library for Java. This package contains Microsoft Azure SDK for Elevation Management SDK. The Azure Maps Elevation API provides an HTTP interface to query elevation data on the  surface of the Earth. Elevation data can be retrieved at specific locations by sending  lat/lon coordinates, by defining an ordered set of vertices that form a Polyline and a  number of sample points along the length of a Polyline, or by defining a bounding box  that consists of equally spaced vertices as rows and columns. The vertical datum is EPSG:3855.  This datum uses the EGM2008 geoid model applied to the WGS84 ellipsoid as its zero height  reference surface. The vertical unit is measured in meters, the spatial resolution of the  elevation data is 0.8 arc-second for global coverage (~24 meters). Package tag 1.0-preview. For documentation on how to use this package, please see [Azure Management Libraries for Java](https://aka.ms/azsdk/java/mgmt).
+

@@ -8,6 +8,7 @@ import com.azure.core.annotation.Fluent;
 import com.azure.core.util.logging.ClientLogger;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.time.OffsetDateTime;
 
 /** Information about a daily index. */
 @Fluent
@@ -35,7 +36,7 @@ public final class DailyIndex {
      * for example, 2019-10-27T19:39:57-08:00.
      */
     @JsonProperty(value = "dateTime")
-    private String dateTime;
+    private OffsetDateTime dateTime;
 
     /*
      * Index value. Ranges from 0.0 to 10.0. Please refer to [Weather Service
@@ -130,7 +131,7 @@ public final class DailyIndex {
      *
      * @return the dateTime value.
      */
-    public String dateTime() {
+    public OffsetDateTime dateTime() {
         return this.dateTime;
     }
 
@@ -141,7 +142,7 @@ public final class DailyIndex {
      * @param dateTime the dateTime value to set.
      * @return the DailyIndex object itself.
      */
-    public DailyIndex withDateTime(String dateTime) {
+    public DailyIndex withDateTime(OffsetDateTime dateTime) {
         this.dateTime = dateTime;
         return this;
     }

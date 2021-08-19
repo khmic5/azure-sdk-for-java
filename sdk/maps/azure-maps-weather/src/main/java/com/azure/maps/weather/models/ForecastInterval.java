@@ -8,6 +8,7 @@ import com.azure.core.annotation.Fluent;
 import com.azure.core.util.logging.ClientLogger;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.time.OffsetDateTime;
 
 /** The ForecastInterval model. */
 @Fluent
@@ -19,7 +20,7 @@ public final class ForecastInterval {
      * example, 2019-10-27T19:39:57-08:00.
      */
     @JsonProperty(value = "startTime")
-    private String startTime;
+    private OffsetDateTime startTime;
 
     /*
      * The first minute for the interval.
@@ -88,7 +89,7 @@ public final class ForecastInterval {
      *
      * @return the startTime value.
      */
-    public String startTime() {
+    public OffsetDateTime startTime() {
         return this.startTime;
     }
 
@@ -99,7 +100,7 @@ public final class ForecastInterval {
      * @param startTime the startTime value to set.
      * @return the ForecastInterval object itself.
      */
-    public ForecastInterval withStartTime(String startTime) {
+    public ForecastInterval withStartTime(OffsetDateTime startTime) {
         this.startTime = startTime;
         return this;
     }
