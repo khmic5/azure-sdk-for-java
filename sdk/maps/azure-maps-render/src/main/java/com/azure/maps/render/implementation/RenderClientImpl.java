@@ -70,6 +70,18 @@ public final class RenderClientImpl implements RenderClient {
         return this.geography;
     }
 
+    /** server parameter. */
+    private final String endpoint;
+
+    /**
+     * Gets server parameter.
+     *
+     * @return the endpoint value.
+     */
+    public String getEndpoint() {
+        return this.endpoint;
+    }
+
     /** The HTTP pipeline to send requests through. */
     private final HttpPipeline httpPipeline;
 
@@ -143,6 +155,7 @@ public final class RenderClientImpl implements RenderClient {
      *     [articles](https://aka.ms/amauthdetails) for guidance.
      * @param geography This parameter specifies where the Azure Maps Creator resource is located. Valid values are us
      *     and eu.
+     * @param endpoint server parameter.
      */
     RenderClientImpl(
         HttpPipeline httpPipeline,
@@ -150,12 +163,14 @@ public final class RenderClientImpl implements RenderClient {
         Duration defaultPollInterval,
         AzureEnvironment environment,
         String xMsClientId,
-        Geography geography) {
+        Geography geography,
+        String endpoint) {
         this.httpPipeline = httpPipeline;
         this.serializerAdapter = serializerAdapter;
         this.defaultPollInterval = defaultPollInterval;
         this.xMsClientId = xMsClientId;
         this.geography = geography;
+        this.endpoint = endpoint;
         this.renders = new RendersClientImpl(this);
         this.renderV2s = new RenderV2sClientImpl(this);
     }

@@ -46,6 +46,9 @@ public final class TilesetId extends ExpandableStringEnum<TilesetId> {
     /** Static value microsoft.dem for TilesetId. */
     public static final TilesetId MICROSOFT_DEM = fromString("microsoft.dem");
 
+    /** Static value microsoft.dem.contours for TilesetId. */
+    public static final TilesetId MICROSOFT_DEM_CONTOURS = fromString("microsoft.dem.contours");
+
     /**
      * Creates or finds a TilesetId from its string representation.
      *

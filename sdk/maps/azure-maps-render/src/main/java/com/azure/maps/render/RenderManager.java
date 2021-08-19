@@ -44,7 +44,11 @@ public final class RenderManager {
         Objects.requireNonNull(httpPipeline, "'httpPipeline' cannot be null.");
         Objects.requireNonNull(profile, "'profile' cannot be null.");
         this.clientObject =
-            new RenderClientBuilder().pipeline(httpPipeline).defaultPollInterval(defaultPollInterval).buildClient();
+            new RenderClientBuilder()
+                .pipeline(httpPipeline)
+                .endpoint(profile.getEnvironment().getResourceManagerEndpoint())
+                .defaultPollInterval(defaultPollInterval)
+                .buildClient();
     }
 
     /**

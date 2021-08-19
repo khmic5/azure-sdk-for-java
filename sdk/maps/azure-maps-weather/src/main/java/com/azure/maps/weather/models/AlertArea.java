@@ -8,6 +8,7 @@ import com.azure.core.annotation.Fluent;
 import com.azure.core.util.logging.ClientLogger;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.time.OffsetDateTime;
 
 /**
  * Information about a severe weather alert issued within an affected area(s). If multiple alerts are active for the
@@ -38,7 +39,7 @@ public final class AlertArea {
      * coordinate location.
      */
     @JsonProperty(value = "startTime")
-    private String startTime;
+    private OffsetDateTime startTime;
 
     /*
      * The end date and time of the alert in ISO 8601 format, for example,
@@ -47,7 +48,7 @@ public final class AlertArea {
      * coordinate location.
      */
     @JsonProperty(value = "endTime")
-    private String endTime;
+    private OffsetDateTime endTime;
 
     /*
      * The latest status of the alert in the current area.
@@ -123,7 +124,7 @@ public final class AlertArea {
      *
      * @return the startTime value.
      */
-    public String startTime() {
+    public OffsetDateTime startTime() {
         return this.startTime;
     }
 
@@ -135,7 +136,7 @@ public final class AlertArea {
      * @param startTime the startTime value to set.
      * @return the AlertArea object itself.
      */
-    public AlertArea withStartTime(String startTime) {
+    public AlertArea withStartTime(OffsetDateTime startTime) {
         this.startTime = startTime;
         return this;
     }
@@ -147,7 +148,7 @@ public final class AlertArea {
      *
      * @return the endTime value.
      */
-    public String endTime() {
+    public OffsetDateTime endTime() {
         return this.endTime;
     }
 
@@ -159,7 +160,7 @@ public final class AlertArea {
      * @param endTime the endTime value to set.
      * @return the AlertArea object itself.
      */
-    public AlertArea withEndTime(String endTime) {
+    public AlertArea withEndTime(OffsetDateTime endTime) {
         this.endTime = endTime;
         return this;
     }

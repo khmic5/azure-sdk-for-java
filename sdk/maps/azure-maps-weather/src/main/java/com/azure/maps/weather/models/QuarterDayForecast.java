@@ -8,6 +8,7 @@ import com.azure.core.annotation.Fluent;
 import com.azure.core.util.logging.ClientLogger;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.time.OffsetDateTime;
 
 /** The QuarterDayForecast model. */
 @Fluent
@@ -15,8 +16,7 @@ public final class QuarterDayForecast {
     @JsonIgnore private final ClientLogger logger = new ClientLogger(QuarterDayForecast.class);
 
     /*
-     * Date and time of the forecast in ISO 8601 format, for example,
-     * 2019-10-27T19:39:57-08:00.
+     * Date of the forecast as example, 2019-10-27T00:00:00
      */
     @JsonProperty(value = "date")
     private String date;
@@ -26,7 +26,7 @@ public final class QuarterDayForecast {
      * 8601 format, for example, 2019-10-27T19:39:57-08:00.
      */
     @JsonProperty(value = "effectiveDate")
-    private String effectiveDate;
+    private OffsetDateTime effectiveDate;
 
     /*
      * Quarter of the day.
@@ -167,7 +167,7 @@ public final class QuarterDayForecast {
     private WeatherUnit ice;
 
     /**
-     * Get the date property: Date and time of the forecast in ISO 8601 format, for example, 2019-10-27T19:39:57-08:00.
+     * Get the date property: Date of the forecast as example, 2019-10-27T00:00:00.
      *
      * @return the date value.
      */
@@ -176,7 +176,7 @@ public final class QuarterDayForecast {
     }
 
     /**
-     * Set the date property: Date and time of the forecast in ISO 8601 format, for example, 2019-10-27T19:39:57-08:00.
+     * Set the date property: Date of the forecast as example, 2019-10-27T00:00:00.
      *
      * @param date the date value to set.
      * @return the QuarterDayForecast object itself.
@@ -192,7 +192,7 @@ public final class QuarterDayForecast {
      *
      * @return the effectiveDate value.
      */
-    public String effectiveDate() {
+    public OffsetDateTime effectiveDate() {
         return this.effectiveDate;
     }
 
@@ -203,7 +203,7 @@ public final class QuarterDayForecast {
      * @param effectiveDate the effectiveDate value to set.
      * @return the QuarterDayForecast object itself.
      */
-    public QuarterDayForecast withEffectiveDate(String effectiveDate) {
+    public QuarterDayForecast withEffectiveDate(OffsetDateTime effectiveDate) {
         this.effectiveDate = effectiveDate;
         return this;
     }

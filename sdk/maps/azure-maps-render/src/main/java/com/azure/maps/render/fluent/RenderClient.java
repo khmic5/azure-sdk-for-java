@@ -27,6 +27,13 @@ public interface RenderClient {
     Geography getGeography();
 
     /**
+     * Gets server parameter.
+     *
+     * @return the endpoint value.
+     */
+    String getEndpoint();
+
+    /**
      * Gets The HTTP pipeline to send requests through.
      *
      * @return the httpPipeline value.

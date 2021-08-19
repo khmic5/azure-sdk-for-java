@@ -6,11 +6,16 @@ package com.azure.maps.render.fluent;
 
 import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceMethod;
+import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.StreamResponse;
 import com.azure.core.util.Context;
+import com.azure.maps.render.fluent.models.MapAttributionResultV2Inner;
+import com.azure.maps.render.fluent.models.MapTilesetResultV2Inner;
 import com.azure.maps.render.models.TileSize;
 import com.azure.maps.render.models.TilesetId;
 import java.io.InputStream;
+import java.time.OffsetDateTime;
+import java.util.List;
 
 /** An instance of this class provides access to all the operations defined in RenderV2sClient. */
 public interface RenderV2sClient {
@@ -109,9 +114,102 @@ public interface RenderV2sClient {
         int zoom,
         int xTileIndex,
         int yTileIndex,
-        String timestamp,
+        OffsetDateTime timestamp,
         TileSize tileSize,
         String language,
         String view,
         Context context);
+
+    /**
+     * **Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>The Get Map Tileset API allows users to request metadata for a tileset.
+     *
+     * @param tilesetId A tileset is a collection of raster or vector data broken up into a uniform grid of square tiles
+     *     at preset zoom levels. Every tileset has a **tilesetId** to use when making requests. The **tilesetId** for
+     *     tilesets created using [Azure Maps Creator](https://aka.ms/amcreator) are generated through the [Tileset
+     *     Create API](https://docs.microsoft.com/en-us/rest/api/maps/tileset). The ready-to-use tilesets supplied by
+     *     Azure Maps are listed below. For example, microsoft.base.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return metadata for a tileset in the TileJSON format.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    MapTilesetResultV2Inner getMapTileset(TilesetId tilesetId);
+
+    /**
+     * **Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>The Get Map Tileset API allows users to request metadata for a tileset.
+     *
+     * @param tilesetId A tileset is a collection of raster or vector data broken up into a uniform grid of square tiles
+     *     at preset zoom levels. Every tileset has a **tilesetId** to use when making requests. The **tilesetId** for
+     *     tilesets created using [Azure Maps Creator](https://aka.ms/amcreator) are generated through the [Tileset
+     *     Create API](https://docs.microsoft.com/en-us/rest/api/maps/tileset). The ready-to-use tilesets supplied by
+     *     Azure Maps are listed below. For example, microsoft.base.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return metadata for a tileset in the TileJSON format.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    Response<MapTilesetResultV2Inner> getMapTilesetWithResponse(TilesetId tilesetId, Context context);
+
+    /**
+     * **Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>The Get Map Attribution API allows users to request map copyright attribution information for a section of a
+     * tileset.
+     *
+     * @param tilesetId A tileset is a collection of raster or vector data broken up into a uniform grid of square tiles
+     *     at preset zoom levels. Every tileset has a **tilesetId** to use when making requests. The **tilesetId** for
+     *     tilesets created using [Azure Maps Creator](https://aka.ms/amcreator) are generated through the [Tileset
+     *     Create API](https://docs.microsoft.com/en-us/rest/api/maps/tileset). The ready-to-use tilesets supplied by
+     *     Azure Maps are listed below. For example, microsoft.base.
+     * @param zoom Zoom level for the desired tile. Please find TilesetID list below for more details on supported zoom
+     *     level for each tilesetId.&lt;br&gt;
+     *     <p>Please see [Zoom Levels and Tile
+     *     Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
+     * @param bounds The string that represents the rectangular area of a bounding box. The bounds parameter is defined
+     *     by the 4 bounding box coordinates, with WGS84 longitude and latitude of the southwest corner followed by
+     *     WGS84 longitude and latitude of the northeast corner. The string is presented in the following format:
+     *     `[SouthwestCorner_Longitude, SouthwestCorner_Latitude, NortheastCorner_Longitude, NortheastCorner_Latitude]`.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return copyright attribution for the requested section of a tileset.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    MapAttributionResultV2Inner getMapAttribution(TilesetId tilesetId, int zoom, List<String> bounds);
+
+    /**
+     * **Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>The Get Map Attribution API allows users to request map copyright attribution information for a section of a
+     * tileset.
+     *
+     * @param tilesetId A tileset is a collection of raster or vector data broken up into a uniform grid of square tiles
+     *     at preset zoom levels. Every tileset has a **tilesetId** to use when making requests. The **tilesetId** for
+     *     tilesets created using [Azure Maps Creator](https://aka.ms/amcreator) are generated through the [Tileset
+     *     Create API](https://docs.microsoft.com/en-us/rest/api/maps/tileset). The ready-to-use tilesets supplied by
+     *     Azure Maps are listed below. For example, microsoft.base.
+     * @param zoom Zoom level for the desired tile. Please find TilesetID list below for more details on supported zoom
+     *     level for each tilesetId.&lt;br&gt;
+     *     <p>Please see [Zoom Levels and Tile
+     *     Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
+     * @param bounds The string that represents the rectangular area of a bounding box. The bounds parameter is defined
+     *     by the 4 bounding box coordinates, with WGS84 longitude and latitude of the southwest corner followed by
+     *     WGS84 longitude and latitude of the northeast corner. The string is presented in the following format:
+     *     `[SouthwestCorner_Longitude, SouthwestCorner_Latitude, NortheastCorner_Longitude, NortheastCorner_Latitude]`.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return copyright attribution for the requested section of a tileset.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    Response<MapAttributionResultV2Inner> getMapAttributionWithResponse(
+        TilesetId tilesetId, int zoom, List<String> bounds, Context context);
 }

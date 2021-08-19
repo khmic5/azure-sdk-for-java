@@ -2,7 +2,7 @@
 
 Azure Resource Manager Render client library for Java.
 
-This package contains Microsoft Azure SDK for Render Management SDK. Azure Maps Render REST APIs. Package tag 2.0-preview. For documentation on how to use this package, please see [Azure Management Libraries for Java](https://aka.ms/azsdk/java/mgmt).
+This package contains Microsoft Azure SDK for Render Management SDK. Azure Maps Render REST APIs. Package tag 2.1-preview. For documentation on how to use this package, please see [Azure Management Libraries for Java](https://aka.ms/azsdk/java/mgmt).
 
 ## We'd love to hear your feedback
 

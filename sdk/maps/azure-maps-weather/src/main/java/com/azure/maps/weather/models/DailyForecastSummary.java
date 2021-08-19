@@ -8,6 +8,7 @@ import com.azure.core.annotation.Fluent;
 import com.azure.core.util.logging.ClientLogger;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.time.OffsetDateTime;
 
 /**
  * Summary for the main conditions for the requested time period. Notice that summary can cover only part of the time
@@ -22,14 +23,14 @@ public final class DailyForecastSummary {
      * format, for example, 2019-10-27T19:39:57-08:00.
      */
     @JsonProperty(value = "startDate")
-    private String startDate;
+    private OffsetDateTime startDate;
 
     /*
      * Date and time that the summary period ends, displayed in ISO 8601
      * format, for example, 2019-10-27T19:39:57-08:00.
      */
     @JsonProperty(value = "endDate")
-    private String endDate;
+    private OffsetDateTime endDate;
 
     /*
      * severity
@@ -55,7 +56,7 @@ public final class DailyForecastSummary {
      *
      * @return the startDate value.
      */
-    public String startDate() {
+    public OffsetDateTime startDate() {
         return this.startDate;
     }
 
@@ -66,7 +67,7 @@ public final class DailyForecastSummary {
      * @param startDate the startDate value to set.
      * @return the DailyForecastSummary object itself.
      */
-    public DailyForecastSummary withStartDate(String startDate) {
+    public DailyForecastSummary withStartDate(OffsetDateTime startDate) {
         this.startDate = startDate;
         return this;
     }
@@ -77,7 +78,7 @@ public final class DailyForecastSummary {
      *
      * @return the endDate value.
      */
-    public String endDate() {
+    public OffsetDateTime endDate() {
         return this.endDate;
     }
 
@@ -88,7 +89,7 @@ public final class DailyForecastSummary {
      * @param endDate the endDate value to set.
      * @return the DailyForecastSummary object itself.
      */
-    public DailyForecastSummary withEndDate(String endDate) {
+    public DailyForecastSummary withEndDate(OffsetDateTime endDate) {
         this.endDate = endDate;
         return this;
     }

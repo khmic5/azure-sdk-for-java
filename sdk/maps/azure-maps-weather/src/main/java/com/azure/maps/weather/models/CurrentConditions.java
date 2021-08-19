@@ -8,6 +8,7 @@ import com.azure.core.annotation.Fluent;
 import com.azure.core.util.logging.ClientLogger;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.time.OffsetDateTime;
 
 /** The CurrentConditions model. */
 @Fluent
@@ -19,7 +20,7 @@ public final class CurrentConditions {
      * for example, 2019-10-27T19:39:57-08:00.
      */
     @JsonProperty(value = "dateTime")
-    private String dateTime;
+    private OffsetDateTime dateTime;
 
     /*
      * Phrase description of the current weather condition.  Displayed in
@@ -197,7 +198,7 @@ public final class CurrentConditions {
      *
      * @return the dateTime value.
      */
-    public String dateTime() {
+    public OffsetDateTime dateTime() {
         return this.dateTime;
     }
 
@@ -208,7 +209,7 @@ public final class CurrentConditions {
      * @param dateTime the dateTime value to set.
      * @return the CurrentConditions object itself.
      */
-    public CurrentConditions withDateTime(String dateTime) {
+    public CurrentConditions withDateTime(OffsetDateTime dateTime) {
         this.dateTime = dateTime;
         return this;
     }

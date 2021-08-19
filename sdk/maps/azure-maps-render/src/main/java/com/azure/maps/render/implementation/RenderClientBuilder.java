@@ -59,6 +59,22 @@ public final class RenderClientBuilder {
     }
 
     /*
+     * server parameter
+     */
+    private String endpoint;
+
+    /**
+     * Sets server parameter.
+     *
+     * @param endpoint the endpoint value.
+     * @return the RenderClientBuilder.
+     */
+    public RenderClientBuilder endpoint(String endpoint) {
+        this.endpoint = endpoint;
+        return this;
+    }
+
+    /*
      * The environment to connect to
      */
     private AzureEnvironment environment;
@@ -131,6 +147,9 @@ public final class RenderClientBuilder {
         if (geography == null) {
             this.geography = Geography.US;
         }
+        if (endpoint == null) {
+            this.endpoint = "https://atlas.microsoft.com";
+        }
         if (environment == null) {
             this.environment = AzureEnvironment.AZURE;
         }
@@ -147,7 +166,8 @@ public final class RenderClientBuilder {
             this.serializerAdapter = SerializerFactory.createDefaultManagementSerializerAdapter();
         }
         RenderClientImpl client =
-            new RenderClientImpl(pipeline, serializerAdapter, defaultPollInterval, environment, xMsClientId, geography);
+            new RenderClientImpl(
+                pipeline, serializerAdapter, defaultPollInterval, environment, xMsClientId, geography, endpoint);
         return client;
     }
 }

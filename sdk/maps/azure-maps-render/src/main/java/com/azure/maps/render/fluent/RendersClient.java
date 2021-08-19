@@ -46,10 +46,8 @@ public interface RendersClient {
      * referenced in the request - Add labels to the pushpins
      *
      * <p>In S1 you can: - Render pushpins through [Azure Maps Data Service](https://aka.ms/AzureMapsMapDataService) -
-     * Specify multiple pushpin styles - Provide custom pushpin images stored in [Azure Maps Data
-     * Service](https://aka.ms/AzureMapsMapDataService) - Render circle, polyline and polygon geometry types. - Render
-     * of supported GeoJSON geometry types uploaded through [Azure Maps Data
-     * Service](https://aka.ms/AzureMapsMapDataService)
+     * Specify multiple pushpin styles - Render circle, polyline and polygon geometry types. - Render of supported
+     * GeoJSON geometry types uploaded through [Azure Maps Data Service](https://aka.ms/AzureMapsMapDataService)
      *
      * <p>Please see [How-to-Guide](https://aka.ms/AzureMapsHowToGuideImageCompositor) for detailed examples.
      *
@@ -90,10 +88,8 @@ public interface RendersClient {
      * referenced in the request - Add labels to the pushpins
      *
      * <p>In S1 you can: - Render pushpins through [Azure Maps Data Service](https://aka.ms/AzureMapsMapDataService) -
-     * Specify multiple pushpin styles - Provide custom pushpin images stored in [Azure Maps Data
-     * Service](https://aka.ms/AzureMapsMapDataService) - Render circle, polyline and polygon geometry types. - Render
-     * of supported GeoJSON geometry types uploaded through [Azure Maps Data
-     * Service](https://aka.ms/AzureMapsMapDataService)
+     * Specify multiple pushpin styles - Render circle, polyline and polygon geometry types. - Render of supported
+     * GeoJSON geometry types uploaded through [Azure Maps Data Service](https://aka.ms/AzureMapsMapDataService)
      *
      * <p>Please see [How-to-Guide](https://aka.ms/AzureMapsHowToGuideImageCompositor) for detailed examples.
      *
@@ -201,13 +197,9 @@ public interface RendersClient {
      *     RGB channels of the pixels in the image but will leave the alpha (opacity) channel unchanged. This would
      *     usually only be done with a solid-color custom image.
      *     <p>### Getting Pushpins from Azure Maps Data Storage
-     *     <p>For all Azure Maps account SKUs other than S0, the pushpin image and location information can be obtained
-     *     from Azure Maps Data Storage. After uploading a pushpin image or a GeoJSON document containing pin locations,
-     *     the Data Storage service returns a Unique Data ID (UDID) that you can use to reference the data in the pins
-     *     parameter.
-     *     <p>To use a custom pushpin image from Azure Maps Data Storage, specify the UDID prefixed by 'udid-' as the
-     *     name of the pushpin style. For example,
-     *     <p>`pins=udid-fe22c504-3a81-4fcd-adc6-a3507ce866c1||-122 45`
+     *     <p>For all Azure Maps account SKUs other than S0, the pushpin location information can be obtained from Azure
+     *     Maps Data Storage. After uploading a GeoJSON document containing pin locations, the Data Storage service
+     *     returns a Unique Data ID (UDID) that you can use to reference the data in the pins parameter.
      *     <p>To use the point geometry from an uploaded GeoJSON document as the pin locations, specify the UDID in the
      *     locations section of the pins parameter. For example,
      *     <p>`pins=default||udid-29dc105a-dee7-409f-a3f9-22b066ae4713`

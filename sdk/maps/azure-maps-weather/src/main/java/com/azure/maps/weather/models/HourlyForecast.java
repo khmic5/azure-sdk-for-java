@@ -8,6 +8,7 @@ import com.azure.core.annotation.Fluent;
 import com.azure.core.util.logging.ClientLogger;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.time.OffsetDateTime;
 
 /** The HourlyForecast model. */
 @Fluent
@@ -19,7 +20,7 @@ public final class HourlyForecast {
      * 2019-10-27T19:39:57-08:00.
      */
     @JsonProperty(value = "date")
-    private String date;
+    private OffsetDateTime date;
 
     /*
      * Numeric value representing an image that displays the `iconPhrase`.
@@ -188,7 +189,7 @@ public final class HourlyForecast {
      *
      * @return the date value.
      */
-    public String date() {
+    public OffsetDateTime date() {
         return this.date;
     }
 
@@ -198,7 +199,7 @@ public final class HourlyForecast {
      * @param date the date value to set.
      * @return the HourlyForecast object itself.
      */
-    public HourlyForecast withDate(String date) {
+    public HourlyForecast withDate(OffsetDateTime date) {
         this.date = date;
         return this;
     }
