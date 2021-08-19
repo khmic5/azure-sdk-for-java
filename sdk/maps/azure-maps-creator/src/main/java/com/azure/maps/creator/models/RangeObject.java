@@ -18,32 +18,32 @@ public final class RangeObject {
      * All the number x that x ≥ minimum.
      */
     @JsonProperty(value = "minimum")
-    private Double minimum;
+    private String minimum;
 
     /*
      * All the number x that x ≤ maximum.
      */
     @JsonProperty(value = "maximum")
-    private Double maximum;
+    private String maximum;
 
     /*
      * All the number x that x > exclusiveMinimum.
      */
     @JsonProperty(value = "exclusiveMinimum")
-    private Double exclusiveMinimum;
+    private String exclusiveMinimum;
 
     /*
      * All the number x that x < exclusiveMaximum.
      */
     @JsonProperty(value = "exclusiveMaximum")
-    private Double exclusiveMaximum;
+    private String exclusiveMaximum;
 
     /**
      * Get the minimum property: All the number x that x ≥ minimum.
      *
      * @return the minimum value.
      */
-    public Double minimum() {
+    public String minimum() {
         return this.minimum;
     }
 
@@ -53,7 +53,7 @@ public final class RangeObject {
      * @param minimum the minimum value to set.
      * @return the RangeObject object itself.
      */
-    public RangeObject withMinimum(Double minimum) {
+    public RangeObject withMinimum(String minimum) {
         this.minimum = minimum;
         return this;
     }
@@ -63,7 +63,7 @@ public final class RangeObject {
      *
      * @return the maximum value.
      */
-    public Double maximum() {
+    public String maximum() {
         return this.maximum;
     }
 
@@ -73,7 +73,7 @@ public final class RangeObject {
      * @param maximum the maximum value to set.
      * @return the RangeObject object itself.
      */
-    public RangeObject withMaximum(Double maximum) {
+    public RangeObject withMaximum(String maximum) {
         this.maximum = maximum;
         return this;
     }
@@ -83,7 +83,7 @@ public final class RangeObject {
      *
      * @return the exclusiveMinimum value.
      */
-    public Double exclusiveMinimum() {
+    public String exclusiveMinimum() {
         return this.exclusiveMinimum;
     }
 
@@ -93,7 +93,7 @@ public final class RangeObject {
      * @param exclusiveMinimum the exclusiveMinimum value to set.
      * @return the RangeObject object itself.
      */
-    public RangeObject withExclusiveMinimum(Double exclusiveMinimum) {
+    public RangeObject withExclusiveMinimum(String exclusiveMinimum) {
         this.exclusiveMinimum = exclusiveMinimum;
         return this;
     }
@@ -103,7 +103,7 @@ public final class RangeObject {
      *
      * @return the exclusiveMaximum value.
      */
-    public Double exclusiveMaximum() {
+    public String exclusiveMaximum() {
         return this.exclusiveMaximum;
     }
 
@@ -113,7 +113,7 @@ public final class RangeObject {
      * @param exclusiveMaximum the exclusiveMaximum value to set.
      * @return the RangeObject object itself.
      */
-    public RangeObject withExclusiveMaximum(Double exclusiveMaximum) {
+    public RangeObject withExclusiveMaximum(String exclusiveMaximum) {
         this.exclusiveMaximum = exclusiveMaximum;
         return this;
     }
