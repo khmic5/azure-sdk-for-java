@@ -4,28 +4,39 @@
 
 package com.azure.maps.creator.models;
 
-import com.azure.maps.creator.fluent.models.GreatCircleDistanceResponseInner;
+import com.azure.core.annotation.Immutable;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** An immutable client-side representation of GreatCircleDistanceResponse. */
-public interface GreatCircleDistanceResponse {
+/** This object is returned from a successful Great Circle Distance call. */
+@Immutable
+public final class GreatCircleDistanceResponse {
+    /*
+     * Summary object
+     */
+    @JsonProperty(value = "summary", access = JsonProperty.Access.WRITE_ONLY)
+    private GreatCircleDistanceResponseSummary summary;
+
+    /*
+     * Result Object
+     */
+    @JsonProperty(value = "result", access = JsonProperty.Access.WRITE_ONLY)
+    private GreatCircleDistanceResponseResult result;
+
     /**
-     * Gets the summary property: Summary object.
+     * Get the summary property: Summary object.
      *
      * @return the summary value.
      */
-    GreatCircleDistanceResponseSummary summary();
+    public GreatCircleDistanceResponseSummary getSummary() {
+        return this.summary;
+    }
 
     /**
-     * Gets the result property: Result Object.
+     * Get the result property: Result Object.
      *
      * @return the result value.
      */
-    GreatCircleDistanceResponseResult result();
-
-    /**
-     * Gets the inner com.azure.maps.creator.fluent.models.GreatCircleDistanceResponseInner object.
-     *
-     * @return the inner object.
-     */
-    GreatCircleDistanceResponseInner innerModel();
+    public GreatCircleDistanceResponseResult getResult() {
+        return this.result;
+    }
 }

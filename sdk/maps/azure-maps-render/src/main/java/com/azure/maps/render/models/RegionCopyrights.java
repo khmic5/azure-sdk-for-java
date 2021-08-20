@@ -5,16 +5,12 @@
 package com.azure.maps.render.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /** The RegionCopyrights model. */
 @Immutable
 public final class RegionCopyrights {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(RegionCopyrights.class);
-
     /*
      * Copyrights array
      */
@@ -32,7 +28,7 @@ public final class RegionCopyrights {
      *
      * @return the copyrights value.
      */
-    public List<String> copyrights() {
+    public List<String> getCopyrights() {
         return this.copyrights;
     }
 
@@ -41,18 +37,7 @@ public final class RegionCopyrights {
      *
      * @return the country value.
      */
-    public RegionCopyrightsCountry country() {
+    public RegionCopyrightsCountry getCountry() {
         return this.country;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (country() != null) {
-            country().validate();
-        }
     }
 }

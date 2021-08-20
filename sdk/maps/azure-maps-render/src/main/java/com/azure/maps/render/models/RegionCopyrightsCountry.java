@@ -5,20 +5,16 @@
 package com.azure.maps.render.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** Country property. */
 @Immutable
 public final class RegionCopyrightsCountry {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(RegionCopyrightsCountry.class);
-
     /*
      * ISO3 property
      */
     @JsonProperty(value = "ISO3", access = JsonProperty.Access.WRITE_ONLY)
-    private String iso3;
+    private String iSO3;
 
     /*
      * Label property
@@ -27,12 +23,12 @@ public final class RegionCopyrightsCountry {
     private String label;
 
     /**
-     * Get the iso3 property: ISO3 property.
+     * Get the iSO3 property: ISO3 property.
      *
-     * @return the iso3 value.
+     * @return the iSO3 value.
      */
-    public String iso3() {
-        return this.iso3;
+    public String getISO3() {
+        return this.iSO3;
     }
 
     /**
@@ -40,15 +36,7 @@ public final class RegionCopyrightsCountry {
      *
      * @return the label value.
      */
-    public String label() {
+    public String getLabel() {
         return this.label;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

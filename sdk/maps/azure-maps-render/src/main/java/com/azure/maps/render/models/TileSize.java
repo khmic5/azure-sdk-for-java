@@ -11,10 +11,10 @@ import java.util.Collection;
 /** Defines values for TileSize. */
 public final class TileSize extends ExpandableStringEnum<TileSize> {
     /** Static value 256 for TileSize. */
-    public static final TileSize TWO_FIVE_SIX = fromString("256");
+    public static final TileSize TWO_HUNDRED_FIFTY_SIX = fromString("256");
 
     /** Static value 512 for TileSize. */
-    public static final TileSize FIVE_ONE_TWO = fromString("512");
+    public static final TileSize FIVE_HUNDRED_TWELVE = fromString("512");
 
     /**
      * Creates or finds a TileSize from its string representation.

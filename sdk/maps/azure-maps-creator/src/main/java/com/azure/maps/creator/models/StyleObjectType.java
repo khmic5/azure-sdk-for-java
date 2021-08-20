@@ -11,13 +11,13 @@ import java.util.Collection;
 /** Defines values for StyleObjectType. */
 public final class StyleObjectType extends ExpandableStringEnum<StyleObjectType> {
     /** Static value boolean for StyleObjectType. */
-    public static final StyleObjectType BOOLEAN = fromString("boolean");
+    public static final StyleObjectType BOOLEAN_TYPE_STYLE_RULE = fromString("boolean");
 
     /** Static value number for StyleObjectType. */
-    public static final StyleObjectType NUMBER = fromString("number");
+    public static final StyleObjectType NUMBER_TYPE_STYLE_RULE = fromString("number");
 
     /** Static value string for StyleObjectType. */
-    public static final StyleObjectType STRING = fromString("string");
+    public static final StyleObjectType STRING_TYPE_STYLE_RULE = fromString("string");
 
     /**
      * Creates or finds a StyleObjectType from its string representation.

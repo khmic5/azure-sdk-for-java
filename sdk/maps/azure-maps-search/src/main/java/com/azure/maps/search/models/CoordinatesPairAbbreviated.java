@@ -5,15 +5,11 @@
 package com.azure.maps.search.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** A location represented as a latitude and longitude using short names 'lat' &amp; 'lon'. */
 @Fluent
 public class CoordinatesPairAbbreviated {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(CoordinatesPairAbbreviated.class);
-
     /*
      * Latitude property
      */
@@ -31,7 +27,7 @@ public class CoordinatesPairAbbreviated {
      *
      * @return the lat value.
      */
-    public Double lat() {
+    public Double getLat() {
         return this.lat;
     }
 
@@ -41,7 +37,7 @@ public class CoordinatesPairAbbreviated {
      * @param lat the lat value to set.
      * @return the CoordinatesPairAbbreviated object itself.
      */
-    public CoordinatesPairAbbreviated withLat(Double lat) {
+    public CoordinatesPairAbbreviated setLat(Double lat) {
         this.lat = lat;
         return this;
     }
@@ -51,7 +47,7 @@ public class CoordinatesPairAbbreviated {
      *
      * @return the lon value.
      */
-    public Double lon() {
+    public Double getLon() {
         return this.lon;
     }
 
@@ -61,16 +57,8 @@ public class CoordinatesPairAbbreviated {
      * @param lon the lon value to set.
      * @return the CoordinatesPairAbbreviated object itself.
      */
-    public CoordinatesPairAbbreviated withLon(Double lon) {
+    public CoordinatesPairAbbreviated setLon(Double lon) {
         this.lon = lon;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

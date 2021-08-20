@@ -5,15 +5,11 @@
 package com.azure.maps.traffic.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** The TrafficsGetTrafficIncidentTileHeaders model. */
 @Fluent
 public final class TrafficsGetTrafficIncidentTileHeaders {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(TrafficsGetTrafficIncidentTileHeaders.class);
-
     /*
      * The Content-Type property.
      */
@@ -25,7 +21,7 @@ public final class TrafficsGetTrafficIncidentTileHeaders {
      *
      * @return the contentType value.
      */
-    public String contentType() {
+    public String getContentType() {
         return this.contentType;
     }
 
@@ -35,16 +31,8 @@ public final class TrafficsGetTrafficIncidentTileHeaders {
      * @param contentType the contentType value to set.
      * @return the TrafficsGetTrafficIncidentTileHeaders object itself.
      */
-    public TrafficsGetTrafficIncidentTileHeaders withContentType(String contentType) {
+    public TrafficsGetTrafficIncidentTileHeaders setContentType(String contentType) {
         this.contentType = contentType;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

@@ -5,15 +5,11 @@
 package com.azure.maps.weather.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** A rating that indicates how blinding the sun is for the driver. */
 @Fluent
 public final class SunGlare {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(SunGlare.class);
-
     /*
      * If the vehicle heading value is not provided for a waypoint, then the
      * service will calculate a heading based upon the location of neighboring
@@ -38,7 +34,7 @@ public final class SunGlare {
      *
      * @return the calculatedVehicleHeading value.
      */
-    public Integer calculatedVehicleHeading() {
+    public Integer getCalculatedVehicleHeading() {
         return this.calculatedVehicleHeading;
     }
 
@@ -49,7 +45,7 @@ public final class SunGlare {
      * @param calculatedVehicleHeading the calculatedVehicleHeading value to set.
      * @return the SunGlare object itself.
      */
-    public SunGlare withCalculatedVehicleHeading(Integer calculatedVehicleHeading) {
+    public SunGlare setCalculatedVehicleHeading(Integer calculatedVehicleHeading) {
         this.calculatedVehicleHeading = calculatedVehicleHeading;
         return this;
     }
@@ -61,7 +57,7 @@ public final class SunGlare {
      *
      * @return the glareIndex value.
      */
-    public Integer glareIndex() {
+    public Integer getGlareIndex() {
         return this.glareIndex;
     }
 
@@ -73,16 +69,8 @@ public final class SunGlare {
      * @param glareIndex the glareIndex value to set.
      * @return the SunGlare object itself.
      */
-    public SunGlare withGlareIndex(Integer glareIndex) {
+    public SunGlare setGlareIndex(Integer glareIndex) {
         this.glareIndex = glareIndex;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

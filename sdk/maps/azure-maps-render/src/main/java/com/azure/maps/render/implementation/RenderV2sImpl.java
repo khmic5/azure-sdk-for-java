@@ -4,107 +4,515 @@
 
 package com.azure.maps.render.implementation;
 
+import com.azure.core.annotation.ExpectedResponses;
+import com.azure.core.annotation.Get;
+import com.azure.core.annotation.HeaderParam;
+import com.azure.core.annotation.Host;
+import com.azure.core.annotation.HostParam;
+import com.azure.core.annotation.QueryParam;
+import com.azure.core.annotation.ReturnType;
+import com.azure.core.annotation.ServiceInterface;
+import com.azure.core.annotation.ServiceMethod;
+import com.azure.core.annotation.UnexpectedResponseExceptionType;
 import com.azure.core.http.rest.Response;
-import com.azure.core.http.rest.SimpleResponse;
+import com.azure.core.http.rest.RestProxy;
 import com.azure.core.http.rest.StreamResponse;
-import com.azure.core.util.Context;
-import com.azure.core.util.logging.ClientLogger;
-import com.azure.maps.render.fluent.RenderV2sClient;
-import com.azure.maps.render.fluent.models.MapAttributionResultV2Inner;
-import com.azure.maps.render.fluent.models.MapTilesetResultV2Inner;
+import com.azure.core.util.serializer.CollectionFormat;
+import com.azure.core.util.serializer.JacksonAdapter;
+import com.azure.maps.render.models.ErrorResponseException;
 import com.azure.maps.render.models.MapAttributionResultV2;
 import com.azure.maps.render.models.MapTilesetResultV2;
-import com.azure.maps.render.models.RenderV2s;
 import com.azure.maps.render.models.TileSize;
-import com.azure.maps.render.models.TilesetId;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.azure.maps.render.models.TilesetID;
+import com.fasterxml.jackson.databind.util.ByteBufferBackedInputStream;
 import java.io.InputStream;
+import java.io.SequenceInputStream;
+import java.nio.ByteBuffer;
 import java.time.OffsetDateTime;
+import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.List;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
-public final class RenderV2sImpl implements RenderV2s {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(RenderV2sImpl.class);
+/** An instance of this class provides access to all the operations defined in RenderV2s. */
+public final class RenderV2sImpl {
+    /** The proxy service used to perform REST calls. */
+    private final RenderV2sService service;
 
-    private final RenderV2sClient innerClient;
+    /** The service client containing this operation class. */
+    private final RenderClientImpl client;
 
-    private final com.azure.maps.render.RenderManager serviceManager;
-
-    public RenderV2sImpl(RenderV2sClient innerClient, com.azure.maps.render.RenderManager serviceManager) {
-        this.innerClient = innerClient;
-        this.serviceManager = serviceManager;
+    /**
+     * Initializes an instance of RenderV2sImpl.
+     *
+     * @param client the instance of the service client containing this operation class.
+     */
+    RenderV2sImpl(RenderClientImpl client) {
+        this.service =
+                RestProxy.create(RenderV2sService.class, client.getHttpPipeline(), client.getSerializerAdapter());
+        this.client = client;
     }
 
-    public InputStream getMapTilePreview(TilesetId tilesetId, int zoom, int xTileIndex, int yTileIndex) {
-        return this.serviceClient().getMapTilePreview(tilesetId, zoom, xTileIndex, yTileIndex);
+    /**
+     * The interface defining all the services for RenderClientRenderV2s to be used by the proxy service to perform REST
+     * calls.
+     */
+    @Host("{$host}")
+    @ServiceInterface(name = "RenderClientRenderV2")
+    private interface RenderV2sService {
+        @Get("/map/tile")
+        @ExpectedResponses({200})
+        @UnexpectedResponseExceptionType(ErrorResponseException.class)
+        Mono<StreamResponse> getMapTilePreview(
+                @HostParam("$host") String host,
+                @HeaderParam("x-ms-client-id") String xMsClientId,
+                @QueryParam("api-version") String apiVersion,
+                @QueryParam("tilesetId") TilesetID tilesetId,
+                @QueryParam("zoom") int zoom,
+                @QueryParam("x") int xTileIndex,
+                @QueryParam("y") int yTileIndex,
+                @QueryParam("timeStamp") OffsetDateTime timeStamp,
+                @QueryParam("tileSize") TileSize tileSize,
+                @QueryParam("language") String language,
+                @QueryParam("view") String view,
+                @HeaderParam("Accept") String accept);
+
+        @Get("/map/tileset")
+        @ExpectedResponses({200})
+        @UnexpectedResponseExceptionType(ErrorResponseException.class)
+        Mono<Response<MapTilesetResultV2>> getMapTileset(
+                @HostParam("$host") String host,
+                @HeaderParam("x-ms-client-id") String xMsClientId,
+                @QueryParam("api-version") String apiVersion,
+                @QueryParam("tilesetId") TilesetID tilesetId,
+                @HeaderParam("Accept") String accept);
+
+        @Get("/map/attribution")
+        @ExpectedResponses({200})
+        @UnexpectedResponseExceptionType(ErrorResponseException.class)
+        Mono<Response<MapAttributionResultV2>> getMapAttribution(
+                @HostParam("$host") String host,
+                @HeaderParam("x-ms-client-id") String xMsClientId,
+                @QueryParam("api-version") String apiVersion,
+                @QueryParam("tilesetId") TilesetID tilesetId,
+                @QueryParam("zoom") int zoom,
+                @QueryParam("bounds") String bounds,
+                @HeaderParam("Accept") String accept);
     }
 
-    public StreamResponse getMapTilePreviewWithResponse(
-        TilesetId tilesetId,
-        int zoom,
-        int xTileIndex,
-        int yTileIndex,
-        OffsetDateTime timestamp,
-        TileSize tileSize,
-        String language,
-        String view,
-        Context context) {
-        return this
-            .serviceClient()
-            .getMapTilePreviewWithResponse(
-                tilesetId, zoom, xTileIndex, yTileIndex, timestamp, tileSize, language, view, context);
+    /**
+     * **Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>The Get Map Tiles API allows users to request map tiles in vector or raster formats typically to be integrated
+     * into a map control or SDK. Some example tiles that can be requested are Azure Maps road tiles, real-time Weather
+     * Radar tiles or the map tiles created using [Azure Maps Creator](https://aka.ms/amcreator). By default, Azure Maps
+     * uses vector tiles for its web map control (Web SDK) and Android SDK.
+     *
+     * @param tilesetId A tileset is a collection of raster or vector data broken up into a uniform grid of square tiles
+     *     at preset zoom levels. Every tileset has a **tilesetId** to use when making requests. The **tilesetId** for
+     *     tilesets created using [Azure Maps Creator](https://aka.ms/amcreator) are generated through the [Tileset
+     *     Create API](https://docs.microsoft.com/en-us/rest/api/maps/tileset). The ready-to-use tilesets supplied by
+     *     Azure Maps are listed below. For example, microsoft.base.
+     * @param zoom Zoom level for the desired tile. Please find TilesetID list below for more details on supported zoom
+     *     level for each tilesetId.&lt;br&gt;
+     *     <p>Please see [Zoom Levels and Tile
+     *     Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
+     * @param xTileIndex X coordinate of the tile on zoom grid. Value must be in the range [0,
+     *     2&lt;sup&gt;`zoom`&lt;/sup&gt; -1].
+     *     <p>Please see [Zoom Levels and Tile
+     *     Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
+     * @param yTileIndex Y coordinate of the tile on zoom grid. Value must be in the range [0,
+     *     2&lt;sup&gt;`zoom`&lt;/sup&gt; -1].
+     *     <p>Please see [Zoom Levels and Tile
+     *     Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
+     * @param timeStamp The desired date and time of the requested tile. This parameter must be specified in the
+     *     standard date-time format (e.g. 2019-11-14T16:03:00-08:00), as defined by [ISO
+     *     8601](https://en.wikipedia.org/wiki/ISO_8601). This parameter is only supported when tilesetId parameter is
+     *     set to one of the values below.
+     *     <p>* microsoft.weather.infrared.main: We provide tiles up to 3 hours in the past. Tiles are available in
+     *     10-minute intervals. We round the timeStamp value to the nearest 10-minute time frame. *
+     *     microsoft.weather.radar.main: We provide tiles up to 1.5 hours in the past and up to 2 hours in the future.
+     *     Tiles are available in 5-minute intervals. We round the timeStamp value to the nearest 5-minute time frame.
+     * @param tileSize The size of the returned map tile in pixels.
+     * @param language Language in which search results should be returned. Should be one of supported IETF language
+     *     tags, case insensitive. When data in specified language is not available for a specific field, default
+     *     language is used.
+     *     <p>Please refer to [Supported
+     *     Languages](https://docs.microsoft.com/en-us/azure/azure-maps/supported-languages) for details.
+     * @param view The View parameter specifies which set of geopolitically disputed content is returned via Azure Maps
+     *     services, including borders and labels displayed on the map. The View parameter (also referred to as “user
+     *     region parameter”) will show the correct maps for that country/region. By default, the View parameter is set
+     *     to “Unified” even if you haven’t defined it in the request. It is your responsibility to determine the
+     *     location of your users, and then set the View parameter correctly for that location. Alternatively, you have
+     *     the option to set ‘View=Auto’, which will return the map data based on the IP address of the request. The
+     *     View parameter in Azure Maps must be used in compliance with applicable laws, including those regarding
+     *     mapping, of the country where maps, images and other data and third party content that you are authorized to
+     *     access via Azure Maps is made available. Example: view=IN.
+     *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
+     *     available Views.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<StreamResponse> getMapTilePreviewWithResponseAsync(
+            TilesetID tilesetId,
+            int zoom,
+            int xTileIndex,
+            int yTileIndex,
+            OffsetDateTime timeStamp,
+            TileSize tileSize,
+            String language,
+            String view) {
+        final String apiVersion = "2.1";
+        final String accept = "application/json, image/jpeg, image/png, image/pbf, application/vnd.mapbox-vector-tile";
+        return service.getMapTilePreview(
+                this.client.getHost(),
+                this.client.getXMsClientId(),
+                apiVersion,
+                tilesetId,
+                zoom,
+                xTileIndex,
+                yTileIndex,
+                timeStamp,
+                tileSize,
+                language,
+                view,
+                accept);
     }
 
-    public MapTilesetResultV2 getMapTileset(TilesetId tilesetId) {
-        MapTilesetResultV2Inner inner = this.serviceClient().getMapTileset(tilesetId);
-        if (inner != null) {
-            return new MapTilesetResultV2Impl(inner, this.manager());
-        } else {
-            return null;
-        }
+    /**
+     * **Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>The Get Map Tiles API allows users to request map tiles in vector or raster formats typically to be integrated
+     * into a map control or SDK. Some example tiles that can be requested are Azure Maps road tiles, real-time Weather
+     * Radar tiles or the map tiles created using [Azure Maps Creator](https://aka.ms/amcreator). By default, Azure Maps
+     * uses vector tiles for its web map control (Web SDK) and Android SDK.
+     *
+     * @param tilesetId A tileset is a collection of raster or vector data broken up into a uniform grid of square tiles
+     *     at preset zoom levels. Every tileset has a **tilesetId** to use when making requests. The **tilesetId** for
+     *     tilesets created using [Azure Maps Creator](https://aka.ms/amcreator) are generated through the [Tileset
+     *     Create API](https://docs.microsoft.com/en-us/rest/api/maps/tileset). The ready-to-use tilesets supplied by
+     *     Azure Maps are listed below. For example, microsoft.base.
+     * @param zoom Zoom level for the desired tile. Please find TilesetID list below for more details on supported zoom
+     *     level for each tilesetId.&lt;br&gt;
+     *     <p>Please see [Zoom Levels and Tile
+     *     Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
+     * @param xTileIndex X coordinate of the tile on zoom grid. Value must be in the range [0,
+     *     2&lt;sup&gt;`zoom`&lt;/sup&gt; -1].
+     *     <p>Please see [Zoom Levels and Tile
+     *     Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
+     * @param yTileIndex Y coordinate of the tile on zoom grid. Value must be in the range [0,
+     *     2&lt;sup&gt;`zoom`&lt;/sup&gt; -1].
+     *     <p>Please see [Zoom Levels and Tile
+     *     Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
+     * @param timeStamp The desired date and time of the requested tile. This parameter must be specified in the
+     *     standard date-time format (e.g. 2019-11-14T16:03:00-08:00), as defined by [ISO
+     *     8601](https://en.wikipedia.org/wiki/ISO_8601). This parameter is only supported when tilesetId parameter is
+     *     set to one of the values below.
+     *     <p>* microsoft.weather.infrared.main: We provide tiles up to 3 hours in the past. Tiles are available in
+     *     10-minute intervals. We round the timeStamp value to the nearest 10-minute time frame. *
+     *     microsoft.weather.radar.main: We provide tiles up to 1.5 hours in the past and up to 2 hours in the future.
+     *     Tiles are available in 5-minute intervals. We round the timeStamp value to the nearest 5-minute time frame.
+     * @param tileSize The size of the returned map tile in pixels.
+     * @param language Language in which search results should be returned. Should be one of supported IETF language
+     *     tags, case insensitive. When data in specified language is not available for a specific field, default
+     *     language is used.
+     *     <p>Please refer to [Supported
+     *     Languages](https://docs.microsoft.com/en-us/azure/azure-maps/supported-languages) for details.
+     * @param view The View parameter specifies which set of geopolitically disputed content is returned via Azure Maps
+     *     services, including borders and labels displayed on the map. The View parameter (also referred to as “user
+     *     region parameter”) will show the correct maps for that country/region. By default, the View parameter is set
+     *     to “Unified” even if you haven’t defined it in the request. It is your responsibility to determine the
+     *     location of your users, and then set the View parameter correctly for that location. Alternatively, you have
+     *     the option to set ‘View=Auto’, which will return the map data based on the IP address of the request. The
+     *     View parameter in Azure Maps must be used in compliance with applicable laws, including those regarding
+     *     mapping, of the country where maps, images and other data and third party content that you are authorized to
+     *     access via Azure Maps is made available. Example: view=IN.
+     *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
+     *     available Views.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Flux<ByteBuffer> getMapTilePreviewAsync(
+            TilesetID tilesetId,
+            int zoom,
+            int xTileIndex,
+            int yTileIndex,
+            OffsetDateTime timeStamp,
+            TileSize tileSize,
+            String language,
+            String view) {
+        return getMapTilePreviewWithResponseAsync(
+                        tilesetId, zoom, xTileIndex, yTileIndex, timeStamp, tileSize, language, view)
+                .flatMapMany(StreamResponse::getValue);
     }
 
-    public Response<MapTilesetResultV2> getMapTilesetWithResponse(TilesetId tilesetId, Context context) {
-        Response<MapTilesetResultV2Inner> inner = this.serviceClient().getMapTilesetWithResponse(tilesetId, context);
-        if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
-                new MapTilesetResultV2Impl(inner.getValue(), this.manager()));
-        } else {
-            return null;
-        }
+    /**
+     * **Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>The Get Map Tiles API allows users to request map tiles in vector or raster formats typically to be integrated
+     * into a map control or SDK. Some example tiles that can be requested are Azure Maps road tiles, real-time Weather
+     * Radar tiles or the map tiles created using [Azure Maps Creator](https://aka.ms/amcreator). By default, Azure Maps
+     * uses vector tiles for its web map control (Web SDK) and Android SDK.
+     *
+     * @param tilesetId A tileset is a collection of raster or vector data broken up into a uniform grid of square tiles
+     *     at preset zoom levels. Every tileset has a **tilesetId** to use when making requests. The **tilesetId** for
+     *     tilesets created using [Azure Maps Creator](https://aka.ms/amcreator) are generated through the [Tileset
+     *     Create API](https://docs.microsoft.com/en-us/rest/api/maps/tileset). The ready-to-use tilesets supplied by
+     *     Azure Maps are listed below. For example, microsoft.base.
+     * @param zoom Zoom level for the desired tile. Please find TilesetID list below for more details on supported zoom
+     *     level for each tilesetId.&lt;br&gt;
+     *     <p>Please see [Zoom Levels and Tile
+     *     Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
+     * @param xTileIndex X coordinate of the tile on zoom grid. Value must be in the range [0,
+     *     2&lt;sup&gt;`zoom`&lt;/sup&gt; -1].
+     *     <p>Please see [Zoom Levels and Tile
+     *     Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
+     * @param yTileIndex Y coordinate of the tile on zoom grid. Value must be in the range [0,
+     *     2&lt;sup&gt;`zoom`&lt;/sup&gt; -1].
+     *     <p>Please see [Zoom Levels and Tile
+     *     Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
+     * @param timeStamp The desired date and time of the requested tile. This parameter must be specified in the
+     *     standard date-time format (e.g. 2019-11-14T16:03:00-08:00), as defined by [ISO
+     *     8601](https://en.wikipedia.org/wiki/ISO_8601). This parameter is only supported when tilesetId parameter is
+     *     set to one of the values below.
+     *     <p>* microsoft.weather.infrared.main: We provide tiles up to 3 hours in the past. Tiles are available in
+     *     10-minute intervals. We round the timeStamp value to the nearest 10-minute time frame. *
+     *     microsoft.weather.radar.main: We provide tiles up to 1.5 hours in the past and up to 2 hours in the future.
+     *     Tiles are available in 5-minute intervals. We round the timeStamp value to the nearest 5-minute time frame.
+     * @param tileSize The size of the returned map tile in pixels.
+     * @param language Language in which search results should be returned. Should be one of supported IETF language
+     *     tags, case insensitive. When data in specified language is not available for a specific field, default
+     *     language is used.
+     *     <p>Please refer to [Supported
+     *     Languages](https://docs.microsoft.com/en-us/azure/azure-maps/supported-languages) for details.
+     * @param view The View parameter specifies which set of geopolitically disputed content is returned via Azure Maps
+     *     services, including borders and labels displayed on the map. The View parameter (also referred to as “user
+     *     region parameter”) will show the correct maps for that country/region. By default, the View parameter is set
+     *     to “Unified” even if you haven’t defined it in the request. It is your responsibility to determine the
+     *     location of your users, and then set the View parameter correctly for that location. Alternatively, you have
+     *     the option to set ‘View=Auto’, which will return the map data based on the IP address of the request. The
+     *     View parameter in Azure Maps must be used in compliance with applicable laws, including those regarding
+     *     mapping, of the country where maps, images and other data and third party content that you are authorized to
+     *     access via Azure Maps is made available. Example: view=IN.
+     *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
+     *     available Views.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public InputStream getMapTilePreview(
+            TilesetID tilesetId,
+            int zoom,
+            int xTileIndex,
+            int yTileIndex,
+            OffsetDateTime timeStamp,
+            TileSize tileSize,
+            String language,
+            String view) {
+        Iterator<ByteBufferBackedInputStream> iterator =
+                getMapTilePreviewAsync(tilesetId, zoom, xTileIndex, yTileIndex, timeStamp, tileSize, language, view)
+                        .map(ByteBufferBackedInputStream::new)
+                        .toStream()
+                        .iterator();
+        Enumeration<InputStream> enumeration =
+                new Enumeration<InputStream>() {
+                    @Override
+                    public boolean hasMoreElements() {
+                        return iterator.hasNext();
+                    }
+
+                    @Override
+                    public InputStream nextElement() {
+                        return iterator.next();
+                    }
+                };
+        return new SequenceInputStream(enumeration);
     }
 
-    public MapAttributionResultV2 getMapAttribution(TilesetId tilesetId, int zoom, List<String> bounds) {
-        MapAttributionResultV2Inner inner = this.serviceClient().getMapAttribution(tilesetId, zoom, bounds);
-        if (inner != null) {
-            return new MapAttributionResultV2Impl(inner, this.manager());
-        } else {
-            return null;
-        }
+    /**
+     * **Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>The Get Map Tileset API allows users to request metadata for a tileset.
+     *
+     * @param tilesetId A tileset is a collection of raster or vector data broken up into a uniform grid of square tiles
+     *     at preset zoom levels. Every tileset has a **tilesetId** to use when making requests. The **tilesetId** for
+     *     tilesets created using [Azure Maps Creator](https://aka.ms/amcreator) are generated through the [Tileset
+     *     Create API](https://docs.microsoft.com/en-us/rest/api/maps/tileset). The ready-to-use tilesets supplied by
+     *     Azure Maps are listed below. For example, microsoft.base.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return metadata for a tileset in the TileJSON format.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Response<MapTilesetResultV2>> getMapTilesetWithResponseAsync(TilesetID tilesetId) {
+        final String apiVersion = "2.1";
+        final String accept = "application/json";
+        return service.getMapTileset(
+                this.client.getHost(), this.client.getXMsClientId(), apiVersion, tilesetId, accept);
     }
 
-    public Response<MapAttributionResultV2> getMapAttributionWithResponse(
-        TilesetId tilesetId, int zoom, List<String> bounds, Context context) {
-        Response<MapAttributionResultV2Inner> inner =
-            this.serviceClient().getMapAttributionWithResponse(tilesetId, zoom, bounds, context);
-        if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
-                new MapAttributionResultV2Impl(inner.getValue(), this.manager()));
-        } else {
-            return null;
-        }
+    /**
+     * **Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>The Get Map Tileset API allows users to request metadata for a tileset.
+     *
+     * @param tilesetId A tileset is a collection of raster or vector data broken up into a uniform grid of square tiles
+     *     at preset zoom levels. Every tileset has a **tilesetId** to use when making requests. The **tilesetId** for
+     *     tilesets created using [Azure Maps Creator](https://aka.ms/amcreator) are generated through the [Tileset
+     *     Create API](https://docs.microsoft.com/en-us/rest/api/maps/tileset). The ready-to-use tilesets supplied by
+     *     Azure Maps are listed below. For example, microsoft.base.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return metadata for a tileset in the TileJSON format.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<MapTilesetResultV2> getMapTilesetAsync(TilesetID tilesetId) {
+        return getMapTilesetWithResponseAsync(tilesetId)
+                .flatMap(
+                        (Response<MapTilesetResultV2> res) -> {
+                            if (res.getValue() != null) {
+                                return Mono.just(res.getValue());
+                            } else {
+                                return Mono.empty();
+                            }
+                        });
     }
 
-    private RenderV2sClient serviceClient() {
-        return this.innerClient;
+    /**
+     * **Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>The Get Map Tileset API allows users to request metadata for a tileset.
+     *
+     * @param tilesetId A tileset is a collection of raster or vector data broken up into a uniform grid of square tiles
+     *     at preset zoom levels. Every tileset has a **tilesetId** to use when making requests. The **tilesetId** for
+     *     tilesets created using [Azure Maps Creator](https://aka.ms/amcreator) are generated through the [Tileset
+     *     Create API](https://docs.microsoft.com/en-us/rest/api/maps/tileset). The ready-to-use tilesets supplied by
+     *     Azure Maps are listed below. For example, microsoft.base.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return metadata for a tileset in the TileJSON format.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public MapTilesetResultV2 getMapTileset(TilesetID tilesetId) {
+        return getMapTilesetAsync(tilesetId).block();
     }
 
-    private com.azure.maps.render.RenderManager manager() {
-        return this.serviceManager;
+    /**
+     * **Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>The Get Map Attribution API allows users to request map copyright attribution information for a section of a
+     * tileset.
+     *
+     * @param tilesetId A tileset is a collection of raster or vector data broken up into a uniform grid of square tiles
+     *     at preset zoom levels. Every tileset has a **tilesetId** to use when making requests. The **tilesetId** for
+     *     tilesets created using [Azure Maps Creator](https://aka.ms/amcreator) are generated through the [Tileset
+     *     Create API](https://docs.microsoft.com/en-us/rest/api/maps/tileset). The ready-to-use tilesets supplied by
+     *     Azure Maps are listed below. For example, microsoft.base.
+     * @param zoom Zoom level for the desired tile. Please find TilesetID list below for more details on supported zoom
+     *     level for each tilesetId.&lt;br&gt;
+     *     <p>Please see [Zoom Levels and Tile
+     *     Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
+     * @param bounds The string that represents the rectangular area of a bounding box. The bounds parameter is defined
+     *     by the 4 bounding box coordinates, with WGS84 longitude and latitude of the southwest corner followed by
+     *     WGS84 longitude and latitude of the northeast corner. The string is presented in the following format:
+     *     `[SouthwestCorner_Longitude, SouthwestCorner_Latitude, NortheastCorner_Longitude, NortheastCorner_Latitude]`.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return copyright attribution for the requested section of a tileset.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Response<MapAttributionResultV2>> getMapAttributionWithResponseAsync(
+            TilesetID tilesetId, int zoom, List<String> bounds) {
+        final String apiVersion = "2.1";
+        final String accept = "application/json";
+        String boundsConverted =
+                JacksonAdapter.createDefaultSerializerAdapter().serializeList(bounds, CollectionFormat.CSV);
+        return service.getMapAttribution(
+                this.client.getHost(),
+                this.client.getXMsClientId(),
+                apiVersion,
+                tilesetId,
+                zoom,
+                boundsConverted,
+                accept);
+    }
+
+    /**
+     * **Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>The Get Map Attribution API allows users to request map copyright attribution information for a section of a
+     * tileset.
+     *
+     * @param tilesetId A tileset is a collection of raster or vector data broken up into a uniform grid of square tiles
+     *     at preset zoom levels. Every tileset has a **tilesetId** to use when making requests. The **tilesetId** for
+     *     tilesets created using [Azure Maps Creator](https://aka.ms/amcreator) are generated through the [Tileset
+     *     Create API](https://docs.microsoft.com/en-us/rest/api/maps/tileset). The ready-to-use tilesets supplied by
+     *     Azure Maps are listed below. For example, microsoft.base.
+     * @param zoom Zoom level for the desired tile. Please find TilesetID list below for more details on supported zoom
+     *     level for each tilesetId.&lt;br&gt;
+     *     <p>Please see [Zoom Levels and Tile
+     *     Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
+     * @param bounds The string that represents the rectangular area of a bounding box. The bounds parameter is defined
+     *     by the 4 bounding box coordinates, with WGS84 longitude and latitude of the southwest corner followed by
+     *     WGS84 longitude and latitude of the northeast corner. The string is presented in the following format:
+     *     `[SouthwestCorner_Longitude, SouthwestCorner_Latitude, NortheastCorner_Longitude, NortheastCorner_Latitude]`.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return copyright attribution for the requested section of a tileset.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<MapAttributionResultV2> getMapAttributionAsync(TilesetID tilesetId, int zoom, List<String> bounds) {
+        return getMapAttributionWithResponseAsync(tilesetId, zoom, bounds)
+                .flatMap(
+                        (Response<MapAttributionResultV2> res) -> {
+                            if (res.getValue() != null) {
+                                return Mono.just(res.getValue());
+                            } else {
+                                return Mono.empty();
+                            }
+                        });
+    }
+
+    /**
+     * **Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>The Get Map Attribution API allows users to request map copyright attribution information for a section of a
+     * tileset.
+     *
+     * @param tilesetId A tileset is a collection of raster or vector data broken up into a uniform grid of square tiles
+     *     at preset zoom levels. Every tileset has a **tilesetId** to use when making requests. The **tilesetId** for
+     *     tilesets created using [Azure Maps Creator](https://aka.ms/amcreator) are generated through the [Tileset
+     *     Create API](https://docs.microsoft.com/en-us/rest/api/maps/tileset). The ready-to-use tilesets supplied by
+     *     Azure Maps are listed below. For example, microsoft.base.
+     * @param zoom Zoom level for the desired tile. Please find TilesetID list below for more details on supported zoom
+     *     level for each tilesetId.&lt;br&gt;
+     *     <p>Please see [Zoom Levels and Tile
+     *     Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
+     * @param bounds The string that represents the rectangular area of a bounding box. The bounds parameter is defined
+     *     by the 4 bounding box coordinates, with WGS84 longitude and latitude of the southwest corner followed by
+     *     WGS84 longitude and latitude of the northeast corner. The string is presented in the following format:
+     *     `[SouthwestCorner_Longitude, SouthwestCorner_Latitude, NortheastCorner_Longitude, NortheastCorner_Latitude]`.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return copyright attribution for the requested section of a tileset.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public MapAttributionResultV2 getMapAttribution(TilesetID tilesetId, int zoom, List<String> bounds) {
+        return getMapAttributionAsync(tilesetId, zoom, bounds).block();
     }
 }

@@ -5,15 +5,11 @@
 package com.azure.maps.weather.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** Precipitation forecast of the weather along the route. */
 @Fluent
 public final class WeatherAlongRoutePrecipitation {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(WeatherAlongRoutePrecipitation.class);
-
     /*
      * The forecasted precipitation intensity in dBZ (decibels relative to Z)
      * from 0.0 to 100.0.
@@ -33,7 +29,7 @@ public final class WeatherAlongRoutePrecipitation {
      *
      * @return the dbz value.
      */
-    public Double dbz() {
+    public Double getDbz() {
         return this.dbz;
     }
 
@@ -43,7 +39,7 @@ public final class WeatherAlongRoutePrecipitation {
      * @param dbz the dbz value to set.
      * @return the WeatherAlongRoutePrecipitation object itself.
      */
-    public WeatherAlongRoutePrecipitation withDbz(Double dbz) {
+    public WeatherAlongRoutePrecipitation setDbz(Double dbz) {
         this.dbz = dbz;
         return this;
     }
@@ -54,7 +50,7 @@ public final class WeatherAlongRoutePrecipitation {
      *
      * @return the type value.
      */
-    public String type() {
+    public String getType() {
         return this.type;
     }
 
@@ -65,16 +61,8 @@ public final class WeatherAlongRoutePrecipitation {
      * @param type the type value to set.
      * @return the WeatherAlongRoutePrecipitation object itself.
      */
-    public WeatherAlongRoutePrecipitation withType(String type) {
+    public WeatherAlongRoutePrecipitation setType(String type) {
         this.type = type;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

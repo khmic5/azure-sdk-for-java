@@ -4,22 +4,25 @@
 
 package com.azure.maps.creator.models;
 
-import com.azure.maps.creator.fluent.models.MapDataListResponseInner;
+import com.azure.core.annotation.Immutable;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/** An immutable client-side representation of MapDataListResponse. */
-public interface MapDataListResponse {
+/** The response model for the Data List API. Returns a list of all the previously uploaded data. */
+@Immutable
+public final class MapDataListResponse {
+    /*
+     * A list of all the previously uploaded data.
+     */
+    @JsonProperty(value = "mapDataList", access = JsonProperty.Access.WRITE_ONLY)
+    private List<MapDataDetailInfo> mapDataList;
+
     /**
-     * Gets the mapDataList property: A list of all the previously uploaded data.
+     * Get the mapDataList property: A list of all the previously uploaded data.
      *
      * @return the mapDataList value.
      */
-    List<MapDataDetailInfo> mapDataList();
-
-    /**
-     * Gets the inner com.azure.maps.creator.fluent.models.MapDataListResponseInner object.
-     *
-     * @return the inner object.
-     */
-    MapDataListResponseInner innerModel();
+    public List<MapDataDetailInfo> getMapDataList() {
+        return this.mapDataList;
+    }
 }

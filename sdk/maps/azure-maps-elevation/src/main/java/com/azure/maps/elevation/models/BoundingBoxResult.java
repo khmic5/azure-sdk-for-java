@@ -4,23 +4,28 @@
 
 package com.azure.maps.elevation.models;
 
-import com.azure.maps.elevation.fluent.models.BoundingBoxResultInner;
+import com.azure.core.annotation.Immutable;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/** An immutable client-side representation of BoundingBoxResult. */
-public interface BoundingBoxResult {
+/** The response from a successful Get Data for Bounding Box API. */
+@Immutable
+public final class BoundingBoxResult {
+    /*
+     * The response from the Get Data for Bounding Box API. The results are
+     * ordered starting with the southwest corner, and then proceed west to
+     * east and south to north.
+     */
+    @JsonProperty(value = "data", access = JsonProperty.Access.WRITE_ONLY)
+    private List<PointElevationResult> data;
+
     /**
-     * Gets the data property: The response from the Get Data for Bounding Box API. The results are ordered starting
-     * with the southwest corner, and then proceed west to east and south to north.
+     * Get the data property: The response from the Get Data for Bounding Box API. The results are ordered starting with
+     * the southwest corner, and then proceed west to east and south to north.
      *
      * @return the data value.
      */
-    List<PointElevationResult> data();
-
-    /**
-     * Gets the inner com.azure.maps.elevation.fluent.models.BoundingBoxResultInner object.
-     *
-     * @return the inner object.
-     */
-    BoundingBoxResultInner innerModel();
+    public List<PointElevationResult> getData() {
+        return this.data;
+    }
 }

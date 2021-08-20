@@ -5,15 +5,11 @@
 package com.azure.maps.weather.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** Wind direction. */
 @Fluent
 public final class WindDirection {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(WindDirection.class);
-
     /*
      * Wind direction in Azimuth degrees,  starting at true North and
      * continuing in clockwise direction. North is 0 degrees, east is 90
@@ -36,7 +32,7 @@ public final class WindDirection {
      *
      * @return the degrees value.
      */
-    public Integer degrees() {
+    public Integer getDegrees() {
         return this.degrees;
     }
 
@@ -48,7 +44,7 @@ public final class WindDirection {
      * @param degrees the degrees value to set.
      * @return the WindDirection object itself.
      */
-    public WindDirection withDegrees(Integer degrees) {
+    public WindDirection setDegrees(Integer degrees) {
         this.degrees = degrees;
         return this;
     }
@@ -58,7 +54,7 @@ public final class WindDirection {
      *
      * @return the localizedDescription value.
      */
-    public String localizedDescription() {
+    public String getLocalizedDescription() {
         return this.localizedDescription;
     }
 
@@ -68,16 +64,8 @@ public final class WindDirection {
      * @param localizedDescription the localizedDescription value to set.
      * @return the WindDirection object itself.
      */
-    public WindDirection withLocalizedDescription(String localizedDescription) {
+    public WindDirection setLocalizedDescription(String localizedDescription) {
         this.localizedDescription = localizedDescription;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

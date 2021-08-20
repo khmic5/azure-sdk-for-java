@@ -5,15 +5,11 @@
 package com.azure.maps.search.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** This type represents the request body for the Search Inside Geometry service. */
 @Fluent
 public final class SearchInsideGeometryRequestBody {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(SearchInsideGeometryRequestBody.class);
-
     /*
      * A valid `GeoJSON` object. Please refer to [RFC
      * 7946](https://tools.ietf.org/html/rfc7946#section-3) for details.
@@ -27,7 +23,7 @@ public final class SearchInsideGeometryRequestBody {
      *
      * @return the geometry value.
      */
-    public GeoJsonObject geometry() {
+    public GeoJsonObject getGeometry() {
         return this.geometry;
     }
 
@@ -38,19 +34,8 @@ public final class SearchInsideGeometryRequestBody {
      * @param geometry the geometry value to set.
      * @return the SearchInsideGeometryRequestBody object itself.
      */
-    public SearchInsideGeometryRequestBody withGeometry(GeoJsonObject geometry) {
+    public SearchInsideGeometryRequestBody setGeometry(GeoJsonObject geometry) {
         this.geometry = geometry;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (geometry() != null) {
-            geometry().validate();
-        }
     }
 }

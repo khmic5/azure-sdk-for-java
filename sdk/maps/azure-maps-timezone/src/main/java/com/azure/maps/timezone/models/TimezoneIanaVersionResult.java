@@ -4,21 +4,24 @@
 
 package com.azure.maps.timezone.models;
 
-import com.azure.maps.timezone.fluent.models.TimezoneIanaVersionResultInner;
+import com.azure.core.annotation.Immutable;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** An immutable client-side representation of TimezoneIanaVersionResult. */
-public interface TimezoneIanaVersionResult {
+/** This object is returned from a successful Timezone IANA Version call. */
+@Immutable
+public final class TimezoneIanaVersionResult {
+    /*
+     * Version property
+     */
+    @JsonProperty(value = "version", access = JsonProperty.Access.WRITE_ONLY)
+    private String version;
+
     /**
-     * Gets the version property: Version property.
+     * Get the version property: Version property.
      *
      * @return the version value.
      */
-    String version();
-
-    /**
-     * Gets the inner com.azure.maps.timezone.fluent.models.TimezoneIanaVersionResultInner object.
-     *
-     * @return the inner object.
-     */
-    TimezoneIanaVersionResultInner innerModel();
+    public String getVersion() {
+        return this.version;
+    }
 }

@@ -4,59 +4,139 @@
 
 package com.azure.maps.geolocation.implementation;
 
+import com.azure.core.annotation.ExpectedResponses;
+import com.azure.core.annotation.Get;
+import com.azure.core.annotation.HeaderParam;
+import com.azure.core.annotation.Host;
+import com.azure.core.annotation.HostParam;
+import com.azure.core.annotation.PathParam;
+import com.azure.core.annotation.QueryParam;
+import com.azure.core.annotation.ReturnType;
+import com.azure.core.annotation.ServiceInterface;
+import com.azure.core.annotation.ServiceMethod;
+import com.azure.core.annotation.UnexpectedResponseExceptionType;
 import com.azure.core.http.rest.Response;
-import com.azure.core.http.rest.SimpleResponse;
-import com.azure.core.util.Context;
-import com.azure.core.util.logging.ClientLogger;
-import com.azure.maps.geolocation.fluent.GeolocationsClient;
-import com.azure.maps.geolocation.fluent.models.IpAddressToLocationResultInner;
-import com.azure.maps.geolocation.models.Geolocations;
+import com.azure.core.http.rest.RestProxy;
+import com.azure.maps.geolocation.models.ErrorResponseException;
+import com.azure.maps.geolocation.models.Geography;
 import com.azure.maps.geolocation.models.IpAddressToLocationResult;
 import com.azure.maps.geolocation.models.ResponseFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import reactor.core.publisher.Mono;
 
-public final class GeolocationsImpl implements Geolocations {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(GeolocationsImpl.class);
+/** An instance of this class provides access to all the operations defined in Geolocations. */
+public final class GeolocationsImpl {
+    /** The proxy service used to perform REST calls. */
+    private final GeolocationsService service;
 
-    private final GeolocationsClient innerClient;
+    /** The service client containing this operation class. */
+    private final GeolocationClientImpl client;
 
-    private final com.azure.maps.geolocation.GeolocationManager serviceManager;
-
-    public GeolocationsImpl(
-        GeolocationsClient innerClient, com.azure.maps.geolocation.GeolocationManager serviceManager) {
-        this.innerClient = innerClient;
-        this.serviceManager = serviceManager;
+    /**
+     * Initializes an instance of GeolocationsImpl.
+     *
+     * @param client the instance of the service client containing this operation class.
+     */
+    GeolocationsImpl(GeolocationClientImpl client) {
+        this.service =
+                RestProxy.create(GeolocationsService.class, client.getHttpPipeline(), client.getSerializerAdapter());
+        this.client = client;
     }
 
-    public IpAddressToLocationResult getIpToLocationPreview(ResponseFormat format, String ip) {
-        IpAddressToLocationResultInner inner = this.serviceClient().getIpToLocationPreview(format, ip);
-        if (inner != null) {
-            return new IpAddressToLocationResultImpl(inner, this.manager());
-        } else {
-            return null;
-        }
+    /**
+     * The interface defining all the services for GeolocationClientGeolocations to be used by the proxy service to
+     * perform REST calls.
+     */
+    @Host("https://{geography}.atlas.microsoft.com")
+    @ServiceInterface(name = "GeolocationClientGeo")
+    private interface GeolocationsService {
+        @Get("/geolocation/ip/{format}")
+        @ExpectedResponses({200})
+        @UnexpectedResponseExceptionType(ErrorResponseException.class)
+        Mono<Response<IpAddressToLocationResult>> getIPToLocationPreview(
+                @HostParam("geography") Geography geography,
+                @HeaderParam("x-ms-client-id") String xMsClientId,
+                @QueryParam("api-version") String apiVersion,
+                @PathParam("format") ResponseFormat format,
+                @QueryParam("ip") String ip,
+                @HeaderParam("Accept") String accept);
     }
 
-    public Response<IpAddressToLocationResult> getIpToLocationPreviewWithResponse(
-        ResponseFormat format, String ip, Context context) {
-        Response<IpAddressToLocationResultInner> inner =
-            this.serviceClient().getIpToLocationPreviewWithResponse(format, ip, context);
-        if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
-                new IpAddressToLocationResultImpl(inner.getValue(), this.manager()));
-        } else {
-            return null;
-        }
+    /**
+     * **Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>This service will return the ISO country code for the provided IP address. Developers can use this information
+     * to block or alter certain content based on geographical locations where the application is being viewed from.
+     *
+     * <p>__Note:__ This service returns results from IANA and does not necessarily reflect the views of Microsoft
+     * Corporation.
+     *
+     * @param format Desired format of the response. Only `json` format is supported.
+     * @param ip The IP address. Both IPv4 and IPv6 are allowed.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful call to IP Address to country/region API.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Response<IpAddressToLocationResult>> getIPToLocationPreviewWithResponseAsync(
+            ResponseFormat format, String ip) {
+        final String accept = "application/json";
+        return service.getIPToLocationPreview(
+                this.client.getGeography(),
+                this.client.getXMsClientId(),
+                this.client.getApiVersion(),
+                format,
+                ip,
+                accept);
     }
 
-    private GeolocationsClient serviceClient() {
-        return this.innerClient;
+    /**
+     * **Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>This service will return the ISO country code for the provided IP address. Developers can use this information
+     * to block or alter certain content based on geographical locations where the application is being viewed from.
+     *
+     * <p>__Note:__ This service returns results from IANA and does not necessarily reflect the views of Microsoft
+     * Corporation.
+     *
+     * @param format Desired format of the response. Only `json` format is supported.
+     * @param ip The IP address. Both IPv4 and IPv6 are allowed.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful call to IP Address to country/region API.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<IpAddressToLocationResult> getIPToLocationPreviewAsync(ResponseFormat format, String ip) {
+        return getIPToLocationPreviewWithResponseAsync(format, ip)
+                .flatMap(
+                        (Response<IpAddressToLocationResult> res) -> {
+                            if (res.getValue() != null) {
+                                return Mono.just(res.getValue());
+                            } else {
+                                return Mono.empty();
+                            }
+                        });
     }
 
-    private com.azure.maps.geolocation.GeolocationManager manager() {
-        return this.serviceManager;
+    /**
+     * **Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>This service will return the ISO country code for the provided IP address. Developers can use this information
+     * to block or alter certain content based on geographical locations where the application is being viewed from.
+     *
+     * <p>__Note:__ This service returns results from IANA and does not necessarily reflect the views of Microsoft
+     * Corporation.
+     *
+     * @param format Desired format of the response. Only `json` format is supported.
+     * @param ip The IP address. Both IPv4 and IPv6 are allowed.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful call to IP Address to country/region API.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public IpAddressToLocationResult getIPToLocationPreview(ResponseFormat format, String ip) {
+        return getIPToLocationPreviewAsync(format, ip).block();
     }
 }

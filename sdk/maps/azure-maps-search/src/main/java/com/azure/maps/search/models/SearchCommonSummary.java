@@ -5,15 +5,11 @@
 package com.azure.maps.search.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** Summary object for a Search API response. */
 @Immutable
 public final class SearchCommonSummary {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(SearchCommonSummary.class);
-
     /*
      * Query property
      */
@@ -76,7 +72,7 @@ public final class SearchCommonSummary {
      *
      * @return the query value.
      */
-    public String query() {
+    public String getQuery() {
         return this.query;
     }
 
@@ -85,7 +81,7 @@ public final class SearchCommonSummary {
      *
      * @return the queryType value.
      */
-    public String queryType() {
+    public String getQueryType() {
         return this.queryType;
     }
 
@@ -94,7 +90,7 @@ public final class SearchCommonSummary {
      *
      * @return the queryTime value.
      */
-    public Integer queryTime() {
+    public Integer getQueryTime() {
         return this.queryTime;
     }
 
@@ -103,7 +99,7 @@ public final class SearchCommonSummary {
      *
      * @return the numResults value.
      */
-    public Integer numResults() {
+    public Integer getNumResults() {
         return this.numResults;
     }
 
@@ -112,7 +108,7 @@ public final class SearchCommonSummary {
      *
      * @return the limit value.
      */
-    public Integer limit() {
+    public Integer getLimit() {
         return this.limit;
     }
 
@@ -121,7 +117,7 @@ public final class SearchCommonSummary {
      *
      * @return the offset value.
      */
-    public Integer offset() {
+    public Integer getOffset() {
         return this.offset;
     }
 
@@ -130,7 +126,7 @@ public final class SearchCommonSummary {
      *
      * @return the totalResults value.
      */
-    public Integer totalResults() {
+    public Integer getTotalResults() {
         return this.totalResults;
     }
 
@@ -139,7 +135,7 @@ public final class SearchCommonSummary {
      *
      * @return the fuzzyLevel value.
      */
-    public Integer fuzzyLevel() {
+    public Integer getFuzzyLevel() {
         return this.fuzzyLevel;
     }
 
@@ -150,18 +146,7 @@ public final class SearchCommonSummary {
      *
      * @return the geoBias value.
      */
-    public SearchCommonSummaryGeoBias geoBias() {
+    public SearchCommonSummaryGeoBias getGeoBias() {
         return this.geoBias;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (geoBias() != null) {
-            geoBias().validate();
-        }
     }
 }

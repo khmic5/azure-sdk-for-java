@@ -5,16 +5,12 @@
 package com.azure.maps.weather.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.OffsetDateTime;
 
 /** The HourlyForecast model. */
 @Fluent
 public final class HourlyForecast {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(HourlyForecast.class);
-
     /*
      * Date and time of the forecast in ISO 8601 format, for example,
      * 2019-10-27T19:39:57-08:00.
@@ -189,7 +185,7 @@ public final class HourlyForecast {
      *
      * @return the date value.
      */
-    public OffsetDateTime date() {
+    public OffsetDateTime getDate() {
         return this.date;
     }
 
@@ -199,7 +195,7 @@ public final class HourlyForecast {
      * @param date the date value to set.
      * @return the HourlyForecast object itself.
      */
-    public HourlyForecast withDate(OffsetDateTime date) {
+    public HourlyForecast setDate(OffsetDateTime date) {
         this.date = date;
         return this;
     }
@@ -210,7 +206,7 @@ public final class HourlyForecast {
      *
      * @return the iconCode value.
      */
-    public Integer iconCode() {
+    public Integer getIconCode() {
         return this.iconCode;
     }
 
@@ -221,7 +217,7 @@ public final class HourlyForecast {
      * @param iconCode the iconCode value to set.
      * @return the HourlyForecast object itself.
      */
-    public HourlyForecast withIconCode(Integer iconCode) {
+    public HourlyForecast setIconCode(Integer iconCode) {
         this.iconCode = iconCode;
         return this;
     }
@@ -231,7 +227,7 @@ public final class HourlyForecast {
      *
      * @return the iconPhrase value.
      */
-    public String iconPhrase() {
+    public String getIconPhrase() {
         return this.iconPhrase;
     }
 
@@ -241,7 +237,7 @@ public final class HourlyForecast {
      * @param iconPhrase the iconPhrase value to set.
      * @return the HourlyForecast object itself.
      */
-    public HourlyForecast withIconPhrase(String iconPhrase) {
+    public HourlyForecast setIconPhrase(String iconPhrase) {
         this.iconPhrase = iconPhrase;
         return this;
     }
@@ -252,7 +248,7 @@ public final class HourlyForecast {
      *
      * @return the hasPrecipitation value.
      */
-    public Boolean hasPrecipitation() {
+    public Boolean isHasPrecipitation() {
         return this.hasPrecipitation;
     }
 
@@ -263,7 +259,7 @@ public final class HourlyForecast {
      * @param hasPrecipitation the hasPrecipitation value to set.
      * @return the HourlyForecast object itself.
      */
-    public HourlyForecast withHasPrecipitation(Boolean hasPrecipitation) {
+    public HourlyForecast setHasPrecipitation(Boolean hasPrecipitation) {
         this.hasPrecipitation = hasPrecipitation;
         return this;
     }
@@ -283,7 +279,7 @@ public final class HourlyForecast {
      * @param isDaylight the isDaylight value to set.
      * @return the HourlyForecast object itself.
      */
-    public HourlyForecast withIsDaylight(Boolean isDaylight) {
+    public HourlyForecast setIsDaylight(Boolean isDaylight) {
         this.isDaylight = isDaylight;
         return this;
     }
@@ -293,7 +289,7 @@ public final class HourlyForecast {
      *
      * @return the temperature value.
      */
-    public WeatherUnit temperature() {
+    public WeatherUnit getTemperature() {
         return this.temperature;
     }
 
@@ -303,7 +299,7 @@ public final class HourlyForecast {
      * @param temperature the temperature value to set.
      * @return the HourlyForecast object itself.
      */
-    public HourlyForecast withTemperature(WeatherUnit temperature) {
+    public HourlyForecast setTemperature(WeatherUnit temperature) {
         this.temperature = temperature;
         return this;
     }
@@ -314,7 +310,7 @@ public final class HourlyForecast {
      *
      * @return the realFeelTemperature value.
      */
-    public WeatherUnit realFeelTemperature() {
+    public WeatherUnit getRealFeelTemperature() {
         return this.realFeelTemperature;
     }
 
@@ -325,7 +321,7 @@ public final class HourlyForecast {
      * @param realFeelTemperature the realFeelTemperature value to set.
      * @return the HourlyForecast object itself.
      */
-    public HourlyForecast withRealFeelTemperature(WeatherUnit realFeelTemperature) {
+    public HourlyForecast setRealFeelTemperature(WeatherUnit realFeelTemperature) {
         this.realFeelTemperature = realFeelTemperature;
         return this;
     }
@@ -336,7 +332,7 @@ public final class HourlyForecast {
      *
      * @return the wetBulbTemperature value.
      */
-    public WeatherUnit wetBulbTemperature() {
+    public WeatherUnit getWetBulbTemperature() {
         return this.wetBulbTemperature;
     }
 
@@ -347,7 +343,7 @@ public final class HourlyForecast {
      * @param wetBulbTemperature the wetBulbTemperature value to set.
      * @return the HourlyForecast object itself.
      */
-    public HourlyForecast withWetBulbTemperature(WeatherUnit wetBulbTemperature) {
+    public HourlyForecast setWetBulbTemperature(WeatherUnit wetBulbTemperature) {
         this.wetBulbTemperature = wetBulbTemperature;
         return this;
     }
@@ -358,7 +354,7 @@ public final class HourlyForecast {
      *
      * @return the dewPoint value.
      */
-    public WeatherUnit dewPoint() {
+    public WeatherUnit getDewPoint() {
         return this.dewPoint;
     }
 
@@ -369,7 +365,7 @@ public final class HourlyForecast {
      * @param dewPoint the dewPoint value to set.
      * @return the HourlyForecast object itself.
      */
-    public HourlyForecast withDewPoint(WeatherUnit dewPoint) {
+    public HourlyForecast setDewPoint(WeatherUnit dewPoint) {
         this.dewPoint = dewPoint;
         return this;
     }
@@ -379,7 +375,7 @@ public final class HourlyForecast {
      *
      * @return the wind value.
      */
-    public WindDetails wind() {
+    public WindDetails getWind() {
         return this.wind;
     }
 
@@ -389,7 +385,7 @@ public final class HourlyForecast {
      * @param wind the wind value to set.
      * @return the HourlyForecast object itself.
      */
-    public HourlyForecast withWind(WindDetails wind) {
+    public HourlyForecast setWind(WindDetails wind) {
         this.wind = wind;
         return this;
     }
@@ -399,7 +395,7 @@ public final class HourlyForecast {
      *
      * @return the windGust value.
      */
-    public WindDetails windGust() {
+    public WindDetails getWindGust() {
         return this.windGust;
     }
 
@@ -409,7 +405,7 @@ public final class HourlyForecast {
      * @param windGust the windGust value to set.
      * @return the HourlyForecast object itself.
      */
-    public HourlyForecast withWindGust(WindDetails windGust) {
+    public HourlyForecast setWindGust(WindDetails windGust) {
         this.windGust = windGust;
         return this;
     }
@@ -420,7 +416,7 @@ public final class HourlyForecast {
      *
      * @return the relativeHumidity value.
      */
-    public Integer relativeHumidity() {
+    public Integer getRelativeHumidity() {
         return this.relativeHumidity;
     }
 
@@ -431,7 +427,7 @@ public final class HourlyForecast {
      * @param relativeHumidity the relativeHumidity value to set.
      * @return the HourlyForecast object itself.
      */
-    public HourlyForecast withRelativeHumidity(Integer relativeHumidity) {
+    public HourlyForecast setRelativeHumidity(Integer relativeHumidity) {
         this.relativeHumidity = relativeHumidity;
         return this;
     }
@@ -442,7 +438,7 @@ public final class HourlyForecast {
      *
      * @return the visibility value.
      */
-    public WeatherUnit visibility() {
+    public WeatherUnit getVisibility() {
         return this.visibility;
     }
 
@@ -453,7 +449,7 @@ public final class HourlyForecast {
      * @param visibility the visibility value to set.
      * @return the HourlyForecast object itself.
      */
-    public HourlyForecast withVisibility(WeatherUnit visibility) {
+    public HourlyForecast setVisibility(WeatherUnit visibility) {
         this.visibility = visibility;
         return this;
     }
@@ -464,7 +460,7 @@ public final class HourlyForecast {
      *
      * @return the ceiling value.
      */
-    public WeatherUnit ceiling() {
+    public WeatherUnit getCeiling() {
         return this.ceiling;
     }
 
@@ -475,7 +471,7 @@ public final class HourlyForecast {
      * @param ceiling the ceiling value to set.
      * @return the HourlyForecast object itself.
      */
-    public HourlyForecast withCeiling(WeatherUnit ceiling) {
+    public HourlyForecast setCeiling(WeatherUnit ceiling) {
         this.ceiling = ceiling;
         return this;
     }
@@ -488,7 +484,7 @@ public final class HourlyForecast {
      *
      * @return the uvIndex value.
      */
-    public Integer uvIndex() {
+    public Integer getUvIndex() {
         return this.uvIndex;
     }
 
@@ -501,7 +497,7 @@ public final class HourlyForecast {
      * @param uvIndex the uvIndex value to set.
      * @return the HourlyForecast object itself.
      */
-    public HourlyForecast withUvIndex(Integer uvIndex) {
+    public HourlyForecast setUvIndex(Integer uvIndex) {
         this.uvIndex = uvIndex;
         return this;
     }
@@ -511,7 +507,7 @@ public final class HourlyForecast {
      *
      * @return the uvIndexPhrase value.
      */
-    public String uvIndexPhrase() {
+    public String getUvIndexPhrase() {
         return this.uvIndexPhrase;
     }
 
@@ -521,7 +517,7 @@ public final class HourlyForecast {
      * @param uvIndexPhrase the uvIndexPhrase value to set.
      * @return the HourlyForecast object itself.
      */
-    public HourlyForecast withUvIndexPhrase(String uvIndexPhrase) {
+    public HourlyForecast setUvIndexPhrase(String uvIndexPhrase) {
         this.uvIndexPhrase = uvIndexPhrase;
         return this;
     }
@@ -532,7 +528,7 @@ public final class HourlyForecast {
      *
      * @return the precipitationProbability value.
      */
-    public Integer precipitationProbability() {
+    public Integer getPrecipitationProbability() {
         return this.precipitationProbability;
     }
 
@@ -543,7 +539,7 @@ public final class HourlyForecast {
      * @param precipitationProbability the precipitationProbability value to set.
      * @return the HourlyForecast object itself.
      */
-    public HourlyForecast withPrecipitationProbability(Integer precipitationProbability) {
+    public HourlyForecast setPrecipitationProbability(Integer precipitationProbability) {
         this.precipitationProbability = precipitationProbability;
         return this;
     }
@@ -553,7 +549,7 @@ public final class HourlyForecast {
      *
      * @return the rainProbability value.
      */
-    public Integer rainProbability() {
+    public Integer getRainProbability() {
         return this.rainProbability;
     }
 
@@ -563,7 +559,7 @@ public final class HourlyForecast {
      * @param rainProbability the rainProbability value to set.
      * @return the HourlyForecast object itself.
      */
-    public HourlyForecast withRainProbability(Integer rainProbability) {
+    public HourlyForecast setRainProbability(Integer rainProbability) {
         this.rainProbability = rainProbability;
         return this;
     }
@@ -573,7 +569,7 @@ public final class HourlyForecast {
      *
      * @return the snowProbability value.
      */
-    public Integer snowProbability() {
+    public Integer getSnowProbability() {
         return this.snowProbability;
     }
 
@@ -583,7 +579,7 @@ public final class HourlyForecast {
      * @param snowProbability the snowProbability value to set.
      * @return the HourlyForecast object itself.
      */
-    public HourlyForecast withSnowProbability(Integer snowProbability) {
+    public HourlyForecast setSnowProbability(Integer snowProbability) {
         this.snowProbability = snowProbability;
         return this;
     }
@@ -593,7 +589,7 @@ public final class HourlyForecast {
      *
      * @return the iceProbability value.
      */
-    public Integer iceProbability() {
+    public Integer getIceProbability() {
         return this.iceProbability;
     }
 
@@ -603,7 +599,7 @@ public final class HourlyForecast {
      * @param iceProbability the iceProbability value to set.
      * @return the HourlyForecast object itself.
      */
-    public HourlyForecast withIceProbability(Integer iceProbability) {
+    public HourlyForecast setIceProbability(Integer iceProbability) {
         this.iceProbability = iceProbability;
         return this;
     }
@@ -613,7 +609,7 @@ public final class HourlyForecast {
      *
      * @return the totalLiquid value.
      */
-    public WeatherUnit totalLiquid() {
+    public WeatherUnit getTotalLiquid() {
         return this.totalLiquid;
     }
 
@@ -623,7 +619,7 @@ public final class HourlyForecast {
      * @param totalLiquid the totalLiquid value to set.
      * @return the HourlyForecast object itself.
      */
-    public HourlyForecast withTotalLiquid(WeatherUnit totalLiquid) {
+    public HourlyForecast setTotalLiquid(WeatherUnit totalLiquid) {
         this.totalLiquid = totalLiquid;
         return this;
     }
@@ -633,7 +629,7 @@ public final class HourlyForecast {
      *
      * @return the rain value.
      */
-    public WeatherUnit rain() {
+    public WeatherUnit getRain() {
         return this.rain;
     }
 
@@ -643,7 +639,7 @@ public final class HourlyForecast {
      * @param rain the rain value to set.
      * @return the HourlyForecast object itself.
      */
-    public HourlyForecast withRain(WeatherUnit rain) {
+    public HourlyForecast setRain(WeatherUnit rain) {
         this.rain = rain;
         return this;
     }
@@ -653,7 +649,7 @@ public final class HourlyForecast {
      *
      * @return the snow value.
      */
-    public WeatherUnit snow() {
+    public WeatherUnit getSnow() {
         return this.snow;
     }
 
@@ -663,7 +659,7 @@ public final class HourlyForecast {
      * @param snow the snow value to set.
      * @return the HourlyForecast object itself.
      */
-    public HourlyForecast withSnow(WeatherUnit snow) {
+    public HourlyForecast setSnow(WeatherUnit snow) {
         this.snow = snow;
         return this;
     }
@@ -673,7 +669,7 @@ public final class HourlyForecast {
      *
      * @return the ice value.
      */
-    public WeatherUnit ice() {
+    public WeatherUnit getIce() {
         return this.ice;
     }
 
@@ -683,7 +679,7 @@ public final class HourlyForecast {
      * @param ice the ice value to set.
      * @return the HourlyForecast object itself.
      */
-    public HourlyForecast withIce(WeatherUnit ice) {
+    public HourlyForecast setIce(WeatherUnit ice) {
         this.ice = ice;
         return this;
     }
@@ -693,7 +689,7 @@ public final class HourlyForecast {
      *
      * @return the cloudCover value.
      */
-    public Integer cloudCover() {
+    public Integer getCloudCover() {
         return this.cloudCover;
     }
 
@@ -703,52 +699,8 @@ public final class HourlyForecast {
      * @param cloudCover the cloudCover value to set.
      * @return the HourlyForecast object itself.
      */
-    public HourlyForecast withCloudCover(Integer cloudCover) {
+    public HourlyForecast setCloudCover(Integer cloudCover) {
         this.cloudCover = cloudCover;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (temperature() != null) {
-            temperature().validate();
-        }
-        if (realFeelTemperature() != null) {
-            realFeelTemperature().validate();
-        }
-        if (wetBulbTemperature() != null) {
-            wetBulbTemperature().validate();
-        }
-        if (dewPoint() != null) {
-            dewPoint().validate();
-        }
-        if (wind() != null) {
-            wind().validate();
-        }
-        if (windGust() != null) {
-            windGust().validate();
-        }
-        if (visibility() != null) {
-            visibility().validate();
-        }
-        if (ceiling() != null) {
-            ceiling().validate();
-        }
-        if (totalLiquid() != null) {
-            totalLiquid().validate();
-        }
-        if (rain() != null) {
-            rain().validate();
-        }
-        if (snow() != null) {
-            snow().validate();
-        }
-        if (ice() != null) {
-            ice().validate();
-        }
     }
 }

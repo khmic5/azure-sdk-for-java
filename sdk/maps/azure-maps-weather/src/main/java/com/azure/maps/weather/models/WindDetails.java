@@ -5,15 +5,11 @@
 package com.azure.maps.weather.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** Wind details being returned including speed and direction. */
 @Fluent
 public final class WindDetails {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(WindDetails.class);
-
     /*
      * Wind direction
      */
@@ -31,7 +27,7 @@ public final class WindDetails {
      *
      * @return the direction value.
      */
-    public WindDirection direction() {
+    public WindDirection getDirection() {
         return this.direction;
     }
 
@@ -41,7 +37,7 @@ public final class WindDetails {
      * @param direction the direction value to set.
      * @return the WindDetails object itself.
      */
-    public WindDetails withDirection(WindDirection direction) {
+    public WindDetails setDirection(WindDirection direction) {
         this.direction = direction;
         return this;
     }
@@ -51,7 +47,7 @@ public final class WindDetails {
      *
      * @return the speed value.
      */
-    public WindSpeed speed() {
+    public WindSpeed getSpeed() {
         return this.speed;
     }
 
@@ -61,22 +57,8 @@ public final class WindDetails {
      * @param speed the speed value to set.
      * @return the WindDetails object itself.
      */
-    public WindDetails withSpeed(WindSpeed speed) {
+    public WindDetails setSpeed(WindSpeed speed) {
         this.speed = speed;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (direction() != null) {
-            direction().validate();
-        }
-        if (speed() != null) {
-            speed().validate();
-        }
     }
 }

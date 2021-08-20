@@ -5,15 +5,11 @@
 package com.azure.maps.search.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** Open time range for a day. */
 @Fluent
 public final class SearchResultPoiOpeningHoursTimeRange {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(SearchResultPoiOpeningHoursTimeRange.class);
-
     /*
      * The point in the next 7 days range when a given POI is being opened, or
      * the beginning of the range if it was opened before the range.
@@ -34,7 +30,7 @@ public final class SearchResultPoiOpeningHoursTimeRange {
      *
      * @return the startTime value.
      */
-    public SearchResultPoiOpeningHoursTimeRangeTime startTime() {
+    public SearchResultPoiOpeningHoursTimeRangeTime getStartTime() {
         return this.startTime;
     }
 
@@ -45,7 +41,7 @@ public final class SearchResultPoiOpeningHoursTimeRange {
      * @param startTime the startTime value to set.
      * @return the SearchResultPoiOpeningHoursTimeRange object itself.
      */
-    public SearchResultPoiOpeningHoursTimeRange withStartTime(SearchResultPoiOpeningHoursTimeRangeTime startTime) {
+    public SearchResultPoiOpeningHoursTimeRange setStartTime(SearchResultPoiOpeningHoursTimeRangeTime startTime) {
         this.startTime = startTime;
         return this;
     }
@@ -56,7 +52,7 @@ public final class SearchResultPoiOpeningHoursTimeRange {
      *
      * @return the endTime value.
      */
-    public SearchResultPoiOpeningHoursTimeRangeTime endTime() {
+    public SearchResultPoiOpeningHoursTimeRangeTime getEndTime() {
         return this.endTime;
     }
 
@@ -67,22 +63,8 @@ public final class SearchResultPoiOpeningHoursTimeRange {
      * @param endTime the endTime value to set.
      * @return the SearchResultPoiOpeningHoursTimeRange object itself.
      */
-    public SearchResultPoiOpeningHoursTimeRange withEndTime(SearchResultPoiOpeningHoursTimeRangeTime endTime) {
+    public SearchResultPoiOpeningHoursTimeRange setEndTime(SearchResultPoiOpeningHoursTimeRangeTime endTime) {
         this.endTime = endTime;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (startTime() != null) {
-            startTime().validate();
-        }
-        if (endTime() != null) {
-            endTime().validate();
-        }
     }
 }

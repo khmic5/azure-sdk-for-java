@@ -5,15 +5,11 @@
 package com.azure.maps.weather.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** The HazardDetail model. */
 @Fluent
 public final class HazardDetail {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(HazardDetail.class);
-
     /*
      * A severity/hazard index.
      * * `0` - No hazard.
@@ -49,7 +45,7 @@ public final class HazardDetail {
      *
      * @return the hazardIndex value.
      */
-    public Integer hazardIndex() {
+    public Integer getHazardIndex() {
         return this.hazardIndex;
     }
 
@@ -60,7 +56,7 @@ public final class HazardDetail {
      * @param hazardIndex the hazardIndex value to set.
      * @return the HazardDetail object itself.
      */
-    public HazardDetail withHazardIndex(Integer hazardIndex) {
+    public HazardDetail setHazardIndex(Integer hazardIndex) {
         this.hazardIndex = hazardIndex;
         return this;
     }
@@ -74,7 +70,7 @@ public final class HazardDetail {
      *
      * @return the hazardCode value.
      */
-    public String hazardCode() {
+    public String getHazardCode() {
         return this.hazardCode;
     }
 
@@ -88,7 +84,7 @@ public final class HazardDetail {
      * @param hazardCode the hazardCode value to set.
      * @return the HazardDetail object itself.
      */
-    public HazardDetail withHazardCode(String hazardCode) {
+    public HazardDetail setHazardCode(String hazardCode) {
         this.hazardCode = hazardCode;
         return this;
     }
@@ -99,7 +95,7 @@ public final class HazardDetail {
      *
      * @return the shortPhrase value.
      */
-    public String shortPhrase() {
+    public String getShortPhrase() {
         return this.shortPhrase;
     }
 
@@ -110,16 +106,8 @@ public final class HazardDetail {
      * @param shortPhrase the shortPhrase value to set.
      * @return the HazardDetail object itself.
      */
-    public HazardDetail withShortPhrase(String shortPhrase) {
+    public HazardDetail setShortPhrase(String shortPhrase) {
         this.shortPhrase = shortPhrase;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

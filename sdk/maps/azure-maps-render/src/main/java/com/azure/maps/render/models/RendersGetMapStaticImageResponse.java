@@ -20,11 +20,11 @@ public final class RendersGetMapStaticImageResponse extends ResponseBase<Renders
      * @param headers the deserialized headers of the HTTP response.
      */
     public RendersGetMapStaticImageResponse(
-        HttpRequest request,
-        int statusCode,
-        HttpHeaders rawHeaders,
-        Void value,
-        RendersGetMapStaticImageHeaders headers) {
+            HttpRequest request,
+            int statusCode,
+            HttpHeaders rawHeaders,
+            Void value,
+            RendersGetMapStaticImageHeaders headers) {
         super(request, statusCode, rawHeaders, value, headers);
     }
 }

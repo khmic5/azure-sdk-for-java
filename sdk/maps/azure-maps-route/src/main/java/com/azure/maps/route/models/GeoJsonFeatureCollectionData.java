@@ -5,16 +5,12 @@
 package com.azure.maps.route.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /** The GeoJsonFeatureCollectionData model. */
 @Fluent
 public class GeoJsonFeatureCollectionData {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(GeoJsonFeatureCollectionData.class);
-
     /*
      * Contains a list of valid `GeoJSON Feature` objects.
      */
@@ -26,7 +22,7 @@ public class GeoJsonFeatureCollectionData {
      *
      * @return the features value.
      */
-    public List<GeoJsonFeature> features() {
+    public List<GeoJsonFeature> getFeatures() {
         return this.features;
     }
 
@@ -36,24 +32,8 @@ public class GeoJsonFeatureCollectionData {
      * @param features the features value to set.
      * @return the GeoJsonFeatureCollectionData object itself.
      */
-    public GeoJsonFeatureCollectionData withFeatures(List<GeoJsonFeature> features) {
+    public GeoJsonFeatureCollectionData setFeatures(List<GeoJsonFeature> features) {
         this.features = features;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (features() == null) {
-            throw logger
-                .logExceptionAsError(
-                    new IllegalArgumentException(
-                        "Missing required property features in model GeoJsonFeatureCollectionData"));
-        } else {
-            features().forEach(e -> e.validate());
-        }
     }
 }

@@ -5,15 +5,11 @@
 package com.azure.maps.weather.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** The latest status on the alert in the current area. */
 @Fluent
 public final class LatestStatus {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(LatestStatus.class);
-
     /*
      * The latest status keyword for the alert, in the specified language. By
      * default, returned in English (en-US).
@@ -33,7 +29,7 @@ public final class LatestStatus {
      *
      * @return the localized value.
      */
-    public String localized() {
+    public String getLocalized() {
         return this.localized;
     }
 
@@ -44,7 +40,7 @@ public final class LatestStatus {
      * @param localized the localized value to set.
      * @return the LatestStatus object itself.
      */
-    public LatestStatus withLocalized(String localized) {
+    public LatestStatus setLocalized(String localized) {
         this.localized = localized;
         return this;
     }
@@ -54,7 +50,7 @@ public final class LatestStatus {
      *
      * @return the english value.
      */
-    public LatestStatusKeyword english() {
+    public LatestStatusKeyword getEnglish() {
         return this.english;
     }
 
@@ -64,16 +60,8 @@ public final class LatestStatus {
      * @param english the english value to set.
      * @return the LatestStatus object itself.
      */
-    public LatestStatus withEnglish(LatestStatusKeyword english) {
+    public LatestStatus setEnglish(LatestStatusKeyword english) {
         this.english = english;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

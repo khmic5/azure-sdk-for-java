@@ -5,15 +5,11 @@
 package com.azure.maps.weather.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** The TemperatureSummary model. */
 @Fluent
 public final class TemperatureSummary {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(TemperatureSummary.class);
-
     /*
      * Summary of temperature fluctuations over the past 6 hours.
      */
@@ -37,7 +33,7 @@ public final class TemperatureSummary {
      *
      * @return the past6Hours value.
      */
-    public TemperatureSummaryPast6Hours past6Hours() {
+    public TemperatureSummaryPast6Hours getPast6Hours() {
         return this.past6Hours;
     }
 
@@ -47,7 +43,7 @@ public final class TemperatureSummary {
      * @param past6Hours the past6Hours value to set.
      * @return the TemperatureSummary object itself.
      */
-    public TemperatureSummary withPast6Hours(TemperatureSummaryPast6Hours past6Hours) {
+    public TemperatureSummary setPast6Hours(TemperatureSummaryPast6Hours past6Hours) {
         this.past6Hours = past6Hours;
         return this;
     }
@@ -57,7 +53,7 @@ public final class TemperatureSummary {
      *
      * @return the past12Hours value.
      */
-    public TemperatureSummaryPast12Hours past12Hours() {
+    public TemperatureSummaryPast12Hours getPast12Hours() {
         return this.past12Hours;
     }
 
@@ -67,7 +63,7 @@ public final class TemperatureSummary {
      * @param past12Hours the past12Hours value to set.
      * @return the TemperatureSummary object itself.
      */
-    public TemperatureSummary withPast12Hours(TemperatureSummaryPast12Hours past12Hours) {
+    public TemperatureSummary setPast12Hours(TemperatureSummaryPast12Hours past12Hours) {
         this.past12Hours = past12Hours;
         return this;
     }
@@ -77,7 +73,7 @@ public final class TemperatureSummary {
      *
      * @return the past24Hours value.
      */
-    public TemperatureSummaryPast24Hours past24Hours() {
+    public TemperatureSummaryPast24Hours getPast24Hours() {
         return this.past24Hours;
     }
 
@@ -87,25 +83,8 @@ public final class TemperatureSummary {
      * @param past24Hours the past24Hours value to set.
      * @return the TemperatureSummary object itself.
      */
-    public TemperatureSummary withPast24Hours(TemperatureSummaryPast24Hours past24Hours) {
+    public TemperatureSummary setPast24Hours(TemperatureSummaryPast24Hours past24Hours) {
         this.past24Hours = past24Hours;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (past6Hours() != null) {
-            past6Hours().validate();
-        }
-        if (past12Hours() != null) {
-            past12Hours().validate();
-        }
-        if (past24Hours() != null) {
-            past24Hours().validate();
-        }
     }
 }

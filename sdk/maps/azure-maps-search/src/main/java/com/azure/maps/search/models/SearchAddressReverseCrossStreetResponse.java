@@ -4,29 +4,40 @@
 
 package com.azure.maps.search.models;
 
-import com.azure.maps.search.fluent.models.SearchAddressReverseCrossStreetResponseInner;
+import com.azure.core.annotation.Immutable;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/** An immutable client-side representation of SearchAddressReverseCrossStreetResponse. */
-public interface SearchAddressReverseCrossStreetResponse {
+/** This object is returned from a successful Search Address Reverse CrossStreet call. */
+@Immutable
+public final class SearchAddressReverseCrossStreetResponse {
+    /*
+     * Summary object for a Search Address Reverse Cross Street response
+     */
+    @JsonProperty(value = "summary", access = JsonProperty.Access.WRITE_ONLY)
+    private SearchCommonSummary summary;
+
+    /*
+     * Addresses array
+     */
+    @JsonProperty(value = "addresses", access = JsonProperty.Access.WRITE_ONLY)
+    private List<SearchAddressReverseCrossStreetResult> addresses;
+
     /**
-     * Gets the summary property: Summary object for a Search Address Reverse Cross Street response.
+     * Get the summary property: Summary object for a Search Address Reverse Cross Street response.
      *
      * @return the summary value.
      */
-    SearchCommonSummary summary();
+    public SearchCommonSummary getSummary() {
+        return this.summary;
+    }
 
     /**
-     * Gets the addresses property: Addresses array.
+     * Get the addresses property: Addresses array.
      *
      * @return the addresses value.
      */
-    List<SearchAddressReverseCrossStreetResult> addresses();
-
-    /**
-     * Gets the inner com.azure.maps.search.fluent.models.SearchAddressReverseCrossStreetResponseInner object.
-     *
-     * @return the inner object.
-     */
-    SearchAddressReverseCrossStreetResponseInner innerModel();
+    public List<SearchAddressReverseCrossStreetResult> getAddresses() {
+        return this.addresses;
+    }
 }

@@ -5,15 +5,11 @@
 package com.azure.maps.route.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** Response object of the current cell in the input matrix. */
 @Immutable
 public final class RouteMatrixResultResponse {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(RouteMatrixResultResponse.class);
-
     /*
      * Summary object for route section.
      */
@@ -25,18 +21,7 @@ public final class RouteMatrixResultResponse {
      *
      * @return the routeSummary value.
      */
-    public RouteResultLegSummary routeSummary() {
+    public RouteResultLegSummary getRouteSummary() {
         return this.routeSummary;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (routeSummary() != null) {
-            routeSummary().validate();
-        }
     }
 }

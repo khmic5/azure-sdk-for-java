@@ -4,56 +4,110 @@
 
 package com.azure.maps.creator.models;
 
-import com.azure.maps.creator.fluent.models.DatasetDetailInfoInner;
+import com.azure.core.annotation.Fluent;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** An immutable client-side representation of DatasetDetailInfo. */
-public interface DatasetDetailInfo {
+/** Detail information for the dataset. */
+@Fluent
+public final class DatasetDetailInfo {
+    /*
+     * The created timestamp for the dataset.
+     */
+    @JsonProperty(value = "created", access = JsonProperty.Access.WRITE_ONLY)
+    private String created;
+
+    /*
+     * The id for the dataset.
+     */
+    @JsonProperty(value = "datasetId", access = JsonProperty.Access.WRITE_ONLY)
+    private String datasetId;
+
+    /*
+     * The ontology version of this dataset.
+     */
+    @JsonProperty(value = "ontology", access = JsonProperty.Access.WRITE_ONLY)
+    private String ontology;
+
+    /*
+     * The description for the dataset.
+     */
+    @JsonProperty(value = "description", access = JsonProperty.Access.WRITE_ONLY)
+    private String description;
+
+    /*
+     * Information about the details of the create request for the dataset.
+     */
+    @JsonProperty(value = "datasetSources")
+    private DatasetSources datasetSources;
+
+    /*
+     * The feature counts for the dataset.
+     */
+    @JsonProperty(value = "featureCounts", access = JsonProperty.Access.WRITE_ONLY)
+    private Object featureCounts;
+
     /**
-     * Gets the created property: The created timestamp for the dataset.
+     * Get the created property: The created timestamp for the dataset.
      *
      * @return the created value.
      */
-    String created();
+    public String getCreated() {
+        return this.created;
+    }
 
     /**
-     * Gets the datasetId property: The id for the dataset.
+     * Get the datasetId property: The id for the dataset.
      *
      * @return the datasetId value.
      */
-    String datasetId();
+    public String getDatasetId() {
+        return this.datasetId;
+    }
 
     /**
-     * Gets the ontology property: The ontology version of this dataset.
+     * Get the ontology property: The ontology version of this dataset.
      *
      * @return the ontology value.
      */
-    String ontology();
+    public String getOntology() {
+        return this.ontology;
+    }
 
     /**
-     * Gets the description property: The description for the dataset.
+     * Get the description property: The description for the dataset.
      *
      * @return the description value.
      */
-    String description();
+    public String getDescription() {
+        return this.description;
+    }
 
     /**
-     * Gets the datasetSources property: Information about the details of the create request for the dataset.
+     * Get the datasetSources property: Information about the details of the create request for the dataset.
      *
      * @return the datasetSources value.
      */
-    DatasetSources datasetSources();
+    public DatasetSources getDatasetSources() {
+        return this.datasetSources;
+    }
 
     /**
-     * Gets the featureCounts property: The feature counts for the dataset.
+     * Set the datasetSources property: Information about the details of the create request for the dataset.
+     *
+     * @param datasetSources the datasetSources value to set.
+     * @return the DatasetDetailInfo object itself.
+     */
+    public DatasetDetailInfo setDatasetSources(DatasetSources datasetSources) {
+        this.datasetSources = datasetSources;
+        return this;
+    }
+
+    /**
+     * Get the featureCounts property: The feature counts for the dataset.
      *
      * @return the featureCounts value.
      */
-    Object featureCounts();
-
-    /**
-     * Gets the inner com.azure.maps.creator.fluent.models.DatasetDetailInfoInner object.
-     *
-     * @return the inner object.
-     */
-    DatasetDetailInfoInner innerModel();
+    public Object getFeatureCounts() {
+        return this.featureCounts;
+    }
 }

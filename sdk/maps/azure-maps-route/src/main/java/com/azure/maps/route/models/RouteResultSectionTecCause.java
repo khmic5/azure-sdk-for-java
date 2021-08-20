@@ -5,8 +5,6 @@
 package com.azure.maps.route.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -15,8 +13,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 @Immutable
 public final class RouteResultSectionTecCause {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(RouteResultSectionTecCause.class);
-
     /*
      * The main cause of the traffic event. Contains a value in the
      * tec002:CauseCode table, as defined in the
@@ -39,7 +35,7 @@ public final class RouteResultSectionTecCause {
      *
      * @return the mainCauseCode value.
      */
-    public Integer mainCauseCode() {
+    public Integer getMainCauseCode() {
         return this.mainCauseCode;
     }
 
@@ -49,15 +45,7 @@ public final class RouteResultSectionTecCause {
      *
      * @return the subCauseCode value.
      */
-    public Integer subCauseCode() {
+    public Integer getSubCauseCode() {
         return this.subCauseCode;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

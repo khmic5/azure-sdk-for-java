@@ -7,10 +7,9 @@ package com.azure.maps.creator.models;
 import com.azure.core.http.HttpHeaders;
 import com.azure.core.http.HttpRequest;
 import com.azure.core.http.rest.ResponseBase;
-import com.azure.maps.creator.fluent.models.GeofenceResponseInner;
 
 /** Contains all response data for the getGeofence operation. */
-public final class SpatialsGetGeofenceResponse extends ResponseBase<SpatialsGetGeofenceHeaders, GeofenceResponseInner> {
+public final class SpatialsGetGeofenceResponse extends ResponseBase<SpatialsGetGeofenceHeaders, GeofenceResponse> {
     /**
      * Creates an instance of SpatialsGetGeofenceResponse.
      *
@@ -21,17 +20,17 @@ public final class SpatialsGetGeofenceResponse extends ResponseBase<SpatialsGetG
      * @param headers the deserialized headers of the HTTP response.
      */
     public SpatialsGetGeofenceResponse(
-        HttpRequest request,
-        int statusCode,
-        HttpHeaders rawHeaders,
-        GeofenceResponseInner value,
-        SpatialsGetGeofenceHeaders headers) {
+            HttpRequest request,
+            int statusCode,
+            HttpHeaders rawHeaders,
+            GeofenceResponse value,
+            SpatialsGetGeofenceHeaders headers) {
         super(request, statusCode, rawHeaders, value, headers);
     }
 
     /** @return the deserialized response body. */
     @Override
-    public GeofenceResponseInner getValue() {
+    public GeofenceResponse getValue() {
         return super.getValue();
     }
 }

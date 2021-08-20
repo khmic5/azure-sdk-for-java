@@ -5,8 +5,6 @@
 package com.azure.maps.route.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
@@ -16,8 +14,6 @@ import java.util.List;
  */
 @Fluent
 public final class RouteResultInstruction {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(RouteResultInstruction.class);
-
     /*
      * Distance from the start of the route to the point of the instruction.
      */
@@ -184,7 +180,7 @@ public final class RouteResultInstruction {
      *
      * @return the routeOffsetInMeters value.
      */
-    public Integer routeOffsetInMeters() {
+    public Integer getRouteOffsetInMeters() {
         return this.routeOffsetInMeters;
     }
 
@@ -193,7 +189,7 @@ public final class RouteResultInstruction {
      *
      * @return the travelTimeInSeconds value.
      */
-    public Integer travelTimeInSeconds() {
+    public Integer getTravelTimeInSeconds() {
         return this.travelTimeInSeconds;
     }
 
@@ -202,7 +198,7 @@ public final class RouteResultInstruction {
      *
      * @return the point value.
      */
-    public CoordinatesPair point() {
+    public CoordinatesPair getPoint() {
         return this.point;
     }
 
@@ -212,7 +208,7 @@ public final class RouteResultInstruction {
      * @param point the point value to set.
      * @return the RouteResultInstruction object itself.
      */
-    public RouteResultInstruction withPoint(CoordinatesPair point) {
+    public RouteResultInstruction setPoint(CoordinatesPair point) {
         this.point = point;
         return this;
     }
@@ -223,7 +219,7 @@ public final class RouteResultInstruction {
      *
      * @return the pointIndex value.
      */
-    public Integer pointIndex() {
+    public Integer getPointIndex() {
         return this.pointIndex;
     }
 
@@ -232,7 +228,7 @@ public final class RouteResultInstruction {
      *
      * @return the instructionType value.
      */
-    public GuidanceInstructionType instructionType() {
+    public GuidanceInstructionType getInstructionType() {
         return this.instructionType;
     }
 
@@ -242,7 +238,7 @@ public final class RouteResultInstruction {
      * @param instructionType the instructionType value to set.
      * @return the RouteResultInstruction object itself.
      */
-    public RouteResultInstruction withInstructionType(GuidanceInstructionType instructionType) {
+    public RouteResultInstruction setInstructionType(GuidanceInstructionType instructionType) {
         this.instructionType = instructionType;
         return this;
     }
@@ -253,7 +249,7 @@ public final class RouteResultInstruction {
      *
      * @return the roadNumbers value.
      */
-    public List<String> roadNumbers() {
+    public List<String> getRoadNumbers() {
         return this.roadNumbers;
     }
 
@@ -263,7 +259,7 @@ public final class RouteResultInstruction {
      *
      * @return the exitNumber value.
      */
-    public String exitNumber() {
+    public String getExitNumber() {
         return this.exitNumber;
     }
 
@@ -273,7 +269,7 @@ public final class RouteResultInstruction {
      *
      * @return the street value.
      */
-    public String street() {
+    public String getStreet() {
         return this.street;
     }
 
@@ -283,7 +279,7 @@ public final class RouteResultInstruction {
      *
      * @return the signpostText value.
      */
-    public String signpostText() {
+    public String getSignpostText() {
         return this.signpostText;
     }
 
@@ -293,7 +289,7 @@ public final class RouteResultInstruction {
      *
      * @return the countryCode value.
      */
-    public String countryCode() {
+    public String getCountryCode() {
         return this.countryCode;
     }
 
@@ -304,7 +300,7 @@ public final class RouteResultInstruction {
      *
      * @return the stateCode value.
      */
-    public String stateCode() {
+    public String getStateCode() {
         return this.stateCode;
     }
 
@@ -314,7 +310,7 @@ public final class RouteResultInstruction {
      *
      * @return the junctionType value.
      */
-    public JunctionType junctionType() {
+    public JunctionType getJunctionType() {
         return this.junctionType;
     }
 
@@ -330,7 +326,7 @@ public final class RouteResultInstruction {
      *
      * @return the turnAngleInDecimalDegrees value.
      */
-    public Integer turnAngleInDecimalDegrees() {
+    public Integer getTurnAngleInDecimalDegrees() {
         return this.turnAngleInDecimalDegrees;
     }
 
@@ -339,7 +335,7 @@ public final class RouteResultInstruction {
      *
      * @return the roundaboutExitNumber value.
      */
-    public String roundaboutExitNumber() {
+    public String getRoundaboutExitNumber() {
         return this.roundaboutExitNumber;
     }
 
@@ -349,7 +345,7 @@ public final class RouteResultInstruction {
      *
      * @return the possibleCombineWithNext value.
      */
-    public Boolean possibleCombineWithNext() {
+    public Boolean isPossibleCombineWithNext() {
         return this.possibleCombineWithNext;
     }
 
@@ -358,7 +354,7 @@ public final class RouteResultInstruction {
      *
      * @return the drivingSide value.
      */
-    public DrivingSide drivingSide() {
+    public DrivingSide getDrivingSide() {
         return this.drivingSide;
     }
 
@@ -367,7 +363,7 @@ public final class RouteResultInstruction {
      *
      * @return the maneuver value.
      */
-    public GuidanceManeuver maneuver() {
+    public GuidanceManeuver getManeuver() {
         return this.maneuver;
     }
 
@@ -376,7 +372,7 @@ public final class RouteResultInstruction {
      *
      * @return the message value.
      */
-    public String message() {
+    public String getMessage() {
         return this.message;
     }
 
@@ -397,18 +393,7 @@ public final class RouteResultInstruction {
      *
      * @return the combinedMessage value.
      */
-    public String combinedMessage() {
+    public String getCombinedMessage() {
         return this.combinedMessage;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (point() != null) {
-            point().validate();
-        }
     }
 }

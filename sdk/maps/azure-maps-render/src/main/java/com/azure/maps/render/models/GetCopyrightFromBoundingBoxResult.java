@@ -4,36 +4,55 @@
 
 package com.azure.maps.render.models;
 
-import com.azure.maps.render.fluent.models.GetCopyrightFromBoundingBoxResultInner;
+import com.azure.core.annotation.Immutable;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/** An immutable client-side representation of GetCopyrightFromBoundingBoxResult. */
-public interface GetCopyrightFromBoundingBoxResult {
+/** This object is returned from a successful Get Copyright From Bounding Box call. */
+@Immutable
+public final class GetCopyrightFromBoundingBoxResult {
+    /*
+     * Format Version property
+     */
+    @JsonProperty(value = "formatVersion", access = JsonProperty.Access.WRITE_ONLY)
+    private String formatVersion;
+
+    /*
+     * General Copyrights array
+     */
+    @JsonProperty(value = "generalCopyrights", access = JsonProperty.Access.WRITE_ONLY)
+    private List<String> generalCopyrights;
+
+    /*
+     * Regions array
+     */
+    @JsonProperty(value = "regions", access = JsonProperty.Access.WRITE_ONLY)
+    private List<RegionCopyrights> regions;
+
     /**
-     * Gets the formatVersion property: Format Version property.
+     * Get the formatVersion property: Format Version property.
      *
      * @return the formatVersion value.
      */
-    String formatVersion();
+    public String getFormatVersion() {
+        return this.formatVersion;
+    }
 
     /**
-     * Gets the generalCopyrights property: General Copyrights array.
+     * Get the generalCopyrights property: General Copyrights array.
      *
      * @return the generalCopyrights value.
      */
-    List<String> generalCopyrights();
+    public List<String> getGeneralCopyrights() {
+        return this.generalCopyrights;
+    }
 
     /**
-     * Gets the regions property: Regions array.
+     * Get the regions property: Regions array.
      *
      * @return the regions value.
      */
-    List<RegionCopyrights> regions();
-
-    /**
-     * Gets the inner com.azure.maps.render.fluent.models.GetCopyrightFromBoundingBoxResultInner object.
-     *
-     * @return the inner object.
-     */
-    GetCopyrightFromBoundingBoxResultInner innerModel();
+    public List<RegionCopyrights> getRegions() {
+        return this.regions;
+    }
 }

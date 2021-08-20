@@ -5,16 +5,12 @@
 package com.azure.maps.search.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /** The classification for the POI being returned. */
 @Immutable
 public final class SearchResultPoiClassification {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(SearchResultPoiClassification.class);
-
     /*
      * Code property
      */
@@ -32,7 +28,7 @@ public final class SearchResultPoiClassification {
      *
      * @return the code value.
      */
-    public String code() {
+    public String getCode() {
         return this.code;
     }
 
@@ -41,18 +37,7 @@ public final class SearchResultPoiClassification {
      *
      * @return the names value.
      */
-    public List<SearchResultPoiClassificationName> names() {
+    public List<SearchResultPoiClassificationName> getNames() {
         return this.names;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (names() != null) {
-            names().forEach(e -> e.validate());
-        }
     }
 }

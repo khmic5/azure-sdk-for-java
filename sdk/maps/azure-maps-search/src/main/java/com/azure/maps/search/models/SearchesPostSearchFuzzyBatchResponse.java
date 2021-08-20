@@ -7,11 +7,10 @@ package com.azure.maps.search.models;
 import com.azure.core.http.HttpHeaders;
 import com.azure.core.http.HttpRequest;
 import com.azure.core.http.rest.ResponseBase;
-import com.azure.maps.search.fluent.models.SearchFuzzyBatchResponseInner;
 
 /** Contains all response data for the postSearchFuzzyBatch operation. */
 public final class SearchesPostSearchFuzzyBatchResponse
-    extends ResponseBase<SearchesPostSearchFuzzyBatchHeaders, SearchFuzzyBatchResponseInner> {
+        extends ResponseBase<SearchesPostSearchFuzzyBatchHeaders, SearchFuzzyBatchResponse> {
     /**
      * Creates an instance of SearchesPostSearchFuzzyBatchResponse.
      *
@@ -22,17 +21,17 @@ public final class SearchesPostSearchFuzzyBatchResponse
      * @param headers the deserialized headers of the HTTP response.
      */
     public SearchesPostSearchFuzzyBatchResponse(
-        HttpRequest request,
-        int statusCode,
-        HttpHeaders rawHeaders,
-        SearchFuzzyBatchResponseInner value,
-        SearchesPostSearchFuzzyBatchHeaders headers) {
+            HttpRequest request,
+            int statusCode,
+            HttpHeaders rawHeaders,
+            SearchFuzzyBatchResponse value,
+            SearchesPostSearchFuzzyBatchHeaders headers) {
         super(request, statusCode, rawHeaders, value, headers);
     }
 
     /** @return the deserialized response body. */
     @Override
-    public SearchFuzzyBatchResponseInner getValue() {
+    public SearchFuzzyBatchResponse getValue() {
         return super.getValue();
     }
 }

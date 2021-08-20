@@ -5,16 +5,12 @@
 package com.azure.maps.creator.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /** The GeoJsonGeometryCollectionData model. */
 @Fluent
 public class GeoJsonGeometryCollectionData {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(GeoJsonGeometryCollectionData.class);
-
     /*
      * Contains a list of valid `GeoJSON` geometry objects. **Note** that
      * coordinates in GeoJSON are in x, y order (longitude, latitude).
@@ -28,7 +24,7 @@ public class GeoJsonGeometryCollectionData {
      *
      * @return the geometries value.
      */
-    public List<GeoJsonGeometry> geometries() {
+    public List<GeoJsonGeometry> getGeometries() {
         return this.geometries;
     }
 
@@ -39,24 +35,8 @@ public class GeoJsonGeometryCollectionData {
      * @param geometries the geometries value to set.
      * @return the GeoJsonGeometryCollectionData object itself.
      */
-    public GeoJsonGeometryCollectionData withGeometries(List<GeoJsonGeometry> geometries) {
+    public GeoJsonGeometryCollectionData setGeometries(List<GeoJsonGeometry> geometries) {
         this.geometries = geometries;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (geometries() == null) {
-            throw logger
-                .logExceptionAsError(
-                    new IllegalArgumentException(
-                        "Missing required property geometries in model GeoJsonGeometryCollectionData"));
-        } else {
-            geometries().forEach(e -> e.validate());
-        }
     }
 }

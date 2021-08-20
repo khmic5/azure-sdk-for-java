@@ -5,15 +5,11 @@
 package com.azure.maps.timezone.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** Details in effect at the local time. */
 @Immutable
 public final class ReferenceTimeById {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(ReferenceTimeById.class);
-
     /*
      * Time zone name in effect at the reference timestamp (i.e. PST or PDT
      * depending whether Daylight Savings Time is in effect).
@@ -58,7 +54,7 @@ public final class ReferenceTimeById {
      *
      * @return the tag value.
      */
-    public String tag() {
+    public String getTag() {
         return this.tag;
     }
 
@@ -67,7 +63,7 @@ public final class ReferenceTimeById {
      *
      * @return the standardOffset value.
      */
-    public String standardOffset() {
+    public String getStandardOffset() {
         return this.standardOffset;
     }
 
@@ -76,7 +72,7 @@ public final class ReferenceTimeById {
      *
      * @return the daylightSavings value.
      */
-    public String daylightSavings() {
+    public String getDaylightSavings() {
         return this.daylightSavings;
     }
 
@@ -85,7 +81,7 @@ public final class ReferenceTimeById {
      *
      * @return the wallTime value.
      */
-    public String wallTime() {
+    public String getWallTime() {
         return this.wallTime;
     }
 
@@ -95,7 +91,7 @@ public final class ReferenceTimeById {
      *
      * @return the posixTzValidYear value.
      */
-    public Integer posixTzValidYear() {
+    public Integer getPosixTzValidYear() {
         return this.posixTzValidYear;
     }
 
@@ -104,15 +100,7 @@ public final class ReferenceTimeById {
      *
      * @return the posixTz value.
      */
-    public String posixTz() {
+    public String getPosixTz() {
         return this.posixTz;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

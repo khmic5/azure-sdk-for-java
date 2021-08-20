@@ -5,16 +5,12 @@
 package com.azure.maps.search.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /** The GeoJsonLineStringData model. */
 @Fluent
 public class GeoJsonLineStringData {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(GeoJsonLineStringData.class);
-
     /*
      * Coordinates for the `GeoJson LineString` geometry.
      */
@@ -26,7 +22,7 @@ public class GeoJsonLineStringData {
      *
      * @return the coordinates value.
      */
-    public List<List<Double>> coordinates() {
+    public List<List<Double>> getCoordinates() {
         return this.coordinates;
     }
 
@@ -36,22 +32,8 @@ public class GeoJsonLineStringData {
      * @param coordinates the coordinates value to set.
      * @return the GeoJsonLineStringData object itself.
      */
-    public GeoJsonLineStringData withCoordinates(List<List<Double>> coordinates) {
+    public GeoJsonLineStringData setCoordinates(List<List<Double>> coordinates) {
         this.coordinates = coordinates;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (coordinates() == null) {
-            throw logger
-                .logExceptionAsError(
-                    new IllegalArgumentException(
-                        "Missing required property coordinates in model GeoJsonLineStringData"));
-        }
     }
 }

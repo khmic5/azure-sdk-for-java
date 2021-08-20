@@ -5,15 +5,11 @@
 package com.azure.maps.search.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** The name of the brand for the POI being returned. */
 @Immutable
 public final class SearchResultPoiBrand {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(SearchResultPoiBrand.class);
-
     /*
      * Name of the brand
      */
@@ -25,15 +21,7 @@ public final class SearchResultPoiBrand {
      *
      * @return the name value.
      */
-    public String name() {
+    public String getName() {
         return this.name;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

@@ -5,16 +5,12 @@
 package com.azure.maps.weather.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /** Information about a severe weather alert. */
 @Fluent
 public final class SevereWeatherAlert {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(SevereWeatherAlert.class);
-
     /*
      * 2-character ISO 3166-1 Alpha-2 country code, for example, "US".
      */
@@ -97,7 +93,7 @@ public final class SevereWeatherAlert {
      *
      * @return the countryCode value.
      */
-    public String countryCode() {
+    public String getCountryCode() {
         return this.countryCode;
     }
 
@@ -107,7 +103,7 @@ public final class SevereWeatherAlert {
      * @param countryCode the countryCode value to set.
      * @return the SevereWeatherAlert object itself.
      */
-    public SevereWeatherAlert withCountryCode(String countryCode) {
+    public SevereWeatherAlert setCountryCode(String countryCode) {
         this.countryCode = countryCode;
         return this;
     }
@@ -117,7 +113,7 @@ public final class SevereWeatherAlert {
      *
      * @return the alertId value.
      */
-    public Integer alertId() {
+    public Integer getAlertId() {
         return this.alertId;
     }
 
@@ -127,7 +123,7 @@ public final class SevereWeatherAlert {
      * @param alertId the alertId value to set.
      * @return the SevereWeatherAlert object itself.
      */
-    public SevereWeatherAlert withAlertId(Integer alertId) {
+    public SevereWeatherAlert setAlertId(Integer alertId) {
         this.alertId = alertId;
         return this;
     }
@@ -137,7 +133,7 @@ public final class SevereWeatherAlert {
      *
      * @return the description value.
      */
-    public SevereWeatherAlertDescription description() {
+    public SevereWeatherAlertDescription getDescription() {
         return this.description;
     }
 
@@ -147,7 +143,7 @@ public final class SevereWeatherAlert {
      * @param description the description value to set.
      * @return the SevereWeatherAlert object itself.
      */
-    public SevereWeatherAlert withDescription(SevereWeatherAlertDescription description) {
+    public SevereWeatherAlert setDescription(SevereWeatherAlertDescription description) {
         this.description = description;
         return this;
     }
@@ -157,7 +153,7 @@ public final class SevereWeatherAlert {
      *
      * @return the category value.
      */
-    public String category() {
+    public String getCategory() {
         return this.category;
     }
 
@@ -167,7 +163,7 @@ public final class SevereWeatherAlert {
      * @param category the category value to set.
      * @return the SevereWeatherAlert object itself.
      */
-    public SevereWeatherAlert withCategory(String category) {
+    public SevereWeatherAlert setCategory(String category) {
         this.category = category;
         return this;
     }
@@ -180,7 +176,7 @@ public final class SevereWeatherAlert {
      *
      * @return the priority value.
      */
-    public Integer priority() {
+    public Integer getPriority() {
         return this.priority;
     }
 
@@ -193,7 +189,7 @@ public final class SevereWeatherAlert {
      * @param priority the priority value to set.
      * @return the SevereWeatherAlert object itself.
      */
-    public SevereWeatherAlert withPriority(Integer priority) {
+    public SevereWeatherAlert setPriority(Integer priority) {
         this.priority = priority;
         return this;
     }
@@ -204,7 +200,7 @@ public final class SevereWeatherAlert {
      *
      * @return the classProperty value.
      */
-    public String classProperty() {
+    public String getClassProperty() {
         return this.classProperty;
     }
 
@@ -215,7 +211,7 @@ public final class SevereWeatherAlert {
      * @param classProperty the classProperty value to set.
      * @return the SevereWeatherAlert object itself.
      */
-    public SevereWeatherAlert withClassProperty(String classProperty) {
+    public SevereWeatherAlert setClassProperty(String classProperty) {
         this.classProperty = classProperty;
         return this;
     }
@@ -226,7 +222,7 @@ public final class SevereWeatherAlert {
      *
      * @return the level value.
      */
-    public String level() {
+    public String getLevel() {
         return this.level;
     }
 
@@ -237,7 +233,7 @@ public final class SevereWeatherAlert {
      * @param level the level value to set.
      * @return the SevereWeatherAlert object itself.
      */
-    public SevereWeatherAlert withLevel(String level) {
+    public SevereWeatherAlert setLevel(String level) {
         this.level = level;
         return this;
     }
@@ -249,7 +245,7 @@ public final class SevereWeatherAlert {
      *
      * @return the source value.
      */
-    public String source() {
+    public String getSource() {
         return this.source;
     }
 
@@ -261,7 +257,7 @@ public final class SevereWeatherAlert {
      * @param source the source value to set.
      * @return the SevereWeatherAlert object itself.
      */
-    public SevereWeatherAlert withSource(String source) {
+    public SevereWeatherAlert setSource(String source) {
         this.source = source;
         return this;
     }
@@ -271,7 +267,7 @@ public final class SevereWeatherAlert {
      *
      * @return the sourceId value.
      */
-    public Integer sourceId() {
+    public Integer getSourceId() {
         return this.sourceId;
     }
 
@@ -281,7 +277,7 @@ public final class SevereWeatherAlert {
      * @param sourceId the sourceId value to set.
      * @return the SevereWeatherAlert object itself.
      */
-    public SevereWeatherAlert withSourceId(Integer sourceId) {
+    public SevereWeatherAlert setSourceId(Integer sourceId) {
         this.sourceId = sourceId;
         return this;
     }
@@ -292,7 +288,7 @@ public final class SevereWeatherAlert {
      *
      * @return the disclaimer value.
      */
-    public String disclaimer() {
+    public String getDisclaimer() {
         return this.disclaimer;
     }
 
@@ -303,7 +299,7 @@ public final class SevereWeatherAlert {
      * @param disclaimer the disclaimer value to set.
      * @return the SevereWeatherAlert object itself.
      */
-    public SevereWeatherAlert withDisclaimer(String disclaimer) {
+    public SevereWeatherAlert setDisclaimer(String disclaimer) {
         this.disclaimer = disclaimer;
         return this;
     }
@@ -313,7 +309,7 @@ public final class SevereWeatherAlert {
      *
      * @return the alertAreas value.
      */
-    public List<AlertArea> alertAreas() {
+    public List<AlertArea> getAlertAreas() {
         return this.alertAreas;
     }
 
@@ -323,22 +319,8 @@ public final class SevereWeatherAlert {
      * @param alertAreas the alertAreas value to set.
      * @return the SevereWeatherAlert object itself.
      */
-    public SevereWeatherAlert withAlertAreas(List<AlertArea> alertAreas) {
+    public SevereWeatherAlert setAlertAreas(List<AlertArea> alertAreas) {
         this.alertAreas = alertAreas;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (description() != null) {
-            description().validate();
-        }
-        if (alertAreas() != null) {
-            alertAreas().forEach(e -> e.validate());
-        }
     }
 }

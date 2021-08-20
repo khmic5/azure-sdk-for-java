@@ -5,15 +5,11 @@
 package com.azure.maps.creator.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** The numeric rule. The color is selected from the first range it falls into. */
 @Fluent
 public final class NumberRuleObject {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(NumberRuleObject.class);
-
     /*
      * The numeric value range for this style rule. If the value is in the
      * range, all the conditions must hold true.
@@ -37,7 +33,7 @@ public final class NumberRuleObject {
      *
      * @return the range value.
      */
-    public RangeObject range() {
+    public RangeObject getRange() {
         return this.range;
     }
 
@@ -48,7 +44,7 @@ public final class NumberRuleObject {
      * @param range the range value to set.
      * @return the NumberRuleObject object itself.
      */
-    public NumberRuleObject withRange(RangeObject range) {
+    public NumberRuleObject setRange(RangeObject range) {
         this.range = range;
         return this;
     }
@@ -61,7 +57,7 @@ public final class NumberRuleObject {
      *
      * @return the color value.
      */
-    public String color() {
+    public String getColor() {
         return this.color;
     }
 
@@ -74,19 +70,8 @@ public final class NumberRuleObject {
      * @param color the color value to set.
      * @return the NumberRuleObject object itself.
      */
-    public NumberRuleObject withColor(String color) {
+    public NumberRuleObject setColor(String color) {
         this.color = color;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (range() != null) {
-            range().validate();
-        }
     }
 }

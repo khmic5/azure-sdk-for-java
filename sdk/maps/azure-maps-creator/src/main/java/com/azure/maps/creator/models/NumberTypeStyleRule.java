@@ -5,8 +5,6 @@
 package com.azure.maps.creator.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
@@ -17,8 +15,6 @@ import java.util.List;
 @JsonTypeName("number")
 @Fluent
 public final class NumberTypeStyleRule extends StyleObject {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(NumberTypeStyleRule.class);
-
     /*
      * Numeric style rules.
      */
@@ -30,7 +26,7 @@ public final class NumberTypeStyleRule extends StyleObject {
      *
      * @return the rules value.
      */
-    public List<NumberRuleObject> rules() {
+    public List<NumberRuleObject> getRules() {
         return this.rules;
     }
 
@@ -40,32 +36,8 @@ public final class NumberTypeStyleRule extends StyleObject {
      * @param rules the rules value to set.
      * @return the NumberTypeStyleRule object itself.
      */
-    public NumberTypeStyleRule withRules(List<NumberRuleObject> rules) {
+    public NumberTypeStyleRule setRules(List<NumberRuleObject> rules) {
         this.rules = rules;
         return this;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public NumberTypeStyleRule withKeyName(String keyName) {
-        super.withKeyName(keyName);
-        return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    @Override
-    public void validate() {
-        super.validate();
-        if (rules() == null) {
-            throw logger
-                .logExceptionAsError(
-                    new IllegalArgumentException("Missing required property rules in model NumberTypeStyleRule"));
-        } else {
-            rules().forEach(e -> e.validate());
-        }
     }
 }

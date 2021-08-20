@@ -5,16 +5,12 @@
 package com.azure.maps.search.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /** Opening hours for a POI (Points of Interest). */
 @Immutable
 public final class SearchResultPoiOpeningHours {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(SearchResultPoiOpeningHours.class);
-
     /*
      * Value used in the Request
      */
@@ -32,7 +28,7 @@ public final class SearchResultPoiOpeningHours {
      *
      * @return the mode value.
      */
-    public String mode() {
+    public String getMode() {
         return this.mode;
     }
 
@@ -41,18 +37,7 @@ public final class SearchResultPoiOpeningHours {
      *
      * @return the timeRanges value.
      */
-    public List<SearchResultPoiOpeningHoursTimeRange> timeRanges() {
+    public List<SearchResultPoiOpeningHoursTimeRange> getTimeRanges() {
         return this.timeRanges;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (timeRanges() != null) {
-            timeRanges().forEach(e -> e.validate());
-        }
     }
 }

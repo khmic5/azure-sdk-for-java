@@ -4,29 +4,51 @@
 
 package com.azure.maps.creator.models;
 
-import com.azure.maps.creator.fluent.models.LandingPageResponseInner;
+import com.azure.core.annotation.Fluent;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/** An immutable client-side representation of LandingPageResponse. */
-public interface LandingPageResponse {
+/** The LandingPageResponse model. */
+@Fluent
+public final class LandingPageResponse {
+    /*
+     * The ontology version of this dataset.
+     */
+    @JsonProperty(value = "ontology", access = JsonProperty.Access.WRITE_ONLY)
+    private String ontology;
+
+    /*
+     * Links to other WFS endpoints.
+     */
+    @JsonProperty(value = "links", required = true)
+    private List<WfsEndpointLink> links;
+
     /**
-     * Gets the ontology property: The ontology version of this dataset.
+     * Get the ontology property: The ontology version of this dataset.
      *
      * @return the ontology value.
      */
-    String ontology();
+    public String getOntology() {
+        return this.ontology;
+    }
 
     /**
-     * Gets the links property: Links to other WFS endpoints.
+     * Get the links property: Links to other WFS endpoints.
      *
      * @return the links value.
      */
-    List<WfsEndpointLink> links();
+    public List<WfsEndpointLink> getLinks() {
+        return this.links;
+    }
 
     /**
-     * Gets the inner com.azure.maps.creator.fluent.models.LandingPageResponseInner object.
+     * Set the links property: Links to other WFS endpoints.
      *
-     * @return the inner object.
+     * @param links the links value to set.
+     * @return the LandingPageResponse object itself.
      */
-    LandingPageResponseInner innerModel();
+    public LandingPageResponse setLinks(List<WfsEndpointLink> links) {
+        this.links = links;
+        return this;
+    }
 }

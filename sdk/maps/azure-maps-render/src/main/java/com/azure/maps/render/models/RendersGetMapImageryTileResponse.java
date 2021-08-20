@@ -20,11 +20,11 @@ public final class RendersGetMapImageryTileResponse extends ResponseBase<Renders
      * @param headers the deserialized headers of the HTTP response.
      */
     public RendersGetMapImageryTileResponse(
-        HttpRequest request,
-        int statusCode,
-        HttpHeaders rawHeaders,
-        Void value,
-        RendersGetMapImageryTileHeaders headers) {
+            HttpRequest request,
+            int statusCode,
+            HttpHeaders rawHeaders,
+            Void value,
+            RendersGetMapImageryTileHeaders headers) {
         super(request, statusCode, rawHeaders, value, headers);
     }
 }

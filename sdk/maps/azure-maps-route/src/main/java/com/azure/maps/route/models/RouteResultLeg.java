@@ -5,16 +5,12 @@
 package com.azure.maps.route.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /** The RouteResultLeg model. */
 @Immutable
 public final class RouteResultLeg {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(RouteResultLeg.class);
-
     /*
      * Summary object for route section.
      */
@@ -32,7 +28,7 @@ public final class RouteResultLeg {
      *
      * @return the summary value.
      */
-    public RouteResultLegSummary summary() {
+    public RouteResultLegSummary getSummary() {
         return this.summary;
     }
 
@@ -41,21 +37,7 @@ public final class RouteResultLeg {
      *
      * @return the points value.
      */
-    public List<CoordinatesPair> points() {
+    public List<CoordinatesPair> getPoints() {
         return this.points;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (summary() != null) {
-            summary().validate();
-        }
-        if (points() != null) {
-            points().forEach(e -> e.validate());
-        }
     }
 }

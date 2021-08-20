@@ -4,21 +4,24 @@
 
 package com.azure.maps.traffic.models;
 
-import com.azure.maps.traffic.fluent.models.TrafficFlowSegmentResultInner;
+import com.azure.core.annotation.Immutable;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** An immutable client-side representation of TrafficFlowSegmentResult. */
-public interface TrafficFlowSegmentResult {
+/** This object is returned from a successful Traffic Flow Segment call. */
+@Immutable
+public final class TrafficFlowSegmentResult {
+    /*
+     * Flow Segment Data property
+     */
+    @JsonProperty(value = "flowSegmentData", access = JsonProperty.Access.WRITE_ONLY)
+    private TrafficFlowSegmentResultFlowSegmentData flowSegmentData;
+
     /**
-     * Gets the flowSegmentData property: Flow Segment Data property.
+     * Get the flowSegmentData property: Flow Segment Data property.
      *
      * @return the flowSegmentData value.
      */
-    TrafficFlowSegmentResultFlowSegmentData flowSegmentData();
-
-    /**
-     * Gets the inner com.azure.maps.traffic.fluent.models.TrafficFlowSegmentResultInner object.
-     *
-     * @return the inner object.
-     */
-    TrafficFlowSegmentResultInner innerModel();
+    public TrafficFlowSegmentResultFlowSegmentData getFlowSegmentData() {
+        return this.flowSegmentData;
+    }
 }

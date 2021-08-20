@@ -4,23 +4,27 @@
 
 package com.azure.maps.elevation.models;
 
-import com.azure.maps.elevation.fluent.models.PointsResultInner;
+import com.azure.core.annotation.Immutable;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/** An immutable client-side representation of PointsResult. */
-public interface PointsResult {
+/** The response from a successful Elevation Points request. */
+@Immutable
+public final class PointsResult {
+    /*
+     * The response for point/points elevation API. The result will be in same
+     * sequence of points listed in request.
+     */
+    @JsonProperty(value = "data", access = JsonProperty.Access.WRITE_ONLY)
+    private List<PointElevationResult> data;
+
     /**
-     * Gets the data property: The response for point/points elevation API. The result will be in same sequence of
-     * points listed in request.
+     * Get the data property: The response for point/points elevation API. The result will be in same sequence of points
+     * listed in request.
      *
      * @return the data value.
      */
-    List<PointElevationResult> data();
-
-    /**
-     * Gets the inner com.azure.maps.elevation.fluent.models.PointsResultInner object.
-     *
-     * @return the inner object.
-     */
-    PointsResultInner innerModel();
+    public List<PointElevationResult> getData() {
+        return this.data;
+    }
 }

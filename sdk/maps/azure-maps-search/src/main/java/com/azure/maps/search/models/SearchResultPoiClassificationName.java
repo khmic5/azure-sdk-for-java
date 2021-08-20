@@ -5,15 +5,11 @@
 package com.azure.maps.search.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** Name for the classification. */
 @Immutable
 public final class SearchResultPoiClassificationName {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(SearchResultPoiClassificationName.class);
-
     /*
      * Name Locale property
      */
@@ -31,7 +27,7 @@ public final class SearchResultPoiClassificationName {
      *
      * @return the nameLocale value.
      */
-    public String nameLocale() {
+    public String getNameLocale() {
         return this.nameLocale;
     }
 
@@ -40,15 +36,7 @@ public final class SearchResultPoiClassificationName {
      *
      * @return the name value.
      */
-    public String name() {
+    public String getName() {
         return this.name;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

@@ -5,8 +5,6 @@
 package com.azure.maps.route.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
@@ -16,8 +14,6 @@ import java.util.List;
  */
 @Fluent
 public final class RouteResultSectionTec {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(RouteResultSectionTec.class);
-
     /*
      * The effect on the traffic flow. Contains a value in the
      * tec001:EffectCode table, as defined in the
@@ -40,7 +36,7 @@ public final class RouteResultSectionTec {
      *
      * @return the effectCode value.
      */
-    public Integer effectCode() {
+    public Integer getEffectCode() {
         return this.effectCode;
     }
 
@@ -49,7 +45,7 @@ public final class RouteResultSectionTec {
      *
      * @return the causes value.
      */
-    public List<RouteResultSectionTecCause> causes() {
+    public List<RouteResultSectionTecCause> getCauses() {
         return this.causes;
     }
 
@@ -59,19 +55,8 @@ public final class RouteResultSectionTec {
      * @param causes the causes value to set.
      * @return the RouteResultSectionTec object itself.
      */
-    public RouteResultSectionTec withCauses(List<RouteResultSectionTecCause> causes) {
+    public RouteResultSectionTec setCauses(List<RouteResultSectionTecCause> causes) {
         this.causes = causes;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (causes() != null) {
-            causes().forEach(e -> e.validate());
-        }
     }
 }

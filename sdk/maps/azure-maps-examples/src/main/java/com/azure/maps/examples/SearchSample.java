@@ -1,7 +1,6 @@
 package com.azure.maps.examples;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -9,21 +8,17 @@ import com.azure.core.http.HttpPipelineCallContext;
 import com.azure.core.http.HttpPipelineNextPolicy;
 import com.azure.core.http.HttpResponse;
 import com.azure.core.http.policy.HttpPipelinePolicy;
-import com.azure.core.http.rest.Response;
-import com.azure.core.management.AzureEnvironment;
-import com.azure.core.management.polling.PollResult;
-import com.azure.core.management.profile.AzureProfile;
-import com.azure.core.util.polling.SyncPoller;
 import com.azure.identity.DefaultAzureCredential;
 import com.azure.identity.DefaultAzureCredentialBuilder;
-import com.azure.maps.search.SearchManager;
-import com.azure.maps.search.fluent.SearchesClient;
-import com.azure.maps.search.fluent.models.SearchAddressBatchResponseInner;
-import com.azure.maps.search.fluent.models.SearchAddressReverseBatchResponseInner;
-import com.azure.maps.search.fluent.models.SearchCommonResponseInner;
+import com.azure.maps.search.SearchClient;
+import com.azure.maps.search.SearchClientBuilder;
+import com.azure.maps.search.implementation.SearchClientImpl;
 import com.azure.maps.search.models.BatchRequestBody;
 import com.azure.maps.search.models.ResponseFormat;
+import com.azure.maps.search.models.SearchAddressBatchResponse;
+import com.azure.maps.search.models.SearchAddressReverseBatchResponse;
 import com.azure.maps.search.models.SearchAlongRouteRequestBody;
+import com.azure.maps.search.models.SearchCommonResponse;
 import com.azure.maps.search.models.SearchInsideGeometryRequestBody;
 import com.azure.maps.search.models.TextFormat;
 
@@ -56,90 +51,65 @@ public class SearchSample {
 
         // use default credentials
         DefaultAzureCredential defaultCreds = new DefaultAzureCredentialBuilder().build();
-
-        // authenticate and create search client
-        // TODO see why calling searches() here causes infinite recursion on Jackson
-        SearchesClient client = SearchManager
-            .configure()
-            .withPolicy(subscriptionKeyPolicy)
-            .authenticate(defaultCreds, new AzureProfile(new AzureEnvironment(new HashMap<String, String>() {{
-                put("managementEndpointUrl", "https://atlas.microsoft.com");
-            }}))).serviceClient().getSearches();
+        SearchClientBuilder builder = new SearchClientBuilder();
+        builder.addPolicy(subscriptionKeyPolicy);
+        SearchClient client = builder.buildClient();
 
         /* Stand-alone, one-shot operations */
 
         // Get search address - https://docs.microsoft.com/en-us/rest/api/maps/search/get-search-address
         // This is the only version of this call. No "WithResponse" version.
         System.out.println("Get Search Address:");
-        MapsCommon.print(client.getSearchAddress(TextFormat.JSON, "15127 NE 24th Street, Redmond, WA 98052"));
+        MapsCommon.print(client.getSearchAddress(TextFormat.JSON, "15127 NE 24th Street, Redmond, WA 98052",
+            null, null, null, null, null, null, null, null, null, null, null, null));
 
         // Get search address reverse - https://docs.microsoft.com/en-us/rest/api/maps/search/get-search-address-reverse
-        // client.getSearchAddressReverseWithResponse() offers a complete version including more parameters and
-        // the underlying HttpResponse object.
         System.out.println("Get Search Address Reverse:");
-        MapsCommon.print(client.getSearchAddressReverse(TextFormat.JSON, "37.337,-121.89"));
+        MapsCommon.print(client.getSearchAddressReverse(TextFormat.JSON, "37.337,-121.89",
+            null, null, null, null, null, null, null, null, null, null, null));
 
         // Get search address reverse cross street - https://docs.microsoft.com/en-us/rest/api/maps/search/get-search-address-reverse-cross-street
-        // client.getSearchAddressReverseCrossStreetWithResponse()
         System.out.println("Get Search Address Reverse Cross Street:");
-        MapsCommon.print(client.getSearchAddressReverseCrossStreet(TextFormat.JSON, "37.337,-121.89"));
+        MapsCommon.print(client.getSearchAddressReverseCrossStreet(TextFormat.JSON, "37.337,-121.89", null, null, null, null, null));
 
         // Get search address structured - https://docs.microsoft.com/en-us/rest/api/maps/search/get-search-address-structured
-        // TODO The simple version is throwing an exception. Only the complete one is working.
-        // MapsCommon.print(client.getSearchAddressStructured(TextFormat.JSON)); //TextFormat.JSON, null, "US", null, null,
-        //"15127", "NE 24th Street", null, "Redmond", null, null, null, "WA", "98052", null, null));
-
         System.out.println("Get Search Address Structured:");
-        Response<SearchCommonResponseInner> response = client.getSearchAddressStructuredWithResponse(TextFormat.JSON, null, "US", null, null,
-            "15127", "NE 24th Street", null, "Redmond", null, null, null, "WA", "98052", null, null, null);
-        MapsCommon.print(response.getValue());
+        MapsCommon.print(client.getSearchAddressStructured(TextFormat.JSON, null, "US", null, null,
+            "15127", "NE 24th Street", null, "Redmond", null, null, null, "WA", "98052", null, null));
 
         // Get search fuzzy - https://docs.microsoft.com/en-us/rest/api/maps/search/get-search-fuzzy
-        // client.getSearchFuzzyWithResponse() offers a complete version including more parameters and
-        // the underlying HttpResponse object.
         System.out.println("Get Search Fuzzy:");
-        SearchCommonResponseInner results = client.getSearchFuzzy(TextFormat.JSON, "seattle");
+        SearchCommonResponse results = client.getSearchFuzzy(TextFormat.JSON, "seattle", null, null, null, null,
+            null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
         MapsCommon.print(results);
 
         // Get search polygon - https://docs.microsoft.com/en-us/rest/api/maps/search/get-search-polygon
-        // client.getSearchPolygonWithResponse() offers a complete version including more parameters and
-        // the underlying HttpResponse object.
-        List<String> ids = results.results().stream().map(item -> item.dataSources().geometry().id())
+        List<String> ids = results.getResults().stream().map(item -> item.getDataSources().getGeometry().getId())
                 .collect(Collectors.toList());
 
         System.out.println("Get Search Polygon:");
         MapsCommon.print(client.getSearchPolygon(ResponseFormat.JSON, ids));
 
         // Get search nearby - https://docs.microsoft.com/en-us/rest/api/maps/search/get-search-nearby
-        // client.getSearchNearbyWithResponse() offers a complete version including more parameters and
-        // the underlying HttpResponse object.
         System.out.println("Get Search Nearby:");
-        MapsCommon.print(client.getSearchNearby(TextFormat.JSON, 40.706270f, -74.011454f));
+        MapsCommon.print(client.getSearchNearby(TextFormat.JSON, 40.706270f, -74.011454f, null, null, null, null,
+            null, null, null, null, null, null));
 
         // Get search POI - https://docs.microsoft.com/en-us/rest/api/maps/search/get-search-poi
-        // client.getSearchPoiWithResponse() offers a complete version including more parameters and
-        // the underlying HttpResponse object.
         System.out.println("Get Search POI:");
-        MapsCommon.print(client.getSearchPoi(TextFormat.JSON, "juice bars"));
-
-        // Example of a WithResponse() call.
-        Response<SearchCommonResponseInner> poiResponse = client.getSearchPoiWithResponse(TextFormat.JSON, "juice bars", null, 5, null, null, null,
-                47.606038f, -122.333345f, 8046f, null, null, null, null, null, null, null, null, null);
-        System.out.println("Status code: " + poiResponse.getStatusCode());
-        System.out.println("Headers:" + poiResponse.getHeaders().toString());
-        MapsCommon.print(poiResponse.getValue());
+        MapsCommon.print(client.getSearchPOI(TextFormat.JSON, "juice bars", null, null, null, null, null, null,
+            null, null, null, null, null, null, null, null, null, null));
 
         // Get search POI Category - https://docs.microsoft.com/en-us/rest/api/maps/search/get-search-poi-category
-        // client.getSearchPoiCategoryWithResponse() offers a complete version including more parameters and
-        // the underlying HttpResponse object.
         System.out.println("Get Search POI Category:");
-        MapsCommon.print(client.getSearchPoiCategory(TextFormat.JSON, "atm"));
+        MapsCommon.print(client.getSearchPOICategory(TextFormat.JSON, "atm", null, null, null, null, null, null,
+            null, null, null, null, null, null, null, null, null, null));
 
         // Get search POI Category Tree - https://docs.microsoft.com/en-us/rest/api/maps/search/get-search-poi-category-tree-preview
         // client.getSearchPoiCategoryTreePreviewWithResponse() offers a complete version including more parameters and
         // the underlying HttpResponse object.
         System.out.println("Get Search POI Category Tree:");
-        MapsCommon.print(client.getSearchPoiCategoryTreePreview(ResponseFormat.JSON));
+        MapsCommon.print(client.getSearchPOICategoryTreePreview(ResponseFormat.JSON, null));
 
         // Post search along route - https://docs.microsoft.com/en-us/rest/api/maps/search/post-search-along-route
         // client.postSearchAlongRouteWithResponse() offers a complete version including more parameters and
@@ -150,7 +120,7 @@ public class SearchSample {
                 SearchAlongRouteRequestBody.class);
 
         MapsCommon.print(client.postSearchAlongRoute(TextFormat.JSON, "burger", 1000,
-                searchAlongRouteRequestBody)); //, null, 2, null, null, null, null));
+                searchAlongRouteRequestBody, null, 2, null, null, null, null));
 
         // Post search along route - https://docs.microsoft.com/en-us/rest/api/maps/search/post-search-along-route
         // client.postSearchInsideGeometryWithResponse() offers a complete version including more parameters and
@@ -160,15 +130,13 @@ public class SearchSample {
                 MapsCommon.readContent(MapsCommon.getResource("/search_inside_geometry_request_body.json")),
                 SearchInsideGeometryRequestBody.class);
         MapsCommon.print(client.postSearchInsideGeometry(TextFormat.JSON, "burger",
-                searchInsideGeometryRequestBody)); // , 2, null, null, null, null, null, null));
+                searchInsideGeometryRequestBody, 2, null, null, null, null, null, null));
 
         /* Batch operations. */
 
         // Post search address batch sync - https://docs.microsoft.com/en-us/rest/api/maps/search/post-search-address-batch
         // This call posts addresses for search using the Synchronous Batch API.
         // All results will be available when the call returns. A maximum of 100 addresses can be searched this way.
-        // client.postSearchAddressBatchSyncWithResponse() offers a complete version including more parameters and
-        // the underlying HttpResponse object.
         System.out.println("Post Search Address Batch Sync");
         BatchRequestBody contentJson = MapsCommon.readJson(
                 MapsCommon.readContent(MapsCommon.getResource("/search_address_batch_request_body.json")),
@@ -180,23 +148,9 @@ public class SearchSample {
         // There are two ways to call the Batch Asynchronous API:
         // - client.postSearchAddressBatch() will call the async API and block waiting for the result. All addresses
         //      will be available when the call returns. This allows simplifying the call and search more than 100 addresses.
-        // - client.beginPostSearchAddressBatch() will call the async API and return a SyncPoller<T>. It can be used
-        //      to poll for results and query the long running async operation.
-
         // Use async API + blocking call
         System.out.println("Post Search Address Batch Async - Blocking call");
-        SearchAddressBatchResponseInner resp = client.postSearchAddressBatch(ResponseFormat.JSON, contentJson);
-        MapsCommon.print(resp.batchItems());
-
-        // Use async API + non-blocking call
-        System.out.println("Post Search Address Batch Async - Non-blocking call");
-        SyncPoller<PollResult<SearchAddressBatchResponseInner>, SearchAddressBatchResponseInner> poller =
-            client.beginPostSearchAddressBatch(ResponseFormat.JSON, contentJson);
-        System.out.println("Poller obtained");
-        System.out.println("Poller status so far: " + poller.poll().getStatus());
-        System.out.println("Final value: ");
-        poller.waitForCompletion();
-        MapsCommon.print(poller.getFinalResult());
+        MapsCommon.print(client.postSearchAddressBatch(ResponseFormat.JSON, contentJson));
 
         // Post search address reverse batch - https://docs.microsoft.com/en-us/rest/api/maps/search/post-search-address-reverse-batch
         // This is also a batch API like postSearchAddressBatch(), so the same calling patterns apply.
@@ -204,8 +158,8 @@ public class SearchSample {
         contentJson = MapsCommon.readJson(
                 MapsCommon.readContent(MapsCommon.getResource("/search_address_reverse_batch_request_body.json")),
                 BatchRequestBody.class);
-        SearchAddressReverseBatchResponseInner r = client.postSearchAddressReverseBatchSync(ResponseFormat.JSON, contentJson);
-        MapsCommon.print(r.batchItems());
+        SearchAddressReverseBatchResponse br = client.postSearchAddressReverseBatchSync(ResponseFormat.JSON, contentJson);
+        MapsCommon.print(br.getBatchItems());
 
         // Post search address reverse batch - https://docs.microsoft.com/en-us/rest/api/maps/search/post-search-fuzzy-batch
         // This is also a batch API like postSearchAddressBatch(), so the same calling patterns apply.
@@ -214,5 +168,7 @@ public class SearchSample {
                 MapsCommon.readContent(MapsCommon.getResource("/search_fuzzy_batch_request_body.json")),
                 BatchRequestBody.class);
         MapsCommon.print(client.postSearchFuzzyBatchSync(ResponseFormat.JSON, contentJson));
+
+        MapsCommon.print(client.postSearchFuzzyBatch(ResponseFormat.JSON, contentJson));
     }
 }

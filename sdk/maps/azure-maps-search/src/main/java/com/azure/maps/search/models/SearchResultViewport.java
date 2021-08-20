@@ -5,15 +5,11 @@
 package com.azure.maps.search.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** The viewport that covers the result represented by the top-left and bottom-right coordinates of the viewport. */
 @Fluent
 public final class SearchResultViewport {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(SearchResultViewport.class);
-
     /*
      * A location represented as a latitude and longitude using short names
      * 'lat' & 'lon'.
@@ -34,7 +30,7 @@ public final class SearchResultViewport {
      *
      * @return the topLeftPoint value.
      */
-    public CoordinatesPairAbbreviated topLeftPoint() {
+    public CoordinatesPairAbbreviated getTopLeftPoint() {
         return this.topLeftPoint;
     }
 
@@ -45,7 +41,7 @@ public final class SearchResultViewport {
      * @param topLeftPoint the topLeftPoint value to set.
      * @return the SearchResultViewport object itself.
      */
-    public SearchResultViewport withTopLeftPoint(CoordinatesPairAbbreviated topLeftPoint) {
+    public SearchResultViewport setTopLeftPoint(CoordinatesPairAbbreviated topLeftPoint) {
         this.topLeftPoint = topLeftPoint;
         return this;
     }
@@ -56,7 +52,7 @@ public final class SearchResultViewport {
      *
      * @return the btmRightPoint value.
      */
-    public CoordinatesPairAbbreviated btmRightPoint() {
+    public CoordinatesPairAbbreviated getBtmRightPoint() {
         return this.btmRightPoint;
     }
 
@@ -67,22 +63,8 @@ public final class SearchResultViewport {
      * @param btmRightPoint the btmRightPoint value to set.
      * @return the SearchResultViewport object itself.
      */
-    public SearchResultViewport withBtmRightPoint(CoordinatesPairAbbreviated btmRightPoint) {
+    public SearchResultViewport setBtmRightPoint(CoordinatesPairAbbreviated btmRightPoint) {
         this.btmRightPoint = btmRightPoint;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (topLeftPoint() != null) {
-            topLeftPoint().validate();
-        }
-        if (btmRightPoint() != null) {
-            btmRightPoint().validate();
-        }
     }
 }

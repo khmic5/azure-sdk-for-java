@@ -5,15 +5,11 @@
 package com.azure.maps.search.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** An item returned from Search Address Batch service call. */
 @Immutable
 public final class SearchAddressBatchItem extends BatchItem {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(SearchAddressBatchItem.class);
-
     /*
      * The result of the query. SearchCommonResponse if the query completed
      * successfully, ErrorResponse otherwise.
@@ -27,20 +23,7 @@ public final class SearchAddressBatchItem extends BatchItem {
      *
      * @return the response value.
      */
-    public SearchAddressBatchItemResponse response() {
+    public SearchAddressBatchItemResponse getResponse() {
         return this.response;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    @Override
-    public void validate() {
-        super.validate();
-        if (response() != null) {
-            response().validate();
-        }
     }
 }

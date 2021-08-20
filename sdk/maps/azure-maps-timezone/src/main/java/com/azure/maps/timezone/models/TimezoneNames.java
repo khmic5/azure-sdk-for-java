@@ -5,20 +5,16 @@
 package com.azure.maps.timezone.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** Timezone names object. */
 @Immutable
 public final class TimezoneNames {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(TimezoneNames.class);
-
     /*
      * The ISO 639-1 language code of the Names
      */
     @JsonProperty(value = "ISO6391LanguageCode", access = JsonProperty.Access.WRITE_ONLY)
-    private String iso6391LanguageCode;
+    private String iSO6391LanguageCode;
 
     /*
      * Generic Name
@@ -39,12 +35,12 @@ public final class TimezoneNames {
     private String daylight;
 
     /**
-     * Get the iso6391LanguageCode property: The ISO 639-1 language code of the Names.
+     * Get the iSO6391LanguageCode property: The ISO 639-1 language code of the Names.
      *
-     * @return the iso6391LanguageCode value.
+     * @return the iSO6391LanguageCode value.
      */
-    public String iso6391LanguageCode() {
-        return this.iso6391LanguageCode;
+    public String getISO6391LanguageCode() {
+        return this.iSO6391LanguageCode;
     }
 
     /**
@@ -52,7 +48,7 @@ public final class TimezoneNames {
      *
      * @return the generic value.
      */
-    public String generic() {
+    public String getGeneric() {
         return this.generic;
     }
 
@@ -61,7 +57,7 @@ public final class TimezoneNames {
      *
      * @return the standard value.
      */
-    public String standard() {
+    public String getStandard() {
         return this.standard;
     }
 
@@ -70,15 +66,7 @@ public final class TimezoneNames {
      *
      * @return the daylight value.
      */
-    public String daylight() {
+    public String getDaylight() {
         return this.daylight;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

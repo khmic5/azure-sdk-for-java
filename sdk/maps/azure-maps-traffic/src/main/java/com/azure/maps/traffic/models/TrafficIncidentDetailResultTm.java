@@ -5,16 +5,12 @@
 package com.azure.maps.traffic.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /** Main response element. */
 @Immutable
 public final class TrafficIncidentDetailResultTm {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(TrafficIncidentDetailResultTm.class);
-
     /*
      * ID of the traffic incident
      */
@@ -32,7 +28,7 @@ public final class TrafficIncidentDetailResultTm {
      *
      * @return the id value.
      */
-    public String id() {
+    public String getId() {
         return this.id;
     }
 
@@ -41,18 +37,7 @@ public final class TrafficIncidentDetailResultTm {
      *
      * @return the poi value.
      */
-    public List<TrafficIncidentPoi> poi() {
+    public List<TrafficIncidentPoi> getPoi() {
         return this.poi;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (poi() != null) {
-            poi().forEach(e -> e.validate());
-        }
     }
 }

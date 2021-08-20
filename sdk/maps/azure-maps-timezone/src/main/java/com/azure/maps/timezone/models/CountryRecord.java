@@ -5,15 +5,11 @@
 package com.azure.maps.timezone.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** A country record. */
 @Immutable
 public final class CountryRecord {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(CountryRecord.class);
-
     /*
      * Country Name
      */
@@ -31,7 +27,7 @@ public final class CountryRecord {
      *
      * @return the name value.
      */
-    public String name() {
+    public String getName() {
         return this.name;
     }
 
@@ -40,15 +36,7 @@ public final class CountryRecord {
      *
      * @return the code value.
      */
-    public String code() {
+    public String getCode() {
         return this.code;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

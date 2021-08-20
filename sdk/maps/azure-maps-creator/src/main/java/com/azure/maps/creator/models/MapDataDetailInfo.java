@@ -5,15 +5,11 @@
 package com.azure.maps.creator.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** Detail information for the data. */
 @Immutable
 public final class MapDataDetailInfo {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(MapDataDetailInfo.class);
-
     /*
      * The unique data id for the data.
      */
@@ -56,7 +52,7 @@ public final class MapDataDetailInfo {
      *
      * @return the udid value.
      */
-    public String udid() {
+    public String getUdid() {
         return this.udid;
     }
 
@@ -65,7 +61,7 @@ public final class MapDataDetailInfo {
      *
      * @return the location value.
      */
-    public String location() {
+    public String getLocation() {
         return this.location;
     }
 
@@ -74,7 +70,7 @@ public final class MapDataDetailInfo {
      *
      * @return the sizeInBytes value.
      */
-    public Long sizeInBytes() {
+    public Long getSizeInBytes() {
         return this.sizeInBytes;
     }
 
@@ -83,7 +79,7 @@ public final class MapDataDetailInfo {
      *
      * @return the uploadStatus value.
      */
-    public String uploadStatus() {
+    public String getUploadStatus() {
         return this.uploadStatus;
     }
 
@@ -92,7 +88,7 @@ public final class MapDataDetailInfo {
      *
      * @return the dataFormat value.
      */
-    public String dataFormat() {
+    public String getDataFormat() {
         return this.dataFormat;
     }
 
@@ -101,15 +97,7 @@ public final class MapDataDetailInfo {
      *
      * @return the description value.
      */
-    public String description() {
+    public String getDescription() {
         return this.description;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

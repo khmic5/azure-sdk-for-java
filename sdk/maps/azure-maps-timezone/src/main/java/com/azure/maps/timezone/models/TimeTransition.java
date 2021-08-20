@@ -5,16 +5,12 @@
 package com.azure.maps.timezone.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.OffsetDateTime;
 
 /** The TimeTransition model. */
 @Immutable
 public final class TimeTransition {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(TimeTransition.class);
-
     /*
      * Tag property
      */
@@ -50,7 +46,7 @@ public final class TimeTransition {
      *
      * @return the tag value.
      */
-    public String tag() {
+    public String getTag() {
         return this.tag;
     }
 
@@ -59,7 +55,7 @@ public final class TimeTransition {
      *
      * @return the standardOffset value.
      */
-    public String standardOffset() {
+    public String getStandardOffset() {
         return this.standardOffset;
     }
 
@@ -68,7 +64,7 @@ public final class TimeTransition {
      *
      * @return the daylightSavings value.
      */
-    public String daylightSavings() {
+    public String getDaylightSavings() {
         return this.daylightSavings;
     }
 
@@ -77,7 +73,7 @@ public final class TimeTransition {
      *
      * @return the utcStart value.
      */
-    public OffsetDateTime utcStart() {
+    public OffsetDateTime getUtcStart() {
         return this.utcStart;
     }
 
@@ -86,15 +82,7 @@ public final class TimeTransition {
      *
      * @return the utcEnd value.
      */
-    public OffsetDateTime utcEnd() {
+    public OffsetDateTime getUtcEnd() {
         return this.utcEnd;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

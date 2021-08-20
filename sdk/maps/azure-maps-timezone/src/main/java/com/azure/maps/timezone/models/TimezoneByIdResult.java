@@ -4,37 +4,56 @@
 
 package com.azure.maps.timezone.models;
 
-import com.azure.maps.timezone.fluent.models.TimezoneByIdResultInner;
+import com.azure.core.annotation.Immutable;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.OffsetDateTime;
 import java.util.List;
 
-/** An immutable client-side representation of TimezoneByIdResult. */
-public interface TimezoneByIdResult {
+/** This object is returned from a successful Timezone By ID call. */
+@Immutable
+public final class TimezoneByIdResult {
+    /*
+     * Version property
+     */
+    @JsonProperty(value = "Version", access = JsonProperty.Access.WRITE_ONLY)
+    private String version;
+
+    /*
+     * Reference Utc Timestamp property
+     */
+    @JsonProperty(value = "ReferenceUtcTimestamp", access = JsonProperty.Access.WRITE_ONLY)
+    private OffsetDateTime referenceUtcTimestamp;
+
+    /*
+     * TimeZoneById array
+     */
+    @JsonProperty(value = "TimeZones", access = JsonProperty.Access.WRITE_ONLY)
+    private List<TimezoneById> timeZones;
+
     /**
-     * Gets the version property: Version property.
+     * Get the version property: Version property.
      *
      * @return the version value.
      */
-    String version();
+    public String getVersion() {
+        return this.version;
+    }
 
     /**
-     * Gets the referenceUtcTimestamp property: Reference Utc Timestamp property.
+     * Get the referenceUtcTimestamp property: Reference Utc Timestamp property.
      *
      * @return the referenceUtcTimestamp value.
      */
-    OffsetDateTime referenceUtcTimestamp();
+    public OffsetDateTime getReferenceUtcTimestamp() {
+        return this.referenceUtcTimestamp;
+    }
 
     /**
-     * Gets the timeZones property: TimeZoneById array.
+     * Get the timeZones property: TimeZoneById array.
      *
      * @return the timeZones value.
      */
-    List<TimezoneById> timeZones();
-
-    /**
-     * Gets the inner com.azure.maps.timezone.fluent.models.TimezoneByIdResultInner object.
-     *
-     * @return the inner object.
-     */
-    TimezoneByIdResultInner innerModel();
+    public List<TimezoneById> getTimeZones() {
+        return this.timeZones;
+    }
 }

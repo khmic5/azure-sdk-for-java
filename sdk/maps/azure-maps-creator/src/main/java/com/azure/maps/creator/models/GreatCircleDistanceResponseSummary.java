@@ -5,15 +5,11 @@
 package com.azure.maps.creator.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** Summary object. */
 @Fluent
 public final class GreatCircleDistanceResponseSummary {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(GreatCircleDistanceResponseSummary.class);
-
     /*
      * A location represented as a latitude and longitude
      */
@@ -31,7 +27,7 @@ public final class GreatCircleDistanceResponseSummary {
      *
      * @return the sourcePoint value.
      */
-    public SpatialCoordinate sourcePoint() {
+    public SpatialCoordinate getSourcePoint() {
         return this.sourcePoint;
     }
 
@@ -41,7 +37,7 @@ public final class GreatCircleDistanceResponseSummary {
      * @param sourcePoint the sourcePoint value to set.
      * @return the GreatCircleDistanceResponseSummary object itself.
      */
-    public GreatCircleDistanceResponseSummary withSourcePoint(SpatialCoordinate sourcePoint) {
+    public GreatCircleDistanceResponseSummary setSourcePoint(SpatialCoordinate sourcePoint) {
         this.sourcePoint = sourcePoint;
         return this;
     }
@@ -51,7 +47,7 @@ public final class GreatCircleDistanceResponseSummary {
      *
      * @return the targetPoint value.
      */
-    public SpatialCoordinate targetPoint() {
+    public SpatialCoordinate getTargetPoint() {
         return this.targetPoint;
     }
 
@@ -61,22 +57,8 @@ public final class GreatCircleDistanceResponseSummary {
      * @param targetPoint the targetPoint value to set.
      * @return the GreatCircleDistanceResponseSummary object itself.
      */
-    public GreatCircleDistanceResponseSummary withTargetPoint(SpatialCoordinate targetPoint) {
+    public GreatCircleDistanceResponseSummary setTargetPoint(SpatialCoordinate targetPoint) {
         this.targetPoint = targetPoint;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (sourcePoint() != null) {
-            sourcePoint().validate();
-        }
-        if (targetPoint() != null) {
-            targetPoint().validate();
-        }
     }
 }

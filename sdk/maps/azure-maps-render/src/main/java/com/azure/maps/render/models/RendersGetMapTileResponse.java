@@ -20,7 +20,7 @@ public final class RendersGetMapTileResponse extends ResponseBase<RendersGetMapT
      * @param headers the deserialized headers of the HTTP response.
      */
     public RendersGetMapTileResponse(
-        HttpRequest request, int statusCode, HttpHeaders rawHeaders, Void value, RendersGetMapTileHeaders headers) {
+            HttpRequest request, int statusCode, HttpHeaders rawHeaders, Void value, RendersGetMapTileHeaders headers) {
         super(request, statusCode, rawHeaders, value, headers);
     }
 }

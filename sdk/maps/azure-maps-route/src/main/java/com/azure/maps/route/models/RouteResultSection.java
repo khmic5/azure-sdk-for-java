@@ -5,15 +5,11 @@
 package com.azure.maps.route.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** The RouteResultSection model. */
 @Fluent
 public final class RouteResultSection {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(RouteResultSection.class);
-
     /*
      * Start Point Index property
      */
@@ -80,7 +76,7 @@ public final class RouteResultSection {
      *
      * @return the startPointIndex value.
      */
-    public Integer startPointIndex() {
+    public Integer getStartPointIndex() {
         return this.startPointIndex;
     }
 
@@ -89,7 +85,7 @@ public final class RouteResultSection {
      *
      * @return the endPointIndex value.
      */
-    public Integer endPointIndex() {
+    public Integer getEndPointIndex() {
         return this.endPointIndex;
     }
 
@@ -98,7 +94,7 @@ public final class RouteResultSection {
      *
      * @return the sectionType value.
      */
-    public String sectionType() {
+    public String getSectionType() {
         return this.sectionType;
     }
 
@@ -107,7 +103,7 @@ public final class RouteResultSection {
      *
      * @return the travelMode value.
      */
-    public String travelMode() {
+    public String getTravelMode() {
         return this.travelMode;
     }
 
@@ -117,7 +113,7 @@ public final class RouteResultSection {
      *
      * @return the simpleCategory value.
      */
-    public String simpleCategory() {
+    public String getSimpleCategory() {
         return this.simpleCategory;
     }
 
@@ -126,7 +122,7 @@ public final class RouteResultSection {
      *
      * @return the effectiveSpeedInKmh value.
      */
-    public Integer effectiveSpeedInKmh() {
+    public Integer getEffectiveSpeedInKmh() {
         return this.effectiveSpeedInKmh;
     }
 
@@ -135,7 +131,7 @@ public final class RouteResultSection {
      *
      * @return the delayInSeconds value.
      */
-    public Integer delayInSeconds() {
+    public Integer getDelayInSeconds() {
         return this.delayInSeconds;
     }
 
@@ -146,7 +142,7 @@ public final class RouteResultSection {
      *
      * @return the magnitudeOfDelay value.
      */
-    public MagnitudeOfDelay magnitudeOfDelay() {
+    public MagnitudeOfDelay getMagnitudeOfDelay() {
         return this.magnitudeOfDelay;
     }
 
@@ -156,7 +152,7 @@ public final class RouteResultSection {
      *
      * @return the tec value.
      */
-    public RouteResultSectionTec tec() {
+    public RouteResultSectionTec getTec() {
         return this.tec;
     }
 
@@ -167,19 +163,8 @@ public final class RouteResultSection {
      * @param tec the tec value to set.
      * @return the RouteResultSection object itself.
      */
-    public RouteResultSection withTec(RouteResultSectionTec tec) {
+    public RouteResultSection setTec(RouteResultSectionTec tec) {
         this.tec = tec;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (tec() != null) {
-            tec().validate();
-        }
     }
 }

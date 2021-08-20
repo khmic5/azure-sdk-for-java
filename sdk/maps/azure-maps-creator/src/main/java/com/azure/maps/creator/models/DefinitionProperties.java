@@ -5,15 +5,11 @@
 package com.azure.maps.creator.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** The DefinitionProperties model. */
 @Fluent
 public final class DefinitionProperties {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(DefinitionProperties.class);
-
     /*
      * name of attribute
      */
@@ -37,7 +33,7 @@ public final class DefinitionProperties {
      *
      * @return the name value.
      */
-    public String name() {
+    public String getName() {
         return this.name;
     }
 
@@ -47,7 +43,7 @@ public final class DefinitionProperties {
      * @param name the name value to set.
      * @return the DefinitionProperties object itself.
      */
-    public DefinitionProperties withName(String name) {
+    public DefinitionProperties setName(String name) {
         this.name = name;
         return this;
     }
@@ -57,7 +53,7 @@ public final class DefinitionProperties {
      *
      * @return the required value.
      */
-    public boolean required() {
+    public boolean isRequired() {
         return this.required;
     }
 
@@ -67,7 +63,7 @@ public final class DefinitionProperties {
      * @param required the required value to set.
      * @return the DefinitionProperties object itself.
      */
-    public DefinitionProperties withRequired(boolean required) {
+    public DefinitionProperties setRequired(boolean required) {
         this.required = required;
         return this;
     }
@@ -77,7 +73,7 @@ public final class DefinitionProperties {
      *
      * @return the type value.
      */
-    public Object type() {
+    public Object getType() {
         return this.type;
     }
 
@@ -87,26 +83,8 @@ public final class DefinitionProperties {
      * @param type the type value to set.
      * @return the DefinitionProperties object itself.
      */
-    public DefinitionProperties withType(Object type) {
+    public DefinitionProperties setType(Object type) {
         this.type = type;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (name() == null) {
-            throw logger
-                .logExceptionAsError(
-                    new IllegalArgumentException("Missing required property name in model DefinitionProperties"));
-        }
-        if (type() == null) {
-            throw logger
-                .logExceptionAsError(
-                    new IllegalArgumentException("Missing required property type in model DefinitionProperties"));
-        }
     }
 }

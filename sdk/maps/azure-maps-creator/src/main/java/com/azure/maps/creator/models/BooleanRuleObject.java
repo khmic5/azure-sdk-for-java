@@ -5,15 +5,11 @@
 package com.azure.maps.creator.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** The boolean rule. The color is selected based on the logic value of the key. */
 @Fluent
 public final class BooleanRuleObject {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(BooleanRuleObject.class);
-
     /*
      * The color when value is true. Color is a JSON string in a variety of
      * permitted formats, HTML-style hex values, RGB ("#ff0", "#ffff00",
@@ -42,7 +38,7 @@ public final class BooleanRuleObject {
      *
      * @return the trueProperty value.
      */
-    public String trueProperty() {
+    public String getTrueProperty() {
         return this.trueProperty;
     }
 
@@ -55,7 +51,7 @@ public final class BooleanRuleObject {
      * @param trueProperty the trueProperty value to set.
      * @return the BooleanRuleObject object itself.
      */
-    public BooleanRuleObject withTrueProperty(String trueProperty) {
+    public BooleanRuleObject setTrueProperty(String trueProperty) {
         this.trueProperty = trueProperty;
         return this;
     }
@@ -68,7 +64,7 @@ public final class BooleanRuleObject {
      *
      * @return the falseProperty value.
      */
-    public String falseProperty() {
+    public String getFalseProperty() {
         return this.falseProperty;
     }
 
@@ -81,16 +77,8 @@ public final class BooleanRuleObject {
      * @param falseProperty the falseProperty value to set.
      * @return the BooleanRuleObject object itself.
      */
-    public BooleanRuleObject withFalseProperty(String falseProperty) {
+    public BooleanRuleObject setFalseProperty(String falseProperty) {
         this.falseProperty = falseProperty;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

@@ -5,15 +5,11 @@
 package com.azure.maps.creator.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** The GeoJsonFeatureData model. */
 @Fluent
 public class GeoJsonFeatureData {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(GeoJsonFeatureData.class);
-
     /*
      * A valid `GeoJSON` geometry object. The type must be one of the seven
      * valid GeoJSON geometry types - Point, MultiPoint, LineString,
@@ -51,7 +47,7 @@ public class GeoJsonFeatureData {
      *
      * @return the geometry value.
      */
-    public GeoJsonGeometry geometry() {
+    public GeoJsonGeometry getGeometry() {
         return this.geometry;
     }
 
@@ -63,7 +59,7 @@ public class GeoJsonFeatureData {
      * @param geometry the geometry value to set.
      * @return the GeoJsonFeatureData object itself.
      */
-    public GeoJsonFeatureData withGeometry(GeoJsonGeometry geometry) {
+    public GeoJsonFeatureData setGeometry(GeoJsonGeometry geometry) {
         this.geometry = geometry;
         return this;
     }
@@ -74,7 +70,7 @@ public class GeoJsonFeatureData {
      *
      * @return the properties value.
      */
-    public Object properties() {
+    public Object getProperties() {
         return this.properties;
     }
 
@@ -85,7 +81,7 @@ public class GeoJsonFeatureData {
      * @param properties the properties value to set.
      * @return the GeoJsonFeatureData object itself.
      */
-    public GeoJsonFeatureData withProperties(Object properties) {
+    public GeoJsonFeatureData setProperties(Object properties) {
         this.properties = properties;
         return this;
     }
@@ -95,7 +91,7 @@ public class GeoJsonFeatureData {
      *
      * @return the id value.
      */
-    public String id() {
+    public String getId() {
         return this.id;
     }
 
@@ -105,7 +101,7 @@ public class GeoJsonFeatureData {
      * @param id the id value to set.
      * @return the GeoJsonFeatureData object itself.
      */
-    public GeoJsonFeatureData withId(String id) {
+    public GeoJsonFeatureData setId(String id) {
         this.id = id;
         return this;
     }
@@ -116,7 +112,7 @@ public class GeoJsonFeatureData {
      *
      * @return the featureType value.
      */
-    public String featureType() {
+    public String getFeatureType() {
         return this.featureType;
     }
 
@@ -127,23 +123,8 @@ public class GeoJsonFeatureData {
      * @param featureType the featureType value to set.
      * @return the GeoJsonFeatureData object itself.
      */
-    public GeoJsonFeatureData withFeatureType(String featureType) {
+    public GeoJsonFeatureData setFeatureType(String featureType) {
         this.featureType = featureType;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (geometry() == null) {
-            throw logger
-                .logExceptionAsError(
-                    new IllegalArgumentException("Missing required property geometry in model GeoJsonFeatureData"));
-        } else {
-            geometry().validate();
-        }
     }
 }

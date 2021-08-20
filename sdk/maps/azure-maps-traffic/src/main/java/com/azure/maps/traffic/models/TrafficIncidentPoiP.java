@@ -5,8 +5,6 @@
 package com.azure.maps.traffic.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -15,8 +13,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 @Immutable
 public final class TrafficIncidentPoiP {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(TrafficIncidentPoiP.class);
-
     /*
      * x coordinate
      */
@@ -34,7 +30,7 @@ public final class TrafficIncidentPoiP {
      *
      * @return the x value.
      */
-    public Float x() {
+    public Float getX() {
         return this.x;
     }
 
@@ -43,15 +39,7 @@ public final class TrafficIncidentPoiP {
      *
      * @return the y value.
      */
-    public Float y() {
+    public Float getY() {
         return this.y;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

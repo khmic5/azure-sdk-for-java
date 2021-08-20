@@ -5,15 +5,11 @@
 package com.azure.maps.route.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** Optimized way point object. */
 @Immutable
 public final class RouteOptimizedWaypoint {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(RouteOptimizedWaypoint.class);
-
     /*
      * Way point index provided by the user.
      */
@@ -31,7 +27,7 @@ public final class RouteOptimizedWaypoint {
      *
      * @return the providedIndex value.
      */
-    public Integer providedIndex() {
+    public Integer getProvidedIndex() {
         return this.providedIndex;
     }
 
@@ -40,15 +36,7 @@ public final class RouteOptimizedWaypoint {
      *
      * @return the optimizedIndex value.
      */
-    public Integer optimizedIndex() {
+    public Integer getOptimizedIndex() {
         return this.optimizedIndex;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

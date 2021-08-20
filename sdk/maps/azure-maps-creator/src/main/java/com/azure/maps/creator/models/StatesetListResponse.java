@@ -5,16 +5,12 @@
 package com.azure.maps.creator.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /** The response model for the successful Stateset List API. */
 @Fluent
 public final class StatesetListResponse {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(StatesetListResponse.class);
-
     /*
      * A list of statesets information.
      */
@@ -32,7 +28,7 @@ public final class StatesetListResponse {
      *
      * @return the statesets value.
      */
-    public List<StatesetInfoObject> statesets() {
+    public List<StatesetInfoObject> getStatesets() {
         return this.statesets;
     }
 
@@ -42,7 +38,7 @@ public final class StatesetListResponse {
      * @param statesets the statesets value to set.
      * @return the StatesetListResponse object itself.
      */
-    public StatesetListResponse withStatesets(List<StatesetInfoObject> statesets) {
+    public StatesetListResponse setStatesets(List<StatesetInfoObject> statesets) {
         this.statesets = statesets;
         return this;
     }
@@ -52,18 +48,7 @@ public final class StatesetListResponse {
      *
      * @return the nextLink value.
      */
-    public String nextLink() {
+    public String getNextLink() {
         return this.nextLink;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (statesets() != null) {
-            statesets().forEach(e -> e.validate());
-        }
     }
 }

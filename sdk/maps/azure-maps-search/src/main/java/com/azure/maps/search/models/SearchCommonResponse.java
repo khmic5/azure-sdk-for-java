@@ -4,29 +4,40 @@
 
 package com.azure.maps.search.models;
 
-import com.azure.maps.search.fluent.models.SearchCommonResponseInner;
+import com.azure.core.annotation.Immutable;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/** An immutable client-side representation of SearchCommonResponse. */
-public interface SearchCommonResponse {
+/** This object is returned from a successful Search calls. */
+@Immutable
+public class SearchCommonResponse {
+    /*
+     * Summary object for a Search API response
+     */
+    @JsonProperty(value = "summary", access = JsonProperty.Access.WRITE_ONLY)
+    private SearchCommonSummary summary;
+
+    /*
+     * A list of Search API results.
+     */
+    @JsonProperty(value = "results", access = JsonProperty.Access.WRITE_ONLY)
+    private List<SearchCommonResult> results;
+
     /**
-     * Gets the summary property: Summary object for a Search API response.
+     * Get the summary property: Summary object for a Search API response.
      *
      * @return the summary value.
      */
-    SearchCommonSummary summary();
+    public SearchCommonSummary getSummary() {
+        return this.summary;
+    }
 
     /**
-     * Gets the results property: A list of Search API results.
+     * Get the results property: A list of Search API results.
      *
      * @return the results value.
      */
-    List<SearchCommonResult> results();
-
-    /**
-     * Gets the inner com.azure.maps.search.fluent.models.SearchCommonResponseInner object.
-     *
-     * @return the inner object.
-     */
-    SearchCommonResponseInner innerModel();
+    public List<SearchCommonResult> getResults() {
+        return this.results;
+    }
 }

@@ -4,21 +4,24 @@
 
 package com.azure.maps.creator.models;
 
-import com.azure.maps.creator.fluent.models.StatesetCreatedResponseInner;
+import com.azure.core.annotation.Immutable;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** An immutable client-side representation of StatesetCreatedResponse. */
-public interface StatesetCreatedResponse {
+/** The response model for the successful Stateset Create API. */
+@Immutable
+public final class StatesetCreatedResponse {
+    /*
+     * The ID for the new stateset created.
+     */
+    @JsonProperty(value = "statesetId", access = JsonProperty.Access.WRITE_ONLY)
+    private String statesetId;
+
     /**
-     * Gets the statesetId property: The ID for the new stateset created.
+     * Get the statesetId property: The ID for the new stateset created.
      *
      * @return the statesetId value.
      */
-    String statesetId();
-
-    /**
-     * Gets the inner com.azure.maps.creator.fluent.models.StatesetCreatedResponseInner object.
-     *
-     * @return the inner object.
-     */
-    StatesetCreatedResponseInner innerModel();
+    public String getStatesetId() {
+        return this.statesetId;
+    }
 }

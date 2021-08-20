@@ -5,15 +5,11 @@
 package com.azure.maps.weather.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** Short summary of the weather along the route. */
 @Fluent
 public final class WeatherAlongRouteSummary {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(WeatherAlongRouteSummary.class);
-
     /*
      * Numeric value representing an image that displays the `iconPhrase`.
      * Please refer to [Weather Service
@@ -34,7 +30,7 @@ public final class WeatherAlongRouteSummary {
      *
      * @return the iconCode value.
      */
-    public Integer iconCode() {
+    public Integer getIconCode() {
         return this.iconCode;
     }
 
@@ -45,7 +41,7 @@ public final class WeatherAlongRouteSummary {
      * @param iconCode the iconCode value to set.
      * @return the WeatherAlongRouteSummary object itself.
      */
-    public WeatherAlongRouteSummary withIconCode(Integer iconCode) {
+    public WeatherAlongRouteSummary setIconCode(Integer iconCode) {
         this.iconCode = iconCode;
         return this;
     }
@@ -55,7 +51,7 @@ public final class WeatherAlongRouteSummary {
      *
      * @return the hazards value.
      */
-    public WeatherHazards hazards() {
+    public WeatherHazards getHazards() {
         return this.hazards;
     }
 
@@ -65,19 +61,8 @@ public final class WeatherAlongRouteSummary {
      * @param hazards the hazards value to set.
      * @return the WeatherAlongRouteSummary object itself.
      */
-    public WeatherAlongRouteSummary withHazards(WeatherHazards hazards) {
+    public WeatherAlongRouteSummary setHazards(WeatherHazards hazards) {
         this.hazards = hazards;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (hazards() != null) {
-            hazards().validate();
-        }
     }
 }

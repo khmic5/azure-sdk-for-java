@@ -4,50 +4,129 @@
 
 package com.azure.maps.creator.models;
 
-import com.azure.maps.creator.fluent.models.CollectionInfoInner;
+import com.azure.core.annotation.Fluent;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/** An immutable client-side representation of CollectionInfo. */
-public interface CollectionInfo {
+/** The CollectionInfo model. */
+@Fluent
+public final class CollectionInfo {
+    /*
+     * identifier of the collection used, for example, in URIs
+     */
+    @JsonProperty(value = "name", required = true)
+    private String name;
+
+    /*
+     * human readable title of the collection
+     */
+    @JsonProperty(value = "title")
+    private String title;
+
+    /*
+     * The ontology version of this dataset.
+     */
+    @JsonProperty(value = "ontology", access = JsonProperty.Access.WRITE_ONLY)
+    private String ontology;
+
+    /*
+     * a description of the features in the collection
+     */
+    @JsonProperty(value = "description")
+    private String description;
+
+    /*
+     * Links to other WFS endpoints.
+     */
+    @JsonProperty(value = "links", required = true)
+    private List<WfsEndpointLink> links;
+
     /**
-     * Gets the name property: identifier of the collection used, for example, in URIs.
+     * Get the name property: identifier of the collection used, for example, in URIs.
      *
      * @return the name value.
      */
-    String name();
+    public String getName() {
+        return this.name;
+    }
 
     /**
-     * Gets the title property: human readable title of the collection.
+     * Set the name property: identifier of the collection used, for example, in URIs.
+     *
+     * @param name the name value to set.
+     * @return the CollectionInfo object itself.
+     */
+    public CollectionInfo setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    /**
+     * Get the title property: human readable title of the collection.
      *
      * @return the title value.
      */
-    String title();
+    public String getTitle() {
+        return this.title;
+    }
 
     /**
-     * Gets the ontology property: The ontology version of this dataset.
+     * Set the title property: human readable title of the collection.
+     *
+     * @param title the title value to set.
+     * @return the CollectionInfo object itself.
+     */
+    public CollectionInfo setTitle(String title) {
+        this.title = title;
+        return this;
+    }
+
+    /**
+     * Get the ontology property: The ontology version of this dataset.
      *
      * @return the ontology value.
      */
-    String ontology();
+    public String getOntology() {
+        return this.ontology;
+    }
 
     /**
-     * Gets the description property: a description of the features in the collection.
+     * Get the description property: a description of the features in the collection.
      *
      * @return the description value.
      */
-    String description();
+    public String getDescription() {
+        return this.description;
+    }
 
     /**
-     * Gets the links property: Links to other WFS endpoints.
+     * Set the description property: a description of the features in the collection.
+     *
+     * @param description the description value to set.
+     * @return the CollectionInfo object itself.
+     */
+    public CollectionInfo setDescription(String description) {
+        this.description = description;
+        return this;
+    }
+
+    /**
+     * Get the links property: Links to other WFS endpoints.
      *
      * @return the links value.
      */
-    List<WfsEndpointLink> links();
+    public List<WfsEndpointLink> getLinks() {
+        return this.links;
+    }
 
     /**
-     * Gets the inner com.azure.maps.creator.fluent.models.CollectionInfoInner object.
+     * Set the links property: Links to other WFS endpoints.
      *
-     * @return the inner object.
+     * @param links the links value to set.
+     * @return the CollectionInfo object itself.
      */
-    CollectionInfoInner innerModel();
+    public CollectionInfo setLinks(List<WfsEndpointLink> links) {
+        this.links = links;
+        return this;
+    }
 }

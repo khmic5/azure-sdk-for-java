@@ -5,15 +5,11 @@
 package com.azure.maps.search.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** Batch Query object. */
 @Fluent
 public final class BatchRequestBodyBatchItemsItem {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(BatchRequestBodyBatchItemsItem.class);
-
     /*
      * Partial query string.
      */
@@ -25,7 +21,7 @@ public final class BatchRequestBodyBatchItemsItem {
      *
      * @return the query value.
      */
-    public String query() {
+    public String getQuery() {
         return this.query;
     }
 
@@ -35,16 +31,8 @@ public final class BatchRequestBodyBatchItemsItem {
      * @param query the query value to set.
      * @return the BatchRequestBodyBatchItemsItem object itself.
      */
-    public BatchRequestBodyBatchItemsItem withQuery(String query) {
+    public BatchRequestBodyBatchItemsItem setQuery(String query) {
         this.query = query;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

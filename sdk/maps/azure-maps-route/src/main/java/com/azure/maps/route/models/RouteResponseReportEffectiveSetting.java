@@ -5,15 +5,11 @@
 package com.azure.maps.route.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** Effective parameter or data used when calling this Route API. */
 @Immutable
 public final class RouteResponseReportEffectiveSetting {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(RouteResponseReportEffectiveSetting.class);
-
     /*
      * Name of the parameter used.
      */
@@ -31,7 +27,7 @@ public final class RouteResponseReportEffectiveSetting {
      *
      * @return the key value.
      */
-    public String key() {
+    public String getKey() {
         return this.key;
     }
 
@@ -40,15 +36,7 @@ public final class RouteResponseReportEffectiveSetting {
      *
      * @return the value value.
      */
-    public String value() {
+    public String getValue() {
         return this.value;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

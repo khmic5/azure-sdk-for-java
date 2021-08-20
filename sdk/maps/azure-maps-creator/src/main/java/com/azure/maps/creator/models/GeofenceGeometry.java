@@ -5,15 +5,11 @@
 package com.azure.maps.creator.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** The geofencing geometry. */
 @Immutable
 public final class GeofenceGeometry {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(GeofenceGeometry.class);
-
     /*
      * ID of the device.
      */
@@ -77,7 +73,7 @@ public final class GeofenceGeometry {
      *
      * @return the deviceId value.
      */
-    public String deviceId() {
+    public String getDeviceId() {
         return this.deviceId;
     }
 
@@ -90,7 +86,7 @@ public final class GeofenceGeometry {
      *
      * @return the udId value.
      */
-    public String udId() {
+    public String getUdId() {
         return this.udId;
     }
 
@@ -99,7 +95,7 @@ public final class GeofenceGeometry {
      *
      * @return the geometryId value.
      */
-    public String geometryId() {
+    public String getGeometryId() {
         return this.geometryId;
     }
 
@@ -114,7 +110,7 @@ public final class GeofenceGeometry {
      *
      * @return the distance value.
      */
-    public Float distance() {
+    public Float getDistance() {
         return this.distance;
     }
 
@@ -123,7 +119,7 @@ public final class GeofenceGeometry {
      *
      * @return the nearestLat value.
      */
-    public Float nearestLat() {
+    public Float getNearestLat() {
         return this.nearestLat;
     }
 
@@ -132,7 +128,7 @@ public final class GeofenceGeometry {
      *
      * @return the nearestLon value.
      */
-    public Float nearestLon() {
+    public Float getNearestLon() {
         return this.nearestLon;
     }
 
@@ -142,15 +138,7 @@ public final class GeofenceGeometry {
      *
      * @return the nearestZ value.
      */
-    public Float nearestZ() {
+    public Float getNearestZ() {
         return this.nearestZ;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

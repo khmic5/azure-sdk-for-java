@@ -5,8 +5,6 @@
 package com.azure.maps.search.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
@@ -17,10 +15,10 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
  * 7946](https://tools.ietf.org/html/rfc7946#section-3.1) for details.
  */
 @JsonTypeInfo(
-    use = JsonTypeInfo.Id.NAME,
-    include = JsonTypeInfo.As.PROPERTY,
-    property = "type",
-    defaultImpl = GeoJsonGeometry.class)
+        use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "type",
+        defaultImpl = GeoJsonGeometry.class)
 @JsonTypeName("GeoJsonGeometry")
 @JsonSubTypes({
     @JsonSubTypes.Type(name = "LineString", value = GeoJsonLineString.class),
@@ -32,16 +30,4 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
     @JsonSubTypes.Type(name = "GeometryCollection", value = GeoJsonGeometryCollection.class)
 })
 @Immutable
-public class GeoJsonGeometry extends GeoJsonObject {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(GeoJsonGeometry.class);
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    @Override
-    public void validate() {
-        super.validate();
-    }
-}
+public class GeoJsonGeometry extends GeoJsonObject {}

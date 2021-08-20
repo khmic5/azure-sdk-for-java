@@ -20,11 +20,11 @@ public final class RenderV2sGetMapTilePreviewResponse extends ResponseBase<Rende
      * @param headers the deserialized headers of the HTTP response.
      */
     public RenderV2sGetMapTilePreviewResponse(
-        HttpRequest request,
-        int statusCode,
-        HttpHeaders rawHeaders,
-        Void value,
-        RenderV2sGetMapTilePreviewHeaders headers) {
+            HttpRequest request,
+            int statusCode,
+            HttpHeaders rawHeaders,
+            Void value,
+            RenderV2sGetMapTilePreviewHeaders headers) {
         super(request, statusCode, rawHeaders, value, headers);
     }
 }

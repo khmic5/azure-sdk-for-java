@@ -5,15 +5,11 @@
 package com.azure.maps.creator.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** The ConversionsConvertHeaders model. */
 @Fluent
 public final class ConversionsConvertHeaders {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(ConversionsConvertHeaders.class);
-
     /*
      * The Operation-Location property.
      */
@@ -31,7 +27,7 @@ public final class ConversionsConvertHeaders {
      *
      * @return the operationLocation value.
      */
-    public String operationLocation() {
+    public String getOperationLocation() {
         return this.operationLocation;
     }
 
@@ -41,7 +37,7 @@ public final class ConversionsConvertHeaders {
      * @param operationLocation the operationLocation value to set.
      * @return the ConversionsConvertHeaders object itself.
      */
-    public ConversionsConvertHeaders withOperationLocation(String operationLocation) {
+    public ConversionsConvertHeaders setOperationLocation(String operationLocation) {
         this.operationLocation = operationLocation;
         return this;
     }
@@ -51,7 +47,7 @@ public final class ConversionsConvertHeaders {
      *
      * @return the resourceLocation value.
      */
-    public String resourceLocation() {
+    public String getResourceLocation() {
         return this.resourceLocation;
     }
 
@@ -61,16 +57,8 @@ public final class ConversionsConvertHeaders {
      * @param resourceLocation the resourceLocation value to set.
      * @return the ConversionsConvertHeaders object itself.
      */
-    public ConversionsConvertHeaders withResourceLocation(String resourceLocation) {
+    public ConversionsConvertHeaders setResourceLocation(String resourceLocation) {
         this.resourceLocation = resourceLocation;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

@@ -86,7 +86,7 @@ public final class GuidanceManeuver extends ExpandableStringEnum<GuidanceManeuve
     public static final GuidanceManeuver ROUNDABOUT_BACK = fromString("ROUNDABOUT_BACK");
 
     /** Static value TRY_MAKE_UTURN for GuidanceManeuver. */
-    public static final GuidanceManeuver TRY_MAKE_UTURN = fromString("TRY_MAKE_UTURN");
+    public static final GuidanceManeuver TRYMAKE_UTURN = fromString("TRY_MAKE_UTURN");
 
     /** Static value FOLLOW for GuidanceManeuver. */
     public static final GuidanceManeuver FOLLOW = fromString("FOLLOW");

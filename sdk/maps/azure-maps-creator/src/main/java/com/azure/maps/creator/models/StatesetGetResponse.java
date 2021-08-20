@@ -4,36 +4,77 @@
 
 package com.azure.maps.creator.models;
 
-import com.azure.maps.creator.fluent.models.StatesetGetResponseInner;
+import com.azure.core.annotation.Fluent;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/** An immutable client-side representation of StatesetGetResponse. */
-public interface StatesetGetResponse {
+/** The response model for the successful Stateset Get API. */
+@Fluent
+public final class StatesetGetResponse {
+    /*
+     * Description associated with the stateset.
+     */
+    @JsonProperty(value = "description", access = JsonProperty.Access.WRITE_ONLY)
+    private String description;
+
+    /*
+     * Dataset ID associated with the stateset.
+     */
+    @JsonProperty(value = "datasetIds")
+    private List<String> datasetIds;
+
+    /*
+     * The styles model.
+     */
+    @JsonProperty(value = "statesetStyle")
+    private StylesObject statesetStyle;
+
     /**
-     * Gets the description property: Description associated with the stateset.
+     * Get the description property: Description associated with the stateset.
      *
      * @return the description value.
      */
-    String description();
+    public String getDescription() {
+        return this.description;
+    }
 
     /**
-     * Gets the datasetIds property: Dataset ID associated with the stateset.
+     * Get the datasetIds property: Dataset ID associated with the stateset.
      *
      * @return the datasetIds value.
      */
-    List<String> datasetIds();
+    public List<String> getDatasetIds() {
+        return this.datasetIds;
+    }
 
     /**
-     * Gets the statesetStyle property: The styles model.
+     * Set the datasetIds property: Dataset ID associated with the stateset.
+     *
+     * @param datasetIds the datasetIds value to set.
+     * @return the StatesetGetResponse object itself.
+     */
+    public StatesetGetResponse setDatasetIds(List<String> datasetIds) {
+        this.datasetIds = datasetIds;
+        return this;
+    }
+
+    /**
+     * Get the statesetStyle property: The styles model.
      *
      * @return the statesetStyle value.
      */
-    StylesObject statesetStyle();
+    public StylesObject getStatesetStyle() {
+        return this.statesetStyle;
+    }
 
     /**
-     * Gets the inner com.azure.maps.creator.fluent.models.StatesetGetResponseInner object.
+     * Set the statesetStyle property: The styles model.
      *
-     * @return the inner object.
+     * @param statesetStyle the statesetStyle value to set.
+     * @return the StatesetGetResponse object itself.
      */
-    StatesetGetResponseInner innerModel();
+    public StatesetGetResponse setStatesetStyle(StylesObject statesetStyle) {
+        this.statesetStyle = statesetStyle;
+        return this;
+    }
 }

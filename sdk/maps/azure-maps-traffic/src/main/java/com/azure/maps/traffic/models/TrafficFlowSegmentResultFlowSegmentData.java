@@ -5,15 +5,11 @@
 package com.azure.maps.traffic.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** Flow Segment Data property. */
 @Fluent
 public final class TrafficFlowSegmentResultFlowSegmentData {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(TrafficFlowSegmentResultFlowSegmentData.class);
-
     /*
      * Functional Road Class. This indicates the road type:
      * 0: Motorway, freeway or other major road.
@@ -96,7 +92,7 @@ public final class TrafficFlowSegmentResultFlowSegmentData {
      *
      * @return the frc value.
      */
-    public String frc() {
+    public String getFrc() {
         return this.frc;
     }
 
@@ -106,7 +102,7 @@ public final class TrafficFlowSegmentResultFlowSegmentData {
      *
      * @return the currentSpeed value.
      */
-    public Integer currentSpeed() {
+    public Integer getCurrentSpeed() {
         return this.currentSpeed;
     }
 
@@ -116,7 +112,7 @@ public final class TrafficFlowSegmentResultFlowSegmentData {
      *
      * @return the freeFlowSpeed value.
      */
-    public Integer freeFlowSpeed() {
+    public Integer getFreeFlowSpeed() {
         return this.freeFlowSpeed;
     }
 
@@ -126,7 +122,7 @@ public final class TrafficFlowSegmentResultFlowSegmentData {
      *
      * @return the currentTravelTime value.
      */
-    public Integer currentTravelTime() {
+    public Integer getCurrentTravelTime() {
         return this.currentTravelTime;
     }
 
@@ -136,7 +132,7 @@ public final class TrafficFlowSegmentResultFlowSegmentData {
      *
      * @return the freeFlowTravelTime value.
      */
-    public Integer freeFlowTravelTime() {
+    public Integer getFreeFlowTravelTime() {
         return this.freeFlowTravelTime;
     }
 
@@ -149,7 +145,7 @@ public final class TrafficFlowSegmentResultFlowSegmentData {
      *
      * @return the confidence value.
      */
-    public Float confidence() {
+    public Float getConfidence() {
         return this.confidence;
     }
 
@@ -159,7 +155,7 @@ public final class TrafficFlowSegmentResultFlowSegmentData {
      *
      * @return the coordinates value.
      */
-    public TrafficFlowSegmentResultFlowSegmentDataCoordinates coordinates() {
+    public TrafficFlowSegmentResultFlowSegmentDataCoordinates getCoordinates() {
         return this.coordinates;
     }
 
@@ -170,8 +166,8 @@ public final class TrafficFlowSegmentResultFlowSegmentData {
      * @param coordinates the coordinates value to set.
      * @return the TrafficFlowSegmentResultFlowSegmentData object itself.
      */
-    public TrafficFlowSegmentResultFlowSegmentData withCoordinates(
-        TrafficFlowSegmentResultFlowSegmentDataCoordinates coordinates) {
+    public TrafficFlowSegmentResultFlowSegmentData setCoordinates(
+            TrafficFlowSegmentResultFlowSegmentDataCoordinates coordinates) {
         this.coordinates = coordinates;
         return this;
     }
@@ -181,7 +177,7 @@ public final class TrafficFlowSegmentResultFlowSegmentData {
      *
      * @return the version value.
      */
-    public String version() {
+    public String getVersion() {
         return this.version;
     }
 
@@ -190,18 +186,7 @@ public final class TrafficFlowSegmentResultFlowSegmentData {
      *
      * @return the openlr value.
      */
-    public Float openlr() {
+    public Float getOpenlr() {
         return this.openlr;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (coordinates() != null) {
-            coordinates().validate();
-        }
     }
 }

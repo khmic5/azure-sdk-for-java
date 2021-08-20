@@ -20,7 +20,11 @@ public final class DatasDownloadPreviewResponse extends ResponseBase<DatasDownlo
      * @param headers the deserialized headers of the HTTP response.
      */
     public DatasDownloadPreviewResponse(
-        HttpRequest request, int statusCode, HttpHeaders rawHeaders, Void value, DatasDownloadPreviewHeaders headers) {
+            HttpRequest request,
+            int statusCode,
+            HttpHeaders rawHeaders,
+            Void value,
+            DatasDownloadPreviewHeaders headers) {
         super(request, statusCode, rawHeaders, value, headers);
     }
 }

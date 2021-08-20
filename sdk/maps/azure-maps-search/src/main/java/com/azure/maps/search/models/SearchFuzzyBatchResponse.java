@@ -4,29 +4,25 @@
 
 package com.azure.maps.search.models;
 
-import com.azure.maps.search.fluent.models.SearchFuzzyBatchResponseInner;
+import com.azure.core.annotation.Immutable;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/** An immutable client-side representation of SearchFuzzyBatchResponse. */
-public interface SearchFuzzyBatchResponse {
-    /**
-     * Gets the summary property: Summary for the batch request.
-     *
-     * @return the summary value.
+/** This object is returned from a successful Search Fuzzy Batch service call. */
+@Immutable
+public final class SearchFuzzyBatchResponse extends BatchResponse {
+    /*
+     * Array containing the batch results.
      */
-    BatchResponseSummary summary();
+    @JsonProperty(value = "batchItems", access = JsonProperty.Access.WRITE_ONLY)
+    private List<SearchFuzzyBatchItem> batchItems;
 
     /**
-     * Gets the batchItems property: Array containing the batch results.
+     * Get the batchItems property: Array containing the batch results.
      *
      * @return the batchItems value.
      */
-    List<SearchFuzzyBatchItem> batchItems();
-
-    /**
-     * Gets the inner com.azure.maps.search.fluent.models.SearchFuzzyBatchResponseInner object.
-     *
-     * @return the inner object.
-     */
-    SearchFuzzyBatchResponseInner innerModel();
+    public List<SearchFuzzyBatchItem> getBatchItems() {
+        return this.batchItems;
+    }
 }

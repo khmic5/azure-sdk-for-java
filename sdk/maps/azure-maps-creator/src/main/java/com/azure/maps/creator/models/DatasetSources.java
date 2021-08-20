@@ -5,16 +5,12 @@
 package com.azure.maps.creator.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /** Information about the details of the create request for the dataset. */
 @Immutable
 public final class DatasetSources {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(DatasetSources.class);
-
     /*
      * The list of `conversionId` that were used to create the dataset.
      */
@@ -32,7 +28,7 @@ public final class DatasetSources {
      *
      * @return the conversionIds value.
      */
-    public List<String> conversionIds() {
+    public List<String> getConversionIds() {
         return this.conversionIds;
     }
 
@@ -41,15 +37,7 @@ public final class DatasetSources {
      *
      * @return the appendDatasetId value.
      */
-    public String appendDatasetId() {
+    public String getAppendDatasetId() {
         return this.appendDatasetId;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

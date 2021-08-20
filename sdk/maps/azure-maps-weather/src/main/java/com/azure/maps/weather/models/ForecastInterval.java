@@ -5,16 +5,12 @@
 package com.azure.maps.weather.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.OffsetDateTime;
 
 /** The ForecastInterval model. */
 @Fluent
 public final class ForecastInterval {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(ForecastInterval.class);
-
     /*
      * The date and time for the start of the interval in ISO 8601 format, for
      * example, 2019-10-27T19:39:57-08:00.
@@ -89,7 +85,7 @@ public final class ForecastInterval {
      *
      * @return the startTime value.
      */
-    public OffsetDateTime startTime() {
+    public OffsetDateTime getStartTime() {
         return this.startTime;
     }
 
@@ -100,7 +96,7 @@ public final class ForecastInterval {
      * @param startTime the startTime value to set.
      * @return the ForecastInterval object itself.
      */
-    public ForecastInterval withStartTime(OffsetDateTime startTime) {
+    public ForecastInterval setStartTime(OffsetDateTime startTime) {
         this.startTime = startTime;
         return this;
     }
@@ -110,7 +106,7 @@ public final class ForecastInterval {
      *
      * @return the minute value.
      */
-    public Integer minute() {
+    public Integer getMinute() {
         return this.minute;
     }
 
@@ -120,7 +116,7 @@ public final class ForecastInterval {
      * @param minute the minute value to set.
      * @return the ForecastInterval object itself.
      */
-    public ForecastInterval withMinute(Integer minute) {
+    public ForecastInterval setMinute(Integer minute) {
         this.minute = minute;
         return this;
     }
@@ -130,7 +126,7 @@ public final class ForecastInterval {
      *
      * @return the dbz value.
      */
-    public Double dbz() {
+    public Double getDbz() {
         return this.dbz;
     }
 
@@ -140,7 +136,7 @@ public final class ForecastInterval {
      * @param dbz the dbz value to set.
      * @return the ForecastInterval object itself.
      */
-    public ForecastInterval withDbz(Double dbz) {
+    public ForecastInterval setDbz(Double dbz) {
         this.dbz = dbz;
         return this;
     }
@@ -150,7 +146,7 @@ public final class ForecastInterval {
      *
      * @return the shortPhrase value.
      */
-    public String shortPhrase() {
+    public String getShortPhrase() {
         return this.shortPhrase;
     }
 
@@ -160,7 +156,7 @@ public final class ForecastInterval {
      * @param shortPhrase the shortPhrase value to set.
      * @return the ForecastInterval object itself.
      */
-    public ForecastInterval withShortPhrase(String shortPhrase) {
+    public ForecastInterval setShortPhrase(String shortPhrase) {
         this.shortPhrase = shortPhrase;
         return this;
     }
@@ -171,7 +167,7 @@ public final class ForecastInterval {
      *
      * @return the threshold value.
      */
-    public String threshold() {
+    public String getThreshold() {
         return this.threshold;
     }
 
@@ -182,7 +178,7 @@ public final class ForecastInterval {
      * @param threshold the threshold value to set.
      * @return the ForecastInterval object itself.
      */
-    public ForecastInterval withThreshold(String threshold) {
+    public ForecastInterval setThreshold(String threshold) {
         this.threshold = threshold;
         return this;
     }
@@ -193,7 +189,7 @@ public final class ForecastInterval {
      *
      * @return the color value.
      */
-    public ColorValue color() {
+    public ColorValue getColor() {
         return this.color;
     }
 
@@ -204,7 +200,7 @@ public final class ForecastInterval {
      * @param color the color value to set.
      * @return the ForecastInterval object itself.
      */
-    public ForecastInterval withColor(ColorValue color) {
+    public ForecastInterval setColor(ColorValue color) {
         this.color = color;
         return this;
     }
@@ -215,7 +211,7 @@ public final class ForecastInterval {
      *
      * @return the simplifiedColor value.
      */
-    public ColorValue simplifiedColor() {
+    public ColorValue getSimplifiedColor() {
         return this.simplifiedColor;
     }
 
@@ -226,7 +222,7 @@ public final class ForecastInterval {
      * @param simplifiedColor the simplifiedColor value to set.
      * @return the ForecastInterval object itself.
      */
-    public ForecastInterval withSimplifiedColor(ColorValue simplifiedColor) {
+    public ForecastInterval setSimplifiedColor(ColorValue simplifiedColor) {
         this.simplifiedColor = simplifiedColor;
         return this;
     }
@@ -237,7 +233,7 @@ public final class ForecastInterval {
      *
      * @return the precipitationType value.
      */
-    public String precipitationType() {
+    public String getPrecipitationType() {
         return this.precipitationType;
     }
 
@@ -248,7 +244,7 @@ public final class ForecastInterval {
      * @param precipitationType the precipitationType value to set.
      * @return the ForecastInterval object itself.
      */
-    public ForecastInterval withPrecipitationType(String precipitationType) {
+    public ForecastInterval setPrecipitationType(String precipitationType) {
         this.precipitationType = precipitationType;
         return this;
     }
@@ -259,7 +255,7 @@ public final class ForecastInterval {
      *
      * @return the iconCode value.
      */
-    public Integer iconCode() {
+    public Integer getIconCode() {
         return this.iconCode;
     }
 
@@ -270,7 +266,7 @@ public final class ForecastInterval {
      * @param iconCode the iconCode value to set.
      * @return the ForecastInterval object itself.
      */
-    public ForecastInterval withIconCode(Integer iconCode) {
+    public ForecastInterval setIconCode(Integer iconCode) {
         this.iconCode = iconCode;
         return this;
     }
@@ -280,7 +276,7 @@ public final class ForecastInterval {
      *
      * @return the cloudCover value.
      */
-    public Integer cloudCover() {
+    public Integer getCloudCover() {
         return this.cloudCover;
     }
 
@@ -290,22 +286,8 @@ public final class ForecastInterval {
      * @param cloudCover the cloudCover value to set.
      * @return the ForecastInterval object itself.
      */
-    public ForecastInterval withCloudCover(Integer cloudCover) {
+    public ForecastInterval setCloudCover(Integer cloudCover) {
         this.cloudCover = cloudCover;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (color() != null) {
-            color().validate();
-        }
-        if (simplifiedColor() != null) {
-            simplifiedColor().validate();
-        }
     }
 }

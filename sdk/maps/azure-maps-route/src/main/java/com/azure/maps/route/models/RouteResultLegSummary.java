@@ -5,15 +5,11 @@
 package com.azure.maps.route.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** Summary object for route section. */
 @Immutable
 public final class RouteResultLegSummary {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(RouteResultLegSummary.class);
-
     /*
      * Length In Meters property
      */
@@ -102,7 +98,7 @@ public final class RouteResultLegSummary {
      *
      * @return the lengthInMeters value.
      */
-    public Integer lengthInMeters() {
+    public Integer getLengthInMeters() {
         return this.lengthInMeters;
     }
 
@@ -113,7 +109,7 @@ public final class RouteResultLegSummary {
      *
      * @return the travelTimeInSeconds value.
      */
-    public Integer travelTimeInSeconds() {
+    public Integer getTravelTimeInSeconds() {
         return this.travelTimeInSeconds;
     }
 
@@ -125,7 +121,7 @@ public final class RouteResultLegSummary {
      *
      * @return the trafficDelayInSeconds value.
      */
-    public Integer trafficDelayInSeconds() {
+    public Integer getTrafficDelayInSeconds() {
         return this.trafficDelayInSeconds;
     }
 
@@ -134,7 +130,7 @@ public final class RouteResultLegSummary {
      *
      * @return the departureTime value.
      */
-    public String departureTime() {
+    public String getDepartureTime() {
         return this.departureTime;
     }
 
@@ -143,7 +139,7 @@ public final class RouteResultLegSummary {
      *
      * @return the arrivalTime value.
      */
-    public String arrivalTime() {
+    public String getArrivalTime() {
         return this.arrivalTime;
     }
 
@@ -154,7 +150,7 @@ public final class RouteResultLegSummary {
      *
      * @return the noTrafficTravelTimeInSeconds value.
      */
-    public Integer noTrafficTravelTimeInSeconds() {
+    public Integer getNoTrafficTravelTimeInSeconds() {
         return this.noTrafficTravelTimeInSeconds;
     }
 
@@ -164,7 +160,7 @@ public final class RouteResultLegSummary {
      *
      * @return the historicTrafficTravelTimeInSeconds value.
      */
-    public Integer historicTrafficTravelTimeInSeconds() {
+    public Integer getHistoricTrafficTravelTimeInSeconds() {
         return this.historicTrafficTravelTimeInSeconds;
     }
 
@@ -174,7 +170,7 @@ public final class RouteResultLegSummary {
      *
      * @return the liveTrafficIncidentsTravelTimeInSeconds value.
      */
-    public Integer liveTrafficIncidentsTravelTimeInSeconds() {
+    public Integer getLiveTrafficIncidentsTravelTimeInSeconds() {
         return this.liveTrafficIncidentsTravelTimeInSeconds;
     }
 
@@ -185,7 +181,7 @@ public final class RouteResultLegSummary {
      *
      * @return the fuelConsumptionInLiters value.
      */
-    public Float fuelConsumptionInLiters() {
+    public Float getFuelConsumptionInLiters() {
         return this.fuelConsumptionInLiters;
     }
 
@@ -200,15 +196,7 @@ public final class RouteResultLegSummary {
      *
      * @return the batteryConsumptionInkWh value.
      */
-    public Float batteryConsumptionInkWh() {
+    public Float getBatteryConsumptionInkWh() {
         return this.batteryConsumptionInkWh;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

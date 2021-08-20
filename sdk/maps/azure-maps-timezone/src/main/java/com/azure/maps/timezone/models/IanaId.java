@@ -4,42 +4,69 @@
 
 package com.azure.maps.timezone.models;
 
-import com.azure.maps.timezone.fluent.models.IanaIdInner;
+import com.azure.core.annotation.Immutable;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** An immutable client-side representation of IanaId. */
-public interface IanaId {
+/** The IanaId model. */
+@Immutable
+public final class IanaId {
+    /*
+     * Id property
+     */
+    @JsonProperty(value = "id", access = JsonProperty.Access.WRITE_ONLY)
+    private String id;
+
+    /*
+     * IsAlias property
+     */
+    @JsonProperty(value = "isAlias", access = JsonProperty.Access.WRITE_ONLY)
+    private Boolean isAlias;
+
+    /*
+     * AliasOf property
+     */
+    @JsonProperty(value = "aliasOf", access = JsonProperty.Access.WRITE_ONLY)
+    private String aliasOf;
+
+    /*
+     * HasZone1970Location property
+     */
+    @JsonProperty(value = "hasZone1970Location", access = JsonProperty.Access.WRITE_ONLY)
+    private Boolean hasZone1970Location;
+
     /**
-     * Gets the id property: Id property.
+     * Get the id property: Id property.
      *
      * @return the id value.
      */
-    String id();
+    public String getId() {
+        return this.id;
+    }
 
     /**
-     * Gets the isAlias property: IsAlias property.
+     * Get the isAlias property: IsAlias property.
      *
      * @return the isAlias value.
      */
-    Boolean isAlias();
+    public Boolean isAlias() {
+        return this.isAlias;
+    }
 
     /**
-     * Gets the aliasOf property: AliasOf property.
+     * Get the aliasOf property: AliasOf property.
      *
      * @return the aliasOf value.
      */
-    String aliasOf();
+    public String getAliasOf() {
+        return this.aliasOf;
+    }
 
     /**
-     * Gets the hasZone1970Location property: HasZone1970Location property.
+     * Get the hasZone1970Location property: HasZone1970Location property.
      *
      * @return the hasZone1970Location value.
      */
-    Boolean hasZone1970Location();
-
-    /**
-     * Gets the inner com.azure.maps.timezone.fluent.models.IanaIdInner object.
-     *
-     * @return the inner object.
-     */
-    IanaIdInner innerModel();
+    public Boolean isHasZone1970Location() {
+        return this.hasZone1970Location;
+    }
 }

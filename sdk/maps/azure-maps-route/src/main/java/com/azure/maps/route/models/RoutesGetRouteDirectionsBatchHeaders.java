@@ -5,15 +5,11 @@
 package com.azure.maps.route.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** The RoutesGetRouteDirectionsBatchHeaders model. */
 @Fluent
 public final class RoutesGetRouteDirectionsBatchHeaders {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(RoutesGetRouteDirectionsBatchHeaders.class);
-
     /*
      * The Location property.
      */
@@ -25,7 +21,7 @@ public final class RoutesGetRouteDirectionsBatchHeaders {
      *
      * @return the location value.
      */
-    public String location() {
+    public String getLocation() {
         return this.location;
     }
 
@@ -35,16 +31,8 @@ public final class RoutesGetRouteDirectionsBatchHeaders {
      * @param location the location value to set.
      * @return the RoutesGetRouteDirectionsBatchHeaders object itself.
      */
-    public RoutesGetRouteDirectionsBatchHeaders withLocation(String location) {
+    public RoutesGetRouteDirectionsBatchHeaders setLocation(String location) {
         this.location = location;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

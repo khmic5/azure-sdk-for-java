@@ -10,7 +10,7 @@ import com.azure.core.http.rest.ResponseBase;
 
 /** Contains all response data for the getMapStateTilePreview operation. */
 public final class RendersGetMapStateTilePreviewResponse
-    extends ResponseBase<RendersGetMapStateTilePreviewHeaders, Void> {
+        extends ResponseBase<RendersGetMapStateTilePreviewHeaders, Void> {
     /**
      * Creates an instance of RendersGetMapStateTilePreviewResponse.
      *
@@ -21,11 +21,11 @@ public final class RendersGetMapStateTilePreviewResponse
      * @param headers the deserialized headers of the HTTP response.
      */
     public RendersGetMapStateTilePreviewResponse(
-        HttpRequest request,
-        int statusCode,
-        HttpHeaders rawHeaders,
-        Void value,
-        RendersGetMapStateTilePreviewHeaders headers) {
+            HttpRequest request,
+            int statusCode,
+            HttpHeaders rawHeaders,
+            Void value,
+            RendersGetMapStateTilePreviewHeaders headers) {
         super(request, statusCode, rawHeaders, value, headers);
     }
 }

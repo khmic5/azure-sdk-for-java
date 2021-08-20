@@ -5,15 +5,11 @@
 package com.azure.maps.search.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** The entry point for the POI being returned. */
 @Fluent
 public final class SearchResultEntryPoint {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(SearchResultEntryPoint.class);
-
     /*
      * The type of entry point. Value can be either _main_ or _minor_.
      */
@@ -32,7 +28,7 @@ public final class SearchResultEntryPoint {
      *
      * @return the type value.
      */
-    public EntryPointType type() {
+    public EntryPointType getType() {
         return this.type;
     }
 
@@ -42,7 +38,7 @@ public final class SearchResultEntryPoint {
      *
      * @return the position value.
      */
-    public CoordinatesPairAbbreviated position() {
+    public CoordinatesPairAbbreviated getPosition() {
         return this.position;
     }
 
@@ -53,19 +49,8 @@ public final class SearchResultEntryPoint {
      * @param position the position value to set.
      * @return the SearchResultEntryPoint object itself.
      */
-    public SearchResultEntryPoint withPosition(CoordinatesPairAbbreviated position) {
+    public SearchResultEntryPoint setPosition(CoordinatesPairAbbreviated position) {
         this.position = position;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (position() != null) {
-            position().validate();
-        }
     }
 }

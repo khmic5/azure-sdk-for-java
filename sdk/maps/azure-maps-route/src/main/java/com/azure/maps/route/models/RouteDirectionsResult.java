@@ -5,16 +5,12 @@
 package com.azure.maps.route.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /** The RouteDirectionsResult model. */
 @Immutable
 public final class RouteDirectionsResult {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(RouteDirectionsResult.class);
-
     /*
      * Summary object
      */
@@ -45,7 +41,7 @@ public final class RouteDirectionsResult {
      *
      * @return the summary value.
      */
-    public RouteDirectionsSummary summary() {
+    public RouteDirectionsSummary getSummary() {
         return this.summary;
     }
 
@@ -54,7 +50,7 @@ public final class RouteDirectionsResult {
      *
      * @return the legs value.
      */
-    public List<RouteResultLeg> legs() {
+    public List<RouteResultLeg> getLegs() {
         return this.legs;
     }
 
@@ -63,7 +59,7 @@ public final class RouteDirectionsResult {
      *
      * @return the sections value.
      */
-    public List<RouteResultSection> sections() {
+    public List<RouteResultSection> getSections() {
         return this.sections;
     }
 
@@ -73,27 +69,7 @@ public final class RouteDirectionsResult {
      *
      * @return the guidance value.
      */
-    public RouteResultGuidance guidance() {
+    public RouteResultGuidance getGuidance() {
         return this.guidance;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (summary() != null) {
-            summary().validate();
-        }
-        if (legs() != null) {
-            legs().forEach(e -> e.validate());
-        }
-        if (sections() != null) {
-            sections().forEach(e -> e.validate());
-        }
-        if (guidance() != null) {
-            guidance().validate();
-        }
     }
 }

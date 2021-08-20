@@ -4,44 +4,72 @@
 
 package com.azure.maps.creator.models;
 
-import com.azure.maps.creator.fluent.models.AliasesCreateResponseInner;
+import com.azure.core.annotation.Immutable;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.OffsetDateTime;
 
-/** An immutable client-side representation of AliasesCreateResponse. */
-public interface AliasesCreateResponse {
+/** The response model for the Alias Create API for the case when the alias was successfully created. */
+@Immutable
+public final class AliasesCreateResponse {
+    /*
+     * The created timestamp for the alias.
+     */
+    @JsonProperty(value = "createdTimestamp", access = JsonProperty.Access.WRITE_ONLY)
+    private OffsetDateTime createdTimestamp;
+
+    /*
+     * The id for the alias.
+     */
+    @JsonProperty(value = "aliasId", access = JsonProperty.Access.WRITE_ONLY)
+    private String aliasId;
+
+    /*
+     * The id for the creator data item that this alias references (could be
+     * null if the alias has not been assigned).
+     */
+    @JsonProperty(value = "creatorDataItemId", access = JsonProperty.Access.WRITE_ONLY)
+    private String creatorDataItemId;
+
+    /*
+     * The timestamp of the last time the alias was assigned.
+     */
+    @JsonProperty(value = "lastUpdatedTimestamp", access = JsonProperty.Access.WRITE_ONLY)
+    private OffsetDateTime lastUpdatedTimestamp;
+
     /**
-     * Gets the createdTimestamp property: The created timestamp for the alias.
+     * Get the createdTimestamp property: The created timestamp for the alias.
      *
      * @return the createdTimestamp value.
      */
-    OffsetDateTime createdTimestamp();
+    public OffsetDateTime getCreatedTimestamp() {
+        return this.createdTimestamp;
+    }
 
     /**
-     * Gets the aliasId property: The id for the alias.
+     * Get the aliasId property: The id for the alias.
      *
      * @return the aliasId value.
      */
-    String aliasId();
+    public String getAliasId() {
+        return this.aliasId;
+    }
 
     /**
-     * Gets the creatorDataItemId property: The id for the creator data item that this alias references (could be null
-     * if the alias has not been assigned).
+     * Get the creatorDataItemId property: The id for the creator data item that this alias references (could be null if
+     * the alias has not been assigned).
      *
      * @return the creatorDataItemId value.
      */
-    String creatorDataItemId();
+    public String getCreatorDataItemId() {
+        return this.creatorDataItemId;
+    }
 
     /**
-     * Gets the lastUpdatedTimestamp property: The timestamp of the last time the alias was assigned.
+     * Get the lastUpdatedTimestamp property: The timestamp of the last time the alias was assigned.
      *
      * @return the lastUpdatedTimestamp value.
      */
-    OffsetDateTime lastUpdatedTimestamp();
-
-    /**
-     * Gets the inner com.azure.maps.creator.fluent.models.AliasesCreateResponseInner object.
-     *
-     * @return the inner object.
-     */
-    AliasesCreateResponseInner innerModel();
+    public OffsetDateTime getLastUpdatedTimestamp() {
+        return this.lastUpdatedTimestamp;
+    }
 }

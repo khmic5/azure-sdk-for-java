@@ -5,15 +5,11 @@
 package com.azure.maps.elevation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** A location represented as a latitude and longitude. */
 @Fluent
 public final class CoordinatesPair {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(CoordinatesPair.class);
-
     /*
      * Latitude property
      */
@@ -31,7 +27,7 @@ public final class CoordinatesPair {
      *
      * @return the latitude value.
      */
-    public Double latitude() {
+    public Double getLatitude() {
         return this.latitude;
     }
 
@@ -41,7 +37,7 @@ public final class CoordinatesPair {
      * @param latitude the latitude value to set.
      * @return the CoordinatesPair object itself.
      */
-    public CoordinatesPair withLatitude(Double latitude) {
+    public CoordinatesPair setLatitude(Double latitude) {
         this.latitude = latitude;
         return this;
     }
@@ -51,7 +47,7 @@ public final class CoordinatesPair {
      *
      * @return the longitude value.
      */
-    public Double longitude() {
+    public Double getLongitude() {
         return this.longitude;
     }
 
@@ -61,16 +57,8 @@ public final class CoordinatesPair {
      * @param longitude the longitude value to set.
      * @return the CoordinatesPair object itself.
      */
-    public CoordinatesPair withLongitude(Double longitude) {
+    public CoordinatesPair setLongitude(Double longitude) {
         this.longitude = longitude;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

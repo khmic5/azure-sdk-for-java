@@ -5,15 +5,11 @@
 package com.azure.maps.route.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** Summary object. */
 @Immutable
 public final class RouteMatrixSummary {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(RouteMatrixSummary.class);
-
     /*
      * Number of successful routes in the response.
      */
@@ -31,7 +27,7 @@ public final class RouteMatrixSummary {
      *
      * @return the successfulRoutes value.
      */
-    public Integer successfulRoutes() {
+    public Integer getSuccessfulRoutes() {
         return this.successfulRoutes;
     }
 
@@ -40,15 +36,7 @@ public final class RouteMatrixSummary {
      *
      * @return the totalRoutes value.
      */
-    public Integer totalRoutes() {
+    public Integer getTotalRoutes() {
         return this.totalRoutes;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

@@ -4,22 +4,36 @@
 
 package com.azure.maps.render.models;
 
-import com.azure.maps.render.fluent.models.MapAttributionResultV2Inner;
+import com.azure.core.annotation.Fluent;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/** An immutable client-side representation of MapAttributionResultV2. */
-public interface MapAttributionResultV2 {
+/** Copyright attribution for the requested section of a tileset. */
+@Fluent
+public final class MapAttributionResultV2 {
+    /*
+     * A list of copyright strings.
+     */
+    @JsonProperty(value = "copyrights")
+    private List<String> copyrights;
+
     /**
-     * Gets the copyrights property: A list of copyright strings.
+     * Get the copyrights property: A list of copyright strings.
      *
      * @return the copyrights value.
      */
-    List<String> copyrights();
+    public List<String> getCopyrights() {
+        return this.copyrights;
+    }
 
     /**
-     * Gets the inner com.azure.maps.render.fluent.models.MapAttributionResultV2Inner object.
+     * Set the copyrights property: A list of copyright strings.
      *
-     * @return the inner object.
+     * @param copyrights the copyrights value to set.
+     * @return the MapAttributionResultV2 object itself.
      */
-    MapAttributionResultV2Inner innerModel();
+    public MapAttributionResultV2 setCopyrights(List<String> copyrights) {
+        this.copyrights = copyrights;
+        return this;
+    }
 }

@@ -5,15 +5,11 @@
 package com.azure.maps.traffic.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** Viewport Response object. */
 @Immutable
 public final class TrafficIncidentViewportResultViewpResp {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(TrafficIncidentViewportResultViewpResp.class);
-
     /*
      * Traffic State array
      */
@@ -43,7 +39,7 @@ public final class TrafficIncidentViewportResultViewpResp {
      *
      * @return the trafficState value.
      */
-    public TrafficIncidentViewportResultViewpRespTrafficState trafficState() {
+    public TrafficIncidentViewportResultViewpRespTrafficState getTrafficState() {
         return this.trafficState;
     }
 
@@ -52,7 +48,7 @@ public final class TrafficIncidentViewportResultViewpResp {
      *
      * @return the copyrightIds value.
      */
-    public String copyrightIds() {
+    public String getCopyrightIds() {
         return this.copyrightIds;
     }
 
@@ -61,7 +57,7 @@ public final class TrafficIncidentViewportResultViewpResp {
      *
      * @return the version value.
      */
-    public String version() {
+    public String getVersion() {
         return this.version;
     }
 
@@ -70,18 +66,7 @@ public final class TrafficIncidentViewportResultViewpResp {
      *
      * @return the maps value.
      */
-    public String maps() {
+    public String getMaps() {
         return this.maps;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (trafficState() != null) {
-            trafficState().validate();
-        }
     }
 }

@@ -4,41 +4,17 @@
 
 package com.azure.maps.search.implementation;
 
-import com.azure.core.annotation.ServiceClient;
-import com.azure.core.http.HttpHeaders;
 import com.azure.core.http.HttpPipeline;
-import com.azure.core.http.HttpResponse;
-import com.azure.core.http.rest.Response;
-import com.azure.core.management.AzureEnvironment;
-import com.azure.core.management.exception.ManagementError;
-import com.azure.core.management.exception.ManagementException;
-import com.azure.core.management.polling.PollResult;
-import com.azure.core.management.polling.PollerFactory;
-import com.azure.core.util.Context;
-import com.azure.core.util.logging.ClientLogger;
-import com.azure.core.util.polling.AsyncPollResponse;
-import com.azure.core.util.polling.LongRunningOperationStatus;
-import com.azure.core.util.polling.PollerFlux;
+import com.azure.core.http.HttpPipelineBuilder;
+import com.azure.core.http.policy.CookiePolicy;
+import com.azure.core.http.policy.RetryPolicy;
+import com.azure.core.http.policy.UserAgentPolicy;
+import com.azure.core.util.serializer.JacksonAdapter;
 import com.azure.core.util.serializer.SerializerAdapter;
-import com.azure.core.util.serializer.SerializerEncoding;
-import com.azure.maps.search.fluent.SearchClient;
-import com.azure.maps.search.fluent.SearchesClient;
 import com.azure.maps.search.models.Geography;
-import java.io.IOException;
-import java.lang.reflect.Type;
-import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.time.Duration;
-import java.util.Map;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
-/** Initializes a new instance of the SearchClientImpl type. */
-@ServiceClient(builder = SearchClientBuilder.class)
-public final class SearchClientImpl implements SearchClient {
-    private final ClientLogger logger = new ClientLogger(SearchClientImpl.class);
-
+/** Initializes a new instance of the SearchClient type. */
+public final class SearchClientImpl {
     /**
      * Specifies which account is intended for usage in conjunction with the Azure AD security model. It represents a
      * unique ID for the Azure Maps account and can be retrieved from the Azure Maps management plane Account API. To
@@ -101,32 +77,58 @@ public final class SearchClientImpl implements SearchClient {
      *
      * @return the serializerAdapter value.
      */
-    SerializerAdapter getSerializerAdapter() {
+    public SerializerAdapter getSerializerAdapter() {
         return this.serializerAdapter;
     }
 
-    /** The default poll interval for long-running operation. */
-    private final Duration defaultPollInterval;
+    /** The SearchesImpl object to access its operations. */
+    private final SearchesImpl searches;
 
     /**
-     * Gets The default poll interval for long-running operation.
+     * Gets the SearchesImpl object to access its operations.
      *
-     * @return the defaultPollInterval value.
+     * @return the SearchesImpl object.
      */
-    public Duration getDefaultPollInterval() {
-        return this.defaultPollInterval;
+    public SearchesImpl getSearches() {
+        return this.searches;
     }
 
-    /** The SearchesClient object to access its operations. */
-    private final SearchesClient searches;
+    /**
+     * Initializes an instance of SearchClient client.
+     *
+     * @param xMsClientId Specifies which account is intended for usage in conjunction with the Azure AD security model.
+     *     It represents a unique ID for the Azure Maps account and can be retrieved from the Azure Maps management
+     *     plane Account API. To use Azure AD security in Azure Maps see the following
+     *     [articles](https://aka.ms/amauthdetails) for guidance.
+     * @param geography This parameter specifies where the Azure Maps Creator resource is located. Valid values are us
+     *     and eu.
+     * @param apiVersion Api Version.
+     */
+    public SearchClientImpl(String xMsClientId, Geography geography, String apiVersion) {
+        this(
+                new HttpPipelineBuilder()
+                        .policies(new UserAgentPolicy(), new RetryPolicy(), new CookiePolicy())
+                        .build(),
+                JacksonAdapter.createDefaultSerializerAdapter(),
+                xMsClientId,
+                geography,
+                apiVersion);
+    }
 
     /**
-     * Gets the SearchesClient object to access its operations.
+     * Initializes an instance of SearchClient client.
      *
-     * @return the SearchesClient object.
+     * @param httpPipeline The HTTP pipeline to send requests through.
+     * @param xMsClientId Specifies which account is intended for usage in conjunction with the Azure AD security model.
+     *     It represents a unique ID for the Azure Maps account and can be retrieved from the Azure Maps management
+     *     plane Account API. To use Azure AD security in Azure Maps see the following
+     *     [articles](https://aka.ms/amauthdetails) for guidance.
+     * @param geography This parameter specifies where the Azure Maps Creator resource is located. Valid values are us
+     *     and eu.
+     * @param apiVersion Api Version.
      */
-    public SearchesClient getSearches() {
-        return this.searches;
+    public SearchClientImpl(HttpPipeline httpPipeline, String xMsClientId, Geography geography, String apiVersion) {
+        this(httpPipeline, JacksonAdapter.createDefaultSerializerAdapter(), xMsClientId, geography, apiVersion);
     }
 
     /**
@@ -134,171 +136,25 @@ public final class SearchClientImpl implements SearchClient {
      *
      * @param httpPipeline The HTTP pipeline to send requests through.
      * @param serializerAdapter The serializer to serialize an object into a string.
-     * @param defaultPollInterval The default poll interval for long-running operation.
-     * @param environment The Azure environment.
      * @param xMsClientId Specifies which account is intended for usage in conjunction with the Azure AD security model.
      *     It represents a unique ID for the Azure Maps account and can be retrieved from the Azure Maps management
      *     plane Account API. To use Azure AD security in Azure Maps see the following
      *     [articles](https://aka.ms/amauthdetails) for guidance.
      * @param geography This parameter specifies where the Azure Maps Creator resource is located. Valid values are us
      *     and eu.
+     * @param apiVersion Api Version.
      */
-    SearchClientImpl(
-        HttpPipeline httpPipeline,
-        SerializerAdapter serializerAdapter,
-        Duration defaultPollInterval,
-        AzureEnvironment environment,
-        String xMsClientId,
-        Geography geography) {
+    public SearchClientImpl(
+            HttpPipeline httpPipeline,
+            SerializerAdapter serializerAdapter,
+            String xMsClientId,
+            Geography geography,
+            String apiVersion) {
         this.httpPipeline = httpPipeline;
         this.serializerAdapter = serializerAdapter;
-        this.defaultPollInterval = defaultPollInterval;
         this.xMsClientId = xMsClientId;
         this.geography = geography;
-        this.apiVersion = "1.0";
-        this.searches = new SearchesClientImpl(this);
-    }
-
-    /**
-     * Gets default client context.
-     *
-     * @return the default client context.
-     */
-    public Context getContext() {
-        return Context.NONE;
-    }
-
-    /**
-     * Merges default client context with provided context.
-     *
-     * @param context the context to be merged with default client context.
-     * @return the merged context.
-     */
-    public Context mergeContext(Context context) {
-        for (Map.Entry<Object, Object> entry : this.getContext().getValues().entrySet()) {
-            context = context.addData(entry.getKey(), entry.getValue());
-        }
-        return context;
-    }
-
-    /**
-     * Gets long running operation result.
-     *
-     * @param activationResponse the response of activation operation.
-     * @param httpPipeline the http pipeline.
-     * @param pollResultType type of poll result.
-     * @param finalResultType type of final result.
-     * @param context the context shared by all requests.
-     * @param <T> type of poll result.
-     * @param <U> type of final result.
-     * @return poller flux for poll result and final result.
-     */
-    public <T, U> PollerFlux<PollResult<T>, U> getLroResult(
-        Mono<Response<Flux<ByteBuffer>>> activationResponse,
-        HttpPipeline httpPipeline,
-        Type pollResultType,
-        Type finalResultType,
-        Context context) {
-        return PollerFactory
-            .create(
-                serializerAdapter,
-                httpPipeline,
-                pollResultType,
-                finalResultType,
-                defaultPollInterval,
-                activationResponse,
-                context);
-    }
-
-    /**
-     * Gets the final result, or an error, based on last async poll response.
-     *
-     * @param response the last async poll response.
-     * @param <T> type of poll result.
-     * @param <U> type of final result.
-     * @return the final result, or an error.
-     */
-    public <T, U> Mono<U> getLroFinalResultOrError(AsyncPollResponse<PollResult<T>, U> response) {
-        if (response.getStatus() != LongRunningOperationStatus.SUCCESSFULLY_COMPLETED) {
-            String errorMessage;
-            ManagementError managementError = null;
-            HttpResponse errorResponse = null;
-            PollResult.Error lroError = response.getValue().getError();
-            if (lroError != null) {
-                errorResponse =
-                    new HttpResponseImpl(
-                        lroError.getResponseStatusCode(), lroError.getResponseHeaders(), lroError.getResponseBody());
-
-                errorMessage = response.getValue().getError().getMessage();
-                String errorBody = response.getValue().getError().getResponseBody();
-                if (errorBody != null) {
-                    // try to deserialize error body to ManagementError
-                    try {
-                        managementError =
-                            this
-                                .getSerializerAdapter()
-                                .deserialize(errorBody, ManagementError.class, SerializerEncoding.JSON);
-                        if (managementError.getCode() == null || managementError.getMessage() == null) {
-                            managementError = null;
-                        }
-                    } catch (IOException | RuntimeException ioe) {
-                        logger.logThrowableAsWarning(ioe);
-                    }
-                }
-            } else {
-                // fallback to default error message
-                errorMessage = "Long running operation failed.";
-            }
-            if (managementError == null) {
-                // fallback to default ManagementError
-                managementError = new ManagementError(response.getStatus().toString(), errorMessage);
-            }
-            return Mono.error(new ManagementException(errorMessage, errorResponse, managementError));
-        } else {
-            return response.getFinalResult();
-        }
-    }
-
-    private static final class HttpResponseImpl extends HttpResponse {
-        private final int statusCode;
-
-        private final byte[] responseBody;
-
-        private final HttpHeaders httpHeaders;
-
-        HttpResponseImpl(int statusCode, HttpHeaders httpHeaders, String responseBody) {
-            super(null);
-            this.statusCode = statusCode;
-            this.httpHeaders = httpHeaders;
-            this.responseBody = responseBody == null ? null : responseBody.getBytes(StandardCharsets.UTF_8);
-        }
-
-        public int getStatusCode() {
-            return statusCode;
-        }
-
-        public String getHeaderValue(String s) {
-            return httpHeaders.getValue(s);
-        }
-
-        public HttpHeaders getHeaders() {
-            return httpHeaders;
-        }
-
-        public Flux<ByteBuffer> getBody() {
-            return Flux.just(ByteBuffer.wrap(responseBody));
-        }
-
-        public Mono<byte[]> getBodyAsByteArray() {
-            return Mono.just(responseBody);
-        }
-
-        public Mono<String> getBodyAsString() {
-            return Mono.just(new String(responseBody, StandardCharsets.UTF_8));
-        }
-
-        public Mono<String> getBodyAsString(Charset charset) {
-            return Mono.just(new String(responseBody, charset));
-        }
+        this.apiVersion = apiVersion;
+        this.searches = new SearchesImpl(this);
     }
 }

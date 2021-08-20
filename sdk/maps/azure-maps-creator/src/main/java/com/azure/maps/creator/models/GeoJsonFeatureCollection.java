@@ -5,9 +5,6 @@
 package com.azure.maps.creator.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.azure.maps.creator.fluent.models.ExtendedGeoJsonFeatureCollectionInner;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -19,16 +16,14 @@ import java.util.List;
  * 7946](https://tools.ietf.org/html/rfc7946#section-3.3) for details.
  */
 @JsonTypeInfo(
-    use = JsonTypeInfo.Id.NAME,
-    include = JsonTypeInfo.As.PROPERTY,
-    property = "type",
-    defaultImpl = GeoJsonFeatureCollection.class)
+        use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "type",
+        defaultImpl = GeoJsonFeatureCollection.class)
 @JsonTypeName("FeatureCollection")
-@JsonSubTypes({@JsonSubTypes.Type(name = "FeatureCollection", value = ExtendedGeoJsonFeatureCollectionInner.class)})
+@JsonSubTypes({@JsonSubTypes.Type(name = "FeatureCollection", value = ExtendedGeoJsonFeatureCollection.class)})
 @Fluent
 public class GeoJsonFeatureCollection extends GeoJsonObject {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(GeoJsonFeatureCollection.class);
-
     /*
      * Contains a list of valid `GeoJSON Feature` objects.
      */
@@ -40,7 +35,7 @@ public class GeoJsonFeatureCollection extends GeoJsonObject {
      *
      * @return the features value.
      */
-    public List<GeoJsonFeature> features() {
+    public List<GeoJsonFeature> getFeatures() {
         return this.features;
     }
 
@@ -50,26 +45,8 @@ public class GeoJsonFeatureCollection extends GeoJsonObject {
      * @param features the features value to set.
      * @return the GeoJsonFeatureCollection object itself.
      */
-    public GeoJsonFeatureCollection withFeatures(List<GeoJsonFeature> features) {
+    public GeoJsonFeatureCollection setFeatures(List<GeoJsonFeature> features) {
         this.features = features;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    @Override
-    public void validate() {
-        super.validate();
-        if (features() == null) {
-            throw logger
-                .logExceptionAsError(
-                    new IllegalArgumentException(
-                        "Missing required property features in model GeoJsonFeatureCollection"));
-        } else {
-            features().forEach(e -> e.validate());
-        }
     }
 }

@@ -5,8 +5,6 @@
 package com.azure.maps.weather.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.OffsetDateTime;
 
@@ -16,8 +14,6 @@ import java.time.OffsetDateTime;
  */
 @Fluent
 public final class DailyForecastSummary {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(DailyForecastSummary.class);
-
     /*
      * Date and time that the summary is in effect, displayed in ISO 8601
      * format, for example, 2019-10-27T19:39:57-08:00.
@@ -56,7 +52,7 @@ public final class DailyForecastSummary {
      *
      * @return the startDate value.
      */
-    public OffsetDateTime startDate() {
+    public OffsetDateTime getStartDate() {
         return this.startDate;
     }
 
@@ -67,7 +63,7 @@ public final class DailyForecastSummary {
      * @param startDate the startDate value to set.
      * @return the DailyForecastSummary object itself.
      */
-    public DailyForecastSummary withStartDate(OffsetDateTime startDate) {
+    public DailyForecastSummary setStartDate(OffsetDateTime startDate) {
         this.startDate = startDate;
         return this;
     }
@@ -78,7 +74,7 @@ public final class DailyForecastSummary {
      *
      * @return the endDate value.
      */
-    public OffsetDateTime endDate() {
+    public OffsetDateTime getEndDate() {
         return this.endDate;
     }
 
@@ -89,7 +85,7 @@ public final class DailyForecastSummary {
      * @param endDate the endDate value to set.
      * @return the DailyForecastSummary object itself.
      */
-    public DailyForecastSummary withEndDate(OffsetDateTime endDate) {
+    public DailyForecastSummary setEndDate(OffsetDateTime endDate) {
         this.endDate = endDate;
         return this;
     }
@@ -99,7 +95,7 @@ public final class DailyForecastSummary {
      *
      * @return the severity value.
      */
-    public Integer severity() {
+    public Integer getSeverity() {
         return this.severity;
     }
 
@@ -109,7 +105,7 @@ public final class DailyForecastSummary {
      * @param severity the severity value to set.
      * @return the DailyForecastSummary object itself.
      */
-    public DailyForecastSummary withSeverity(Integer severity) {
+    public DailyForecastSummary setSeverity(Integer severity) {
         this.severity = severity;
         return this;
     }
@@ -119,7 +115,7 @@ public final class DailyForecastSummary {
      *
      * @return the phrase value.
      */
-    public String phrase() {
+    public String getPhrase() {
         return this.phrase;
     }
 
@@ -129,7 +125,7 @@ public final class DailyForecastSummary {
      * @param phrase the phrase value to set.
      * @return the DailyForecastSummary object itself.
      */
-    public DailyForecastSummary withPhrase(String phrase) {
+    public DailyForecastSummary setPhrase(String phrase) {
         this.phrase = phrase;
         return this;
     }
@@ -139,7 +135,7 @@ public final class DailyForecastSummary {
      *
      * @return the category value.
      */
-    public String category() {
+    public String getCategory() {
         return this.category;
     }
 
@@ -149,16 +145,8 @@ public final class DailyForecastSummary {
      * @param category the category value to set.
      * @return the DailyForecastSummary object itself.
      */
-    public DailyForecastSummary withCategory(String category) {
+    public DailyForecastSummary setCategory(String category) {
         this.category = category;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

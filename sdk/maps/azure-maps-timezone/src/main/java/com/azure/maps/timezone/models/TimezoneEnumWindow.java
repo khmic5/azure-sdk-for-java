@@ -4,36 +4,66 @@
 
 package com.azure.maps.timezone.models;
 
-import com.azure.maps.timezone.fluent.models.TimezoneEnumWindowInner;
+import com.azure.core.annotation.Fluent;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/** An immutable client-side representation of TimezoneEnumWindow. */
-public interface TimezoneEnumWindow {
+/** The TimezoneEnumWindow model. */
+@Fluent
+public final class TimezoneEnumWindow {
+    /*
+     * Windows Id property
+     */
+    @JsonProperty(value = "WindowsId", access = JsonProperty.Access.WRITE_ONLY)
+    private String windowsId;
+
+    /*
+     * Territory property
+     */
+    @JsonProperty(value = "Territory", access = JsonProperty.Access.WRITE_ONLY)
+    private String territory;
+
+    /*
+     * IanaIds array
+     */
+    @JsonProperty(value = "IanaIds")
+    private List<String> ianaIds;
+
     /**
-     * Gets the windowsId property: Windows Id property.
+     * Get the windowsId property: Windows Id property.
      *
      * @return the windowsId value.
      */
-    String windowsId();
+    public String getWindowsId() {
+        return this.windowsId;
+    }
 
     /**
-     * Gets the territory property: Territory property.
+     * Get the territory property: Territory property.
      *
      * @return the territory value.
      */
-    String territory();
+    public String getTerritory() {
+        return this.territory;
+    }
 
     /**
-     * Gets the ianaIds property: IanaIds array.
+     * Get the ianaIds property: IanaIds array.
      *
      * @return the ianaIds value.
      */
-    List<String> ianaIds();
+    public List<String> getIanaIds() {
+        return this.ianaIds;
+    }
 
     /**
-     * Gets the inner com.azure.maps.timezone.fluent.models.TimezoneEnumWindowInner object.
+     * Set the ianaIds property: IanaIds array.
      *
-     * @return the inner object.
+     * @param ianaIds the ianaIds value to set.
+     * @return the TimezoneEnumWindow object itself.
      */
-    TimezoneEnumWindowInner innerModel();
+    public TimezoneEnumWindow setIanaIds(List<String> ianaIds) {
+        this.ianaIds = ianaIds;
+        return this;
+    }
 }

@@ -4,51 +4,118 @@
 
 package com.azure.maps.creator.models;
 
-import com.azure.core.management.exception.ManagementError;
-import com.azure.maps.creator.fluent.models.LongRunningOperationResultInner;
+import com.azure.core.annotation.Fluent;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.OffsetDateTime;
 
-/** An immutable client-side representation of LongRunningOperationResult. */
-public interface LongRunningOperationResult {
+/** The response model for a Long-Running Operations API. */
+@Fluent
+public final class LongRunningOperationResult {
+    /*
+     * The Id for this long-running operation.
+     */
+    @JsonProperty(value = "operationId")
+    private String operationId;
+
+    /*
+     * The status state of the request.
+     */
+    @JsonProperty(value = "status", access = JsonProperty.Access.WRITE_ONLY)
+    private LroStatus status;
+
+    /*
+     * The created timestamp.
+     */
+    @JsonProperty(value = "created", access = JsonProperty.Access.WRITE_ONLY)
+    private OffsetDateTime created;
+
+    /*
+     * The error detail.
+     */
+    @JsonProperty(value = "error")
+    private ErrorDetail error;
+
+    /*
+     * The error detail.
+     */
+    @JsonProperty(value = "warning")
+    private ErrorDetail warning;
+
     /**
-     * Gets the operationId property: The Id for this long-running operation.
+     * Get the operationId property: The Id for this long-running operation.
      *
      * @return the operationId value.
      */
-    String operationId();
+    public String getOperationId() {
+        return this.operationId;
+    }
 
     /**
-     * Gets the status property: The status state of the request.
+     * Set the operationId property: The Id for this long-running operation.
+     *
+     * @param operationId the operationId value to set.
+     * @return the LongRunningOperationResult object itself.
+     */
+    public LongRunningOperationResult setOperationId(String operationId) {
+        this.operationId = operationId;
+        return this;
+    }
+
+    /**
+     * Get the status property: The status state of the request.
      *
      * @return the status value.
      */
-    LroStatus status();
+    public LroStatus getStatus() {
+        return this.status;
+    }
 
     /**
-     * Gets the created property: The created timestamp.
+     * Get the created property: The created timestamp.
      *
      * @return the created value.
      */
-    OffsetDateTime created();
+    public OffsetDateTime getCreated() {
+        return this.created;
+    }
 
     /**
-     * Gets the error property: The error detail.
+     * Get the error property: The error detail.
      *
      * @return the error value.
      */
-    ManagementError error();
+    public ErrorDetail getError() {
+        return this.error;
+    }
 
     /**
-     * Gets the warning property: The error detail.
+     * Set the error property: The error detail.
+     *
+     * @param error the error value to set.
+     * @return the LongRunningOperationResult object itself.
+     */
+    public LongRunningOperationResult setError(ErrorDetail error) {
+        this.error = error;
+        return this;
+    }
+
+    /**
+     * Get the warning property: The error detail.
      *
      * @return the warning value.
      */
-    ManagementError warning();
+    public ErrorDetail getWarning() {
+        return this.warning;
+    }
 
     /**
-     * Gets the inner com.azure.maps.creator.fluent.models.LongRunningOperationResultInner object.
+     * Set the warning property: The error detail.
      *
-     * @return the inner object.
+     * @param warning the warning value to set.
+     * @return the LongRunningOperationResult object itself.
      */
-    LongRunningOperationResultInner innerModel();
+    public LongRunningOperationResult setWarning(ErrorDetail warning) {
+        this.warning = warning;
+        return this;
+    }
 }

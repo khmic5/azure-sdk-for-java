@@ -5,15 +5,11 @@
 package com.azure.maps.creator.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** The DatasetsCreateHeaders model. */
 @Fluent
 public final class DatasetsCreateHeaders {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(DatasetsCreateHeaders.class);
-
     /*
      * The Operation-Location property.
      */
@@ -31,7 +27,7 @@ public final class DatasetsCreateHeaders {
      *
      * @return the operationLocation value.
      */
-    public String operationLocation() {
+    public String getOperationLocation() {
         return this.operationLocation;
     }
 
@@ -41,7 +37,7 @@ public final class DatasetsCreateHeaders {
      * @param operationLocation the operationLocation value to set.
      * @return the DatasetsCreateHeaders object itself.
      */
-    public DatasetsCreateHeaders withOperationLocation(String operationLocation) {
+    public DatasetsCreateHeaders setOperationLocation(String operationLocation) {
         this.operationLocation = operationLocation;
         return this;
     }
@@ -51,7 +47,7 @@ public final class DatasetsCreateHeaders {
      *
      * @return the resourceLocation value.
      */
-    public String resourceLocation() {
+    public String getResourceLocation() {
         return this.resourceLocation;
     }
 
@@ -61,16 +57,8 @@ public final class DatasetsCreateHeaders {
      * @param resourceLocation the resourceLocation value to set.
      * @return the DatasetsCreateHeaders object itself.
      */
-    public DatasetsCreateHeaders withResourceLocation(String resourceLocation) {
+    public DatasetsCreateHeaders setResourceLocation(String resourceLocation) {
         this.resourceLocation = resourceLocation;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

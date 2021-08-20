@@ -4,21 +4,24 @@
 
 package com.azure.maps.traffic.models;
 
-import com.azure.maps.traffic.fluent.models.TrafficIncidentViewportResultInner;
+import com.azure.core.annotation.Immutable;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** An immutable client-side representation of TrafficIncidentViewportResult. */
-public interface TrafficIncidentViewportResult {
+/** This object is returned from a successful Traffic Incident Viewport call. */
+@Immutable
+public final class TrafficIncidentViewportResult {
+    /*
+     * Viewport Response object
+     */
+    @JsonProperty(value = "viewpResp", access = JsonProperty.Access.WRITE_ONLY)
+    private TrafficIncidentViewportResultViewpResp viewpResp;
+
     /**
-     * Gets the viewpResp property: Viewport Response object.
+     * Get the viewpResp property: Viewport Response object.
      *
      * @return the viewpResp value.
      */
-    TrafficIncidentViewportResultViewpResp viewpResp();
-
-    /**
-     * Gets the inner com.azure.maps.traffic.fluent.models.TrafficIncidentViewportResultInner object.
-     *
-     * @return the inner object.
-     */
-    TrafficIncidentViewportResultInner innerModel();
+    public TrafficIncidentViewportResultViewpResp getViewpResp() {
+        return this.viewpResp;
+    }
 }

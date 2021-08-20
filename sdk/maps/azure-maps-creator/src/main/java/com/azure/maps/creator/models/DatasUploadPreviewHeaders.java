@@ -5,15 +5,11 @@
 package com.azure.maps.creator.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** The DatasUploadPreviewHeaders model. */
 @Fluent
 public final class DatasUploadPreviewHeaders {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(DatasUploadPreviewHeaders.class);
-
     /*
      * The Operation-Location property.
      */
@@ -31,7 +27,7 @@ public final class DatasUploadPreviewHeaders {
      *
      * @return the operationLocation value.
      */
-    public String operationLocation() {
+    public String getOperationLocation() {
         return this.operationLocation;
     }
 
@@ -41,7 +37,7 @@ public final class DatasUploadPreviewHeaders {
      * @param operationLocation the operationLocation value to set.
      * @return the DatasUploadPreviewHeaders object itself.
      */
-    public DatasUploadPreviewHeaders withOperationLocation(String operationLocation) {
+    public DatasUploadPreviewHeaders setOperationLocation(String operationLocation) {
         this.operationLocation = operationLocation;
         return this;
     }
@@ -51,7 +47,7 @@ public final class DatasUploadPreviewHeaders {
      *
      * @return the resourceLocation value.
      */
-    public String resourceLocation() {
+    public String getResourceLocation() {
         return this.resourceLocation;
     }
 
@@ -61,16 +57,8 @@ public final class DatasUploadPreviewHeaders {
      * @param resourceLocation the resourceLocation value to set.
      * @return the DatasUploadPreviewHeaders object itself.
      */
-    public DatasUploadPreviewHeaders withResourceLocation(String resourceLocation) {
+    public DatasUploadPreviewHeaders setResourceLocation(String resourceLocation) {
         this.resourceLocation = resourceLocation;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

@@ -5,15 +5,11 @@
 package com.azure.maps.route.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** Matrix result object. */
 @Immutable
 public final class RouteMatrixResult {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(RouteMatrixResult.class);
-
     /*
      * StatusCode property for the current cell in the input matrix.
      */
@@ -31,7 +27,7 @@ public final class RouteMatrixResult {
      *
      * @return the statusCode value.
      */
-    public Integer statusCode() {
+    public Integer getStatusCode() {
         return this.statusCode;
     }
 
@@ -40,18 +36,7 @@ public final class RouteMatrixResult {
      *
      * @return the response value.
      */
-    public RouteMatrixResultResponse response() {
+    public RouteMatrixResultResponse getResponse() {
         return this.response;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (response() != null) {
-            response().validate();
-        }
     }
 }

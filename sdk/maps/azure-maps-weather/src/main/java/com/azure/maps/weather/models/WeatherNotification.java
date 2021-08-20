@@ -5,15 +5,11 @@
 package com.azure.maps.weather.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** The WeatherNotification model. */
 @Fluent
 public final class WeatherNotification {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(WeatherNotification.class);
-
     /*
      * A type of notification generated to warn drivers of the onset of a
      * hazard, or increase in intensity of a hazard.
@@ -56,7 +52,7 @@ public final class WeatherNotification {
      *
      * @return the type value.
      */
-    public String type() {
+    public String getType() {
         return this.type;
     }
 
@@ -67,7 +63,7 @@ public final class WeatherNotification {
      * @param type the type value to set.
      * @return the WeatherNotification object itself.
      */
-    public WeatherNotification withType(String type) {
+    public WeatherNotification setType(String type) {
         this.type = type;
         return this;
     }
@@ -78,7 +74,7 @@ public final class WeatherNotification {
      *
      * @return the hazardIndex value.
      */
-    public Integer hazardIndex() {
+    public Integer getHazardIndex() {
         return this.hazardIndex;
     }
 
@@ -89,7 +85,7 @@ public final class WeatherNotification {
      * @param hazardIndex the hazardIndex value to set.
      * @return the WeatherNotification object itself.
      */
-    public WeatherNotification withHazardIndex(Integer hazardIndex) {
+    public WeatherNotification setHazardIndex(Integer hazardIndex) {
         this.hazardIndex = hazardIndex;
         return this;
     }
@@ -103,7 +99,7 @@ public final class WeatherNotification {
      *
      * @return the hazardCode value.
      */
-    public String hazardCode() {
+    public String getHazardCode() {
         return this.hazardCode;
     }
 
@@ -117,7 +113,7 @@ public final class WeatherNotification {
      * @param hazardCode the hazardCode value to set.
      * @return the WeatherNotification object itself.
      */
-    public WeatherNotification withHazardCode(String hazardCode) {
+    public WeatherNotification setHazardCode(String hazardCode) {
         this.hazardCode = hazardCode;
         return this;
     }
@@ -128,7 +124,7 @@ public final class WeatherNotification {
      *
      * @return the shortPhrase value.
      */
-    public String shortPhrase() {
+    public String getShortPhrase() {
         return this.shortPhrase;
     }
 
@@ -139,16 +135,8 @@ public final class WeatherNotification {
      * @param shortPhrase the shortPhrase value to set.
      * @return the WeatherNotification object itself.
      */
-    public WeatherNotification withShortPhrase(String shortPhrase) {
+    public WeatherNotification setShortPhrase(String shortPhrase) {
         this.shortPhrase = shortPhrase;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

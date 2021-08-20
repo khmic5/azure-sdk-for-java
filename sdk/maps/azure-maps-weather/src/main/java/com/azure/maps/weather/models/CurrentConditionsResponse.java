@@ -4,22 +4,36 @@
 
 package com.azure.maps.weather.models;
 
-import com.azure.maps.weather.fluent.models.CurrentConditionsResponseInner;
+import com.azure.core.annotation.Fluent;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/** An immutable client-side representation of CurrentConditionsResponse. */
-public interface CurrentConditionsResponse {
+/** The CurrentConditionsResponse model. */
+@Fluent
+public final class CurrentConditionsResponse {
+    /*
+     * Detailed current weather conditions.
+     */
+    @JsonProperty(value = "results")
+    private List<CurrentConditions> results;
+
     /**
-     * Gets the results property: Detailed current weather conditions.
+     * Get the results property: Detailed current weather conditions.
      *
      * @return the results value.
      */
-    List<CurrentConditions> results();
+    public List<CurrentConditions> getResults() {
+        return this.results;
+    }
 
     /**
-     * Gets the inner com.azure.maps.weather.fluent.models.CurrentConditionsResponseInner object.
+     * Set the results property: Detailed current weather conditions.
      *
-     * @return the inner object.
+     * @param results the results value to set.
+     * @return the CurrentConditionsResponse object itself.
      */
-    CurrentConditionsResponseInner innerModel();
+    public CurrentConditionsResponse setResults(List<CurrentConditions> results) {
+        this.results = results;
+        return this;
+    }
 }

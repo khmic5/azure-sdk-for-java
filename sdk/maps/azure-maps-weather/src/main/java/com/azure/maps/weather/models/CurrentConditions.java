@@ -5,16 +5,12 @@
 package com.azure.maps.weather.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.OffsetDateTime;
 
 /** The CurrentConditions model. */
 @Fluent
 public final class CurrentConditions {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(CurrentConditions.class);
-
     /*
      * Date and time of the current observation displayed in ISO 8601 format,
      * for example, 2019-10-27T19:39:57-08:00.
@@ -198,7 +194,7 @@ public final class CurrentConditions {
      *
      * @return the dateTime value.
      */
-    public OffsetDateTime dateTime() {
+    public OffsetDateTime getDateTime() {
         return this.dateTime;
     }
 
@@ -209,7 +205,7 @@ public final class CurrentConditions {
      * @param dateTime the dateTime value to set.
      * @return the CurrentConditions object itself.
      */
-    public CurrentConditions withDateTime(OffsetDateTime dateTime) {
+    public CurrentConditions setDateTime(OffsetDateTime dateTime) {
         this.dateTime = dateTime;
         return this;
     }
@@ -219,7 +215,7 @@ public final class CurrentConditions {
      *
      * @return the phrase value.
      */
-    public String phrase() {
+    public String getPhrase() {
         return this.phrase;
     }
 
@@ -229,7 +225,7 @@ public final class CurrentConditions {
      * @param phrase the phrase value to set.
      * @return the CurrentConditions object itself.
      */
-    public CurrentConditions withPhrase(String phrase) {
+    public CurrentConditions setPhrase(String phrase) {
         this.phrase = phrase;
         return this;
     }
@@ -240,7 +236,7 @@ public final class CurrentConditions {
      *
      * @return the iconCode value.
      */
-    public Integer iconCode() {
+    public Integer getIconCode() {
         return this.iconCode;
     }
 
@@ -251,7 +247,7 @@ public final class CurrentConditions {
      * @param iconCode the iconCode value to set.
      * @return the CurrentConditions object itself.
      */
-    public CurrentConditions withIconCode(Integer iconCode) {
+    public CurrentConditions setIconCode(Integer iconCode) {
         this.iconCode = iconCode;
         return this;
     }
@@ -262,7 +258,7 @@ public final class CurrentConditions {
      *
      * @return the hasPrecipitation value.
      */
-    public Boolean hasPrecipitation() {
+    public Boolean isHasPrecipitation() {
         return this.hasPrecipitation;
     }
 
@@ -273,7 +269,7 @@ public final class CurrentConditions {
      * @param hasPrecipitation the hasPrecipitation value to set.
      * @return the CurrentConditions object itself.
      */
-    public CurrentConditions withHasPrecipitation(Boolean hasPrecipitation) {
+    public CurrentConditions setHasPrecipitation(Boolean hasPrecipitation) {
         this.hasPrecipitation = hasPrecipitation;
         return this;
     }
@@ -293,7 +289,7 @@ public final class CurrentConditions {
      * @param isDayTime the isDayTime value to set.
      * @return the CurrentConditions object itself.
      */
-    public CurrentConditions withIsDayTime(Boolean isDayTime) {
+    public CurrentConditions setIsDayTime(Boolean isDayTime) {
         this.isDayTime = isDayTime;
         return this;
     }
@@ -303,7 +299,7 @@ public final class CurrentConditions {
      *
      * @return the temperature value.
      */
-    public WeatherUnit temperature() {
+    public WeatherUnit getTemperature() {
         return this.temperature;
     }
 
@@ -313,7 +309,7 @@ public final class CurrentConditions {
      * @param temperature the temperature value to set.
      * @return the CurrentConditions object itself.
      */
-    public CurrentConditions withTemperature(WeatherUnit temperature) {
+    public CurrentConditions setTemperature(WeatherUnit temperature) {
         this.temperature = temperature;
         return this;
     }
@@ -323,7 +319,7 @@ public final class CurrentConditions {
      *
      * @return the realFeelTemperature value.
      */
-    public WeatherUnit realFeelTemperature() {
+    public WeatherUnit getRealFeelTemperature() {
         return this.realFeelTemperature;
     }
 
@@ -333,7 +329,7 @@ public final class CurrentConditions {
      * @param realFeelTemperature the realFeelTemperature value to set.
      * @return the CurrentConditions object itself.
      */
-    public CurrentConditions withRealFeelTemperature(WeatherUnit realFeelTemperature) {
+    public CurrentConditions setRealFeelTemperature(WeatherUnit realFeelTemperature) {
         this.realFeelTemperature = realFeelTemperature;
         return this;
     }
@@ -344,7 +340,7 @@ public final class CurrentConditions {
      *
      * @return the realFeelTemperatureShade value.
      */
-    public WeatherUnit realFeelTemperatureShade() {
+    public WeatherUnit getRealFeelTemperatureShade() {
         return this.realFeelTemperatureShade;
     }
 
@@ -355,7 +351,7 @@ public final class CurrentConditions {
      * @param realFeelTemperatureShade the realFeelTemperatureShade value to set.
      * @return the CurrentConditions object itself.
      */
-    public CurrentConditions withRealFeelTemperatureShade(WeatherUnit realFeelTemperatureShade) {
+    public CurrentConditions setRealFeelTemperatureShade(WeatherUnit realFeelTemperatureShade) {
         this.realFeelTemperatureShade = realFeelTemperatureShade;
         return this;
     }
@@ -366,7 +362,7 @@ public final class CurrentConditions {
      *
      * @return the relativeHumidity value.
      */
-    public Integer relativeHumidity() {
+    public Integer getRelativeHumidity() {
         return this.relativeHumidity;
     }
 
@@ -377,7 +373,7 @@ public final class CurrentConditions {
      * @param relativeHumidity the relativeHumidity value to set.
      * @return the CurrentConditions object itself.
      */
-    public CurrentConditions withRelativeHumidity(Integer relativeHumidity) {
+    public CurrentConditions setRelativeHumidity(Integer relativeHumidity) {
         this.relativeHumidity = relativeHumidity;
         return this;
     }
@@ -388,7 +384,7 @@ public final class CurrentConditions {
      *
      * @return the dewPoint value.
      */
-    public WeatherUnit dewPoint() {
+    public WeatherUnit getDewPoint() {
         return this.dewPoint;
     }
 
@@ -399,7 +395,7 @@ public final class CurrentConditions {
      * @param dewPoint the dewPoint value to set.
      * @return the CurrentConditions object itself.
      */
-    public CurrentConditions withDewPoint(WeatherUnit dewPoint) {
+    public CurrentConditions setDewPoint(WeatherUnit dewPoint) {
         this.dewPoint = dewPoint;
         return this;
     }
@@ -409,7 +405,7 @@ public final class CurrentConditions {
      *
      * @return the wind value.
      */
-    public WindDetails wind() {
+    public WindDetails getWind() {
         return this.wind;
     }
 
@@ -419,7 +415,7 @@ public final class CurrentConditions {
      * @param wind the wind value to set.
      * @return the CurrentConditions object itself.
      */
-    public CurrentConditions withWind(WindDetails wind) {
+    public CurrentConditions setWind(WindDetails wind) {
         this.wind = wind;
         return this;
     }
@@ -429,7 +425,7 @@ public final class CurrentConditions {
      *
      * @return the windGust value.
      */
-    public WindDetails windGust() {
+    public WindDetails getWindGust() {
         return this.windGust;
     }
 
@@ -439,7 +435,7 @@ public final class CurrentConditions {
      * @param windGust the windGust value to set.
      * @return the CurrentConditions object itself.
      */
-    public CurrentConditions withWindGust(WindDetails windGust) {
+    public CurrentConditions setWindGust(WindDetails windGust) {
         this.windGust = windGust;
         return this;
     }
@@ -452,7 +448,7 @@ public final class CurrentConditions {
      *
      * @return the uvIndex value.
      */
-    public Integer uvIndex() {
+    public Integer getUvIndex() {
         return this.uvIndex;
     }
 
@@ -465,7 +461,7 @@ public final class CurrentConditions {
      * @param uvIndex the uvIndex value to set.
      * @return the CurrentConditions object itself.
      */
-    public CurrentConditions withUvIndex(Integer uvIndex) {
+    public CurrentConditions setUvIndex(Integer uvIndex) {
         this.uvIndex = uvIndex;
         return this;
     }
@@ -475,7 +471,7 @@ public final class CurrentConditions {
      *
      * @return the uvIndexPhrase value.
      */
-    public String uvIndexPhrase() {
+    public String getUvIndexPhrase() {
         return this.uvIndexPhrase;
     }
 
@@ -485,7 +481,7 @@ public final class CurrentConditions {
      * @param uvIndexPhrase the uvIndexPhrase value to set.
      * @return the CurrentConditions object itself.
      */
-    public CurrentConditions withUvIndexPhrase(String uvIndexPhrase) {
+    public CurrentConditions setUvIndexPhrase(String uvIndexPhrase) {
         this.uvIndexPhrase = uvIndexPhrase;
         return this;
     }
@@ -496,7 +492,7 @@ public final class CurrentConditions {
      *
      * @return the visibility value.
      */
-    public WeatherUnit visibility() {
+    public WeatherUnit getVisibility() {
         return this.visibility;
     }
 
@@ -507,7 +503,7 @@ public final class CurrentConditions {
      * @param visibility the visibility value to set.
      * @return the CurrentConditions object itself.
      */
-    public CurrentConditions withVisibility(WeatherUnit visibility) {
+    public CurrentConditions setVisibility(WeatherUnit visibility) {
         this.visibility = visibility;
         return this;
     }
@@ -517,7 +513,7 @@ public final class CurrentConditions {
      *
      * @return the obstructionsToVisibility value.
      */
-    public String obstructionsToVisibility() {
+    public String getObstructionsToVisibility() {
         return this.obstructionsToVisibility;
     }
 
@@ -527,7 +523,7 @@ public final class CurrentConditions {
      * @param obstructionsToVisibility the obstructionsToVisibility value to set.
      * @return the CurrentConditions object itself.
      */
-    public CurrentConditions withObstructionsToVisibility(String obstructionsToVisibility) {
+    public CurrentConditions setObstructionsToVisibility(String obstructionsToVisibility) {
         this.obstructionsToVisibility = obstructionsToVisibility;
         return this;
     }
@@ -537,7 +533,7 @@ public final class CurrentConditions {
      *
      * @return the cloudCover value.
      */
-    public Integer cloudCover() {
+    public Integer getCloudCover() {
         return this.cloudCover;
     }
 
@@ -547,7 +543,7 @@ public final class CurrentConditions {
      * @param cloudCover the cloudCover value to set.
      * @return the CurrentConditions object itself.
      */
-    public CurrentConditions withCloudCover(Integer cloudCover) {
+    public CurrentConditions setCloudCover(Integer cloudCover) {
         this.cloudCover = cloudCover;
         return this;
     }
@@ -558,7 +554,7 @@ public final class CurrentConditions {
      *
      * @return the ceiling value.
      */
-    public WeatherUnit ceiling() {
+    public WeatherUnit getCeiling() {
         return this.ceiling;
     }
 
@@ -569,7 +565,7 @@ public final class CurrentConditions {
      * @param ceiling the ceiling value to set.
      * @return the CurrentConditions object itself.
      */
-    public CurrentConditions withCeiling(WeatherUnit ceiling) {
+    public CurrentConditions setCeiling(WeatherUnit ceiling) {
         this.ceiling = ceiling;
         return this;
     }
@@ -579,7 +575,7 @@ public final class CurrentConditions {
      *
      * @return the pressure value.
      */
-    public WeatherUnit pressure() {
+    public WeatherUnit getPressure() {
         return this.pressure;
     }
 
@@ -589,7 +585,7 @@ public final class CurrentConditions {
      * @param pressure the pressure value to set.
      * @return the CurrentConditions object itself.
      */
-    public CurrentConditions withPressure(WeatherUnit pressure) {
+    public CurrentConditions setPressure(WeatherUnit pressure) {
         this.pressure = pressure;
         return this;
     }
@@ -599,7 +595,7 @@ public final class CurrentConditions {
      *
      * @return the pressureTendency value.
      */
-    public PressureTendency pressureTendency() {
+    public PressureTendency getPressureTendency() {
         return this.pressureTendency;
     }
 
@@ -609,7 +605,7 @@ public final class CurrentConditions {
      * @param pressureTendency the pressureTendency value to set.
      * @return the CurrentConditions object itself.
      */
-    public CurrentConditions withPressureTendency(PressureTendency pressureTendency) {
+    public CurrentConditions setPressureTendency(PressureTendency pressureTendency) {
         this.pressureTendency = pressureTendency;
         return this;
     }
@@ -620,7 +616,7 @@ public final class CurrentConditions {
      *
      * @return the past24HourTemperatureDeparture value.
      */
-    public WeatherUnit past24HourTemperatureDeparture() {
+    public WeatherUnit getPast24HourTemperatureDeparture() {
         return this.past24HourTemperatureDeparture;
     }
 
@@ -631,7 +627,7 @@ public final class CurrentConditions {
      * @param past24HourTemperatureDeparture the past24HourTemperatureDeparture value to set.
      * @return the CurrentConditions object itself.
      */
-    public CurrentConditions withPast24HourTemperatureDeparture(WeatherUnit past24HourTemperatureDeparture) {
+    public CurrentConditions setPast24HourTemperatureDeparture(WeatherUnit past24HourTemperatureDeparture) {
         this.past24HourTemperatureDeparture = past24HourTemperatureDeparture;
         return this;
     }
@@ -642,7 +638,7 @@ public final class CurrentConditions {
      *
      * @return the apparentTemperature value.
      */
-    public WeatherUnit apparentTemperature() {
+    public WeatherUnit getApparentTemperature() {
         return this.apparentTemperature;
     }
 
@@ -653,7 +649,7 @@ public final class CurrentConditions {
      * @param apparentTemperature the apparentTemperature value to set.
      * @return the CurrentConditions object itself.
      */
-    public CurrentConditions withApparentTemperature(WeatherUnit apparentTemperature) {
+    public CurrentConditions setApparentTemperature(WeatherUnit apparentTemperature) {
         this.apparentTemperature = apparentTemperature;
         return this;
     }
@@ -663,7 +659,7 @@ public final class CurrentConditions {
      *
      * @return the windChillTemperature value.
      */
-    public WeatherUnit windChillTemperature() {
+    public WeatherUnit getWindChillTemperature() {
         return this.windChillTemperature;
     }
 
@@ -673,7 +669,7 @@ public final class CurrentConditions {
      * @param windChillTemperature the windChillTemperature value to set.
      * @return the CurrentConditions object itself.
      */
-    public CurrentConditions withWindChillTemperature(WeatherUnit windChillTemperature) {
+    public CurrentConditions setWindChillTemperature(WeatherUnit windChillTemperature) {
         this.windChillTemperature = windChillTemperature;
         return this;
     }
@@ -684,7 +680,7 @@ public final class CurrentConditions {
      *
      * @return the wetBulbTemperature value.
      */
-    public WeatherUnit wetBulbTemperature() {
+    public WeatherUnit getWetBulbTemperature() {
         return this.wetBulbTemperature;
     }
 
@@ -695,7 +691,7 @@ public final class CurrentConditions {
      * @param wetBulbTemperature the wetBulbTemperature value to set.
      * @return the CurrentConditions object itself.
      */
-    public CurrentConditions withWetBulbTemperature(WeatherUnit wetBulbTemperature) {
+    public CurrentConditions setWetBulbTemperature(WeatherUnit wetBulbTemperature) {
         this.wetBulbTemperature = wetBulbTemperature;
         return this;
     }
@@ -705,7 +701,7 @@ public final class CurrentConditions {
      *
      * @return the precipitationSummary value.
      */
-    public PrecipitationSummary precipitationSummary() {
+    public PrecipitationSummary getPrecipitationSummary() {
         return this.precipitationSummary;
     }
 
@@ -715,7 +711,7 @@ public final class CurrentConditions {
      * @param precipitationSummary the precipitationSummary value to set.
      * @return the CurrentConditions object itself.
      */
-    public CurrentConditions withPrecipitationSummary(PrecipitationSummary precipitationSummary) {
+    public CurrentConditions setPrecipitationSummary(PrecipitationSummary precipitationSummary) {
         this.precipitationSummary = precipitationSummary;
         return this;
     }
@@ -725,7 +721,7 @@ public final class CurrentConditions {
      *
      * @return the temperatureSummary value.
      */
-    public TemperatureSummary temperatureSummary() {
+    public TemperatureSummary getTemperatureSummary() {
         return this.temperatureSummary;
     }
 
@@ -735,64 +731,8 @@ public final class CurrentConditions {
      * @param temperatureSummary the temperatureSummary value to set.
      * @return the CurrentConditions object itself.
      */
-    public CurrentConditions withTemperatureSummary(TemperatureSummary temperatureSummary) {
+    public CurrentConditions setTemperatureSummary(TemperatureSummary temperatureSummary) {
         this.temperatureSummary = temperatureSummary;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (temperature() != null) {
-            temperature().validate();
-        }
-        if (realFeelTemperature() != null) {
-            realFeelTemperature().validate();
-        }
-        if (realFeelTemperatureShade() != null) {
-            realFeelTemperatureShade().validate();
-        }
-        if (dewPoint() != null) {
-            dewPoint().validate();
-        }
-        if (wind() != null) {
-            wind().validate();
-        }
-        if (windGust() != null) {
-            windGust().validate();
-        }
-        if (visibility() != null) {
-            visibility().validate();
-        }
-        if (ceiling() != null) {
-            ceiling().validate();
-        }
-        if (pressure() != null) {
-            pressure().validate();
-        }
-        if (pressureTendency() != null) {
-            pressureTendency().validate();
-        }
-        if (past24HourTemperatureDeparture() != null) {
-            past24HourTemperatureDeparture().validate();
-        }
-        if (apparentTemperature() != null) {
-            apparentTemperature().validate();
-        }
-        if (windChillTemperature() != null) {
-            windChillTemperature().validate();
-        }
-        if (wetBulbTemperature() != null) {
-            wetBulbTemperature().validate();
-        }
-        if (precipitationSummary() != null) {
-            precipitationSummary().validate();
-        }
-        if (temperatureSummary() != null) {
-            temperatureSummary().validate();
-        }
     }
 }

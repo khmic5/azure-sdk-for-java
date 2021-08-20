@@ -5,8 +5,6 @@
 package com.azure.maps.traffic.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
@@ -16,9 +14,6 @@ import java.util.List;
  */
 @Immutable
 public final class TrafficFlowSegmentResultFlowSegmentDataCoordinates {
-    @JsonIgnore
-    private final ClientLogger logger = new ClientLogger(TrafficFlowSegmentResultFlowSegmentDataCoordinates.class);
-
     /*
      * Coordinate array
      */
@@ -30,18 +25,7 @@ public final class TrafficFlowSegmentResultFlowSegmentDataCoordinates {
      *
      * @return the coordinate value.
      */
-    public List<CoordinatesPair> coordinate() {
+    public List<CoordinatesPair> getCoordinate() {
         return this.coordinate;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (coordinate() != null) {
-            coordinate().forEach(e -> e.validate());
-        }
     }
 }

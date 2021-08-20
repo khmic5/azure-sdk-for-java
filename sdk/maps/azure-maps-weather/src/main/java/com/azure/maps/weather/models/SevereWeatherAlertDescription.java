@@ -5,15 +5,11 @@
 package com.azure.maps.weather.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** Description of a severe weather alert. */
 @Fluent
 public final class SevereWeatherAlertDescription {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(SevereWeatherAlertDescription.class);
-
     /*
      * Description of the alert in the specified language. By default English
      * (en-US) is returned if the language parameter is not specified in the
@@ -34,7 +30,7 @@ public final class SevereWeatherAlertDescription {
      *
      * @return the localized value.
      */
-    public String localized() {
+    public String getLocalized() {
         return this.localized;
     }
 
@@ -45,7 +41,7 @@ public final class SevereWeatherAlertDescription {
      * @param localized the localized value to set.
      * @return the SevereWeatherAlertDescription object itself.
      */
-    public SevereWeatherAlertDescription withLocalized(String localized) {
+    public SevereWeatherAlertDescription setLocalized(String localized) {
         this.localized = localized;
         return this;
     }
@@ -55,7 +51,7 @@ public final class SevereWeatherAlertDescription {
      *
      * @return the english value.
      */
-    public String english() {
+    public String getEnglish() {
         return this.english;
     }
 
@@ -65,16 +61,8 @@ public final class SevereWeatherAlertDescription {
      * @param english the english value to set.
      * @return the SevereWeatherAlertDescription object itself.
      */
-    public SevereWeatherAlertDescription withEnglish(String english) {
+    public SevereWeatherAlertDescription setEnglish(String english) {
         this.english = english;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

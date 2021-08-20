@@ -5,16 +5,12 @@
 package com.azure.maps.search.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /** Result object for a Search API response. */
 @Fluent
 public final class SearchCommonResult {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(SearchCommonResult.class);
-
     /*
      * One of:
      * * POI
@@ -134,7 +130,7 @@ public final class SearchCommonResult {
      *
      * @return the type value.
      */
-    public String type() {
+    public String getType() {
         return this.type;
     }
 
@@ -143,7 +139,7 @@ public final class SearchCommonResult {
      *
      * @return the id value.
      */
-    public String id() {
+    public String getId() {
         return this.id;
     }
 
@@ -154,7 +150,7 @@ public final class SearchCommonResult {
      *
      * @return the score value.
      */
-    public Float score() {
+    public Float getScore() {
         return this.score;
     }
 
@@ -163,7 +159,7 @@ public final class SearchCommonResult {
      *
      * @return the dist value.
      */
-    public Float dist() {
+    public Float getDist() {
         return this.dist;
     }
 
@@ -172,7 +168,7 @@ public final class SearchCommonResult {
      *
      * @return the info value.
      */
-    public String info() {
+    public String getInfo() {
         return this.info;
     }
 
@@ -181,7 +177,7 @@ public final class SearchCommonResult {
      *
      * @return the entityType value.
      */
-    public EntityType entityType() {
+    public EntityType getEntityType() {
         return this.entityType;
     }
 
@@ -191,7 +187,7 @@ public final class SearchCommonResult {
      * @param entityType the entityType value to set.
      * @return the SearchCommonResult object itself.
      */
-    public SearchCommonResult withEntityType(EntityType entityType) {
+    public SearchCommonResult setEntityType(EntityType entityType) {
         this.entityType = entityType;
         return this;
     }
@@ -202,7 +198,7 @@ public final class SearchCommonResult {
      *
      * @return the poi value.
      */
-    public SearchResultPoi poi() {
+    public SearchResultPoi getPoi() {
         return this.poi;
     }
 
@@ -211,7 +207,7 @@ public final class SearchCommonResult {
      *
      * @return the address value.
      */
-    public SearchResultAddress address() {
+    public SearchResultAddress getAddress() {
         return this.address;
     }
 
@@ -221,7 +217,7 @@ public final class SearchCommonResult {
      *
      * @return the position value.
      */
-    public CoordinatesPairAbbreviated position() {
+    public CoordinatesPairAbbreviated getPosition() {
         return this.position;
     }
 
@@ -232,7 +228,7 @@ public final class SearchCommonResult {
      * @param position the position value to set.
      * @return the SearchCommonResult object itself.
      */
-    public SearchCommonResult withPosition(CoordinatesPairAbbreviated position) {
+    public SearchCommonResult setPosition(CoordinatesPairAbbreviated position) {
         this.position = position;
         return this;
     }
@@ -243,7 +239,7 @@ public final class SearchCommonResult {
      *
      * @return the viewport value.
      */
-    public SearchResultViewport viewport() {
+    public SearchResultViewport getViewport() {
         return this.viewport;
     }
 
@@ -252,7 +248,7 @@ public final class SearchCommonResult {
      *
      * @return the entryPoints value.
      */
-    public List<SearchResultEntryPoint> entryPoints() {
+    public List<SearchResultEntryPoint> getEntryPoints() {
         return this.entryPoints;
     }
 
@@ -262,7 +258,7 @@ public final class SearchCommonResult {
      *
      * @return the addressRanges value.
      */
-    public SearchResultAddressRanges addressRanges() {
+    public SearchResultAddressRanges getAddressRanges() {
         return this.addressRanges;
     }
 
@@ -272,7 +268,7 @@ public final class SearchCommonResult {
      *
      * @return the dataSources value.
      */
-    public DataSources dataSources() {
+    public DataSources getDataSources() {
         return this.dataSources;
     }
 
@@ -283,7 +279,7 @@ public final class SearchCommonResult {
      *
      * @return the matchType value.
      */
-    public String matchType() {
+    public String getMatchType() {
         return this.matchType;
     }
 
@@ -292,36 +288,7 @@ public final class SearchCommonResult {
      *
      * @return the detourTime value.
      */
-    public Float detourTime() {
+    public Float getDetourTime() {
         return this.detourTime;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (poi() != null) {
-            poi().validate();
-        }
-        if (address() != null) {
-            address().validate();
-        }
-        if (position() != null) {
-            position().validate();
-        }
-        if (viewport() != null) {
-            viewport().validate();
-        }
-        if (entryPoints() != null) {
-            entryPoints().forEach(e -> e.validate());
-        }
-        if (addressRanges() != null) {
-            addressRanges().validate();
-        }
-        if (dataSources() != null) {
-            dataSources().validate();
-        }
     }
 }

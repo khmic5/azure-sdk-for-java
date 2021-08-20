@@ -5,15 +5,11 @@
 package com.azure.maps.route.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** Summary object. */
 @Immutable
 public final class RouteDirectionsSummary {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(RouteDirectionsSummary.class);
-
     /*
      * Length In Meters property
      */
@@ -56,7 +52,7 @@ public final class RouteDirectionsSummary {
      *
      * @return the lengthInMeters value.
      */
-    public Integer lengthInMeters() {
+    public Integer getLengthInMeters() {
         return this.lengthInMeters;
     }
 
@@ -67,7 +63,7 @@ public final class RouteDirectionsSummary {
      *
      * @return the travelTimeInSeconds value.
      */
-    public Integer travelTimeInSeconds() {
+    public Integer getTravelTimeInSeconds() {
         return this.travelTimeInSeconds;
     }
 
@@ -79,7 +75,7 @@ public final class RouteDirectionsSummary {
      *
      * @return the trafficDelayInSeconds value.
      */
-    public Integer trafficDelayInSeconds() {
+    public Integer getTrafficDelayInSeconds() {
         return this.trafficDelayInSeconds;
     }
 
@@ -88,7 +84,7 @@ public final class RouteDirectionsSummary {
      *
      * @return the departureTime value.
      */
-    public String departureTime() {
+    public String getDepartureTime() {
         return this.departureTime;
     }
 
@@ -97,15 +93,7 @@ public final class RouteDirectionsSummary {
      *
      * @return the arrivalTime value.
      */
-    public String arrivalTime() {
+    public String getArrivalTime() {
         return this.arrivalTime;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

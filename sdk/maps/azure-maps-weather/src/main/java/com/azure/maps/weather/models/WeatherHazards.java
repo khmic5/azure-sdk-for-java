@@ -5,16 +5,12 @@
 package com.azure.maps.weather.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /** Description of the weather hazard affecting the trip. */
 @Fluent
 public final class WeatherHazards {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(WeatherHazards.class);
-
     /*
      * A severity/hazard index.
      * * `0` - No hazard.
@@ -38,7 +34,7 @@ public final class WeatherHazards {
      *
      * @return the maxHazardIndex value.
      */
-    public Integer maxHazardIndex() {
+    public Integer getMaxHazardIndex() {
         return this.maxHazardIndex;
     }
 
@@ -49,7 +45,7 @@ public final class WeatherHazards {
      * @param maxHazardIndex the maxHazardIndex value to set.
      * @return the WeatherHazards object itself.
      */
-    public WeatherHazards withMaxHazardIndex(Integer maxHazardIndex) {
+    public WeatherHazards setMaxHazardIndex(Integer maxHazardIndex) {
         this.maxHazardIndex = maxHazardIndex;
         return this;
     }
@@ -59,7 +55,7 @@ public final class WeatherHazards {
      *
      * @return the hazardDetails value.
      */
-    public List<HazardDetail> hazardDetails() {
+    public List<HazardDetail> getHazardDetails() {
         return this.hazardDetails;
     }
 
@@ -69,19 +65,8 @@ public final class WeatherHazards {
      * @param hazardDetails the hazardDetails value to set.
      * @return the WeatherHazards object itself.
      */
-    public WeatherHazards withHazardDetails(List<HazardDetail> hazardDetails) {
+    public WeatherHazards setHazardDetails(List<HazardDetail> hazardDetails) {
         this.hazardDetails = hazardDetails;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (hazardDetails() != null) {
-            hazardDetails().forEach(e -> e.validate());
-        }
     }
 }

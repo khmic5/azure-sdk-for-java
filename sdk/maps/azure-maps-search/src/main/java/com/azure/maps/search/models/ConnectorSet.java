@@ -12,7 +12,7 @@ import java.util.Collection;
 public final class ConnectorSet extends ExpandableStringEnum<ConnectorSet> {
     /** Static value StandardHouseholdCountrySpecific for ConnectorSet. */
     public static final ConnectorSet STANDARD_HOUSEHOLD_COUNTRY_SPECIFIC =
-        fromString("StandardHouseholdCountrySpecific");
+            fromString("StandardHouseholdCountrySpecific");
 
     /** Static value IEC62196Type1 for ConnectorSet. */
     public static final ConnectorSet IEC62196TYPE1 = fromString("IEC62196Type1");

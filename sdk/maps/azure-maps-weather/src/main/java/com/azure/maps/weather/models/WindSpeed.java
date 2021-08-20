@@ -5,15 +5,11 @@
 package com.azure.maps.weather.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** Speed of wind in specified unit. */
 @Fluent
 public final class WindSpeed {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(WindSpeed.class);
-
     /*
      * Rounded value of the speed.
      */
@@ -39,7 +35,7 @@ public final class WindSpeed {
      *
      * @return the value value.
      */
-    public Float value() {
+    public Float getValue() {
         return this.value;
     }
 
@@ -49,7 +45,7 @@ public final class WindSpeed {
      * @param value the value value to set.
      * @return the WindSpeed object itself.
      */
-    public WindSpeed withValue(Float value) {
+    public WindSpeed setValue(Float value) {
         this.value = value;
         return this;
     }
@@ -59,7 +55,7 @@ public final class WindSpeed {
      *
      * @return the unit value.
      */
-    public String unit() {
+    public String getUnit() {
         return this.unit;
     }
 
@@ -69,7 +65,7 @@ public final class WindSpeed {
      * @param unit the unit value to set.
      * @return the WindSpeed object itself.
      */
-    public WindSpeed withUnit(String unit) {
+    public WindSpeed setUnit(String unit) {
         this.unit = unit;
         return this;
     }
@@ -81,7 +77,7 @@ public final class WindSpeed {
      *
      * @return the unitType value.
      */
-    public Integer unitType() {
+    public Integer getUnitType() {
         return this.unitType;
     }
 
@@ -93,16 +89,8 @@ public final class WindSpeed {
      * @param unitType the unitType value to set.
      * @return the WindSpeed object itself.
      */
-    public WindSpeed withUnitType(Integer unitType) {
+    public WindSpeed setUnitType(Integer unitType) {
         this.unitType = unitType;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }
