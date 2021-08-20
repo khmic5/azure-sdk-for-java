@@ -5,16 +5,12 @@
 package com.azure.maps.search.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /** Details of the returned POI including information such as the name, phone, url address, and classifications. */
 @Fluent
 public final class SearchResultPoi {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(SearchResultPoi.class);
-
     /*
      * Name of the POI property
      */
@@ -68,7 +64,7 @@ public final class SearchResultPoi {
      *
      * @return the name value.
      */
-    public String name() {
+    public String getName() {
         return this.name;
     }
 
@@ -77,7 +73,7 @@ public final class SearchResultPoi {
      *
      * @return the phone value.
      */
-    public String phone() {
+    public String getPhone() {
         return this.phone;
     }
 
@@ -86,7 +82,7 @@ public final class SearchResultPoi {
      *
      * @return the url value.
      */
-    public String url() {
+    public String getUrl() {
         return this.url;
     }
 
@@ -95,7 +91,7 @@ public final class SearchResultPoi {
      *
      * @return the categorySet value.
      */
-    public List<SearchResultPoiCategorySet> categorySet() {
+    public List<SearchResultPoiCategorySet> getCategorySet() {
         return this.categorySet;
     }
 
@@ -104,7 +100,7 @@ public final class SearchResultPoi {
      *
      * @return the categories value.
      */
-    public List<String> categories() {
+    public List<String> getCategories() {
         return this.categories;
     }
 
@@ -113,7 +109,7 @@ public final class SearchResultPoi {
      *
      * @return the classifications value.
      */
-    public List<SearchResultPoiClassification> classifications() {
+    public List<SearchResultPoiClassification> getClassifications() {
         return this.classifications;
     }
 
@@ -122,7 +118,7 @@ public final class SearchResultPoi {
      *
      * @return the brands value.
      */
-    public List<SearchResultPoiBrand> brands() {
+    public List<SearchResultPoiBrand> getBrands() {
         return this.brands;
     }
 
@@ -131,7 +127,7 @@ public final class SearchResultPoi {
      *
      * @return the openingHours value.
      */
-    public SearchResultPoiOpeningHours openingHours() {
+    public SearchResultPoiOpeningHours getOpeningHours() {
         return this.openingHours;
     }
 
@@ -141,28 +137,8 @@ public final class SearchResultPoi {
      * @param openingHours the openingHours value to set.
      * @return the SearchResultPoi object itself.
      */
-    public SearchResultPoi withOpeningHours(SearchResultPoiOpeningHours openingHours) {
+    public SearchResultPoi setOpeningHours(SearchResultPoiOpeningHours openingHours) {
         this.openingHours = openingHours;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (categorySet() != null) {
-            categorySet().forEach(e -> e.validate());
-        }
-        if (classifications() != null) {
-            classifications().forEach(e -> e.validate());
-        }
-        if (brands() != null) {
-            brands().forEach(e -> e.validate());
-        }
-        if (openingHours() != null) {
-            openingHours().validate();
-        }
     }
 }

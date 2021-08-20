@@ -5,29 +5,23 @@
 package com.azure.maps.route.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.management.exception.ManagementError;
-import com.azure.core.util.logging.ClientLogger;
-import com.azure.maps.route.fluent.models.RouteDirectionsResponseInner;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** The result of the query. RouteDirectionsResponse if the query completed successfully, ErrorResponse otherwise. */
 @Fluent
-public final class RouteDirectionsBatchItemResponse extends RouteDirectionsResponseInner {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(RouteDirectionsBatchItemResponse.class);
-
+public final class RouteDirectionsBatchItemResponse extends RouteDirectionsResponse {
     /*
      * The error object.
      */
     @JsonProperty(value = "error")
-    private ManagementError error;
+    private ErrorDetail error;
 
     /**
      * Get the error property: The error object.
      *
      * @return the error value.
      */
-    public ManagementError error() {
+    public ErrorDetail getError() {
         return this.error;
     }
 
@@ -37,25 +31,8 @@ public final class RouteDirectionsBatchItemResponse extends RouteDirectionsRespo
      * @param error the error value to set.
      * @return the RouteDirectionsBatchItemResponse object itself.
      */
-    public RouteDirectionsBatchItemResponse withError(ManagementError error) {
+    public RouteDirectionsBatchItemResponse setError(ErrorDetail error) {
         this.error = error;
         return this;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public RouteDirectionsBatchItemResponse withReport(RouteResponseReport report) {
-        super.withReport(report);
-        return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    @Override
-    public void validate() {
-        super.validate();
     }
 }

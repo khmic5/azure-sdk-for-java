@@ -4,28 +4,39 @@
 
 package com.azure.maps.render.models;
 
-import com.azure.maps.render.fluent.models.GetCopyrightCaptionResultInner;
+import com.azure.core.annotation.Immutable;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** An immutable client-side representation of GetCopyrightCaptionResult. */
-public interface GetCopyrightCaptionResult {
+/** This object is returned from a successful Get Copyright Caption call. */
+@Immutable
+public final class GetCopyrightCaptionResult {
+    /*
+     * Format Version property
+     */
+    @JsonProperty(value = "formatVersion", access = JsonProperty.Access.WRITE_ONLY)
+    private String formatVersion;
+
+    /*
+     * Copyrights Caption property
+     */
+    @JsonProperty(value = "copyrightsCaption", access = JsonProperty.Access.WRITE_ONLY)
+    private String copyrightsCaption;
+
     /**
-     * Gets the formatVersion property: Format Version property.
+     * Get the formatVersion property: Format Version property.
      *
      * @return the formatVersion value.
      */
-    String formatVersion();
+    public String getFormatVersion() {
+        return this.formatVersion;
+    }
 
     /**
-     * Gets the copyrightsCaption property: Copyrights Caption property.
+     * Get the copyrightsCaption property: Copyrights Caption property.
      *
      * @return the copyrightsCaption value.
      */
-    String copyrightsCaption();
-
-    /**
-     * Gets the inner com.azure.maps.render.fluent.models.GetCopyrightCaptionResultInner object.
-     *
-     * @return the inner object.
-     */
-    GetCopyrightCaptionResultInner innerModel();
+    public String getCopyrightsCaption() {
+        return this.copyrightsCaption;
+    }
 }

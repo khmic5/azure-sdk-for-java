@@ -5,15 +5,11 @@
 package com.azure.maps.creator.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** A location represented as a latitude and longitude. */
 @Immutable
 public final class SpatialCoordinate {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(SpatialCoordinate.class);
-
     /*
      * Latitude property
      */
@@ -31,7 +27,7 @@ public final class SpatialCoordinate {
      *
      * @return the lat value.
      */
-    public Double lat() {
+    public Double getLat() {
         return this.lat;
     }
 
@@ -40,15 +36,7 @@ public final class SpatialCoordinate {
      *
      * @return the lon value.
      */
-    public Double lon() {
+    public Double getLon() {
         return this.lon;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

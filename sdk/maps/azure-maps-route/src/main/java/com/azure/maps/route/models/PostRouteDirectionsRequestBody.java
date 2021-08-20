@@ -5,16 +5,12 @@
 package com.azure.maps.route.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /** Post body parameters for Route directions. */
 @Fluent
 public final class PostRouteDirectionsRequestBody {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(PostRouteDirectionsRequestBody.class);
-
     /*
      * A GeoJSON Geometry collection representing sequence of coordinates used
      * as input for route reconstruction and for calculating zero or more
@@ -82,7 +78,7 @@ public final class PostRouteDirectionsRequestBody {
      *
      * @return the supportingPoints value.
      */
-    public GeoJsonGeometryCollection supportingPoints() {
+    public GeoJsonGeometryCollection getSupportingPoints() {
         return this.supportingPoints;
     }
 
@@ -100,7 +96,7 @@ public final class PostRouteDirectionsRequestBody {
      * @param supportingPoints the supportingPoints value to set.
      * @return the PostRouteDirectionsRequestBody object itself.
      */
-    public PostRouteDirectionsRequestBody withSupportingPoints(GeoJsonGeometryCollection supportingPoints) {
+    public PostRouteDirectionsRequestBody setSupportingPoints(GeoJsonGeometryCollection supportingPoints) {
         this.supportingPoints = supportingPoints;
         return this;
     }
@@ -112,7 +108,7 @@ public final class PostRouteDirectionsRequestBody {
      *
      * @return the avoidVignette value.
      */
-    public List<String> avoidVignette() {
+    public List<String> getAvoidVignette() {
         return this.avoidVignette;
     }
 
@@ -124,7 +120,7 @@ public final class PostRouteDirectionsRequestBody {
      * @param avoidVignette the avoidVignette value to set.
      * @return the PostRouteDirectionsRequestBody object itself.
      */
-    public PostRouteDirectionsRequestBody withAvoidVignette(List<String> avoidVignette) {
+    public PostRouteDirectionsRequestBody setAvoidVignette(List<String> avoidVignette) {
         this.avoidVignette = avoidVignette;
         return this;
     }
@@ -138,7 +134,7 @@ public final class PostRouteDirectionsRequestBody {
      *
      * @return the allowVignette value.
      */
-    public List<String> allowVignette() {
+    public List<String> getAllowVignette() {
         return this.allowVignette;
     }
 
@@ -152,7 +148,7 @@ public final class PostRouteDirectionsRequestBody {
      * @param allowVignette the allowVignette value to set.
      * @return the PostRouteDirectionsRequestBody object itself.
      */
-    public PostRouteDirectionsRequestBody withAllowVignette(List<String> allowVignette) {
+    public PostRouteDirectionsRequestBody setAllowVignette(List<String> allowVignette) {
         this.allowVignette = allowVignette;
         return this;
     }
@@ -164,7 +160,7 @@ public final class PostRouteDirectionsRequestBody {
      *
      * @return the avoidAreas value.
      */
-    public GeoJsonMultiPolygon avoidAreas() {
+    public GeoJsonMultiPolygon getAvoidAreas() {
         return this.avoidAreas;
     }
 
@@ -176,22 +172,8 @@ public final class PostRouteDirectionsRequestBody {
      * @param avoidAreas the avoidAreas value to set.
      * @return the PostRouteDirectionsRequestBody object itself.
      */
-    public PostRouteDirectionsRequestBody withAvoidAreas(GeoJsonMultiPolygon avoidAreas) {
+    public PostRouteDirectionsRequestBody setAvoidAreas(GeoJsonMultiPolygon avoidAreas) {
         this.avoidAreas = avoidAreas;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (supportingPoints() != null) {
-            supportingPoints().validate();
-        }
-        if (avoidAreas() != null) {
-            avoidAreas().validate();
-        }
     }
 }

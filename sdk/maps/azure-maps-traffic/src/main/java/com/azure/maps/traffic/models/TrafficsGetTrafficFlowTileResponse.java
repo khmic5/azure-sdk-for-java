@@ -20,11 +20,11 @@ public final class TrafficsGetTrafficFlowTileResponse extends ResponseBase<Traff
      * @param headers the deserialized headers of the HTTP response.
      */
     public TrafficsGetTrafficFlowTileResponse(
-        HttpRequest request,
-        int statusCode,
-        HttpHeaders rawHeaders,
-        Void value,
-        TrafficsGetTrafficFlowTileHeaders headers) {
+            HttpRequest request,
+            int statusCode,
+            HttpHeaders rawHeaders,
+            Void value,
+            TrafficsGetTrafficFlowTileHeaders headers) {
         super(request, statusCode, rawHeaders, value, headers);
     }
 }

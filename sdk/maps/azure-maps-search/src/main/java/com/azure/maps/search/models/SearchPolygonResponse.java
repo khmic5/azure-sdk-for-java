@@ -4,22 +4,25 @@
 
 package com.azure.maps.search.models;
 
-import com.azure.maps.search.fluent.models.SearchPolygonResponseInner;
+import com.azure.core.annotation.Immutable;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/** An immutable client-side representation of SearchPolygonResponse. */
-public interface SearchPolygonResponse {
+/** This object is returned from a successful Search Polygon call. */
+@Immutable
+public final class SearchPolygonResponse {
+    /*
+     * Results array
+     */
+    @JsonProperty(value = "additionalData", access = JsonProperty.Access.WRITE_ONLY)
+    private List<SearchPolygonResult> additionalData;
+
     /**
-     * Gets the additionalData property: Results array.
+     * Get the additionalData property: Results array.
      *
      * @return the additionalData value.
      */
-    List<SearchPolygonResult> additionalData();
-
-    /**
-     * Gets the inner com.azure.maps.search.fluent.models.SearchPolygonResponseInner object.
-     *
-     * @return the inner object.
-     */
-    SearchPolygonResponseInner innerModel();
+    public List<SearchPolygonResult> getAdditionalData() {
+        return this.additionalData;
+    }
 }

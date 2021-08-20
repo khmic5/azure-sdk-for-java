@@ -5,15 +5,11 @@
 package com.azure.maps.weather.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** Phrase summaries for the entire forecast period. */
 @Fluent
 public final class MinuteForecastSummary {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(MinuteForecastSummary.class);
-
     /*
      * Summary phrase for the next 60 minutes. Phrase length is approximately
      * 60 characters.
@@ -56,7 +52,7 @@ public final class MinuteForecastSummary {
      *
      * @return the briefPhrase60 value.
      */
-    public String briefPhrase60() {
+    public String getBriefPhrase60() {
         return this.briefPhrase60;
     }
 
@@ -67,7 +63,7 @@ public final class MinuteForecastSummary {
      * @param briefPhrase60 the briefPhrase60 value to set.
      * @return the MinuteForecastSummary object itself.
      */
-    public MinuteForecastSummary withBriefPhrase60(String briefPhrase60) {
+    public MinuteForecastSummary setBriefPhrase60(String briefPhrase60) {
         this.briefPhrase60 = briefPhrase60;
         return this;
     }
@@ -78,7 +74,7 @@ public final class MinuteForecastSummary {
      *
      * @return the shortPhrase value.
      */
-    public String shortPhrase() {
+    public String getShortPhrase() {
         return this.shortPhrase;
     }
 
@@ -89,7 +85,7 @@ public final class MinuteForecastSummary {
      * @param shortPhrase the shortPhrase value to set.
      * @return the MinuteForecastSummary object itself.
      */
-    public MinuteForecastSummary withShortPhrase(String shortPhrase) {
+    public MinuteForecastSummary setShortPhrase(String shortPhrase) {
         this.shortPhrase = shortPhrase;
         return this;
     }
@@ -100,7 +96,7 @@ public final class MinuteForecastSummary {
      *
      * @return the briefPhrase value.
      */
-    public String briefPhrase() {
+    public String getBriefPhrase() {
         return this.briefPhrase;
     }
 
@@ -111,7 +107,7 @@ public final class MinuteForecastSummary {
      * @param briefPhrase the briefPhrase value to set.
      * @return the MinuteForecastSummary object itself.
      */
-    public MinuteForecastSummary withBriefPhrase(String briefPhrase) {
+    public MinuteForecastSummary setBriefPhrase(String briefPhrase) {
         this.briefPhrase = briefPhrase;
         return this;
     }
@@ -121,7 +117,7 @@ public final class MinuteForecastSummary {
      *
      * @return the longPhrase value.
      */
-    public String longPhrase() {
+    public String getLongPhrase() {
         return this.longPhrase;
     }
 
@@ -131,7 +127,7 @@ public final class MinuteForecastSummary {
      * @param longPhrase the longPhrase value to set.
      * @return the MinuteForecastSummary object itself.
      */
-    public MinuteForecastSummary withLongPhrase(String longPhrase) {
+    public MinuteForecastSummary setLongPhrase(String longPhrase) {
         this.longPhrase = longPhrase;
         return this;
     }
@@ -142,7 +138,7 @@ public final class MinuteForecastSummary {
      *
      * @return the iconCode value.
      */
-    public Integer iconCode() {
+    public Integer getIconCode() {
         return this.iconCode;
     }
 
@@ -153,16 +149,8 @@ public final class MinuteForecastSummary {
      * @param iconCode the iconCode value to set.
      * @return the MinuteForecastSummary object itself.
      */
-    public MinuteForecastSummary withIconCode(Integer iconCode) {
+    public MinuteForecastSummary setIconCode(Integer iconCode) {
         this.iconCode = iconCode;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

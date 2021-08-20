@@ -4,35 +4,76 @@
 
 package com.azure.maps.route.models;
 
-import com.azure.maps.route.fluent.models.GetRouteRangeResponseInner;
+import com.azure.core.annotation.Fluent;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** An immutable client-side representation of GetRouteRangeResponse. */
-public interface GetRouteRangeResponse {
+/** This object is returned from a successful Route Reachable Range call. */
+@Fluent
+public final class GetRouteRangeResponse {
+    /*
+     * Format Version property
+     */
+    @JsonProperty(value = "formatVersion", access = JsonProperty.Access.WRITE_ONLY)
+    private String formatVersion;
+
+    /*
+     * Reachable Range
+     */
+    @JsonProperty(value = "reachableRange")
+    private RouteRange reachableRange;
+
+    /*
+     * Reports the effective settings used in the current call.
+     */
+    @JsonProperty(value = "report")
+    private RouteResponseReport report;
+
     /**
-     * Gets the formatVersion property: Format Version property.
+     * Get the formatVersion property: Format Version property.
      *
      * @return the formatVersion value.
      */
-    String formatVersion();
+    public String getFormatVersion() {
+        return this.formatVersion;
+    }
 
     /**
-     * Gets the reachableRange property: Reachable Range.
+     * Get the reachableRange property: Reachable Range.
      *
      * @return the reachableRange value.
      */
-    RouteRange reachableRange();
+    public RouteRange getReachableRange() {
+        return this.reachableRange;
+    }
 
     /**
-     * Gets the report property: Reports the effective settings used in the current call.
+     * Set the reachableRange property: Reachable Range.
+     *
+     * @param reachableRange the reachableRange value to set.
+     * @return the GetRouteRangeResponse object itself.
+     */
+    public GetRouteRangeResponse setReachableRange(RouteRange reachableRange) {
+        this.reachableRange = reachableRange;
+        return this;
+    }
+
+    /**
+     * Get the report property: Reports the effective settings used in the current call.
      *
      * @return the report value.
      */
-    RouteResponseReport report();
+    public RouteResponseReport getReport() {
+        return this.report;
+    }
 
     /**
-     * Gets the inner com.azure.maps.route.fluent.models.GetRouteRangeResponseInner object.
+     * Set the report property: Reports the effective settings used in the current call.
      *
-     * @return the inner object.
+     * @param report the report value to set.
+     * @return the GetRouteRangeResponse object itself.
      */
-    GetRouteRangeResponseInner innerModel();
+    public GetRouteRangeResponse setReport(RouteResponseReport report) {
+        this.report = report;
+        return this;
+    }
 }

@@ -5,8 +5,6 @@
 package com.azure.maps.creator.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
@@ -16,8 +14,6 @@ import java.util.List;
  */
 @Fluent
 public final class BufferRequestBody {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(BufferRequestBody.class);
-
     /*
      * A valid `GeoJSON FeatureCollection` object type. Please refer to [RFC
      * 7946](https://tools.ietf.org/html/rfc7946#section-3.3) for details.
@@ -38,7 +34,7 @@ public final class BufferRequestBody {
      *
      * @return the geometries value.
      */
-    public GeoJsonFeatureCollection geometries() {
+    public GeoJsonFeatureCollection getGeometries() {
         return this.geometries;
     }
 
@@ -49,7 +45,7 @@ public final class BufferRequestBody {
      * @param geometries the geometries value to set.
      * @return the BufferRequestBody object itself.
      */
-    public BufferRequestBody withGeometries(GeoJsonFeatureCollection geometries) {
+    public BufferRequestBody setGeometries(GeoJsonFeatureCollection geometries) {
         this.geometries = geometries;
         return this;
     }
@@ -60,7 +56,7 @@ public final class BufferRequestBody {
      *
      * @return the distances value.
      */
-    public List<Float> distances() {
+    public List<Float> getDistances() {
         return this.distances;
     }
 
@@ -71,19 +67,8 @@ public final class BufferRequestBody {
      * @param distances the distances value to set.
      * @return the BufferRequestBody object itself.
      */
-    public BufferRequestBody withDistances(List<Float> distances) {
+    public BufferRequestBody setDistances(List<Float> distances) {
         this.distances = distances;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (geometries() != null) {
-            geometries().validate();
-        }
     }
 }

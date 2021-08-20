@@ -4,48 +4,81 @@
 
 package com.azure.maps.creator.models;
 
-import com.azure.maps.creator.fluent.models.GeofenceResponseInner;
+import com.azure.core.annotation.Immutable;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/** An immutable client-side representation of GeofenceResponse. */
-public interface GeofenceResponse {
+/** This object is returned from a geofence proximity call. */
+@Immutable
+public final class GeofenceResponse {
+    /*
+     * Lists the fence geometries that contain the coordinate position or
+     * overlap the searchBuffer around the position.
+     */
+    @JsonProperty(value = "geometries", access = JsonProperty.Access.WRITE_ONLY)
+    private List<GeofenceGeometry> geometries;
+
+    /*
+     * Lists of the geometry ID of the geofence which is expired relative to
+     * the user time in the request.
+     */
+    @JsonProperty(value = "expiredGeofenceGeometryId", access = JsonProperty.Access.WRITE_ONLY)
+    private List<String> expiredGeofenceGeometryId;
+
+    /*
+     * Lists of the geometry ID of the geofence which is in invalid period
+     * relative to the user time in the request.
+     */
+    @JsonProperty(value = "invalidPeriodGeofenceGeometryId", access = JsonProperty.Access.WRITE_ONLY)
+    private List<String> invalidPeriodGeofenceGeometryId;
+
+    /*
+     * True if at least one event is published to the Azure Maps event
+     * subscriber, false if no event is published to the Azure Maps event
+     * subscriber. This will only be presented in response when 'isAsync' query
+     * parameter is set to true.
+     */
+    @JsonProperty(value = "isEventPublished", access = JsonProperty.Access.WRITE_ONLY)
+    private Boolean isEventPublished;
+
     /**
-     * Gets the geometries property: Lists the fence geometries that contain the coordinate position or overlap the
+     * Get the geometries property: Lists the fence geometries that contain the coordinate position or overlap the
      * searchBuffer around the position.
      *
      * @return the geometries value.
      */
-    List<GeofenceGeometry> geometries();
+    public List<GeofenceGeometry> getGeometries() {
+        return this.geometries;
+    }
 
     /**
-     * Gets the expiredGeofenceGeometryId property: Lists of the geometry ID of the geofence which is expired relative
-     * to the user time in the request.
+     * Get the expiredGeofenceGeometryId property: Lists of the geometry ID of the geofence which is expired relative to
+     * the user time in the request.
      *
      * @return the expiredGeofenceGeometryId value.
      */
-    List<String> expiredGeofenceGeometryId();
+    public List<String> getExpiredGeofenceGeometryId() {
+        return this.expiredGeofenceGeometryId;
+    }
 
     /**
-     * Gets the invalidPeriodGeofenceGeometryId property: Lists of the geometry ID of the geofence which is in invalid
+     * Get the invalidPeriodGeofenceGeometryId property: Lists of the geometry ID of the geofence which is in invalid
      * period relative to the user time in the request.
      *
      * @return the invalidPeriodGeofenceGeometryId value.
      */
-    List<String> invalidPeriodGeofenceGeometryId();
+    public List<String> getInvalidPeriodGeofenceGeometryId() {
+        return this.invalidPeriodGeofenceGeometryId;
+    }
 
     /**
-     * Gets the isEventPublished property: True if at least one event is published to the Azure Maps event subscriber,
+     * Get the isEventPublished property: True if at least one event is published to the Azure Maps event subscriber,
      * false if no event is published to the Azure Maps event subscriber. This will only be presented in response when
      * 'isAsync' query parameter is set to true.
      *
      * @return the isEventPublished value.
      */
-    Boolean isEventPublished();
-
-    /**
-     * Gets the inner com.azure.maps.creator.fluent.models.GeofenceResponseInner object.
-     *
-     * @return the inner object.
-     */
-    GeofenceResponseInner innerModel();
+    public Boolean isEventPublished() {
+        return this.isEventPublished;
+    }
 }

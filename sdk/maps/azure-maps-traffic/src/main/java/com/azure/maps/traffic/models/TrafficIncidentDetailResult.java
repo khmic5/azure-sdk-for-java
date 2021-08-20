@@ -4,21 +4,24 @@
 
 package com.azure.maps.traffic.models;
 
-import com.azure.maps.traffic.fluent.models.TrafficIncidentDetailResultInner;
+import com.azure.core.annotation.Immutable;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** An immutable client-side representation of TrafficIncidentDetailResult. */
-public interface TrafficIncidentDetailResult {
+/** This object is returned from a successful Traffic incident Detail call. */
+@Immutable
+public final class TrafficIncidentDetailResult {
+    /*
+     * Main response element
+     */
+    @JsonProperty(value = "tm", access = JsonProperty.Access.WRITE_ONLY)
+    private TrafficIncidentDetailResultTm tm;
+
     /**
-     * Gets the tm property: Main response element.
+     * Get the tm property: Main response element.
      *
      * @return the tm value.
      */
-    TrafficIncidentDetailResultTm tm();
-
-    /**
-     * Gets the inner com.azure.maps.traffic.fluent.models.TrafficIncidentDetailResultInner object.
-     *
-     * @return the inner object.
-     */
-    TrafficIncidentDetailResultInner innerModel();
+    public TrafficIncidentDetailResultTm getTm() {
+        return this.tm;
+    }
 }

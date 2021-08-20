@@ -5,16 +5,12 @@
 package com.azure.maps.search.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /** The address of the result. */
 @Immutable
 public final class SearchResultAddress {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(SearchResultAddress.class);
-
     /*
      * Building Number property
      */
@@ -115,7 +111,7 @@ public final class SearchResultAddress {
      * Country Code ISO3 property
      */
     @JsonProperty(value = "countryCodeISO3", access = JsonProperty.Access.WRITE_ONLY)
-    private String countryCodeIso3;
+    private String countryCodeISO3;
 
     /*
      * Free form Address property
@@ -149,7 +145,7 @@ public final class SearchResultAddress {
      *
      * @return the buildingNumber value.
      */
-    public String buildingNumber() {
+    public String getBuildingNumber() {
         return this.buildingNumber;
     }
 
@@ -158,7 +154,7 @@ public final class SearchResultAddress {
      *
      * @return the street value.
      */
-    public String street() {
+    public String getStreet() {
         return this.street;
     }
 
@@ -167,7 +163,7 @@ public final class SearchResultAddress {
      *
      * @return the crossStreet value.
      */
-    public String crossStreet() {
+    public String getCrossStreet() {
         return this.crossStreet;
     }
 
@@ -176,7 +172,7 @@ public final class SearchResultAddress {
      *
      * @return the streetNumber value.
      */
-    public String streetNumber() {
+    public String getStreetNumber() {
         return this.streetNumber;
     }
 
@@ -185,7 +181,7 @@ public final class SearchResultAddress {
      *
      * @return the routeNumbers value.
      */
-    public List<Integer> routeNumbers() {
+    public List<Integer> getRouteNumbers() {
         return this.routeNumbers;
     }
 
@@ -194,7 +190,7 @@ public final class SearchResultAddress {
      *
      * @return the streetName value.
      */
-    public String streetName() {
+    public String getStreetName() {
         return this.streetName;
     }
 
@@ -203,7 +199,7 @@ public final class SearchResultAddress {
      *
      * @return the streetNameAndNumber value.
      */
-    public String streetNameAndNumber() {
+    public String getStreetNameAndNumber() {
         return this.streetNameAndNumber;
     }
 
@@ -212,7 +208,7 @@ public final class SearchResultAddress {
      *
      * @return the municipality value.
      */
-    public String municipality() {
+    public String getMunicipality() {
         return this.municipality;
     }
 
@@ -221,7 +217,7 @@ public final class SearchResultAddress {
      *
      * @return the municipalitySubdivision value.
      */
-    public String municipalitySubdivision() {
+    public String getMunicipalitySubdivision() {
         return this.municipalitySubdivision;
     }
 
@@ -230,7 +226,7 @@ public final class SearchResultAddress {
      *
      * @return the countryTertiarySubdivision value.
      */
-    public String countryTertiarySubdivision() {
+    public String getCountryTertiarySubdivision() {
         return this.countryTertiarySubdivision;
     }
 
@@ -239,7 +235,7 @@ public final class SearchResultAddress {
      *
      * @return the countrySecondarySubdivision value.
      */
-    public String countrySecondarySubdivision() {
+    public String getCountrySecondarySubdivision() {
         return this.countrySecondarySubdivision;
     }
 
@@ -248,7 +244,7 @@ public final class SearchResultAddress {
      *
      * @return the countrySubdivision value.
      */
-    public String countrySubdivision() {
+    public String getCountrySubdivision() {
         return this.countrySubdivision;
     }
 
@@ -257,7 +253,7 @@ public final class SearchResultAddress {
      *
      * @return the postalCode value.
      */
-    public String postalCode() {
+    public String getPostalCode() {
         return this.postalCode;
     }
 
@@ -266,7 +262,7 @@ public final class SearchResultAddress {
      *
      * @return the extendedPostalCode value.
      */
-    public String extendedPostalCode() {
+    public String getExtendedPostalCode() {
         return this.extendedPostalCode;
     }
 
@@ -275,7 +271,7 @@ public final class SearchResultAddress {
      *
      * @return the countryCode value.
      */
-    public String countryCode() {
+    public String getCountryCode() {
         return this.countryCode;
     }
 
@@ -284,17 +280,17 @@ public final class SearchResultAddress {
      *
      * @return the country value.
      */
-    public String country() {
+    public String getCountry() {
         return this.country;
     }
 
     /**
-     * Get the countryCodeIso3 property: Country Code ISO3 property.
+     * Get the countryCodeISO3 property: Country Code ISO3 property.
      *
-     * @return the countryCodeIso3 value.
+     * @return the countryCodeISO3 value.
      */
-    public String countryCodeIso3() {
-        return this.countryCodeIso3;
+    public String getCountryCodeISO3() {
+        return this.countryCodeISO3;
     }
 
     /**
@@ -302,7 +298,7 @@ public final class SearchResultAddress {
      *
      * @return the freeformAddress value.
      */
-    public String freeformAddress() {
+    public String getFreeformAddress() {
         return this.freeformAddress;
     }
 
@@ -311,7 +307,7 @@ public final class SearchResultAddress {
      *
      * @return the countrySubdivisionName value.
      */
-    public String countrySubdivisionName() {
+    public String getCountrySubdivisionName() {
         return this.countrySubdivisionName;
     }
 
@@ -322,7 +318,7 @@ public final class SearchResultAddress {
      *
      * @return the localName value.
      */
-    public String localName() {
+    public String getLocalName() {
         return this.localName;
     }
 
@@ -331,15 +327,7 @@ public final class SearchResultAddress {
      *
      * @return the boundingBox value.
      */
-    public Object boundingBox() {
+    public Object getBoundingBox() {
         return this.boundingBox;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

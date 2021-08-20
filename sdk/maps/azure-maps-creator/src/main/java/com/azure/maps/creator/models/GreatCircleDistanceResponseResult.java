@@ -5,15 +5,11 @@
 package com.azure.maps.creator.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** Result Object. */
 @Immutable
 public final class GreatCircleDistanceResponseResult {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(GreatCircleDistanceResponseResult.class);
-
     /*
      * The great circle distance in meters from the source point to the target
      * point
@@ -26,15 +22,7 @@ public final class GreatCircleDistanceResponseResult {
      *
      * @return the distanceInMeters value.
      */
-    public Float distanceInMeters() {
+    public Float getDistanceInMeters() {
         return this.distanceInMeters;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

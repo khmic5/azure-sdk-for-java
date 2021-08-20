@@ -4,22 +4,25 @@
 
 package com.azure.maps.search.models;
 
-import com.azure.maps.search.fluent.models.SearchPoiCategoryTreeResponseInner;
+import com.azure.core.annotation.Immutable;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/** An immutable client-side representation of SearchPoiCategoryTreeResponse. */
-public interface SearchPoiCategoryTreeResponse {
+/** This object is returned from a successful POI Category Tree call. */
+@Immutable
+public final class SearchPoiCategoryTreeResponse {
+    /*
+     * Categories array
+     */
+    @JsonProperty(value = "poiCategories", access = JsonProperty.Access.WRITE_ONLY)
+    private List<PoiCategoryResult> poiCategories;
+
     /**
-     * Gets the poiCategories property: Categories array.
+     * Get the poiCategories property: Categories array.
      *
      * @return the poiCategories value.
      */
-    List<PoiCategoryResult> poiCategories();
-
-    /**
-     * Gets the inner com.azure.maps.search.fluent.models.SearchPoiCategoryTreeResponseInner object.
-     *
-     * @return the inner object.
-     */
-    SearchPoiCategoryTreeResponseInner innerModel();
+    public List<PoiCategoryResult> getPoiCategories() {
+        return this.poiCategories;
+    }
 }

@@ -5,16 +5,12 @@
 package com.azure.maps.route.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /** Reachable Range. */
 @Fluent
 public final class RouteRange {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(RouteRange.class);
-
     /*
      * Center point of the reachable range
      */
@@ -32,7 +28,7 @@ public final class RouteRange {
      *
      * @return the center value.
      */
-    public CoordinatesPair center() {
+    public CoordinatesPair getCenter() {
         return this.center;
     }
 
@@ -42,7 +38,7 @@ public final class RouteRange {
      * @param center the center value to set.
      * @return the RouteRange object itself.
      */
-    public RouteRange withCenter(CoordinatesPair center) {
+    public RouteRange setCenter(CoordinatesPair center) {
         this.center = center;
         return this;
     }
@@ -52,21 +48,7 @@ public final class RouteRange {
      *
      * @return the boundary value.
      */
-    public List<CoordinatesPair> boundary() {
+    public List<CoordinatesPair> getBoundary() {
         return this.boundary;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (center() != null) {
-            center().validate();
-        }
-        if (boundary() != null) {
-            boundary().forEach(e -> e.validate());
-        }
     }
 }

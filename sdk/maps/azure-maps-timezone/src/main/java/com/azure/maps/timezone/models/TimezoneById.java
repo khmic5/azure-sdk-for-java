@@ -5,16 +5,12 @@
 package com.azure.maps.timezone.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /** The TimezoneById model. */
 @Fluent
 public final class TimezoneById {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(TimezoneById.class);
-
     /*
      * Id property
      */
@@ -67,7 +63,7 @@ public final class TimezoneById {
      *
      * @return the id value.
      */
-    public String id() {
+    public String getId() {
         return this.id;
     }
 
@@ -78,7 +74,7 @@ public final class TimezoneById {
      *
      * @return the aliases value.
      */
-    public List<String> aliases() {
+    public List<String> getAliases() {
         return this.aliases;
     }
 
@@ -87,7 +83,7 @@ public final class TimezoneById {
      *
      * @return the countries value.
      */
-    public List<CountryRecord> countries() {
+    public List<CountryRecord> getCountries() {
         return this.countries;
     }
 
@@ -96,7 +92,7 @@ public final class TimezoneById {
      *
      * @return the names value.
      */
-    public TimezoneNames names() {
+    public TimezoneNames getNames() {
         return this.names;
     }
 
@@ -106,7 +102,7 @@ public final class TimezoneById {
      * @param names the names value to set.
      * @return the TimezoneById object itself.
      */
-    public TimezoneById withNames(TimezoneNames names) {
+    public TimezoneById setNames(TimezoneNames names) {
         this.names = names;
         return this;
     }
@@ -116,7 +112,7 @@ public final class TimezoneById {
      *
      * @return the referenceTime value.
      */
-    public ReferenceTimeById referenceTime() {
+    public ReferenceTimeById getReferenceTime() {
         return this.referenceTime;
     }
 
@@ -125,7 +121,7 @@ public final class TimezoneById {
      *
      * @return the representativePoint value.
      */
-    public RepresentativePoint representativePoint() {
+    public RepresentativePoint getRepresentativePoint() {
         return this.representativePoint;
     }
 
@@ -134,30 +130,7 @@ public final class TimezoneById {
      *
      * @return the timeTransitions value.
      */
-    public List<TimeTransition> timeTransitions() {
+    public List<TimeTransition> getTimeTransitions() {
         return this.timeTransitions;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (countries() != null) {
-            countries().forEach(e -> e.validate());
-        }
-        if (names() != null) {
-            names().validate();
-        }
-        if (referenceTime() != null) {
-            referenceTime().validate();
-        }
-        if (representativePoint() != null) {
-            representativePoint().validate();
-        }
-        if (timeTransitions() != null) {
-            timeTransitions().forEach(e -> e.validate());
-        }
     }
 }

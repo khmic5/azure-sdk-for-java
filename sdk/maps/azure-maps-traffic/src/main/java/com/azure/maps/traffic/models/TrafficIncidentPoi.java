@@ -5,15 +5,11 @@
 package com.azure.maps.traffic.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** The TrafficIncidentPoi model. */
 @Immutable
 public final class TrafficIncidentPoi {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(TrafficIncidentPoi.class);
-
     /*
      * ID of the traffic incident
      */
@@ -113,7 +109,7 @@ public final class TrafficIncidentPoi {
      *
      * @return the id value.
      */
-    public String id() {
+    public String getId() {
         return this.id;
     }
 
@@ -123,7 +119,7 @@ public final class TrafficIncidentPoi {
      *
      * @return the p value.
      */
-    public TrafficIncidentPoiP p() {
+    public TrafficIncidentPoiP getP() {
         return this.p;
     }
 
@@ -134,7 +130,7 @@ public final class TrafficIncidentPoi {
      *
      * @return the ic value.
      */
-    public Integer ic() {
+    public Integer getIc() {
         return this.ic;
     }
 
@@ -144,7 +140,7 @@ public final class TrafficIncidentPoi {
      *
      * @return the ty value.
      */
-    public Integer ty() {
+    public Integer getTy() {
         return this.ty;
     }
 
@@ -153,7 +149,7 @@ public final class TrafficIncidentPoi {
      *
      * @return the cbl value.
      */
-    public TrafficIncidentPoiCbl cbl() {
+    public TrafficIncidentPoiCbl getCbl() {
         return this.cbl;
     }
 
@@ -162,7 +158,7 @@ public final class TrafficIncidentPoi {
      *
      * @return the ctr value.
      */
-    public TrafficIncidentPoiCtr ctr() {
+    public TrafficIncidentPoiCtr getCtr() {
         return this.ctr;
     }
 
@@ -171,7 +167,7 @@ public final class TrafficIncidentPoi {
      *
      * @return the cs value.
      */
-    public Integer cs() {
+    public Integer getCs() {
         return this.cs;
     }
 
@@ -180,7 +176,7 @@ public final class TrafficIncidentPoi {
      *
      * @return the l value.
      */
-    public Integer l() {
+    public Integer getL() {
         return this.l;
     }
 
@@ -189,7 +185,7 @@ public final class TrafficIncidentPoi {
      *
      * @return the r value.
      */
-    public String r() {
+    public String getR() {
         return this.r;
     }
 
@@ -198,7 +194,7 @@ public final class TrafficIncidentPoi {
      *
      * @return the dl value.
      */
-    public Integer dl() {
+    public Integer getDl() {
         return this.dl;
     }
 
@@ -207,7 +203,7 @@ public final class TrafficIncidentPoi {
      *
      * @return the t value.
      */
-    public String t() {
+    public String getT() {
         return this.t;
     }
 
@@ -216,7 +212,7 @@ public final class TrafficIncidentPoi {
      *
      * @return the f value.
      */
-    public String f() {
+    public String getF() {
         return this.f;
     }
 
@@ -225,7 +221,7 @@ public final class TrafficIncidentPoi {
      *
      * @return the d value.
      */
-    public String d() {
+    public String getD() {
         return this.d;
     }
 
@@ -234,24 +230,7 @@ public final class TrafficIncidentPoi {
      *
      * @return the c value.
      */
-    public String c() {
+    public String getC() {
         return this.c;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (p() != null) {
-            p().validate();
-        }
-        if (cbl() != null) {
-            cbl().validate();
-        }
-        if (ctr() != null) {
-            ctr().validate();
-        }
     }
 }

@@ -5,15 +5,11 @@
 package com.azure.maps.weather.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** The IntervalSummary model. */
 @Fluent
 public final class IntervalSummary {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(IntervalSummary.class);
-
     /*
      * The first minute to which the summary applies.
      */
@@ -63,7 +59,7 @@ public final class IntervalSummary {
      *
      * @return the startMinute value.
      */
-    public Integer startMinute() {
+    public Integer getStartMinute() {
         return this.startMinute;
     }
 
@@ -73,7 +69,7 @@ public final class IntervalSummary {
      * @param startMinute the startMinute value to set.
      * @return the IntervalSummary object itself.
      */
-    public IntervalSummary withStartMinute(Integer startMinute) {
+    public IntervalSummary setStartMinute(Integer startMinute) {
         this.startMinute = startMinute;
         return this;
     }
@@ -83,7 +79,7 @@ public final class IntervalSummary {
      *
      * @return the endMinute value.
      */
-    public Integer endMinute() {
+    public Integer getEndMinute() {
         return this.endMinute;
     }
 
@@ -93,7 +89,7 @@ public final class IntervalSummary {
      * @param endMinute the endMinute value to set.
      * @return the IntervalSummary object itself.
      */
-    public IntervalSummary withEndMinute(Integer endMinute) {
+    public IntervalSummary setEndMinute(Integer endMinute) {
         this.endMinute = endMinute;
         return this;
     }
@@ -103,7 +99,7 @@ public final class IntervalSummary {
      *
      * @return the totalMinutes value.
      */
-    public Integer totalMinutes() {
+    public Integer getTotalMinutes() {
         return this.totalMinutes;
     }
 
@@ -113,7 +109,7 @@ public final class IntervalSummary {
      * @param totalMinutes the totalMinutes value to set.
      * @return the IntervalSummary object itself.
      */
-    public IntervalSummary withTotalMinutes(Integer totalMinutes) {
+    public IntervalSummary setTotalMinutes(Integer totalMinutes) {
         this.totalMinutes = totalMinutes;
         return this;
     }
@@ -123,7 +119,7 @@ public final class IntervalSummary {
      *
      * @return the shortPhrase value.
      */
-    public String shortPhrase() {
+    public String getShortPhrase() {
         return this.shortPhrase;
     }
 
@@ -133,7 +129,7 @@ public final class IntervalSummary {
      * @param shortPhrase the shortPhrase value to set.
      * @return the IntervalSummary object itself.
      */
-    public IntervalSummary withShortPhrase(String shortPhrase) {
+    public IntervalSummary setShortPhrase(String shortPhrase) {
         this.shortPhrase = shortPhrase;
         return this;
     }
@@ -143,7 +139,7 @@ public final class IntervalSummary {
      *
      * @return the briefPhrase value.
      */
-    public String briefPhrase() {
+    public String getBriefPhrase() {
         return this.briefPhrase;
     }
 
@@ -153,7 +149,7 @@ public final class IntervalSummary {
      * @param briefPhrase the briefPhrase value to set.
      * @return the IntervalSummary object itself.
      */
-    public IntervalSummary withBriefPhrase(String briefPhrase) {
+    public IntervalSummary setBriefPhrase(String briefPhrase) {
         this.briefPhrase = briefPhrase;
         return this;
     }
@@ -163,7 +159,7 @@ public final class IntervalSummary {
      *
      * @return the longPhrase value.
      */
-    public String longPhrase() {
+    public String getLongPhrase() {
         return this.longPhrase;
     }
 
@@ -173,7 +169,7 @@ public final class IntervalSummary {
      * @param longPhrase the longPhrase value to set.
      * @return the IntervalSummary object itself.
      */
-    public IntervalSummary withLongPhrase(String longPhrase) {
+    public IntervalSummary setLongPhrase(String longPhrase) {
         this.longPhrase = longPhrase;
         return this;
     }
@@ -184,7 +180,7 @@ public final class IntervalSummary {
      *
      * @return the iconCode value.
      */
-    public Integer iconCode() {
+    public Integer getIconCode() {
         return this.iconCode;
     }
 
@@ -195,16 +191,8 @@ public final class IntervalSummary {
      * @param iconCode the iconCode value to set.
      * @return the IntervalSummary object itself.
      */
-    public IntervalSummary withIconCode(Integer iconCode) {
+    public IntervalSummary setIconCode(Integer iconCode) {
         this.iconCode = iconCode;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

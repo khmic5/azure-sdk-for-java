@@ -5,16 +5,12 @@
 package com.azure.maps.route.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /** Contains guidance related elements. This field is present only when guidance was requested and is available. */
 @Immutable
 public final class RouteResultGuidance {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(RouteResultGuidance.class);
-
     /*
      * A list of instructions describing maneuvers.
      */
@@ -33,7 +29,7 @@ public final class RouteResultGuidance {
      *
      * @return the instructions value.
      */
-    public List<RouteResultInstruction> instructions() {
+    public List<RouteResultInstruction> getInstructions() {
         return this.instructions;
     }
 
@@ -42,21 +38,7 @@ public final class RouteResultGuidance {
      *
      * @return the instructionGroups value.
      */
-    public List<RouteResultInstructionGroup> instructionGroups() {
+    public List<RouteResultInstructionGroup> getInstructionGroups() {
         return this.instructionGroups;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (instructions() != null) {
-            instructions().forEach(e -> e.validate());
-        }
-        if (instructionGroups() != null) {
-            instructionGroups().forEach(e -> e.validate());
-        }
     }
 }

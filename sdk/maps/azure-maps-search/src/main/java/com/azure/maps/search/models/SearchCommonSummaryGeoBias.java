@@ -4,40 +4,12 @@
 
 package com.azure.maps.search.models;
 
-import com.azure.core.annotation.Immutable;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.azure.core.annotation.Fluent;
 
 /**
  * Indication when the internal search engine has applied a geospatial bias to improve the ranking of results. In some
  * methods, this can be affected by setting the lat and lon parameters where available. In other cases it is purely
  * internal.
  */
-@Immutable
-public final class SearchCommonSummaryGeoBias extends CoordinatesPairAbbreviated {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(SearchCommonSummaryGeoBias.class);
-
-    /** {@inheritDoc} */
-    @Override
-    public SearchCommonSummaryGeoBias withLat(Double lat) {
-        super.withLat(lat);
-        return this;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public SearchCommonSummaryGeoBias withLon(Double lon) {
-        super.withLon(lon);
-        return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    @Override
-    public void validate() {
-        super.validate();
-    }
-}
+@Fluent
+public final class SearchCommonSummaryGeoBias extends CoordinatesPairAbbreviated {}

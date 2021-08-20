@@ -4,27 +4,71 @@
 
 package com.azure.maps.route.models;
 
-import com.azure.maps.route.fluent.models.RouteDirectionsResponseInner;
+import com.azure.core.annotation.Fluent;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/** An immutable client-side representation of RouteDirectionsResponse. */
-public interface RouteDirectionsResponse {
+/** This object is returned from a successful Route Directions call. */
+@Fluent
+public class RouteDirectionsResponse {
+    /*
+     * Format Version property
+     */
+    @JsonProperty(value = "formatVersion", access = JsonProperty.Access.WRITE_ONLY)
+    private String formatVersion;
+
+    /*
+     * Routes array
+     */
+    @JsonProperty(value = "routes", access = JsonProperty.Access.WRITE_ONLY)
+    private List<RouteDirectionsResult> routes;
+
+    /*
+     * Optimized sequence of waypoints. It shows the index from the user
+     * provided waypoint sequence for the original and optimized list. For
+     * instance, a response:
+     *
+     * ```
+     * <optimizedWaypoints>
+     * <waypoint providedIndex="0" optimizedIndex="1"/>
+     * <waypoint providedIndex="1" optimizedIndex="2"/>
+     * <waypoint providedIndex="2" optimizedIndex="0"/>
+     * </optimizedWaypoints>
+     * ```
+     *
+     * means that the original sequence is [0, 1, 2] and optimized sequence is
+     * [1, 2, 0]. Since the index starts by 0 the original is "first, second,
+     * third" while the optimized is "second, third, first".
+     */
+    @JsonProperty(value = "optimizedWaypoints", access = JsonProperty.Access.WRITE_ONLY)
+    private List<RouteOptimizedWaypoint> optimizedWaypoints;
+
+    /*
+     * Reports the effective settings used in the current call.
+     */
+    @JsonProperty(value = "report")
+    private RouteResponseReport report;
+
     /**
-     * Gets the formatVersion property: Format Version property.
+     * Get the formatVersion property: Format Version property.
      *
      * @return the formatVersion value.
      */
-    String formatVersion();
+    public String getFormatVersion() {
+        return this.formatVersion;
+    }
 
     /**
-     * Gets the routes property: Routes array.
+     * Get the routes property: Routes array.
      *
      * @return the routes value.
      */
-    List<RouteDirectionsResult> routes();
+    public List<RouteDirectionsResult> getRoutes() {
+        return this.routes;
+    }
 
     /**
-     * Gets the optimizedWaypoints property: Optimized sequence of waypoints. It shows the index from the user provided
+     * Get the optimizedWaypoints property: Optimized sequence of waypoints. It shows the index from the user provided
      * waypoint sequence for the original and optimized list. For instance, a response:
      *
      * <p>``` &lt;optimizedWaypoints&gt; &lt;waypoint providedIndex="0" optimizedIndex="1"/&gt; &lt;waypoint
@@ -36,19 +80,27 @@ public interface RouteDirectionsResponse {
      *
      * @return the optimizedWaypoints value.
      */
-    List<RouteOptimizedWaypoint> optimizedWaypoints();
+    public List<RouteOptimizedWaypoint> getOptimizedWaypoints() {
+        return this.optimizedWaypoints;
+    }
 
     /**
-     * Gets the report property: Reports the effective settings used in the current call.
+     * Get the report property: Reports the effective settings used in the current call.
      *
      * @return the report value.
      */
-    RouteResponseReport report();
+    public RouteResponseReport getReport() {
+        return this.report;
+    }
 
     /**
-     * Gets the inner com.azure.maps.route.fluent.models.RouteDirectionsResponseInner object.
+     * Set the report property: Reports the effective settings used in the current call.
      *
-     * @return the inner object.
+     * @param report the report value to set.
+     * @return the RouteDirectionsResponse object itself.
      */
-    RouteDirectionsResponseInner innerModel();
+    public RouteDirectionsResponse setReport(RouteResponseReport report) {
+        this.report = report;
+        return this;
+    }
 }

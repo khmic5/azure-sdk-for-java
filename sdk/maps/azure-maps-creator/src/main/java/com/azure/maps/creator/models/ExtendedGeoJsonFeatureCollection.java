@@ -4,43 +4,84 @@
 
 package com.azure.maps.creator.models;
 
-import com.azure.maps.creator.fluent.models.ExtendedGeoJsonFeatureCollectionInner;
+import com.azure.core.annotation.Fluent;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import java.util.List;
 
-/** An immutable client-side representation of ExtendedGeoJsonFeatureCollection. */
-public interface ExtendedGeoJsonFeatureCollection {
-    /**
-     * Gets the features property: Contains a list of valid `GeoJSON Feature` objects.
-     *
-     * @return the features value.
+/**
+ * A valid `GeoJSON FeatureCollection` object type extended with numberReturned and links array. Please refer to [RFC
+ * 7946](https://tools.ietf.org/html/rfc7946#section-3.3) for details.
+ */
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonTypeName("FeatureCollection")
+@Fluent
+public final class ExtendedGeoJsonFeatureCollection extends GeoJsonFeatureCollection {
+    /*
+     * The ontology version of this dataset.
      */
-    List<GeoJsonFeature> features();
+    @JsonProperty(value = "ontology", access = JsonProperty.Access.WRITE_ONLY)
+    private String ontology;
+
+    /*
+     * Number of returned features.
+     */
+    @JsonProperty(value = "numberReturned")
+    private Integer numberReturned;
+
+    /*
+     * Links to other WFS endpoints.
+     */
+    @JsonProperty(value = "links")
+    private List<WfsEndpointLink> links;
 
     /**
-     * Gets the ontology property: The ontology version of this dataset.
+     * Get the ontology property: The ontology version of this dataset.
      *
      * @return the ontology value.
      */
-    String ontology();
+    public String getOntology() {
+        return this.ontology;
+    }
 
     /**
-     * Gets the numberReturned property: Number of returned features.
+     * Get the numberReturned property: Number of returned features.
      *
      * @return the numberReturned value.
      */
-    Integer numberReturned();
+    public Integer getNumberReturned() {
+        return this.numberReturned;
+    }
 
     /**
-     * Gets the links property: Links to other WFS endpoints.
+     * Set the numberReturned property: Number of returned features.
+     *
+     * @param numberReturned the numberReturned value to set.
+     * @return the ExtendedGeoJsonFeatureCollection object itself.
+     */
+    public ExtendedGeoJsonFeatureCollection setNumberReturned(Integer numberReturned) {
+        this.numberReturned = numberReturned;
+        return this;
+    }
+
+    /**
+     * Get the links property: Links to other WFS endpoints.
      *
      * @return the links value.
      */
-    List<WfsEndpointLink> links();
+    public List<WfsEndpointLink> getLinks() {
+        return this.links;
+    }
 
     /**
-     * Gets the inner com.azure.maps.creator.fluent.models.ExtendedGeoJsonFeatureCollectionInner object.
+     * Set the links property: Links to other WFS endpoints.
      *
-     * @return the inner object.
+     * @param links the links value to set.
+     * @return the ExtendedGeoJsonFeatureCollection object itself.
      */
-    ExtendedGeoJsonFeatureCollectionInner innerModel();
+    public ExtendedGeoJsonFeatureCollection setLinks(List<WfsEndpointLink> links) {
+        this.links = links;
+        return this;
+    }
 }

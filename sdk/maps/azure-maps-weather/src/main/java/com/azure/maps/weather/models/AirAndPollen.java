@@ -5,15 +5,11 @@
 package com.azure.maps.weather.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** The AirAndPollen model. */
 @Fluent
 public final class AirAndPollen {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(AirAndPollen.class);
-
     /*
      * Name of the pollen or pollutant. For example, grass, mold, weed, air
      * quality, tree and UV index.
@@ -57,7 +53,7 @@ public final class AirAndPollen {
      *
      * @return the name value.
      */
-    public String name() {
+    public String getName() {
         return this.name;
     }
 
@@ -68,7 +64,7 @@ public final class AirAndPollen {
      * @param name the name value to set.
      * @return the AirAndPollen object itself.
      */
-    public AirAndPollen withName(String name) {
+    public AirAndPollen setName(String name) {
         this.name = name;
         return this;
     }
@@ -79,7 +75,7 @@ public final class AirAndPollen {
      *
      * @return the value value.
      */
-    public Integer value() {
+    public Integer getValue() {
         return this.value;
     }
 
@@ -90,7 +86,7 @@ public final class AirAndPollen {
      * @param value the value value to set.
      * @return the AirAndPollen object itself.
      */
-    public AirAndPollen withValue(Integer value) {
+    public AirAndPollen setValue(Integer value) {
         this.value = value;
         return this;
     }
@@ -101,7 +97,7 @@ public final class AirAndPollen {
      *
      * @return the category value.
      */
-    public String category() {
+    public String getCategory() {
         return this.category;
     }
 
@@ -112,7 +108,7 @@ public final class AirAndPollen {
      * @param category the category value to set.
      * @return the AirAndPollen object itself.
      */
-    public AirAndPollen withCategory(String category) {
+    public AirAndPollen setCategory(String category) {
         this.category = category;
         return this;
     }
@@ -123,7 +119,7 @@ public final class AirAndPollen {
      *
      * @return the categoryValue value.
      */
-    public Integer categoryValue() {
+    public Integer getCategoryValue() {
         return this.categoryValue;
     }
 
@@ -134,7 +130,7 @@ public final class AirAndPollen {
      * @param categoryValue the categoryValue value to set.
      * @return the AirAndPollen object itself.
      */
-    public AirAndPollen withCategoryValue(Integer categoryValue) {
+    public AirAndPollen setCategoryValue(Integer categoryValue) {
         this.categoryValue = categoryValue;
         return this;
     }
@@ -144,7 +140,7 @@ public final class AirAndPollen {
      *
      * @return the type value.
      */
-    public String type() {
+    public String getType() {
         return this.type;
     }
 
@@ -154,16 +150,8 @@ public final class AirAndPollen {
      * @param type the type value to set.
      * @return the AirAndPollen object itself.
      */
-    public AirAndPollen withType(String type) {
+    public AirAndPollen setType(String type) {
         this.type = type;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

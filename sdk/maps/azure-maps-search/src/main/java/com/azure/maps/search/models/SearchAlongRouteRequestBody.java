@@ -5,15 +5,11 @@
 package com.azure.maps.search.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** This type represents the request body for the Search Along Route service. */
 @Fluent
 public final class SearchAlongRouteRequestBody {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(SearchAlongRouteRequestBody.class);
-
     /*
      * A valid `GeoJSON LineString` geometry type. Please refer to [RFC
      * 7946](https://tools.ietf.org/html/rfc7946#section-3.1.4) for details.
@@ -27,7 +23,7 @@ public final class SearchAlongRouteRequestBody {
      *
      * @return the route value.
      */
-    public GeoJsonLineString route() {
+    public GeoJsonLineString getRoute() {
         return this.route;
     }
 
@@ -38,19 +34,8 @@ public final class SearchAlongRouteRequestBody {
      * @param route the route value to set.
      * @return the SearchAlongRouteRequestBody object itself.
      */
-    public SearchAlongRouteRequestBody withRoute(GeoJsonLineString route) {
+    public SearchAlongRouteRequestBody setRoute(GeoJsonLineString route) {
         this.route = route;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (route() != null) {
-            route().validate();
-        }
     }
 }

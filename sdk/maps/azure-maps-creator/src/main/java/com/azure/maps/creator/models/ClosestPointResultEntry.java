@@ -5,15 +5,11 @@
 package com.azure.maps.creator.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** Closest Point Result Entry Object. */
 @Fluent
 public final class ClosestPointResultEntry {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(ClosestPointResultEntry.class);
-
     /*
      * The distance in meters from the source point to the closest point
      */
@@ -37,7 +33,7 @@ public final class ClosestPointResultEntry {
      *
      * @return the distanceInMeters value.
      */
-    public Float distanceInMeters() {
+    public Float getDistanceInMeters() {
         return this.distanceInMeters;
     }
 
@@ -46,7 +42,7 @@ public final class ClosestPointResultEntry {
      *
      * @return the position value.
      */
-    public SpatialCoordinate position() {
+    public SpatialCoordinate getPosition() {
         return this.position;
     }
 
@@ -56,7 +52,7 @@ public final class ClosestPointResultEntry {
      * @param position the position value to set.
      * @return the ClosestPointResultEntry object itself.
      */
-    public ClosestPointResultEntry withPosition(SpatialCoordinate position) {
+    public ClosestPointResultEntry setPosition(SpatialCoordinate position) {
         this.position = position;
         return this;
     }
@@ -66,18 +62,7 @@ public final class ClosestPointResultEntry {
      *
      * @return the geometryId value.
      */
-    public String geometryId() {
+    public String getGeometryId() {
         return this.geometryId;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (position() != null) {
-            position().validate();
-        }
     }
 }

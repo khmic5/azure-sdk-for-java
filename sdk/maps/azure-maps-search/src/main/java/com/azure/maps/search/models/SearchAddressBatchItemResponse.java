@@ -5,29 +5,23 @@
 package com.azure.maps.search.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.management.exception.ManagementError;
-import com.azure.core.util.logging.ClientLogger;
-import com.azure.maps.search.fluent.models.SearchCommonResponseInner;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** The result of the query. SearchCommonResponse if the query completed successfully, ErrorResponse otherwise. */
 @Fluent
-public final class SearchAddressBatchItemResponse extends SearchCommonResponseInner {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(SearchAddressBatchItemResponse.class);
-
+public final class SearchAddressBatchItemResponse extends SearchCommonResponse {
     /*
      * The error object.
      */
     @JsonProperty(value = "error")
-    private ManagementError error;
+    private ErrorDetail error;
 
     /**
      * Get the error property: The error object.
      *
      * @return the error value.
      */
-    public ManagementError error() {
+    public ErrorDetail getError() {
         return this.error;
     }
 
@@ -37,18 +31,8 @@ public final class SearchAddressBatchItemResponse extends SearchCommonResponseIn
      * @param error the error value to set.
      * @return the SearchAddressBatchItemResponse object itself.
      */
-    public SearchAddressBatchItemResponse withError(ManagementError error) {
+    public SearchAddressBatchItemResponse setError(ErrorDetail error) {
         this.error = error;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    @Override
-    public void validate() {
-        super.validate();
     }
 }

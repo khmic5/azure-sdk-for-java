@@ -5,8 +5,6 @@
 package com.azure.maps.search.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -15,8 +13,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 @Fluent
 public final class SearchResultAddressRanges {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(SearchResultAddressRanges.class);
-
     /*
      * Address range on the left side of the street.
      */
@@ -48,7 +44,7 @@ public final class SearchResultAddressRanges {
      *
      * @return the rangeLeft value.
      */
-    public String rangeLeft() {
+    public String getRangeLeft() {
         return this.rangeLeft;
     }
 
@@ -58,7 +54,7 @@ public final class SearchResultAddressRanges {
      * @param rangeLeft the rangeLeft value to set.
      * @return the SearchResultAddressRanges object itself.
      */
-    public SearchResultAddressRanges withRangeLeft(String rangeLeft) {
+    public SearchResultAddressRanges setRangeLeft(String rangeLeft) {
         this.rangeLeft = rangeLeft;
         return this;
     }
@@ -68,7 +64,7 @@ public final class SearchResultAddressRanges {
      *
      * @return the rangeRight value.
      */
-    public String rangeRight() {
+    public String getRangeRight() {
         return this.rangeRight;
     }
 
@@ -78,7 +74,7 @@ public final class SearchResultAddressRanges {
      * @param rangeRight the rangeRight value to set.
      * @return the SearchResultAddressRanges object itself.
      */
-    public SearchResultAddressRanges withRangeRight(String rangeRight) {
+    public SearchResultAddressRanges setRangeRight(String rangeRight) {
         this.rangeRight = rangeRight;
         return this;
     }
@@ -88,7 +84,7 @@ public final class SearchResultAddressRanges {
      *
      * @return the from value.
      */
-    public CoordinatesPairAbbreviated from() {
+    public CoordinatesPairAbbreviated getFrom() {
         return this.from;
     }
 
@@ -98,7 +94,7 @@ public final class SearchResultAddressRanges {
      * @param from the from value to set.
      * @return the SearchResultAddressRanges object itself.
      */
-    public SearchResultAddressRanges withFrom(CoordinatesPairAbbreviated from) {
+    public SearchResultAddressRanges setFrom(CoordinatesPairAbbreviated from) {
         this.from = from;
         return this;
     }
@@ -108,7 +104,7 @@ public final class SearchResultAddressRanges {
      *
      * @return the to value.
      */
-    public CoordinatesPairAbbreviated to() {
+    public CoordinatesPairAbbreviated getTo() {
         return this.to;
     }
 
@@ -118,22 +114,8 @@ public final class SearchResultAddressRanges {
      * @param to the to value to set.
      * @return the SearchResultAddressRanges object itself.
      */
-    public SearchResultAddressRanges withTo(CoordinatesPairAbbreviated to) {
+    public SearchResultAddressRanges setTo(CoordinatesPairAbbreviated to) {
         this.to = to;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (from() != null) {
-            from().validate();
-        }
-        if (to() != null) {
-            to().validate();
-        }
     }
 }

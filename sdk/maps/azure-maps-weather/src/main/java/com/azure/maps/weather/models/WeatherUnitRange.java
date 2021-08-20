@@ -5,15 +5,11 @@
 package com.azure.maps.weather.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** Returned temperature values. */
 @Fluent
 public final class WeatherUnitRange {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(WeatherUnitRange.class);
-
     /*
      * Minimum temperature for the time period.
      */
@@ -31,7 +27,7 @@ public final class WeatherUnitRange {
      *
      * @return the minimum value.
      */
-    public WeatherUnit minimum() {
+    public WeatherUnit getMinimum() {
         return this.minimum;
     }
 
@@ -41,7 +37,7 @@ public final class WeatherUnitRange {
      * @param minimum the minimum value to set.
      * @return the WeatherUnitRange object itself.
      */
-    public WeatherUnitRange withMinimum(WeatherUnit minimum) {
+    public WeatherUnitRange setMinimum(WeatherUnit minimum) {
         this.minimum = minimum;
         return this;
     }
@@ -51,7 +47,7 @@ public final class WeatherUnitRange {
      *
      * @return the maximum value.
      */
-    public WeatherUnit maximum() {
+    public WeatherUnit getMaximum() {
         return this.maximum;
     }
 
@@ -61,22 +57,8 @@ public final class WeatherUnitRange {
      * @param maximum the maximum value to set.
      * @return the WeatherUnitRange object itself.
      */
-    public WeatherUnitRange withMaximum(WeatherUnit maximum) {
+    public WeatherUnitRange setMaximum(WeatherUnit maximum) {
         this.maximum = maximum;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (minimum() != null) {
-            minimum().validate();
-        }
-        if (maximum() != null) {
-            maximum().validate();
-        }
     }
 }

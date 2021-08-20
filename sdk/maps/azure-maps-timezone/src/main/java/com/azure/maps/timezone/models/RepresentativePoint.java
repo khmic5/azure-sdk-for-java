@@ -5,15 +5,11 @@
 package com.azure.maps.timezone.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** Representative point property. */
 @Immutable
 public final class RepresentativePoint {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(RepresentativePoint.class);
-
     /*
      * Latitude property
      */
@@ -31,7 +27,7 @@ public final class RepresentativePoint {
      *
      * @return the latitude value.
      */
-    public Float latitude() {
+    public Float getLatitude() {
         return this.latitude;
     }
 
@@ -40,15 +36,7 @@ public final class RepresentativePoint {
      *
      * @return the longitude value.
      */
-    public Float longitude() {
+    public Float getLongitude() {
         return this.longitude;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

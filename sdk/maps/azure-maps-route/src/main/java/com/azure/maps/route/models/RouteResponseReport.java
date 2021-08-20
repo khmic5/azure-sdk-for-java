@@ -5,16 +5,12 @@
 package com.azure.maps.route.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /** Reports the effective settings used in the current call. */
 @Immutable
 public final class RouteResponseReport {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(RouteResponseReport.class);
-
     /*
      * Effective parameters or data used when calling this Route API.
      */
@@ -26,18 +22,7 @@ public final class RouteResponseReport {
      *
      * @return the effectiveSettings value.
      */
-    public List<RouteResponseReportEffectiveSetting> effectiveSettings() {
+    public List<RouteResponseReportEffectiveSetting> getEffectiveSettings() {
         return this.effectiveSettings;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (effectiveSettings() != null) {
-            effectiveSettings().forEach(e -> e.validate());
-        }
     }
 }

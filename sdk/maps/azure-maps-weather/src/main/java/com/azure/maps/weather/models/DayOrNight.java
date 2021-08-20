@@ -5,15 +5,11 @@
 package com.azure.maps.weather.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** The DayOrNight model. */
 @Fluent
 public final class DayOrNight {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(DayOrNight.class);
-
     /*
      * Numeric value representing an image that displays the `iconPhrase`.
      * Please refer to [Weather Service
@@ -177,7 +173,7 @@ public final class DayOrNight {
      *
      * @return the iconCode value.
      */
-    public Integer iconCode() {
+    public Integer getIconCode() {
         return this.iconCode;
     }
 
@@ -188,7 +184,7 @@ public final class DayOrNight {
      * @param iconCode the iconCode value to set.
      * @return the DayOrNight object itself.
      */
-    public DayOrNight withIconCode(Integer iconCode) {
+    public DayOrNight setIconCode(Integer iconCode) {
         this.iconCode = iconCode;
         return this;
     }
@@ -199,7 +195,7 @@ public final class DayOrNight {
      *
      * @return the iconPhrase value.
      */
-    public String iconPhrase() {
+    public String getIconPhrase() {
         return this.iconPhrase;
     }
 
@@ -210,7 +206,7 @@ public final class DayOrNight {
      * @param iconPhrase the iconPhrase value to set.
      * @return the DayOrNight object itself.
      */
-    public DayOrNight withIconPhrase(String iconPhrase) {
+    public DayOrNight setIconPhrase(String iconPhrase) {
         this.iconPhrase = iconPhrase;
         return this;
     }
@@ -220,7 +216,7 @@ public final class DayOrNight {
      *
      * @return the localSource value.
      */
-    public LocalSource localSource() {
+    public LocalSource getLocalSource() {
         return this.localSource;
     }
 
@@ -230,7 +226,7 @@ public final class DayOrNight {
      * @param localSource the localSource value to set.
      * @return the DayOrNight object itself.
      */
-    public DayOrNight withLocalSource(LocalSource localSource) {
+    public DayOrNight setLocalSource(LocalSource localSource) {
         this.localSource = localSource;
         return this;
     }
@@ -241,7 +237,7 @@ public final class DayOrNight {
      *
      * @return the hasPrecipitation value.
      */
-    public Boolean hasPrecipitation() {
+    public Boolean isHasPrecipitation() {
         return this.hasPrecipitation;
     }
 
@@ -252,7 +248,7 @@ public final class DayOrNight {
      * @param hasPrecipitation the hasPrecipitation value to set.
      * @return the DayOrNight object itself.
      */
-    public DayOrNight withHasPrecipitation(Boolean hasPrecipitation) {
+    public DayOrNight setHasPrecipitation(Boolean hasPrecipitation) {
         this.hasPrecipitation = hasPrecipitation;
         return this;
     }
@@ -263,7 +259,7 @@ public final class DayOrNight {
      *
      * @return the precipitationType value.
      */
-    public String precipitationType() {
+    public String getPrecipitationType() {
         return this.precipitationType;
     }
 
@@ -274,7 +270,7 @@ public final class DayOrNight {
      * @param precipitationType the precipitationType value to set.
      * @return the DayOrNight object itself.
      */
-    public DayOrNight withPrecipitationType(String precipitationType) {
+    public DayOrNight setPrecipitationType(String precipitationType) {
         this.precipitationType = precipitationType;
         return this;
     }
@@ -284,7 +280,7 @@ public final class DayOrNight {
      *
      * @return the precipitationIntensity value.
      */
-    public String precipitationIntensity() {
+    public String getPrecipitationIntensity() {
         return this.precipitationIntensity;
     }
 
@@ -294,7 +290,7 @@ public final class DayOrNight {
      * @param precipitationIntensity the precipitationIntensity value to set.
      * @return the DayOrNight object itself.
      */
-    public DayOrNight withPrecipitationIntensity(String precipitationIntensity) {
+    public DayOrNight setPrecipitationIntensity(String precipitationIntensity) {
         this.precipitationIntensity = precipitationIntensity;
         return this;
     }
@@ -306,7 +302,7 @@ public final class DayOrNight {
      *
      * @return the shortPhrase value.
      */
-    public String shortPhrase() {
+    public String getShortPhrase() {
         return this.shortPhrase;
     }
 
@@ -318,7 +314,7 @@ public final class DayOrNight {
      * @param shortPhrase the shortPhrase value to set.
      * @return the DayOrNight object itself.
      */
-    public DayOrNight withShortPhrase(String shortPhrase) {
+    public DayOrNight setShortPhrase(String shortPhrase) {
         this.shortPhrase = shortPhrase;
         return this;
     }
@@ -330,7 +326,7 @@ public final class DayOrNight {
      *
      * @return the longPhrase value.
      */
-    public String longPhrase() {
+    public String getLongPhrase() {
         return this.longPhrase;
     }
 
@@ -342,7 +338,7 @@ public final class DayOrNight {
      * @param longPhrase the longPhrase value to set.
      * @return the DayOrNight object itself.
      */
-    public DayOrNight withLongPhrase(String longPhrase) {
+    public DayOrNight setLongPhrase(String longPhrase) {
         this.longPhrase = longPhrase;
         return this;
     }
@@ -353,7 +349,7 @@ public final class DayOrNight {
      *
      * @return the precipitationProbability value.
      */
-    public Integer precipitationProbability() {
+    public Integer getPrecipitationProbability() {
         return this.precipitationProbability;
     }
 
@@ -364,7 +360,7 @@ public final class DayOrNight {
      * @param precipitationProbability the precipitationProbability value to set.
      * @return the DayOrNight object itself.
      */
-    public DayOrNight withPrecipitationProbability(Integer precipitationProbability) {
+    public DayOrNight setPrecipitationProbability(Integer precipitationProbability) {
         this.precipitationProbability = precipitationProbability;
         return this;
     }
@@ -375,7 +371,7 @@ public final class DayOrNight {
      *
      * @return the thunderstormProbability value.
      */
-    public Integer thunderstormProbability() {
+    public Integer getThunderstormProbability() {
         return this.thunderstormProbability;
     }
 
@@ -386,7 +382,7 @@ public final class DayOrNight {
      * @param thunderstormProbability the thunderstormProbability value to set.
      * @return the DayOrNight object itself.
      */
-    public DayOrNight withThunderstormProbability(Integer thunderstormProbability) {
+    public DayOrNight setThunderstormProbability(Integer thunderstormProbability) {
         this.thunderstormProbability = thunderstormProbability;
         return this;
     }
@@ -396,7 +392,7 @@ public final class DayOrNight {
      *
      * @return the rainProbability value.
      */
-    public Integer rainProbability() {
+    public Integer getRainProbability() {
         return this.rainProbability;
     }
 
@@ -406,7 +402,7 @@ public final class DayOrNight {
      * @param rainProbability the rainProbability value to set.
      * @return the DayOrNight object itself.
      */
-    public DayOrNight withRainProbability(Integer rainProbability) {
+    public DayOrNight setRainProbability(Integer rainProbability) {
         this.rainProbability = rainProbability;
         return this;
     }
@@ -416,7 +412,7 @@ public final class DayOrNight {
      *
      * @return the snowProbability value.
      */
-    public Integer snowProbability() {
+    public Integer getSnowProbability() {
         return this.snowProbability;
     }
 
@@ -426,7 +422,7 @@ public final class DayOrNight {
      * @param snowProbability the snowProbability value to set.
      * @return the DayOrNight object itself.
      */
-    public DayOrNight withSnowProbability(Integer snowProbability) {
+    public DayOrNight setSnowProbability(Integer snowProbability) {
         this.snowProbability = snowProbability;
         return this;
     }
@@ -436,7 +432,7 @@ public final class DayOrNight {
      *
      * @return the iceProbability value.
      */
-    public Integer iceProbability() {
+    public Integer getIceProbability() {
         return this.iceProbability;
     }
 
@@ -446,7 +442,7 @@ public final class DayOrNight {
      * @param iceProbability the iceProbability value to set.
      * @return the DayOrNight object itself.
      */
-    public DayOrNight withIceProbability(Integer iceProbability) {
+    public DayOrNight setIceProbability(Integer iceProbability) {
         this.iceProbability = iceProbability;
         return this;
     }
@@ -456,7 +452,7 @@ public final class DayOrNight {
      *
      * @return the wind value.
      */
-    public WindDetails wind() {
+    public WindDetails getWind() {
         return this.wind;
     }
 
@@ -466,7 +462,7 @@ public final class DayOrNight {
      * @param wind the wind value to set.
      * @return the DayOrNight object itself.
      */
-    public DayOrNight withWind(WindDetails wind) {
+    public DayOrNight setWind(WindDetails wind) {
         this.wind = wind;
         return this;
     }
@@ -476,7 +472,7 @@ public final class DayOrNight {
      *
      * @return the windGust value.
      */
-    public WindDetails windGust() {
+    public WindDetails getWindGust() {
         return this.windGust;
     }
 
@@ -486,7 +482,7 @@ public final class DayOrNight {
      * @param windGust the windGust value to set.
      * @return the DayOrNight object itself.
      */
-    public DayOrNight withWindGust(WindDetails windGust) {
+    public DayOrNight setWindGust(WindDetails windGust) {
         this.windGust = windGust;
         return this;
     }
@@ -496,7 +492,7 @@ public final class DayOrNight {
      *
      * @return the totalLiquid value.
      */
-    public WeatherUnit totalLiquid() {
+    public WeatherUnit getTotalLiquid() {
         return this.totalLiquid;
     }
 
@@ -506,7 +502,7 @@ public final class DayOrNight {
      * @param totalLiquid the totalLiquid value to set.
      * @return the DayOrNight object itself.
      */
-    public DayOrNight withTotalLiquid(WeatherUnit totalLiquid) {
+    public DayOrNight setTotalLiquid(WeatherUnit totalLiquid) {
         this.totalLiquid = totalLiquid;
         return this;
     }
@@ -516,7 +512,7 @@ public final class DayOrNight {
      *
      * @return the rain value.
      */
-    public WeatherUnit rain() {
+    public WeatherUnit getRain() {
         return this.rain;
     }
 
@@ -526,7 +522,7 @@ public final class DayOrNight {
      * @param rain the rain value to set.
      * @return the DayOrNight object itself.
      */
-    public DayOrNight withRain(WeatherUnit rain) {
+    public DayOrNight setRain(WeatherUnit rain) {
         this.rain = rain;
         return this;
     }
@@ -536,7 +532,7 @@ public final class DayOrNight {
      *
      * @return the snow value.
      */
-    public WeatherUnit snow() {
+    public WeatherUnit getSnow() {
         return this.snow;
     }
 
@@ -546,7 +542,7 @@ public final class DayOrNight {
      * @param snow the snow value to set.
      * @return the DayOrNight object itself.
      */
-    public DayOrNight withSnow(WeatherUnit snow) {
+    public DayOrNight setSnow(WeatherUnit snow) {
         this.snow = snow;
         return this;
     }
@@ -556,7 +552,7 @@ public final class DayOrNight {
      *
      * @return the ice value.
      */
-    public WeatherUnit ice() {
+    public WeatherUnit getIce() {
         return this.ice;
     }
 
@@ -566,7 +562,7 @@ public final class DayOrNight {
      * @param ice the ice value to set.
      * @return the DayOrNight object itself.
      */
-    public DayOrNight withIce(WeatherUnit ice) {
+    public DayOrNight setIce(WeatherUnit ice) {
         this.ice = ice;
         return this;
     }
@@ -576,7 +572,7 @@ public final class DayOrNight {
      *
      * @return the hoursOfPrecipitation value.
      */
-    public Float hoursOfPrecipitation() {
+    public Float getHoursOfPrecipitation() {
         return this.hoursOfPrecipitation;
     }
 
@@ -586,7 +582,7 @@ public final class DayOrNight {
      * @param hoursOfPrecipitation the hoursOfPrecipitation value to set.
      * @return the DayOrNight object itself.
      */
-    public DayOrNight withHoursOfPrecipitation(Float hoursOfPrecipitation) {
+    public DayOrNight setHoursOfPrecipitation(Float hoursOfPrecipitation) {
         this.hoursOfPrecipitation = hoursOfPrecipitation;
         return this;
     }
@@ -596,7 +592,7 @@ public final class DayOrNight {
      *
      * @return the hoursOfRain value.
      */
-    public Float hoursOfRain() {
+    public Float getHoursOfRain() {
         return this.hoursOfRain;
     }
 
@@ -606,7 +602,7 @@ public final class DayOrNight {
      * @param hoursOfRain the hoursOfRain value to set.
      * @return the DayOrNight object itself.
      */
-    public DayOrNight withHoursOfRain(Float hoursOfRain) {
+    public DayOrNight setHoursOfRain(Float hoursOfRain) {
         this.hoursOfRain = hoursOfRain;
         return this;
     }
@@ -616,7 +612,7 @@ public final class DayOrNight {
      *
      * @return the hoursOfSnow value.
      */
-    public Float hoursOfSnow() {
+    public Float getHoursOfSnow() {
         return this.hoursOfSnow;
     }
 
@@ -626,7 +622,7 @@ public final class DayOrNight {
      * @param hoursOfSnow the hoursOfSnow value to set.
      * @return the DayOrNight object itself.
      */
-    public DayOrNight withHoursOfSnow(Float hoursOfSnow) {
+    public DayOrNight setHoursOfSnow(Float hoursOfSnow) {
         this.hoursOfSnow = hoursOfSnow;
         return this;
     }
@@ -636,7 +632,7 @@ public final class DayOrNight {
      *
      * @return the hoursOfIce value.
      */
-    public Float hoursOfIce() {
+    public Float getHoursOfIce() {
         return this.hoursOfIce;
     }
 
@@ -646,7 +642,7 @@ public final class DayOrNight {
      * @param hoursOfIce the hoursOfIce value to set.
      * @return the DayOrNight object itself.
      */
-    public DayOrNight withHoursOfIce(Float hoursOfIce) {
+    public DayOrNight setHoursOfIce(Float hoursOfIce) {
         this.hoursOfIce = hoursOfIce;
         return this;
     }
@@ -656,7 +652,7 @@ public final class DayOrNight {
      *
      * @return the cloudCover value.
      */
-    public Integer cloudCover() {
+    public Integer getCloudCover() {
         return this.cloudCover;
     }
 
@@ -666,37 +662,8 @@ public final class DayOrNight {
      * @param cloudCover the cloudCover value to set.
      * @return the DayOrNight object itself.
      */
-    public DayOrNight withCloudCover(Integer cloudCover) {
+    public DayOrNight setCloudCover(Integer cloudCover) {
         this.cloudCover = cloudCover;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (localSource() != null) {
-            localSource().validate();
-        }
-        if (wind() != null) {
-            wind().validate();
-        }
-        if (windGust() != null) {
-            windGust().validate();
-        }
-        if (totalLiquid() != null) {
-            totalLiquid().validate();
-        }
-        if (rain() != null) {
-            rain().validate();
-        }
-        if (snow() != null) {
-            snow().validate();
-        }
-        if (ice() != null) {
-            ice().validate();
-        }
     }
 }

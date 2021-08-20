@@ -10,7 +10,7 @@ import com.azure.core.http.rest.ResponseBase;
 
 /** Contains all response data for the getTrafficIncidentTile operation. */
 public final class TrafficsGetTrafficIncidentTileResponse
-    extends ResponseBase<TrafficsGetTrafficIncidentTileHeaders, Void> {
+        extends ResponseBase<TrafficsGetTrafficIncidentTileHeaders, Void> {
     /**
      * Creates an instance of TrafficsGetTrafficIncidentTileResponse.
      *
@@ -21,11 +21,11 @@ public final class TrafficsGetTrafficIncidentTileResponse
      * @param headers the deserialized headers of the HTTP response.
      */
     public TrafficsGetTrafficIncidentTileResponse(
-        HttpRequest request,
-        int statusCode,
-        HttpHeaders rawHeaders,
-        Void value,
-        TrafficsGetTrafficIncidentTileHeaders headers) {
+            HttpRequest request,
+            int statusCode,
+            HttpHeaders rawHeaders,
+            Void value,
+            TrafficsGetTrafficIncidentTileHeaders headers) {
         super(request, statusCode, rawHeaders, value, headers);
     }
 }

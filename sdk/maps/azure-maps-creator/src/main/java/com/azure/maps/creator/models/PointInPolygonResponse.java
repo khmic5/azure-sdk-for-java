@@ -4,28 +4,50 @@
 
 package com.azure.maps.creator.models;
 
-import com.azure.maps.creator.fluent.models.PointInPolygonResponseInner;
+import com.azure.core.annotation.Fluent;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** An immutable client-side representation of PointInPolygonResponse. */
-public interface PointInPolygonResponse {
+/** Returns true if point is within the polygon, false otherwise. */
+@Fluent
+public final class PointInPolygonResponse {
+    /*
+     * Point In Polygon Summary object
+     */
+    @JsonProperty(value = "summary", access = JsonProperty.Access.WRITE_ONLY)
+    private PointInPolygonSummary summary;
+
+    /*
+     * Point In Polygon Result Object
+     */
+    @JsonProperty(value = "result")
+    private PointInPolygonResult result;
+
     /**
-     * Gets the summary property: Point In Polygon Summary object.
+     * Get the summary property: Point In Polygon Summary object.
      *
      * @return the summary value.
      */
-    PointInPolygonSummary summary();
+    public PointInPolygonSummary getSummary() {
+        return this.summary;
+    }
 
     /**
-     * Gets the result property: Point In Polygon Result Object.
+     * Get the result property: Point In Polygon Result Object.
      *
      * @return the result value.
      */
-    PointInPolygonResult result();
+    public PointInPolygonResult getResult() {
+        return this.result;
+    }
 
     /**
-     * Gets the inner com.azure.maps.creator.fluent.models.PointInPolygonResponseInner object.
+     * Set the result property: Point In Polygon Result Object.
      *
-     * @return the inner object.
+     * @param result the result value to set.
+     * @return the PointInPolygonResponse object itself.
      */
-    PointInPolygonResponseInner innerModel();
+    public PointInPolygonResponse setResult(PointInPolygonResult result) {
+        this.result = result;
+        return this;
+    }
 }

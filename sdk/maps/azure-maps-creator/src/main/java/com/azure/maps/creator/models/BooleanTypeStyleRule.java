@@ -5,8 +5,6 @@
 package com.azure.maps.creator.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
@@ -17,8 +15,6 @@ import java.util.List;
 @JsonTypeName("boolean")
 @Fluent
 public final class BooleanTypeStyleRule extends StyleObject {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(BooleanTypeStyleRule.class);
-
     /*
      * Boolean style rules.
      */
@@ -30,7 +26,7 @@ public final class BooleanTypeStyleRule extends StyleObject {
      *
      * @return the rules value.
      */
-    public List<BooleanRuleObject> rules() {
+    public List<BooleanRuleObject> getRules() {
         return this.rules;
     }
 
@@ -40,32 +36,8 @@ public final class BooleanTypeStyleRule extends StyleObject {
      * @param rules the rules value to set.
      * @return the BooleanTypeStyleRule object itself.
      */
-    public BooleanTypeStyleRule withRules(List<BooleanRuleObject> rules) {
+    public BooleanTypeStyleRule setRules(List<BooleanRuleObject> rules) {
         this.rules = rules;
         return this;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public BooleanTypeStyleRule withKeyName(String keyName) {
-        super.withKeyName(keyName);
-        return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    @Override
-    public void validate() {
-        super.validate();
-        if (rules() == null) {
-            throw logger
-                .logExceptionAsError(
-                    new IllegalArgumentException("Missing required property rules in model BooleanTypeStyleRule"));
-        } else {
-            rules().forEach(e -> e.validate());
-        }
     }
 }

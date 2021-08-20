@@ -4,22 +4,36 @@
 
 package com.azure.maps.creator.models;
 
-import com.azure.maps.creator.fluent.models.ConformanceResponseInner;
+import com.azure.core.annotation.Fluent;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/** An immutable client-side representation of ConformanceResponse. */
-public interface ConformanceResponse {
+/** The ConformanceResponse model. */
+@Fluent
+public final class ConformanceResponse {
+    /*
+     * List of requirements classes that the server conforms to.
+     */
+    @JsonProperty(value = "conformsTo", required = true)
+    private List<String> conformsTo;
+
     /**
-     * Gets the conformsTo property: List of requirements classes that the server conforms to.
+     * Get the conformsTo property: List of requirements classes that the server conforms to.
      *
      * @return the conformsTo value.
      */
-    List<String> conformsTo();
+    public List<String> getConformsTo() {
+        return this.conformsTo;
+    }
 
     /**
-     * Gets the inner com.azure.maps.creator.fluent.models.ConformanceResponseInner object.
+     * Set the conformsTo property: List of requirements classes that the server conforms to.
      *
-     * @return the inner object.
+     * @param conformsTo the conformsTo value to set.
+     * @return the ConformanceResponse object itself.
      */
-    ConformanceResponseInner innerModel();
+    public ConformanceResponse setConformsTo(List<String> conformsTo) {
+        this.conformsTo = conformsTo;
+        return this;
+    }
 }

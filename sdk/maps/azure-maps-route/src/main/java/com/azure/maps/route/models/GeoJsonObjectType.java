@@ -11,31 +11,31 @@ import java.util.Collection;
 /** Defines values for GeoJsonObjectType. */
 public final class GeoJsonObjectType extends ExpandableStringEnum<GeoJsonObjectType> {
     /** Static value Point for GeoJsonObjectType. */
-    public static final GeoJsonObjectType POINT = fromString("Point");
+    public static final GeoJsonObjectType GEO_JSON_POINT = fromString("Point");
 
     /** Static value MultiPoint for GeoJsonObjectType. */
-    public static final GeoJsonObjectType MULTI_POINT = fromString("MultiPoint");
+    public static final GeoJsonObjectType GEO_JSON_MULTI_POINT = fromString("MultiPoint");
 
     /** Static value LineString for GeoJsonObjectType. */
-    public static final GeoJsonObjectType LINE_STRING = fromString("LineString");
+    public static final GeoJsonObjectType GEO_JSON_LINE_STRING = fromString("LineString");
 
     /** Static value MultiLineString for GeoJsonObjectType. */
-    public static final GeoJsonObjectType MULTI_LINE_STRING = fromString("MultiLineString");
+    public static final GeoJsonObjectType GEO_JSON_MULTI_LINE_STRING = fromString("MultiLineString");
 
     /** Static value Polygon for GeoJsonObjectType. */
-    public static final GeoJsonObjectType POLYGON = fromString("Polygon");
+    public static final GeoJsonObjectType GEO_JSON_POLYGON = fromString("Polygon");
 
     /** Static value MultiPolygon for GeoJsonObjectType. */
-    public static final GeoJsonObjectType MULTI_POLYGON = fromString("MultiPolygon");
+    public static final GeoJsonObjectType GEO_JSON_MULTI_POLYGON = fromString("MultiPolygon");
 
     /** Static value GeometryCollection for GeoJsonObjectType. */
-    public static final GeoJsonObjectType GEOMETRY_COLLECTION = fromString("GeometryCollection");
+    public static final GeoJsonObjectType GEO_JSON_GEOMETRY_COLLECTION = fromString("GeometryCollection");
 
     /** Static value Feature for GeoJsonObjectType. */
-    public static final GeoJsonObjectType FEATURE = fromString("Feature");
+    public static final GeoJsonObjectType GEO_JSON_FEATURE = fromString("Feature");
 
     /** Static value FeatureCollection for GeoJsonObjectType. */
-    public static final GeoJsonObjectType FEATURE_COLLECTION = fromString("FeatureCollection");
+    public static final GeoJsonObjectType GEO_JSON_FEATURE_COLLECTION = fromString("FeatureCollection");
 
     /**
      * Creates or finds a GeoJsonObjectType from its string representation.

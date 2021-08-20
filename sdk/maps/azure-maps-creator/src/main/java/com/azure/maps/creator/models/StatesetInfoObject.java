@@ -5,16 +5,12 @@
 package com.azure.maps.creator.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /** The stateset information detail. */
 @Fluent
 public final class StatesetInfoObject {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(StatesetInfoObject.class);
-
     /*
      * The stateset ID of this stateset.
      */
@@ -44,7 +40,7 @@ public final class StatesetInfoObject {
      *
      * @return the statesetId value.
      */
-    public String statesetId() {
+    public String getStatesetId() {
         return this.statesetId;
     }
 
@@ -54,7 +50,7 @@ public final class StatesetInfoObject {
      * @param statesetId the statesetId value to set.
      * @return the StatesetInfoObject object itself.
      */
-    public StatesetInfoObject withStatesetId(String statesetId) {
+    public StatesetInfoObject setStatesetId(String statesetId) {
         this.statesetId = statesetId;
         return this;
     }
@@ -64,7 +60,7 @@ public final class StatesetInfoObject {
      *
      * @return the description value.
      */
-    public String description() {
+    public String getDescription() {
         return this.description;
     }
 
@@ -73,7 +69,7 @@ public final class StatesetInfoObject {
      *
      * @return the datasetIds value.
      */
-    public List<String> datasetIds() {
+    public List<String> getDatasetIds() {
         return this.datasetIds;
     }
 
@@ -83,7 +79,7 @@ public final class StatesetInfoObject {
      * @param datasetIds the datasetIds value to set.
      * @return the StatesetInfoObject object itself.
      */
-    public StatesetInfoObject withDatasetIds(List<String> datasetIds) {
+    public StatesetInfoObject setDatasetIds(List<String> datasetIds) {
         this.datasetIds = datasetIds;
         return this;
     }
@@ -93,7 +89,7 @@ public final class StatesetInfoObject {
      *
      * @return the statesetStyle value.
      */
-    public StylesObject statesetStyle() {
+    public StylesObject getStatesetStyle() {
         return this.statesetStyle;
     }
 
@@ -103,19 +99,8 @@ public final class StatesetInfoObject {
      * @param statesetStyle the statesetStyle value to set.
      * @return the StatesetInfoObject object itself.
      */
-    public StatesetInfoObject withStatesetStyle(StylesObject statesetStyle) {
+    public StatesetInfoObject setStatesetStyle(StylesObject statesetStyle) {
         this.statesetStyle = statesetStyle;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (statesetStyle() != null) {
-            statesetStyle().validate();
-        }
     }
 }

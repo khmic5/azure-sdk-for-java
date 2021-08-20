@@ -5,22 +5,17 @@
 package com.azure.maps.creator.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.core.util.logging.ClientLogger;
-import com.azure.maps.creator.fluent.models.ConversionListDetailInfoInner;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /** The response model for the Conversion List API. */
 @Immutable
 public final class ConversionListResponse {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(ConversionListResponse.class);
-
     /*
      * A list of all the previously submitted conversion requests.
      */
     @JsonProperty(value = "conversions", access = JsonProperty.Access.WRITE_ONLY)
-    private List<ConversionListDetailInfoInner> conversions;
+    private List<ConversionListDetailInfo> conversions;
 
     /*
      * If present, the location of the next page of data.
@@ -33,7 +28,7 @@ public final class ConversionListResponse {
      *
      * @return the conversions value.
      */
-    public List<ConversionListDetailInfoInner> conversions() {
+    public List<ConversionListDetailInfo> getConversions() {
         return this.conversions;
     }
 
@@ -42,18 +37,7 @@ public final class ConversionListResponse {
      *
      * @return the nextLink value.
      */
-    public String nextLink() {
+    public String getNextLink() {
         return this.nextLink;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (conversions() != null) {
-            conversions().forEach(e -> e.validate());
-        }
     }
 }

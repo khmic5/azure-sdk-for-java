@@ -5,22 +5,17 @@
 package com.azure.maps.creator.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.core.util.logging.ClientLogger;
-import com.azure.maps.creator.fluent.models.AliasListItemInner;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /** The response model for the List API. Returns a list of all the previously created aliases. */
 @Immutable
 public final class AliasListResponse {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(AliasListResponse.class);
-
     /*
      * A list of all the previously created aliases.
      */
     @JsonProperty(value = "aliases", access = JsonProperty.Access.WRITE_ONLY)
-    private List<AliasListItemInner> aliases;
+    private List<AliasListItem> aliases;
 
     /*
      * If present, the location of the next page of data.
@@ -33,7 +28,7 @@ public final class AliasListResponse {
      *
      * @return the aliases value.
      */
-    public List<AliasListItemInner> aliases() {
+    public List<AliasListItem> getAliases() {
         return this.aliases;
     }
 
@@ -42,18 +37,7 @@ public final class AliasListResponse {
      *
      * @return the nextLink value.
      */
-    public String nextLink() {
+    public String getNextLink() {
         return this.nextLink;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (aliases() != null) {
-            aliases().forEach(e -> e.validate());
-        }
     }
 }

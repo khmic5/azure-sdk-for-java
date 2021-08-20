@@ -5,16 +5,12 @@
 package com.azure.maps.route.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /** This type represents the request body for the Batch service. */
 @Fluent
 public final class BatchRequestBody {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(BatchRequestBody.class);
-
     /*
      * The list of queries to process.
      */
@@ -26,7 +22,7 @@ public final class BatchRequestBody {
      *
      * @return the batchItems value.
      */
-    public List<BatchRequestBodyBatchItemsItem> batchItems() {
+    public List<BatchRequestBodyBatchItemsItem> getBatchItems() {
         return this.batchItems;
     }
 
@@ -36,19 +32,8 @@ public final class BatchRequestBody {
      * @param batchItems the batchItems value to set.
      * @return the BatchRequestBody object itself.
      */
-    public BatchRequestBody withBatchItems(List<BatchRequestBodyBatchItemsItem> batchItems) {
+    public BatchRequestBody setBatchItems(List<BatchRequestBodyBatchItemsItem> batchItems) {
         this.batchItems = batchItems;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (batchItems() != null) {
-            batchItems().forEach(e -> e.validate());
-        }
     }
 }

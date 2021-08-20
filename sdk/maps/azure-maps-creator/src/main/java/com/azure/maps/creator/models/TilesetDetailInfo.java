@@ -4,66 +4,119 @@
 
 package com.azure.maps.creator.models;
 
-import com.azure.maps.creator.fluent.models.TilesetDetailInfoInner;
+import com.azure.core.annotation.Immutable;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/** An immutable client-side representation of TilesetDetailInfo. */
-public interface TilesetDetailInfo {
+/** Detail information for the data. */
+@Immutable
+public final class TilesetDetailInfo {
+    /*
+     * The unique tileset id for the tileset.
+     */
+    @JsonProperty(value = "tilesetId", access = JsonProperty.Access.WRITE_ONLY)
+    private String tilesetId;
+
+    /*
+     * The ontology version of this dataset.
+     */
+    @JsonProperty(value = "ontology", access = JsonProperty.Access.WRITE_ONLY)
+    private String ontology;
+
+    /*
+     * The unique dataset Id used to create the tileset.
+     */
+    @JsonProperty(value = "datasetId", access = JsonProperty.Access.WRITE_ONLY)
+    private String datasetId;
+
+    /*
+     * The description the caller provided when creating the tileset. Maximum
+     * length 1024 characters.
+     */
+    @JsonProperty(value = "description", access = JsonProperty.Access.WRITE_ONLY)
+    private String description;
+
+    /*
+     * The lowest tile zoom level tile generated for the tileset.
+     */
+    @JsonProperty(value = "minZoom", access = JsonProperty.Access.WRITE_ONLY)
+    private Integer minZoom;
+
+    /*
+     * The highest tile zoom level tile generated for the tileset.
+     */
+    @JsonProperty(value = "maxZoom", access = JsonProperty.Access.WRITE_ONLY)
+    private Integer maxZoom;
+
+    /*
+     * Bounding box which all features of the tileset lay within. Projection
+     * used - EPSG:3857. Format : 'minLon, minLat, maxLon, maxLat'.
+     */
+    @JsonProperty(value = "bbox", access = JsonProperty.Access.WRITE_ONLY)
+    private List<Float> bbox;
+
     /**
-     * Gets the tilesetId property: The unique tileset id for the tileset.
+     * Get the tilesetId property: The unique tileset id for the tileset.
      *
      * @return the tilesetId value.
      */
-    String tilesetId();
+    public String getTilesetId() {
+        return this.tilesetId;
+    }
 
     /**
-     * Gets the ontology property: The ontology version of this dataset.
+     * Get the ontology property: The ontology version of this dataset.
      *
      * @return the ontology value.
      */
-    String ontology();
+    public String getOntology() {
+        return this.ontology;
+    }
 
     /**
-     * Gets the datasetId property: The unique dataset Id used to create the tileset.
+     * Get the datasetId property: The unique dataset Id used to create the tileset.
      *
      * @return the datasetId value.
      */
-    String datasetId();
+    public String getDatasetId() {
+        return this.datasetId;
+    }
 
     /**
-     * Gets the description property: The description the caller provided when creating the tileset. Maximum length 1024
+     * Get the description property: The description the caller provided when creating the tileset. Maximum length 1024
      * characters.
      *
      * @return the description value.
      */
-    String description();
+    public String getDescription() {
+        return this.description;
+    }
 
     /**
-     * Gets the minZoom property: The lowest tile zoom level tile generated for the tileset.
+     * Get the minZoom property: The lowest tile zoom level tile generated for the tileset.
      *
      * @return the minZoom value.
      */
-    Integer minZoom();
+    public Integer getMinZoom() {
+        return this.minZoom;
+    }
 
     /**
-     * Gets the maxZoom property: The highest tile zoom level tile generated for the tileset.
+     * Get the maxZoom property: The highest tile zoom level tile generated for the tileset.
      *
      * @return the maxZoom value.
      */
-    Integer maxZoom();
+    public Integer getMaxZoom() {
+        return this.maxZoom;
+    }
 
     /**
-     * Gets the bbox property: Bounding box which all features of the tileset lay within. Projection used - EPSG:3857.
+     * Get the bbox property: Bounding box which all features of the tileset lay within. Projection used - EPSG:3857.
      * Format : 'minLon, minLat, maxLon, maxLat'.
      *
      * @return the bbox value.
      */
-    List<Float> bbox();
-
-    /**
-     * Gets the inner com.azure.maps.creator.fluent.models.TilesetDetailInfoInner object.
-     *
-     * @return the inner object.
-     */
-    TilesetDetailInfoInner innerModel();
+    public List<Float> getBbox() {
+        return this.bbox;
+    }
 }

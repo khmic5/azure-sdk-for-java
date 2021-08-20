@@ -5,15 +5,11 @@
 package com.azure.maps.weather.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** The PressureTendency model. */
 @Fluent
 public final class PressureTendency {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(PressureTendency.class);
-
     /*
      * Description of the pressure tendency in specified language
      */
@@ -32,7 +28,7 @@ public final class PressureTendency {
      *
      * @return the localizedDescription value.
      */
-    public String localizedDescription() {
+    public String getLocalizedDescription() {
         return this.localizedDescription;
     }
 
@@ -42,7 +38,7 @@ public final class PressureTendency {
      * @param localizedDescription the localizedDescription value to set.
      * @return the PressureTendency object itself.
      */
-    public PressureTendency withLocalizedDescription(String localizedDescription) {
+    public PressureTendency setLocalizedDescription(String localizedDescription) {
         this.localizedDescription = localizedDescription;
         return this;
     }
@@ -52,7 +48,7 @@ public final class PressureTendency {
      *
      * @return the code value.
      */
-    public String code() {
+    public String getCode() {
         return this.code;
     }
 
@@ -62,16 +58,8 @@ public final class PressureTendency {
      * @param code the code value to set.
      * @return the PressureTendency object itself.
      */
-    public PressureTendency withCode(String code) {
+    public PressureTendency setCode(String code) {
         this.code = code;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

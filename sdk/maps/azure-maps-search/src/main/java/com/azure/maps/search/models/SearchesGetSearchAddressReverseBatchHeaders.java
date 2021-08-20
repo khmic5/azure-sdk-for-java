@@ -5,15 +5,11 @@
 package com.azure.maps.search.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** The SearchesGetSearchAddressReverseBatchHeaders model. */
 @Fluent
 public final class SearchesGetSearchAddressReverseBatchHeaders {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(SearchesGetSearchAddressReverseBatchHeaders.class);
-
     /*
      * The Location property.
      */
@@ -25,7 +21,7 @@ public final class SearchesGetSearchAddressReverseBatchHeaders {
      *
      * @return the location value.
      */
-    public String location() {
+    public String getLocation() {
         return this.location;
     }
 
@@ -35,16 +31,8 @@ public final class SearchesGetSearchAddressReverseBatchHeaders {
      * @param location the location value to set.
      * @return the SearchesGetSearchAddressReverseBatchHeaders object itself.
      */
-    public SearchesGetSearchAddressReverseBatchHeaders withLocation(String location) {
+    public SearchesGetSearchAddressReverseBatchHeaders setLocation(String location) {
         this.location = location;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

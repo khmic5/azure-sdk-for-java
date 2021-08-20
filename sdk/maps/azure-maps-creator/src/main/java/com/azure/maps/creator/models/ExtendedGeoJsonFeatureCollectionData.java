@@ -5,16 +5,12 @@
 package com.azure.maps.creator.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /** The ExtendedGeoJsonFeatureCollectionData model. */
 @Fluent
 public class ExtendedGeoJsonFeatureCollectionData {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(ExtendedGeoJsonFeatureCollectionData.class);
-
     /*
      * The ontology version of this dataset.
      */
@@ -38,7 +34,7 @@ public class ExtendedGeoJsonFeatureCollectionData {
      *
      * @return the ontology value.
      */
-    public String ontology() {
+    public String getOntology() {
         return this.ontology;
     }
 
@@ -47,7 +43,7 @@ public class ExtendedGeoJsonFeatureCollectionData {
      *
      * @return the numberReturned value.
      */
-    public Integer numberReturned() {
+    public Integer getNumberReturned() {
         return this.numberReturned;
     }
 
@@ -57,7 +53,7 @@ public class ExtendedGeoJsonFeatureCollectionData {
      * @param numberReturned the numberReturned value to set.
      * @return the ExtendedGeoJsonFeatureCollectionData object itself.
      */
-    public ExtendedGeoJsonFeatureCollectionData withNumberReturned(Integer numberReturned) {
+    public ExtendedGeoJsonFeatureCollectionData setNumberReturned(Integer numberReturned) {
         this.numberReturned = numberReturned;
         return this;
     }
@@ -67,7 +63,7 @@ public class ExtendedGeoJsonFeatureCollectionData {
      *
      * @return the links value.
      */
-    public List<WfsEndpointLink> links() {
+    public List<WfsEndpointLink> getLinks() {
         return this.links;
     }
 
@@ -77,19 +73,8 @@ public class ExtendedGeoJsonFeatureCollectionData {
      * @param links the links value to set.
      * @return the ExtendedGeoJsonFeatureCollectionData object itself.
      */
-    public ExtendedGeoJsonFeatureCollectionData withLinks(List<WfsEndpointLink> links) {
+    public ExtendedGeoJsonFeatureCollectionData setLinks(List<WfsEndpointLink> links) {
         this.links = links;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (links() != null) {
-            links().forEach(e -> e.validate());
-        }
     }
 }

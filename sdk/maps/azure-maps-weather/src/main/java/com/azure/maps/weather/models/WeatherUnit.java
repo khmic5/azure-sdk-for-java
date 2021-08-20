@@ -5,15 +5,11 @@
 package com.azure.maps.weather.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** Specific value of a given unit related to weather. */
 @Fluent
 public final class WeatherUnit {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(WeatherUnit.class);
-
     /*
      * Rounded value.
      */
@@ -39,7 +35,7 @@ public final class WeatherUnit {
      *
      * @return the value value.
      */
-    public Float value() {
+    public Float getValue() {
         return this.value;
     }
 
@@ -49,7 +45,7 @@ public final class WeatherUnit {
      * @param value the value value to set.
      * @return the WeatherUnit object itself.
      */
-    public WeatherUnit withValue(Float value) {
+    public WeatherUnit setValue(Float value) {
         this.value = value;
         return this;
     }
@@ -59,7 +55,7 @@ public final class WeatherUnit {
      *
      * @return the unit value.
      */
-    public String unit() {
+    public String getUnit() {
         return this.unit;
     }
 
@@ -69,7 +65,7 @@ public final class WeatherUnit {
      * @param unit the unit value to set.
      * @return the WeatherUnit object itself.
      */
-    public WeatherUnit withUnit(String unit) {
+    public WeatherUnit setUnit(String unit) {
         this.unit = unit;
         return this;
     }
@@ -81,7 +77,7 @@ public final class WeatherUnit {
      *
      * @return the unitType value.
      */
-    public Integer unitType() {
+    public Integer getUnitType() {
         return this.unitType;
     }
 
@@ -93,16 +89,8 @@ public final class WeatherUnit {
      * @param unitType the unitType value to set.
      * @return the WeatherUnit object itself.
      */
-    public WeatherUnit withUnitType(Integer unitType) {
+    public WeatherUnit setUnitType(Integer unitType) {
         this.unitType = unitType;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

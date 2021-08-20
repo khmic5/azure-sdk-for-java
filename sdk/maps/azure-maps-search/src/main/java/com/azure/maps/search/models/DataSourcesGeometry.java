@@ -5,15 +5,11 @@
 package com.azure.maps.search.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** Information about the geometric shape of the result. Only present if type == Geography. */
 @Immutable
 public final class DataSourcesGeometry {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(DataSourcesGeometry.class);
-
     /*
      * Pass this as geometryId to the [Get Search
      * Polygon](https://docs.microsoft.com/rest/api/maps/search/getsearchpolygon)
@@ -29,15 +25,7 @@ public final class DataSourcesGeometry {
      *
      * @return the id value.
      */
-    public String id() {
+    public String getId() {
         return this.id;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

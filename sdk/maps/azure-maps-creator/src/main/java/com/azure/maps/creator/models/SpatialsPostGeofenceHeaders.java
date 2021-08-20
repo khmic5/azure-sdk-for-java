@@ -5,15 +5,11 @@
 package com.azure.maps.creator.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** The SpatialsPostGeofenceHeaders model. */
 @Fluent
 public final class SpatialsPostGeofenceHeaders {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(SpatialsPostGeofenceHeaders.class);
-
     /*
      * The X-Correlation-id property.
      */
@@ -25,7 +21,7 @@ public final class SpatialsPostGeofenceHeaders {
      *
      * @return the xCorrelationId value.
      */
-    public String xCorrelationId() {
+    public String getXCorrelationId() {
         return this.xCorrelationId;
     }
 
@@ -35,16 +31,8 @@ public final class SpatialsPostGeofenceHeaders {
      * @param xCorrelationId the xCorrelationId value to set.
      * @return the SpatialsPostGeofenceHeaders object itself.
      */
-    public SpatialsPostGeofenceHeaders withXCorrelationId(String xCorrelationId) {
+    public SpatialsPostGeofenceHeaders setXCorrelationId(String xCorrelationId) {
         this.xCorrelationId = xCorrelationId;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

@@ -5,15 +5,11 @@
 package com.azure.maps.creator.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** The DatasGetOperationPreviewHeaders model. */
 @Fluent
 public final class DatasGetOperationPreviewHeaders {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(DatasGetOperationPreviewHeaders.class);
-
     /*
      * The Resource-Location property.
      */
@@ -25,7 +21,7 @@ public final class DatasGetOperationPreviewHeaders {
      *
      * @return the resourceLocation value.
      */
-    public String resourceLocation() {
+    public String getResourceLocation() {
         return this.resourceLocation;
     }
 
@@ -35,16 +31,8 @@ public final class DatasGetOperationPreviewHeaders {
      * @param resourceLocation the resourceLocation value to set.
      * @return the DatasGetOperationPreviewHeaders object itself.
      */
-    public DatasGetOperationPreviewHeaders withResourceLocation(String resourceLocation) {
+    public DatasGetOperationPreviewHeaders setResourceLocation(String resourceLocation) {
         this.resourceLocation = resourceLocation;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

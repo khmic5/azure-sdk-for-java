@@ -5,8 +5,6 @@
 package com.azure.maps.weather.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -14,8 +12,6 @@ import java.util.List;
 /** The DailyForecast model. */
 @Fluent
 public final class DailyForecast {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(DailyForecast.class);
-
     /*
      * Date and time of the current observation displayed in ISO 8601 format,
      * for example, 2019-10-27T19:39:57-08:00.
@@ -84,7 +80,7 @@ public final class DailyForecast {
      *
      * @return the date value.
      */
-    public OffsetDateTime date() {
+    public OffsetDateTime getDate() {
         return this.date;
     }
 
@@ -95,7 +91,7 @@ public final class DailyForecast {
      * @param date the date value to set.
      * @return the DailyForecast object itself.
      */
-    public DailyForecast withDate(OffsetDateTime date) {
+    public DailyForecast setDate(OffsetDateTime date) {
         this.date = date;
         return this;
     }
@@ -105,7 +101,7 @@ public final class DailyForecast {
      *
      * @return the temperature value.
      */
-    public WeatherUnitRange temperature() {
+    public WeatherUnitRange getTemperature() {
         return this.temperature;
     }
 
@@ -115,7 +111,7 @@ public final class DailyForecast {
      * @param temperature the temperature value to set.
      * @return the DailyForecast object itself.
      */
-    public DailyForecast withTemperature(WeatherUnitRange temperature) {
+    public DailyForecast setTemperature(WeatherUnitRange temperature) {
         this.temperature = temperature;
         return this;
     }
@@ -125,7 +121,7 @@ public final class DailyForecast {
      *
      * @return the realFeelTemperature value.
      */
-    public WeatherUnitRange realFeelTemperature() {
+    public WeatherUnitRange getRealFeelTemperature() {
         return this.realFeelTemperature;
     }
 
@@ -135,7 +131,7 @@ public final class DailyForecast {
      * @param realFeelTemperature the realFeelTemperature value to set.
      * @return the DailyForecast object itself.
      */
-    public DailyForecast withRealFeelTemperature(WeatherUnitRange realFeelTemperature) {
+    public DailyForecast setRealFeelTemperature(WeatherUnitRange realFeelTemperature) {
         this.realFeelTemperature = realFeelTemperature;
         return this;
     }
@@ -146,7 +142,7 @@ public final class DailyForecast {
      *
      * @return the realFeelTemperatureShade value.
      */
-    public WeatherUnitRange realFeelTemperatureShade() {
+    public WeatherUnitRange getRealFeelTemperatureShade() {
         return this.realFeelTemperatureShade;
     }
 
@@ -157,7 +153,7 @@ public final class DailyForecast {
      * @param realFeelTemperatureShade the realFeelTemperatureShade value to set.
      * @return the DailyForecast object itself.
      */
-    public DailyForecast withRealFeelTemperatureShade(WeatherUnitRange realFeelTemperatureShade) {
+    public DailyForecast setRealFeelTemperatureShade(WeatherUnitRange realFeelTemperatureShade) {
         this.realFeelTemperatureShade = realFeelTemperatureShade;
         return this;
     }
@@ -167,7 +163,7 @@ public final class DailyForecast {
      *
      * @return the hoursOfSun value.
      */
-    public Float hoursOfSun() {
+    public Float getHoursOfSun() {
         return this.hoursOfSun;
     }
 
@@ -177,7 +173,7 @@ public final class DailyForecast {
      * @param hoursOfSun the hoursOfSun value to set.
      * @return the DailyForecast object itself.
      */
-    public DailyForecast withHoursOfSun(Float hoursOfSun) {
+    public DailyForecast setHoursOfSun(Float hoursOfSun) {
         this.hoursOfSun = hoursOfSun;
         return this;
     }
@@ -187,7 +183,7 @@ public final class DailyForecast {
      *
      * @return the degreeDaySummary value.
      */
-    public DegreeDaySummary degreeDaySummary() {
+    public DegreeDaySummary getDegreeDaySummary() {
         return this.degreeDaySummary;
     }
 
@@ -197,7 +193,7 @@ public final class DailyForecast {
      * @param degreeDaySummary the degreeDaySummary value to set.
      * @return the DailyForecast object itself.
      */
-    public DailyForecast withDegreeDaySummary(DegreeDaySummary degreeDaySummary) {
+    public DailyForecast setDegreeDaySummary(DegreeDaySummary degreeDaySummary) {
         this.degreeDaySummary = degreeDaySummary;
         return this;
     }
@@ -207,7 +203,7 @@ public final class DailyForecast {
      *
      * @return the airAndPollen value.
      */
-    public List<AirAndPollen> airAndPollen() {
+    public List<AirAndPollen> getAirAndPollen() {
         return this.airAndPollen;
     }
 
@@ -217,7 +213,7 @@ public final class DailyForecast {
      * @param airAndPollen the airAndPollen value to set.
      * @return the DailyForecast object itself.
      */
-    public DailyForecast withAirAndPollen(List<AirAndPollen> airAndPollen) {
+    public DailyForecast setAirAndPollen(List<AirAndPollen> airAndPollen) {
         this.airAndPollen = airAndPollen;
         return this;
     }
@@ -227,7 +223,7 @@ public final class DailyForecast {
      *
      * @return the day value.
      */
-    public DayOrNight day() {
+    public DayOrNight getDay() {
         return this.day;
     }
 
@@ -237,7 +233,7 @@ public final class DailyForecast {
      * @param day the day value to set.
      * @return the DailyForecast object itself.
      */
-    public DailyForecast withDay(DayOrNight day) {
+    public DailyForecast setDay(DayOrNight day) {
         this.day = day;
         return this;
     }
@@ -247,7 +243,7 @@ public final class DailyForecast {
      *
      * @return the night value.
      */
-    public DayOrNight night() {
+    public DayOrNight getNight() {
         return this.night;
     }
 
@@ -257,7 +253,7 @@ public final class DailyForecast {
      * @param night the night value to set.
      * @return the DailyForecast object itself.
      */
-    public DailyForecast withNight(DayOrNight night) {
+    public DailyForecast setNight(DayOrNight night) {
         this.night = night;
         return this;
     }
@@ -267,7 +263,7 @@ public final class DailyForecast {
      *
      * @return the sources value.
      */
-    public List<String> sources() {
+    public List<String> getSources() {
         return this.sources;
     }
 
@@ -277,37 +273,8 @@ public final class DailyForecast {
      * @param sources the sources value to set.
      * @return the DailyForecast object itself.
      */
-    public DailyForecast withSources(List<String> sources) {
+    public DailyForecast setSources(List<String> sources) {
         this.sources = sources;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (temperature() != null) {
-            temperature().validate();
-        }
-        if (realFeelTemperature() != null) {
-            realFeelTemperature().validate();
-        }
-        if (realFeelTemperatureShade() != null) {
-            realFeelTemperatureShade().validate();
-        }
-        if (degreeDaySummary() != null) {
-            degreeDaySummary().validate();
-        }
-        if (airAndPollen() != null) {
-            airAndPollen().forEach(e -> e.validate());
-        }
-        if (day() != null) {
-            day().validate();
-        }
-        if (night() != null) {
-            night().validate();
-        }
     }
 }

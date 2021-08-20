@@ -5,20 +5,16 @@
 package com.azure.maps.search.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** The SearchPolygonResult model. */
 @Fluent
 public final class SearchPolygonResult {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(SearchPolygonResult.class);
-
     /*
      * ID of the returned entity
      */
     @JsonProperty(value = "providerID", access = JsonProperty.Access.WRITE_ONLY)
-    private String providerId;
+    private String providerID;
 
     /*
      * Reason for the failure to obtain data for this provider.
@@ -35,12 +31,12 @@ public final class SearchPolygonResult {
     private GeoJsonObject geometryData;
 
     /**
-     * Get the providerId property: ID of the returned entity.
+     * Get the providerID property: ID of the returned entity.
      *
-     * @return the providerId value.
+     * @return the providerID value.
      */
-    public String providerId() {
-        return this.providerId;
+    public String getProviderID() {
+        return this.providerID;
     }
 
     /**
@@ -48,7 +44,7 @@ public final class SearchPolygonResult {
      *
      * @return the error value.
      */
-    public String error() {
+    public String getError() {
         return this.error;
     }
 
@@ -58,7 +54,7 @@ public final class SearchPolygonResult {
      *
      * @return the geometryData value.
      */
-    public GeoJsonObject geometryData() {
+    public GeoJsonObject getGeometryData() {
         return this.geometryData;
     }
 
@@ -69,19 +65,8 @@ public final class SearchPolygonResult {
      * @param geometryData the geometryData value to set.
      * @return the SearchPolygonResult object itself.
      */
-    public SearchPolygonResult withGeometryData(GeoJsonObject geometryData) {
+    public SearchPolygonResult setGeometryData(GeoJsonObject geometryData) {
         this.geometryData = geometryData;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (geometryData() != null) {
-            geometryData().validate();
-        }
     }
 }

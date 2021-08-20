@@ -4,57 +4,101 @@
 
 package com.azure.maps.creator.models;
 
-import com.azure.maps.creator.fluent.models.ConversionListDetailInfoInner;
+import com.azure.core.annotation.Immutable;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** An immutable client-side representation of ConversionListDetailInfo. */
-public interface ConversionListDetailInfo {
+/** Detail information for the conversion requests. */
+@Immutable
+public final class ConversionListDetailInfo {
+    /*
+     * A unique id that represents the artifact of a _successfully_ completed
+     * conversion process.
+     */
+    @JsonProperty(value = "conversionId", access = JsonProperty.Access.WRITE_ONLY)
+    private String conversionId;
+
+    /*
+     * The ontology version of this dataset.
+     */
+    @JsonProperty(value = "ontology", access = JsonProperty.Access.WRITE_ONLY)
+    private String ontology;
+
+    /*
+     * The unique id of the content provided to create this conversion.
+     */
+    @JsonProperty(value = "udid", access = JsonProperty.Access.WRITE_ONLY)
+    private String udid;
+
+    /*
+     * The date and time of this conversion.
+     */
+    @JsonProperty(value = "created", access = JsonProperty.Access.WRITE_ONLY)
+    private String created;
+
+    /*
+     * User provided description of the content being converted.
+     */
+    @JsonProperty(value = "description", access = JsonProperty.Access.WRITE_ONLY)
+    private String description;
+
+    /*
+     * A summary of feature counts in this conversion.
+     */
+    @JsonProperty(value = "featureCounts", access = JsonProperty.Access.WRITE_ONLY)
+    private Object featureCounts;
+
     /**
-     * Gets the conversionId property: A unique id that represents the artifact of a _successfully_ completed conversion
+     * Get the conversionId property: A unique id that represents the artifact of a _successfully_ completed conversion
      * process.
      *
      * @return the conversionId value.
      */
-    String conversionId();
+    public String getConversionId() {
+        return this.conversionId;
+    }
 
     /**
-     * Gets the ontology property: The ontology version of this dataset.
+     * Get the ontology property: The ontology version of this dataset.
      *
      * @return the ontology value.
      */
-    String ontology();
+    public String getOntology() {
+        return this.ontology;
+    }
 
     /**
-     * Gets the udid property: The unique id of the content provided to create this conversion.
+     * Get the udid property: The unique id of the content provided to create this conversion.
      *
      * @return the udid value.
      */
-    String udid();
+    public String getUdid() {
+        return this.udid;
+    }
 
     /**
-     * Gets the created property: The date and time of this conversion.
+     * Get the created property: The date and time of this conversion.
      *
      * @return the created value.
      */
-    String created();
+    public String getCreated() {
+        return this.created;
+    }
 
     /**
-     * Gets the description property: User provided description of the content being converted.
+     * Get the description property: User provided description of the content being converted.
      *
      * @return the description value.
      */
-    String description();
+    public String getDescription() {
+        return this.description;
+    }
 
     /**
-     * Gets the featureCounts property: A summary of feature counts in this conversion.
+     * Get the featureCounts property: A summary of feature counts in this conversion.
      *
      * @return the featureCounts value.
      */
-    Object featureCounts();
-
-    /**
-     * Gets the inner com.azure.maps.creator.fluent.models.ConversionListDetailInfoInner object.
-     *
-     * @return the inner object.
-     */
-    ConversionListDetailInfoInner innerModel();
+    public Object getFeatureCounts() {
+        return this.featureCounts;
+    }
 }

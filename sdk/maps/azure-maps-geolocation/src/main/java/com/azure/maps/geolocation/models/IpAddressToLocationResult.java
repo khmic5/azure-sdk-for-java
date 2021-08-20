@@ -4,28 +4,39 @@
 
 package com.azure.maps.geolocation.models;
 
-import com.azure.maps.geolocation.fluent.models.IpAddressToLocationResultInner;
+import com.azure.core.annotation.Immutable;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** An immutable client-side representation of IpAddressToLocationResult. */
-public interface IpAddressToLocationResult {
+/** This object is returned from a successful call to IP Address to country/region API. */
+@Immutable
+public final class IpAddressToLocationResult {
+    /*
+     * The object containing the country/region information.
+     */
+    @JsonProperty(value = "countryRegion", access = JsonProperty.Access.WRITE_ONLY)
+    private CountryRegion countryRegion;
+
+    /*
+     * The IP Address of the request.
+     */
+    @JsonProperty(value = "ipAddress", access = JsonProperty.Access.WRITE_ONLY)
+    private String ipAddress;
+
     /**
-     * Gets the countryRegion property: The object containing the country/region information.
+     * Get the countryRegion property: The object containing the country/region information.
      *
      * @return the countryRegion value.
      */
-    CountryRegion countryRegion();
+    public CountryRegion getCountryRegion() {
+        return this.countryRegion;
+    }
 
     /**
-     * Gets the ipAddress property: The IP Address of the request.
+     * Get the ipAddress property: The IP Address of the request.
      *
      * @return the ipAddress value.
      */
-    String ipAddress();
-
-    /**
-     * Gets the inner com.azure.maps.geolocation.fluent.models.IpAddressToLocationResultInner object.
-     *
-     * @return the inner object.
-     */
-    IpAddressToLocationResultInner innerModel();
+    public String getIpAddress() {
+        return this.ipAddress;
+    }
 }

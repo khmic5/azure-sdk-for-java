@@ -4,30 +4,65 @@
 
 package com.azure.maps.weather.models;
 
-import com.azure.maps.weather.fluent.models.DailyForecastResponseInner;
+import com.azure.core.annotation.Fluent;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/** An immutable client-side representation of DailyForecastResponse. */
-public interface DailyForecastResponse {
+/** The DailyForecastResponse model. */
+@Fluent
+public final class DailyForecastResponse {
+    /*
+     * Summary for the main conditions for the requested time period. Notice
+     * that summary can cover only part of the time period.
+     */
+    @JsonProperty(value = "summary")
+    private DailyForecastSummary summary;
+
+    /*
+     * Forecast data for each requested day.
+     */
+    @JsonProperty(value = "forecasts")
+    private List<DailyForecast> forecasts;
+
     /**
-     * Gets the summary property: Summary for the main conditions for the requested time period. Notice that summary can
+     * Get the summary property: Summary for the main conditions for the requested time period. Notice that summary can
      * cover only part of the time period.
      *
      * @return the summary value.
      */
-    DailyForecastSummary summary();
+    public DailyForecastSummary getSummary() {
+        return this.summary;
+    }
 
     /**
-     * Gets the forecasts property: Forecast data for each requested day.
+     * Set the summary property: Summary for the main conditions for the requested time period. Notice that summary can
+     * cover only part of the time period.
+     *
+     * @param summary the summary value to set.
+     * @return the DailyForecastResponse object itself.
+     */
+    public DailyForecastResponse setSummary(DailyForecastSummary summary) {
+        this.summary = summary;
+        return this;
+    }
+
+    /**
+     * Get the forecasts property: Forecast data for each requested day.
      *
      * @return the forecasts value.
      */
-    List<DailyForecast> forecasts();
+    public List<DailyForecast> getForecasts() {
+        return this.forecasts;
+    }
 
     /**
-     * Gets the inner com.azure.maps.weather.fluent.models.DailyForecastResponseInner object.
+     * Set the forecasts property: Forecast data for each requested day.
      *
-     * @return the inner object.
+     * @param forecasts the forecasts value to set.
+     * @return the DailyForecastResponse object itself.
      */
-    DailyForecastResponseInner innerModel();
+    public DailyForecastResponse setForecasts(List<DailyForecast> forecasts) {
+        this.forecasts = forecasts;
+        return this;
+    }
 }

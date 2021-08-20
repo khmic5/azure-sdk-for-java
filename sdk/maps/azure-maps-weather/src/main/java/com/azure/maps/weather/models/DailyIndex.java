@@ -5,16 +5,12 @@
 package com.azure.maps.weather.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.OffsetDateTime;
 
 /** Information about a daily index. */
 @Fluent
 public final class DailyIndex {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(DailyIndex.class);
-
     /*
      * Name of the index, for example, "Construction", "Outdoor Activity",
      * "Flight Delays".
@@ -86,7 +82,7 @@ public final class DailyIndex {
      *
      * @return the indexName value.
      */
-    public String indexName() {
+    public String getIndexName() {
         return this.indexName;
     }
 
@@ -96,7 +92,7 @@ public final class DailyIndex {
      * @param indexName the indexName value to set.
      * @return the DailyIndex object itself.
      */
-    public DailyIndex withIndexName(String indexName) {
+    public DailyIndex setIndexName(String indexName) {
         this.indexName = indexName;
         return this;
     }
@@ -108,7 +104,7 @@ public final class DailyIndex {
      *
      * @return the indexId value.
      */
-    public Integer indexId() {
+    public Integer getIndexId() {
         return this.indexId;
     }
 
@@ -120,7 +116,7 @@ public final class DailyIndex {
      * @param indexId the indexId value to set.
      * @return the DailyIndex object itself.
      */
-    public DailyIndex withIndexId(Integer indexId) {
+    public DailyIndex setIndexId(Integer indexId) {
         this.indexId = indexId;
         return this;
     }
@@ -131,7 +127,7 @@ public final class DailyIndex {
      *
      * @return the dateTime value.
      */
-    public OffsetDateTime dateTime() {
+    public OffsetDateTime getDateTime() {
         return this.dateTime;
     }
 
@@ -142,7 +138,7 @@ public final class DailyIndex {
      * @param dateTime the dateTime value to set.
      * @return the DailyIndex object itself.
      */
-    public DailyIndex withDateTime(OffsetDateTime dateTime) {
+    public DailyIndex setDateTime(OffsetDateTime dateTime) {
         this.dateTime = dateTime;
         return this;
     }
@@ -153,7 +149,7 @@ public final class DailyIndex {
      *
      * @return the value value.
      */
-    public Float value() {
+    public Float getValue() {
         return this.value;
     }
 
@@ -164,7 +160,7 @@ public final class DailyIndex {
      * @param value the value value to set.
      * @return the DailyIndex object itself.
      */
-    public DailyIndex withValue(Float value) {
+    public DailyIndex setValue(Float value) {
         this.value = value;
         return this;
     }
@@ -175,7 +171,7 @@ public final class DailyIndex {
      *
      * @return the category value.
      */
-    public String category() {
+    public String getCategory() {
         return this.category;
     }
 
@@ -186,7 +182,7 @@ public final class DailyIndex {
      * @param category the category value to set.
      * @return the DailyIndex object itself.
      */
-    public DailyIndex withCategory(String category) {
+    public DailyIndex setCategory(String category) {
         this.category = category;
         return this;
     }
@@ -199,7 +195,7 @@ public final class DailyIndex {
      *
      * @return the categoryValue value.
      */
-    public Integer categoryValue() {
+    public Integer getCategoryValue() {
         return this.categoryValue;
     }
 
@@ -212,7 +208,7 @@ public final class DailyIndex {
      * @param categoryValue the categoryValue value to set.
      * @return the DailyIndex object itself.
      */
-    public DailyIndex withCategoryValue(Integer categoryValue) {
+    public DailyIndex setCategoryValue(Integer categoryValue) {
         this.categoryValue = categoryValue;
         return this;
     }
@@ -224,7 +220,7 @@ public final class DailyIndex {
      *
      * @return the ascending value.
      */
-    public Boolean ascending() {
+    public Boolean isAscending() {
         return this.ascending;
     }
 
@@ -236,7 +232,7 @@ public final class DailyIndex {
      * @param ascending the ascending value to set.
      * @return the DailyIndex object itself.
      */
-    public DailyIndex withAscending(Boolean ascending) {
+    public DailyIndex setAscending(Boolean ascending) {
         this.ascending = ascending;
         return this;
     }
@@ -248,7 +244,7 @@ public final class DailyIndex {
      *
      * @return the description value.
      */
-    public String description() {
+    public String getDescription() {
         return this.description;
     }
 
@@ -260,16 +256,8 @@ public final class DailyIndex {
      * @param description the description value to set.
      * @return the DailyIndex object itself.
      */
-    public DailyIndex withDescription(String description) {
+    public DailyIndex setDescription(String description) {
         this.description = description;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

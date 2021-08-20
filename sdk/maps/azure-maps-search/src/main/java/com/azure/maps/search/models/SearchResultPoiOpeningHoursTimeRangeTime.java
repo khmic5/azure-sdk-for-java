@@ -5,15 +5,11 @@
 package com.azure.maps.search.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** Represents a date and time. */
 @Immutable
 public final class SearchResultPoiOpeningHoursTimeRangeTime {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(SearchResultPoiOpeningHoursTimeRangeTime.class);
-
     /*
      * Represents current day in calendar year in POI time zone.
      */
@@ -38,7 +34,7 @@ public final class SearchResultPoiOpeningHoursTimeRangeTime {
      *
      * @return the date value.
      */
-    public String date() {
+    public String getDate() {
         return this.date;
     }
 
@@ -47,7 +43,7 @@ public final class SearchResultPoiOpeningHoursTimeRangeTime {
      *
      * @return the hour value.
      */
-    public Integer hour() {
+    public Integer getHour() {
         return this.hour;
     }
 
@@ -56,15 +52,7 @@ public final class SearchResultPoiOpeningHoursTimeRangeTime {
      *
      * @return the minute value.
      */
-    public Integer minute() {
+    public Integer getMinute() {
         return this.minute;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

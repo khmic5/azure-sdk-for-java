@@ -5,15 +5,11 @@
 package com.azure.maps.search.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** Summary for the batch request. */
 @Immutable
 public final class BatchResponseSummary {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(BatchResponseSummary.class);
-
     /*
      * Number of successful requests in the batch
      */
@@ -31,7 +27,7 @@ public final class BatchResponseSummary {
      *
      * @return the successfulRequests value.
      */
-    public Integer successfulRequests() {
+    public Integer getSuccessfulRequests() {
         return this.successfulRequests;
     }
 
@@ -40,15 +36,7 @@ public final class BatchResponseSummary {
      *
      * @return the totalRequests value.
      */
-    public Integer totalRequests() {
+    public Integer getTotalRequests() {
         return this.totalRequests;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

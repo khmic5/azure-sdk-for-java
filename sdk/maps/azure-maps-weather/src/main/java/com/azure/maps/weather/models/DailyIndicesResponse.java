@@ -4,22 +4,36 @@
 
 package com.azure.maps.weather.models;
 
-import com.azure.maps.weather.fluent.models.DailyIndicesResponseInner;
+import com.azure.core.annotation.Fluent;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/** An immutable client-side representation of DailyIndicesResponse. */
-public interface DailyIndicesResponse {
+/** This object is returned from a successful Get Daily Indices call. */
+@Fluent
+public final class DailyIndicesResponse {
+    /*
+     * A list of all daily indices for the queried location.
+     */
+    @JsonProperty(value = "results")
+    private List<DailyIndex> results;
+
     /**
-     * Gets the results property: A list of all daily indices for the queried location.
+     * Get the results property: A list of all daily indices for the queried location.
      *
      * @return the results value.
      */
-    List<DailyIndex> results();
+    public List<DailyIndex> getResults() {
+        return this.results;
+    }
 
     /**
-     * Gets the inner com.azure.maps.weather.fluent.models.DailyIndicesResponseInner object.
+     * Set the results property: A list of all daily indices for the queried location.
      *
-     * @return the inner object.
+     * @param results the results value to set.
+     * @return the DailyIndicesResponse object itself.
      */
-    DailyIndicesResponseInner innerModel();
+    public DailyIndicesResponse setResults(List<DailyIndex> results) {
+        this.results = results;
+        return this;
+    }
 }

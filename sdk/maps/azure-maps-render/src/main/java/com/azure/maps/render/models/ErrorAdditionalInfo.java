@@ -5,15 +5,11 @@
 package com.azure.maps.render.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** The resource management error additional info. */
 @Immutable
 public final class ErrorAdditionalInfo {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(ErrorAdditionalInfo.class);
-
     /*
      * The additional info type.
      */
@@ -31,7 +27,7 @@ public final class ErrorAdditionalInfo {
      *
      * @return the type value.
      */
-    public String type() {
+    public String getType() {
         return this.type;
     }
 
@@ -40,15 +36,7 @@ public final class ErrorAdditionalInfo {
      *
      * @return the info value.
      */
-    public Object info() {
+    public Object getInfo() {
         return this.info;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

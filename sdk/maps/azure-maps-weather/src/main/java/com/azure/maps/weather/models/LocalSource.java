@@ -5,15 +5,11 @@
 package com.azure.maps.weather.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** Local weather data provider information. */
 @Fluent
 public final class LocalSource {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(LocalSource.class);
-
     /*
      * Numeric identifier, unique to the local data provider.
      */
@@ -41,7 +37,7 @@ public final class LocalSource {
      *
      * @return the id value.
      */
-    public Integer id() {
+    public Integer getId() {
         return this.id;
     }
 
@@ -51,7 +47,7 @@ public final class LocalSource {
      * @param id the id value to set.
      * @return the LocalSource object itself.
      */
-    public LocalSource withId(Integer id) {
+    public LocalSource setId(Integer id) {
         this.id = id;
         return this;
     }
@@ -63,7 +59,7 @@ public final class LocalSource {
      *
      * @return the name value.
      */
-    public String name() {
+    public String getName() {
         return this.name;
     }
 
@@ -75,7 +71,7 @@ public final class LocalSource {
      * @param name the name value to set.
      * @return the LocalSource object itself.
      */
-    public LocalSource withName(String name) {
+    public LocalSource setName(String name) {
         this.name = name;
         return this;
     }
@@ -86,7 +82,7 @@ public final class LocalSource {
      *
      * @return the weatherCode value.
      */
-    public String weatherCode() {
+    public String getWeatherCode() {
         return this.weatherCode;
     }
 
@@ -97,16 +93,8 @@ public final class LocalSource {
      * @param weatherCode the weatherCode value to set.
      * @return the LocalSource object itself.
      */
-    public LocalSource withWeatherCode(String weatherCode) {
+    public LocalSource setWeatherCode(String weatherCode) {
         this.weatherCode = weatherCode;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

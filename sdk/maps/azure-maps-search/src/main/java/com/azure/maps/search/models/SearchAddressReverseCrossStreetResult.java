@@ -5,15 +5,11 @@
 package com.azure.maps.search.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** Result object for a Search Address Reverse Cross Street response. */
 @Immutable
 public final class SearchAddressReverseCrossStreetResult {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(SearchAddressReverseCrossStreetResult.class);
-
     /*
      * The address of the result
      */
@@ -31,7 +27,7 @@ public final class SearchAddressReverseCrossStreetResult {
      *
      * @return the address value.
      */
-    public SearchResultAddress address() {
+    public SearchResultAddress getAddress() {
         return this.address;
     }
 
@@ -40,18 +36,7 @@ public final class SearchAddressReverseCrossStreetResult {
      *
      * @return the position value.
      */
-    public String position() {
+    public String getPosition() {
         return this.position;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (address() != null) {
-            address().validate();
-        }
     }
 }

@@ -6,35 +6,29 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.util.HashMap;
 
 import com.azure.core.http.HttpPipelineCallContext;
 import com.azure.core.http.HttpPipelineNextPolicy;
 import com.azure.core.http.HttpResponse;
 import com.azure.core.http.policy.HttpPipelinePolicy;
-import com.azure.core.http.rest.StreamResponse;
-import com.azure.core.management.AzureEnvironment;
-import com.azure.core.management.profile.AzureProfile;
 import com.azure.identity.DefaultAzureCredential;
 import com.azure.identity.DefaultAzureCredentialBuilder;
-import com.azure.maps.render.RenderManager;
-import com.azure.maps.render.fluent.RenderClient;
+import com.azure.maps.render.RenderClient;
+import com.azure.maps.render.RenderClientBuilder;
+import com.azure.maps.render.RenderV2Client;
 import com.azure.maps.render.models.MapImageStyle;
 import com.azure.maps.render.models.MapImageryStyle;
 import com.azure.maps.render.models.MapTileLayer;
-import com.azure.maps.render.models.MapTileSize;
 import com.azure.maps.render.models.MapTileStyle;
 import com.azure.maps.render.models.RasterTileFormat;
 import com.azure.maps.render.models.StaticMapLayer;
 import com.azure.maps.render.models.TextFormat;
 import com.azure.maps.render.models.TileFormat;
-import com.azure.maps.render.models.TileSize;
-import com.azure.maps.render.models.TilesetId;
+import com.azure.maps.render.models.TilesetID;
 
 import reactor.core.publisher.Mono;
 
 public class RenderSamples {
-
     public static void main(String[] args) throws IOException {
         String statesetId = "";
 
@@ -71,31 +65,26 @@ public class RenderSamples {
         DefaultAzureCredential defaultCreds = new DefaultAzureCredentialBuilder().build();
 
         // authenticate and create search client
-        // TODO see why calling searches() here causes infinite recursion on Jackson
-        RenderClient client = RenderManager
-            .configure()
-            .withPolicy(subscriptionKeyPolicy)
-            .authenticate(defaultCreds, new AzureProfile(new AzureEnvironment(new HashMap<String, String>() {{
-                put("managementEndpointUrl", "https://atlas.microsoft.com");
-            }}))).serviceClient();
+        RenderClientBuilder builder = new RenderClientBuilder();
+        builder.addPolicy(subscriptionKeyPolicy);
+        RenderClient client = builder.buildRenderClient();
+        RenderV2Client v2Client = builder.buildRenderV2Client();
 
-            client.getRenders().getCopyrightCaption(TextFormat.JSON);
         System.out.println("Get copyright for caption");
-        MapsCommon.print(client.getRenders().getCopyrightCaption(TextFormat.JSON));
+        MapsCommon.print(client.getCopyrightCaption(TextFormat.JSON));
 
         System.out.println("Get copyright for tile");
-        MapsCommon.print(client.getRenders().getCopyrightForTile(TextFormat.JSON, 6, 9, 22));
+        MapsCommon.print(client.getCopyrightForTile(TextFormat.JSON, 6, 9, 22, null));
 
         System.out.println("Get copyright for world");
-        // MapsCommon.print(client.getRenders().getCopyrightForWorld(TextFormat.JSON));
+        MapsCommon.print(client.getCopyrightForWorld(TextFormat.JSON, null));
 
         System.out.println("Get copyright from bounding box");
-        MapsCommon.print(client.getRenders().getCopyrightFromBoundingBox(TextFormat.JSON, "52.41064,4.84228",
-                "52.41072,4.84239"));
+        MapsCommon.print(client.getCopyrightFromBoundingBox(TextFormat.JSON, "52.41064,4.84228",
+                "52.41072,4.84239", null));
 
         System.out.println("Get map imagery tile");
-        openImageFile(
-                client.getRenders().getMapImageryTile(RasterTileFormat.PNG, MapImageryStyle.SATELLITE, 6, 10, 22));
+        openImageFile(client.getMapImageryTile(RasterTileFormat.PNG, MapImageryStyle.SATELLITE, 6, 10, 22));
 
         /*
         System.out.println("Get map satelite tile");
@@ -103,27 +92,16 @@ public class RenderSamples {
         */
 
         System.out.println("Get map static image");
-        // client.getRenders().getMapStaticImage(RasterTileFormat.PNG);
-        // throwing exception due to lack of parameters
-        // StreamResponse response = client.getRenders().getMapStaticImageWithResponse(RasterTileFormat.PNG, StaticMapLayer.BASIC, MapImageStyle.DARK, 2,
-        //                null, "1.355233,42.982261,24.980233,56.526017", null, null, null, null, null, null, null);
-
-        // response.getValue().toStream().map
-
-        /*
-        openImageFile(
-                );
-        */
+        openImageFile(client.getMapStaticImage(RasterTileFormat.PNG, StaticMapLayer.BASIC, MapImageStyle.DARK, 2,
+            null, "1.355233,42.982261,24.980233,56.526017", null, null, null, null, null, null));
 
         System.out.println("Get map tile");
-        openImageFile(client.getRenders().getMapTile(TileFormat.PNG, MapTileLayer.BASIC, MapTileStyle.MAIN,
-            6, 10, 22));
+        openImageFile(client.getMapTile(TileFormat.PNG, MapTileLayer.BASIC, MapTileStyle.MAIN,
+            6, 10, 22, null, null, null));
 
-        /*
         System.out.println("Get map tile for V2");
-        openImageFile(client.getRenderV2s().getMapTilePreview(TilesetId.MICROSOFT_BASE, 6, 10, 22)) ; //, null,
-                //TileSize.FIVE_ONE_TWO, null, null));
-                */
+        openImageFile(v2Client.getMapTilePreview(TilesetID.MICROSOFT_BASE_HYBRID_ROAD, 6, 10, 22, null,
+                null, null, null));
     }
 
     public static void openImageFile(InputStream stream) throws IOException {

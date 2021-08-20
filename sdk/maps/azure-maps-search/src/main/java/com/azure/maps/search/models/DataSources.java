@@ -5,8 +5,6 @@
 package com.azure.maps.search.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -15,8 +13,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 @Fluent
 public final class DataSources {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(DataSources.class);
-
     /*
      * Information about the geometric shape of the result. Only present if
      * type == Geography.
@@ -30,7 +26,7 @@ public final class DataSources {
      *
      * @return the geometry value.
      */
-    public DataSourcesGeometry geometry() {
+    public DataSourcesGeometry getGeometry() {
         return this.geometry;
     }
 
@@ -41,19 +37,8 @@ public final class DataSources {
      * @param geometry the geometry value to set.
      * @return the DataSources object itself.
      */
-    public DataSources withGeometry(DataSourcesGeometry geometry) {
+    public DataSources setGeometry(DataSourcesGeometry geometry) {
         this.geometry = geometry;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (geometry() != null) {
-            geometry().validate();
-        }
     }
 }

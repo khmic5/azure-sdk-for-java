@@ -5,15 +5,11 @@
 package com.azure.maps.route.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** An object with a matrix of coordinates. */
 @Fluent
 public final class PostRouteMatrixRequestBody {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(PostRouteMatrixRequestBody.class);
-
     /*
      * A valid `GeoJSON MultiPoint` geometry type. Please refer to [RFC
      * 7946](https://tools.ietf.org/html/rfc7946#section-3.1.3) for details.
@@ -34,7 +30,7 @@ public final class PostRouteMatrixRequestBody {
      *
      * @return the origins value.
      */
-    public GeoJsonMultiPoint origins() {
+    public GeoJsonMultiPoint getOrigins() {
         return this.origins;
     }
 
@@ -45,7 +41,7 @@ public final class PostRouteMatrixRequestBody {
      * @param origins the origins value to set.
      * @return the PostRouteMatrixRequestBody object itself.
      */
-    public PostRouteMatrixRequestBody withOrigins(GeoJsonMultiPoint origins) {
+    public PostRouteMatrixRequestBody setOrigins(GeoJsonMultiPoint origins) {
         this.origins = origins;
         return this;
     }
@@ -56,7 +52,7 @@ public final class PostRouteMatrixRequestBody {
      *
      * @return the destinations value.
      */
-    public GeoJsonMultiPoint destinations() {
+    public GeoJsonMultiPoint getDestinations() {
         return this.destinations;
     }
 
@@ -67,22 +63,8 @@ public final class PostRouteMatrixRequestBody {
      * @param destinations the destinations value to set.
      * @return the PostRouteMatrixRequestBody object itself.
      */
-    public PostRouteMatrixRequestBody withDestinations(GeoJsonMultiPoint destinations) {
+    public PostRouteMatrixRequestBody setDestinations(GeoJsonMultiPoint destinations) {
         this.destinations = destinations;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (origins() != null) {
-            origins().validate();
-        }
-        if (destinations() != null) {
-            destinations().validate();
-        }
     }
 }

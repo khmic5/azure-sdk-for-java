@@ -7,10 +7,9 @@ package com.azure.maps.creator.models;
 import com.azure.core.http.HttpHeaders;
 import com.azure.core.http.HttpRequest;
 import com.azure.core.http.rest.ResponseBase;
-import com.azure.maps.creator.fluent.models.LongRunningOperationResultInner;
 
 /** Contains all response data for the create operation. */
-public final class DatasetsCreateResponse extends ResponseBase<DatasetsCreateHeaders, LongRunningOperationResultInner> {
+public final class DatasetsCreateResponse extends ResponseBase<DatasetsCreateHeaders, LongRunningOperationResult> {
     /**
      * Creates an instance of DatasetsCreateResponse.
      *
@@ -21,17 +20,17 @@ public final class DatasetsCreateResponse extends ResponseBase<DatasetsCreateHea
      * @param headers the deserialized headers of the HTTP response.
      */
     public DatasetsCreateResponse(
-        HttpRequest request,
-        int statusCode,
-        HttpHeaders rawHeaders,
-        LongRunningOperationResultInner value,
-        DatasetsCreateHeaders headers) {
+            HttpRequest request,
+            int statusCode,
+            HttpHeaders rawHeaders,
+            LongRunningOperationResult value,
+            DatasetsCreateHeaders headers) {
         super(request, statusCode, rawHeaders, value, headers);
     }
 
     /** @return the deserialized response body. */
     @Override
-    public LongRunningOperationResultInner getValue() {
+    public LongRunningOperationResult getValue() {
         return super.getValue();
     }
 }

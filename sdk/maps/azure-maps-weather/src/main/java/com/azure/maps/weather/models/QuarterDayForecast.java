@@ -5,16 +5,12 @@
 package com.azure.maps.weather.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.OffsetDateTime;
 
 /** The QuarterDayForecast model. */
 @Fluent
 public final class QuarterDayForecast {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(QuarterDayForecast.class);
-
     /*
      * Date of the forecast as example, 2019-10-27T00:00:00
      */
@@ -171,7 +167,7 @@ public final class QuarterDayForecast {
      *
      * @return the date value.
      */
-    public String date() {
+    public String getDate() {
         return this.date;
     }
 
@@ -181,7 +177,7 @@ public final class QuarterDayForecast {
      * @param date the date value to set.
      * @return the QuarterDayForecast object itself.
      */
-    public QuarterDayForecast withDate(String date) {
+    public QuarterDayForecast setDate(String date) {
         this.date = date;
         return this;
     }
@@ -192,7 +188,7 @@ public final class QuarterDayForecast {
      *
      * @return the effectiveDate value.
      */
-    public OffsetDateTime effectiveDate() {
+    public OffsetDateTime getEffectiveDate() {
         return this.effectiveDate;
     }
 
@@ -203,7 +199,7 @@ public final class QuarterDayForecast {
      * @param effectiveDate the effectiveDate value to set.
      * @return the QuarterDayForecast object itself.
      */
-    public QuarterDayForecast withEffectiveDate(OffsetDateTime effectiveDate) {
+    public QuarterDayForecast setEffectiveDate(OffsetDateTime effectiveDate) {
         this.effectiveDate = effectiveDate;
         return this;
     }
@@ -213,7 +209,7 @@ public final class QuarterDayForecast {
      *
      * @return the quarter value.
      */
-    public DayQuarter quarter() {
+    public DayQuarter getQuarter() {
         return this.quarter;
     }
 
@@ -223,7 +219,7 @@ public final class QuarterDayForecast {
      * @param quarter the quarter value to set.
      * @return the QuarterDayForecast object itself.
      */
-    public QuarterDayForecast withQuarter(DayQuarter quarter) {
+    public QuarterDayForecast setQuarter(DayQuarter quarter) {
         this.quarter = quarter;
         return this;
     }
@@ -234,7 +230,7 @@ public final class QuarterDayForecast {
      *
      * @return the iconCode value.
      */
-    public Integer iconCode() {
+    public Integer getIconCode() {
         return this.iconCode;
     }
 
@@ -245,7 +241,7 @@ public final class QuarterDayForecast {
      * @param iconCode the iconCode value to set.
      * @return the QuarterDayForecast object itself.
      */
-    public QuarterDayForecast withIconCode(Integer iconCode) {
+    public QuarterDayForecast setIconCode(Integer iconCode) {
         this.iconCode = iconCode;
         return this;
     }
@@ -256,7 +252,7 @@ public final class QuarterDayForecast {
      *
      * @return the iconPhrase value.
      */
-    public String iconPhrase() {
+    public String getIconPhrase() {
         return this.iconPhrase;
     }
 
@@ -267,7 +263,7 @@ public final class QuarterDayForecast {
      * @param iconPhrase the iconPhrase value to set.
      * @return the QuarterDayForecast object itself.
      */
-    public QuarterDayForecast withIconPhrase(String iconPhrase) {
+    public QuarterDayForecast setIconPhrase(String iconPhrase) {
         this.iconPhrase = iconPhrase;
         return this;
     }
@@ -277,7 +273,7 @@ public final class QuarterDayForecast {
      *
      * @return the phrase value.
      */
-    public String phrase() {
+    public String getPhrase() {
         return this.phrase;
     }
 
@@ -287,7 +283,7 @@ public final class QuarterDayForecast {
      * @param phrase the phrase value to set.
      * @return the QuarterDayForecast object itself.
      */
-    public QuarterDayForecast withPhrase(String phrase) {
+    public QuarterDayForecast setPhrase(String phrase) {
         this.phrase = phrase;
         return this;
     }
@@ -297,7 +293,7 @@ public final class QuarterDayForecast {
      *
      * @return the temperature value.
      */
-    public WeatherUnitRange temperature() {
+    public WeatherUnitRange getTemperature() {
         return this.temperature;
     }
 
@@ -307,7 +303,7 @@ public final class QuarterDayForecast {
      * @param temperature the temperature value to set.
      * @return the QuarterDayForecast object itself.
      */
-    public QuarterDayForecast withTemperature(WeatherUnitRange temperature) {
+    public QuarterDayForecast setTemperature(WeatherUnitRange temperature) {
         this.temperature = temperature;
         return this;
     }
@@ -317,7 +313,7 @@ public final class QuarterDayForecast {
      *
      * @return the realFeelTemperature value.
      */
-    public WeatherUnitRange realFeelTemperature() {
+    public WeatherUnitRange getRealFeelTemperature() {
         return this.realFeelTemperature;
     }
 
@@ -327,7 +323,7 @@ public final class QuarterDayForecast {
      * @param realFeelTemperature the realFeelTemperature value to set.
      * @return the QuarterDayForecast object itself.
      */
-    public QuarterDayForecast withRealFeelTemperature(WeatherUnitRange realFeelTemperature) {
+    public QuarterDayForecast setRealFeelTemperature(WeatherUnitRange realFeelTemperature) {
         this.realFeelTemperature = realFeelTemperature;
         return this;
     }
@@ -338,7 +334,7 @@ public final class QuarterDayForecast {
      *
      * @return the dewPoint value.
      */
-    public WeatherUnit dewPoint() {
+    public WeatherUnit getDewPoint() {
         return this.dewPoint;
     }
 
@@ -349,7 +345,7 @@ public final class QuarterDayForecast {
      * @param dewPoint the dewPoint value to set.
      * @return the QuarterDayForecast object itself.
      */
-    public QuarterDayForecast withDewPoint(WeatherUnit dewPoint) {
+    public QuarterDayForecast setDewPoint(WeatherUnit dewPoint) {
         this.dewPoint = dewPoint;
         return this;
     }
@@ -360,7 +356,7 @@ public final class QuarterDayForecast {
      *
      * @return the relativeHumidity value.
      */
-    public Integer relativeHumidity() {
+    public Integer getRelativeHumidity() {
         return this.relativeHumidity;
     }
 
@@ -371,7 +367,7 @@ public final class QuarterDayForecast {
      * @param relativeHumidity the relativeHumidity value to set.
      * @return the QuarterDayForecast object itself.
      */
-    public QuarterDayForecast withRelativeHumidity(Integer relativeHumidity) {
+    public QuarterDayForecast setRelativeHumidity(Integer relativeHumidity) {
         this.relativeHumidity = relativeHumidity;
         return this;
     }
@@ -381,7 +377,7 @@ public final class QuarterDayForecast {
      *
      * @return the wind value.
      */
-    public WindDetails wind() {
+    public WindDetails getWind() {
         return this.wind;
     }
 
@@ -391,7 +387,7 @@ public final class QuarterDayForecast {
      * @param wind the wind value to set.
      * @return the QuarterDayForecast object itself.
      */
-    public QuarterDayForecast withWind(WindDetails wind) {
+    public QuarterDayForecast setWind(WindDetails wind) {
         this.wind = wind;
         return this;
     }
@@ -401,7 +397,7 @@ public final class QuarterDayForecast {
      *
      * @return the windGust value.
      */
-    public WindDetails windGust() {
+    public WindDetails getWindGust() {
         return this.windGust;
     }
 
@@ -411,7 +407,7 @@ public final class QuarterDayForecast {
      * @param windGust the windGust value to set.
      * @return the QuarterDayForecast object itself.
      */
-    public QuarterDayForecast withWindGust(WindDetails windGust) {
+    public QuarterDayForecast setWindGust(WindDetails windGust) {
         this.windGust = windGust;
         return this;
     }
@@ -422,7 +418,7 @@ public final class QuarterDayForecast {
      *
      * @return the visibility value.
      */
-    public WeatherUnit visibility() {
+    public WeatherUnit getVisibility() {
         return this.visibility;
     }
 
@@ -433,7 +429,7 @@ public final class QuarterDayForecast {
      * @param visibility the visibility value to set.
      * @return the QuarterDayForecast object itself.
      */
-    public QuarterDayForecast withVisibility(WeatherUnit visibility) {
+    public QuarterDayForecast setVisibility(WeatherUnit visibility) {
         this.visibility = visibility;
         return this;
     }
@@ -443,7 +439,7 @@ public final class QuarterDayForecast {
      *
      * @return the cloudCover value.
      */
-    public Integer cloudCover() {
+    public Integer getCloudCover() {
         return this.cloudCover;
     }
 
@@ -453,7 +449,7 @@ public final class QuarterDayForecast {
      * @param cloudCover the cloudCover value to set.
      * @return the QuarterDayForecast object itself.
      */
-    public QuarterDayForecast withCloudCover(Integer cloudCover) {
+    public QuarterDayForecast setCloudCover(Integer cloudCover) {
         this.cloudCover = cloudCover;
         return this;
     }
@@ -464,7 +460,7 @@ public final class QuarterDayForecast {
      *
      * @return the hasPrecipitation value.
      */
-    public Boolean hasPrecipitation() {
+    public Boolean isHasPrecipitation() {
         return this.hasPrecipitation;
     }
 
@@ -475,7 +471,7 @@ public final class QuarterDayForecast {
      * @param hasPrecipitation the hasPrecipitation value to set.
      * @return the QuarterDayForecast object itself.
      */
-    public QuarterDayForecast withHasPrecipitation(Boolean hasPrecipitation) {
+    public QuarterDayForecast setHasPrecipitation(Boolean hasPrecipitation) {
         this.hasPrecipitation = hasPrecipitation;
         return this;
     }
@@ -486,7 +482,7 @@ public final class QuarterDayForecast {
      *
      * @return the precipitationType value.
      */
-    public String precipitationType() {
+    public String getPrecipitationType() {
         return this.precipitationType;
     }
 
@@ -497,7 +493,7 @@ public final class QuarterDayForecast {
      * @param precipitationType the precipitationType value to set.
      * @return the QuarterDayForecast object itself.
      */
-    public QuarterDayForecast withPrecipitationType(String precipitationType) {
+    public QuarterDayForecast setPrecipitationType(String precipitationType) {
         this.precipitationType = precipitationType;
         return this;
     }
@@ -507,7 +503,7 @@ public final class QuarterDayForecast {
      *
      * @return the precipitationIntensity value.
      */
-    public String precipitationIntensity() {
+    public String getPrecipitationIntensity() {
         return this.precipitationIntensity;
     }
 
@@ -517,7 +513,7 @@ public final class QuarterDayForecast {
      * @param precipitationIntensity the precipitationIntensity value to set.
      * @return the QuarterDayForecast object itself.
      */
-    public QuarterDayForecast withPrecipitationIntensity(String precipitationIntensity) {
+    public QuarterDayForecast setPrecipitationIntensity(String precipitationIntensity) {
         this.precipitationIntensity = precipitationIntensity;
         return this;
     }
@@ -528,7 +524,7 @@ public final class QuarterDayForecast {
      *
      * @return the precipitationProbability value.
      */
-    public Integer precipitationProbability() {
+    public Integer getPrecipitationProbability() {
         return this.precipitationProbability;
     }
 
@@ -539,7 +535,7 @@ public final class QuarterDayForecast {
      * @param precipitationProbability the precipitationProbability value to set.
      * @return the QuarterDayForecast object itself.
      */
-    public QuarterDayForecast withPrecipitationProbability(Integer precipitationProbability) {
+    public QuarterDayForecast setPrecipitationProbability(Integer precipitationProbability) {
         this.precipitationProbability = precipitationProbability;
         return this;
     }
@@ -550,7 +546,7 @@ public final class QuarterDayForecast {
      *
      * @return the thunderstormProbability value.
      */
-    public Integer thunderstormProbability() {
+    public Integer getThunderstormProbability() {
         return this.thunderstormProbability;
     }
 
@@ -561,7 +557,7 @@ public final class QuarterDayForecast {
      * @param thunderstormProbability the thunderstormProbability value to set.
      * @return the QuarterDayForecast object itself.
      */
-    public QuarterDayForecast withThunderstormProbability(Integer thunderstormProbability) {
+    public QuarterDayForecast setThunderstormProbability(Integer thunderstormProbability) {
         this.thunderstormProbability = thunderstormProbability;
         return this;
     }
@@ -571,7 +567,7 @@ public final class QuarterDayForecast {
      *
      * @return the totalLiquid value.
      */
-    public WeatherUnit totalLiquid() {
+    public WeatherUnit getTotalLiquid() {
         return this.totalLiquid;
     }
 
@@ -581,7 +577,7 @@ public final class QuarterDayForecast {
      * @param totalLiquid the totalLiquid value to set.
      * @return the QuarterDayForecast object itself.
      */
-    public QuarterDayForecast withTotalLiquid(WeatherUnit totalLiquid) {
+    public QuarterDayForecast setTotalLiquid(WeatherUnit totalLiquid) {
         this.totalLiquid = totalLiquid;
         return this;
     }
@@ -591,7 +587,7 @@ public final class QuarterDayForecast {
      *
      * @return the rain value.
      */
-    public WeatherUnit rain() {
+    public WeatherUnit getRain() {
         return this.rain;
     }
 
@@ -601,7 +597,7 @@ public final class QuarterDayForecast {
      * @param rain the rain value to set.
      * @return the QuarterDayForecast object itself.
      */
-    public QuarterDayForecast withRain(WeatherUnit rain) {
+    public QuarterDayForecast setRain(WeatherUnit rain) {
         this.rain = rain;
         return this;
     }
@@ -611,7 +607,7 @@ public final class QuarterDayForecast {
      *
      * @return the snow value.
      */
-    public WeatherUnit snow() {
+    public WeatherUnit getSnow() {
         return this.snow;
     }
 
@@ -621,7 +617,7 @@ public final class QuarterDayForecast {
      * @param snow the snow value to set.
      * @return the QuarterDayForecast object itself.
      */
-    public QuarterDayForecast withSnow(WeatherUnit snow) {
+    public QuarterDayForecast setSnow(WeatherUnit snow) {
         this.snow = snow;
         return this;
     }
@@ -631,7 +627,7 @@ public final class QuarterDayForecast {
      *
      * @return the ice value.
      */
-    public WeatherUnit ice() {
+    public WeatherUnit getIce() {
         return this.ice;
     }
 
@@ -641,46 +637,8 @@ public final class QuarterDayForecast {
      * @param ice the ice value to set.
      * @return the QuarterDayForecast object itself.
      */
-    public QuarterDayForecast withIce(WeatherUnit ice) {
+    public QuarterDayForecast setIce(WeatherUnit ice) {
         this.ice = ice;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (temperature() != null) {
-            temperature().validate();
-        }
-        if (realFeelTemperature() != null) {
-            realFeelTemperature().validate();
-        }
-        if (dewPoint() != null) {
-            dewPoint().validate();
-        }
-        if (wind() != null) {
-            wind().validate();
-        }
-        if (windGust() != null) {
-            windGust().validate();
-        }
-        if (visibility() != null) {
-            visibility().validate();
-        }
-        if (totalLiquid() != null) {
-            totalLiquid().validate();
-        }
-        if (rain() != null) {
-            rain().validate();
-        }
-        if (snow() != null) {
-            snow().validate();
-        }
-        if (ice() != null) {
-            ice().validate();
-        }
     }
 }

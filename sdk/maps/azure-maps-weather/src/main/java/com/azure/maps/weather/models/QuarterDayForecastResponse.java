@@ -4,22 +4,36 @@
 
 package com.azure.maps.weather.models;
 
-import com.azure.maps.weather.fluent.models.QuarterDayForecastResponseInner;
+import com.azure.core.annotation.Fluent;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/** An immutable client-side representation of QuarterDayForecastResponse. */
-public interface QuarterDayForecastResponse {
+/** The QuarterDayForecastResponse model. */
+@Fluent
+public final class QuarterDayForecastResponse {
+    /*
+     * Forecast data for each quarter in the response.
+     */
+    @JsonProperty(value = "forecasts")
+    private List<QuarterDayForecast> forecasts;
+
     /**
-     * Gets the forecasts property: Forecast data for each quarter in the response.
+     * Get the forecasts property: Forecast data for each quarter in the response.
      *
      * @return the forecasts value.
      */
-    List<QuarterDayForecast> forecasts();
+    public List<QuarterDayForecast> getForecasts() {
+        return this.forecasts;
+    }
 
     /**
-     * Gets the inner com.azure.maps.weather.fluent.models.QuarterDayForecastResponseInner object.
+     * Set the forecasts property: Forecast data for each quarter in the response.
      *
-     * @return the inner object.
+     * @param forecasts the forecasts value to set.
+     * @return the QuarterDayForecastResponse object itself.
      */
-    QuarterDayForecastResponseInner innerModel();
+    public QuarterDayForecastResponse setForecasts(List<QuarterDayForecast> forecasts) {
+        this.forecasts = forecasts;
+        return this;
+    }
 }

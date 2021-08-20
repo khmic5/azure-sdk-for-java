@@ -5,15 +5,11 @@
 package com.azure.maps.elevation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** The elevation data. */
 @Fluent
 public final class PointElevationResult {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(PointElevationResult.class);
-
     /*
      * A location represented as a latitude and longitude.
      */
@@ -31,7 +27,7 @@ public final class PointElevationResult {
      *
      * @return the coordinate value.
      */
-    public CoordinatesPair coordinate() {
+    public CoordinatesPair getCoordinate() {
         return this.coordinate;
     }
 
@@ -41,7 +37,7 @@ public final class PointElevationResult {
      * @param coordinate the coordinate value to set.
      * @return the PointElevationResult object itself.
      */
-    public PointElevationResult withCoordinate(CoordinatesPair coordinate) {
+    public PointElevationResult setCoordinate(CoordinatesPair coordinate) {
         this.coordinate = coordinate;
         return this;
     }
@@ -51,18 +47,7 @@ public final class PointElevationResult {
      *
      * @return the elevationInMeter value.
      */
-    public Float elevationInMeter() {
+    public Float getElevationInMeter() {
         return this.elevationInMeter;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (coordinate() != null) {
-            coordinate().validate();
-        }
     }
 }

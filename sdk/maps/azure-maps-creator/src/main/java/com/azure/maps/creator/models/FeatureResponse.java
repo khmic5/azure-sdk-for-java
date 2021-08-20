@@ -4,37 +4,80 @@
 
 package com.azure.maps.creator.models;
 
-import com.azure.maps.creator.fluent.models.FeatureResponseInner;
+import com.azure.core.annotation.Fluent;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/** An immutable client-side representation of FeatureResponse. */
-public interface FeatureResponse {
+/** The FeatureResponse model. */
+@Fluent
+public final class FeatureResponse {
+    /*
+     * The ontology version of this dataset.
+     */
+    @JsonProperty(value = "ontology", access = JsonProperty.Access.WRITE_ONLY)
+    private String ontology;
+
+    /*
+     * A valid `GeoJSON Feature` object type. Please refer to [RFC
+     * 7946](https://tools.ietf.org/html/rfc7946#section-3.2) for details.
+     */
+    @JsonProperty(value = "feature", required = true)
+    private GeoJsonFeature feature;
+
+    /*
+     * Links to other WFS endpoints.
+     */
+    @JsonProperty(value = "links")
+    private List<WfsEndpointLink> links;
+
     /**
-     * Gets the ontology property: The ontology version of this dataset.
+     * Get the ontology property: The ontology version of this dataset.
      *
      * @return the ontology value.
      */
-    String ontology();
+    public String getOntology() {
+        return this.ontology;
+    }
 
     /**
-     * Gets the feature property: A valid `GeoJSON Feature` object type. Please refer to [RFC
+     * Get the feature property: A valid `GeoJSON Feature` object type. Please refer to [RFC
      * 7946](https://tools.ietf.org/html/rfc7946#section-3.2) for details.
      *
      * @return the feature value.
      */
-    GeoJsonFeature feature();
+    public GeoJsonFeature getFeature() {
+        return this.feature;
+    }
 
     /**
-     * Gets the links property: Links to other WFS endpoints.
+     * Set the feature property: A valid `GeoJSON Feature` object type. Please refer to [RFC
+     * 7946](https://tools.ietf.org/html/rfc7946#section-3.2) for details.
+     *
+     * @param feature the feature value to set.
+     * @return the FeatureResponse object itself.
+     */
+    public FeatureResponse setFeature(GeoJsonFeature feature) {
+        this.feature = feature;
+        return this;
+    }
+
+    /**
+     * Get the links property: Links to other WFS endpoints.
      *
      * @return the links value.
      */
-    List<WfsEndpointLink> links();
+    public List<WfsEndpointLink> getLinks() {
+        return this.links;
+    }
 
     /**
-     * Gets the inner com.azure.maps.creator.fluent.models.FeatureResponseInner object.
+     * Set the links property: Links to other WFS endpoints.
      *
-     * @return the inner object.
+     * @param links the links value to set.
+     * @return the FeatureResponse object itself.
      */
-    FeatureResponseInner innerModel();
+    public FeatureResponse setLinks(List<WfsEndpointLink> links) {
+        this.links = links;
+        return this;
+    }
 }

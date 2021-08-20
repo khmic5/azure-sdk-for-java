@@ -11,25 +11,25 @@ import java.util.Collection;
 /** Defines values for GeoJsonGeometryType. */
 public final class GeoJsonGeometryType extends ExpandableStringEnum<GeoJsonGeometryType> {
     /** Static value Point for GeoJsonGeometryType. */
-    public static final GeoJsonGeometryType POINT = fromString("Point");
+    public static final GeoJsonGeometryType GEO_JSON_POINT = fromString("Point");
 
     /** Static value MultiPoint for GeoJsonGeometryType. */
-    public static final GeoJsonGeometryType MULTI_POINT = fromString("MultiPoint");
+    public static final GeoJsonGeometryType GEO_JSON_MULTI_POINT = fromString("MultiPoint");
 
     /** Static value LineString for GeoJsonGeometryType. */
-    public static final GeoJsonGeometryType LINE_STRING = fromString("LineString");
+    public static final GeoJsonGeometryType GEO_JSON_LINE_STRING = fromString("LineString");
 
     /** Static value MultiLineString for GeoJsonGeometryType. */
-    public static final GeoJsonGeometryType MULTI_LINE_STRING = fromString("MultiLineString");
+    public static final GeoJsonGeometryType GEO_JSON_MULTI_LINE_STRING = fromString("MultiLineString");
 
     /** Static value Polygon for GeoJsonGeometryType. */
-    public static final GeoJsonGeometryType POLYGON = fromString("Polygon");
+    public static final GeoJsonGeometryType GEO_JSON_POLYGON = fromString("Polygon");
 
     /** Static value MultiPolygon for GeoJsonGeometryType. */
-    public static final GeoJsonGeometryType MULTI_POLYGON = fromString("MultiPolygon");
+    public static final GeoJsonGeometryType GEO_JSON_MULTI_POLYGON = fromString("MultiPolygon");
 
     /** Static value GeometryCollection for GeoJsonGeometryType. */
-    public static final GeoJsonGeometryType GEOMETRY_COLLECTION = fromString("GeometryCollection");
+    public static final GeoJsonGeometryType GEO_JSON_GEOMETRY_COLLECTION = fromString("GeometryCollection");
 
     /**
      * Creates or finds a GeoJsonGeometryType from its string representation.

@@ -5,16 +5,12 @@
 package com.azure.maps.weather.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /** The WeatherWaypoint model. */
 @Fluent
 public final class WeatherWaypoint {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(WeatherWaypoint.class);
-
     /*
      * Numeric value representing an image that displays the `iconPhrase`.
      * Please refer to [Weather Service
@@ -99,7 +95,7 @@ public final class WeatherWaypoint {
      *
      * @return the iconCode value.
      */
-    public Integer iconCode() {
+    public Integer getIconCode() {
         return this.iconCode;
     }
 
@@ -110,7 +106,7 @@ public final class WeatherWaypoint {
      * @param iconCode the iconCode value to set.
      * @return the WeatherWaypoint object itself.
      */
-    public WeatherWaypoint withIconCode(Integer iconCode) {
+    public WeatherWaypoint setIconCode(Integer iconCode) {
         this.iconCode = iconCode;
         return this;
     }
@@ -121,7 +117,7 @@ public final class WeatherWaypoint {
      *
      * @return the shortPhrase value.
      */
-    public String shortPhrase() {
+    public String getShortPhrase() {
         return this.shortPhrase;
     }
 
@@ -132,7 +128,7 @@ public final class WeatherWaypoint {
      * @param shortPhrase the shortPhrase value to set.
      * @return the WeatherWaypoint object itself.
      */
-    public WeatherWaypoint withShortPhrase(String shortPhrase) {
+    public WeatherWaypoint setShortPhrase(String shortPhrase) {
         this.shortPhrase = shortPhrase;
         return this;
     }
@@ -152,7 +148,7 @@ public final class WeatherWaypoint {
      * @param isDayTime the isDayTime value to set.
      * @return the WeatherWaypoint object itself.
      */
-    public WeatherWaypoint withIsDayTime(Boolean isDayTime) {
+    public WeatherWaypoint setIsDayTime(Boolean isDayTime) {
         this.isDayTime = isDayTime;
         return this;
     }
@@ -162,7 +158,7 @@ public final class WeatherWaypoint {
      *
      * @return the cloudCover value.
      */
-    public Integer cloudCover() {
+    public Integer getCloudCover() {
         return this.cloudCover;
     }
 
@@ -172,7 +168,7 @@ public final class WeatherWaypoint {
      * @param cloudCover the cloudCover value to set.
      * @return the WeatherWaypoint object itself.
      */
-    public WeatherWaypoint withCloudCover(Integer cloudCover) {
+    public WeatherWaypoint setCloudCover(Integer cloudCover) {
         this.cloudCover = cloudCover;
         return this;
     }
@@ -182,7 +178,7 @@ public final class WeatherWaypoint {
      *
      * @return the temperature value.
      */
-    public WeatherUnit temperature() {
+    public WeatherUnit getTemperature() {
         return this.temperature;
     }
 
@@ -192,7 +188,7 @@ public final class WeatherWaypoint {
      * @param temperature the temperature value to set.
      * @return the WeatherWaypoint object itself.
      */
-    public WeatherWaypoint withTemperature(WeatherUnit temperature) {
+    public WeatherWaypoint setTemperature(WeatherUnit temperature) {
         this.temperature = temperature;
         return this;
     }
@@ -202,7 +198,7 @@ public final class WeatherWaypoint {
      *
      * @return the wind value.
      */
-    public WindDetails wind() {
+    public WindDetails getWind() {
         return this.wind;
     }
 
@@ -212,7 +208,7 @@ public final class WeatherWaypoint {
      * @param wind the wind value to set.
      * @return the WeatherWaypoint object itself.
      */
-    public WeatherWaypoint withWind(WindDetails wind) {
+    public WeatherWaypoint setWind(WindDetails wind) {
         this.wind = wind;
         return this;
     }
@@ -222,7 +218,7 @@ public final class WeatherWaypoint {
      *
      * @return the windGust value.
      */
-    public WindDetails windGust() {
+    public WindDetails getWindGust() {
         return this.windGust;
     }
 
@@ -232,7 +228,7 @@ public final class WeatherWaypoint {
      * @param windGust the windGust value to set.
      * @return the WeatherWaypoint object itself.
      */
-    public WeatherWaypoint withWindGust(WindDetails windGust) {
+    public WeatherWaypoint setWindGust(WindDetails windGust) {
         this.windGust = windGust;
         return this;
     }
@@ -242,7 +238,7 @@ public final class WeatherWaypoint {
      *
      * @return the precipitation value.
      */
-    public WeatherAlongRoutePrecipitation precipitation() {
+    public WeatherAlongRoutePrecipitation getPrecipitation() {
         return this.precipitation;
     }
 
@@ -252,7 +248,7 @@ public final class WeatherWaypoint {
      * @param precipitation the precipitation value to set.
      * @return the WeatherWaypoint object itself.
      */
-    public WeatherWaypoint withPrecipitation(WeatherAlongRoutePrecipitation precipitation) {
+    public WeatherWaypoint setPrecipitation(WeatherAlongRoutePrecipitation precipitation) {
         this.precipitation = precipitation;
         return this;
     }
@@ -263,7 +259,7 @@ public final class WeatherWaypoint {
      *
      * @return the lightningCount value.
      */
-    public Integer lightningCount() {
+    public Integer getLightningCount() {
         return this.lightningCount;
     }
 
@@ -274,7 +270,7 @@ public final class WeatherWaypoint {
      * @param lightningCount the lightningCount value to set.
      * @return the WeatherWaypoint object itself.
      */
-    public WeatherWaypoint withLightningCount(Integer lightningCount) {
+    public WeatherWaypoint setLightningCount(Integer lightningCount) {
         this.lightningCount = lightningCount;
         return this;
     }
@@ -284,7 +280,7 @@ public final class WeatherWaypoint {
      *
      * @return the sunGlare value.
      */
-    public SunGlare sunGlare() {
+    public SunGlare getSunGlare() {
         return this.sunGlare;
     }
 
@@ -294,7 +290,7 @@ public final class WeatherWaypoint {
      * @param sunGlare the sunGlare value to set.
      * @return the WeatherWaypoint object itself.
      */
-    public WeatherWaypoint withSunGlare(SunGlare sunGlare) {
+    public WeatherWaypoint setSunGlare(SunGlare sunGlare) {
         this.sunGlare = sunGlare;
         return this;
     }
@@ -304,7 +300,7 @@ public final class WeatherWaypoint {
      *
      * @return the hazards value.
      */
-    public WeatherHazards hazards() {
+    public WeatherHazards getHazards() {
         return this.hazards;
     }
 
@@ -314,7 +310,7 @@ public final class WeatherWaypoint {
      * @param hazards the hazards value to set.
      * @return the WeatherWaypoint object itself.
      */
-    public WeatherWaypoint withHazards(WeatherHazards hazards) {
+    public WeatherWaypoint setHazards(WeatherHazards hazards) {
         this.hazards = hazards;
         return this;
     }
@@ -324,7 +320,7 @@ public final class WeatherWaypoint {
      *
      * @return the notifications value.
      */
-    public List<WeatherNotification> notifications() {
+    public List<WeatherNotification> getNotifications() {
         return this.notifications;
     }
 
@@ -334,37 +330,8 @@ public final class WeatherWaypoint {
      * @param notifications the notifications value to set.
      * @return the WeatherWaypoint object itself.
      */
-    public WeatherWaypoint withNotifications(List<WeatherNotification> notifications) {
+    public WeatherWaypoint setNotifications(List<WeatherNotification> notifications) {
         this.notifications = notifications;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (temperature() != null) {
-            temperature().validate();
-        }
-        if (wind() != null) {
-            wind().validate();
-        }
-        if (windGust() != null) {
-            windGust().validate();
-        }
-        if (precipitation() != null) {
-            precipitation().validate();
-        }
-        if (sunGlare() != null) {
-            sunGlare().validate();
-        }
-        if (hazards() != null) {
-            hazards().validate();
-        }
-        if (notifications() != null) {
-            notifications().forEach(e -> e.validate());
-        }
     }
 }

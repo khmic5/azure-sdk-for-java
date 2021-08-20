@@ -5,15 +5,11 @@
 package com.azure.maps.creator.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** Single feature state model. */
 @Fluent
 public final class FeatureStateObject {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(FeatureStateObject.class);
-
     /*
      * Feature state Keyname. Maximum length allowed is 1000.
      */
@@ -39,7 +35,7 @@ public final class FeatureStateObject {
      *
      * @return the keyName value.
      */
-    public String keyName() {
+    public String getKeyName() {
         return this.keyName;
     }
 
@@ -49,7 +45,7 @@ public final class FeatureStateObject {
      * @param keyName the keyName value to set.
      * @return the FeatureStateObject object itself.
      */
-    public FeatureStateObject withKeyName(String keyName) {
+    public FeatureStateObject setKeyName(String keyName) {
         this.keyName = keyName;
         return this;
     }
@@ -60,7 +56,7 @@ public final class FeatureStateObject {
      *
      * @return the value value.
      */
-    public String value() {
+    public String getValue() {
         return this.value;
     }
 
@@ -71,7 +67,7 @@ public final class FeatureStateObject {
      * @param value the value value to set.
      * @return the FeatureStateObject object itself.
      */
-    public FeatureStateObject withValue(String value) {
+    public FeatureStateObject setValue(String value) {
         this.value = value;
         return this;
     }
@@ -81,7 +77,7 @@ public final class FeatureStateObject {
      *
      * @return the eventTimestamp value.
      */
-    public String eventTimestamp() {
+    public String getEventTimestamp() {
         return this.eventTimestamp;
     }
 
@@ -91,16 +87,8 @@ public final class FeatureStateObject {
      * @param eventTimestamp the eventTimestamp value to set.
      * @return the FeatureStateObject object itself.
      */
-    public FeatureStateObject withEventTimestamp(String eventTimestamp) {
+    public FeatureStateObject setEventTimestamp(String eventTimestamp) {
         this.eventTimestamp = eventTimestamp;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

@@ -5,8 +5,6 @@
 package com.azure.maps.route.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -16,8 +14,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 @Immutable
 public final class RouteResultInstructionGroup {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(RouteResultInstructionGroup.class);
-
     /*
      * Index of the first instruction.
      */
@@ -48,7 +44,7 @@ public final class RouteResultInstructionGroup {
      *
      * @return the firstInstructionIndex value.
      */
-    public Integer firstInstructionIndex() {
+    public Integer getFirstInstructionIndex() {
         return this.firstInstructionIndex;
     }
 
@@ -57,7 +53,7 @@ public final class RouteResultInstructionGroup {
      *
      * @return the lastInstructionIndex value.
      */
-    public Integer lastInstructionIndex() {
+    public Integer getLastInstructionIndex() {
         return this.lastInstructionIndex;
     }
 
@@ -66,7 +62,7 @@ public final class RouteResultInstructionGroup {
      *
      * @return the groupLengthInMeters value.
      */
-    public Integer groupLengthInMeters() {
+    public Integer getGroupLengthInMeters() {
         return this.groupLengthInMeters;
     }
 
@@ -76,15 +72,7 @@ public final class RouteResultInstructionGroup {
      *
      * @return the groupMessage value.
      */
-    public String groupMessage() {
+    public String getGroupMessage() {
         return this.groupMessage;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

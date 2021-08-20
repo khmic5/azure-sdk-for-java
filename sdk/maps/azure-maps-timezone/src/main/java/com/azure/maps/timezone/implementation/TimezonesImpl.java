@@ -4,16 +4,21 @@
 
 package com.azure.maps.timezone.implementation;
 
+import com.azure.core.annotation.ExpectedResponses;
+import com.azure.core.annotation.Get;
+import com.azure.core.annotation.HeaderParam;
+import com.azure.core.annotation.Host;
+import com.azure.core.annotation.HostParam;
+import com.azure.core.annotation.PathParam;
+import com.azure.core.annotation.QueryParam;
+import com.azure.core.annotation.ReturnType;
+import com.azure.core.annotation.ServiceInterface;
+import com.azure.core.annotation.ServiceMethod;
+import com.azure.core.annotation.UnexpectedResponseExceptionType;
 import com.azure.core.http.rest.Response;
-import com.azure.core.http.rest.SimpleResponse;
-import com.azure.core.util.Context;
-import com.azure.core.util.logging.ClientLogger;
-import com.azure.maps.timezone.fluent.TimezonesClient;
-import com.azure.maps.timezone.fluent.models.IanaIdInner;
-import com.azure.maps.timezone.fluent.models.TimezoneByCoordinatesResultInner;
-import com.azure.maps.timezone.fluent.models.TimezoneByIdResultInner;
-import com.azure.maps.timezone.fluent.models.TimezoneEnumWindowInner;
-import com.azure.maps.timezone.fluent.models.TimezoneIanaVersionResultInner;
+import com.azure.core.http.rest.RestProxy;
+import com.azure.maps.timezone.models.ErrorResponseException;
+import com.azure.maps.timezone.models.Geography;
 import com.azure.maps.timezone.models.IanaId;
 import com.azure.maps.timezone.models.ResponseFormat;
 import com.azure.maps.timezone.models.TimezoneByCoordinatesResult;
@@ -21,213 +26,657 @@ import com.azure.maps.timezone.models.TimezoneByIdResult;
 import com.azure.maps.timezone.models.TimezoneEnumWindow;
 import com.azure.maps.timezone.models.TimezoneIanaVersionResult;
 import com.azure.maps.timezone.models.TimezoneOptions;
-import com.azure.maps.timezone.models.Timezones;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.OffsetDateTime;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
+import reactor.core.publisher.Mono;
 
-public final class TimezonesImpl implements Timezones {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(TimezonesImpl.class);
+/** An instance of this class provides access to all the operations defined in Timezones. */
+public final class TimezonesImpl {
+    /** The proxy service used to perform REST calls. */
+    private final TimezonesService service;
 
-    private final TimezonesClient innerClient;
+    /** The service client containing this operation class. */
+    private final TimezoneClientImpl client;
 
-    private final com.azure.maps.timezone.TimezoneManager serviceManager;
-
-    public TimezonesImpl(TimezonesClient innerClient, com.azure.maps.timezone.TimezoneManager serviceManager) {
-        this.innerClient = innerClient;
-        this.serviceManager = serviceManager;
+    /**
+     * Initializes an instance of TimezonesImpl.
+     *
+     * @param client the instance of the service client containing this operation class.
+     */
+    TimezonesImpl(TimezoneClientImpl client) {
+        this.service =
+                RestProxy.create(TimezonesService.class, client.getHttpPipeline(), client.getSerializerAdapter());
+        this.client = client;
     }
 
-    public TimezoneByIdResult getTimezoneById(ResponseFormat format, String query) {
-        TimezoneByIdResultInner inner = this.serviceClient().getTimezoneById(format, query);
-        if (inner != null) {
-            return new TimezoneByIdResultImpl(inner, this.manager());
-        } else {
-            return null;
-        }
+    /**
+     * The interface defining all the services for TimezoneClientTimezones to be used by the proxy service to perform
+     * REST calls.
+     */
+    @Host("https://{geography}.atlas.microsoft.com")
+    @ServiceInterface(name = "TimezoneClientTimezo")
+    private interface TimezonesService {
+        @Get("/timezone/byId/{format}")
+        @ExpectedResponses({200})
+        @UnexpectedResponseExceptionType(ErrorResponseException.class)
+        Mono<Response<TimezoneByIdResult>> getTimezoneByID(
+                @HostParam("geography") Geography geography,
+                @HeaderParam("x-ms-client-id") String xMsClientId,
+                @QueryParam("api-version") String apiVersion,
+                @HeaderParam("Accept-Language") String acceptLanguage,
+                @QueryParam("options") TimezoneOptions options,
+                @QueryParam("timeStamp") OffsetDateTime timeStamp,
+                @QueryParam("transitionsFrom") OffsetDateTime transitionsFrom,
+                @QueryParam("transitionsYears") Integer transitionsYears,
+                @PathParam("format") ResponseFormat format,
+                @QueryParam("query") String query,
+                @HeaderParam("Accept") String accept);
+
+        @Get("/timezone/byCoordinates/{format}")
+        @ExpectedResponses({200})
+        @UnexpectedResponseExceptionType(ErrorResponseException.class)
+        Mono<Response<TimezoneByCoordinatesResult>> getTimezoneByCoordinates(
+                @HostParam("geography") Geography geography,
+                @HeaderParam("x-ms-client-id") String xMsClientId,
+                @QueryParam("api-version") String apiVersion,
+                @HeaderParam("Accept-Language") String acceptLanguage,
+                @QueryParam("options") TimezoneOptions options,
+                @QueryParam("timeStamp") OffsetDateTime timeStamp,
+                @QueryParam("transitionsFrom") OffsetDateTime transitionsFrom,
+                @QueryParam("transitionsYears") Integer transitionsYears,
+                @PathParam("format") ResponseFormat format,
+                @QueryParam("query") String query,
+                @HeaderParam("Accept") String accept);
+
+        @Get("/timezone/enumWindows/{format}")
+        @ExpectedResponses({200})
+        @UnexpectedResponseExceptionType(ErrorResponseException.class)
+        Mono<Response<List<TimezoneEnumWindow>>> getTimezoneEnumWindows(
+                @HostParam("geography") Geography geography,
+                @HeaderParam("x-ms-client-id") String xMsClientId,
+                @QueryParam("api-version") String apiVersion,
+                @PathParam("format") ResponseFormat format,
+                @HeaderParam("Accept") String accept);
+
+        @Get("/timezone/enumIana/{format}")
+        @ExpectedResponses({200})
+        @UnexpectedResponseExceptionType(ErrorResponseException.class)
+        Mono<Response<List<IanaId>>> getTimezoneEnumIana(
+                @HostParam("geography") Geography geography,
+                @HeaderParam("x-ms-client-id") String xMsClientId,
+                @QueryParam("api-version") String apiVersion,
+                @PathParam("format") ResponseFormat format,
+                @HeaderParam("Accept") String accept);
+
+        @Get("/timezone/ianaVersion/{format}")
+        @ExpectedResponses({200})
+        @UnexpectedResponseExceptionType(ErrorResponseException.class)
+        Mono<Response<TimezoneIanaVersionResult>> getTimezoneIanaVersion(
+                @HostParam("geography") Geography geography,
+                @HeaderParam("x-ms-client-id") String xMsClientId,
+                @QueryParam("api-version") String apiVersion,
+                @PathParam("format") ResponseFormat format,
+                @HeaderParam("Accept") String accept);
+
+        @Get("/timezone/windowsToIana/{format}")
+        @ExpectedResponses({200})
+        @UnexpectedResponseExceptionType(ErrorResponseException.class)
+        Mono<Response<List<IanaId>>> getTimezoneWindowsToIana(
+                @HostParam("geography") Geography geography,
+                @HeaderParam("x-ms-client-id") String xMsClientId,
+                @QueryParam("api-version") String apiVersion,
+                @PathParam("format") ResponseFormat format,
+                @QueryParam("query") String query,
+                @QueryParam("territory") String territory,
+                @HeaderParam("Accept") String accept);
     }
 
-    public Response<TimezoneByIdResult> getTimezoneByIdWithResponse(
-        ResponseFormat format,
-        String query,
-        String acceptLanguage,
-        TimezoneOptions options,
-        OffsetDateTime timestamp,
-        OffsetDateTime transitionsFrom,
-        Integer transitionsYears,
-        Context context) {
-        Response<TimezoneByIdResultInner> inner =
-            this
-                .serviceClient()
-                .getTimezoneByIdWithResponse(
-                    format, query, acceptLanguage, options, timestamp, transitionsFrom, transitionsYears, context);
-        if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
-                new TimezoneByIdResultImpl(inner.getValue(), this.manager()));
-        } else {
-            return null;
-        }
+    /**
+     * __Time Zone by Id__
+     *
+     * <p>**Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>This API returns current, historical, and future time zone information for the specified IANA time zone ID.
+     *
+     * @param format Desired format of the response. Only `json` format is supported.
+     * @param query The IANA time zone ID.
+     * @param acceptLanguage Specifies the language code in which the timezone names should be returned. If no language
+     *     code is provided, the response will be in "EN". Please refer to [Supported
+     *     Languages](https://docs.microsoft.com/en-us/azure/azure-maps/supported-languages) for details.
+     * @param options Alternatively, use alias "o". Options available for types of information returned in the result.
+     * @param timeStamp Alternatively, use alias "stamp", or "s". Reference time, if omitted, the API will use the
+     *     machine time serving the request.
+     * @param transitionsFrom Alternatively, use alias "tf". The start date from which daylight savings time (DST)
+     *     transitions are requested, only applies when "options" = all or "options" = transitions.
+     * @param transitionsYears Alternatively, use alias "ty". The number of years from "transitionsFrom" for which DST
+     *     transitions are requested, only applies when "options" = all or "options" = transitions.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful Timezone By ID call.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Response<TimezoneByIdResult>> getTimezoneByIDWithResponseAsync(
+            ResponseFormat format,
+            String query,
+            String acceptLanguage,
+            TimezoneOptions options,
+            OffsetDateTime timeStamp,
+            OffsetDateTime transitionsFrom,
+            Integer transitionsYears) {
+        final String accept = "application/json";
+        return service.getTimezoneByID(
+                this.client.getGeography(),
+                this.client.getXMsClientId(),
+                this.client.getApiVersion(),
+                acceptLanguage,
+                options,
+                timeStamp,
+                transitionsFrom,
+                transitionsYears,
+                format,
+                query,
+                accept);
     }
 
-    public TimezoneByCoordinatesResult getTimezoneByCoordinates(ResponseFormat format, String query) {
-        TimezoneByCoordinatesResultInner inner = this.serviceClient().getTimezoneByCoordinates(format, query);
-        if (inner != null) {
-            return new TimezoneByCoordinatesResultImpl(inner, this.manager());
-        } else {
-            return null;
-        }
+    /**
+     * __Time Zone by Id__
+     *
+     * <p>**Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>This API returns current, historical, and future time zone information for the specified IANA time zone ID.
+     *
+     * @param format Desired format of the response. Only `json` format is supported.
+     * @param query The IANA time zone ID.
+     * @param acceptLanguage Specifies the language code in which the timezone names should be returned. If no language
+     *     code is provided, the response will be in "EN". Please refer to [Supported
+     *     Languages](https://docs.microsoft.com/en-us/azure/azure-maps/supported-languages) for details.
+     * @param options Alternatively, use alias "o". Options available for types of information returned in the result.
+     * @param timeStamp Alternatively, use alias "stamp", or "s". Reference time, if omitted, the API will use the
+     *     machine time serving the request.
+     * @param transitionsFrom Alternatively, use alias "tf". The start date from which daylight savings time (DST)
+     *     transitions are requested, only applies when "options" = all or "options" = transitions.
+     * @param transitionsYears Alternatively, use alias "ty". The number of years from "transitionsFrom" for which DST
+     *     transitions are requested, only applies when "options" = all or "options" = transitions.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful Timezone By ID call.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<TimezoneByIdResult> getTimezoneByIDAsync(
+            ResponseFormat format,
+            String query,
+            String acceptLanguage,
+            TimezoneOptions options,
+            OffsetDateTime timeStamp,
+            OffsetDateTime transitionsFrom,
+            Integer transitionsYears) {
+        return getTimezoneByIDWithResponseAsync(
+                        format, query, acceptLanguage, options, timeStamp, transitionsFrom, transitionsYears)
+                .flatMap(
+                        (Response<TimezoneByIdResult> res) -> {
+                            if (res.getValue() != null) {
+                                return Mono.just(res.getValue());
+                            } else {
+                                return Mono.empty();
+                            }
+                        });
     }
 
-    public Response<TimezoneByCoordinatesResult> getTimezoneByCoordinatesWithResponse(
-        ResponseFormat format,
-        String query,
-        String acceptLanguage,
-        TimezoneOptions options,
-        OffsetDateTime timestamp,
-        OffsetDateTime transitionsFrom,
-        Integer transitionsYears,
-        Context context) {
-        Response<TimezoneByCoordinatesResultInner> inner =
-            this
-                .serviceClient()
-                .getTimezoneByCoordinatesWithResponse(
-                    format, query, acceptLanguage, options, timestamp, transitionsFrom, transitionsYears, context);
-        if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
-                new TimezoneByCoordinatesResultImpl(inner.getValue(), this.manager()));
-        } else {
-            return null;
-        }
+    /**
+     * __Time Zone by Id__
+     *
+     * <p>**Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>This API returns current, historical, and future time zone information for the specified IANA time zone ID.
+     *
+     * @param format Desired format of the response. Only `json` format is supported.
+     * @param query The IANA time zone ID.
+     * @param acceptLanguage Specifies the language code in which the timezone names should be returned. If no language
+     *     code is provided, the response will be in "EN". Please refer to [Supported
+     *     Languages](https://docs.microsoft.com/en-us/azure/azure-maps/supported-languages) for details.
+     * @param options Alternatively, use alias "o". Options available for types of information returned in the result.
+     * @param timeStamp Alternatively, use alias "stamp", or "s". Reference time, if omitted, the API will use the
+     *     machine time serving the request.
+     * @param transitionsFrom Alternatively, use alias "tf". The start date from which daylight savings time (DST)
+     *     transitions are requested, only applies when "options" = all or "options" = transitions.
+     * @param transitionsYears Alternatively, use alias "ty". The number of years from "transitionsFrom" for which DST
+     *     transitions are requested, only applies when "options" = all or "options" = transitions.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful Timezone By ID call.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public TimezoneByIdResult getTimezoneByID(
+            ResponseFormat format,
+            String query,
+            String acceptLanguage,
+            TimezoneOptions options,
+            OffsetDateTime timeStamp,
+            OffsetDateTime transitionsFrom,
+            Integer transitionsYears) {
+        return getTimezoneByIDAsync(
+                        format, query, acceptLanguage, options, timeStamp, transitionsFrom, transitionsYears)
+                .block();
     }
 
+    /**
+     * __Time Zone by Coordinates__
+     *
+     * <p>**Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>This API returns current, historical, and future time zone information for a specified latitude-longitude
+     * pair. In addition, the API provides sunset and sunrise times for a given location.
+     *
+     * @param format Desired format of the response. Only `json` format is supported.
+     * @param query Coordinates of the point for which time zone information is requested. The applicable query is
+     *     specified as a comma separated string composed by latitude followed by longitude e.g.
+     *     "47.641268,-122.125679".
+     * @param acceptLanguage Specifies the language code in which the timezone names should be returned. If no language
+     *     code is provided, the response will be in "EN". Please refer to [Supported
+     *     Languages](https://docs.microsoft.com/en-us/azure/azure-maps/supported-languages) for details.
+     * @param options Alternatively, use alias "o". Options available for types of information returned in the result.
+     * @param timeStamp Alternatively, use alias "stamp", or "s". Reference time, if omitted, the API will use the
+     *     machine time serving the request.
+     * @param transitionsFrom Alternatively, use alias "tf". The start date from which daylight savings time (DST)
+     *     transitions are requested, only applies when "options" = all or "options" = transitions.
+     * @param transitionsYears Alternatively, use alias "ty". The number of years from "transitionsFrom" for which DST
+     *     transitions are requested, only applies when "options" = all or "options" = transitions.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful Timezone By Coordinates call.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Response<TimezoneByCoordinatesResult>> getTimezoneByCoordinatesWithResponseAsync(
+            ResponseFormat format,
+            String query,
+            String acceptLanguage,
+            TimezoneOptions options,
+            OffsetDateTime timeStamp,
+            OffsetDateTime transitionsFrom,
+            Integer transitionsYears) {
+        final String accept = "application/json";
+        return service.getTimezoneByCoordinates(
+                this.client.getGeography(),
+                this.client.getXMsClientId(),
+                this.client.getApiVersion(),
+                acceptLanguage,
+                options,
+                timeStamp,
+                transitionsFrom,
+                transitionsYears,
+                format,
+                query,
+                accept);
+    }
+
+    /**
+     * __Time Zone by Coordinates__
+     *
+     * <p>**Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>This API returns current, historical, and future time zone information for a specified latitude-longitude
+     * pair. In addition, the API provides sunset and sunrise times for a given location.
+     *
+     * @param format Desired format of the response. Only `json` format is supported.
+     * @param query Coordinates of the point for which time zone information is requested. The applicable query is
+     *     specified as a comma separated string composed by latitude followed by longitude e.g.
+     *     "47.641268,-122.125679".
+     * @param acceptLanguage Specifies the language code in which the timezone names should be returned. If no language
+     *     code is provided, the response will be in "EN". Please refer to [Supported
+     *     Languages](https://docs.microsoft.com/en-us/azure/azure-maps/supported-languages) for details.
+     * @param options Alternatively, use alias "o". Options available for types of information returned in the result.
+     * @param timeStamp Alternatively, use alias "stamp", or "s". Reference time, if omitted, the API will use the
+     *     machine time serving the request.
+     * @param transitionsFrom Alternatively, use alias "tf". The start date from which daylight savings time (DST)
+     *     transitions are requested, only applies when "options" = all or "options" = transitions.
+     * @param transitionsYears Alternatively, use alias "ty". The number of years from "transitionsFrom" for which DST
+     *     transitions are requested, only applies when "options" = all or "options" = transitions.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful Timezone By Coordinates call.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<TimezoneByCoordinatesResult> getTimezoneByCoordinatesAsync(
+            ResponseFormat format,
+            String query,
+            String acceptLanguage,
+            TimezoneOptions options,
+            OffsetDateTime timeStamp,
+            OffsetDateTime transitionsFrom,
+            Integer transitionsYears) {
+        return getTimezoneByCoordinatesWithResponseAsync(
+                        format, query, acceptLanguage, options, timeStamp, transitionsFrom, transitionsYears)
+                .flatMap(
+                        (Response<TimezoneByCoordinatesResult> res) -> {
+                            if (res.getValue() != null) {
+                                return Mono.just(res.getValue());
+                            } else {
+                                return Mono.empty();
+                            }
+                        });
+    }
+
+    /**
+     * __Time Zone by Coordinates__
+     *
+     * <p>**Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>This API returns current, historical, and future time zone information for a specified latitude-longitude
+     * pair. In addition, the API provides sunset and sunrise times for a given location.
+     *
+     * @param format Desired format of the response. Only `json` format is supported.
+     * @param query Coordinates of the point for which time zone information is requested. The applicable query is
+     *     specified as a comma separated string composed by latitude followed by longitude e.g.
+     *     "47.641268,-122.125679".
+     * @param acceptLanguage Specifies the language code in which the timezone names should be returned. If no language
+     *     code is provided, the response will be in "EN". Please refer to [Supported
+     *     Languages](https://docs.microsoft.com/en-us/azure/azure-maps/supported-languages) for details.
+     * @param options Alternatively, use alias "o". Options available for types of information returned in the result.
+     * @param timeStamp Alternatively, use alias "stamp", or "s". Reference time, if omitted, the API will use the
+     *     machine time serving the request.
+     * @param transitionsFrom Alternatively, use alias "tf". The start date from which daylight savings time (DST)
+     *     transitions are requested, only applies when "options" = all or "options" = transitions.
+     * @param transitionsYears Alternatively, use alias "ty". The number of years from "transitionsFrom" for which DST
+     *     transitions are requested, only applies when "options" = all or "options" = transitions.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful Timezone By Coordinates call.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public TimezoneByCoordinatesResult getTimezoneByCoordinates(
+            ResponseFormat format,
+            String query,
+            String acceptLanguage,
+            TimezoneOptions options,
+            OffsetDateTime timeStamp,
+            OffsetDateTime transitionsFrom,
+            Integer transitionsYears) {
+        return getTimezoneByCoordinatesAsync(
+                        format, query, acceptLanguage, options, timeStamp, transitionsFrom, transitionsYears)
+                .block();
+    }
+
+    /**
+     * __Enumerate Windows Time Zones__
+     *
+     * <p>**Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>This API returns a full list of Windows Time Zone IDs.
+     *
+     * @param format Desired format of the response. Only `json` format is supported.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful Timezone Enum Windows call.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Response<List<TimezoneEnumWindow>>> getTimezoneEnumWindowsWithResponseAsync(ResponseFormat format) {
+        final String accept = "application/json";
+        return service.getTimezoneEnumWindows(
+                this.client.getGeography(), this.client.getXMsClientId(), this.client.getApiVersion(), format, accept);
+    }
+
+    /**
+     * __Enumerate Windows Time Zones__
+     *
+     * <p>**Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>This API returns a full list of Windows Time Zone IDs.
+     *
+     * @param format Desired format of the response. Only `json` format is supported.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful Timezone Enum Windows call.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<List<TimezoneEnumWindow>> getTimezoneEnumWindowsAsync(ResponseFormat format) {
+        return getTimezoneEnumWindowsWithResponseAsync(format)
+                .flatMap(
+                        (Response<List<TimezoneEnumWindow>> res) -> {
+                            if (res.getValue() != null) {
+                                return Mono.just(res.getValue());
+                            } else {
+                                return Mono.empty();
+                            }
+                        });
+    }
+
+    /**
+     * __Enumerate Windows Time Zones__
+     *
+     * <p>**Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>This API returns a full list of Windows Time Zone IDs.
+     *
+     * @param format Desired format of the response. Only `json` format is supported.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful Timezone Enum Windows call.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
     public List<TimezoneEnumWindow> getTimezoneEnumWindows(ResponseFormat format) {
-        List<TimezoneEnumWindowInner> inner = this.serviceClient().getTimezoneEnumWindows(format);
-        if (inner != null) {
-            return Collections
-                .unmodifiableList(
-                    inner
-                        .stream()
-                        .map(inner1 -> new TimezoneEnumWindowImpl(inner1, this.manager()))
-                        .collect(Collectors.toList()));
-        } else {
-            return Collections.emptyList();
-        }
+        return getTimezoneEnumWindowsAsync(format).block();
     }
 
-    public Response<List<TimezoneEnumWindow>> getTimezoneEnumWindowsWithResponse(
-        ResponseFormat format, Context context) {
-        Response<List<TimezoneEnumWindowInner>> inner =
-            this.serviceClient().getTimezoneEnumWindowsWithResponse(format, context);
-        if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
-                inner
-                    .getValue()
-                    .stream()
-                    .map(inner1 -> new TimezoneEnumWindowImpl(inner1, this.manager()))
-                    .collect(Collectors.toList()));
-        } else {
-            return null;
-        }
+    /**
+     * __Enumerate IANA Time Zones__
+     *
+     * <p>**Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>This API returns a full list of IANA time zone IDs. Updates to the IANA service will be reflected in the
+     * system within one day.
+     *
+     * @param format Desired format of the response. Only `json` format is supported.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful Timezone Enum IANA call.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Response<List<IanaId>>> getTimezoneEnumIanaWithResponseAsync(ResponseFormat format) {
+        final String accept = "application/json";
+        return service.getTimezoneEnumIana(
+                this.client.getGeography(), this.client.getXMsClientId(), this.client.getApiVersion(), format, accept);
     }
 
+    /**
+     * __Enumerate IANA Time Zones__
+     *
+     * <p>**Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>This API returns a full list of IANA time zone IDs. Updates to the IANA service will be reflected in the
+     * system within one day.
+     *
+     * @param format Desired format of the response. Only `json` format is supported.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful Timezone Enum IANA call.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<List<IanaId>> getTimezoneEnumIanaAsync(ResponseFormat format) {
+        return getTimezoneEnumIanaWithResponseAsync(format)
+                .flatMap(
+                        (Response<List<IanaId>> res) -> {
+                            if (res.getValue() != null) {
+                                return Mono.just(res.getValue());
+                            } else {
+                                return Mono.empty();
+                            }
+                        });
+    }
+
+    /**
+     * __Enumerate IANA Time Zones__
+     *
+     * <p>**Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>This API returns a full list of IANA time zone IDs. Updates to the IANA service will be reflected in the
+     * system within one day.
+     *
+     * @param format Desired format of the response. Only `json` format is supported.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful Timezone Enum IANA call.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
     public List<IanaId> getTimezoneEnumIana(ResponseFormat format) {
-        List<IanaIdInner> inner = this.serviceClient().getTimezoneEnumIana(format);
-        if (inner != null) {
-            return Collections
-                .unmodifiableList(
-                    inner.stream().map(inner1 -> new IanaIdImpl(inner1, this.manager())).collect(Collectors.toList()));
-        } else {
-            return Collections.emptyList();
-        }
+        return getTimezoneEnumIanaAsync(format).block();
     }
 
-    public Response<List<IanaId>> getTimezoneEnumIanaWithResponse(ResponseFormat format, Context context) {
-        Response<List<IanaIdInner>> inner = this.serviceClient().getTimezoneEnumIanaWithResponse(format, context);
-        if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
-                inner
-                    .getValue()
-                    .stream()
-                    .map(inner1 -> new IanaIdImpl(inner1, this.manager()))
-                    .collect(Collectors.toList()));
-        } else {
-            return null;
-        }
+    /**
+     * __Time Zone IANA Version__
+     *
+     * <p>**Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>This API returns the current IANA version number.
+     *
+     * @param format Desired format of the response. Only `json` format is supported.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful Timezone IANA Version call.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Response<TimezoneIanaVersionResult>> getTimezoneIanaVersionWithResponseAsync(ResponseFormat format) {
+        final String accept = "application/json";
+        return service.getTimezoneIanaVersion(
+                this.client.getGeography(), this.client.getXMsClientId(), this.client.getApiVersion(), format, accept);
     }
 
+    /**
+     * __Time Zone IANA Version__
+     *
+     * <p>**Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>This API returns the current IANA version number.
+     *
+     * @param format Desired format of the response. Only `json` format is supported.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful Timezone IANA Version call.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<TimezoneIanaVersionResult> getTimezoneIanaVersionAsync(ResponseFormat format) {
+        return getTimezoneIanaVersionWithResponseAsync(format)
+                .flatMap(
+                        (Response<TimezoneIanaVersionResult> res) -> {
+                            if (res.getValue() != null) {
+                                return Mono.just(res.getValue());
+                            } else {
+                                return Mono.empty();
+                            }
+                        });
+    }
+
+    /**
+     * __Time Zone IANA Version__
+     *
+     * <p>**Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>This API returns the current IANA version number.
+     *
+     * @param format Desired format of the response. Only `json` format is supported.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful Timezone IANA Version call.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
     public TimezoneIanaVersionResult getTimezoneIanaVersion(ResponseFormat format) {
-        TimezoneIanaVersionResultInner inner = this.serviceClient().getTimezoneIanaVersion(format);
-        if (inner != null) {
-            return new TimezoneIanaVersionResultImpl(inner, this.manager());
-        } else {
-            return null;
-        }
+        return getTimezoneIanaVersionAsync(format).block();
     }
 
-    public Response<TimezoneIanaVersionResult> getTimezoneIanaVersionWithResponse(
-        ResponseFormat format, Context context) {
-        Response<TimezoneIanaVersionResultInner> inner =
-            this.serviceClient().getTimezoneIanaVersionWithResponse(format, context);
-        if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
-                new TimezoneIanaVersionResultImpl(inner.getValue(), this.manager()));
-        } else {
-            return null;
-        }
+    /**
+     * __Windows to IANA Time Zone__
+     *
+     * <p>**Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>This API returns a corresponding IANA ID, given a valid Windows Time Zone ID. Multiple IANA IDs may be
+     * returned for a single Windows ID. It is possible to narrow these results by adding an optional territory
+     * parameter.
+     *
+     * @param format Desired format of the response. Only `json` format is supported.
+     * @param query The Windows time zone ID.
+     * @param territory Windows Time Zone territory code.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful Timezone Windows To IANA call.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Response<List<IanaId>>> getTimezoneWindowsToIanaWithResponseAsync(
+            ResponseFormat format, String query, String territory) {
+        final String accept = "application/json";
+        return service.getTimezoneWindowsToIana(
+                this.client.getGeography(),
+                this.client.getXMsClientId(),
+                this.client.getApiVersion(),
+                format,
+                query,
+                territory,
+                accept);
     }
 
-    public List<IanaId> getTimezoneWindowsToIana(ResponseFormat format, String query) {
-        List<IanaIdInner> inner = this.serviceClient().getTimezoneWindowsToIana(format, query);
-        if (inner != null) {
-            return Collections
-                .unmodifiableList(
-                    inner.stream().map(inner1 -> new IanaIdImpl(inner1, this.manager())).collect(Collectors.toList()));
-        } else {
-            return Collections.emptyList();
-        }
+    /**
+     * __Windows to IANA Time Zone__
+     *
+     * <p>**Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>This API returns a corresponding IANA ID, given a valid Windows Time Zone ID. Multiple IANA IDs may be
+     * returned for a single Windows ID. It is possible to narrow these results by adding an optional territory
+     * parameter.
+     *
+     * @param format Desired format of the response. Only `json` format is supported.
+     * @param query The Windows time zone ID.
+     * @param territory Windows Time Zone territory code.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful Timezone Windows To IANA call.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<List<IanaId>> getTimezoneWindowsToIanaAsync(ResponseFormat format, String query, String territory) {
+        return getTimezoneWindowsToIanaWithResponseAsync(format, query, territory)
+                .flatMap(
+                        (Response<List<IanaId>> res) -> {
+                            if (res.getValue() != null) {
+                                return Mono.just(res.getValue());
+                            } else {
+                                return Mono.empty();
+                            }
+                        });
     }
 
-    public Response<List<IanaId>> getTimezoneWindowsToIanaWithResponse(
-        ResponseFormat format, String query, String territory, Context context) {
-        Response<List<IanaIdInner>> inner =
-            this.serviceClient().getTimezoneWindowsToIanaWithResponse(format, query, territory, context);
-        if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
-                inner
-                    .getValue()
-                    .stream()
-                    .map(inner1 -> new IanaIdImpl(inner1, this.manager()))
-                    .collect(Collectors.toList()));
-        } else {
-            return null;
-        }
-    }
-
-    private TimezonesClient serviceClient() {
-        return this.innerClient;
-    }
-
-    private com.azure.maps.timezone.TimezoneManager manager() {
-        return this.serviceManager;
+    /**
+     * __Windows to IANA Time Zone__
+     *
+     * <p>**Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>This API returns a corresponding IANA ID, given a valid Windows Time Zone ID. Multiple IANA IDs may be
+     * returned for a single Windows ID. It is possible to narrow these results by adding an optional territory
+     * parameter.
+     *
+     * @param format Desired format of the response. Only `json` format is supported.
+     * @param query The Windows time zone ID.
+     * @param territory Windows Time Zone territory code.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful Timezone Windows To IANA call.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public List<IanaId> getTimezoneWindowsToIana(ResponseFormat format, String query, String territory) {
+        return getTimezoneWindowsToIanaAsync(format, query, territory).block();
     }
 }

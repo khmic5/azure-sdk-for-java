@@ -5,15 +5,11 @@
 package com.azure.maps.search.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** The SearchesPostSearchFuzzyBatchHeaders model. */
 @Fluent
 public final class SearchesPostSearchFuzzyBatchHeaders {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(SearchesPostSearchFuzzyBatchHeaders.class);
-
     /*
      * The Location property.
      */
@@ -25,7 +21,7 @@ public final class SearchesPostSearchFuzzyBatchHeaders {
      *
      * @return the location value.
      */
-    public String location() {
+    public String getLocation() {
         return this.location;
     }
 
@@ -35,16 +31,8 @@ public final class SearchesPostSearchFuzzyBatchHeaders {
      * @param location the location value to set.
      * @return the SearchesPostSearchFuzzyBatchHeaders object itself.
      */
-    public SearchesPostSearchFuzzyBatchHeaders withLocation(String location) {
+    public SearchesPostSearchFuzzyBatchHeaders setLocation(String location) {
         this.location = location;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

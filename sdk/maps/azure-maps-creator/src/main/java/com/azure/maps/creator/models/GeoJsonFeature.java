@@ -5,8 +5,6 @@
 package com.azure.maps.creator.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
@@ -19,8 +17,6 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 @JsonTypeName("Feature")
 @Fluent
 public final class GeoJsonFeature extends GeoJsonObject {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(GeoJsonFeature.class);
-
     /*
      * A valid `GeoJSON` geometry object. The type must be one of the seven
      * valid GeoJSON geometry types - Point, MultiPoint, LineString,
@@ -58,7 +54,7 @@ public final class GeoJsonFeature extends GeoJsonObject {
      *
      * @return the geometry value.
      */
-    public GeoJsonGeometry geometry() {
+    public GeoJsonGeometry getGeometry() {
         return this.geometry;
     }
 
@@ -70,7 +66,7 @@ public final class GeoJsonFeature extends GeoJsonObject {
      * @param geometry the geometry value to set.
      * @return the GeoJsonFeature object itself.
      */
-    public GeoJsonFeature withGeometry(GeoJsonGeometry geometry) {
+    public GeoJsonFeature setGeometry(GeoJsonGeometry geometry) {
         this.geometry = geometry;
         return this;
     }
@@ -81,7 +77,7 @@ public final class GeoJsonFeature extends GeoJsonObject {
      *
      * @return the properties value.
      */
-    public Object properties() {
+    public Object getProperties() {
         return this.properties;
     }
 
@@ -92,7 +88,7 @@ public final class GeoJsonFeature extends GeoJsonObject {
      * @param properties the properties value to set.
      * @return the GeoJsonFeature object itself.
      */
-    public GeoJsonFeature withProperties(Object properties) {
+    public GeoJsonFeature setProperties(Object properties) {
         this.properties = properties;
         return this;
     }
@@ -102,7 +98,7 @@ public final class GeoJsonFeature extends GeoJsonObject {
      *
      * @return the id value.
      */
-    public String id() {
+    public String getId() {
         return this.id;
     }
 
@@ -112,7 +108,7 @@ public final class GeoJsonFeature extends GeoJsonObject {
      * @param id the id value to set.
      * @return the GeoJsonFeature object itself.
      */
-    public GeoJsonFeature withId(String id) {
+    public GeoJsonFeature setId(String id) {
         this.id = id;
         return this;
     }
@@ -123,7 +119,7 @@ public final class GeoJsonFeature extends GeoJsonObject {
      *
      * @return the featureType value.
      */
-    public String featureType() {
+    public String getFeatureType() {
         return this.featureType;
     }
 
@@ -134,25 +130,8 @@ public final class GeoJsonFeature extends GeoJsonObject {
      * @param featureType the featureType value to set.
      * @return the GeoJsonFeature object itself.
      */
-    public GeoJsonFeature withFeatureType(String featureType) {
+    public GeoJsonFeature setFeatureType(String featureType) {
         this.featureType = featureType;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    @Override
-    public void validate() {
-        super.validate();
-        if (geometry() == null) {
-            throw logger
-                .logExceptionAsError(
-                    new IllegalArgumentException("Missing required property geometry in model GeoJsonFeature"));
-        } else {
-            geometry().validate();
-        }
     }
 }

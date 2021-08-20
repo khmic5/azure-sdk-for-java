@@ -4,28 +4,50 @@
 
 package com.azure.maps.creator.models;
 
-import com.azure.maps.creator.fluent.models.BufferResponseInner;
+import com.azure.core.annotation.Fluent;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** An immutable client-side representation of BufferResponse. */
-public interface BufferResponse {
+/** This object is returned from a successful Spatial Buffer call. */
+@Fluent
+public final class BufferResponse {
+    /*
+     * Summary of the call.
+     */
+    @JsonProperty(value = "summary", access = JsonProperty.Access.WRITE_ONLY)
+    private BufferResponseSummary summary;
+
+    /*
+     * The FeatureCollection of buffers for the input.
+     */
+    @JsonProperty(value = "result")
+    private GeoJsonFeatureCollection result;
+
     /**
-     * Gets the summary property: Summary of the call.
+     * Get the summary property: Summary of the call.
      *
      * @return the summary value.
      */
-    BufferResponseSummary summary();
+    public BufferResponseSummary getSummary() {
+        return this.summary;
+    }
 
     /**
-     * Gets the result property: The FeatureCollection of buffers for the input.
+     * Get the result property: The FeatureCollection of buffers for the input.
      *
      * @return the result value.
      */
-    GeoJsonFeatureCollection result();
+    public GeoJsonFeatureCollection getResult() {
+        return this.result;
+    }
 
     /**
-     * Gets the inner com.azure.maps.creator.fluent.models.BufferResponseInner object.
+     * Set the result property: The FeatureCollection of buffers for the input.
      *
-     * @return the inner object.
+     * @param result the result value to set.
+     * @return the BufferResponse object itself.
      */
-    BufferResponseInner innerModel();
+    public BufferResponse setResult(GeoJsonFeatureCollection result) {
+        this.result = result;
+        return this;
+    }
 }

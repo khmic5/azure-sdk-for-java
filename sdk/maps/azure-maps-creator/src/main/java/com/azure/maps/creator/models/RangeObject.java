@@ -5,15 +5,11 @@
 package com.azure.maps.creator.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** The numeric value range for this style rule. If the value is in the range, all the conditions must hold true. */
 @Fluent
 public final class RangeObject {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(RangeObject.class);
-
     /*
      * All the number x that x ≥ minimum.
      */
@@ -43,7 +39,7 @@ public final class RangeObject {
      *
      * @return the minimum value.
      */
-    public String minimum() {
+    public String getMinimum() {
         return this.minimum;
     }
 
@@ -53,7 +49,7 @@ public final class RangeObject {
      * @param minimum the minimum value to set.
      * @return the RangeObject object itself.
      */
-    public RangeObject withMinimum(String minimum) {
+    public RangeObject setMinimum(String minimum) {
         this.minimum = minimum;
         return this;
     }
@@ -63,7 +59,7 @@ public final class RangeObject {
      *
      * @return the maximum value.
      */
-    public String maximum() {
+    public String getMaximum() {
         return this.maximum;
     }
 
@@ -73,7 +69,7 @@ public final class RangeObject {
      * @param maximum the maximum value to set.
      * @return the RangeObject object itself.
      */
-    public RangeObject withMaximum(String maximum) {
+    public RangeObject setMaximum(String maximum) {
         this.maximum = maximum;
         return this;
     }
@@ -83,7 +79,7 @@ public final class RangeObject {
      *
      * @return the exclusiveMinimum value.
      */
-    public String exclusiveMinimum() {
+    public String getExclusiveMinimum() {
         return this.exclusiveMinimum;
     }
 
@@ -93,7 +89,7 @@ public final class RangeObject {
      * @param exclusiveMinimum the exclusiveMinimum value to set.
      * @return the RangeObject object itself.
      */
-    public RangeObject withExclusiveMinimum(String exclusiveMinimum) {
+    public RangeObject setExclusiveMinimum(String exclusiveMinimum) {
         this.exclusiveMinimum = exclusiveMinimum;
         return this;
     }
@@ -103,7 +99,7 @@ public final class RangeObject {
      *
      * @return the exclusiveMaximum value.
      */
-    public String exclusiveMaximum() {
+    public String getExclusiveMaximum() {
         return this.exclusiveMaximum;
     }
 
@@ -113,16 +109,8 @@ public final class RangeObject {
      * @param exclusiveMaximum the exclusiveMaximum value to set.
      * @return the RangeObject object itself.
      */
-    public RangeObject withExclusiveMaximum(String exclusiveMaximum) {
+    public RangeObject setExclusiveMaximum(String exclusiveMaximum) {
         this.exclusiveMaximum = exclusiveMaximum;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

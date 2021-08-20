@@ -5,16 +5,12 @@
 package com.azure.maps.search.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /** POI category result. */
 @Immutable
 public final class PoiCategoryResult {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(PoiCategoryResult.class);
-
     /*
      * Unique ID for the category. ID can be used to restrict search results to
      * specific categories through other Search Service APIs, like [Get Search
@@ -48,7 +44,7 @@ public final class PoiCategoryResult {
      *
      * @return the id value.
      */
-    public Integer id() {
+    public Integer getId() {
         return this.id;
     }
 
@@ -57,7 +53,7 @@ public final class PoiCategoryResult {
      *
      * @return the name value.
      */
-    public String name() {
+    public String getName() {
         return this.name;
     }
 
@@ -66,7 +62,7 @@ public final class PoiCategoryResult {
      *
      * @return the childCategoryIds value.
      */
-    public List<Integer> childCategoryIds() {
+    public List<Integer> getChildCategoryIds() {
         return this.childCategoryIds;
     }
 
@@ -75,15 +71,7 @@ public final class PoiCategoryResult {
      *
      * @return the synonyms value.
      */
-    public List<String> synonyms() {
+    public List<String> getSynonyms() {
         return this.synonyms;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

@@ -4,29 +4,25 @@
 
 package com.azure.maps.route.models;
 
-import com.azure.maps.route.fluent.models.RouteDirectionsBatchResponseInner;
+import com.azure.core.annotation.Immutable;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/** An immutable client-side representation of RouteDirectionsBatchResponse. */
-public interface RouteDirectionsBatchResponse {
-    /**
-     * Gets the summary property: Summary for the batch request.
-     *
-     * @return the summary value.
+/** This object is returned from a successful Route Directions Batch service call. */
+@Immutable
+public final class RouteDirectionsBatchResponse extends BatchResponse {
+    /*
+     * Array containing the batch results.
      */
-    BatchResponseSummary summary();
+    @JsonProperty(value = "batchItems", access = JsonProperty.Access.WRITE_ONLY)
+    private List<RouteDirectionsBatchItem> batchItems;
 
     /**
-     * Gets the batchItems property: Array containing the batch results.
+     * Get the batchItems property: Array containing the batch results.
      *
      * @return the batchItems value.
      */
-    List<RouteDirectionsBatchItem> batchItems();
-
-    /**
-     * Gets the inner com.azure.maps.route.fluent.models.RouteDirectionsBatchResponseInner object.
-     *
-     * @return the inner object.
-     */
-    RouteDirectionsBatchResponseInner innerModel();
+    public List<RouteDirectionsBatchItem> getBatchItems() {
+        return this.batchItems;
+    }
 }

@@ -5,8 +5,6 @@
 package com.azure.maps.creator.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -18,10 +16,10 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
  * [here](https://aka.ms/AzureMapsStatesetStylesObject).
  */
 @JsonTypeInfo(
-    use = JsonTypeInfo.Id.NAME,
-    include = JsonTypeInfo.As.PROPERTY,
-    property = "type",
-    defaultImpl = StyleObject.class)
+        use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "type",
+        defaultImpl = StyleObject.class)
 @JsonTypeName("StyleObject")
 @JsonSubTypes({
     @JsonSubTypes.Type(name = "boolean", value = BooleanTypeStyleRule.class),
@@ -30,8 +28,6 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 })
 @Fluent
 public class StyleObject {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(StyleObject.class);
-
     /*
      * Stateset style key name. Key names are random strings but they should be
      * unique inside style array.
@@ -45,7 +41,7 @@ public class StyleObject {
      *
      * @return the keyName value.
      */
-    public String keyName() {
+    public String getKeyName() {
         return this.keyName;
     }
 
@@ -56,21 +52,8 @@ public class StyleObject {
      * @param keyName the keyName value to set.
      * @return the StyleObject object itself.
      */
-    public StyleObject withKeyName(String keyName) {
+    public StyleObject setKeyName(String keyName) {
         this.keyName = keyName;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (keyName() == null) {
-            throw logger
-                .logExceptionAsError(
-                    new IllegalArgumentException("Missing required property keyName in model StyleObject"));
-        }
     }
 }

@@ -4,22 +4,36 @@
 
 package com.azure.maps.weather.models;
 
-import com.azure.maps.weather.fluent.models.SevereWeatherAlertsResponseInner;
+import com.azure.core.annotation.Fluent;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/** An immutable client-side representation of SevereWeatherAlertsResponse. */
-public interface SevereWeatherAlertsResponse {
+/** This object is returned from a successful Get Severe Weather Alerts call. */
+@Fluent
+public final class SevereWeatherAlertsResponse {
+    /*
+     * A list of all severe weather alerts for the queried location.
+     */
+    @JsonProperty(value = "results")
+    private List<SevereWeatherAlert> results;
+
     /**
-     * Gets the results property: A list of all severe weather alerts for the queried location.
+     * Get the results property: A list of all severe weather alerts for the queried location.
      *
      * @return the results value.
      */
-    List<SevereWeatherAlert> results();
+    public List<SevereWeatherAlert> getResults() {
+        return this.results;
+    }
 
     /**
-     * Gets the inner com.azure.maps.weather.fluent.models.SevereWeatherAlertsResponseInner object.
+     * Set the results property: A list of all severe weather alerts for the queried location.
      *
-     * @return the inner object.
+     * @param results the results value to set.
+     * @return the SevereWeatherAlertsResponse object itself.
      */
-    SevereWeatherAlertsResponseInner innerModel();
+    public SevereWeatherAlertsResponse setResults(List<SevereWeatherAlert> results) {
+        this.results = results;
+        return this;
+    }
 }

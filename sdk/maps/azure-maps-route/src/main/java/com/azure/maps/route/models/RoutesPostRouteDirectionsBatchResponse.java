@@ -7,11 +7,10 @@ package com.azure.maps.route.models;
 import com.azure.core.http.HttpHeaders;
 import com.azure.core.http.HttpRequest;
 import com.azure.core.http.rest.ResponseBase;
-import com.azure.maps.route.fluent.models.RouteDirectionsBatchResponseInner;
 
 /** Contains all response data for the postRouteDirectionsBatch operation. */
 public final class RoutesPostRouteDirectionsBatchResponse
-    extends ResponseBase<RoutesPostRouteDirectionsBatchHeaders, RouteDirectionsBatchResponseInner> {
+        extends ResponseBase<RoutesPostRouteDirectionsBatchHeaders, RouteDirectionsBatchResponse> {
     /**
      * Creates an instance of RoutesPostRouteDirectionsBatchResponse.
      *
@@ -22,17 +21,17 @@ public final class RoutesPostRouteDirectionsBatchResponse
      * @param headers the deserialized headers of the HTTP response.
      */
     public RoutesPostRouteDirectionsBatchResponse(
-        HttpRequest request,
-        int statusCode,
-        HttpHeaders rawHeaders,
-        RouteDirectionsBatchResponseInner value,
-        RoutesPostRouteDirectionsBatchHeaders headers) {
+            HttpRequest request,
+            int statusCode,
+            HttpHeaders rawHeaders,
+            RouteDirectionsBatchResponse value,
+            RoutesPostRouteDirectionsBatchHeaders headers) {
         super(request, statusCode, rawHeaders, value, headers);
     }
 
     /** @return the deserialized response body. */
     @Override
-    public RouteDirectionsBatchResponseInner getValue() {
+    public RouteDirectionsBatchResponse getValue() {
         return super.getValue();
     }
 }

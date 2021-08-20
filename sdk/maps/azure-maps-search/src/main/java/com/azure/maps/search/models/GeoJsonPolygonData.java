@@ -5,16 +5,12 @@
 package com.azure.maps.search.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /** The GeoJsonPolygonData model. */
 @Fluent
 public class GeoJsonPolygonData {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(GeoJsonPolygonData.class);
-
     /*
      * Coordinates for the `GeoJson Polygon` geometry type.
      */
@@ -26,7 +22,7 @@ public class GeoJsonPolygonData {
      *
      * @return the coordinates value.
      */
-    public List<List<List<Double>>> coordinates() {
+    public List<List<List<Double>>> getCoordinates() {
         return this.coordinates;
     }
 
@@ -36,21 +32,8 @@ public class GeoJsonPolygonData {
      * @param coordinates the coordinates value to set.
      * @return the GeoJsonPolygonData object itself.
      */
-    public GeoJsonPolygonData withCoordinates(List<List<List<Double>>> coordinates) {
+    public GeoJsonPolygonData setCoordinates(List<List<List<Double>>> coordinates) {
         this.coordinates = coordinates;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (coordinates() == null) {
-            throw logger
-                .logExceptionAsError(
-                    new IllegalArgumentException("Missing required property coordinates in model GeoJsonPolygonData"));
-        }
     }
 }

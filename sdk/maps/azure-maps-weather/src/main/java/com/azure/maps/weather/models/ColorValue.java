@@ -5,15 +5,11 @@
 package com.azure.maps.weather.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** The ColorValue model. */
 @Fluent
 public final class ColorValue {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(ColorValue.class);
-
     /*
      * Red component of the RGB value.
      */
@@ -43,7 +39,7 @@ public final class ColorValue {
      *
      * @return the red value.
      */
-    public Integer red() {
+    public Integer getRed() {
         return this.red;
     }
 
@@ -53,7 +49,7 @@ public final class ColorValue {
      * @param red the red value to set.
      * @return the ColorValue object itself.
      */
-    public ColorValue withRed(Integer red) {
+    public ColorValue setRed(Integer red) {
         this.red = red;
         return this;
     }
@@ -63,7 +59,7 @@ public final class ColorValue {
      *
      * @return the green value.
      */
-    public Integer green() {
+    public Integer getGreen() {
         return this.green;
     }
 
@@ -73,7 +69,7 @@ public final class ColorValue {
      * @param green the green value to set.
      * @return the ColorValue object itself.
      */
-    public ColorValue withGreen(Integer green) {
+    public ColorValue setGreen(Integer green) {
         this.green = green;
         return this;
     }
@@ -83,7 +79,7 @@ public final class ColorValue {
      *
      * @return the blue value.
      */
-    public Integer blue() {
+    public Integer getBlue() {
         return this.blue;
     }
 
@@ -93,7 +89,7 @@ public final class ColorValue {
      * @param blue the blue value to set.
      * @return the ColorValue object itself.
      */
-    public ColorValue withBlue(Integer blue) {
+    public ColorValue setBlue(Integer blue) {
         this.blue = blue;
         return this;
     }
@@ -103,7 +99,7 @@ public final class ColorValue {
      *
      * @return the hex value.
      */
-    public String hex() {
+    public String getHex() {
         return this.hex;
     }
 
@@ -113,16 +109,8 @@ public final class ColorValue {
      * @param hex the hex value to set.
      * @return the ColorValue object itself.
      */
-    public ColorValue withHex(String hex) {
+    public ColorValue setHex(String hex) {
         this.hex = hex;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

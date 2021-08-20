@@ -5,15 +5,11 @@
 package com.azure.maps.creator.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** Point In Polygon Summary object. */
 @Fluent
 public final class PointInPolygonSummary {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(PointInPolygonSummary.class);
-
     /*
      * A location represented as a latitude and longitude
      */
@@ -38,7 +34,7 @@ public final class PointInPolygonSummary {
      *
      * @return the sourcePoint value.
      */
-    public SpatialCoordinate sourcePoint() {
+    public SpatialCoordinate getSourcePoint() {
         return this.sourcePoint;
     }
 
@@ -48,7 +44,7 @@ public final class PointInPolygonSummary {
      * @param sourcePoint the sourcePoint value to set.
      * @return the PointInPolygonSummary object itself.
      */
-    public PointInPolygonSummary withSourcePoint(SpatialCoordinate sourcePoint) {
+    public PointInPolygonSummary setSourcePoint(SpatialCoordinate sourcePoint) {
         this.sourcePoint = sourcePoint;
         return this;
     }
@@ -59,7 +55,7 @@ public final class PointInPolygonSummary {
      *
      * @return the udid value.
      */
-    public String udid() {
+    public String getUdid() {
         return this.udid;
     }
 
@@ -68,18 +64,7 @@ public final class PointInPolygonSummary {
      *
      * @return the information value.
      */
-    public String information() {
+    public String getInformation() {
         return this.information;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (sourcePoint() != null) {
-            sourcePoint().validate();
-        }
     }
 }

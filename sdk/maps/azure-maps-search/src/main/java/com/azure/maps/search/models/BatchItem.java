@@ -5,15 +5,11 @@
 package com.azure.maps.search.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** An item returned from Batch API. Extend with 'response' property. */
 @Immutable
 public class BatchItem {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(BatchItem.class);
-
     /*
      * HTTP request status code.
      */
@@ -25,15 +21,7 @@ public class BatchItem {
      *
      * @return the statusCode value.
      */
-    public Float statusCode() {
+    public Float getStatusCode() {
         return this.statusCode;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

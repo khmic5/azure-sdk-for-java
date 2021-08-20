@@ -4,29 +4,40 @@
 
 package com.azure.maps.search.models;
 
-import com.azure.maps.search.fluent.models.SearchAddressReverseResponseInner;
+import com.azure.core.annotation.Immutable;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/** An immutable client-side representation of SearchAddressReverseResponse. */
-public interface SearchAddressReverseResponse {
+/** This object is returned from a successful Search Address Reverse call. */
+@Immutable
+public class SearchAddressReverseResponse {
+    /*
+     * Summary object for a Search Address Reverse response
+     */
+    @JsonProperty(value = "summary", access = JsonProperty.Access.WRITE_ONLY)
+    private SearchCommonSummary summary;
+
+    /*
+     * Addresses array
+     */
+    @JsonProperty(value = "addresses", access = JsonProperty.Access.WRITE_ONLY)
+    private List<SearchAddressReverseResult> addresses;
+
     /**
-     * Gets the summary property: Summary object for a Search Address Reverse response.
+     * Get the summary property: Summary object for a Search Address Reverse response.
      *
      * @return the summary value.
      */
-    SearchCommonSummary summary();
+    public SearchCommonSummary getSummary() {
+        return this.summary;
+    }
 
     /**
-     * Gets the addresses property: Addresses array.
+     * Get the addresses property: Addresses array.
      *
      * @return the addresses value.
      */
-    List<SearchAddressReverseResult> addresses();
-
-    /**
-     * Gets the inner com.azure.maps.search.fluent.models.SearchAddressReverseResponseInner object.
-     *
-     * @return the inner object.
-     */
-    SearchAddressReverseResponseInner innerModel();
+    public List<SearchAddressReverseResult> getAddresses() {
+        return this.addresses;
+    }
 }

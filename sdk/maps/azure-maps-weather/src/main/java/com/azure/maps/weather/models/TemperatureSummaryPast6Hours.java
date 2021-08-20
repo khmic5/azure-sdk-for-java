@@ -5,15 +5,11 @@
 package com.azure.maps.weather.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** Summary of temperature fluctuations over the past 6 hours. */
 @Fluent
 public final class TemperatureSummaryPast6Hours {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(TemperatureSummaryPast6Hours.class);
-
     /*
      * minimum
      */
@@ -31,7 +27,7 @@ public final class TemperatureSummaryPast6Hours {
      *
      * @return the minimum value.
      */
-    public WeatherUnit minimum() {
+    public WeatherUnit getMinimum() {
         return this.minimum;
     }
 
@@ -41,7 +37,7 @@ public final class TemperatureSummaryPast6Hours {
      * @param minimum the minimum value to set.
      * @return the TemperatureSummaryPast6Hours object itself.
      */
-    public TemperatureSummaryPast6Hours withMinimum(WeatherUnit minimum) {
+    public TemperatureSummaryPast6Hours setMinimum(WeatherUnit minimum) {
         this.minimum = minimum;
         return this;
     }
@@ -51,7 +47,7 @@ public final class TemperatureSummaryPast6Hours {
      *
      * @return the maximum value.
      */
-    public WeatherUnit maximum() {
+    public WeatherUnit getMaximum() {
         return this.maximum;
     }
 
@@ -61,22 +57,8 @@ public final class TemperatureSummaryPast6Hours {
      * @param maximum the maximum value to set.
      * @return the TemperatureSummaryPast6Hours object itself.
      */
-    public TemperatureSummaryPast6Hours withMaximum(WeatherUnit maximum) {
+    public TemperatureSummaryPast6Hours setMaximum(WeatherUnit maximum) {
         this.maximum = maximum;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (minimum() != null) {
-            minimum().validate();
-        }
-        if (maximum() != null) {
-            maximum().validate();
-        }
     }
 }

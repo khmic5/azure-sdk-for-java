@@ -4,29 +4,63 @@
 
 package com.azure.maps.weather.models;
 
-import com.azure.maps.weather.fluent.models.WeatherAlongRouteResponseInner;
+import com.azure.core.annotation.Fluent;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/** An immutable client-side representation of WeatherAlongRouteResponse. */
-public interface WeatherAlongRouteResponse {
+/** This object is returned from a successful Weather Along Route. */
+@Fluent
+public final class WeatherAlongRouteResponse {
+    /*
+     * Short summary of the weather along the route.
+     */
+    @JsonProperty(value = "summary")
+    private WeatherAlongRouteSummary summary;
+
+    /*
+     * Data for each waypoint returned in the same order as specified in the
+     * request.
+     */
+    @JsonProperty(value = "waypoints")
+    private List<WeatherWaypoint> waypoints;
+
     /**
-     * Gets the summary property: Short summary of the weather along the route.
+     * Get the summary property: Short summary of the weather along the route.
      *
      * @return the summary value.
      */
-    WeatherAlongRouteSummary summary();
+    public WeatherAlongRouteSummary getSummary() {
+        return this.summary;
+    }
 
     /**
-     * Gets the waypoints property: Data for each waypoint returned in the same order as specified in the request.
+     * Set the summary property: Short summary of the weather along the route.
+     *
+     * @param summary the summary value to set.
+     * @return the WeatherAlongRouteResponse object itself.
+     */
+    public WeatherAlongRouteResponse setSummary(WeatherAlongRouteSummary summary) {
+        this.summary = summary;
+        return this;
+    }
+
+    /**
+     * Get the waypoints property: Data for each waypoint returned in the same order as specified in the request.
      *
      * @return the waypoints value.
      */
-    List<WeatherWaypoint> waypoints();
+    public List<WeatherWaypoint> getWaypoints() {
+        return this.waypoints;
+    }
 
     /**
-     * Gets the inner com.azure.maps.weather.fluent.models.WeatherAlongRouteResponseInner object.
+     * Set the waypoints property: Data for each waypoint returned in the same order as specified in the request.
      *
-     * @return the inner object.
+     * @param waypoints the waypoints value to set.
+     * @return the WeatherAlongRouteResponse object itself.
      */
-    WeatherAlongRouteResponseInner innerModel();
+    public WeatherAlongRouteResponse setWaypoints(List<WeatherWaypoint> waypoints) {
+        this.waypoints = waypoints;
+        return this;
+    }
 }

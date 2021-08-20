@@ -4,78 +4,233 @@
 
 package com.azure.maps.creator.models;
 
-import com.azure.maps.creator.fluent.models.CollectionDefinitionResponseInner;
+import com.azure.core.annotation.Fluent;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/** An immutable client-side representation of CollectionDefinitionResponse. */
-public interface CollectionDefinitionResponse {
+/** collection of GeoJSON features. */
+@Fluent
+public final class CollectionDefinitionResponse {
+    /*
+     * describes the collection
+     */
+    @JsonProperty(value = "description")
+    private String description;
+
+    /*
+     * prefix of the collection used
+     */
+    @JsonProperty(value = "idPrefix", required = true)
+    private String idPrefix;
+
+    /*
+     * identifier of the collection used, for example, in URIs
+     */
+    @JsonProperty(value = "name", required = true)
+    private String name;
+
+    /*
+     * title of collection
+     */
+    @JsonProperty(value = "title")
+    private String title;
+
+    /*
+     * The ontology version of this dataset.
+     */
+    @JsonProperty(value = "ontology", access = JsonProperty.Access.WRITE_ONLY)
+    private String ontology;
+
+    /*
+     * type of geometry returned
+     */
+    @JsonProperty(value = "geometryType", required = true)
+    private GeoJsonGeometryType geometryType;
+
+    /*
+     * type of features returned
+     */
+    @JsonProperty(value = "featureTypes", required = true)
+    private List<String> featureTypes;
+
+    /*
+     * attributes of the collection used
+     */
+    @JsonProperty(value = "properties")
+    private List<DefinitionProperties> properties;
+
+    /*
+     * Links to other WFS endpoints.
+     */
+    @JsonProperty(value = "links")
+    private List<WfsEndpointLink> links;
+
     /**
-     * Gets the description property: describes the collection.
+     * Get the description property: describes the collection.
      *
      * @return the description value.
      */
-    String description();
+    public String getDescription() {
+        return this.description;
+    }
 
     /**
-     * Gets the idPrefix property: prefix of the collection used.
+     * Set the description property: describes the collection.
+     *
+     * @param description the description value to set.
+     * @return the CollectionDefinitionResponse object itself.
+     */
+    public CollectionDefinitionResponse setDescription(String description) {
+        this.description = description;
+        return this;
+    }
+
+    /**
+     * Get the idPrefix property: prefix of the collection used.
      *
      * @return the idPrefix value.
      */
-    String idPrefix();
+    public String getIdPrefix() {
+        return this.idPrefix;
+    }
 
     /**
-     * Gets the name property: identifier of the collection used, for example, in URIs.
+     * Set the idPrefix property: prefix of the collection used.
+     *
+     * @param idPrefix the idPrefix value to set.
+     * @return the CollectionDefinitionResponse object itself.
+     */
+    public CollectionDefinitionResponse setIdPrefix(String idPrefix) {
+        this.idPrefix = idPrefix;
+        return this;
+    }
+
+    /**
+     * Get the name property: identifier of the collection used, for example, in URIs.
      *
      * @return the name value.
      */
-    String name();
+    public String getName() {
+        return this.name;
+    }
 
     /**
-     * Gets the title property: title of collection.
+     * Set the name property: identifier of the collection used, for example, in URIs.
+     *
+     * @param name the name value to set.
+     * @return the CollectionDefinitionResponse object itself.
+     */
+    public CollectionDefinitionResponse setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    /**
+     * Get the title property: title of collection.
      *
      * @return the title value.
      */
-    String title();
+    public String getTitle() {
+        return this.title;
+    }
 
     /**
-     * Gets the ontology property: The ontology version of this dataset.
+     * Set the title property: title of collection.
+     *
+     * @param title the title value to set.
+     * @return the CollectionDefinitionResponse object itself.
+     */
+    public CollectionDefinitionResponse setTitle(String title) {
+        this.title = title;
+        return this;
+    }
+
+    /**
+     * Get the ontology property: The ontology version of this dataset.
      *
      * @return the ontology value.
      */
-    String ontology();
+    public String getOntology() {
+        return this.ontology;
+    }
 
     /**
-     * Gets the geometryType property: type of geometry returned.
+     * Get the geometryType property: type of geometry returned.
      *
      * @return the geometryType value.
      */
-    GeoJsonGeometryType geometryType();
+    public GeoJsonGeometryType getGeometryType() {
+        return this.geometryType;
+    }
 
     /**
-     * Gets the featureTypes property: type of features returned.
+     * Set the geometryType property: type of geometry returned.
+     *
+     * @param geometryType the geometryType value to set.
+     * @return the CollectionDefinitionResponse object itself.
+     */
+    public CollectionDefinitionResponse setGeometryType(GeoJsonGeometryType geometryType) {
+        this.geometryType = geometryType;
+        return this;
+    }
+
+    /**
+     * Get the featureTypes property: type of features returned.
      *
      * @return the featureTypes value.
      */
-    List<String> featureTypes();
+    public List<String> getFeatureTypes() {
+        return this.featureTypes;
+    }
 
     /**
-     * Gets the properties property: attributes of the collection used.
+     * Set the featureTypes property: type of features returned.
+     *
+     * @param featureTypes the featureTypes value to set.
+     * @return the CollectionDefinitionResponse object itself.
+     */
+    public CollectionDefinitionResponse setFeatureTypes(List<String> featureTypes) {
+        this.featureTypes = featureTypes;
+        return this;
+    }
+
+    /**
+     * Get the properties property: attributes of the collection used.
      *
      * @return the properties value.
      */
-    List<DefinitionProperties> properties();
+    public List<DefinitionProperties> getProperties() {
+        return this.properties;
+    }
 
     /**
-     * Gets the links property: Links to other WFS endpoints.
+     * Set the properties property: attributes of the collection used.
+     *
+     * @param properties the properties value to set.
+     * @return the CollectionDefinitionResponse object itself.
+     */
+    public CollectionDefinitionResponse setProperties(List<DefinitionProperties> properties) {
+        this.properties = properties;
+        return this;
+    }
+
+    /**
+     * Get the links property: Links to other WFS endpoints.
      *
      * @return the links value.
      */
-    List<WfsEndpointLink> links();
+    public List<WfsEndpointLink> getLinks() {
+        return this.links;
+    }
 
     /**
-     * Gets the inner com.azure.maps.creator.fluent.models.CollectionDefinitionResponseInner object.
+     * Set the links property: Links to other WFS endpoints.
      *
-     * @return the inner object.
+     * @param links the links value to set.
+     * @return the CollectionDefinitionResponse object itself.
      */
-    CollectionDefinitionResponseInner innerModel();
+    public CollectionDefinitionResponse setLinks(List<WfsEndpointLink> links) {
+        this.links = links;
+        return this;
+    }
 }

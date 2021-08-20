@@ -5,8 +5,6 @@
 package com.azure.maps.route.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
@@ -20,8 +18,6 @@ import java.util.List;
 @JsonTypeName("MultiPolygon")
 @Fluent
 public final class GeoJsonMultiPolygon extends GeoJsonGeometry {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(GeoJsonMultiPolygon.class);
-
     /*
      * Contains a list of valid `GeoJSON Polygon` objects. **Note** that
      * coordinates in GeoJSON are in x, y order (longitude, latitude).
@@ -35,7 +31,7 @@ public final class GeoJsonMultiPolygon extends GeoJsonGeometry {
      *
      * @return the coordinates value.
      */
-    public List<List<List<List<Double>>>> coordinates() {
+    public List<List<List<List<Double>>>> getCoordinates() {
         return this.coordinates;
     }
 
@@ -46,23 +42,8 @@ public final class GeoJsonMultiPolygon extends GeoJsonGeometry {
      * @param coordinates the coordinates value to set.
      * @return the GeoJsonMultiPolygon object itself.
      */
-    public GeoJsonMultiPolygon withCoordinates(List<List<List<List<Double>>>> coordinates) {
+    public GeoJsonMultiPolygon setCoordinates(List<List<List<List<Double>>>> coordinates) {
         this.coordinates = coordinates;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    @Override
-    public void validate() {
-        super.validate();
-        if (coordinates() == null) {
-            throw logger
-                .logExceptionAsError(
-                    new IllegalArgumentException("Missing required property coordinates in model GeoJsonMultiPolygon"));
-        }
     }
 }

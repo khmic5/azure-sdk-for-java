@@ -4,22 +4,36 @@
 
 package com.azure.maps.weather.models;
 
-import com.azure.maps.weather.fluent.models.HourlyForecastResponseInner;
+import com.azure.core.annotation.Fluent;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/** An immutable client-side representation of HourlyForecastResponse. */
-public interface HourlyForecastResponse {
+/** The HourlyForecastResponse model. */
+@Fluent
+public final class HourlyForecastResponse {
+    /*
+     * Forecast data for each returned hour.
+     */
+    @JsonProperty(value = "forecasts")
+    private List<HourlyForecast> forecasts;
+
     /**
-     * Gets the forecasts property: Forecast data for each returned hour.
+     * Get the forecasts property: Forecast data for each returned hour.
      *
      * @return the forecasts value.
      */
-    List<HourlyForecast> forecasts();
+    public List<HourlyForecast> getForecasts() {
+        return this.forecasts;
+    }
 
     /**
-     * Gets the inner com.azure.maps.weather.fluent.models.HourlyForecastResponseInner object.
+     * Set the forecasts property: Forecast data for each returned hour.
      *
-     * @return the inner object.
+     * @param forecasts the forecasts value to set.
+     * @return the HourlyForecastResponse object itself.
      */
-    HourlyForecastResponseInner innerModel();
+    public HourlyForecastResponse setForecasts(List<HourlyForecast> forecasts) {
+        this.forecasts = forecasts;
+        return this;
+    }
 }

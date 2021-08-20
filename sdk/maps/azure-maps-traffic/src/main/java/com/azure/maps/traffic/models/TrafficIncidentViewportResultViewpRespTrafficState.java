@@ -5,16 +5,11 @@
 package com.azure.maps.traffic.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** Traffic State array. */
 @Immutable
 public final class TrafficIncidentViewportResultViewpRespTrafficState {
-    @JsonIgnore
-    private final ClientLogger logger = new ClientLogger(TrafficIncidentViewportResultViewpRespTrafficState.class);
-
     /*
      * @Traffic Age property
      */
@@ -32,7 +27,7 @@ public final class TrafficIncidentViewportResultViewpRespTrafficState {
      *
      * @return the trafficAge value.
      */
-    public Integer trafficAge() {
+    public Integer getTrafficAge() {
         return this.trafficAge;
     }
 
@@ -41,15 +36,7 @@ public final class TrafficIncidentViewportResultViewpRespTrafficState {
      *
      * @return the trafficModelId value.
      */
-    public String trafficModelId() {
+    public String getTrafficModelId() {
         return this.trafficModelId;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

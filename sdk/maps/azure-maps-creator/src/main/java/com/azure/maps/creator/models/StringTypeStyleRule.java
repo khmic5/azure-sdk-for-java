@@ -5,8 +5,6 @@
 package com.azure.maps.creator.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
@@ -18,8 +16,6 @@ import java.util.Map;
 @JsonTypeName("string")
 @Fluent
 public final class StringTypeStyleRule extends StyleObject {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(StringTypeStyleRule.class);
-
     /*
      * String style rules.
      */
@@ -31,7 +27,7 @@ public final class StringTypeStyleRule extends StyleObject {
      *
      * @return the rules value.
      */
-    public List<Map<String, String>> rules() {
+    public List<Map<String, String>> getRules() {
         return this.rules;
     }
 
@@ -41,30 +37,8 @@ public final class StringTypeStyleRule extends StyleObject {
      * @param rules the rules value to set.
      * @return the StringTypeStyleRule object itself.
      */
-    public StringTypeStyleRule withRules(List<Map<String, String>> rules) {
+    public StringTypeStyleRule setRules(List<Map<String, String>> rules) {
         this.rules = rules;
         return this;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public StringTypeStyleRule withKeyName(String keyName) {
-        super.withKeyName(keyName);
-        return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    @Override
-    public void validate() {
-        super.validate();
-        if (rules() == null) {
-            throw logger
-                .logExceptionAsError(
-                    new IllegalArgumentException("Missing required property rules in model StringTypeStyleRule"));
-        }
     }
 }

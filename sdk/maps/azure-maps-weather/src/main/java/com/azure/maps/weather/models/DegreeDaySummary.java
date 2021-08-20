@@ -5,15 +5,11 @@
 package com.azure.maps.weather.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** The DegreeDaySummary model. */
 @Fluent
 public final class DegreeDaySummary {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(DegreeDaySummary.class);
-
     /*
      * Number of degrees that the mean temperature is below 65 degrees F/ 18
      * degree C.
@@ -33,7 +29,7 @@ public final class DegreeDaySummary {
      *
      * @return the heating value.
      */
-    public WeatherUnit heating() {
+    public WeatherUnit getHeating() {
         return this.heating;
     }
 
@@ -43,7 +39,7 @@ public final class DegreeDaySummary {
      * @param heating the heating value to set.
      * @return the DegreeDaySummary object itself.
      */
-    public DegreeDaySummary withHeating(WeatherUnit heating) {
+    public DegreeDaySummary setHeating(WeatherUnit heating) {
         this.heating = heating;
         return this;
     }
@@ -53,7 +49,7 @@ public final class DegreeDaySummary {
      *
      * @return the cooling value.
      */
-    public WeatherUnit cooling() {
+    public WeatherUnit getCooling() {
         return this.cooling;
     }
 
@@ -63,22 +59,8 @@ public final class DegreeDaySummary {
      * @param cooling the cooling value to set.
      * @return the DegreeDaySummary object itself.
      */
-    public DegreeDaySummary withCooling(WeatherUnit cooling) {
+    public DegreeDaySummary setCooling(WeatherUnit cooling) {
         this.cooling = cooling;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (heating() != null) {
-            heating().validate();
-        }
-        if (cooling() != null) {
-            cooling().validate();
-        }
     }
 }

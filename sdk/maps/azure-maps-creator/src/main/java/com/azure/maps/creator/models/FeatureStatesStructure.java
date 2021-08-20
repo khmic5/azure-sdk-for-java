@@ -4,22 +4,36 @@
 
 package com.azure.maps.creator.models;
 
-import com.azure.maps.creator.fluent.models.FeatureStatesStructureInner;
+import com.azure.core.annotation.Fluent;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/** An immutable client-side representation of FeatureStatesStructure. */
-public interface FeatureStatesStructure {
+/** The feature states model for a feature. */
+@Fluent
+public final class FeatureStatesStructure {
+    /*
+     * The feature states array.
+     */
+    @JsonProperty(value = "states")
+    private List<FeatureStateObject> states;
+
     /**
-     * Gets the states property: The feature states array.
+     * Get the states property: The feature states array.
      *
      * @return the states value.
      */
-    List<FeatureStateObject> states();
+    public List<FeatureStateObject> getStates() {
+        return this.states;
+    }
 
     /**
-     * Gets the inner com.azure.maps.creator.fluent.models.FeatureStatesStructureInner object.
+     * Set the states property: The feature states array.
      *
-     * @return the inner object.
+     * @param states the states value to set.
+     * @return the FeatureStatesStructure object itself.
      */
-    FeatureStatesStructureInner innerModel();
+    public FeatureStatesStructure setStates(List<FeatureStateObject> states) {
+        this.states = states;
+        return this;
+    }
 }

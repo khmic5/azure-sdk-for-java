@@ -5,8 +5,6 @@
 package com.azure.maps.search.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
@@ -20,8 +18,6 @@ import java.util.List;
 @JsonTypeName("MultiPoint")
 @Fluent
 public final class GeoJsonMultiPoint extends GeoJsonGeometry {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(GeoJsonMultiPoint.class);
-
     /*
      * Coordinates for the `GeoJson MultiPoint` geometry.
      */
@@ -33,7 +29,7 @@ public final class GeoJsonMultiPoint extends GeoJsonGeometry {
      *
      * @return the coordinates value.
      */
-    public List<List<Double>> coordinates() {
+    public List<List<Double>> getCoordinates() {
         return this.coordinates;
     }
 
@@ -43,23 +39,8 @@ public final class GeoJsonMultiPoint extends GeoJsonGeometry {
      * @param coordinates the coordinates value to set.
      * @return the GeoJsonMultiPoint object itself.
      */
-    public GeoJsonMultiPoint withCoordinates(List<List<Double>> coordinates) {
+    public GeoJsonMultiPoint setCoordinates(List<List<Double>> coordinates) {
         this.coordinates = coordinates;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    @Override
-    public void validate() {
-        super.validate();
-        if (coordinates() == null) {
-            throw logger
-                .logExceptionAsError(
-                    new IllegalArgumentException("Missing required property coordinates in model GeoJsonMultiPoint"));
-        }
     }
 }

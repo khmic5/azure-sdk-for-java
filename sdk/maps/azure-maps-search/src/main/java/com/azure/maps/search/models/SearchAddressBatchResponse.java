@@ -4,29 +4,25 @@
 
 package com.azure.maps.search.models;
 
-import com.azure.maps.search.fluent.models.SearchAddressBatchResponseInner;
+import com.azure.core.annotation.Immutable;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/** An immutable client-side representation of SearchAddressBatchResponse. */
-public interface SearchAddressBatchResponse {
-    /**
-     * Gets the summary property: Summary for the batch request.
-     *
-     * @return the summary value.
+/** This object is returned from a successful Search Address Batch service call. */
+@Immutable
+public final class SearchAddressBatchResponse extends BatchResponse {
+    /*
+     * Array containing the batch results.
      */
-    BatchResponseSummary summary();
+    @JsonProperty(value = "batchItems", access = JsonProperty.Access.WRITE_ONLY)
+    private List<SearchAddressBatchItem> batchItems;
 
     /**
-     * Gets the batchItems property: Array containing the batch results.
+     * Get the batchItems property: Array containing the batch results.
      *
      * @return the batchItems value.
      */
-    List<SearchAddressBatchItem> batchItems();
-
-    /**
-     * Gets the inner com.azure.maps.search.fluent.models.SearchAddressBatchResponseInner object.
-     *
-     * @return the inner object.
-     */
-    SearchAddressBatchResponseInner innerModel();
+    public List<SearchAddressBatchItem> getBatchItems() {
+        return this.batchItems;
+    }
 }

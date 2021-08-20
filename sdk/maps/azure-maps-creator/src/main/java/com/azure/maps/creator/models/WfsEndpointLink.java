@@ -5,15 +5,11 @@
 package com.azure.maps.creator.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** Links to other WFS endpoints. */
 @Fluent
 public final class WfsEndpointLink {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(WfsEndpointLink.class);
-
     /*
      * The link target.
      */
@@ -53,7 +49,7 @@ public final class WfsEndpointLink {
      *
      * @return the href value.
      */
-    public String href() {
+    public String getHref() {
         return this.href;
     }
 
@@ -63,7 +59,7 @@ public final class WfsEndpointLink {
      * @param href the href value to set.
      * @return the WfsEndpointLink object itself.
      */
-    public WfsEndpointLink withHref(String href) {
+    public WfsEndpointLink setHref(String href) {
         this.href = href;
         return this;
     }
@@ -73,7 +69,7 @@ public final class WfsEndpointLink {
      *
      * @return the rel value.
      */
-    public String rel() {
+    public String getRel() {
         return this.rel;
     }
 
@@ -83,7 +79,7 @@ public final class WfsEndpointLink {
      * @param rel the rel value to set.
      * @return the WfsEndpointLink object itself.
      */
-    public WfsEndpointLink withRel(String rel) {
+    public WfsEndpointLink setRel(String rel) {
         this.rel = rel;
         return this;
     }
@@ -93,7 +89,7 @@ public final class WfsEndpointLink {
      *
      * @return the type value.
      */
-    public String type() {
+    public String getType() {
         return this.type;
     }
 
@@ -103,7 +99,7 @@ public final class WfsEndpointLink {
      * @param type the type value to set.
      * @return the WfsEndpointLink object itself.
      */
-    public WfsEndpointLink withType(String type) {
+    public WfsEndpointLink setType(String type) {
         this.type = type;
         return this;
     }
@@ -113,7 +109,7 @@ public final class WfsEndpointLink {
      *
      * @return the hreflang value.
      */
-    public String hreflang() {
+    public String getHreflang() {
         return this.hreflang;
     }
 
@@ -123,7 +119,7 @@ public final class WfsEndpointLink {
      * @param hreflang the hreflang value to set.
      * @return the WfsEndpointLink object itself.
      */
-    public WfsEndpointLink withHreflang(String hreflang) {
+    public WfsEndpointLink setHreflang(String hreflang) {
         this.hreflang = hreflang;
         return this;
     }
@@ -134,7 +130,7 @@ public final class WfsEndpointLink {
      *
      * @return the title value.
      */
-    public String title() {
+    public String getTitle() {
         return this.title;
     }
 
@@ -145,21 +141,8 @@ public final class WfsEndpointLink {
      * @param title the title value to set.
      * @return the WfsEndpointLink object itself.
      */
-    public WfsEndpointLink withTitle(String title) {
+    public WfsEndpointLink setTitle(String title) {
         this.title = title;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (href() == null) {
-            throw logger
-                .logExceptionAsError(
-                    new IllegalArgumentException("Missing required property href in model WfsEndpointLink"));
-        }
     }
 }

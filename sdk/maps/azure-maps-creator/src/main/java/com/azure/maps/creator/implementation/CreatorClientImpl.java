@@ -4,48 +4,17 @@
 
 package com.azure.maps.creator.implementation;
 
-import com.azure.core.annotation.ServiceClient;
-import com.azure.core.http.HttpHeaders;
 import com.azure.core.http.HttpPipeline;
-import com.azure.core.http.HttpResponse;
-import com.azure.core.http.rest.Response;
-import com.azure.core.management.AzureEnvironment;
-import com.azure.core.management.exception.ManagementError;
-import com.azure.core.management.exception.ManagementException;
-import com.azure.core.management.polling.PollResult;
-import com.azure.core.management.polling.PollerFactory;
-import com.azure.core.util.Context;
-import com.azure.core.util.logging.ClientLogger;
-import com.azure.core.util.polling.AsyncPollResponse;
-import com.azure.core.util.polling.LongRunningOperationStatus;
-import com.azure.core.util.polling.PollerFlux;
+import com.azure.core.http.HttpPipelineBuilder;
+import com.azure.core.http.policy.CookiePolicy;
+import com.azure.core.http.policy.RetryPolicy;
+import com.azure.core.http.policy.UserAgentPolicy;
+import com.azure.core.util.serializer.JacksonAdapter;
 import com.azure.core.util.serializer.SerializerAdapter;
-import com.azure.core.util.serializer.SerializerEncoding;
-import com.azure.maps.creator.fluent.AliasClient;
-import com.azure.maps.creator.fluent.ConversionsClient;
-import com.azure.maps.creator.fluent.CreatorClient;
-import com.azure.maps.creator.fluent.DatasClient;
-import com.azure.maps.creator.fluent.DatasetsClient;
-import com.azure.maps.creator.fluent.FeatureStatesClient;
-import com.azure.maps.creator.fluent.SpatialsClient;
-import com.azure.maps.creator.fluent.TilesetsClient;
-import com.azure.maps.creator.fluent.WfsClient;
 import com.azure.maps.creator.models.Geography;
-import java.io.IOException;
-import java.lang.reflect.Type;
-import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.time.Duration;
-import java.util.Map;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
-/** Initializes a new instance of the CreatorClientImpl type. */
-@ServiceClient(builder = CreatorClientBuilder.class)
-public final class CreatorClientImpl implements CreatorClient {
-    private final ClientLogger logger = new ClientLogger(CreatorClientImpl.class);
-
+/** Initializes a new instance of the CreatorClient type. */
+public final class CreatorClientImpl {
     /**
      * Specifies which account is intended for usage in conjunction with the Azure AD security model. It represents a
      * unique ID for the Azure Maps account and can be retrieved from the Azure Maps management plane Account API. To
@@ -96,125 +65,109 @@ public final class CreatorClientImpl implements CreatorClient {
      *
      * @return the serializerAdapter value.
      */
-    SerializerAdapter getSerializerAdapter() {
+    public SerializerAdapter getSerializerAdapter() {
         return this.serializerAdapter;
     }
 
-    /** The default poll interval for long-running operation. */
-    private final Duration defaultPollInterval;
+    /** The AliasImpl object to access its operations. */
+    private final AliasImpl alias;
 
     /**
-     * Gets The default poll interval for long-running operation.
+     * Gets the AliasImpl object to access its operations.
      *
-     * @return the defaultPollInterval value.
+     * @return the AliasImpl object.
      */
-    public Duration getDefaultPollInterval() {
-        return this.defaultPollInterval;
-    }
-
-    /** The AliasClient object to access its operations. */
-    private final AliasClient alias;
-
-    /**
-     * Gets the AliasClient object to access its operations.
-     *
-     * @return the AliasClient object.
-     */
-    public AliasClient getAlias() {
+    public AliasImpl getAlias() {
         return this.alias;
     }
 
-    /** The DatasClient object to access its operations. */
-    private final DatasClient datas;
+    /** The DatasImpl object to access its operations. */
+    private final DatasImpl datas;
 
     /**
-     * Gets the DatasClient object to access its operations.
+     * Gets the DatasImpl object to access its operations.
      *
-     * @return the DatasClient object.
+     * @return the DatasImpl object.
      */
-    public DatasClient getDatas() {
+    public DatasImpl getDatas() {
         return this.datas;
     }
 
-    /** The DatasetsClient object to access its operations. */
-    private final DatasetsClient datasets;
+    /** The DatasetsImpl object to access its operations. */
+    private final DatasetsImpl datasets;
 
     /**
-     * Gets the DatasetsClient object to access its operations.
+     * Gets the DatasetsImpl object to access its operations.
      *
-     * @return the DatasetsClient object.
+     * @return the DatasetsImpl object.
      */
-    public DatasetsClient getDatasets() {
+    public DatasetsImpl getDatasets() {
         return this.datasets;
     }
 
-    /** The ConversionsClient object to access its operations. */
-    private final ConversionsClient conversions;
+    /** The ConversionsImpl object to access its operations. */
+    private final ConversionsImpl conversions;
 
     /**
-     * Gets the ConversionsClient object to access its operations.
+     * Gets the ConversionsImpl object to access its operations.
      *
-     * @return the ConversionsClient object.
+     * @return the ConversionsImpl object.
      */
-    public ConversionsClient getConversions() {
+    public ConversionsImpl getConversions() {
         return this.conversions;
     }
 
-    /** The FeatureStatesClient object to access its operations. */
-    private final FeatureStatesClient featureStates;
+    /** The FeatureStatesImpl object to access its operations. */
+    private final FeatureStatesImpl featureStates;
 
     /**
-     * Gets the FeatureStatesClient object to access its operations.
+     * Gets the FeatureStatesImpl object to access its operations.
      *
-     * @return the FeatureStatesClient object.
+     * @return the FeatureStatesImpl object.
      */
-    public FeatureStatesClient getFeatureStates() {
+    public FeatureStatesImpl getFeatureStates() {
         return this.featureStates;
     }
 
-    /** The SpatialsClient object to access its operations. */
-    private final SpatialsClient spatials;
+    /** The SpatialsImpl object to access its operations. */
+    private final SpatialsImpl spatials;
 
     /**
-     * Gets the SpatialsClient object to access its operations.
+     * Gets the SpatialsImpl object to access its operations.
      *
-     * @return the SpatialsClient object.
+     * @return the SpatialsImpl object.
      */
-    public SpatialsClient getSpatials() {
+    public SpatialsImpl getSpatials() {
         return this.spatials;
     }
 
-    /** The TilesetsClient object to access its operations. */
-    private final TilesetsClient tilesets;
+    /** The TilesetsImpl object to access its operations. */
+    private final TilesetsImpl tilesets;
 
     /**
-     * Gets the TilesetsClient object to access its operations.
+     * Gets the TilesetsImpl object to access its operations.
      *
-     * @return the TilesetsClient object.
+     * @return the TilesetsImpl object.
      */
-    public TilesetsClient getTilesets() {
+    public TilesetsImpl getTilesets() {
         return this.tilesets;
     }
 
-    /** The WfsClient object to access its operations. */
-    private final WfsClient wfs;
+    /** The WFSImpl object to access its operations. */
+    private final WFSImpl wFS;
 
     /**
-     * Gets the WfsClient object to access its operations.
+     * Gets the WFSImpl object to access its operations.
      *
-     * @return the WfsClient object.
+     * @return the WFSImpl object.
      */
-    public WfsClient getWfs() {
-        return this.wfs;
+    public WFSImpl getWFS() {
+        return this.wFS;
     }
 
     /**
      * Initializes an instance of CreatorClient client.
      *
-     * @param httpPipeline The HTTP pipeline to send requests through.
-     * @param serializerAdapter The serializer to serialize an object into a string.
-     * @param defaultPollInterval The default poll interval for long-running operation.
-     * @param environment The Azure environment.
      * @param xMsClientId Specifies which account is intended for usage in conjunction with the Azure AD security model.
      *     It represents a unique ID for the Azure Maps account and can be retrieved from the Azure Maps management
      *     plane Account API. To use Azure AD security in Azure Maps see the following
@@ -222,168 +175,56 @@ public final class CreatorClientImpl implements CreatorClient {
      * @param geography This parameter specifies where the Azure Maps Creator resource is located. Valid values are us
      *     and eu.
      */
-    CreatorClientImpl(
-        HttpPipeline httpPipeline,
-        SerializerAdapter serializerAdapter,
-        Duration defaultPollInterval,
-        AzureEnvironment environment,
-        String xMsClientId,
-        Geography geography) {
+    public CreatorClientImpl(String xMsClientId, Geography geography) {
+        this(
+                new HttpPipelineBuilder()
+                        .policies(new UserAgentPolicy(), new RetryPolicy(), new CookiePolicy())
+                        .build(),
+                JacksonAdapter.createDefaultSerializerAdapter(),
+                xMsClientId,
+                geography);
+    }
+
+    /**
+     * Initializes an instance of CreatorClient client.
+     *
+     * @param httpPipeline The HTTP pipeline to send requests through.
+     * @param xMsClientId Specifies which account is intended for usage in conjunction with the Azure AD security model.
+     *     It represents a unique ID for the Azure Maps account and can be retrieved from the Azure Maps management
+     *     plane Account API. To use Azure AD security in Azure Maps see the following
+     *     [articles](https://aka.ms/amauthdetails) for guidance.
+     * @param geography This parameter specifies where the Azure Maps Creator resource is located. Valid values are us
+     *     and eu.
+     */
+    public CreatorClientImpl(HttpPipeline httpPipeline, String xMsClientId, Geography geography) {
+        this(httpPipeline, JacksonAdapter.createDefaultSerializerAdapter(), xMsClientId, geography);
+    }
+
+    /**
+     * Initializes an instance of CreatorClient client.
+     *
+     * @param httpPipeline The HTTP pipeline to send requests through.
+     * @param serializerAdapter The serializer to serialize an object into a string.
+     * @param xMsClientId Specifies which account is intended for usage in conjunction with the Azure AD security model.
+     *     It represents a unique ID for the Azure Maps account and can be retrieved from the Azure Maps management
+     *     plane Account API. To use Azure AD security in Azure Maps see the following
+     *     [articles](https://aka.ms/amauthdetails) for guidance.
+     * @param geography This parameter specifies where the Azure Maps Creator resource is located. Valid values are us
+     *     and eu.
+     */
+    public CreatorClientImpl(
+            HttpPipeline httpPipeline, SerializerAdapter serializerAdapter, String xMsClientId, Geography geography) {
         this.httpPipeline = httpPipeline;
         this.serializerAdapter = serializerAdapter;
-        this.defaultPollInterval = defaultPollInterval;
         this.xMsClientId = xMsClientId;
         this.geography = geography;
-        this.alias = new AliasClientImpl(this);
-        this.datas = new DatasClientImpl(this);
-        this.datasets = new DatasetsClientImpl(this);
-        this.conversions = new ConversionsClientImpl(this);
-        this.featureStates = new FeatureStatesClientImpl(this);
-        this.spatials = new SpatialsClientImpl(this);
-        this.tilesets = new TilesetsClientImpl(this);
-        this.wfs = new WfsClientImpl(this);
-    }
-
-    /**
-     * Gets default client context.
-     *
-     * @return the default client context.
-     */
-    public Context getContext() {
-        return Context.NONE;
-    }
-
-    /**
-     * Merges default client context with provided context.
-     *
-     * @param context the context to be merged with default client context.
-     * @return the merged context.
-     */
-    public Context mergeContext(Context context) {
-        for (Map.Entry<Object, Object> entry : this.getContext().getValues().entrySet()) {
-            context = context.addData(entry.getKey(), entry.getValue());
-        }
-        return context;
-    }
-
-    /**
-     * Gets long running operation result.
-     *
-     * @param activationResponse the response of activation operation.
-     * @param httpPipeline the http pipeline.
-     * @param pollResultType type of poll result.
-     * @param finalResultType type of final result.
-     * @param context the context shared by all requests.
-     * @param <T> type of poll result.
-     * @param <U> type of final result.
-     * @return poller flux for poll result and final result.
-     */
-    public <T, U> PollerFlux<PollResult<T>, U> getLroResult(
-        Mono<Response<Flux<ByteBuffer>>> activationResponse,
-        HttpPipeline httpPipeline,
-        Type pollResultType,
-        Type finalResultType,
-        Context context) {
-        return PollerFactory
-            .create(
-                serializerAdapter,
-                httpPipeline,
-                pollResultType,
-                finalResultType,
-                defaultPollInterval,
-                activationResponse,
-                context);
-    }
-
-    /**
-     * Gets the final result, or an error, based on last async poll response.
-     *
-     * @param response the last async poll response.
-     * @param <T> type of poll result.
-     * @param <U> type of final result.
-     * @return the final result, or an error.
-     */
-    public <T, U> Mono<U> getLroFinalResultOrError(AsyncPollResponse<PollResult<T>, U> response) {
-        if (response.getStatus() != LongRunningOperationStatus.SUCCESSFULLY_COMPLETED) {
-            String errorMessage;
-            ManagementError managementError = null;
-            HttpResponse errorResponse = null;
-            PollResult.Error lroError = response.getValue().getError();
-            if (lroError != null) {
-                errorResponse =
-                    new HttpResponseImpl(
-                        lroError.getResponseStatusCode(), lroError.getResponseHeaders(), lroError.getResponseBody());
-
-                errorMessage = response.getValue().getError().getMessage();
-                String errorBody = response.getValue().getError().getResponseBody();
-                if (errorBody != null) {
-                    // try to deserialize error body to ManagementError
-                    try {
-                        managementError =
-                            this
-                                .getSerializerAdapter()
-                                .deserialize(errorBody, ManagementError.class, SerializerEncoding.JSON);
-                        if (managementError.getCode() == null || managementError.getMessage() == null) {
-                            managementError = null;
-                        }
-                    } catch (IOException | RuntimeException ioe) {
-                        logger.logThrowableAsWarning(ioe);
-                    }
-                }
-            } else {
-                // fallback to default error message
-                errorMessage = "Long running operation failed.";
-            }
-            if (managementError == null) {
-                // fallback to default ManagementError
-                managementError = new ManagementError(response.getStatus().toString(), errorMessage);
-            }
-            return Mono.error(new ManagementException(errorMessage, errorResponse, managementError));
-        } else {
-            return response.getFinalResult();
-        }
-    }
-
-    private static final class HttpResponseImpl extends HttpResponse {
-        private final int statusCode;
-
-        private final byte[] responseBody;
-
-        private final HttpHeaders httpHeaders;
-
-        HttpResponseImpl(int statusCode, HttpHeaders httpHeaders, String responseBody) {
-            super(null);
-            this.statusCode = statusCode;
-            this.httpHeaders = httpHeaders;
-            this.responseBody = responseBody == null ? null : responseBody.getBytes(StandardCharsets.UTF_8);
-        }
-
-        public int getStatusCode() {
-            return statusCode;
-        }
-
-        public String getHeaderValue(String s) {
-            return httpHeaders.getValue(s);
-        }
-
-        public HttpHeaders getHeaders() {
-            return httpHeaders;
-        }
-
-        public Flux<ByteBuffer> getBody() {
-            return Flux.just(ByteBuffer.wrap(responseBody));
-        }
-
-        public Mono<byte[]> getBodyAsByteArray() {
-            return Mono.just(responseBody);
-        }
-
-        public Mono<String> getBodyAsString() {
-            return Mono.just(new String(responseBody, StandardCharsets.UTF_8));
-        }
-
-        public Mono<String> getBodyAsString(Charset charset) {
-            return Mono.just(new String(responseBody, charset));
-        }
+        this.alias = new AliasImpl(this);
+        this.datas = new DatasImpl(this);
+        this.datasets = new DatasetsImpl(this);
+        this.conversions = new ConversionsImpl(this);
+        this.featureStates = new FeatureStatesImpl(this);
+        this.spatials = new SpatialsImpl(this);
+        this.tilesets = new TilesetsImpl(this);
+        this.wFS = new WFSImpl(this);
     }
 }

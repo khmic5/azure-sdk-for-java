@@ -5,15 +5,11 @@
 package com.azure.maps.creator.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** The AliasCreateHeaders model. */
 @Fluent
 public final class AliasCreateHeaders {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(AliasCreateHeaders.class);
-
     /*
      * The Access-Control-Expose-Headers property.
      */
@@ -25,7 +21,7 @@ public final class AliasCreateHeaders {
      *
      * @return the accessControlExposeHeaders value.
      */
-    public String accessControlExposeHeaders() {
+    public String getAccessControlExposeHeaders() {
         return this.accessControlExposeHeaders;
     }
 
@@ -35,16 +31,8 @@ public final class AliasCreateHeaders {
      * @param accessControlExposeHeaders the accessControlExposeHeaders value to set.
      * @return the AliasCreateHeaders object itself.
      */
-    public AliasCreateHeaders withAccessControlExposeHeaders(String accessControlExposeHeaders) {
+    public AliasCreateHeaders setAccessControlExposeHeaders(String accessControlExposeHeaders) {
         this.accessControlExposeHeaders = accessControlExposeHeaders;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

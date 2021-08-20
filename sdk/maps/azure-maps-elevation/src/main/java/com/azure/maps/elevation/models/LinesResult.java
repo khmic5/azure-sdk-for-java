@@ -4,23 +4,28 @@
 
 package com.azure.maps.elevation.models;
 
-import com.azure.maps.elevation.fluent.models.LinesResultInner;
+import com.azure.core.annotation.Immutable;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/** An immutable client-side representation of LinesResult. */
-public interface LinesResult {
+/** The response from a successful Elevation Polyline request. */
+@Immutable
+public final class LinesResult {
+    /*
+     * The response from the Get Data for Polyline API. The results will be
+     * listed in the direction from the first endpoint towards the last
+     * endpoint.
+     */
+    @JsonProperty(value = "data", access = JsonProperty.Access.WRITE_ONLY)
+    private List<PointElevationResult> data;
+
     /**
-     * Gets the data property: The response from the Get Data for Polyline API. The results will be listed in the
+     * Get the data property: The response from the Get Data for Polyline API. The results will be listed in the
      * direction from the first endpoint towards the last endpoint.
      *
      * @return the data value.
      */
-    List<PointElevationResult> data();
-
-    /**
-     * Gets the inner com.azure.maps.elevation.fluent.models.LinesResultInner object.
-     *
-     * @return the inner object.
-     */
-    LinesResultInner innerModel();
+    public List<PointElevationResult> getData() {
+        return this.data;
+    }
 }

@@ -5,8 +5,6 @@
 package com.azure.maps.creator.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
@@ -20,8 +18,6 @@ import java.util.List;
 @JsonTypeName("GeometryCollection")
 @Fluent
 public final class GeoJsonGeometryCollection extends GeoJsonGeometry {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(GeoJsonGeometryCollection.class);
-
     /*
      * Contains a list of valid `GeoJSON` geometry objects. **Note** that
      * coordinates in GeoJSON are in x, y order (longitude, latitude).
@@ -35,7 +31,7 @@ public final class GeoJsonGeometryCollection extends GeoJsonGeometry {
      *
      * @return the geometries value.
      */
-    public List<GeoJsonGeometry> geometries() {
+    public List<GeoJsonGeometry> getGeometries() {
         return this.geometries;
     }
 
@@ -46,26 +42,8 @@ public final class GeoJsonGeometryCollection extends GeoJsonGeometry {
      * @param geometries the geometries value to set.
      * @return the GeoJsonGeometryCollection object itself.
      */
-    public GeoJsonGeometryCollection withGeometries(List<GeoJsonGeometry> geometries) {
+    public GeoJsonGeometryCollection setGeometries(List<GeoJsonGeometry> geometries) {
         this.geometries = geometries;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    @Override
-    public void validate() {
-        super.validate();
-        if (geometries() == null) {
-            throw logger
-                .logExceptionAsError(
-                    new IllegalArgumentException(
-                        "Missing required property geometries in model GeoJsonGeometryCollection"));
-        } else {
-            geometries().forEach(e -> e.validate());
-        }
     }
 }

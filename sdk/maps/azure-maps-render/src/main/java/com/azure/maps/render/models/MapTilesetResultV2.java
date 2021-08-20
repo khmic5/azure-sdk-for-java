@@ -4,121 +4,406 @@
 
 package com.azure.maps.render.models;
 
-import com.azure.maps.render.fluent.models.MapTilesetResultV2Inner;
+import com.azure.core.annotation.Fluent;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/** An immutable client-side representation of MapTilesetResultV2. */
-public interface MapTilesetResultV2 {
+/** Metadata for a tileset in the TileJSON format. */
+@Fluent
+public final class MapTilesetResultV2 {
+    /*
+     * Version of the TileJSON spec.
+     */
+    @JsonProperty(value = "tilejson")
+    private String tilejson;
+
+    /*
+     * Name of the tileset.
+     */
+    @JsonProperty(value = "name")
+    private String name;
+
+    /*
+     * Text description of the tileset.
+     */
+    @JsonProperty(value = "description")
+    private String description;
+
+    /*
+     * A semver.org style version number for the tiles contained within the
+     * tileset.
+     */
+    @JsonProperty(value = "version")
+    private String version;
+
+    /*
+     * Copyright attribution to be displayed on the map.
+     */
+    @JsonProperty(value = "attribution")
+    private String attribution;
+
+    /*
+     * A mustache template to be used to format data from grids for
+     * interaction.
+     */
+    @JsonProperty(value = "template")
+    private String template;
+
+    /*
+     * A legend to be displayed with the map.
+     */
+    @JsonProperty(value = "legend")
+    private String legend;
+
+    /*
+     * Default: "xyz". Either "xyz" or "tms". Influences the y direction of the
+     * tile coordinates.
+     */
+    @JsonProperty(value = "scheme")
+    private String scheme;
+
+    /*
+     * An array of tile endpoints.
+     */
+    @JsonProperty(value = "tiles")
+    private List<String> tiles;
+
+    /*
+     * An array of interactivity endpoints.
+     */
+    @JsonProperty(value = "grids")
+    private List<String> grids;
+
+    /*
+     * An array of data files in GeoJSON format.
+     */
+    @JsonProperty(value = "data")
+    private List<String> data;
+
+    /*
+     * The minimum zoom level.
+     */
+    @JsonProperty(value = "minzoom")
+    private Integer minzoom;
+
+    /*
+     * The maximum zoom level.
+     */
+    @JsonProperty(value = "maxzoom")
+    private Integer maxzoom;
+
+    /*
+     * The WGS84 bounds of the tileset.
+     */
+    @JsonProperty(value = "bounds")
+    private List<Float> bounds;
+
+    /*
+     * The default location of the tileset in the form [longitude, latitude,
+     * zoom].
+     */
+    @JsonProperty(value = "center")
+    private List<Float> center;
+
     /**
-     * Gets the tilejson property: Version of the TileJSON spec.
+     * Get the tilejson property: Version of the TileJSON spec.
      *
      * @return the tilejson value.
      */
-    String tilejson();
+    public String getTilejson() {
+        return this.tilejson;
+    }
 
     /**
-     * Gets the name property: Name of the tileset.
+     * Set the tilejson property: Version of the TileJSON spec.
+     *
+     * @param tilejson the tilejson value to set.
+     * @return the MapTilesetResultV2 object itself.
+     */
+    public MapTilesetResultV2 setTilejson(String tilejson) {
+        this.tilejson = tilejson;
+        return this;
+    }
+
+    /**
+     * Get the name property: Name of the tileset.
      *
      * @return the name value.
      */
-    String name();
+    public String getName() {
+        return this.name;
+    }
 
     /**
-     * Gets the description property: Text description of the tileset.
+     * Set the name property: Name of the tileset.
+     *
+     * @param name the name value to set.
+     * @return the MapTilesetResultV2 object itself.
+     */
+    public MapTilesetResultV2 setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    /**
+     * Get the description property: Text description of the tileset.
      *
      * @return the description value.
      */
-    String description();
+    public String getDescription() {
+        return this.description;
+    }
 
     /**
-     * Gets the version property: A semver.org style version number for the tiles contained within the tileset.
+     * Set the description property: Text description of the tileset.
+     *
+     * @param description the description value to set.
+     * @return the MapTilesetResultV2 object itself.
+     */
+    public MapTilesetResultV2 setDescription(String description) {
+        this.description = description;
+        return this;
+    }
+
+    /**
+     * Get the version property: A semver.org style version number for the tiles contained within the tileset.
      *
      * @return the version value.
      */
-    String version();
+    public String getVersion() {
+        return this.version;
+    }
 
     /**
-     * Gets the attribution property: Copyright attribution to be displayed on the map.
+     * Set the version property: A semver.org style version number for the tiles contained within the tileset.
+     *
+     * @param version the version value to set.
+     * @return the MapTilesetResultV2 object itself.
+     */
+    public MapTilesetResultV2 setVersion(String version) {
+        this.version = version;
+        return this;
+    }
+
+    /**
+     * Get the attribution property: Copyright attribution to be displayed on the map.
      *
      * @return the attribution value.
      */
-    String attribution();
+    public String getAttribution() {
+        return this.attribution;
+    }
 
     /**
-     * Gets the template property: A mustache template to be used to format data from grids for interaction.
+     * Set the attribution property: Copyright attribution to be displayed on the map.
+     *
+     * @param attribution the attribution value to set.
+     * @return the MapTilesetResultV2 object itself.
+     */
+    public MapTilesetResultV2 setAttribution(String attribution) {
+        this.attribution = attribution;
+        return this;
+    }
+
+    /**
+     * Get the template property: A mustache template to be used to format data from grids for interaction.
      *
      * @return the template value.
      */
-    String template();
+    public String getTemplate() {
+        return this.template;
+    }
 
     /**
-     * Gets the legend property: A legend to be displayed with the map.
+     * Set the template property: A mustache template to be used to format data from grids for interaction.
+     *
+     * @param template the template value to set.
+     * @return the MapTilesetResultV2 object itself.
+     */
+    public MapTilesetResultV2 setTemplate(String template) {
+        this.template = template;
+        return this;
+    }
+
+    /**
+     * Get the legend property: A legend to be displayed with the map.
      *
      * @return the legend value.
      */
-    String legend();
+    public String getLegend() {
+        return this.legend;
+    }
 
     /**
-     * Gets the scheme property: Default: "xyz". Either "xyz" or "tms". Influences the y direction of the tile
+     * Set the legend property: A legend to be displayed with the map.
+     *
+     * @param legend the legend value to set.
+     * @return the MapTilesetResultV2 object itself.
+     */
+    public MapTilesetResultV2 setLegend(String legend) {
+        this.legend = legend;
+        return this;
+    }
+
+    /**
+     * Get the scheme property: Default: "xyz". Either "xyz" or "tms". Influences the y direction of the tile
      * coordinates.
      *
      * @return the scheme value.
      */
-    String scheme();
+    public String getScheme() {
+        return this.scheme;
+    }
 
     /**
-     * Gets the tiles property: An array of tile endpoints.
+     * Set the scheme property: Default: "xyz". Either "xyz" or "tms". Influences the y direction of the tile
+     * coordinates.
+     *
+     * @param scheme the scheme value to set.
+     * @return the MapTilesetResultV2 object itself.
+     */
+    public MapTilesetResultV2 setScheme(String scheme) {
+        this.scheme = scheme;
+        return this;
+    }
+
+    /**
+     * Get the tiles property: An array of tile endpoints.
      *
      * @return the tiles value.
      */
-    List<String> tiles();
+    public List<String> getTiles() {
+        return this.tiles;
+    }
 
     /**
-     * Gets the grids property: An array of interactivity endpoints.
+     * Set the tiles property: An array of tile endpoints.
+     *
+     * @param tiles the tiles value to set.
+     * @return the MapTilesetResultV2 object itself.
+     */
+    public MapTilesetResultV2 setTiles(List<String> tiles) {
+        this.tiles = tiles;
+        return this;
+    }
+
+    /**
+     * Get the grids property: An array of interactivity endpoints.
      *
      * @return the grids value.
      */
-    List<String> grids();
+    public List<String> getGrids() {
+        return this.grids;
+    }
 
     /**
-     * Gets the data property: An array of data files in GeoJSON format.
+     * Set the grids property: An array of interactivity endpoints.
+     *
+     * @param grids the grids value to set.
+     * @return the MapTilesetResultV2 object itself.
+     */
+    public MapTilesetResultV2 setGrids(List<String> grids) {
+        this.grids = grids;
+        return this;
+    }
+
+    /**
+     * Get the data property: An array of data files in GeoJSON format.
      *
      * @return the data value.
      */
-    List<String> data();
+    public List<String> getData() {
+        return this.data;
+    }
 
     /**
-     * Gets the minzoom property: The minimum zoom level.
+     * Set the data property: An array of data files in GeoJSON format.
+     *
+     * @param data the data value to set.
+     * @return the MapTilesetResultV2 object itself.
+     */
+    public MapTilesetResultV2 setData(List<String> data) {
+        this.data = data;
+        return this;
+    }
+
+    /**
+     * Get the minzoom property: The minimum zoom level.
      *
      * @return the minzoom value.
      */
-    Integer minzoom();
+    public Integer getMinzoom() {
+        return this.minzoom;
+    }
 
     /**
-     * Gets the maxzoom property: The maximum zoom level.
+     * Set the minzoom property: The minimum zoom level.
+     *
+     * @param minzoom the minzoom value to set.
+     * @return the MapTilesetResultV2 object itself.
+     */
+    public MapTilesetResultV2 setMinzoom(Integer minzoom) {
+        this.minzoom = minzoom;
+        return this;
+    }
+
+    /**
+     * Get the maxzoom property: The maximum zoom level.
      *
      * @return the maxzoom value.
      */
-    Integer maxzoom();
+    public Integer getMaxzoom() {
+        return this.maxzoom;
+    }
 
     /**
-     * Gets the bounds property: The WGS84 bounds of the tileset.
+     * Set the maxzoom property: The maximum zoom level.
+     *
+     * @param maxzoom the maxzoom value to set.
+     * @return the MapTilesetResultV2 object itself.
+     */
+    public MapTilesetResultV2 setMaxzoom(Integer maxzoom) {
+        this.maxzoom = maxzoom;
+        return this;
+    }
+
+    /**
+     * Get the bounds property: The WGS84 bounds of the tileset.
      *
      * @return the bounds value.
      */
-    List<Float> bounds();
+    public List<Float> getBounds() {
+        return this.bounds;
+    }
 
     /**
-     * Gets the center property: The default location of the tileset in the form [longitude, latitude, zoom].
+     * Set the bounds property: The WGS84 bounds of the tileset.
+     *
+     * @param bounds the bounds value to set.
+     * @return the MapTilesetResultV2 object itself.
+     */
+    public MapTilesetResultV2 setBounds(List<Float> bounds) {
+        this.bounds = bounds;
+        return this;
+    }
+
+    /**
+     * Get the center property: The default location of the tileset in the form [longitude, latitude, zoom].
      *
      * @return the center value.
      */
-    List<Float> center();
+    public List<Float> getCenter() {
+        return this.center;
+    }
 
     /**
-     * Gets the inner com.azure.maps.render.fluent.models.MapTilesetResultV2Inner object.
+     * Set the center property: The default location of the tileset in the form [longitude, latitude, zoom].
      *
-     * @return the inner object.
+     * @param center the center value to set.
+     * @return the MapTilesetResultV2 object itself.
      */
-    MapTilesetResultV2Inner innerModel();
+    public MapTilesetResultV2 setCenter(List<Float> center) {
+        this.center = center;
+        return this;
+    }
 }

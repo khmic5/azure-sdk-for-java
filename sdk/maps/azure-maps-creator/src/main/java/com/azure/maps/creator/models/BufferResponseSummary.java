@@ -5,15 +5,11 @@
 package com.azure.maps.creator.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** Summary of the call. */
 @Immutable
 public final class BufferResponseSummary {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(BufferResponseSummary.class);
-
     /*
      * The udid for the user data if one exists
      */
@@ -31,7 +27,7 @@ public final class BufferResponseSummary {
      *
      * @return the udid value.
      */
-    public String udid() {
+    public String getUdid() {
         return this.udid;
     }
 
@@ -40,15 +36,7 @@ public final class BufferResponseSummary {
      *
      * @return the information value.
      */
-    public String information() {
+    public String getInformation() {
         return this.information;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

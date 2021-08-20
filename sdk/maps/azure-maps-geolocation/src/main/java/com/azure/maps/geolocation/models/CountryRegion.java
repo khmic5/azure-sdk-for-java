@@ -5,15 +5,11 @@
 package com.azure.maps.geolocation.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** The object containing the country/region information. */
 @Immutable
 public final class CountryRegion {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(CountryRegion.class);
-
     /*
      * The IP Address's 2-character code [(ISO
      * 3166-1)](https://www.iso.org/iso-3166-country-codes.html) of the country
@@ -32,15 +28,7 @@ public final class CountryRegion {
      *
      * @return the isoCode value.
      */
-    public String isoCode() {
+    public String getIsoCode() {
         return this.isoCode;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
     }
 }

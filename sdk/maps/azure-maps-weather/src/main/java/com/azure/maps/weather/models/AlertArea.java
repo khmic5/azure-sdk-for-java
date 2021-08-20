@@ -5,8 +5,6 @@
 package com.azure.maps.weather.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.OffsetDateTime;
 
@@ -17,8 +15,6 @@ import java.time.OffsetDateTime;
  */
 @Fluent
 public final class AlertArea {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(AlertArea.class);
-
     /*
      * The name of an area which is affected by the alert. The location that
      * was requested falls under the alert area.
@@ -81,7 +77,7 @@ public final class AlertArea {
      *
      * @return the name value.
      */
-    public String name() {
+    public String getName() {
         return this.name;
     }
 
@@ -92,7 +88,7 @@ public final class AlertArea {
      * @param name the name value to set.
      * @return the AlertArea object itself.
      */
-    public AlertArea withName(String name) {
+    public AlertArea setName(String name) {
         this.name = name;
         return this;
     }
@@ -102,7 +98,7 @@ public final class AlertArea {
      *
      * @return the summary value.
      */
-    public String summary() {
+    public String getSummary() {
         return this.summary;
     }
 
@@ -112,7 +108,7 @@ public final class AlertArea {
      * @param summary the summary value to set.
      * @return the AlertArea object itself.
      */
-    public AlertArea withSummary(String summary) {
+    public AlertArea setSummary(String summary) {
         this.summary = summary;
         return this;
     }
@@ -124,7 +120,7 @@ public final class AlertArea {
      *
      * @return the startTime value.
      */
-    public OffsetDateTime startTime() {
+    public OffsetDateTime getStartTime() {
         return this.startTime;
     }
 
@@ -136,7 +132,7 @@ public final class AlertArea {
      * @param startTime the startTime value to set.
      * @return the AlertArea object itself.
      */
-    public AlertArea withStartTime(OffsetDateTime startTime) {
+    public AlertArea setStartTime(OffsetDateTime startTime) {
         this.startTime = startTime;
         return this;
     }
@@ -148,7 +144,7 @@ public final class AlertArea {
      *
      * @return the endTime value.
      */
-    public OffsetDateTime endTime() {
+    public OffsetDateTime getEndTime() {
         return this.endTime;
     }
 
@@ -160,7 +156,7 @@ public final class AlertArea {
      * @param endTime the endTime value to set.
      * @return the AlertArea object itself.
      */
-    public AlertArea withEndTime(OffsetDateTime endTime) {
+    public AlertArea setEndTime(OffsetDateTime endTime) {
         this.endTime = endTime;
         return this;
     }
@@ -170,7 +166,7 @@ public final class AlertArea {
      *
      * @return the latestStatus value.
      */
-    public LatestStatus latestStatus() {
+    public LatestStatus getLatestStatus() {
         return this.latestStatus;
     }
 
@@ -180,7 +176,7 @@ public final class AlertArea {
      * @param latestStatus the latestStatus value to set.
      * @return the AlertArea object itself.
      */
-    public AlertArea withLatestStatus(LatestStatus latestStatus) {
+    public AlertArea setLatestStatus(LatestStatus latestStatus) {
         this.latestStatus = latestStatus;
         return this;
     }
@@ -193,7 +189,7 @@ public final class AlertArea {
      *
      * @return the alertDetails value.
      */
-    public String alertDetails() {
+    public String getAlertDetails() {
         return this.alertDetails;
     }
 
@@ -206,7 +202,7 @@ public final class AlertArea {
      * @param alertDetails the alertDetails value to set.
      * @return the AlertArea object itself.
      */
-    public AlertArea withAlertDetails(String alertDetails) {
+    public AlertArea setAlertDetails(String alertDetails) {
         this.alertDetails = alertDetails;
         return this;
     }
@@ -218,7 +214,7 @@ public final class AlertArea {
      *
      * @return the alertDetailsLanguageCode value.
      */
-    public String alertDetailsLanguageCode() {
+    public String getAlertDetailsLanguageCode() {
         return this.alertDetailsLanguageCode;
     }
 
@@ -230,19 +226,8 @@ public final class AlertArea {
      * @param alertDetailsLanguageCode the alertDetailsLanguageCode value to set.
      * @return the AlertArea object itself.
      */
-    public AlertArea withAlertDetailsLanguageCode(String alertDetailsLanguageCode) {
+    public AlertArea setAlertDetailsLanguageCode(String alertDetailsLanguageCode) {
         this.alertDetailsLanguageCode = alertDetailsLanguageCode;
         return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (latestStatus() != null) {
-            latestStatus().validate();
-        }
     }
 }

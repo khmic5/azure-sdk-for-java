@@ -5,9 +5,6 @@
 package com.azure.maps.creator.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.core.util.logging.ClientLogger;
-import com.azure.maps.creator.fluent.models.DatasetDetailInfoInner;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
@@ -17,13 +14,11 @@ import java.util.List;
  */
 @Immutable
 public final class DatasetListResponse {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(DatasetListResponse.class);
-
     /*
      * A list of all the previously created datasets.
      */
     @JsonProperty(value = "datasets", access = JsonProperty.Access.WRITE_ONLY)
-    private List<DatasetDetailInfoInner> datasets;
+    private List<DatasetDetailInfo> datasets;
 
     /*
      * If present, the location of the next page of data.
@@ -36,7 +31,7 @@ public final class DatasetListResponse {
      *
      * @return the datasets value.
      */
-    public List<DatasetDetailInfoInner> datasets() {
+    public List<DatasetDetailInfo> getDatasets() {
         return this.datasets;
     }
 
@@ -45,18 +40,7 @@ public final class DatasetListResponse {
      *
      * @return the nextLink value.
      */
-    public String nextLink() {
+    public String getNextLink() {
         return this.nextLink;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (datasets() != null) {
-            datasets().forEach(e -> e.validate());
-        }
     }
 }
