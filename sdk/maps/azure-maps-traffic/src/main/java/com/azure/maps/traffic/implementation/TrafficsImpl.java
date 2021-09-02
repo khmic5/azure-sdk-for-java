@@ -19,7 +19,6 @@ import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.RestProxy;
 import com.azure.core.http.rest.StreamResponse;
 import com.azure.maps.traffic.models.ErrorResponseException;
-import com.azure.maps.traffic.models.Geography;
 import com.azure.maps.traffic.models.IncidentGeometryType;
 import com.azure.maps.traffic.models.ProjectionStandard;
 import com.azure.maps.traffic.models.SpeedUnit;
@@ -63,14 +62,14 @@ public final class TrafficsImpl {
      * The interface defining all the services for TrafficClientTraffics to be used by the proxy service to perform REST
      * calls.
      */
-    @Host("https://{geography}.atlas.microsoft.com")
+    @Host("{$host}")
     @ServiceInterface(name = "TrafficClientTraffic")
     private interface TrafficsService {
         @Get("/traffic/flow/tile/{format}")
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<StreamResponse> getTrafficFlowTile(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") TileFormat format,
@@ -85,7 +84,7 @@ public final class TrafficsImpl {
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<Response<TrafficFlowSegmentResult>> getTrafficFlowSegment(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") TextFormat format,
@@ -101,7 +100,7 @@ public final class TrafficsImpl {
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<StreamResponse> getTrafficIncidentTile(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") TileFormat format,
@@ -116,7 +115,7 @@ public final class TrafficsImpl {
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<Response<TrafficIncidentDetailResult>> getTrafficIncidentDetail(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") TextFormat format,
@@ -135,7 +134,7 @@ public final class TrafficsImpl {
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<Response<TrafficIncidentViewportResult>> getTrafficIncidentViewport(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") TextFormat format,
@@ -187,7 +186,7 @@ public final class TrafficsImpl {
             Integer thickness) {
         final String accept = "application/json, image/jpeg, image/png, image/pbf, application/vnd.mapbox-vector-tile";
         return service.getTrafficFlowTile(
-                this.client.getGeography(),
+                this.client.getHost(),
                 this.client.getXMsClientId(),
                 this.client.getApiVersion(),
                 format,
@@ -338,7 +337,7 @@ public final class TrafficsImpl {
             Boolean openLr) {
         final String accept = "application/json";
         return service.getTrafficFlowSegment(
-                this.client.getGeography(),
+                this.client.getHost(),
                 this.client.getXMsClientId(),
                 this.client.getApiVersion(),
                 format,
@@ -480,7 +479,7 @@ public final class TrafficsImpl {
             String trafficState) {
         final String accept = "application/json, image/jpeg, image/png, image/pbf, application/vnd.mapbox-vector-tile";
         return service.getTrafficIncidentTile(
-                this.client.getGeography(),
+                this.client.getHost(),
                 this.client.getXMsClientId(),
                 this.client.getApiVersion(),
                 format,
@@ -655,7 +654,7 @@ public final class TrafficsImpl {
             Boolean originalPosition) {
         final String accept = "application/json";
         return service.getTrafficIncidentDetail(
-                this.client.getGeography(),
+                this.client.getHost(),
                 this.client.getXMsClientId(),
                 this.client.getApiVersion(),
                 format,
@@ -870,7 +869,7 @@ public final class TrafficsImpl {
             Boolean copyright) {
         final String accept = "application/json";
         return service.getTrafficIncidentViewport(
-                this.client.getGeography(),
+                this.client.getHost(),
                 this.client.getXMsClientId(),
                 this.client.getApiVersion(),
                 format,

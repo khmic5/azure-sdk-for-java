@@ -18,7 +18,6 @@ import com.azure.core.annotation.UnexpectedResponseExceptionType;
 import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.RestProxy;
 import com.azure.maps.geolocation.models.ErrorResponseException;
-import com.azure.maps.geolocation.models.Geography;
 import com.azure.maps.geolocation.models.IpAddressToLocationResult;
 import com.azure.maps.geolocation.models.ResponseFormat;
 import reactor.core.publisher.Mono;
@@ -46,14 +45,14 @@ public final class GeolocationsImpl {
      * The interface defining all the services for GeolocationClientGeolocations to be used by the proxy service to
      * perform REST calls.
      */
-    @Host("https://{geography}.atlas.microsoft.com")
+    @Host("{$host}")
     @ServiceInterface(name = "GeolocationClientGeo")
     private interface GeolocationsService {
         @Get("/geolocation/ip/{format}")
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<Response<IpAddressToLocationResult>> getIPToLocationPreview(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") ResponseFormat format,
@@ -82,12 +81,7 @@ public final class GeolocationsImpl {
             ResponseFormat format, String ip) {
         final String accept = "application/json";
         return service.getIPToLocationPreview(
-                this.client.getGeography(),
-                this.client.getXMsClientId(),
-                this.client.getApiVersion(),
-                format,
-                ip,
-                accept);
+                this.client.getHost(), this.client.getXMsClientId(), this.client.getApiVersion(), format, ip, accept);
     }
 
     /**

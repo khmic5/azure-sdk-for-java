@@ -21,7 +21,6 @@ import com.azure.maps.weather.models.CurrentConditionsResponse;
 import com.azure.maps.weather.models.DailyForecastResponse;
 import com.azure.maps.weather.models.DailyIndicesResponse;
 import com.azure.maps.weather.models.ErrorResponseException;
-import com.azure.maps.weather.models.Geography;
 import com.azure.maps.weather.models.HourlyForecastResponse;
 import com.azure.maps.weather.models.MinuteForecastResponse;
 import com.azure.maps.weather.models.QuarterDayForecastResponse;
@@ -53,14 +52,14 @@ public final class WeathersImpl {
      * The interface defining all the services for WeatherClientWeathers to be used by the proxy service to perform REST
      * calls.
      */
-    @Host("https://{geography}.atlas.microsoft.com")
+    @Host("{$host}")
     @ServiceInterface(name = "WeatherClientWeather")
     private interface WeathersService {
         @Get("/weather/forecast/hourly/{format}")
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<Response<HourlyForecastResponse>> getHourlyForecast(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") ResponseFormat format,
@@ -74,7 +73,7 @@ public final class WeathersImpl {
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<Response<MinuteForecastResponse>> getMinuteForecast(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") ResponseFormat format,
@@ -87,7 +86,7 @@ public final class WeathersImpl {
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<Response<QuarterDayForecastResponse>> getQuarterDayForecast(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") ResponseFormat format,
@@ -101,7 +100,7 @@ public final class WeathersImpl {
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<Response<CurrentConditionsResponse>> getCurrentConditions(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") ResponseFormat format,
@@ -116,7 +115,7 @@ public final class WeathersImpl {
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<Response<DailyForecastResponse>> getDailyForecast(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") ResponseFormat format,
@@ -130,7 +129,7 @@ public final class WeathersImpl {
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<Response<WeatherAlongRouteResponse>> getWeatherAlongRoute(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") ResponseFormat format,
@@ -142,7 +141,7 @@ public final class WeathersImpl {
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<Response<SevereWeatherAlertsResponse>> getSevereWeatherAlerts(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") ResponseFormat format,
@@ -155,7 +154,7 @@ public final class WeathersImpl {
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<Response<DailyIndicesResponse>> getDailyIndices(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") ResponseFormat format,
@@ -204,7 +203,7 @@ public final class WeathersImpl {
             ResponseFormat format, String query, WeatherDataUnit unit, Integer duration, String language) {
         final String accept = "application/json";
         return service.getHourlyForecast(
-                this.client.getGeography(),
+                this.client.getHost(),
                 this.client.getXMsClientId(),
                 this.client.getApiVersion(),
                 format,
@@ -331,7 +330,7 @@ public final class WeathersImpl {
             ResponseFormat format, String query, Integer interval, String language) {
         final String accept = "application/json";
         return service.getMinuteForecast(
-                this.client.getGeography(),
+                this.client.getHost(),
                 this.client.getXMsClientId(),
                 this.client.getApiVersion(),
                 format,
@@ -448,7 +447,7 @@ public final class WeathersImpl {
             ResponseFormat format, String query, WeatherDataUnit unit, Integer duration, String language) {
         final String accept = "application/json";
         return service.getQuarterDayForecast(
-                this.client.getGeography(),
+                this.client.getHost(),
                 this.client.getXMsClientId(),
                 this.client.getApiVersion(),
                 format,
@@ -579,7 +578,7 @@ public final class WeathersImpl {
             String language) {
         final String accept = "application/json";
         return service.getCurrentConditions(
-                this.client.getGeography(),
+                this.client.getHost(),
                 this.client.getXMsClientId(),
                 this.client.getApiVersion(),
                 format,
@@ -725,7 +724,7 @@ public final class WeathersImpl {
             ResponseFormat format, String query, WeatherDataUnit unit, Integer duration, String language) {
         final String accept = "application/json";
         return service.getDailyForecast(
-                this.client.getGeography(),
+                this.client.getHost(),
                 this.client.getXMsClientId(),
                 this.client.getApiVersion(),
                 format,
@@ -875,7 +874,7 @@ public final class WeathersImpl {
             ResponseFormat format, String query, String language) {
         final String accept = "application/json";
         return service.getWeatherAlongRoute(
-                this.client.getGeography(),
+                this.client.getHost(),
                 this.client.getXMsClientId(),
                 this.client.getApiVersion(),
                 format,
@@ -1043,7 +1042,7 @@ public final class WeathersImpl {
             ResponseFormat format, String query, String language, String details) {
         final String accept = "application/json";
         return service.getSevereWeatherAlerts(
-                this.client.getGeography(),
+                this.client.getHost(),
                 this.client.getXMsClientId(),
                 this.client.getApiVersion(),
                 format,
@@ -1183,7 +1182,7 @@ public final class WeathersImpl {
             Integer indexGroupId) {
         final String accept = "application/json";
         return service.getDailyIndices(
-                this.client.getGeography(),
+                this.client.getHost(),
                 this.client.getXMsClientId(),
                 this.client.getApiVersion(),
                 format,

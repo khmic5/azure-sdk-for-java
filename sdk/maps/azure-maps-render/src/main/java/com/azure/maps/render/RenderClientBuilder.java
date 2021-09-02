@@ -19,7 +19,6 @@ import com.azure.core.util.Configuration;
 import com.azure.core.util.serializer.JacksonAdapter;
 import com.azure.core.util.serializer.SerializerAdapter;
 import com.azure.maps.render.implementation.RenderClientImpl;
-import com.azure.maps.render.models.Geography;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -61,23 +60,6 @@ public final class RenderClientBuilder {
      */
     public RenderClientBuilder xMsClientId(String xMsClientId) {
         this.xMsClientId = xMsClientId;
-        return this;
-    }
-
-    /*
-     * This parameter specifies where the Azure Maps Creator resource is
-     * located.  Valid values are us and eu.
-     */
-    private Geography geography;
-
-    /**
-     * Sets This parameter specifies where the Azure Maps Creator resource is located. Valid values are us and eu.
-     *
-     * @param geography the geography value.
-     * @return the RenderClientBuilder.
-     */
-    public RenderClientBuilder geography(Geography geography) {
-        this.geography = geography;
         return this;
     }
 
@@ -217,9 +199,6 @@ public final class RenderClientBuilder {
      * @return an instance of RenderClientImpl.
      */
     private RenderClientImpl buildInnerClient() {
-        if (geography == null) {
-            this.geography = Geography.US;
-        }
         if (host == null) {
             this.host = "https://atlas.microsoft.com";
         }
@@ -229,7 +208,7 @@ public final class RenderClientBuilder {
         if (serializerAdapter == null) {
             this.serializerAdapter = JacksonAdapter.createDefaultSerializerAdapter();
         }
-        RenderClientImpl client = new RenderClientImpl(pipeline, serializerAdapter, xMsClientId, geography, host);
+        RenderClientImpl client = new RenderClientImpl(pipeline, serializerAdapter, xMsClientId, host);
         return client;
     }
 
