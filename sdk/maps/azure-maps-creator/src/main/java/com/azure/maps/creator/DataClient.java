@@ -7,6 +7,7 @@ package com.azure.maps.creator;
 import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceClient;
 import com.azure.core.annotation.ServiceMethod;
+import com.azure.core.util.polling.SyncPoller;
 import com.azure.maps.creator.implementation.DatasImpl;
 import com.azure.maps.creator.models.ErrorResponseException;
 import com.azure.maps.creator.models.LongRunningOperationResult;
@@ -75,12 +76,13 @@ public final class DataClient {
      * @return the response model for a Long-Running Operations API.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public LongRunningOperationResult uploadPreview(
+    public SyncPoller<LongRunningOperationResult, LongRunningOperationResult> beginUploadPreview(
             UploadDataFormat uploadDataFormat,
             Flux<ByteBuffer> uploadContent,
             long contentLength,
             String uploadDataDescription) {
-        return this.serviceClient.uploadPreview(uploadDataFormat, uploadContent, contentLength, uploadDataDescription);
+        return this.serviceClient.beginUploadPreview(
+                uploadDataFormat, uploadContent, contentLength, uploadDataDescription);
     }
 
     /**
@@ -127,9 +129,9 @@ public final class DataClient {
      * @return the response model for a Long-Running Operations API.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public LongRunningOperationResult uploadPreview(
+    public SyncPoller<LongRunningOperationResult, LongRunningOperationResult> beginUploadPreview(
             UploadDataFormat uploadDataFormat, Object uploadContent, String uploadDataDescription) {
-        return this.serviceClient.uploadPreview(uploadDataFormat, uploadContent, uploadDataDescription);
+        return this.serviceClient.beginUploadPreview(uploadDataFormat, uploadContent, uploadDataDescription);
     }
 
     /**
@@ -226,9 +228,9 @@ public final class DataClient {
      * @return the response model for a Long-Running Operations API.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public LongRunningOperationResult updatePreview(
+    public SyncPoller<LongRunningOperationResult, LongRunningOperationResult> beginUpdatePreview(
             String uniqueDataId, Object updateContent, String uploadDataDescription) {
-        return this.serviceClient.updatePreview(uniqueDataId, updateContent, uploadDataDescription);
+        return this.serviceClient.beginUpdatePreview(uniqueDataId, updateContent, uploadDataDescription);
     }
 
     /**

@@ -23,6 +23,11 @@ import com.azure.core.http.rest.PagedResponse;
 import com.azure.core.http.rest.PagedResponseBase;
 import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.RestProxy;
+import com.azure.core.util.Context;
+import com.azure.core.util.polling.DefaultPollingStrategy;
+import com.azure.core.util.polling.PollerFlux;
+import com.azure.core.util.polling.SyncPoller;
+import com.azure.core.util.serializer.TypeReference;
 import com.azure.maps.creator.models.ConversionListDetailInfo;
 import com.azure.maps.creator.models.ConversionListResponse;
 import com.azure.maps.creator.models.ConversionsConvertResponse;
@@ -30,6 +35,7 @@ import com.azure.maps.creator.models.ConversionsGetOperationResponse;
 import com.azure.maps.creator.models.ErrorResponseException;
 import com.azure.maps.creator.models.Geography;
 import com.azure.maps.creator.models.LongRunningOperationResult;
+import java.time.Duration;
 import reactor.core.publisher.Mono;
 
 /** An instance of this class provides access to all the operations defined in Conversions. */
@@ -229,17 +235,14 @@ public final class ConversionsImpl {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the response model for a Long-Running Operations API.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<LongRunningOperationResult> convertAsync(String udid, String outputOntology, String description) {
-        return convertWithResponseAsync(udid, outputOntology, description)
-                .flatMap(
-                        (ConversionsConvertResponse res) -> {
-                            if (res.getValue() != null) {
-                                return Mono.just(res.getValue());
-                            } else {
-                                return Mono.empty();
-                            }
-                        });
+    public PollerFlux<LongRunningOperationResult, LongRunningOperationResult> beginConvertAsync(
+            String udid, String outputOntology, String description) {
+        return PollerFlux.create(
+                Duration.ofSeconds(1),
+                () -> this.convertWithResponseAsync(udid, outputOntology, description),
+                new DefaultPollingStrategy<>(this.client.getHttpPipeline(), Context.NONE),
+                new TypeReference<LongRunningOperationResult>() {},
+                new TypeReference<LongRunningOperationResult>() {});
     }
 
     /**
@@ -290,9 +293,9 @@ public final class ConversionsImpl {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the response model for a Long-Running Operations API.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public LongRunningOperationResult convert(String udid, String outputOntology, String description) {
-        return convertAsync(udid, outputOntology, description).block();
+    public SyncPoller<LongRunningOperationResult, LongRunningOperationResult> beginConvert(
+            String udid, String outputOntology, String description) {
+        return this.beginConvertAsync(udid, outputOntology, description).getSyncPoller();
     }
 
     /**

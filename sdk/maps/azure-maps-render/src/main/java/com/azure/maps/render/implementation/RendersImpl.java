@@ -18,6 +18,8 @@ import com.azure.core.annotation.UnexpectedResponseExceptionType;
 import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.RestProxy;
 import com.azure.core.http.rest.StreamResponse;
+import com.azure.core.util.serializer.CollectionFormat;
+import com.azure.core.util.serializer.JacksonAdapter;
 import com.azure.maps.render.models.ErrorResponseException;
 import com.azure.maps.render.models.GetCopyrightCaptionResult;
 import com.azure.maps.render.models.GetCopyrightForTileResult;
@@ -40,7 +42,6 @@ import java.nio.ByteBuffer;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -86,8 +87,8 @@ public final class RendersImpl {
                 @QueryParam("width") Integer width,
                 @QueryParam("language") String language,
                 @QueryParam("view") String view,
-                @QueryParam(value = "pins", multipleQueryParams = true) List<String> pins,
-                @QueryParam(value = "path", multipleQueryParams = true) List<String> path,
+                @QueryParam("pins") String pins,
+                @QueryParam("path") String path,
                 @HeaderParam("Accept") String accept);
 
         @Get("/map/tile/{format}")
@@ -407,10 +408,10 @@ public final class RendersImpl {
             List<String> path) {
         final String apiVersion = "1.0";
         final String accept = "application/json, image/jpeg, image/png, image/pbf, application/vnd.mapbox-vector-tile";
-        List<String> pinsConverted =
-                pins.stream().map((item) -> (item != null) ? item.toString() : "").collect(Collectors.toList());
-        List<String> pathConverted =
-                path.stream().map((item) -> (item != null) ? item.toString() : "").collect(Collectors.toList());
+        String pinsConverted =
+                JacksonAdapter.createDefaultSerializerAdapter().serializeList(pins, CollectionFormat.CSV);
+        String pathConverted =
+                JacksonAdapter.createDefaultSerializerAdapter().serializeList(path, CollectionFormat.CSV);
         return service.getMapStaticImage(
                 this.client.getHost(),
                 this.client.getXMsClientId(),

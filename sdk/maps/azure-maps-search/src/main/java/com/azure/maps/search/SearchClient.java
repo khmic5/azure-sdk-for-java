@@ -7,6 +7,7 @@ package com.azure.maps.search;
 import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceClient;
 import com.azure.core.annotation.ServiceMethod;
+import com.azure.core.util.polling.SyncPoller;
 import com.azure.maps.search.implementation.SearchesImpl;
 import com.azure.maps.search.models.BatchRequestBody;
 import com.azure.maps.search.models.ConnectorSet;
@@ -1477,9 +1478,9 @@ public final class SearchClient {
      * @return this object is returned from a successful Search Fuzzy Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchFuzzyBatchResponse postSearchFuzzyBatch(
+    public SyncPoller<SearchFuzzyBatchResponse, SearchFuzzyBatchResponse> beginPostSearchFuzzyBatch(
             ResponseFormat format, BatchRequestBody searchFuzzyBatchRequestBody) {
-        return this.serviceClient.postSearchFuzzyBatch(format, searchFuzzyBatchRequestBody);
+        return this.serviceClient.beginPostSearchFuzzyBatch(format, searchFuzzyBatchRequestBody);
     }
 
     /**
@@ -1587,8 +1588,8 @@ public final class SearchClient {
      * @return this object is returned from a successful Search Fuzzy Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchFuzzyBatchResponse getSearchFuzzyBatch(String format) {
-        return this.serviceClient.getSearchFuzzyBatch(format);
+    public SyncPoller<SearchFuzzyBatchResponse, SearchFuzzyBatchResponse> beginGetSearchFuzzyBatch(String format) {
+        return this.serviceClient.beginGetSearchFuzzyBatch(format);
     }
 
     /**
@@ -1808,9 +1809,9 @@ public final class SearchClient {
      * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressBatchResponse postSearchAddressBatch(
+    public SyncPoller<SearchAddressBatchResponse, SearchAddressBatchResponse> beginPostSearchAddressBatch(
             ResponseFormat format, BatchRequestBody searchAddressBatchRequestBody) {
-        return this.serviceClient.postSearchAddressBatch(format, searchAddressBatchRequestBody);
+        return this.serviceClient.beginPostSearchAddressBatch(format, searchAddressBatchRequestBody);
     }
 
     /**
@@ -1917,8 +1918,9 @@ public final class SearchClient {
      * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressBatchResponse getSearchAddressBatch(String format) {
-        return this.serviceClient.getSearchAddressBatch(format);
+    public SyncPoller<SearchAddressBatchResponse, SearchAddressBatchResponse> beginGetSearchAddressBatch(
+            String format) {
+        return this.serviceClient.beginGetSearchAddressBatch(format);
     }
 
     /**
@@ -2136,9 +2138,10 @@ public final class SearchClient {
      * @return this object is returned from a successful Search Address Reverse Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressReverseBatchResponse postSearchAddressReverseBatch(
-            ResponseFormat format, BatchRequestBody searchAddressReverseBatchRequestBody) {
-        return this.serviceClient.postSearchAddressReverseBatch(format, searchAddressReverseBatchRequestBody);
+    public SyncPoller<SearchAddressReverseBatchResponse, SearchAddressReverseBatchResponse>
+            beginPostSearchAddressReverseBatch(
+                    ResponseFormat format, BatchRequestBody searchAddressReverseBatchRequestBody) {
+        return this.serviceClient.beginPostSearchAddressReverseBatch(format, searchAddressReverseBatchRequestBody);
     }
 
     /**
@@ -2244,7 +2247,8 @@ public final class SearchClient {
      * @return this object is returned from a successful Search Address Reverse Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressReverseBatchResponse getSearchAddressReverseBatch(String format) {
-        return this.serviceClient.getSearchAddressReverseBatch(format);
+    public SyncPoller<SearchAddressReverseBatchResponse, SearchAddressReverseBatchResponse>
+            beginGetSearchAddressReverseBatch(String format) {
+        return this.serviceClient.beginGetSearchAddressReverseBatch(format);
     }
 }

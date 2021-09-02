@@ -10,6 +10,7 @@ import com.azure.core.annotation.ServiceMethod;
 import com.azure.core.http.rest.PagedFlux;
 import com.azure.core.http.rest.PagedResponse;
 import com.azure.core.http.rest.Response;
+import com.azure.core.util.polling.PollerFlux;
 import com.azure.maps.creator.implementation.ConversionsImpl;
 import com.azure.maps.creator.models.ConversionListDetailInfo;
 import com.azure.maps.creator.models.ConversionsConvertResponse;
@@ -135,8 +136,9 @@ public final class ConversionAsyncClient {
      * @return the response model for a Long-Running Operations API.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<LongRunningOperationResult> convert(String udid, String outputOntology, String description) {
-        return this.serviceClient.convertAsync(udid, outputOntology, description);
+    public PollerFlux<LongRunningOperationResult, LongRunningOperationResult> beginConvert(
+            String udid, String outputOntology, String description) {
+        return this.serviceClient.beginConvertAsync(udid, outputOntology, description);
     }
 
     /**

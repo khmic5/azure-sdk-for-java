@@ -8,6 +8,7 @@ import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceClient;
 import com.azure.core.annotation.ServiceMethod;
 import com.azure.core.http.rest.Response;
+import com.azure.core.util.polling.PollerFlux;
 import com.azure.maps.route.implementation.RoutesImpl;
 import com.azure.maps.route.models.AlternativeRouteType;
 import com.azure.maps.route.models.BatchRequestBody;
@@ -383,7 +384,7 @@ public final class RouteAsyncClient {
      * @return this object is returned from a successful Route Matrix call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<RouteMatrixResponse> postRouteMatrix(
+    public PollerFlux<RouteMatrixResponse, RouteMatrixResponse> beginPostRouteMatrix(
             ResponseFormat format,
             PostRouteMatrixRequestBody postRouteMatrixRequestBody,
             Boolean waitForResults,
@@ -404,7 +405,7 @@ public final class RouteAsyncClient {
             Boolean traffic,
             RouteType routeType,
             VehicleLoadType vehicleLoadType) {
-        return this.serviceClient.postRouteMatrixAsync(
+        return this.serviceClient.beginPostRouteMatrixAsync(
                 format,
                 postRouteMatrixRequestBody,
                 waitForResults,
@@ -495,8 +496,8 @@ public final class RouteAsyncClient {
      * @return this object is returned from a successful Route Matrix call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<RouteMatrixResponse> getRouteMatrix(String format) {
-        return this.serviceClient.getRouteMatrixAsync(format);
+    public PollerFlux<RouteMatrixResponse, RouteMatrixResponse> beginGetRouteMatrix(String format) {
+        return this.serviceClient.beginGetRouteMatrixAsync(format);
     }
 
     /**
@@ -2845,9 +2846,9 @@ public final class RouteAsyncClient {
      * @return this object is returned from a successful Route Directions Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<RouteDirectionsBatchResponse> postRouteDirectionsBatch(
+    public PollerFlux<RouteDirectionsBatchResponse, RouteDirectionsBatchResponse> beginPostRouteDirectionsBatch(
             ResponseFormat format, BatchRequestBody postRouteDirectionsBatchRequestBody) {
-        return this.serviceClient.postRouteDirectionsBatchAsync(format, postRouteDirectionsBatchRequestBody);
+        return this.serviceClient.beginPostRouteDirectionsBatchAsync(format, postRouteDirectionsBatchRequestBody);
     }
 
     /**
@@ -2954,8 +2955,9 @@ public final class RouteAsyncClient {
      * @return this object is returned from a successful Route Directions Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<RouteDirectionsBatchResponse> getRouteDirectionsBatch(String format) {
-        return this.serviceClient.getRouteDirectionsBatchAsync(format);
+    public PollerFlux<RouteDirectionsBatchResponse, RouteDirectionsBatchResponse> beginGetRouteDirectionsBatch(
+            String format) {
+        return this.serviceClient.beginGetRouteDirectionsBatchAsync(format);
     }
 
     /**

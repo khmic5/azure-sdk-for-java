@@ -7,6 +7,7 @@ package com.azure.maps.route;
 import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceClient;
 import com.azure.core.annotation.ServiceMethod;
+import com.azure.core.util.polling.SyncPoller;
 import com.azure.maps.route.implementation.RoutesImpl;
 import com.azure.maps.route.models.AlternativeRouteType;
 import com.azure.maps.route.models.BatchRequestBody;
@@ -190,7 +191,7 @@ public final class RouteClient {
      * @return this object is returned from a successful Route Matrix call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public RouteMatrixResponse postRouteMatrix(
+    public SyncPoller<RouteMatrixResponse, RouteMatrixResponse> beginPostRouteMatrix(
             ResponseFormat format,
             PostRouteMatrixRequestBody postRouteMatrixRequestBody,
             Boolean waitForResults,
@@ -211,7 +212,7 @@ public final class RouteClient {
             Boolean traffic,
             RouteType routeType,
             VehicleLoadType vehicleLoadType) {
-        return this.serviceClient.postRouteMatrix(
+        return this.serviceClient.beginPostRouteMatrix(
                 format,
                 postRouteMatrixRequestBody,
                 waitForResults,
@@ -266,8 +267,8 @@ public final class RouteClient {
      * @return this object is returned from a successful Route Matrix call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public RouteMatrixResponse getRouteMatrix(String format) {
-        return this.serviceClient.getRouteMatrix(format);
+    public SyncPoller<RouteMatrixResponse, RouteMatrixResponse> beginGetRouteMatrix(String format) {
+        return this.serviceClient.beginGetRouteMatrix(format);
     }
 
     /**
@@ -1440,9 +1441,9 @@ public final class RouteClient {
      * @return this object is returned from a successful Route Directions Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public RouteDirectionsBatchResponse postRouteDirectionsBatch(
+    public SyncPoller<RouteDirectionsBatchResponse, RouteDirectionsBatchResponse> beginPostRouteDirectionsBatch(
             ResponseFormat format, BatchRequestBody postRouteDirectionsBatchRequestBody) {
-        return this.serviceClient.postRouteDirectionsBatch(format, postRouteDirectionsBatchRequestBody);
+        return this.serviceClient.beginPostRouteDirectionsBatch(format, postRouteDirectionsBatchRequestBody);
     }
 
     /**
@@ -1495,8 +1496,9 @@ public final class RouteClient {
      * @return this object is returned from a successful Route Directions Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public RouteDirectionsBatchResponse getRouteDirectionsBatch(String format) {
-        return this.serviceClient.getRouteDirectionsBatch(format);
+    public SyncPoller<RouteDirectionsBatchResponse, RouteDirectionsBatchResponse> beginGetRouteDirectionsBatch(
+            String format) {
+        return this.serviceClient.beginGetRouteDirectionsBatch(format);
     }
 
     /**

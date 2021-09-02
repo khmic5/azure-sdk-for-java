@@ -22,6 +22,11 @@ import com.azure.core.annotation.UnexpectedResponseExceptionType;
 import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.RestProxy;
 import com.azure.core.http.rest.StreamResponse;
+import com.azure.core.util.Context;
+import com.azure.core.util.polling.DefaultPollingStrategy;
+import com.azure.core.util.polling.PollerFlux;
+import com.azure.core.util.polling.SyncPoller;
+import com.azure.core.util.serializer.TypeReference;
 import com.azure.maps.creator.models.DatasGetOperationPreviewResponse;
 import com.azure.maps.creator.models.DatasUpdatePreviewResponse;
 import com.azure.maps.creator.models.DatasUploadPreviewResponse;
@@ -34,6 +39,7 @@ import com.fasterxml.jackson.databind.util.ByteBufferBackedInputStream;
 import java.io.InputStream;
 import java.io.SequenceInputStream;
 import java.nio.ByteBuffer;
+import java.time.Duration;
 import java.util.Enumeration;
 import java.util.Iterator;
 import reactor.core.publisher.Flux;
@@ -258,21 +264,19 @@ public final class DatasImpl {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the response model for a Long-Running Operations API.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<LongRunningOperationResult> uploadPreviewAsync(
+    public PollerFlux<LongRunningOperationResult, LongRunningOperationResult> beginUploadPreviewAsync(
             UploadDataFormat uploadDataFormat,
             Flux<ByteBuffer> uploadContent,
             long contentLength,
             String uploadDataDescription) {
-        return uploadPreviewWithResponseAsync(uploadDataFormat, uploadContent, contentLength, uploadDataDescription)
-                .flatMap(
-                        (DatasUploadPreviewResponse res) -> {
-                            if (res.getValue() != null) {
-                                return Mono.just(res.getValue());
-                            } else {
-                                return Mono.empty();
-                            }
-                        });
+        return PollerFlux.create(
+                Duration.ofSeconds(1),
+                () ->
+                        this.uploadPreviewWithResponseAsync(
+                                uploadDataFormat, uploadContent, contentLength, uploadDataDescription),
+                new DefaultPollingStrategy<>(this.client.getHttpPipeline(), Context.NONE),
+                new TypeReference<LongRunningOperationResult>() {},
+                new TypeReference<LongRunningOperationResult>() {});
     }
 
     /**
@@ -320,13 +324,13 @@ public final class DatasImpl {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the response model for a Long-Running Operations API.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public LongRunningOperationResult uploadPreview(
+    public SyncPoller<LongRunningOperationResult, LongRunningOperationResult> beginUploadPreview(
             UploadDataFormat uploadDataFormat,
             Flux<ByteBuffer> uploadContent,
             long contentLength,
             String uploadDataDescription) {
-        return uploadPreviewAsync(uploadDataFormat, uploadContent, contentLength, uploadDataDescription).block();
+        return this.beginUploadPreviewAsync(uploadDataFormat, uploadContent, contentLength, uploadDataDescription)
+                .getSyncPoller();
     }
 
     /**
@@ -432,18 +436,14 @@ public final class DatasImpl {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the response model for a Long-Running Operations API.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<LongRunningOperationResult> uploadPreviewAsync(
+    public PollerFlux<LongRunningOperationResult, LongRunningOperationResult> beginUploadPreviewAsync(
             UploadDataFormat uploadDataFormat, Object uploadContent, String uploadDataDescription) {
-        return uploadPreviewWithResponseAsync(uploadDataFormat, uploadContent, uploadDataDescription)
-                .flatMap(
-                        (DatasUploadPreviewResponse res) -> {
-                            if (res.getValue() != null) {
-                                return Mono.just(res.getValue());
-                            } else {
-                                return Mono.empty();
-                            }
-                        });
+        return PollerFlux.create(
+                Duration.ofSeconds(1),
+                () -> this.uploadPreviewWithResponseAsync(uploadDataFormat, uploadContent, uploadDataDescription),
+                new DefaultPollingStrategy<>(this.client.getHttpPipeline(), Context.NONE),
+                new TypeReference<LongRunningOperationResult>() {},
+                new TypeReference<LongRunningOperationResult>() {});
     }
 
     /**
@@ -490,10 +490,9 @@ public final class DatasImpl {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the response model for a Long-Running Operations API.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public LongRunningOperationResult uploadPreview(
+    public SyncPoller<LongRunningOperationResult, LongRunningOperationResult> beginUploadPreview(
             UploadDataFormat uploadDataFormat, Object uploadContent, String uploadDataDescription) {
-        return uploadPreviewAsync(uploadDataFormat, uploadContent, uploadDataDescription).block();
+        return this.beginUploadPreviewAsync(uploadDataFormat, uploadContent, uploadDataDescription).getSyncPoller();
     }
 
     /**
@@ -751,18 +750,14 @@ public final class DatasImpl {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the response model for a Long-Running Operations API.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<LongRunningOperationResult> updatePreviewAsync(
+    public PollerFlux<LongRunningOperationResult, LongRunningOperationResult> beginUpdatePreviewAsync(
             String uniqueDataId, Object updateContent, String uploadDataDescription) {
-        return updatePreviewWithResponseAsync(uniqueDataId, updateContent, uploadDataDescription)
-                .flatMap(
-                        (DatasUpdatePreviewResponse res) -> {
-                            if (res.getValue() != null) {
-                                return Mono.just(res.getValue());
-                            } else {
-                                return Mono.empty();
-                            }
-                        });
+        return PollerFlux.create(
+                Duration.ofSeconds(1),
+                () -> this.updatePreviewWithResponseAsync(uniqueDataId, updateContent, uploadDataDescription),
+                new DefaultPollingStrategy<>(this.client.getHttpPipeline(), Context.NONE),
+                new TypeReference<LongRunningOperationResult>() {},
+                new TypeReference<LongRunningOperationResult>() {});
     }
 
     /**
@@ -817,10 +812,9 @@ public final class DatasImpl {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the response model for a Long-Running Operations API.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public LongRunningOperationResult updatePreview(
+    public SyncPoller<LongRunningOperationResult, LongRunningOperationResult> beginUpdatePreview(
             String uniqueDataId, Object updateContent, String uploadDataDescription) {
-        return updatePreviewAsync(uniqueDataId, updateContent, uploadDataDescription).block();
+        return this.beginUpdatePreviewAsync(uniqueDataId, updateContent, uploadDataDescription).getSyncPoller();
     }
 
     /**

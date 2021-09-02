@@ -19,8 +19,13 @@ import com.azure.core.annotation.ServiceMethod;
 import com.azure.core.annotation.UnexpectedResponseExceptionType;
 import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.RestProxy;
+import com.azure.core.util.Context;
+import com.azure.core.util.polling.DefaultPollingStrategy;
+import com.azure.core.util.polling.PollerFlux;
+import com.azure.core.util.polling.SyncPoller;
 import com.azure.core.util.serializer.CollectionFormat;
 import com.azure.core.util.serializer.JacksonAdapter;
+import com.azure.core.util.serializer.TypeReference;
 import com.azure.maps.search.models.BatchRequestBody;
 import com.azure.maps.search.models.ConnectorSet;
 import com.azure.maps.search.models.EntityType;
@@ -45,6 +50,7 @@ import com.azure.maps.search.models.SearchesPostSearchAddressBatchResponse;
 import com.azure.maps.search.models.SearchesPostSearchAddressReverseBatchResponse;
 import com.azure.maps.search.models.SearchesPostSearchFuzzyBatchResponse;
 import com.azure.maps.search.models.TextFormat;
+import java.time.Duration;
 import java.util.List;
 import reactor.core.publisher.Mono;
 
@@ -4883,18 +4889,14 @@ public final class SearchesImpl {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search Fuzzy Batch service call.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchFuzzyBatchResponse> postSearchFuzzyBatchAsync(
+    public PollerFlux<SearchFuzzyBatchResponse, SearchFuzzyBatchResponse> beginPostSearchFuzzyBatchAsync(
             ResponseFormat format, BatchRequestBody searchFuzzyBatchRequestBody) {
-        return postSearchFuzzyBatchWithResponseAsync(format, searchFuzzyBatchRequestBody)
-                .flatMap(
-                        (SearchesPostSearchFuzzyBatchResponse res) -> {
-                            if (res.getValue() != null) {
-                                return Mono.just(res.getValue());
-                            } else {
-                                return Mono.empty();
-                            }
-                        });
+        return PollerFlux.create(
+                Duration.ofSeconds(1),
+                () -> this.postSearchFuzzyBatchWithResponseAsync(format, searchFuzzyBatchRequestBody),
+                new DefaultPollingStrategy<>(this.client.getHttpPipeline(), Context.NONE),
+                new TypeReference<SearchFuzzyBatchResponse>() {},
+                new TypeReference<SearchFuzzyBatchResponse>() {});
     }
 
     /**
@@ -5003,10 +5005,9 @@ public final class SearchesImpl {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search Fuzzy Batch service call.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchFuzzyBatchResponse postSearchFuzzyBatch(
+    public SyncPoller<SearchFuzzyBatchResponse, SearchFuzzyBatchResponse> beginPostSearchFuzzyBatch(
             ResponseFormat format, BatchRequestBody searchFuzzyBatchRequestBody) {
-        return postSearchFuzzyBatchAsync(format, searchFuzzyBatchRequestBody).block();
+        return this.beginPostSearchFuzzyBatchAsync(format, searchFuzzyBatchRequestBody).getSyncPoller();
     }
 
     /**
@@ -5224,17 +5225,13 @@ public final class SearchesImpl {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search Fuzzy Batch service call.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchFuzzyBatchResponse> getSearchFuzzyBatchAsync(String format) {
-        return getSearchFuzzyBatchWithResponseAsync(format)
-                .flatMap(
-                        (SearchesGetSearchFuzzyBatchResponse res) -> {
-                            if (res.getValue() != null) {
-                                return Mono.just(res.getValue());
-                            } else {
-                                return Mono.empty();
-                            }
-                        });
+    public PollerFlux<SearchFuzzyBatchResponse, SearchFuzzyBatchResponse> beginGetSearchFuzzyBatchAsync(String format) {
+        return PollerFlux.create(
+                Duration.ofSeconds(1),
+                () -> this.getSearchFuzzyBatchWithResponseAsync(format),
+                new DefaultPollingStrategy<>(this.client.getHttpPipeline(), Context.NONE),
+                new TypeReference<SearchFuzzyBatchResponse>() {},
+                new TypeReference<SearchFuzzyBatchResponse>() {});
     }
 
     /**
@@ -5341,9 +5338,8 @@ public final class SearchesImpl {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search Fuzzy Batch service call.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchFuzzyBatchResponse getSearchFuzzyBatch(String format) {
-        return getSearchFuzzyBatchAsync(format).block();
+    public SyncPoller<SearchFuzzyBatchResponse, SearchFuzzyBatchResponse> beginGetSearchFuzzyBatch(String format) {
+        return this.beginGetSearchFuzzyBatchAsync(format).getSyncPoller();
     }
 
     /**
@@ -5920,18 +5916,14 @@ public final class SearchesImpl {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search Address Batch service call.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchAddressBatchResponse> postSearchAddressBatchAsync(
+    public PollerFlux<SearchAddressBatchResponse, SearchAddressBatchResponse> beginPostSearchAddressBatchAsync(
             ResponseFormat format, BatchRequestBody searchAddressBatchRequestBody) {
-        return postSearchAddressBatchWithResponseAsync(format, searchAddressBatchRequestBody)
-                .flatMap(
-                        (SearchesPostSearchAddressBatchResponse res) -> {
-                            if (res.getValue() != null) {
-                                return Mono.just(res.getValue());
-                            } else {
-                                return Mono.empty();
-                            }
-                        });
+        return PollerFlux.create(
+                Duration.ofSeconds(1),
+                () -> this.postSearchAddressBatchWithResponseAsync(format, searchAddressBatchRequestBody),
+                new DefaultPollingStrategy<>(this.client.getHttpPipeline(), Context.NONE),
+                new TypeReference<SearchAddressBatchResponse>() {},
+                new TypeReference<SearchAddressBatchResponse>() {});
     }
 
     /**
@@ -6039,10 +6031,9 @@ public final class SearchesImpl {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search Address Batch service call.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressBatchResponse postSearchAddressBatch(
+    public SyncPoller<SearchAddressBatchResponse, SearchAddressBatchResponse> beginPostSearchAddressBatch(
             ResponseFormat format, BatchRequestBody searchAddressBatchRequestBody) {
-        return postSearchAddressBatchAsync(format, searchAddressBatchRequestBody).block();
+        return this.beginPostSearchAddressBatchAsync(format, searchAddressBatchRequestBody).getSyncPoller();
     }
 
     /**
@@ -6258,17 +6249,14 @@ public final class SearchesImpl {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search Address Batch service call.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchAddressBatchResponse> getSearchAddressBatchAsync(String format) {
-        return getSearchAddressBatchWithResponseAsync(format)
-                .flatMap(
-                        (SearchesGetSearchAddressBatchResponse res) -> {
-                            if (res.getValue() != null) {
-                                return Mono.just(res.getValue());
-                            } else {
-                                return Mono.empty();
-                            }
-                        });
+    public PollerFlux<SearchAddressBatchResponse, SearchAddressBatchResponse> beginGetSearchAddressBatchAsync(
+            String format) {
+        return PollerFlux.create(
+                Duration.ofSeconds(1),
+                () -> this.getSearchAddressBatchWithResponseAsync(format),
+                new DefaultPollingStrategy<>(this.client.getHttpPipeline(), Context.NONE),
+                new TypeReference<SearchAddressBatchResponse>() {},
+                new TypeReference<SearchAddressBatchResponse>() {});
     }
 
     /**
@@ -6374,9 +6362,9 @@ public final class SearchesImpl {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search Address Batch service call.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressBatchResponse getSearchAddressBatch(String format) {
-        return getSearchAddressBatchAsync(format).block();
+    public SyncPoller<SearchAddressBatchResponse, SearchAddressBatchResponse> beginGetSearchAddressBatch(
+            String format) {
+        return this.beginGetSearchAddressBatchAsync(format).getSyncPoller();
     }
 
     /**
@@ -6948,18 +6936,15 @@ public final class SearchesImpl {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search Address Reverse Batch service call.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchAddressReverseBatchResponse> postSearchAddressReverseBatchAsync(
-            ResponseFormat format, BatchRequestBody searchAddressReverseBatchRequestBody) {
-        return postSearchAddressReverseBatchWithResponseAsync(format, searchAddressReverseBatchRequestBody)
-                .flatMap(
-                        (SearchesPostSearchAddressReverseBatchResponse res) -> {
-                            if (res.getValue() != null) {
-                                return Mono.just(res.getValue());
-                            } else {
-                                return Mono.empty();
-                            }
-                        });
+    public PollerFlux<SearchAddressReverseBatchResponse, SearchAddressReverseBatchResponse>
+            beginPostSearchAddressReverseBatchAsync(
+                    ResponseFormat format, BatchRequestBody searchAddressReverseBatchRequestBody) {
+        return PollerFlux.create(
+                Duration.ofSeconds(1),
+                () -> this.postSearchAddressReverseBatchWithResponseAsync(format, searchAddressReverseBatchRequestBody),
+                new DefaultPollingStrategy<>(this.client.getHttpPipeline(), Context.NONE),
+                new TypeReference<SearchAddressReverseBatchResponse>() {},
+                new TypeReference<SearchAddressReverseBatchResponse>() {});
     }
 
     /**
@@ -7066,10 +7051,11 @@ public final class SearchesImpl {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search Address Reverse Batch service call.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressReverseBatchResponse postSearchAddressReverseBatch(
-            ResponseFormat format, BatchRequestBody searchAddressReverseBatchRequestBody) {
-        return postSearchAddressReverseBatchAsync(format, searchAddressReverseBatchRequestBody).block();
+    public SyncPoller<SearchAddressReverseBatchResponse, SearchAddressReverseBatchResponse>
+            beginPostSearchAddressReverseBatch(
+                    ResponseFormat format, BatchRequestBody searchAddressReverseBatchRequestBody) {
+        return this.beginPostSearchAddressReverseBatchAsync(format, searchAddressReverseBatchRequestBody)
+                .getSyncPoller();
     }
 
     /**
@@ -7284,17 +7270,14 @@ public final class SearchesImpl {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search Address Reverse Batch service call.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchAddressReverseBatchResponse> getSearchAddressReverseBatchAsync(String format) {
-        return getSearchAddressReverseBatchWithResponseAsync(format)
-                .flatMap(
-                        (SearchesGetSearchAddressReverseBatchResponse res) -> {
-                            if (res.getValue() != null) {
-                                return Mono.just(res.getValue());
-                            } else {
-                                return Mono.empty();
-                            }
-                        });
+    public PollerFlux<SearchAddressReverseBatchResponse, SearchAddressReverseBatchResponse>
+            beginGetSearchAddressReverseBatchAsync(String format) {
+        return PollerFlux.create(
+                Duration.ofSeconds(1),
+                () -> this.getSearchAddressReverseBatchWithResponseAsync(format),
+                new DefaultPollingStrategy<>(this.client.getHttpPipeline(), Context.NONE),
+                new TypeReference<SearchAddressReverseBatchResponse>() {},
+                new TypeReference<SearchAddressReverseBatchResponse>() {});
     }
 
     /**
@@ -7399,8 +7382,8 @@ public final class SearchesImpl {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search Address Reverse Batch service call.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressReverseBatchResponse getSearchAddressReverseBatch(String format) {
-        return getSearchAddressReverseBatchAsync(format).block();
+    public SyncPoller<SearchAddressReverseBatchResponse, SearchAddressReverseBatchResponse>
+            beginGetSearchAddressReverseBatch(String format) {
+        return this.beginGetSearchAddressReverseBatchAsync(format).getSyncPoller();
     }
 }

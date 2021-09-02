@@ -23,6 +23,11 @@ import com.azure.core.http.rest.PagedResponse;
 import com.azure.core.http.rest.PagedResponseBase;
 import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.RestProxy;
+import com.azure.core.util.Context;
+import com.azure.core.util.polling.DefaultPollingStrategy;
+import com.azure.core.util.polling.PollerFlux;
+import com.azure.core.util.polling.SyncPoller;
+import com.azure.core.util.serializer.TypeReference;
 import com.azure.maps.creator.models.DatasetDetailInfo;
 import com.azure.maps.creator.models.DatasetListResponse;
 import com.azure.maps.creator.models.DatasetsCreateResponse;
@@ -30,6 +35,7 @@ import com.azure.maps.creator.models.DatasetsGetOperationResponse;
 import com.azure.maps.creator.models.ErrorResponseException;
 import com.azure.maps.creator.models.Geography;
 import com.azure.maps.creator.models.LongRunningOperationResult;
+import java.time.Duration;
 import reactor.core.publisher.Mono;
 
 /** An instance of this class provides access to all the operations defined in Datasets. */
@@ -205,18 +211,14 @@ public final class DatasetsImpl {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the response model for a Long-Running Operations API.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<LongRunningOperationResult> createAsync(
+    public PollerFlux<LongRunningOperationResult, LongRunningOperationResult> beginCreateAsync(
             String conversionId, String datasetId, String descriptionDataset) {
-        return createWithResponseAsync(conversionId, datasetId, descriptionDataset)
-                .flatMap(
-                        (DatasetsCreateResponse res) -> {
-                            if (res.getValue() != null) {
-                                return Mono.just(res.getValue());
-                            } else {
-                                return Mono.empty();
-                            }
-                        });
+        return PollerFlux.create(
+                Duration.ofSeconds(1),
+                () -> this.createWithResponseAsync(conversionId, datasetId, descriptionDataset),
+                new DefaultPollingStrategy<>(this.client.getHttpPipeline(), Context.NONE),
+                new TypeReference<LongRunningOperationResult>() {},
+                new TypeReference<LongRunningOperationResult>() {});
     }
 
     /**
@@ -255,9 +257,9 @@ public final class DatasetsImpl {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the response model for a Long-Running Operations API.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public LongRunningOperationResult create(String conversionId, String datasetId, String descriptionDataset) {
-        return createAsync(conversionId, datasetId, descriptionDataset).block();
+    public SyncPoller<LongRunningOperationResult, LongRunningOperationResult> beginCreate(
+            String conversionId, String datasetId, String descriptionDataset) {
+        return this.beginCreateAsync(conversionId, datasetId, descriptionDataset).getSyncPoller();
     }
 
     /**

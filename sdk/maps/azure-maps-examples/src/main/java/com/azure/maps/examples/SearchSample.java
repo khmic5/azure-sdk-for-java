@@ -150,7 +150,7 @@ public class SearchSample {
         //      will be available when the call returns. This allows simplifying the call and search more than 100 addresses.
         // Use async API + blocking call
         System.out.println("Post Search Address Batch Async - Blocking call");
-        MapsCommon.print(client.postSearchAddressBatch(ResponseFormat.JSON, contentJson));
+        MapsCommon.print(client.beginPostSearchAddressBatch(ResponseFormat.JSON, contentJson).getFinalResult());
 
         // Post search address reverse batch - https://docs.microsoft.com/en-us/rest/api/maps/search/post-search-address-reverse-batch
         // This is also a batch API like postSearchAddressBatch(), so the same calling patterns apply.
@@ -169,6 +169,7 @@ public class SearchSample {
                 BatchRequestBody.class);
         MapsCommon.print(client.postSearchFuzzyBatchSync(ResponseFormat.JSON, contentJson));
 
-        MapsCommon.print(client.postSearchFuzzyBatch(ResponseFormat.JSON, contentJson));
+        System.out.println("Post Search Fuzzy Batch Async");
+        MapsCommon.print(client.beginPostSearchFuzzyBatch(ResponseFormat.JSON, contentJson).getFinalResult());
     }
 }

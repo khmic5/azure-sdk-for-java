@@ -23,6 +23,11 @@ import com.azure.core.http.rest.PagedResponse;
 import com.azure.core.http.rest.PagedResponseBase;
 import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.RestProxy;
+import com.azure.core.util.Context;
+import com.azure.core.util.polling.DefaultPollingStrategy;
+import com.azure.core.util.polling.PollerFlux;
+import com.azure.core.util.polling.SyncPoller;
+import com.azure.core.util.serializer.TypeReference;
 import com.azure.maps.creator.models.ErrorResponseException;
 import com.azure.maps.creator.models.Geography;
 import com.azure.maps.creator.models.LongRunningOperationResult;
@@ -30,6 +35,7 @@ import com.azure.maps.creator.models.TilesetDetailInfo;
 import com.azure.maps.creator.models.TilesetListResponse;
 import com.azure.maps.creator.models.TilesetsCreateResponse;
 import com.azure.maps.creator.models.TilesetsGetOperationResponse;
+import java.time.Duration;
 import reactor.core.publisher.Mono;
 
 /** An instance of this class provides access to all the operations defined in Tilesets. */
@@ -184,17 +190,14 @@ public final class TilesetsImpl {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the response model for a Long-Running Operations API.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<LongRunningOperationResult> createAsync(String datasetId, String description) {
-        return createWithResponseAsync(datasetId, description)
-                .flatMap(
-                        (TilesetsCreateResponse res) -> {
-                            if (res.getValue() != null) {
-                                return Mono.just(res.getValue());
-                            } else {
-                                return Mono.empty();
-                            }
-                        });
+    public PollerFlux<LongRunningOperationResult, LongRunningOperationResult> beginCreateAsync(
+            String datasetId, String description) {
+        return PollerFlux.create(
+                Duration.ofSeconds(1),
+                () -> this.createWithResponseAsync(datasetId, description),
+                new DefaultPollingStrategy<>(this.client.getHttpPipeline(), Context.NONE),
+                new TypeReference<LongRunningOperationResult>() {},
+                new TypeReference<LongRunningOperationResult>() {});
     }
 
     /**
@@ -227,9 +230,9 @@ public final class TilesetsImpl {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the response model for a Long-Running Operations API.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public LongRunningOperationResult create(String datasetId, String description) {
-        return createAsync(datasetId, description).block();
+    public SyncPoller<LongRunningOperationResult, LongRunningOperationResult> beginCreate(
+            String datasetId, String description) {
+        return this.beginCreateAsync(datasetId, description).getSyncPoller();
     }
 
     /**

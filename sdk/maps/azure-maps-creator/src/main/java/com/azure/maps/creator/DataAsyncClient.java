@@ -9,6 +9,7 @@ import com.azure.core.annotation.ServiceClient;
 import com.azure.core.annotation.ServiceMethod;
 import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.StreamResponse;
+import com.azure.core.util.polling.PollerFlux;
 import com.azure.maps.creator.implementation.DatasImpl;
 import com.azure.maps.creator.models.DatasGetOperationPreviewResponse;
 import com.azure.maps.creator.models.DatasUpdatePreviewResponse;
@@ -134,12 +135,12 @@ public final class DataAsyncClient {
      * @return the response model for a Long-Running Operations API.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<LongRunningOperationResult> uploadPreview(
+    public PollerFlux<LongRunningOperationResult, LongRunningOperationResult> beginUploadPreview(
             UploadDataFormat uploadDataFormat,
             Flux<ByteBuffer> uploadContent,
             long contentLength,
             String uploadDataDescription) {
-        return this.serviceClient.uploadPreviewAsync(
+        return this.serviceClient.beginUploadPreviewAsync(
                 uploadDataFormat, uploadContent, contentLength, uploadDataDescription);
     }
 
@@ -237,9 +238,9 @@ public final class DataAsyncClient {
      * @return the response model for a Long-Running Operations API.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<LongRunningOperationResult> uploadPreview(
+    public PollerFlux<LongRunningOperationResult, LongRunningOperationResult> beginUploadPreview(
             UploadDataFormat uploadDataFormat, Object uploadContent, String uploadDataDescription) {
-        return this.serviceClient.uploadPreviewAsync(uploadDataFormat, uploadContent, uploadDataDescription);
+        return this.serviceClient.beginUploadPreviewAsync(uploadDataFormat, uploadContent, uploadDataDescription);
     }
 
     /**
@@ -435,9 +436,9 @@ public final class DataAsyncClient {
      * @return the response model for a Long-Running Operations API.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<LongRunningOperationResult> updatePreview(
+    public PollerFlux<LongRunningOperationResult, LongRunningOperationResult> beginUpdatePreview(
             String uniqueDataId, Object updateContent, String uploadDataDescription) {
-        return this.serviceClient.updatePreviewAsync(uniqueDataId, updateContent, uploadDataDescription);
+        return this.serviceClient.beginUpdatePreviewAsync(uniqueDataId, updateContent, uploadDataDescription);
     }
 
     /**

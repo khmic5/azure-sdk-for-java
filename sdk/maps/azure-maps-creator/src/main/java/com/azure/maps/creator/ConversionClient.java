@@ -8,6 +8,7 @@ import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceClient;
 import com.azure.core.annotation.ServiceMethod;
 import com.azure.core.http.rest.PagedIterable;
+import com.azure.core.util.polling.SyncPoller;
 import com.azure.maps.creator.implementation.ConversionsImpl;
 import com.azure.maps.creator.models.ConversionListDetailInfo;
 import com.azure.maps.creator.models.ErrorResponseException;
@@ -76,8 +77,9 @@ public final class ConversionClient {
      * @return the response model for a Long-Running Operations API.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public LongRunningOperationResult convert(String udid, String outputOntology, String description) {
-        return this.serviceClient.convert(udid, outputOntology, description);
+    public SyncPoller<LongRunningOperationResult, LongRunningOperationResult> beginConvert(
+            String udid, String outputOntology, String description) {
+        return this.serviceClient.beginConvert(udid, outputOntology, description);
     }
 
     /**
