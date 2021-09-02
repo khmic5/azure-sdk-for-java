@@ -8,6 +8,7 @@ import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceClient;
 import com.azure.core.annotation.ServiceMethod;
 import com.azure.core.http.rest.PagedIterable;
+import com.azure.core.util.polling.SyncPoller;
 import com.azure.maps.creator.implementation.DatasetsImpl;
 import com.azure.maps.creator.models.DatasetDetailInfo;
 import com.azure.maps.creator.models.ErrorResponseException;
@@ -64,8 +65,9 @@ public final class DatasetClient {
      * @return the response model for a Long-Running Operations API.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public LongRunningOperationResult create(String conversionId, String datasetId, String descriptionDataset) {
-        return this.serviceClient.create(conversionId, datasetId, descriptionDataset);
+    public SyncPoller<LongRunningOperationResult, LongRunningOperationResult> beginCreate(
+            String conversionId, String datasetId, String descriptionDataset) {
+        return this.serviceClient.beginCreate(conversionId, datasetId, descriptionDataset);
     }
 
     /**

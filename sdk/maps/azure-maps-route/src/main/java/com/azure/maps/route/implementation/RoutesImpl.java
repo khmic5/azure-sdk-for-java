@@ -19,6 +19,13 @@ import com.azure.core.annotation.ServiceMethod;
 import com.azure.core.annotation.UnexpectedResponseExceptionType;
 import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.RestProxy;
+import com.azure.core.util.Context;
+import com.azure.core.util.polling.DefaultPollingStrategy;
+import com.azure.core.util.polling.PollerFlux;
+import com.azure.core.util.polling.SyncPoller;
+import com.azure.core.util.serializer.CollectionFormat;
+import com.azure.core.util.serializer.JacksonAdapter;
+import com.azure.core.util.serializer.TypeReference;
 import com.azure.maps.route.models.AlternativeRouteType;
 import com.azure.maps.route.models.BatchRequestBody;
 import com.azure.maps.route.models.ComputeTravelTimeFor;
@@ -45,9 +52,9 @@ import com.azure.maps.route.models.TravelMode;
 import com.azure.maps.route.models.VehicleEngineType;
 import com.azure.maps.route.models.VehicleLoadType;
 import com.azure.maps.route.models.WindingnessLevel;
+import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 import reactor.core.publisher.Mono;
 
 /** An instance of this class provides access to all the operations defined in Routes. */
@@ -97,7 +104,7 @@ public final class RoutesImpl {
                 @QueryParam("windingness") WindingnessLevel windingness,
                 @QueryParam("hilliness") HillinessDegree hilliness,
                 @QueryParam("travelMode") TravelMode travelMode,
-                @QueryParam(value = "avoid", multipleQueryParams = true) List<String> avoid,
+                @QueryParam("avoid") String avoid,
                 @QueryParam("traffic") Boolean traffic,
                 @QueryParam("routeType") RouteType routeType,
                 @QueryParam("vehicleLoadType") VehicleLoadType vehicleLoadType,
@@ -139,7 +146,7 @@ public final class RoutesImpl {
                 @QueryParam("windingness") WindingnessLevel windingness,
                 @QueryParam("hilliness") HillinessDegree hilliness,
                 @QueryParam("travelMode") TravelMode travelMode,
-                @QueryParam(value = "avoid", multipleQueryParams = true) List<String> avoid,
+                @QueryParam("avoid") String avoid,
                 @QueryParam("traffic") Boolean traffic,
                 @QueryParam("routeType") RouteType routeType,
                 @QueryParam("vehicleLoadType") VehicleLoadType vehicleLoadType,
@@ -179,7 +186,7 @@ public final class RoutesImpl {
                 @QueryParam("windingness") WindingnessLevel windingness,
                 @QueryParam("hilliness") HillinessDegree hilliness,
                 @QueryParam("travelMode") TravelMode travelMode,
-                @QueryParam(value = "avoid", multipleQueryParams = true) List<String> avoid,
+                @QueryParam("avoid") String avoid,
                 @QueryParam("traffic") Boolean traffic,
                 @QueryParam("routeType") RouteType routeType,
                 @QueryParam("vehicleLoadType") VehicleLoadType vehicleLoadType,
@@ -233,7 +240,7 @@ public final class RoutesImpl {
                 @QueryParam("windingness") WindingnessLevel windingness,
                 @QueryParam("hilliness") HillinessDegree hilliness,
                 @QueryParam("travelMode") TravelMode travelMode,
-                @QueryParam(value = "avoid", multipleQueryParams = true) List<String> avoid,
+                @QueryParam("avoid") String avoid,
                 @QueryParam("traffic") Boolean traffic,
                 @QueryParam("routeType") RouteType routeType,
                 @QueryParam("vehicleLoadType") VehicleLoadType vehicleLoadType,
@@ -271,7 +278,7 @@ public final class RoutesImpl {
                 @QueryParam("departAt") OffsetDateTime departAt,
                 @QueryParam("routeType") RouteType routeType,
                 @QueryParam("traffic") Boolean traffic,
-                @QueryParam(value = "avoid", multipleQueryParams = true) List<String> avoid,
+                @QueryParam("avoid") String avoid,
                 @QueryParam("travelMode") TravelMode travelMode,
                 @QueryParam("hilliness") HillinessDegree hilliness,
                 @QueryParam("windingness") WindingnessLevel windingness,
@@ -501,8 +508,8 @@ public final class RoutesImpl {
             RouteType routeType,
             VehicleLoadType vehicleLoadType) {
         final String accept = "application/json";
-        List<String> avoidConverted =
-                avoid.stream().map((item) -> (item != null) ? item.toString() : "").collect(Collectors.toList());
+        String avoidConverted =
+                JacksonAdapter.createDefaultSerializerAdapter().serializeList(avoid, CollectionFormat.CSV);
         return service.postRouteMatrix(
                 this.client.getHost(),
                 this.client.getXMsClientId(),
@@ -672,8 +679,7 @@ public final class RoutesImpl {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Route Matrix call.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<RouteMatrixResponse> postRouteMatrixAsync(
+    public PollerFlux<RouteMatrixResponse, RouteMatrixResponse> beginPostRouteMatrixAsync(
             ResponseFormat format,
             PostRouteMatrixRequestBody postRouteMatrixRequestBody,
             Boolean waitForResults,
@@ -694,35 +700,33 @@ public final class RoutesImpl {
             Boolean traffic,
             RouteType routeType,
             VehicleLoadType vehicleLoadType) {
-        return postRouteMatrixWithResponseAsync(
-                        format,
-                        postRouteMatrixRequestBody,
-                        waitForResults,
-                        computeTravelTimeFor,
-                        sectionType,
-                        arriveAt,
-                        departAt,
-                        vehicleAxleWeight,
-                        vehicleLength,
-                        vehicleHeight,
-                        vehicleWidth,
-                        vehicleMaxSpeed,
-                        vehicleWeight,
-                        windingness,
-                        hilliness,
-                        travelMode,
-                        avoid,
-                        traffic,
-                        routeType,
-                        vehicleLoadType)
-                .flatMap(
-                        (RoutesPostRouteMatrixResponse res) -> {
-                            if (res.getValue() != null) {
-                                return Mono.just(res.getValue());
-                            } else {
-                                return Mono.empty();
-                            }
-                        });
+        return PollerFlux.create(
+                Duration.ofSeconds(1),
+                () ->
+                        this.postRouteMatrixWithResponseAsync(
+                                format,
+                                postRouteMatrixRequestBody,
+                                waitForResults,
+                                computeTravelTimeFor,
+                                sectionType,
+                                arriveAt,
+                                departAt,
+                                vehicleAxleWeight,
+                                vehicleLength,
+                                vehicleHeight,
+                                vehicleWidth,
+                                vehicleMaxSpeed,
+                                vehicleWeight,
+                                windingness,
+                                hilliness,
+                                travelMode,
+                                avoid,
+                                traffic,
+                                routeType,
+                                vehicleLoadType),
+                new DefaultPollingStrategy<>(this.client.getHttpPipeline(), Context.NONE),
+                new TypeReference<RouteMatrixResponse>() {},
+                new TypeReference<RouteMatrixResponse>() {});
     }
 
     /**
@@ -867,8 +871,7 @@ public final class RoutesImpl {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Route Matrix call.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public RouteMatrixResponse postRouteMatrix(
+    public SyncPoller<RouteMatrixResponse, RouteMatrixResponse> beginPostRouteMatrix(
             ResponseFormat format,
             PostRouteMatrixRequestBody postRouteMatrixRequestBody,
             Boolean waitForResults,
@@ -889,7 +892,7 @@ public final class RoutesImpl {
             Boolean traffic,
             RouteType routeType,
             VehicleLoadType vehicleLoadType) {
-        return postRouteMatrixAsync(
+        return this.beginPostRouteMatrixAsync(
                         format,
                         postRouteMatrixRequestBody,
                         waitForResults,
@@ -910,7 +913,7 @@ public final class RoutesImpl {
                         traffic,
                         routeType,
                         vehicleLoadType)
-                .block();
+                .getSyncPoller();
     }
 
     /**
@@ -982,17 +985,13 @@ public final class RoutesImpl {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Route Matrix call.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<RouteMatrixResponse> getRouteMatrixAsync(String format) {
-        return getRouteMatrixWithResponseAsync(format)
-                .flatMap(
-                        (RoutesGetRouteMatrixResponse res) -> {
-                            if (res.getValue() != null) {
-                                return Mono.just(res.getValue());
-                            } else {
-                                return Mono.empty();
-                            }
-                        });
+    public PollerFlux<RouteMatrixResponse, RouteMatrixResponse> beginGetRouteMatrixAsync(String format) {
+        return PollerFlux.create(
+                Duration.ofSeconds(1),
+                () -> this.getRouteMatrixWithResponseAsync(format),
+                new DefaultPollingStrategy<>(this.client.getHttpPipeline(), Context.NONE),
+                new TypeReference<RouteMatrixResponse>() {},
+                new TypeReference<RouteMatrixResponse>() {});
     }
 
     /**
@@ -1026,9 +1025,8 @@ public final class RoutesImpl {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Route Matrix call.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public RouteMatrixResponse getRouteMatrix(String format) {
-        return getRouteMatrixAsync(format).block();
+    public SyncPoller<RouteMatrixResponse, RouteMatrixResponse> beginGetRouteMatrix(String format) {
+        return this.beginGetRouteMatrixAsync(format).getSyncPoller();
     }
 
     /**
@@ -1197,8 +1195,8 @@ public final class RoutesImpl {
             RouteType routeType,
             VehicleLoadType vehicleLoadType) {
         final String accept = "application/json";
-        List<String> avoidConverted =
-                avoid.stream().map((item) -> (item != null) ? item.toString() : "").collect(Collectors.toList());
+        String avoidConverted =
+                JacksonAdapter.createDefaultSerializerAdapter().serializeList(avoid, CollectionFormat.CSV);
         return service.postRouteMatrixSync(
                 this.client.getHost(),
                 this.client.getXMsClientId(),
@@ -1872,8 +1870,8 @@ public final class RoutesImpl {
             String maxChargeInkWh,
             String auxiliaryPowerInkW) {
         final String accept = "application/json";
-        List<String> avoidConverted =
-                avoid.stream().map((item) -> (item != null) ? item.toString() : "").collect(Collectors.toList());
+        String avoidConverted =
+                JacksonAdapter.createDefaultSerializerAdapter().serializeList(avoid, CollectionFormat.CSV);
         return service.getRouteDirections(
                 this.client.getHost(),
                 this.client.getXMsClientId(),
@@ -2821,8 +2819,8 @@ public final class RoutesImpl {
             String maxChargeInkWh,
             String auxiliaryPowerInkW) {
         final String accept = "application/json";
-        List<String> avoidConverted =
-                avoid.stream().map((item) -> (item != null) ? item.toString() : "").collect(Collectors.toList());
+        String avoidConverted =
+                JacksonAdapter.createDefaultSerializerAdapter().serializeList(avoid, CollectionFormat.CSV);
         return service.postRouteDirections(
                 this.client.getHost(),
                 this.client.getXMsClientId(),
@@ -3736,8 +3734,8 @@ public final class RoutesImpl {
             String maxChargeInkWh,
             String auxiliaryPowerInkW) {
         final String accept = "application/json";
-        List<String> avoidConverted =
-                avoid.stream().map((item) -> (item != null) ? item.toString() : "").collect(Collectors.toList());
+        String avoidConverted =
+                JacksonAdapter.createDefaultSerializerAdapter().serializeList(avoid, CollectionFormat.CSV);
         return service.getRouteRange(
                 this.client.getHost(),
                 this.client.getXMsClientId(),
@@ -4509,18 +4507,14 @@ public final class RoutesImpl {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Route Directions Batch service call.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<RouteDirectionsBatchResponse> postRouteDirectionsBatchAsync(
+    public PollerFlux<RouteDirectionsBatchResponse, RouteDirectionsBatchResponse> beginPostRouteDirectionsBatchAsync(
             ResponseFormat format, BatchRequestBody postRouteDirectionsBatchRequestBody) {
-        return postRouteDirectionsBatchWithResponseAsync(format, postRouteDirectionsBatchRequestBody)
-                .flatMap(
-                        (RoutesPostRouteDirectionsBatchResponse res) -> {
-                            if (res.getValue() != null) {
-                                return Mono.just(res.getValue());
-                            } else {
-                                return Mono.empty();
-                            }
-                        });
+        return PollerFlux.create(
+                Duration.ofSeconds(1),
+                () -> this.postRouteDirectionsBatchWithResponseAsync(format, postRouteDirectionsBatchRequestBody),
+                new DefaultPollingStrategy<>(this.client.getHttpPipeline(), Context.NONE),
+                new TypeReference<RouteDirectionsBatchResponse>() {},
+                new TypeReference<RouteDirectionsBatchResponse>() {});
     }
 
     /**
@@ -4632,10 +4626,9 @@ public final class RoutesImpl {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Route Directions Batch service call.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public RouteDirectionsBatchResponse postRouteDirectionsBatch(
+    public SyncPoller<RouteDirectionsBatchResponse, RouteDirectionsBatchResponse> beginPostRouteDirectionsBatch(
             ResponseFormat format, BatchRequestBody postRouteDirectionsBatchRequestBody) {
-        return postRouteDirectionsBatchAsync(format, postRouteDirectionsBatchRequestBody).block();
+        return this.beginPostRouteDirectionsBatchAsync(format, postRouteDirectionsBatchRequestBody).getSyncPoller();
     }
 
     /**
@@ -4743,17 +4736,14 @@ public final class RoutesImpl {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Route Directions Batch service call.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<RouteDirectionsBatchResponse> getRouteDirectionsBatchAsync(String format) {
-        return getRouteDirectionsBatchWithResponseAsync(format)
-                .flatMap(
-                        (RoutesGetRouteDirectionsBatchResponse res) -> {
-                            if (res.getValue() != null) {
-                                return Mono.just(res.getValue());
-                            } else {
-                                return Mono.empty();
-                            }
-                        });
+    public PollerFlux<RouteDirectionsBatchResponse, RouteDirectionsBatchResponse> beginGetRouteDirectionsBatchAsync(
+            String format) {
+        return PollerFlux.create(
+                Duration.ofSeconds(1),
+                () -> this.getRouteDirectionsBatchWithResponseAsync(format),
+                new DefaultPollingStrategy<>(this.client.getHttpPipeline(), Context.NONE),
+                new TypeReference<RouteDirectionsBatchResponse>() {},
+                new TypeReference<RouteDirectionsBatchResponse>() {});
     }
 
     /**
@@ -4805,9 +4795,9 @@ public final class RoutesImpl {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Route Directions Batch service call.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public RouteDirectionsBatchResponse getRouteDirectionsBatch(String format) {
-        return getRouteDirectionsBatchAsync(format).block();
+    public SyncPoller<RouteDirectionsBatchResponse, RouteDirectionsBatchResponse> beginGetRouteDirectionsBatch(
+            String format) {
+        return this.beginGetRouteDirectionsBatchAsync(format).getSyncPoller();
     }
 
     /**

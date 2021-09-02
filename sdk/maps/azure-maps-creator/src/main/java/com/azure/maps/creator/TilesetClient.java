@@ -8,6 +8,7 @@ import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceClient;
 import com.azure.core.annotation.ServiceMethod;
 import com.azure.core.http.rest.PagedIterable;
+import com.azure.core.util.polling.SyncPoller;
 import com.azure.maps.creator.implementation.TilesetsImpl;
 import com.azure.maps.creator.models.ErrorResponseException;
 import com.azure.maps.creator.models.LongRunningOperationResult;
@@ -58,8 +59,9 @@ public final class TilesetClient {
      * @return the response model for a Long-Running Operations API.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public LongRunningOperationResult create(String datasetId, String description) {
-        return this.serviceClient.create(datasetId, description);
+    public SyncPoller<LongRunningOperationResult, LongRunningOperationResult> beginCreate(
+            String datasetId, String description) {
+        return this.serviceClient.beginCreate(datasetId, description);
     }
 
     /**

@@ -10,6 +10,7 @@ import com.azure.core.annotation.ServiceMethod;
 import com.azure.core.http.rest.PagedFlux;
 import com.azure.core.http.rest.PagedResponse;
 import com.azure.core.http.rest.Response;
+import com.azure.core.util.polling.PollerFlux;
 import com.azure.maps.creator.implementation.TilesetsImpl;
 import com.azure.maps.creator.models.ErrorResponseException;
 import com.azure.maps.creator.models.LongRunningOperationResult;
@@ -98,8 +99,9 @@ public final class TilesetAsyncClient {
      * @return the response model for a Long-Running Operations API.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<LongRunningOperationResult> create(String datasetId, String description) {
-        return this.serviceClient.createAsync(datasetId, description);
+    public PollerFlux<LongRunningOperationResult, LongRunningOperationResult> beginCreate(
+            String datasetId, String description) {
+        return this.serviceClient.beginCreateAsync(datasetId, description);
     }
 
     /**
