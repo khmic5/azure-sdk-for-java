@@ -19,7 +19,6 @@ import com.azure.core.util.Configuration;
 import com.azure.core.util.serializer.JacksonAdapter;
 import com.azure.core.util.serializer.SerializerAdapter;
 import com.azure.maps.elevation.implementation.ElevationClientImpl;
-import com.azure.maps.elevation.models.Geography;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -64,19 +63,18 @@ public final class ElevationClientBuilder {
     }
 
     /*
-     * This parameter specifies where the Azure Maps Creator resource is
-     * located.  Valid values are us and eu.
+     * server parameter
      */
-    private Geography geography;
+    private String host;
 
     /**
-     * Sets This parameter specifies where the Azure Maps Creator resource is located. Valid values are us and eu.
+     * Sets server parameter.
      *
-     * @param geography the geography value.
+     * @param host the host value.
      * @return the ElevationClientBuilder.
      */
-    public ElevationClientBuilder geography(Geography geography) {
-        this.geography = geography;
+    public ElevationClientBuilder host(String host) {
+        this.host = host;
         return this;
     }
 
@@ -216,8 +214,8 @@ public final class ElevationClientBuilder {
      * @return an instance of ElevationClientImpl.
      */
     private ElevationClientImpl buildInnerClient() {
-        if (geography == null) {
-            this.geography = Geography.US;
+        if (host == null) {
+            this.host = "https://atlas.microsoft.com";
         }
         if (apiVersion == null) {
             this.apiVersion = "1.0";
@@ -229,7 +227,7 @@ public final class ElevationClientBuilder {
             this.serializerAdapter = JacksonAdapter.createDefaultSerializerAdapter();
         }
         ElevationClientImpl client =
-                new ElevationClientImpl(pipeline, serializerAdapter, xMsClientId, geography, apiVersion);
+                new ElevationClientImpl(pipeline, serializerAdapter, xMsClientId, host, apiVersion);
         return client;
     }
 

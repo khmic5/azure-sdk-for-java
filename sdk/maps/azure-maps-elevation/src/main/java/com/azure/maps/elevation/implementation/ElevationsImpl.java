@@ -24,7 +24,6 @@ import com.azure.core.util.serializer.JacksonAdapter;
 import com.azure.maps.elevation.models.BoundingBoxResult;
 import com.azure.maps.elevation.models.CoordinatesPairAbbreviated;
 import com.azure.maps.elevation.models.ErrorResponseException;
-import com.azure.maps.elevation.models.Geography;
 import com.azure.maps.elevation.models.LinesResult;
 import com.azure.maps.elevation.models.PointsResult;
 import com.azure.maps.elevation.models.ResponseFormat;
@@ -54,14 +53,14 @@ public final class ElevationsImpl {
      * The interface defining all the services for ElevationClientElevations to be used by the proxy service to perform
      * REST calls.
      */
-    @Host("https://{geography}.atlas.microsoft.com")
+    @Host("{$host}")
     @ServiceInterface(name = "ElevationClientEleva")
     private interface ElevationsService {
         @Get("/elevation/point/{format}")
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<Response<PointsResult>> getDataForPoints(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") ResponseFormat format,
@@ -72,7 +71,7 @@ public final class ElevationsImpl {
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<Response<PointsResult>> postDataForPoints(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") ResponseFormat format,
@@ -83,7 +82,7 @@ public final class ElevationsImpl {
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<Response<LinesResult>> getDataForPolyline(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") ResponseFormat format,
@@ -95,7 +94,7 @@ public final class ElevationsImpl {
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<Response<LinesResult>> postDataForPolyline(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") ResponseFormat format,
@@ -107,7 +106,7 @@ public final class ElevationsImpl {
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<Response<BoundingBoxResult>> getDataForBoundingBox(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") ResponseFormat format,
@@ -145,7 +144,7 @@ public final class ElevationsImpl {
         String pointsConverted =
                 JacksonAdapter.createDefaultSerializerAdapter().serializeList(points, CollectionFormat.PIPES);
         return service.getDataForPoints(
-                this.client.getGeography(),
+                this.client.getHost(),
                 this.client.getXMsClientId(),
                 this.client.getApiVersion(),
                 format,
@@ -239,7 +238,7 @@ public final class ElevationsImpl {
             ResponseFormat format, List<CoordinatesPairAbbreviated> pointsRequestBody) {
         final String accept = "application/json";
         return service.postDataForPoints(
-                this.client.getGeography(),
+                this.client.getHost(),
                 this.client.getXMsClientId(),
                 this.client.getApiVersion(),
                 format,
@@ -340,7 +339,7 @@ public final class ElevationsImpl {
         String linesConverted =
                 JacksonAdapter.createDefaultSerializerAdapter().serializeList(lines, CollectionFormat.PIPES);
         return service.getDataForPolyline(
-                this.client.getGeography(),
+                this.client.getHost(),
                 this.client.getXMsClientId(),
                 this.client.getApiVersion(),
                 format,
@@ -458,7 +457,7 @@ public final class ElevationsImpl {
             ResponseFormat format, List<CoordinatesPairAbbreviated> linesRequestBody, Integer samples) {
         final String accept = "application/json";
         return service.postDataForPolyline(
-                this.client.getGeography(),
+                this.client.getHost(),
                 this.client.getXMsClientId(),
                 this.client.getApiVersion(),
                 format,
@@ -576,7 +575,7 @@ public final class ElevationsImpl {
         String boundsConverted =
                 JacksonAdapter.createDefaultSerializerAdapter().serializeList(bounds, CollectionFormat.CSV);
         return service.getDataForBoundingBox(
-                this.client.getGeography(),
+                this.client.getHost(),
                 this.client.getXMsClientId(),
                 this.client.getApiVersion(),
                 format,

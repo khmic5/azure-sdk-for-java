@@ -11,7 +11,6 @@ import com.azure.core.http.policy.RetryPolicy;
 import com.azure.core.http.policy.UserAgentPolicy;
 import com.azure.core.util.serializer.JacksonAdapter;
 import com.azure.core.util.serializer.SerializerAdapter;
-import com.azure.maps.render.models.Geography;
 
 /** Initializes a new instance of the RenderClient type. */
 public final class RenderClientImpl {
@@ -31,18 +30,6 @@ public final class RenderClientImpl {
      */
     public String getXMsClientId() {
         return this.xMsClientId;
-    }
-
-    /** This parameter specifies where the Azure Maps Creator resource is located. Valid values are us and eu. */
-    private final Geography geography;
-
-    /**
-     * Gets This parameter specifies where the Azure Maps Creator resource is located. Valid values are us and eu.
-     *
-     * @return the geography value.
-     */
-    public Geography getGeography() {
-        return this.geography;
     }
 
     /** server parameter. */
@@ -112,18 +99,15 @@ public final class RenderClientImpl {
      *     It represents a unique ID for the Azure Maps account and can be retrieved from the Azure Maps management
      *     plane Account API. To use Azure AD security in Azure Maps see the following
      *     [articles](https://aka.ms/amauthdetails) for guidance.
-     * @param geography This parameter specifies where the Azure Maps Creator resource is located. Valid values are us
-     *     and eu.
      * @param host server parameter.
      */
-    public RenderClientImpl(String xMsClientId, Geography geography, String host) {
+    public RenderClientImpl(String xMsClientId, String host) {
         this(
                 new HttpPipelineBuilder()
                         .policies(new UserAgentPolicy(), new RetryPolicy(), new CookiePolicy())
                         .build(),
                 JacksonAdapter.createDefaultSerializerAdapter(),
                 xMsClientId,
-                geography,
                 host);
     }
 
@@ -135,12 +119,10 @@ public final class RenderClientImpl {
      *     It represents a unique ID for the Azure Maps account and can be retrieved from the Azure Maps management
      *     plane Account API. To use Azure AD security in Azure Maps see the following
      *     [articles](https://aka.ms/amauthdetails) for guidance.
-     * @param geography This parameter specifies where the Azure Maps Creator resource is located. Valid values are us
-     *     and eu.
      * @param host server parameter.
      */
-    public RenderClientImpl(HttpPipeline httpPipeline, String xMsClientId, Geography geography, String host) {
-        this(httpPipeline, JacksonAdapter.createDefaultSerializerAdapter(), xMsClientId, geography, host);
+    public RenderClientImpl(HttpPipeline httpPipeline, String xMsClientId, String host) {
+        this(httpPipeline, JacksonAdapter.createDefaultSerializerAdapter(), xMsClientId, host);
     }
 
     /**
@@ -152,20 +134,13 @@ public final class RenderClientImpl {
      *     It represents a unique ID for the Azure Maps account and can be retrieved from the Azure Maps management
      *     plane Account API. To use Azure AD security in Azure Maps see the following
      *     [articles](https://aka.ms/amauthdetails) for guidance.
-     * @param geography This parameter specifies where the Azure Maps Creator resource is located. Valid values are us
-     *     and eu.
      * @param host server parameter.
      */
     public RenderClientImpl(
-            HttpPipeline httpPipeline,
-            SerializerAdapter serializerAdapter,
-            String xMsClientId,
-            Geography geography,
-            String host) {
+            HttpPipeline httpPipeline, SerializerAdapter serializerAdapter, String xMsClientId, String host) {
         this.httpPipeline = httpPipeline;
         this.serializerAdapter = serializerAdapter;
         this.xMsClientId = xMsClientId;
-        this.geography = geography;
         this.host = host;
         this.renders = new RendersImpl(this);
         this.renderV2s = new RenderV2sImpl(this);

@@ -18,10 +18,7 @@ import com.azure.core.annotation.UnexpectedResponseExceptionType;
 import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.RestProxy;
 import com.azure.core.http.rest.StreamResponse;
-import com.azure.core.util.serializer.CollectionFormat;
-import com.azure.core.util.serializer.JacksonAdapter;
 import com.azure.maps.render.models.ErrorResponseException;
-import com.azure.maps.render.models.Geography;
 import com.azure.maps.render.models.GetCopyrightCaptionResult;
 import com.azure.maps.render.models.GetCopyrightForTileResult;
 import com.azure.maps.render.models.GetCopyrightForWorldResult;
@@ -43,6 +40,7 @@ import java.nio.ByteBuffer;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -68,14 +66,14 @@ public final class RendersImpl {
      * The interface defining all the services for RenderClientRenders to be used by the proxy service to perform REST
      * calls.
      */
-    @Host("https://{geography}.atlas.microsoft.com")
+    @Host("{$host}")
     @ServiceInterface(name = "RenderClientRenders")
     private interface RendersService {
         @Get("/map/static/{format}")
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<StreamResponse> getMapStaticImage(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") RasterTileFormat format,
@@ -88,15 +86,15 @@ public final class RendersImpl {
                 @QueryParam("width") Integer width,
                 @QueryParam("language") String language,
                 @QueryParam("view") String view,
-                @QueryParam("pins") String pins,
-                @QueryParam("path") String path,
+                @QueryParam(value = "pins", multipleQueryParams = true) List<String> pins,
+                @QueryParam(value = "path", multipleQueryParams = true) List<String> path,
                 @HeaderParam("Accept") String accept);
 
         @Get("/map/tile/{format}")
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<StreamResponse> getMapTile(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") TileFormat format,
@@ -114,7 +112,7 @@ public final class RendersImpl {
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<StreamResponse> getMapStateTilePreview(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @QueryParam("zoom") int zoom,
@@ -127,7 +125,7 @@ public final class RendersImpl {
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<Response<GetCopyrightCaptionResult>> getCopyrightCaption(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") TextFormat format,
@@ -137,7 +135,7 @@ public final class RendersImpl {
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<StreamResponse> getMapImageryTile(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") RasterTileFormat format,
@@ -151,7 +149,7 @@ public final class RendersImpl {
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<Response<GetCopyrightFromBoundingBoxResult>> getCopyrightFromBoundingBox(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") TextFormat format,
@@ -164,7 +162,7 @@ public final class RendersImpl {
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<Response<GetCopyrightForTileResult>> getCopyrightForTile(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") TextFormat format,
@@ -178,7 +176,7 @@ public final class RendersImpl {
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<Response<GetCopyrightForWorldResult>> getCopyrightForWorld(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") TextFormat format,
@@ -409,12 +407,12 @@ public final class RendersImpl {
             List<String> path) {
         final String apiVersion = "1.0";
         final String accept = "application/json, image/jpeg, image/png, image/pbf, application/vnd.mapbox-vector-tile";
-        String pinsConverted =
-                JacksonAdapter.createDefaultSerializerAdapter().serializeList(pins, CollectionFormat.CSV);
-        String pathConverted =
-                JacksonAdapter.createDefaultSerializerAdapter().serializeList(path, CollectionFormat.CSV);
+        List<String> pinsConverted =
+                pins.stream().map((item) -> (item != null) ? item.toString() : "").collect(Collectors.toList());
+        List<String> pathConverted =
+                path.stream().map((item) -> (item != null) ? item.toString() : "").collect(Collectors.toList());
         return service.getMapStaticImage(
-                this.client.getGeography(),
+                this.client.getHost(),
                 this.client.getXMsClientId(),
                 apiVersion,
                 format,
@@ -961,7 +959,7 @@ public final class RendersImpl {
         final String apiVersion = "1.0";
         final String accept = "application/json, image/jpeg, image/png, image/pbf, application/vnd.mapbox-vector-tile";
         return service.getMapTile(
-                this.client.getGeography(),
+                this.client.getHost(),
                 this.client.getXMsClientId(),
                 apiVersion,
                 format,
@@ -1146,7 +1144,7 @@ public final class RendersImpl {
         final String apiVersion = "1.0";
         final String accept = "application/vnd.mapbox-vector-tile, application/json";
         return service.getMapStateTilePreview(
-                this.client.getGeography(),
+                this.client.getHost(),
                 this.client.getXMsClientId(),
                 apiVersion,
                 zoom,
@@ -1252,7 +1250,7 @@ public final class RendersImpl {
         final String apiVersion = "1.0";
         final String accept = "application/json";
         return service.getCopyrightCaption(
-                this.client.getGeography(), this.client.getXMsClientId(), apiVersion, format, accept);
+                this.client.getHost(), this.client.getXMsClientId(), apiVersion, format, accept);
     }
 
     /**
@@ -1336,7 +1334,7 @@ public final class RendersImpl {
         final String apiVersion = "1.0";
         final String accept = "application/json, image/jpeg, image/png";
         return service.getMapImageryTile(
-                this.client.getGeography(),
+                this.client.getHost(),
                 this.client.getXMsClientId(),
                 apiVersion,
                 format,
@@ -1455,7 +1453,7 @@ public final class RendersImpl {
         final String apiVersion = "1.0";
         final String accept = "application/json";
         return service.getCopyrightFromBoundingBox(
-                this.client.getGeography(),
+                this.client.getHost(),
                 this.client.getXMsClientId(),
                 apiVersion,
                 format,
@@ -1554,7 +1552,7 @@ public final class RendersImpl {
         final String apiVersion = "1.0";
         final String accept = "application/json";
         return service.getCopyrightForTile(
-                this.client.getGeography(),
+                this.client.getHost(),
                 this.client.getXMsClientId(),
                 apiVersion,
                 format,
@@ -1661,7 +1659,7 @@ public final class RendersImpl {
         final String apiVersion = "1.0";
         final String accept = "application/json";
         return service.getCopyrightForWorld(
-                this.client.getGeography(), this.client.getXMsClientId(), apiVersion, format, text, accept);
+                this.client.getHost(), this.client.getXMsClientId(), apiVersion, format, text, accept);
     }
 
     /**

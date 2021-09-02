@@ -11,7 +11,6 @@ import com.azure.core.http.policy.RetryPolicy;
 import com.azure.core.http.policy.UserAgentPolicy;
 import com.azure.core.util.serializer.JacksonAdapter;
 import com.azure.core.util.serializer.SerializerAdapter;
-import com.azure.maps.timezone.models.Geography;
 
 /** Initializes a new instance of the TimezoneClient type. */
 public final class TimezoneClientImpl {
@@ -33,16 +32,16 @@ public final class TimezoneClientImpl {
         return this.xMsClientId;
     }
 
-    /** This parameter specifies where the Azure Maps Creator resource is located. Valid values are us and eu. */
-    private final Geography geography;
+    /** server parameter. */
+    private final String host;
 
     /**
-     * Gets This parameter specifies where the Azure Maps Creator resource is located. Valid values are us and eu.
+     * Gets server parameter.
      *
-     * @return the geography value.
+     * @return the host value.
      */
-    public Geography getGeography() {
-        return this.geography;
+    public String getHost() {
+        return this.host;
     }
 
     /** Api Version. */
@@ -100,18 +99,17 @@ public final class TimezoneClientImpl {
      *     It represents a unique ID for the Azure Maps account and can be retrieved from the Azure Maps management
      *     plane Account API. To use Azure AD security in Azure Maps see the following
      *     [articles](https://aka.ms/amauthdetails) for guidance.
-     * @param geography This parameter specifies where the Azure Maps Creator resource is located. Valid values are us
-     *     and eu.
+     * @param host server parameter.
      * @param apiVersion Api Version.
      */
-    public TimezoneClientImpl(String xMsClientId, Geography geography, String apiVersion) {
+    public TimezoneClientImpl(String xMsClientId, String host, String apiVersion) {
         this(
                 new HttpPipelineBuilder()
                         .policies(new UserAgentPolicy(), new RetryPolicy(), new CookiePolicy())
                         .build(),
                 JacksonAdapter.createDefaultSerializerAdapter(),
                 xMsClientId,
-                geography,
+                host,
                 apiVersion);
     }
 
@@ -123,12 +121,11 @@ public final class TimezoneClientImpl {
      *     It represents a unique ID for the Azure Maps account and can be retrieved from the Azure Maps management
      *     plane Account API. To use Azure AD security in Azure Maps see the following
      *     [articles](https://aka.ms/amauthdetails) for guidance.
-     * @param geography This parameter specifies where the Azure Maps Creator resource is located. Valid values are us
-     *     and eu.
+     * @param host server parameter.
      * @param apiVersion Api Version.
      */
-    public TimezoneClientImpl(HttpPipeline httpPipeline, String xMsClientId, Geography geography, String apiVersion) {
-        this(httpPipeline, JacksonAdapter.createDefaultSerializerAdapter(), xMsClientId, geography, apiVersion);
+    public TimezoneClientImpl(HttpPipeline httpPipeline, String xMsClientId, String host, String apiVersion) {
+        this(httpPipeline, JacksonAdapter.createDefaultSerializerAdapter(), xMsClientId, host, apiVersion);
     }
 
     /**
@@ -140,20 +137,19 @@ public final class TimezoneClientImpl {
      *     It represents a unique ID for the Azure Maps account and can be retrieved from the Azure Maps management
      *     plane Account API. To use Azure AD security in Azure Maps see the following
      *     [articles](https://aka.ms/amauthdetails) for guidance.
-     * @param geography This parameter specifies where the Azure Maps Creator resource is located. Valid values are us
-     *     and eu.
+     * @param host server parameter.
      * @param apiVersion Api Version.
      */
     public TimezoneClientImpl(
             HttpPipeline httpPipeline,
             SerializerAdapter serializerAdapter,
             String xMsClientId,
-            Geography geography,
+            String host,
             String apiVersion) {
         this.httpPipeline = httpPipeline;
         this.serializerAdapter = serializerAdapter;
         this.xMsClientId = xMsClientId;
-        this.geography = geography;
+        this.host = host;
         this.apiVersion = apiVersion;
         this.timezones = new TimezonesImpl(this);
     }

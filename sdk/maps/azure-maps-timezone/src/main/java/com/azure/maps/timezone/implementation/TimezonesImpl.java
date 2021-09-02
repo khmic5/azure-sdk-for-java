@@ -18,7 +18,6 @@ import com.azure.core.annotation.UnexpectedResponseExceptionType;
 import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.RestProxy;
 import com.azure.maps.timezone.models.ErrorResponseException;
-import com.azure.maps.timezone.models.Geography;
 import com.azure.maps.timezone.models.IanaId;
 import com.azure.maps.timezone.models.ResponseFormat;
 import com.azure.maps.timezone.models.TimezoneByCoordinatesResult;
@@ -53,14 +52,14 @@ public final class TimezonesImpl {
      * The interface defining all the services for TimezoneClientTimezones to be used by the proxy service to perform
      * REST calls.
      */
-    @Host("https://{geography}.atlas.microsoft.com")
+    @Host("{$host}")
     @ServiceInterface(name = "TimezoneClientTimezo")
     private interface TimezonesService {
         @Get("/timezone/byId/{format}")
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<Response<TimezoneByIdResult>> getTimezoneByID(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @HeaderParam("Accept-Language") String acceptLanguage,
@@ -76,7 +75,7 @@ public final class TimezonesImpl {
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<Response<TimezoneByCoordinatesResult>> getTimezoneByCoordinates(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @HeaderParam("Accept-Language") String acceptLanguage,
@@ -92,7 +91,7 @@ public final class TimezonesImpl {
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<Response<List<TimezoneEnumWindow>>> getTimezoneEnumWindows(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") ResponseFormat format,
@@ -102,7 +101,7 @@ public final class TimezonesImpl {
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<Response<List<IanaId>>> getTimezoneEnumIana(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") ResponseFormat format,
@@ -112,7 +111,7 @@ public final class TimezonesImpl {
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<Response<TimezoneIanaVersionResult>> getTimezoneIanaVersion(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") ResponseFormat format,
@@ -122,7 +121,7 @@ public final class TimezonesImpl {
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<Response<List<IanaId>>> getTimezoneWindowsToIana(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") ResponseFormat format,
@@ -166,7 +165,7 @@ public final class TimezonesImpl {
             Integer transitionsYears) {
         final String accept = "application/json";
         return service.getTimezoneByID(
-                this.client.getGeography(),
+                this.client.getHost(),
                 this.client.getXMsClientId(),
                 this.client.getApiVersion(),
                 acceptLanguage,
@@ -300,7 +299,7 @@ public final class TimezonesImpl {
             Integer transitionsYears) {
         final String accept = "application/json";
         return service.getTimezoneByCoordinates(
-                this.client.getGeography(),
+                this.client.getHost(),
                 this.client.getXMsClientId(),
                 this.client.getApiVersion(),
                 acceptLanguage,
@@ -419,7 +418,7 @@ public final class TimezonesImpl {
     public Mono<Response<List<TimezoneEnumWindow>>> getTimezoneEnumWindowsWithResponseAsync(ResponseFormat format) {
         final String accept = "application/json";
         return service.getTimezoneEnumWindows(
-                this.client.getGeography(), this.client.getXMsClientId(), this.client.getApiVersion(), format, accept);
+                this.client.getHost(), this.client.getXMsClientId(), this.client.getApiVersion(), format, accept);
     }
 
     /**
@@ -484,7 +483,7 @@ public final class TimezonesImpl {
     public Mono<Response<List<IanaId>>> getTimezoneEnumIanaWithResponseAsync(ResponseFormat format) {
         final String accept = "application/json";
         return service.getTimezoneEnumIana(
-                this.client.getGeography(), this.client.getXMsClientId(), this.client.getApiVersion(), format, accept);
+                this.client.getHost(), this.client.getXMsClientId(), this.client.getApiVersion(), format, accept);
     }
 
     /**
@@ -550,7 +549,7 @@ public final class TimezonesImpl {
     public Mono<Response<TimezoneIanaVersionResult>> getTimezoneIanaVersionWithResponseAsync(ResponseFormat format) {
         final String accept = "application/json";
         return service.getTimezoneIanaVersion(
-                this.client.getGeography(), this.client.getXMsClientId(), this.client.getApiVersion(), format, accept);
+                this.client.getHost(), this.client.getXMsClientId(), this.client.getApiVersion(), format, accept);
     }
 
     /**
@@ -619,7 +618,7 @@ public final class TimezonesImpl {
             ResponseFormat format, String query, String territory) {
         final String accept = "application/json";
         return service.getTimezoneWindowsToIana(
-                this.client.getGeography(),
+                this.client.getHost(),
                 this.client.getXMsClientId(),
                 this.client.getApiVersion(),
                 format,

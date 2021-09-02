@@ -19,13 +19,10 @@ import com.azure.core.annotation.ServiceMethod;
 import com.azure.core.annotation.UnexpectedResponseExceptionType;
 import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.RestProxy;
-import com.azure.core.util.serializer.CollectionFormat;
-import com.azure.core.util.serializer.JacksonAdapter;
 import com.azure.maps.route.models.AlternativeRouteType;
 import com.azure.maps.route.models.BatchRequestBody;
 import com.azure.maps.route.models.ComputeTravelTimeFor;
 import com.azure.maps.route.models.ErrorResponseException;
-import com.azure.maps.route.models.Geography;
 import com.azure.maps.route.models.GetRouteRangeResponse;
 import com.azure.maps.route.models.HillinessDegree;
 import com.azure.maps.route.models.PostRouteDirectionsRequestBody;
@@ -50,6 +47,7 @@ import com.azure.maps.route.models.VehicleLoadType;
 import com.azure.maps.route.models.WindingnessLevel;
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 import reactor.core.publisher.Mono;
 
 /** An instance of this class provides access to all the operations defined in Routes. */
@@ -74,14 +72,14 @@ public final class RoutesImpl {
      * The interface defining all the services for RouteClientRoutes to be used by the proxy service to perform REST
      * calls.
      */
-    @Host("https://{geography}.atlas.microsoft.com")
+    @Host("{$host}")
     @ServiceInterface(name = "RouteClientRoutes")
     private interface RoutesService {
         @Post("/route/matrix/{format}")
         @ExpectedResponses({200, 202})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<RoutesPostRouteMatrixResponse> postRouteMatrix(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") ResponseFormat format,
@@ -99,7 +97,7 @@ public final class RoutesImpl {
                 @QueryParam("windingness") WindingnessLevel windingness,
                 @QueryParam("hilliness") HillinessDegree hilliness,
                 @QueryParam("travelMode") TravelMode travelMode,
-                @QueryParam("avoid") String avoid,
+                @QueryParam(value = "avoid", multipleQueryParams = true) List<String> avoid,
                 @QueryParam("traffic") Boolean traffic,
                 @QueryParam("routeType") RouteType routeType,
                 @QueryParam("vehicleLoadType") VehicleLoadType vehicleLoadType,
@@ -110,7 +108,7 @@ public final class RoutesImpl {
         @ExpectedResponses({200, 202})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<RoutesGetRouteMatrixResponse> getRouteMatrix(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") String format,
@@ -123,7 +121,7 @@ public final class RoutesImpl {
                 code = {408})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<Response<RouteMatrixResponse>> postRouteMatrixSync(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") ResponseFormat format,
@@ -141,7 +139,7 @@ public final class RoutesImpl {
                 @QueryParam("windingness") WindingnessLevel windingness,
                 @QueryParam("hilliness") HillinessDegree hilliness,
                 @QueryParam("travelMode") TravelMode travelMode,
-                @QueryParam("avoid") String avoid,
+                @QueryParam(value = "avoid", multipleQueryParams = true) List<String> avoid,
                 @QueryParam("traffic") Boolean traffic,
                 @QueryParam("routeType") RouteType routeType,
                 @QueryParam("vehicleLoadType") VehicleLoadType vehicleLoadType,
@@ -152,7 +150,7 @@ public final class RoutesImpl {
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<Response<RouteDirectionsResponse>> getRouteDirections(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") TextFormat format,
@@ -181,7 +179,7 @@ public final class RoutesImpl {
                 @QueryParam("windingness") WindingnessLevel windingness,
                 @QueryParam("hilliness") HillinessDegree hilliness,
                 @QueryParam("travelMode") TravelMode travelMode,
-                @QueryParam("avoid") String avoid,
+                @QueryParam(value = "avoid", multipleQueryParams = true) List<String> avoid,
                 @QueryParam("traffic") Boolean traffic,
                 @QueryParam("routeType") RouteType routeType,
                 @QueryParam("vehicleLoadType") VehicleLoadType vehicleLoadType,
@@ -206,7 +204,7 @@ public final class RoutesImpl {
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<Response<RouteDirectionsResponse>> postRouteDirections(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") TextFormat format,
@@ -235,7 +233,7 @@ public final class RoutesImpl {
                 @QueryParam("windingness") WindingnessLevel windingness,
                 @QueryParam("hilliness") HillinessDegree hilliness,
                 @QueryParam("travelMode") TravelMode travelMode,
-                @QueryParam("avoid") String avoid,
+                @QueryParam(value = "avoid", multipleQueryParams = true) List<String> avoid,
                 @QueryParam("traffic") Boolean traffic,
                 @QueryParam("routeType") RouteType routeType,
                 @QueryParam("vehicleLoadType") VehicleLoadType vehicleLoadType,
@@ -261,7 +259,7 @@ public final class RoutesImpl {
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<Response<GetRouteRangeResponse>> getRouteRange(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") TextFormat format,
@@ -273,7 +271,7 @@ public final class RoutesImpl {
                 @QueryParam("departAt") OffsetDateTime departAt,
                 @QueryParam("routeType") RouteType routeType,
                 @QueryParam("traffic") Boolean traffic,
-                @QueryParam("avoid") String avoid,
+                @QueryParam(value = "avoid", multipleQueryParams = true) List<String> avoid,
                 @QueryParam("travelMode") TravelMode travelMode,
                 @QueryParam("hilliness") HillinessDegree hilliness,
                 @QueryParam("windingness") WindingnessLevel windingness,
@@ -306,7 +304,7 @@ public final class RoutesImpl {
         @ExpectedResponses({200, 202})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<RoutesPostRouteDirectionsBatchResponse> postRouteDirectionsBatch(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") ResponseFormat format,
@@ -317,7 +315,7 @@ public final class RoutesImpl {
         @ExpectedResponses({200, 202})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<RoutesGetRouteDirectionsBatchResponse> getRouteDirectionsBatch(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") String format,
@@ -330,7 +328,7 @@ public final class RoutesImpl {
                 code = {408})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<Response<RouteDirectionsBatchResponse>> postRouteDirectionsBatchSync(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") ResponseFormat format,
@@ -503,10 +501,10 @@ public final class RoutesImpl {
             RouteType routeType,
             VehicleLoadType vehicleLoadType) {
         final String accept = "application/json";
-        String avoidConverted =
-                JacksonAdapter.createDefaultSerializerAdapter().serializeList(avoid, CollectionFormat.CSV);
+        List<String> avoidConverted =
+                avoid.stream().map((item) -> (item != null) ? item.toString() : "").collect(Collectors.toList());
         return service.postRouteMatrix(
-                this.client.getGeography(),
+                this.client.getHost(),
                 this.client.getXMsClientId(),
                 this.client.getApiVersion(),
                 format,
@@ -950,7 +948,7 @@ public final class RoutesImpl {
     public Mono<RoutesGetRouteMatrixResponse> getRouteMatrixWithResponseAsync(String format) {
         final String accept = "application/json";
         return service.getRouteMatrix(
-                this.client.getGeography(), this.client.getXMsClientId(), this.client.getApiVersion(), format, accept);
+                this.client.getHost(), this.client.getXMsClientId(), this.client.getApiVersion(), format, accept);
     }
 
     /**
@@ -1199,10 +1197,10 @@ public final class RoutesImpl {
             RouteType routeType,
             VehicleLoadType vehicleLoadType) {
         final String accept = "application/json";
-        String avoidConverted =
-                JacksonAdapter.createDefaultSerializerAdapter().serializeList(avoid, CollectionFormat.CSV);
+        List<String> avoidConverted =
+                avoid.stream().map((item) -> (item != null) ? item.toString() : "").collect(Collectors.toList());
         return service.postRouteMatrixSync(
-                this.client.getGeography(),
+                this.client.getHost(),
                 this.client.getXMsClientId(),
                 this.client.getApiVersion(),
                 format,
@@ -1874,10 +1872,10 @@ public final class RoutesImpl {
             String maxChargeInkWh,
             String auxiliaryPowerInkW) {
         final String accept = "application/json";
-        String avoidConverted =
-                JacksonAdapter.createDefaultSerializerAdapter().serializeList(avoid, CollectionFormat.CSV);
+        List<String> avoidConverted =
+                avoid.stream().map((item) -> (item != null) ? item.toString() : "").collect(Collectors.toList());
         return service.getRouteDirections(
-                this.client.getGeography(),
+                this.client.getHost(),
                 this.client.getXMsClientId(),
                 this.client.getApiVersion(),
                 format,
@@ -2823,10 +2821,10 @@ public final class RoutesImpl {
             String maxChargeInkWh,
             String auxiliaryPowerInkW) {
         final String accept = "application/json";
-        String avoidConverted =
-                JacksonAdapter.createDefaultSerializerAdapter().serializeList(avoid, CollectionFormat.CSV);
+        List<String> avoidConverted =
+                avoid.stream().map((item) -> (item != null) ? item.toString() : "").collect(Collectors.toList());
         return service.postRouteDirections(
-                this.client.getGeography(),
+                this.client.getHost(),
                 this.client.getXMsClientId(),
                 this.client.getApiVersion(),
                 format,
@@ -3738,10 +3736,10 @@ public final class RoutesImpl {
             String maxChargeInkWh,
             String auxiliaryPowerInkW) {
         final String accept = "application/json";
-        String avoidConverted =
-                JacksonAdapter.createDefaultSerializerAdapter().serializeList(avoid, CollectionFormat.CSV);
+        List<String> avoidConverted =
+                avoid.stream().map((item) -> (item != null) ? item.toString() : "").collect(Collectors.toList());
         return service.getRouteRange(
-                this.client.getGeography(),
+                this.client.getHost(),
                 this.client.getXMsClientId(),
                 this.client.getApiVersion(),
                 format,
@@ -4394,7 +4392,7 @@ public final class RoutesImpl {
             ResponseFormat format, BatchRequestBody postRouteDirectionsBatchRequestBody) {
         final String accept = "application/json";
         return service.postRouteDirectionsBatch(
-                this.client.getGeography(),
+                this.client.getHost(),
                 this.client.getXMsClientId(),
                 this.client.getApiVersion(),
                 format,
@@ -4693,7 +4691,7 @@ public final class RoutesImpl {
     public Mono<RoutesGetRouteDirectionsBatchResponse> getRouteDirectionsBatchWithResponseAsync(String format) {
         final String accept = "application/json";
         return service.getRouteDirectionsBatch(
-                this.client.getGeography(), this.client.getXMsClientId(), this.client.getApiVersion(), format, accept);
+                this.client.getHost(), this.client.getXMsClientId(), this.client.getApiVersion(), format, accept);
     }
 
     /**
@@ -4927,7 +4925,7 @@ public final class RoutesImpl {
             ResponseFormat format, BatchRequestBody postRouteDirectionsBatchRequestBody) {
         final String accept = "application/json";
         return service.postRouteDirectionsBatchSync(
-                this.client.getGeography(),
+                this.client.getHost(),
                 this.client.getXMsClientId(),
                 this.client.getApiVersion(),
                 format,

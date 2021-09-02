@@ -25,7 +25,6 @@ import com.azure.maps.search.models.BatchRequestBody;
 import com.azure.maps.search.models.ConnectorSet;
 import com.azure.maps.search.models.EntityType;
 import com.azure.maps.search.models.ErrorResponseException;
-import com.azure.maps.search.models.Geography;
 import com.azure.maps.search.models.OpeningHours;
 import com.azure.maps.search.models.ResponseFormat;
 import com.azure.maps.search.models.SearchAddressBatchResponse;
@@ -71,14 +70,14 @@ public final class SearchesImpl {
      * The interface defining all the services for SearchClientSearches to be used by the proxy service to perform REST
      * calls.
      */
-    @Host("https://{geography}.atlas.microsoft.com")
+    @Host("{$host}")
     @ServiceInterface(name = "SearchClientSearches")
     private interface SearchesService {
         @Get("/search/polygon/{format}")
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<Response<SearchPolygonResponse>> getSearchPolygon(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") ResponseFormat format,
@@ -89,7 +88,7 @@ public final class SearchesImpl {
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<Response<SearchCommonResponse>> getSearchFuzzy(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") TextFormat format,
@@ -119,7 +118,7 @@ public final class SearchesImpl {
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<Response<SearchCommonResponse>> getSearchPOI(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") TextFormat format,
@@ -146,7 +145,7 @@ public final class SearchesImpl {
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<Response<SearchCommonResponse>> getSearchNearby(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") TextFormat format,
@@ -168,7 +167,7 @@ public final class SearchesImpl {
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<Response<SearchCommonResponse>> getSearchPOICategory(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") TextFormat format,
@@ -195,7 +194,7 @@ public final class SearchesImpl {
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<Response<SearchPoiCategoryTreeResponse>> getSearchPOICategoryTreePreview(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") ResponseFormat format,
@@ -206,7 +205,7 @@ public final class SearchesImpl {
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<Response<SearchCommonResponse>> getSearchAddress(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") TextFormat format,
@@ -229,7 +228,7 @@ public final class SearchesImpl {
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<Response<SearchAddressReverseResponse>> getSearchAddressReverse(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") TextFormat format,
@@ -251,7 +250,7 @@ public final class SearchesImpl {
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<Response<SearchAddressReverseCrossStreetResponse>> getSearchAddressReverseCrossStreet(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") TextFormat format,
@@ -267,7 +266,7 @@ public final class SearchesImpl {
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<Response<SearchCommonResponse>> getSearchAddressStructured(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") TextFormat format,
@@ -292,7 +291,7 @@ public final class SearchesImpl {
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<Response<SearchCommonResponse>> postSearchInsideGeometry(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") TextFormat format,
@@ -311,7 +310,7 @@ public final class SearchesImpl {
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<Response<SearchCommonResponse>> postSearchAlongRoute(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") TextFormat format,
@@ -333,7 +332,7 @@ public final class SearchesImpl {
                 code = {408})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<Response<SearchFuzzyBatchResponse>> postSearchFuzzyBatchSync(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") ResponseFormat format,
@@ -344,7 +343,7 @@ public final class SearchesImpl {
         @ExpectedResponses({200, 202})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<SearchesPostSearchFuzzyBatchResponse> postSearchFuzzyBatch(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") ResponseFormat format,
@@ -355,7 +354,7 @@ public final class SearchesImpl {
         @ExpectedResponses({200, 202})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<SearchesGetSearchFuzzyBatchResponse> getSearchFuzzyBatch(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") String format,
@@ -368,7 +367,7 @@ public final class SearchesImpl {
                 code = {408})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<Response<SearchAddressBatchResponse>> postSearchAddressBatchSync(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") ResponseFormat format,
@@ -379,7 +378,7 @@ public final class SearchesImpl {
         @ExpectedResponses({200, 202})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<SearchesPostSearchAddressBatchResponse> postSearchAddressBatch(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") ResponseFormat format,
@@ -390,7 +389,7 @@ public final class SearchesImpl {
         @ExpectedResponses({200, 202})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<SearchesGetSearchAddressBatchResponse> getSearchAddressBatch(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") String format,
@@ -403,7 +402,7 @@ public final class SearchesImpl {
                 code = {408})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<Response<SearchAddressReverseBatchResponse>> postSearchAddressReverseBatchSync(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") ResponseFormat format,
@@ -414,7 +413,7 @@ public final class SearchesImpl {
         @ExpectedResponses({200, 202})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<SearchesPostSearchAddressReverseBatchResponse> postSearchAddressReverseBatch(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") ResponseFormat format,
@@ -425,7 +424,7 @@ public final class SearchesImpl {
         @ExpectedResponses({200, 202})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<SearchesGetSearchAddressReverseBatchResponse> getSearchAddressReverseBatch(
-                @HostParam("geography") Geography geography,
+                @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String xMsClientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") String format,
@@ -461,7 +460,7 @@ public final class SearchesImpl {
         String geometriesConverted =
                 JacksonAdapter.createDefaultSerializerAdapter().serializeList(geometries, CollectionFormat.CSV);
         return service.getSearchPolygon(
-                this.client.getGeography(),
+                this.client.getHost(),
                 this.client.getXMsClientId(),
                 this.client.getApiVersion(),
                 format,
@@ -705,7 +704,7 @@ public final class SearchesImpl {
         String connectorSetConverted =
                 JacksonAdapter.createDefaultSerializerAdapter().serializeList(connectorSet, CollectionFormat.CSV);
         return service.getSearchFuzzy(
-                this.client.getGeography(),
+                this.client.getHost(),
                 this.client.getXMsClientId(),
                 this.client.getApiVersion(),
                 format,
@@ -1246,7 +1245,7 @@ public final class SearchesImpl {
         String connectorSetConverted =
                 JacksonAdapter.createDefaultSerializerAdapter().serializeList(connectorSet, CollectionFormat.CSV);
         return service.getSearchPOI(
-                this.client.getGeography(),
+                this.client.getHost(),
                 this.client.getXMsClientId(),
                 this.client.getApiVersion(),
                 format,
@@ -1695,7 +1694,7 @@ public final class SearchesImpl {
         String connectorSetConverted =
                 JacksonAdapter.createDefaultSerializerAdapter().serializeList(connectorSet, CollectionFormat.CSV);
         return service.getSearchNearby(
-                this.client.getGeography(),
+                this.client.getHost(),
                 this.client.getXMsClientId(),
                 this.client.getApiVersion(),
                 format,
@@ -2134,7 +2133,7 @@ public final class SearchesImpl {
         String connectorSetConverted =
                 JacksonAdapter.createDefaultSerializerAdapter().serializeList(connectorSet, CollectionFormat.CSV);
         return service.getSearchPOICategory(
-                this.client.getGeography(),
+                this.client.getHost(),
                 this.client.getXMsClientId(),
                 this.client.getApiVersion(),
                 format,
@@ -2501,7 +2500,7 @@ public final class SearchesImpl {
             ResponseFormat format, String language) {
         final String accept = "application/json";
         return service.getSearchPOICategoryTreePreview(
-                this.client.getGeography(),
+                this.client.getHost(),
                 this.client.getXMsClientId(),
                 this.client.getApiVersion(),
                 format,
@@ -2654,7 +2653,7 @@ public final class SearchesImpl {
         String countrySetConverted =
                 JacksonAdapter.createDefaultSerializerAdapter().serializeList(countrySet, CollectionFormat.CSV);
         return service.getSearchAddress(
-                this.client.getGeography(),
+                this.client.getHost(),
                 this.client.getXMsClientId(),
                 this.client.getApiVersion(),
                 format,
@@ -2947,7 +2946,7 @@ public final class SearchesImpl {
             String view) {
         final String accept = "application/json";
         return service.getSearchAddressReverse(
-                this.client.getGeography(),
+                this.client.getHost(),
                 this.client.getXMsClientId(),
                 this.client.getApiVersion(),
                 format,
@@ -3186,7 +3185,7 @@ public final class SearchesImpl {
             TextFormat format, String query, Integer limit, Float heading, Float radius, String language, String view) {
         final String accept = "application/json";
         return service.getSearchAddressReverseCrossStreet(
-                this.client.getGeography(),
+                this.client.getHost(),
                 this.client.getXMsClientId(),
                 this.client.getApiVersion(),
                 format,
@@ -3380,7 +3379,7 @@ public final class SearchesImpl {
             String view) {
         final String accept = "application/json";
         return service.getSearchAddressStructured(
-                this.client.getGeography(),
+                this.client.getHost(),
                 this.client.getXMsClientId(),
                 this.client.getApiVersion(),
                 format,
@@ -3715,7 +3714,7 @@ public final class SearchesImpl {
         String idxSetConverted =
                 JacksonAdapter.createDefaultSerializerAdapter().serializeList(idxSet, CollectionFormat.CSV);
         return service.postSearchInsideGeometry(
-                this.client.getGeography(),
+                this.client.getHost(),
                 this.client.getXMsClientId(),
                 this.client.getApiVersion(),
                 format,
@@ -4062,7 +4061,7 @@ public final class SearchesImpl {
         String connectorSetConverted =
                 JacksonAdapter.createDefaultSerializerAdapter().serializeList(connectorSet, CollectionFormat.CSV);
         return service.postSearchAlongRoute(
-                this.client.getGeography(),
+                this.client.getHost(),
                 this.client.getXMsClientId(),
                 this.client.getApiVersion(),
                 format,
@@ -4417,7 +4416,7 @@ public final class SearchesImpl {
             ResponseFormat format, BatchRequestBody searchFuzzyBatchRequestBody) {
         final String accept = "application/json";
         return service.postSearchFuzzyBatchSync(
-                this.client.getGeography(),
+                this.client.getHost(),
                 this.client.getXMsClientId(),
                 this.client.getApiVersion(),
                 format,
@@ -4770,7 +4769,7 @@ public final class SearchesImpl {
             ResponseFormat format, BatchRequestBody searchFuzzyBatchRequestBody) {
         final String accept = "application/json";
         return service.postSearchFuzzyBatch(
-                this.client.getGeography(),
+                this.client.getHost(),
                 this.client.getXMsClientId(),
                 this.client.getApiVersion(),
                 format,
@@ -5118,7 +5117,7 @@ public final class SearchesImpl {
     public Mono<SearchesGetSearchFuzzyBatchResponse> getSearchFuzzyBatchWithResponseAsync(String format) {
         final String accept = "application/json";
         return service.getSearchFuzzyBatch(
-                this.client.getGeography(), this.client.getXMsClientId(), this.client.getApiVersion(), format, accept);
+                this.client.getHost(), this.client.getXMsClientId(), this.client.getApiVersion(), format, accept);
     }
 
     /**
@@ -5458,7 +5457,7 @@ public final class SearchesImpl {
             ResponseFormat format, BatchRequestBody searchAddressBatchRequestBody) {
         final String accept = "application/json";
         return service.postSearchAddressBatchSync(
-                this.client.getGeography(),
+                this.client.getHost(),
                 this.client.getXMsClientId(),
                 this.client.getApiVersion(),
                 format,
@@ -5808,7 +5807,7 @@ public final class SearchesImpl {
             ResponseFormat format, BatchRequestBody searchAddressBatchRequestBody) {
         final String accept = "application/json";
         return service.postSearchAddressBatch(
-                this.client.getGeography(),
+                this.client.getHost(),
                 this.client.getXMsClientId(),
                 this.client.getApiVersion(),
                 format,
@@ -6153,7 +6152,7 @@ public final class SearchesImpl {
     public Mono<SearchesGetSearchAddressBatchResponse> getSearchAddressBatchWithResponseAsync(String format) {
         final String accept = "application/json";
         return service.getSearchAddressBatch(
-                this.client.getGeography(), this.client.getXMsClientId(), this.client.getApiVersion(), format, accept);
+                this.client.getHost(), this.client.getXMsClientId(), this.client.getApiVersion(), format, accept);
     }
 
     /**
@@ -6490,7 +6489,7 @@ public final class SearchesImpl {
             ResponseFormat format, BatchRequestBody searchAddressReverseBatchRequestBody) {
         final String accept = "application/json";
         return service.postSearchAddressReverseBatchSync(
-                this.client.getGeography(),
+                this.client.getHost(),
                 this.client.getXMsClientId(),
                 this.client.getApiVersion(),
                 format,
@@ -6837,7 +6836,7 @@ public final class SearchesImpl {
             ResponseFormat format, BatchRequestBody searchAddressReverseBatchRequestBody) {
         final String accept = "application/json";
         return service.postSearchAddressReverseBatch(
-                this.client.getGeography(),
+                this.client.getHost(),
                 this.client.getXMsClientId(),
                 this.client.getApiVersion(),
                 format,
@@ -7180,7 +7179,7 @@ public final class SearchesImpl {
             String format) {
         final String accept = "application/json";
         return service.getSearchAddressReverseBatch(
-                this.client.getGeography(), this.client.getXMsClientId(), this.client.getApiVersion(), format, accept);
+                this.client.getHost(), this.client.getXMsClientId(), this.client.getApiVersion(), format, accept);
     }
 
     /**
