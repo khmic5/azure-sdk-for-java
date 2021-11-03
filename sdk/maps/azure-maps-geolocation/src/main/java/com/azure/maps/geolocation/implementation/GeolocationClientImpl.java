@@ -4,32 +4,55 @@
 
 package com.azure.maps.geolocation.implementation;
 
+import com.azure.core.annotation.ExpectedResponses;
+import com.azure.core.annotation.Get;
+import com.azure.core.annotation.HeaderParam;
+import com.azure.core.annotation.Host;
+import com.azure.core.annotation.HostParam;
+import com.azure.core.annotation.PathParam;
+import com.azure.core.annotation.QueryParam;
+import com.azure.core.annotation.ReturnType;
+import com.azure.core.annotation.ServiceInterface;
+import com.azure.core.annotation.ServiceMethod;
+import com.azure.core.annotation.UnexpectedResponseExceptionType;
 import com.azure.core.http.HttpPipeline;
 import com.azure.core.http.HttpPipelineBuilder;
 import com.azure.core.http.policy.CookiePolicy;
 import com.azure.core.http.policy.RetryPolicy;
 import com.azure.core.http.policy.UserAgentPolicy;
+import com.azure.core.http.rest.Response;
+import com.azure.core.http.rest.RestProxy;
+import com.azure.core.util.logging.ClientLogger;
 import com.azure.core.util.serializer.JacksonAdapter;
 import com.azure.core.util.serializer.SerializerAdapter;
+import com.azure.maps.geolocation.models.ErrorResponseException;
+import com.azure.maps.geolocation.models.IpAddressToLocationResult;
+import com.azure.maps.geolocation.models.JsonFormat;
+import reactor.core.publisher.Mono;
 
 /** Initializes a new instance of the GeolocationClient type. */
 public final class GeolocationClientImpl {
+    private final ClientLogger logger = new ClientLogger(GeolocationClientImpl.class);
+
+    /** The proxy service used to perform REST calls. */
+    private final GeolocationClientService service;
+
     /**
      * Specifies which account is intended for usage in conjunction with the Azure AD security model. It represents a
      * unique ID for the Azure Maps account and can be retrieved from the Azure Maps management plane Account API. To
      * use Azure AD security in Azure Maps see the following [articles](https://aka.ms/amauthdetails) for guidance.
      */
-    private final String xMsClientId;
+    private final String clientId;
 
     /**
      * Gets Specifies which account is intended for usage in conjunction with the Azure AD security model. It represents
      * a unique ID for the Azure Maps account and can be retrieved from the Azure Maps management plane Account API. To
      * use Azure AD security in Azure Maps see the following [articles](https://aka.ms/amauthdetails) for guidance.
      *
-     * @return the xMsClientId value.
+     * @return the clientId value.
      */
-    public String getXMsClientId() {
-        return this.xMsClientId;
+    public String getClientId() {
+        return this.clientId;
     }
 
     /** server parameter. */
@@ -80,35 +103,23 @@ public final class GeolocationClientImpl {
         return this.serializerAdapter;
     }
 
-    /** The GeolocationsImpl object to access its operations. */
-    private final GeolocationsImpl geolocations;
-
-    /**
-     * Gets the GeolocationsImpl object to access its operations.
-     *
-     * @return the GeolocationsImpl object.
-     */
-    public GeolocationsImpl getGeolocations() {
-        return this.geolocations;
-    }
-
     /**
      * Initializes an instance of GeolocationClient client.
      *
-     * @param xMsClientId Specifies which account is intended for usage in conjunction with the Azure AD security model.
-     *     It represents a unique ID for the Azure Maps account and can be retrieved from the Azure Maps management
-     *     plane Account API. To use Azure AD security in Azure Maps see the following
+     * @param clientId Specifies which account is intended for usage in conjunction with the Azure AD security model. It
+     *     represents a unique ID for the Azure Maps account and can be retrieved from the Azure Maps management plane
+     *     Account API. To use Azure AD security in Azure Maps see the following
      *     [articles](https://aka.ms/amauthdetails) for guidance.
      * @param host server parameter.
      * @param apiVersion Api Version.
      */
-    public GeolocationClientImpl(String xMsClientId, String host, String apiVersion) {
+    public GeolocationClientImpl(String clientId, String host, String apiVersion) {
         this(
                 new HttpPipelineBuilder()
                         .policies(new UserAgentPolicy(), new RetryPolicy(), new CookiePolicy())
                         .build(),
                 JacksonAdapter.createDefaultSerializerAdapter(),
-                xMsClientId,
+                clientId,
                 host,
                 apiVersion);
     }
@@ -117,15 +128,15 @@ public final class GeolocationClientImpl {
      * Initializes an instance of GeolocationClient client.
      *
      * @param httpPipeline The HTTP pipeline to send requests through.
-     * @param xMsClientId Specifies which account is intended for usage in conjunction with the Azure AD security model.
-     *     It represents a unique ID for the Azure Maps account and can be retrieved from the Azure Maps management
-     *     plane Account API. To use Azure AD security in Azure Maps see the following
+     * @param clientId Specifies which account is intended for usage in conjunction with the Azure AD security model. It
+     *     represents a unique ID for the Azure Maps account and can be retrieved from the Azure Maps management plane
+     *     Account API. To use Azure AD security in Azure Maps see the following
      *     [articles](https://aka.ms/amauthdetails) for guidance.
      * @param host server parameter.
      * @param apiVersion Api Version.
      */
-    public GeolocationClientImpl(HttpPipeline httpPipeline, String xMsClientId, String host, String apiVersion) {
-        this(httpPipeline, JacksonAdapter.createDefaultSerializerAdapter(), xMsClientId, host, apiVersion);
+    public GeolocationClientImpl(HttpPipeline httpPipeline, String clientId, String host, String apiVersion) {
+        this(httpPipeline, JacksonAdapter.createDefaultSerializerAdapter(), clientId, host, apiVersion);
     }
 
     /**
@@ -133,9 +144,9 @@ public final class GeolocationClientImpl {
      *
      * @param httpPipeline The HTTP pipeline to send requests through.
      * @param serializerAdapter The serializer to serialize an object into a string.
-     * @param xMsClientId Specifies which account is intended for usage in conjunction with the Azure AD security model.
-     *     It represents a unique ID for the Azure Maps account and can be retrieved from the Azure Maps management
-     *     plane Account API. To use Azure AD security in Azure Maps see the following
+     * @param clientId Specifies which account is intended for usage in conjunction with the Azure AD security model. It
+     *     represents a unique ID for the Azure Maps account and can be retrieved from the Azure Maps management plane
+     *     Account API. To use Azure AD security in Azure Maps see the following
      *     [articles](https://aka.ms/amauthdetails) for guidance.
      * @param host server parameter.
      * @param apiVersion Api Version.
@@ -143,14 +154,96 @@ public final class GeolocationClientImpl {
     public GeolocationClientImpl(
             HttpPipeline httpPipeline,
             SerializerAdapter serializerAdapter,
-            String xMsClientId,
+            String clientId,
             String host,
             String apiVersion) {
         this.httpPipeline = httpPipeline;
         this.serializerAdapter = serializerAdapter;
-        this.xMsClientId = xMsClientId;
+        this.clientId = clientId;
         this.host = host;
         this.apiVersion = apiVersion;
-        this.geolocations = new GeolocationsImpl(this);
+        this.service = RestProxy.create(GeolocationClientService.class, this.httpPipeline, this.getSerializerAdapter());
+    }
+
+    /**
+     * The interface defining all the services for GeolocationClient to be used by the proxy service to perform REST
+     * calls.
+     */
+    @Host("{$host}")
+    @ServiceInterface(name = "GeolocationClient")
+    private interface GeolocationClientService {
+        @Get("/geolocation/ip/{format}")
+        @ExpectedResponses({200})
+        @UnexpectedResponseExceptionType(ErrorResponseException.class)
+        Mono<Response<IpAddressToLocationResult>> getLocation(
+                @HostParam("$host") String host,
+                @HeaderParam("x-ms-client-id") String clientId,
+                @QueryParam("api-version") String apiVersion,
+                @PathParam("format") JsonFormat format,
+                @QueryParam("ip") String ipAddress,
+                @HeaderParam("Accept") String accept);
+    }
+
+    /**
+     * **Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>This service will return the ISO country code for the provided IP address. Developers can use this information
+     * to block or alter certain content based on geographical locations where the application is being viewed from.
+     *
+     * @param format Desired format of the response. Only `json` format is supported.
+     * @param ipAddress The IP address. Both IPv4 and IPv6 are allowed.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful call to IP Address to country/region API.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Response<IpAddressToLocationResult>> getLocationWithResponseAsync(JsonFormat format, String ipAddress) {
+        final String accept = "application/json";
+        return service.getLocation(this.getHost(), this.getClientId(), this.getApiVersion(), format, ipAddress, accept);
+    }
+
+    /**
+     * **Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>This service will return the ISO country code for the provided IP address. Developers can use this information
+     * to block or alter certain content based on geographical locations where the application is being viewed from.
+     *
+     * @param format Desired format of the response. Only `json` format is supported.
+     * @param ipAddress The IP address. Both IPv4 and IPv6 are allowed.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful call to IP Address to country/region API.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<IpAddressToLocationResult> getLocationAsync(JsonFormat format, String ipAddress) {
+        return getLocationWithResponseAsync(format, ipAddress)
+                .flatMap(
+                        (Response<IpAddressToLocationResult> res) -> {
+                            if (res.getValue() != null) {
+                                return Mono.just(res.getValue());
+                            } else {
+                                return Mono.empty();
+                            }
+                        });
+    }
+
+    /**
+     * **Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>This service will return the ISO country code for the provided IP address. Developers can use this information
+     * to block or alter certain content based on geographical locations where the application is being viewed from.
+     *
+     * @param format Desired format of the response. Only `json` format is supported.
+     * @param ipAddress The IP address. Both IPv4 and IPv6 are allowed.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful call to IP Address to country/region API.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public IpAddressToLocationResult getLocation(JsonFormat format, String ipAddress) {
+        return getLocationAsync(format, ipAddress).block();
     }
 }

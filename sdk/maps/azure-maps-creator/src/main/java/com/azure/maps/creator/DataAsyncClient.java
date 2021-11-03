@@ -11,13 +11,13 @@ import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.StreamResponse;
 import com.azure.core.util.polling.PollerFlux;
 import com.azure.maps.creator.implementation.DatasImpl;
-import com.azure.maps.creator.models.DatasGetOperationPreviewResponse;
-import com.azure.maps.creator.models.DatasUpdatePreviewResponse;
-import com.azure.maps.creator.models.DatasUploadPreviewResponse;
+import com.azure.maps.creator.models.DataFormat;
+import com.azure.maps.creator.models.DatasGetOperationResponse;
+import com.azure.maps.creator.models.DatasUpdateResponse;
+import com.azure.maps.creator.models.DatasUploadResponse;
 import com.azure.maps.creator.models.ErrorResponseException;
 import com.azure.maps.creator.models.LongRunningOperationResult;
-import com.azure.maps.creator.models.MapDataListResponse;
-import com.azure.maps.creator.models.UploadDataFormat;
+import com.azure.maps.creator.models.MapDataListResult;
 import java.nio.ByteBuffer;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -71,23 +71,19 @@ public final class DataAsyncClient {
      * You can always use the [Data Delete API](https://docs.microsoft.com/rest/api/maps/data-v2/delete-preview) to
      * delete old/unused content and create space for new uploads.
      *
-     * @param uploadDataFormat Data format of the content being uploaded.
+     * @param dataFormat Data format of the content being uploaded.
      * @param uploadContent The content to upload.
      * @param contentLength The contentLength parameter.
-     * @param uploadDataDescription The description to be given to the upload.
+     * @param description The description to be given to the upload.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the response model for a Long-Running Operations API.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<DatasUploadPreviewResponse> uploadPreviewWithResponse(
-            UploadDataFormat uploadDataFormat,
-            Flux<ByteBuffer> uploadContent,
-            long contentLength,
-            String uploadDataDescription) {
-        return this.serviceClient.uploadPreviewWithResponseAsync(
-                uploadDataFormat, uploadContent, contentLength, uploadDataDescription);
+    public Mono<DatasUploadResponse> uploadWithResponse(
+            DataFormat dataFormat, Flux<ByteBuffer> uploadContent, long contentLength, String description) {
+        return this.serviceClient.uploadWithResponseAsync(dataFormat, uploadContent, contentLength, description);
     }
 
     /**
@@ -125,23 +121,19 @@ public final class DataAsyncClient {
      * You can always use the [Data Delete API](https://docs.microsoft.com/rest/api/maps/data-v2/delete-preview) to
      * delete old/unused content and create space for new uploads.
      *
-     * @param uploadDataFormat Data format of the content being uploaded.
+     * @param dataFormat Data format of the content being uploaded.
      * @param uploadContent The content to upload.
      * @param contentLength The contentLength parameter.
-     * @param uploadDataDescription The description to be given to the upload.
+     * @param description The description to be given to the upload.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the response model for a Long-Running Operations API.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public PollerFlux<LongRunningOperationResult, LongRunningOperationResult> beginUploadPreview(
-            UploadDataFormat uploadDataFormat,
-            Flux<ByteBuffer> uploadContent,
-            long contentLength,
-            String uploadDataDescription) {
-        return this.serviceClient.beginUploadPreviewAsync(
-                uploadDataFormat, uploadContent, contentLength, uploadDataDescription);
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    public PollerFlux<LongRunningOperationResult, LongRunningOperationResult> beginUpload(
+            DataFormat dataFormat, Flux<ByteBuffer> uploadContent, long contentLength, String description) {
+        return this.serviceClient.beginUploadAsync(dataFormat, uploadContent, contentLength, description);
     }
 
     /**
@@ -179,19 +171,18 @@ public final class DataAsyncClient {
      * You can always use the [Data Delete API](https://docs.microsoft.com/rest/api/maps/data-v2/delete-preview) to
      * delete old/unused content and create space for new uploads.
      *
-     * @param uploadDataFormat Data format of the content being uploaded.
+     * @param dataFormat Data format of the content being uploaded.
      * @param uploadContent The content to upload.
-     * @param uploadDataDescription The description to be given to the upload.
+     * @param description The description to be given to the upload.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the response model for a Long-Running Operations API.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<DatasUploadPreviewResponse> uploadPreviewWithResponse(
-            UploadDataFormat uploadDataFormat, Object uploadContent, String uploadDataDescription) {
-        return this.serviceClient.uploadPreviewWithResponseAsync(
-                uploadDataFormat, uploadContent, uploadDataDescription);
+    public Mono<DatasUploadResponse> uploadWithResponse(
+            DataFormat dataFormat, Object uploadContent, String description) {
+        return this.serviceClient.uploadWithResponseAsync(dataFormat, uploadContent, description);
     }
 
     /**
@@ -229,18 +220,18 @@ public final class DataAsyncClient {
      * You can always use the [Data Delete API](https://docs.microsoft.com/rest/api/maps/data-v2/delete-preview) to
      * delete old/unused content and create space for new uploads.
      *
-     * @param uploadDataFormat Data format of the content being uploaded.
+     * @param dataFormat Data format of the content being uploaded.
      * @param uploadContent The content to upload.
-     * @param uploadDataDescription The description to be given to the upload.
+     * @param description The description to be given to the upload.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the response model for a Long-Running Operations API.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public PollerFlux<LongRunningOperationResult, LongRunningOperationResult> beginUploadPreview(
-            UploadDataFormat uploadDataFormat, Object uploadContent, String uploadDataDescription) {
-        return this.serviceClient.beginUploadPreviewAsync(uploadDataFormat, uploadContent, uploadDataDescription);
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    public PollerFlux<LongRunningOperationResult, LongRunningOperationResult> beginUpload(
+            DataFormat dataFormat, Object uploadContent, String description) {
+        return this.serviceClient.beginUploadAsync(dataFormat, uploadContent, description);
     }
 
     /**
@@ -281,8 +272,8 @@ public final class DataAsyncClient {
      * @return the response model for the Data List API.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<MapDataListResponse>> listPreviewWithResponse() {
-        return this.serviceClient.listPreviewWithResponseAsync();
+    public Mono<Response<MapDataListResult>> listWithResponse() {
+        return this.serviceClient.listWithResponseAsync();
     }
 
     /**
@@ -323,8 +314,8 @@ public final class DataAsyncClient {
      * @return the response model for the Data List API.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<MapDataListResponse> listPreview() {
-        return this.serviceClient.listPreviewAsync();
+    public Mono<MapDataListResult> list() {
+        return this.serviceClient.listAsync();
     }
 
     /**
@@ -369,19 +360,18 @@ public final class DataAsyncClient {
      * You can always use the [Data Delete API](https://docs.microsoft.com/rest/api/maps/data-v2/delete-preview) to
      * delete old/unused content and create space for new uploads.
      *
-     * @param uniqueDataId The unique data id for the content. The `udid` must have been obtained from a successful
-     *     [Data Upload API](https://docs.microsoft.com/en-us/rest/api/maps/data-v2/upload-preview) call.
+     * @param udid The unique data id for the content. The `udid` must have been obtained from a successful [Data Upload
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/data-v2/upload-preview) call.
      * @param updateContent The new content that will update/replace the previously uploaded content.
-     * @param uploadDataDescription The description to be given to the upload.
+     * @param description The description to be given to the upload.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the response model for a Long-Running Operations API.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<DatasUpdatePreviewResponse> updatePreviewWithResponse(
-            String uniqueDataId, Object updateContent, String uploadDataDescription) {
-        return this.serviceClient.updatePreviewWithResponseAsync(uniqueDataId, updateContent, uploadDataDescription);
+    public Mono<DatasUpdateResponse> updateWithResponse(String udid, Object updateContent, String description) {
+        return this.serviceClient.updateWithResponseAsync(udid, updateContent, description);
     }
 
     /**
@@ -426,19 +416,19 @@ public final class DataAsyncClient {
      * You can always use the [Data Delete API](https://docs.microsoft.com/rest/api/maps/data-v2/delete-preview) to
      * delete old/unused content and create space for new uploads.
      *
-     * @param uniqueDataId The unique data id for the content. The `udid` must have been obtained from a successful
-     *     [Data Upload API](https://docs.microsoft.com/en-us/rest/api/maps/data-v2/upload-preview) call.
+     * @param udid The unique data id for the content. The `udid` must have been obtained from a successful [Data Upload
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/data-v2/upload-preview) call.
      * @param updateContent The new content that will update/replace the previously uploaded content.
-     * @param uploadDataDescription The description to be given to the upload.
+     * @param description The description to be given to the upload.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the response model for a Long-Running Operations API.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public PollerFlux<LongRunningOperationResult, LongRunningOperationResult> beginUpdatePreview(
-            String uniqueDataId, Object updateContent, String uploadDataDescription) {
-        return this.serviceClient.beginUpdatePreviewAsync(uniqueDataId, updateContent, uploadDataDescription);
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    public PollerFlux<LongRunningOperationResult, LongRunningOperationResult> beginUpdate(
+            String udid, Object updateContent, String description) {
+        return this.serviceClient.beginUpdateAsync(udid, updateContent, description);
     }
 
     /**
@@ -471,16 +461,16 @@ public final class DataAsyncClient {
      * <p>```json { "type": "FeatureCollection", "features": [{ "type": "Feature", "geometry": { "type": "Point",
      * "coordinates": [-122.126986, 47.639754] }, "properties": { "geometryId": "001", "radius": 500 } }] } ```.
      *
-     * @param uniqueDataId The unique data id for the content. The `udid` must have been obtained from a successful
-     *     [Data Upload API](https://docs.microsoft.com/en-us/rest/api/maps/data-v2/upload-preview) call.
+     * @param udid The unique data id for the content. The `udid` must have been obtained from a successful [Data Upload
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/data-v2/upload-preview) call.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<StreamResponse> downloadPreviewWithResponse(String uniqueDataId) {
-        return this.serviceClient.downloadPreviewWithResponseAsync(uniqueDataId);
+    public Mono<StreamResponse> downloadWithResponse(String udid) {
+        return this.serviceClient.downloadWithResponseAsync(udid);
     }
 
     /**
@@ -513,16 +503,16 @@ public final class DataAsyncClient {
      * <p>```json { "type": "FeatureCollection", "features": [{ "type": "Feature", "geometry": { "type": "Point",
      * "coordinates": [-122.126986, 47.639754] }, "properties": { "geometryId": "001", "radius": 500 } }] } ```.
      *
-     * @param uniqueDataId The unique data id for the content. The `udid` must have been obtained from a successful
-     *     [Data Upload API](https://docs.microsoft.com/en-us/rest/api/maps/data-v2/upload-preview) call.
+     * @param udid The unique data id for the content. The `udid` must have been obtained from a successful [Data Upload
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/data-v2/upload-preview) call.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Flux<ByteBuffer> downloadPreview(String uniqueDataId) {
-        return this.serviceClient.downloadPreviewAsync(uniqueDataId);
+    public Flux<ByteBuffer> download(String udid) {
+        return this.serviceClient.downloadAsync(udid);
     }
 
     /**
@@ -546,16 +536,16 @@ public final class DataAsyncClient {
      * deleted successfully.&lt;br&gt; A HTTP `400 Bad Request` error response will be returned if the data resource
      * with the passed-in `udid` is not found.
      *
-     * @param uniqueDataId The unique data id for the content. The `udid` must have been obtained from a successful
-     *     [Data Upload API](https://docs.microsoft.com/en-us/rest/api/maps/data-v2/upload-preview) call.
+     * @param udid The unique data id for the content. The `udid` must have been obtained from a successful [Data Upload
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/data-v2/upload-preview) call.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the completion.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<Void>> deletePreviewWithResponse(String uniqueDataId) {
-        return this.serviceClient.deletePreviewWithResponseAsync(uniqueDataId);
+    public Mono<Response<Void>> deleteWithResponse(String udid) {
+        return this.serviceClient.deleteWithResponseAsync(udid);
     }
 
     /**
@@ -579,16 +569,16 @@ public final class DataAsyncClient {
      * deleted successfully.&lt;br&gt; A HTTP `400 Bad Request` error response will be returned if the data resource
      * with the passed-in `udid` is not found.
      *
-     * @param uniqueDataId The unique data id for the content. The `udid` must have been obtained from a successful
-     *     [Data Upload API](https://docs.microsoft.com/en-us/rest/api/maps/data-v2/upload-preview) call.
+     * @param udid The unique data id for the content. The `udid` must have been obtained from a successful [Data Upload
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/data-v2/upload-preview) call.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the completion.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Void> deletePreview(String uniqueDataId) {
-        return this.serviceClient.deletePreviewAsync(uniqueDataId);
+    public Mono<Void> delete(String udid) {
+        return this.serviceClient.deleteAsync(udid);
     }
 
     /**
@@ -602,8 +592,8 @@ public final class DataAsyncClient {
      * @return the response model for a Long-Running Operations API.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<DatasGetOperationPreviewResponse> getOperationPreviewWithResponse(String operationId) {
-        return this.serviceClient.getOperationPreviewWithResponseAsync(operationId);
+    public Mono<DatasGetOperationResponse> getOperationWithResponse(String operationId) {
+        return this.serviceClient.getOperationWithResponseAsync(operationId);
     }
 
     /**
@@ -617,7 +607,7 @@ public final class DataAsyncClient {
      * @return the response model for a Long-Running Operations API.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<LongRunningOperationResult> getOperationPreview(String operationId) {
-        return this.serviceClient.getOperationPreviewAsync(operationId);
+    public Mono<LongRunningOperationResult> getOperation(String operationId) {
+        return this.serviceClient.getOperationAsync(operationId);
     }
 }

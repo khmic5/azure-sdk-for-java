@@ -9,27 +9,30 @@ import com.azure.core.http.HttpPipelineBuilder;
 import com.azure.core.http.policy.CookiePolicy;
 import com.azure.core.http.policy.RetryPolicy;
 import com.azure.core.http.policy.UserAgentPolicy;
+import com.azure.core.util.logging.ClientLogger;
 import com.azure.core.util.serializer.JacksonAdapter;
 import com.azure.core.util.serializer.SerializerAdapter;
 
 /** Initializes a new instance of the SearchClient type. */
 public final class SearchClientImpl {
+    private final ClientLogger logger = new ClientLogger(SearchClientImpl.class);
+
     /**
      * Specifies which account is intended for usage in conjunction with the Azure AD security model. It represents a
      * unique ID for the Azure Maps account and can be retrieved from the Azure Maps management plane Account API. To
      * use Azure AD security in Azure Maps see the following [articles](https://aka.ms/amauthdetails) for guidance.
      */
-    private final String xMsClientId;
+    private final String clientId;
 
     /**
      * Gets Specifies which account is intended for usage in conjunction with the Azure AD security model. It represents
      * a unique ID for the Azure Maps account and can be retrieved from the Azure Maps management plane Account API. To
      * use Azure AD security in Azure Maps see the following [articles](https://aka.ms/amauthdetails) for guidance.
      *
-     * @return the xMsClientId value.
+     * @return the clientId value.
      */
-    public String getXMsClientId() {
-        return this.xMsClientId;
+    public String getClientId() {
+        return this.clientId;
     }
 
     /** server parameter. */
@@ -95,20 +98,20 @@ public final class SearchClientImpl {
     /**
      * Initializes an instance of SearchClient client.
      *
-     * @param xMsClientId Specifies which account is intended for usage in conjunction with the Azure AD security model.
-     *     It represents a unique ID for the Azure Maps account and can be retrieved from the Azure Maps management
-     *     plane Account API. To use Azure AD security in Azure Maps see the following
+     * @param clientId Specifies which account is intended for usage in conjunction with the Azure AD security model. It
+     *     represents a unique ID for the Azure Maps account and can be retrieved from the Azure Maps management plane
+     *     Account API. To use Azure AD security in Azure Maps see the following
      *     [articles](https://aka.ms/amauthdetails) for guidance.
      * @param host server parameter.
      * @param apiVersion Api Version.
      */
-    public SearchClientImpl(String xMsClientId, String host, String apiVersion) {
+    public SearchClientImpl(String clientId, String host, String apiVersion) {
         this(
                 new HttpPipelineBuilder()
                         .policies(new UserAgentPolicy(), new RetryPolicy(), new CookiePolicy())
                         .build(),
                 JacksonAdapter.createDefaultSerializerAdapter(),
-                xMsClientId,
+                clientId,
                 host,
                 apiVersion);
     }
@@ -117,15 +120,15 @@ public final class SearchClientImpl {
      * Initializes an instance of SearchClient client.
      *
      * @param httpPipeline The HTTP pipeline to send requests through.
-     * @param xMsClientId Specifies which account is intended for usage in conjunction with the Azure AD security model.
-     *     It represents a unique ID for the Azure Maps account and can be retrieved from the Azure Maps management
-     *     plane Account API. To use Azure AD security in Azure Maps see the following
+     * @param clientId Specifies which account is intended for usage in conjunction with the Azure AD security model. It
+     *     represents a unique ID for the Azure Maps account and can be retrieved from the Azure Maps management plane
+     *     Account API. To use Azure AD security in Azure Maps see the following
      *     [articles](https://aka.ms/amauthdetails) for guidance.
      * @param host server parameter.
      * @param apiVersion Api Version.
      */
-    public SearchClientImpl(HttpPipeline httpPipeline, String xMsClientId, String host, String apiVersion) {
-        this(httpPipeline, JacksonAdapter.createDefaultSerializerAdapter(), xMsClientId, host, apiVersion);
+    public SearchClientImpl(HttpPipeline httpPipeline, String clientId, String host, String apiVersion) {
+        this(httpPipeline, JacksonAdapter.createDefaultSerializerAdapter(), clientId, host, apiVersion);
     }
 
     /**
@@ -133,9 +136,9 @@ public final class SearchClientImpl {
      *
      * @param httpPipeline The HTTP pipeline to send requests through.
      * @param serializerAdapter The serializer to serialize an object into a string.
-     * @param xMsClientId Specifies which account is intended for usage in conjunction with the Azure AD security model.
-     *     It represents a unique ID for the Azure Maps account and can be retrieved from the Azure Maps management
-     *     plane Account API. To use Azure AD security in Azure Maps see the following
+     * @param clientId Specifies which account is intended for usage in conjunction with the Azure AD security model. It
+     *     represents a unique ID for the Azure Maps account and can be retrieved from the Azure Maps management plane
+     *     Account API. To use Azure AD security in Azure Maps see the following
      *     [articles](https://aka.ms/amauthdetails) for guidance.
      * @param host server parameter.
      * @param apiVersion Api Version.
@@ -143,12 +146,12 @@ public final class SearchClientImpl {
     public SearchClientImpl(
             HttpPipeline httpPipeline,
             SerializerAdapter serializerAdapter,
-            String xMsClientId,
+            String clientId,
             String host,
             String apiVersion) {
         this.httpPipeline = httpPipeline;
         this.serializerAdapter = serializerAdapter;
-        this.xMsClientId = xMsClientId;
+        this.clientId = clientId;
         this.host = host;
         this.apiVersion = apiVersion;
         this.searches = new SearchesImpl(this);

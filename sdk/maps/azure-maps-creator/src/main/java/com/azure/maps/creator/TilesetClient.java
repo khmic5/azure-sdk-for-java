@@ -8,11 +8,14 @@ import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceClient;
 import com.azure.core.annotation.ServiceMethod;
 import com.azure.core.http.rest.PagedIterable;
+import com.azure.core.http.rest.Response;
+import com.azure.core.util.Context;
 import com.azure.core.util.polling.SyncPoller;
 import com.azure.maps.creator.implementation.TilesetsImpl;
 import com.azure.maps.creator.models.ErrorResponseException;
 import com.azure.maps.creator.models.LongRunningOperationResult;
-import com.azure.maps.creator.models.TilesetDetailInfo;
+import com.azure.maps.creator.models.Tileset;
+import com.azure.maps.creator.models.TilesetsGetOperationResponse;
 
 /** Initializes a new instance of the synchronous CreatorClient type. */
 @ServiceClient(builder = CreatorClientBuilder.class)
@@ -58,10 +61,47 @@ public final class TilesetClient {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the response model for a Long-Running Operations API.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<LongRunningOperationResult, LongRunningOperationResult> beginCreate(
             String datasetId, String description) {
         return this.serviceClient.beginCreate(datasetId, description);
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>[This](https://docs.microsoft.com/en-us/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>The Tileset Create API allows the caller to create a tileset from a dataset. A tileset contains a set of tiles
+     * that can be consumed from the [Get Map Tile](/rest/api/maps/render/getmaptile) to retrieve custom tiles. To make
+     * a dataset, use the [DataSet Create API](/rest/api/maps/dataset/createpreview).
+     *
+     * <p>## Submit Create Request
+     *
+     * <p>To create your tileset you will make a `POST` request with an empty body. The `datasetId` query parameter will
+     * be used as the source of the tileset data.
+     *
+     * <p>The Create Tileset API is a [long-running request](https://aka.ms/am-creator-lrt-v2).
+     *
+     * @param datasetId The unique `datasetId` that the tileset create API uses to retrieve features to generate tiles.
+     *     The `datasetId` must have been obtained from a successful [Dataset Create
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create) call.
+     * @param description User provided description of the tileset.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response model for a Long-Running Operations API.
+     */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    public SyncPoller<LongRunningOperationResult, LongRunningOperationResult> beginCreate(
+            String datasetId, String description, Context context) {
+        return this.serviceClient.beginCreate(datasetId, description, context);
     }
 
     /**
@@ -78,8 +118,28 @@ public final class TilesetClient {
      * @return the response model for the Tileset List API.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedIterable<TilesetDetailInfo> list() {
+    public PagedIterable<Tileset> list() {
         return this.serviceClient.list();
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>This API allows the caller to fetch a list of all tilesets created. &lt;br&gt;.
+     *
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response model for the Tileset List API.
+     */
+    @ServiceMethod(returns = ReturnType.COLLECTION)
+    public PagedIterable<Tileset> list(Context context) {
+        return this.serviceClient.list(context);
     }
 
     /**
@@ -98,8 +158,29 @@ public final class TilesetClient {
      * @return detail information for the data.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public TilesetDetailInfo get(String tilesetId) {
+    public Tileset get(String tilesetId) {
         return this.serviceClient.get(tilesetId);
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>This API allows the caller to fetch a tileset.
+     *
+     * @param tilesetId The Tileset Id.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return detail information for the data.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<Tileset> getWithResponse(String tilesetId, Context context) {
+        return this.serviceClient.getWithResponse(tilesetId, context);
     }
 
     /**
@@ -145,6 +226,50 @@ public final class TilesetClient {
     }
 
     /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>This API allows the caller to delete a created tileset.&lt;br&gt; You can use this API if a tileset is no
+     * longer needed.
+     *
+     * <p>### Submit Delete Request
+     *
+     * <p>To delete your content you will issue a `DELETE` request where the path will contain the `tilesetId` of the
+     * tileset to delete.&lt;br&gt;
+     *
+     * <p>#### Delete request "Successful"
+     *
+     * <p>The Tileset Delete API returns a HTTP `204 No Content` response with an empty body, if the tileset was deleted
+     * successfully.&lt;br&gt;
+     *
+     * <p>#### Delete request "Failed"
+     *
+     * <p>A HTTP `400 Bad Request` error response will be returned if the tileset with the passed-in `tilesetId` is not
+     * found.
+     *
+     * <p>Here is a sample error response:
+     *
+     * <p>&lt;br&gt;
+     *
+     * <p>```json { "error": { "code": "400 BadRequest", "message": "Bad request - Tileset Id:
+     * d85b5b27-5fc4-4599-8b50-47160e90f8ce does not exist." } } ```.
+     *
+     * @param tilesetId The Tileset Id.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<Void> deleteWithResponse(String tilesetId, Context context) {
+        return this.serviceClient.deleteWithResponse(tilesetId, context);
+    }
+
+    /**
      * This path will be obtained from a call to /tilesets/create. While in progress, an http200 will be returned with
      * no extra headers - followed by an http200 with Resource-Location header once successfully completed.
      *
@@ -157,5 +282,21 @@ public final class TilesetClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public LongRunningOperationResult getOperation(String operationId) {
         return this.serviceClient.getOperation(operationId);
+    }
+
+    /**
+     * This path will be obtained from a call to /tilesets/create. While in progress, an http200 will be returned with
+     * no extra headers - followed by an http200 with Resource-Location header once successfully completed.
+     *
+     * @param operationId The ID to query the status for the tileset create/import request.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response model for a Long-Running Operations API.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public TilesetsGetOperationResponse getOperationWithResponse(String operationId, Context context) {
+        return this.serviceClient.getOperationWithResponse(operationId, context);
     }
 }

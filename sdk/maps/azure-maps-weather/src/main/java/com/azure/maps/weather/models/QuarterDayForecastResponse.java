@@ -4,17 +4,17 @@
 
 package com.azure.maps.weather.models;
 
-import com.azure.core.annotation.Fluent;
+import com.azure.core.annotation.Immutable;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /** The QuarterDayForecastResponse model. */
-@Fluent
+@Immutable
 public final class QuarterDayForecastResponse {
     /*
      * Forecast data for each quarter in the response.
      */
-    @JsonProperty(value = "forecasts")
+    @JsonProperty(value = "forecasts", access = JsonProperty.Access.WRITE_ONLY)
     private List<QuarterDayForecast> forecasts;
 
     /**
@@ -24,16 +24,5 @@ public final class QuarterDayForecastResponse {
      */
     public List<QuarterDayForecast> getForecasts() {
         return this.forecasts;
-    }
-
-    /**
-     * Set the forecasts property: Forecast data for each quarter in the response.
-     *
-     * @param forecasts the forecasts value to set.
-     * @return the QuarterDayForecastResponse object itself.
-     */
-    public QuarterDayForecastResponse setForecasts(List<QuarterDayForecast> forecasts) {
-        this.forecasts = forecasts;
-        return this;
     }
 }

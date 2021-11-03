@@ -6,37 +6,57 @@ package com.azure.maps.route.models;
 
 import com.azure.core.annotation.Immutable;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
 
-/** Matrix result object. */
+/**
+ * This object is returned from a successful Route Matrix call. For ex, if 2 origins and 3 destinations are provided,
+ * there are going to 2 arrays with 3 elements in each. Each element's content depends on the options provided in the
+ * query.
+ */
 @Immutable
 public final class RouteMatrixResult {
     /*
-     * StatusCode property for the current cell in the input matrix.
+     * Format Version property
      */
-    @JsonProperty(value = "statusCode", access = JsonProperty.Access.WRITE_ONLY)
-    private Integer statusCode;
+    @JsonProperty(value = "formatVersion", access = JsonProperty.Access.WRITE_ONLY)
+    private String formatVersion;
 
     /*
-     * Response object of the current cell in the input matrix.
+     * Results as a 2 dimensional array of route summaries.
      */
-    @JsonProperty(value = "response", access = JsonProperty.Access.WRITE_ONLY)
-    private RouteMatrixResultResponse response;
+    @JsonProperty(value = "matrix", access = JsonProperty.Access.WRITE_ONLY)
+    private List<List<RouteMatrix>> matrix;
+
+    /*
+     * Summary object
+     */
+    @JsonProperty(value = "summary", access = JsonProperty.Access.WRITE_ONLY)
+    private RouteMatrixSummary summary;
 
     /**
-     * Get the statusCode property: StatusCode property for the current cell in the input matrix.
+     * Get the formatVersion property: Format Version property.
      *
-     * @return the statusCode value.
+     * @return the formatVersion value.
      */
-    public Integer getStatusCode() {
-        return this.statusCode;
+    public String getFormatVersion() {
+        return this.formatVersion;
     }
 
     /**
-     * Get the response property: Response object of the current cell in the input matrix.
+     * Get the matrix property: Results as a 2 dimensional array of route summaries.
      *
-     * @return the response value.
+     * @return the matrix value.
      */
-    public RouteMatrixResultResponse getResponse() {
-        return this.response;
+    public List<List<RouteMatrix>> getMatrix() {
+        return this.matrix;
+    }
+
+    /**
+     * Get the summary property: Summary object.
+     *
+     * @return the summary value.
+     */
+    public RouteMatrixSummary getSummary() {
+        return this.summary;
     }
 }

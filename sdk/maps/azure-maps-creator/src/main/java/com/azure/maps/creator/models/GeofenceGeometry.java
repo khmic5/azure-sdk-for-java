@@ -25,7 +25,7 @@ public final class GeofenceGeometry {
      * which is used for identifying the geometry and is case-sensitive.
      */
     @JsonProperty(value = "udId", access = JsonProperty.Access.WRITE_ONLY)
-    private String udId;
+    private String udid;
 
     /*
      * The unique id identifies a geometry.
@@ -34,16 +34,17 @@ public final class GeofenceGeometry {
     private String geometryId;
 
     /*
-     * Distance from the coordinate to the closest border of the geofence.
-     * Positive means the  coordinate is outside of the geofence. If the
-     * coordinate is outside of the geofence, but more than the value of
-     * searchBuffer away from the closest geofence border, then the value is
-     * 999. Negative means the coordinate is inside of the geofence. If the
-     * coordinate is inside the polygon, but more than the value of
-     * searchBuffer away from the closest geofencing border, then the value is
-     * -999. A value of 999 means that there is great confidence the coordinate
-     * is well outside the geofence. A value of -999 means that there is great
-     * confidence the coordinate is well within the geofence.
+     * Distance from the coordinate to the closest border of the geofence (in
+     * meters except when special values -999/999 are used). Positive means the
+     * coordinate is outside of the geofence. If the coordinate is outside of
+     * the geofence, but more than the value of searchBuffer away from the
+     * closest geofence border, then the value is 999. Negative means the
+     * coordinate is inside of the geofence. If the coordinate is inside the
+     * polygon, but more than the value of searchBuffer away from the closest
+     * geofencing border, then the value is -999. A value of 999 means that
+     * there is great confidence the coordinate is well outside the geofence. A
+     * value of -999 means that there is great confidence the coordinate is
+     * well within the geofence.
      */
     @JsonProperty(value = "distance", access = JsonProperty.Access.WRITE_ONLY)
     private Float distance;
@@ -66,7 +67,7 @@ public final class GeofenceGeometry {
      * 'zInMeter' in the request.
      */
     @JsonProperty(value = "nearestZ", access = JsonProperty.Access.WRITE_ONLY)
-    private Float nearestZ;
+    private Float nearestElevation;
 
     /**
      * Get the deviceId property: ID of the device.
@@ -78,16 +79,16 @@ public final class GeofenceGeometry {
     }
 
     /**
-     * Get the udId property: The unique id returned from [Data Upload
+     * Get the udid property: The unique id returned from [Data Upload
      * API](https://docs.microsoft.com/en-us/rest/api/maps/data/uploadPreview) after uploading a valid GeoJSON
      * FeatureCollection object. Please refer to [RFC 7946](https://tools.ietf.org/html/rfc7946#section-3.3) for
      * details. All the feature's properties should contain `geometryId`, which is used for identifying the geometry and
      * is case-sensitive.
      *
-     * @return the udId value.
+     * @return the udid value.
      */
-    public String getUdId() {
-        return this.udId;
+    public String getUdid() {
+        return this.udid;
     }
 
     /**
@@ -100,13 +101,13 @@ public final class GeofenceGeometry {
     }
 
     /**
-     * Get the distance property: Distance from the coordinate to the closest border of the geofence. Positive means the
-     * coordinate is outside of the geofence. If the coordinate is outside of the geofence, but more than the value of
-     * searchBuffer away from the closest geofence border, then the value is 999. Negative means the coordinate is
-     * inside of the geofence. If the coordinate is inside the polygon, but more than the value of searchBuffer away
-     * from the closest geofencing border, then the value is -999. A value of 999 means that there is great confidence
-     * the coordinate is well outside the geofence. A value of -999 means that there is great confidence the coordinate
-     * is well within the geofence.
+     * Get the distance property: Distance from the coordinate to the closest border of the geofence (in meters except
+     * when special values -999/999 are used). Positive means the coordinate is outside of the geofence. If the
+     * coordinate is outside of the geofence, but more than the value of searchBuffer away from the closest geofence
+     * border, then the value is 999. Negative means the coordinate is inside of the geofence. If the coordinate is
+     * inside the polygon, but more than the value of searchBuffer away from the closest geofencing border, then the
+     * value is -999. A value of 999 means that there is great confidence the coordinate is well outside the geofence. A
+     * value of -999 means that there is great confidence the coordinate is well within the geofence.
      *
      * @return the distance value.
      */
@@ -133,12 +134,12 @@ public final class GeofenceGeometry {
     }
 
     /**
-     * Get the nearestZ property: Sea level in meter of the nearest point on the 2D extrusion geometry. This will only
-     * be presented in response when value is provided for 'zInMeter' in the request.
+     * Get the nearestElevation property: Sea level in meter of the nearest point on the 2D extrusion geometry. This
+     * will only be presented in response when value is provided for 'zInMeter' in the request.
      *
-     * @return the nearestZ value.
+     * @return the nearestElevation value.
      */
-    public Float getNearestZ() {
-        return this.nearestZ;
+    public Float getNearestElevation() {
+        return this.nearestElevation;
     }
 }

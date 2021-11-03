@@ -10,15 +10,16 @@ import com.azure.core.annotation.ServiceMethod;
 import com.azure.core.http.rest.Response;
 import com.azure.maps.creator.implementation.SpatialsImpl;
 import com.azure.maps.creator.models.BufferRequestBody;
-import com.azure.maps.creator.models.BufferResponse;
+import com.azure.maps.creator.models.BufferResult;
 import com.azure.maps.creator.models.ClosestPointResponse;
 import com.azure.maps.creator.models.ErrorResponseException;
 import com.azure.maps.creator.models.GeoJsonFeatureCollection;
+import com.azure.maps.creator.models.Geofence;
 import com.azure.maps.creator.models.GeofenceMode;
-import com.azure.maps.creator.models.GeofenceResponse;
-import com.azure.maps.creator.models.GreatCircleDistanceResponse;
-import com.azure.maps.creator.models.PointInPolygonResponse;
-import com.azure.maps.creator.models.ResponseFormat;
+import com.azure.maps.creator.models.GreatCircleDistanceResult;
+import com.azure.maps.creator.models.JsonFormat;
+import com.azure.maps.creator.models.PointInPolygonResult;
+import com.azure.maps.creator.models.Position;
 import com.azure.maps.creator.models.SpatialsGetGeofenceResponse;
 import com.azure.maps.creator.models.SpatialsPostGeofenceResponse;
 import java.time.OffsetDateTime;
@@ -84,14 +85,13 @@ public final class SpatialAsyncClient {
      *     FeatureCollection object. Please refer to [RFC 7946](https://tools.ietf.org/html/rfc7946#section-3.3) for
      *     details. All the feature's properties should contain `geometryId`, which is used for identifying the geometry
      *     and is case-sensitive.
-     * @param latitude The latitude of the location being passed. Example: 48.36.
-     * @param longitude The longitude of the location being passed. Example: -124.63.
-     * @param z The sea level in meter of the location being passed. If this parameter is presented, 2D extrusion is
-     *     used. Example: 200.
+     * @param position Parameter group.
+     * @param altitude The sea level in meter of the location being passed. If this parameter is presented, 2D extrusion
+     *     is used. Example: 200.
      * @param userTime The user request time. If not presented in the request, the default value is DateTime.Now.
-     * @param searchBuffer The radius of the buffer around the geofence in meters that defines how far to search inside
-     *     and outside the border of the fence against the coordinate that was provided when calculating the result. The
-     *     minimum value is 0, and the maximum is 500. The default value is 50.
+     * @param searchBufferInMeters The radius of the buffer around the geofence in meters that defines how far to search
+     *     inside and outside the border of the fence against the coordinate that was provided when calculating the
+     *     result. The minimum value is 0, and the maximum is 500. The default value is 50.
      * @param isAsync If true, the request will use async event mechanism; if false, the request will be synchronized
      *     and do not trigger any event. The default value is false.
      * @param mode Mode of the geofencing async event mechanism.
@@ -102,18 +102,17 @@ public final class SpatialAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<SpatialsGetGeofenceResponse> getGeofenceWithResponse(
-            ResponseFormat format,
+            JsonFormat format,
             String deviceId,
             String udid,
-            float latitude,
-            float longitude,
-            Float z,
+            Position position,
+            Float altitude,
             OffsetDateTime userTime,
-            Float searchBuffer,
+            Float searchBufferInMeters,
             Boolean isAsync,
             GeofenceMode mode) {
         return this.serviceClient.getGeofenceWithResponseAsync(
-                format, deviceId, udid, latitude, longitude, z, userTime, searchBuffer, isAsync, mode);
+                format, deviceId, udid, position, altitude, userTime, searchBufferInMeters, isAsync, mode);
     }
 
     /**
@@ -162,14 +161,13 @@ public final class SpatialAsyncClient {
      *     FeatureCollection object. Please refer to [RFC 7946](https://tools.ietf.org/html/rfc7946#section-3.3) for
      *     details. All the feature's properties should contain `geometryId`, which is used for identifying the geometry
      *     and is case-sensitive.
-     * @param latitude The latitude of the location being passed. Example: 48.36.
-     * @param longitude The longitude of the location being passed. Example: -124.63.
-     * @param z The sea level in meter of the location being passed. If this parameter is presented, 2D extrusion is
-     *     used. Example: 200.
+     * @param position Parameter group.
+     * @param altitude The sea level in meter of the location being passed. If this parameter is presented, 2D extrusion
+     *     is used. Example: 200.
      * @param userTime The user request time. If not presented in the request, the default value is DateTime.Now.
-     * @param searchBuffer The radius of the buffer around the geofence in meters that defines how far to search inside
-     *     and outside the border of the fence against the coordinate that was provided when calculating the result. The
-     *     minimum value is 0, and the maximum is 500. The default value is 50.
+     * @param searchBufferInMeters The radius of the buffer around the geofence in meters that defines how far to search
+     *     inside and outside the border of the fence against the coordinate that was provided when calculating the
+     *     result. The minimum value is 0, and the maximum is 500. The default value is 50.
      * @param isAsync If true, the request will use async event mechanism; if false, the request will be synchronized
      *     and do not trigger any event. The default value is false.
      * @param mode Mode of the geofencing async event mechanism.
@@ -179,19 +177,18 @@ public final class SpatialAsyncClient {
      * @return this object is returned from a geofence proximity call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<GeofenceResponse> getGeofence(
-            ResponseFormat format,
+    public Mono<Geofence> getGeofence(
+            JsonFormat format,
             String deviceId,
             String udid,
-            float latitude,
-            float longitude,
-            Float z,
+            Position position,
+            Float altitude,
             OffsetDateTime userTime,
-            Float searchBuffer,
+            Float searchBufferInMeters,
             Boolean isAsync,
             GeofenceMode mode) {
         return this.serviceClient.getGeofenceAsync(
-                format, deviceId, udid, latitude, longitude, z, userTime, searchBuffer, isAsync, mode);
+                format, deviceId, udid, position, altitude, userTime, searchBufferInMeters, isAsync, mode);
     }
 
     /**
@@ -211,10 +208,9 @@ public final class SpatialAsyncClient {
      *
      * @param format Desired format of the response. Only `json` format is supported.
      * @param deviceId ID of the device.
-     * @param latitude The latitude of the location being passed. Example: 48.36.
-     * @param longitude The longitude of the location being passed. Example: -124.63.
      * @param searchGeofenceRequestBody The geofencing GeoJSON data.
-     * @param z The sea level in meter of the location being passed. If this parameter is presented, 2D extrusion
+     * @param position Parameter group.
+     * @param altitude The sea level in meter of the location being passed. If this parameter is presented, 2D extrusion
      *     geofencing is applied. Example: 200.
      * @param userTime The user request time. If not presented in the request, the default value is DateTime.UtcNow.
      * @param searchBuffer The radius of the buffer around the geofence in meters that defines how far to search inside
@@ -230,27 +226,17 @@ public final class SpatialAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<SpatialsPostGeofenceResponse> postGeofenceWithResponse(
-            ResponseFormat format,
+            JsonFormat format,
             String deviceId,
-            float latitude,
-            float longitude,
             GeoJsonFeatureCollection searchGeofenceRequestBody,
-            Float z,
+            Position position,
+            Float altitude,
             OffsetDateTime userTime,
             Float searchBuffer,
             Boolean isAsync,
             GeofenceMode mode) {
         return this.serviceClient.postGeofenceWithResponseAsync(
-                format,
-                deviceId,
-                latitude,
-                longitude,
-                searchGeofenceRequestBody,
-                z,
-                userTime,
-                searchBuffer,
-                isAsync,
-                mode);
+                format, deviceId, searchGeofenceRequestBody, position, altitude, userTime, searchBuffer, isAsync, mode);
     }
 
     /**
@@ -270,10 +256,9 @@ public final class SpatialAsyncClient {
      *
      * @param format Desired format of the response. Only `json` format is supported.
      * @param deviceId ID of the device.
-     * @param latitude The latitude of the location being passed. Example: 48.36.
-     * @param longitude The longitude of the location being passed. Example: -124.63.
      * @param searchGeofenceRequestBody The geofencing GeoJSON data.
-     * @param z The sea level in meter of the location being passed. If this parameter is presented, 2D extrusion
+     * @param position Parameter group.
+     * @param altitude The sea level in meter of the location being passed. If this parameter is presented, 2D extrusion
      *     geofencing is applied. Example: 200.
      * @param userTime The user request time. If not presented in the request, the default value is DateTime.UtcNow.
      * @param searchBuffer The radius of the buffer around the geofence in meters that defines how far to search inside
@@ -288,28 +273,18 @@ public final class SpatialAsyncClient {
      * @return this object is returned from a geofence proximity call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<GeofenceResponse> postGeofence(
-            ResponseFormat format,
+    public Mono<Geofence> postGeofence(
+            JsonFormat format,
             String deviceId,
-            float latitude,
-            float longitude,
             GeoJsonFeatureCollection searchGeofenceRequestBody,
-            Float z,
+            Position position,
+            Float altitude,
             OffsetDateTime userTime,
             Float searchBuffer,
             Boolean isAsync,
             GeofenceMode mode) {
         return this.serviceClient.postGeofenceAsync(
-                format,
-                deviceId,
-                latitude,
-                longitude,
-                searchGeofenceRequestBody,
-                z,
-                userTime,
-                searchBuffer,
-                isAsync,
-                mode);
+                format, deviceId, searchGeofenceRequestBody, position, altitude, userTime, searchBuffer, isAsync, mode);
     }
 
     /**
@@ -334,8 +309,7 @@ public final class SpatialAsyncClient {
      * @return this object is returned from a successful Spatial Buffer call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<BufferResponse>> postBufferWithResponse(
-            ResponseFormat format, BufferRequestBody bufferRequestBody) {
+    public Mono<Response<BufferResult>> postBufferWithResponse(JsonFormat format, BufferRequestBody bufferRequestBody) {
         return this.serviceClient.postBufferWithResponseAsync(format, bufferRequestBody);
     }
 
@@ -361,7 +335,7 @@ public final class SpatialAsyncClient {
      * @return this object is returned from a successful Spatial Buffer call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<BufferResponse> postBuffer(ResponseFormat format, BufferRequestBody bufferRequestBody) {
+    public Mono<BufferResult> postBuffer(JsonFormat format, BufferRequestBody bufferRequestBody) {
         return this.serviceClient.postBufferAsync(format, bufferRequestBody);
     }
 
@@ -403,7 +377,7 @@ public final class SpatialAsyncClient {
      * @return this object is returned from a successful Spatial Buffer call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<BufferResponse>> getBufferWithResponse(ResponseFormat format, String udid, String distances) {
+    public Mono<Response<BufferResult>> getBufferWithResponse(JsonFormat format, String udid, String distances) {
         return this.serviceClient.getBufferWithResponseAsync(format, udid, distances);
     }
 
@@ -445,7 +419,7 @@ public final class SpatialAsyncClient {
      * @return this object is returned from a successful Spatial Buffer call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<BufferResponse> getBuffer(ResponseFormat format, String udid, String distances) {
+    public Mono<BufferResult> getBuffer(JsonFormat format, String udid, String distances) {
         return this.serviceClient.getBufferAsync(format, udid, distances);
     }
 
@@ -459,11 +433,10 @@ public final class SpatialAsyncClient {
      * latitude, longitude, and distance in meters from the closest point.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param latitude The latitude of the location being passed. Example: 48.36.
-     * @param longitude The longitude of the location being passed. Example: -124.63.
      * @param closestPointRequestBody The FeatureCollection of Point geometries from which closest point to source point
      *     should be determined. All the feature's properties should contain `geometryId`, which is used for identifying
      *     the geometry and is case-sensitive.
+     * @param position Parameter group.
      * @param numberOfClosestPoints The number of closest points expected from response. Default: 1, minimum: 1 and
      *     maximum: 50.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -473,13 +446,12 @@ public final class SpatialAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<ClosestPointResponse>> postClosestPointWithResponse(
-            ResponseFormat format,
-            float latitude,
-            float longitude,
+            JsonFormat format,
             GeoJsonFeatureCollection closestPointRequestBody,
+            Position position,
             Integer numberOfClosestPoints) {
         return this.serviceClient.postClosestPointWithResponseAsync(
-                format, latitude, longitude, closestPointRequestBody, numberOfClosestPoints);
+                format, closestPointRequestBody, position, numberOfClosestPoints);
     }
 
     /**
@@ -492,11 +464,10 @@ public final class SpatialAsyncClient {
      * latitude, longitude, and distance in meters from the closest point.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param latitude The latitude of the location being passed. Example: 48.36.
-     * @param longitude The longitude of the location being passed. Example: -124.63.
      * @param closestPointRequestBody The FeatureCollection of Point geometries from which closest point to source point
      *     should be determined. All the feature's properties should contain `geometryId`, which is used for identifying
      *     the geometry and is case-sensitive.
+     * @param position Parameter group.
      * @param numberOfClosestPoints The number of closest points expected from response. Default: 1, minimum: 1 and
      *     maximum: 50.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -506,13 +477,12 @@ public final class SpatialAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<ClosestPointResponse> postClosestPoint(
-            ResponseFormat format,
-            float latitude,
-            float longitude,
+            JsonFormat format,
             GeoJsonFeatureCollection closestPointRequestBody,
+            Position position,
             Integer numberOfClosestPoints) {
         return this.serviceClient.postClosestPointAsync(
-                format, latitude, longitude, closestPointRequestBody, numberOfClosestPoints);
+                format, closestPointRequestBody, position, numberOfClosestPoints);
     }
 
     /**
@@ -538,8 +508,7 @@ public final class SpatialAsyncClient {
      *     FeatureCollection object. Please refer to [RFC 7946](https://tools.ietf.org/html/rfc7946#section-3.3) for
      *     details. All the feature's properties should contain `geometryId`, which is used for identifying the geometry
      *     and is case-sensitive.
-     * @param latitude The latitude of the location being passed. Example: 48.36.
-     * @param longitude The longitude of the location being passed. Example: -124.63.
+     * @param position Parameter group.
      * @param numberOfClosestPoints The number of closest points expected from response. Default: 1, minimum: 1 and
      *     maximum: 50.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -549,9 +518,8 @@ public final class SpatialAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<ClosestPointResponse>> getClosestPointWithResponse(
-            ResponseFormat format, String udid, float latitude, float longitude, Integer numberOfClosestPoints) {
-        return this.serviceClient.getClosestPointWithResponseAsync(
-                format, udid, latitude, longitude, numberOfClosestPoints);
+            JsonFormat format, String udid, Position position, Integer numberOfClosestPoints) {
+        return this.serviceClient.getClosestPointWithResponseAsync(format, udid, position, numberOfClosestPoints);
     }
 
     /**
@@ -577,8 +545,7 @@ public final class SpatialAsyncClient {
      *     FeatureCollection object. Please refer to [RFC 7946](https://tools.ietf.org/html/rfc7946#section-3.3) for
      *     details. All the feature's properties should contain `geometryId`, which is used for identifying the geometry
      *     and is case-sensitive.
-     * @param latitude The latitude of the location being passed. Example: 48.36.
-     * @param longitude The longitude of the location being passed. Example: -124.63.
+     * @param position Parameter group.
      * @param numberOfClosestPoints The number of closest points expected from response. Default: 1, minimum: 1 and
      *     maximum: 50.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -588,8 +555,8 @@ public final class SpatialAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<ClosestPointResponse> getClosestPoint(
-            ResponseFormat format, String udid, float latitude, float longitude, Integer numberOfClosestPoints) {
-        return this.serviceClient.getClosestPointAsync(format, udid, latitude, longitude, numberOfClosestPoints);
+            JsonFormat format, String udid, Position position, Integer numberOfClosestPoints) {
+        return this.serviceClient.getClosestPointAsync(format, udid, position, numberOfClosestPoints);
     }
 
     /**
@@ -603,24 +570,19 @@ public final class SpatialAsyncClient {
      * form a Polygon is 10,000.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param latitude The latitude of the location being passed. Example: 48.36.
-     * @param longitude The longitude of the location being passed. Example: -124.63.
      * @param pointInPolygonRequestBody A FeatureCollection with a set of Polygon/MultiPolygon geometries. The maximum
      *     number of vertices accepted to form a Polygon is 10,000. All the feature's properties should contain
      *     `geometryId`, which is used for identifying the geometry and is case-sensitive.
+     * @param position Parameter group.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return returns true if point is within the polygon, false otherwise.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<PointInPolygonResponse>> postPointInPolygonWithResponse(
-            ResponseFormat format,
-            float latitude,
-            float longitude,
-            GeoJsonFeatureCollection pointInPolygonRequestBody) {
-        return this.serviceClient.postPointInPolygonWithResponseAsync(
-                format, latitude, longitude, pointInPolygonRequestBody);
+    public Mono<Response<PointInPolygonResult>> postPointInPolygonWithResponse(
+            JsonFormat format, GeoJsonFeatureCollection pointInPolygonRequestBody, Position position) {
+        return this.serviceClient.postPointInPolygonWithResponseAsync(format, pointInPolygonRequestBody, position);
     }
 
     /**
@@ -634,23 +596,19 @@ public final class SpatialAsyncClient {
      * form a Polygon is 10,000.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param latitude The latitude of the location being passed. Example: 48.36.
-     * @param longitude The longitude of the location being passed. Example: -124.63.
      * @param pointInPolygonRequestBody A FeatureCollection with a set of Polygon/MultiPolygon geometries. The maximum
      *     number of vertices accepted to form a Polygon is 10,000. All the feature's properties should contain
      *     `geometryId`, which is used for identifying the geometry and is case-sensitive.
+     * @param position Parameter group.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return returns true if point is within the polygon, false otherwise.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<PointInPolygonResponse> postPointInPolygon(
-            ResponseFormat format,
-            float latitude,
-            float longitude,
-            GeoJsonFeatureCollection pointInPolygonRequestBody) {
-        return this.serviceClient.postPointInPolygonAsync(format, latitude, longitude, pointInPolygonRequestBody);
+    public Mono<PointInPolygonResult> postPointInPolygon(
+            JsonFormat format, GeoJsonFeatureCollection pointInPolygonRequestBody, Position position) {
+        return this.serviceClient.postPointInPolygonAsync(format, pointInPolygonRequestBody, position);
     }
 
     /**
@@ -678,17 +636,16 @@ public final class SpatialAsyncClient {
      *     FeatureCollection object. Please refer to [RFC 7946](https://tools.ietf.org/html/rfc7946#section-3.3) for
      *     details. All the feature's properties should contain `geometryId`, which is used for identifying the geometry
      *     and is case-sensitive.
-     * @param latitude The latitude of the location being passed. Example: 48.36.
-     * @param longitude The longitude of the location being passed. Example: -124.63.
+     * @param position Parameter group.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return returns true if point is within the polygon, false otherwise.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<PointInPolygonResponse>> getPointInPolygonWithResponse(
-            ResponseFormat format, String udid, float latitude, float longitude) {
-        return this.serviceClient.getPointInPolygonWithResponseAsync(format, udid, latitude, longitude);
+    public Mono<Response<PointInPolygonResult>> evaluatePointInPolygonWithResponse(
+            JsonFormat format, String udid, Position position) {
+        return this.serviceClient.evaluatePointInPolygonWithResponseAsync(format, udid, position);
     }
 
     /**
@@ -716,17 +673,15 @@ public final class SpatialAsyncClient {
      *     FeatureCollection object. Please refer to [RFC 7946](https://tools.ietf.org/html/rfc7946#section-3.3) for
      *     details. All the feature's properties should contain `geometryId`, which is used for identifying the geometry
      *     and is case-sensitive.
-     * @param latitude The latitude of the location being passed. Example: 48.36.
-     * @param longitude The longitude of the location being passed. Example: -124.63.
+     * @param position Parameter group.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return returns true if point is within the polygon, false otherwise.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<PointInPolygonResponse> getPointInPolygon(
-            ResponseFormat format, String udid, float latitude, float longitude) {
-        return this.serviceClient.getPointInPolygonAsync(format, udid, latitude, longitude);
+    public Mono<PointInPolygonResult> evaluatePointInPolygon(JsonFormat format, String udid, Position position) {
+        return this.serviceClient.evaluatePointInPolygonAsync(format, udid, position);
     }
 
     /**
@@ -747,8 +702,8 @@ public final class SpatialAsyncClient {
      * @return this object is returned from a successful Great Circle Distance call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<GreatCircleDistanceResponse>> getGreatCircleDistanceWithResponse(
-            ResponseFormat format, String query) {
+    public Mono<Response<GreatCircleDistanceResult>> getGreatCircleDistanceWithResponse(
+            JsonFormat format, String query) {
         return this.serviceClient.getGreatCircleDistanceWithResponseAsync(format, query);
     }
 
@@ -770,7 +725,7 @@ public final class SpatialAsyncClient {
      * @return this object is returned from a successful Great Circle Distance call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<GreatCircleDistanceResponse> getGreatCircleDistance(ResponseFormat format, String query) {
+    public Mono<GreatCircleDistanceResult> getGreatCircleDistance(JsonFormat format, String query) {
         return this.serviceClient.getGreatCircleDistanceAsync(format, query);
     }
 }

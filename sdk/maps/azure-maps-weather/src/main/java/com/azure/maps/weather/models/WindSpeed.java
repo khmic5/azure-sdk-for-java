@@ -28,7 +28,7 @@ public final class WindSpeed {
      * Concepts](https://aka.ms/AzureMapsWeatherConcepts) for details.
      */
     @JsonProperty(value = "unitType")
-    private Integer unitType;
+    private UnitType unitType;
 
     /**
      * Get the value property: Rounded value of the speed.
@@ -77,7 +77,7 @@ public final class WindSpeed {
      *
      * @return the unitType value.
      */
-    public Integer getUnitType() {
+    public UnitType getUnitType() {
         return this.unitType;
     }
 
@@ -89,7 +89,7 @@ public final class WindSpeed {
      * @param unitType the unitType value to set.
      * @return the WindSpeed object itself.
      */
-    public WindSpeed setUnitType(Integer unitType) {
+    public WindSpeed setUnitType(UnitType unitType) {
         this.unitType = unitType;
         return this;
     }

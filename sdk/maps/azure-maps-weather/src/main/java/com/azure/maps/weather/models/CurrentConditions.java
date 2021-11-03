@@ -23,7 +23,7 @@ public final class CurrentConditions {
      * specified language.
      */
     @JsonProperty(value = "phrase")
-    private String phrase;
+    private String description;
 
     /*
      * Numeric value representing an image that displays the `iconPhrase`.
@@ -31,7 +31,7 @@ public final class CurrentConditions {
      * Concepts](https://aka.ms/AzureMapsWeatherConcepts) for details.
      */
     @JsonProperty(value = "iconCode")
-    private Integer iconCode;
+    private IconCode iconCode;
 
     /*
      * Indicates the presence or absence of precipitation. True indicates the
@@ -45,26 +45,26 @@ public final class CurrentConditions {
      * 'night.
      */
     @JsonProperty(value = "isDayTime")
-    private Boolean isDayTime;
+    private Boolean isDaytime;
 
     /*
      * Temperature being returned.
      */
     @JsonProperty(value = "temperature")
-    private WeatherUnit temperature;
+    private WeatherValue temperature;
 
     /*
      * RealFeel™ Temperature being returned.
      */
     @JsonProperty(value = "realFeelTemperature")
-    private WeatherUnit realFeelTemperature;
+    private WeatherValue realFeelTemperature;
 
     /*
      * RealFeel™ Temperature being returned. Describes what the temperature
      * really feels like in the shade.
      */
     @JsonProperty(value = "realFeelTemperatureShade")
-    private WeatherUnit realFeelTemperatureShade;
+    private WeatherValue realFeelTemperatureShade;
 
     /*
      * Relative humidity is the amount of water vapor present in air expressed
@@ -80,7 +80,7 @@ public final class CurrentConditions {
      * saturation.
      */
     @JsonProperty(value = "dewPoint")
-    private WeatherUnit dewPoint;
+    private WeatherValue dewPoint;
 
     /*
      * Wind details being returned including speed and direction.
@@ -110,14 +110,14 @@ public final class CurrentConditions {
      * Phrase associated with the `uvIndex`.
      */
     @JsonProperty(value = "uvIndexPhrase")
-    private String uvIndexPhrase;
+    private String uvIndexDescription;
 
     /*
      * Visibility in specified unit. A measure of the distance at which an
      * object or light can be clearly discerned.
      */
     @JsonProperty(value = "visibility")
-    private WeatherUnit visibility;
+    private WeatherValue visibility;
 
     /*
      * Cause of limited visibility.
@@ -136,13 +136,13 @@ public final class CurrentConditions {
      * height of the base of the lowest clouds.
      */
     @JsonProperty(value = "ceiling")
-    private WeatherUnit ceiling;
+    private WeatherValue cloudCeiling;
 
     /*
      * Atmospheric pressure in specified unit.
      */
     @JsonProperty(value = "pressure")
-    private WeatherUnit pressure;
+    private WeatherValue pressure;
 
     /*
      * Atmospheric pressure change.
@@ -153,28 +153,28 @@ public final class CurrentConditions {
     /*
      * Departure from the temperature observed 24 hours ago in specified unit.
      */
-    @JsonProperty(value = "past24HourTemperatureDeparture")
-    private WeatherUnit past24HourTemperatureDeparture;
+    @JsonProperty(value = "pastTwentyFourHourTemperatureDeparture")
+    private WeatherValue pastTwentyFourHourTemperatureDeparture;
 
     /*
      * Perceived outdoor temperature caused by the combination of air
      * temperature, relative humidity, and wind speed in specified unit.
      */
     @JsonProperty(value = "apparentTemperature")
-    private WeatherUnit apparentTemperature;
+    private WeatherValue apparentTemperature;
 
     /*
      * Perceived air temperature on exposed skin due to wind.
      */
     @JsonProperty(value = "windChillTemperature")
-    private WeatherUnit windChillTemperature;
+    private WeatherValue windChillTemperature;
 
     /*
      * The temperature to which air may be cooled by evaporating water into it
      * at constant pressure until it reaches saturation.
      */
     @JsonProperty(value = "wetBulbTemperature")
-    private WeatherUnit wetBulbTemperature;
+    private WeatherValue wetBulbTemperature;
 
     /*
      * Summary of precipitation amounts over the past 24 hours.
@@ -211,22 +211,24 @@ public final class CurrentConditions {
     }
 
     /**
-     * Get the phrase property: Phrase description of the current weather condition. Displayed in specified language.
+     * Get the description property: Phrase description of the current weather condition. Displayed in specified
+     * language.
      *
-     * @return the phrase value.
+     * @return the description value.
      */
-    public String getPhrase() {
-        return this.phrase;
+    public String getDescription() {
+        return this.description;
     }
 
     /**
-     * Set the phrase property: Phrase description of the current weather condition. Displayed in specified language.
+     * Set the description property: Phrase description of the current weather condition. Displayed in specified
+     * language.
      *
-     * @param phrase the phrase value to set.
+     * @param description the description value to set.
      * @return the CurrentConditions object itself.
      */
-    public CurrentConditions setPhrase(String phrase) {
-        this.phrase = phrase;
+    public CurrentConditions setDescription(String description) {
+        this.description = description;
         return this;
     }
 
@@ -236,7 +238,7 @@ public final class CurrentConditions {
      *
      * @return the iconCode value.
      */
-    public Integer getIconCode() {
+    public IconCode getIconCode() {
         return this.iconCode;
     }
 
@@ -247,7 +249,7 @@ public final class CurrentConditions {
      * @param iconCode the iconCode value to set.
      * @return the CurrentConditions object itself.
      */
-    public CurrentConditions setIconCode(Integer iconCode) {
+    public CurrentConditions setIconCode(IconCode iconCode) {
         this.iconCode = iconCode;
         return this;
     }
@@ -275,22 +277,22 @@ public final class CurrentConditions {
     }
 
     /**
-     * Get the isDayTime property: Indicates the time of the day. True indicates 'day',', false indicates 'night.
+     * Get the isDaytime property: Indicates the time of the day. True indicates 'day',', false indicates 'night.
      *
-     * @return the isDayTime value.
+     * @return the isDaytime value.
      */
-    public Boolean isDayTime() {
-        return this.isDayTime;
+    public Boolean isDaytime() {
+        return this.isDaytime;
     }
 
     /**
-     * Set the isDayTime property: Indicates the time of the day. True indicates 'day',', false indicates 'night.
+     * Set the isDaytime property: Indicates the time of the day. True indicates 'day',', false indicates 'night.
      *
-     * @param isDayTime the isDayTime value to set.
+     * @param isDaytime the isDaytime value to set.
      * @return the CurrentConditions object itself.
      */
-    public CurrentConditions setIsDayTime(Boolean isDayTime) {
-        this.isDayTime = isDayTime;
+    public CurrentConditions setIsDaytime(Boolean isDaytime) {
+        this.isDaytime = isDaytime;
         return this;
     }
 
@@ -299,7 +301,7 @@ public final class CurrentConditions {
      *
      * @return the temperature value.
      */
-    public WeatherUnit getTemperature() {
+    public WeatherValue getTemperature() {
         return this.temperature;
     }
 
@@ -309,7 +311,7 @@ public final class CurrentConditions {
      * @param temperature the temperature value to set.
      * @return the CurrentConditions object itself.
      */
-    public CurrentConditions setTemperature(WeatherUnit temperature) {
+    public CurrentConditions setTemperature(WeatherValue temperature) {
         this.temperature = temperature;
         return this;
     }
@@ -319,7 +321,7 @@ public final class CurrentConditions {
      *
      * @return the realFeelTemperature value.
      */
-    public WeatherUnit getRealFeelTemperature() {
+    public WeatherValue getRealFeelTemperature() {
         return this.realFeelTemperature;
     }
 
@@ -329,7 +331,7 @@ public final class CurrentConditions {
      * @param realFeelTemperature the realFeelTemperature value to set.
      * @return the CurrentConditions object itself.
      */
-    public CurrentConditions setRealFeelTemperature(WeatherUnit realFeelTemperature) {
+    public CurrentConditions setRealFeelTemperature(WeatherValue realFeelTemperature) {
         this.realFeelTemperature = realFeelTemperature;
         return this;
     }
@@ -340,7 +342,7 @@ public final class CurrentConditions {
      *
      * @return the realFeelTemperatureShade value.
      */
-    public WeatherUnit getRealFeelTemperatureShade() {
+    public WeatherValue getRealFeelTemperatureShade() {
         return this.realFeelTemperatureShade;
     }
 
@@ -351,7 +353,7 @@ public final class CurrentConditions {
      * @param realFeelTemperatureShade the realFeelTemperatureShade value to set.
      * @return the CurrentConditions object itself.
      */
-    public CurrentConditions setRealFeelTemperatureShade(WeatherUnit realFeelTemperatureShade) {
+    public CurrentConditions setRealFeelTemperatureShade(WeatherValue realFeelTemperatureShade) {
         this.realFeelTemperatureShade = realFeelTemperatureShade;
         return this;
     }
@@ -384,7 +386,7 @@ public final class CurrentConditions {
      *
      * @return the dewPoint value.
      */
-    public WeatherUnit getDewPoint() {
+    public WeatherValue getDewPoint() {
         return this.dewPoint;
     }
 
@@ -395,7 +397,7 @@ public final class CurrentConditions {
      * @param dewPoint the dewPoint value to set.
      * @return the CurrentConditions object itself.
      */
-    public CurrentConditions setDewPoint(WeatherUnit dewPoint) {
+    public CurrentConditions setDewPoint(WeatherValue dewPoint) {
         this.dewPoint = dewPoint;
         return this;
     }
@@ -467,22 +469,22 @@ public final class CurrentConditions {
     }
 
     /**
-     * Get the uvIndexPhrase property: Phrase associated with the `uvIndex`.
+     * Get the uvIndexDescription property: Phrase associated with the `uvIndex`.
      *
-     * @return the uvIndexPhrase value.
+     * @return the uvIndexDescription value.
      */
-    public String getUvIndexPhrase() {
-        return this.uvIndexPhrase;
+    public String getUvIndexDescription() {
+        return this.uvIndexDescription;
     }
 
     /**
-     * Set the uvIndexPhrase property: Phrase associated with the `uvIndex`.
+     * Set the uvIndexDescription property: Phrase associated with the `uvIndex`.
      *
-     * @param uvIndexPhrase the uvIndexPhrase value to set.
+     * @param uvIndexDescription the uvIndexDescription value to set.
      * @return the CurrentConditions object itself.
      */
-    public CurrentConditions setUvIndexPhrase(String uvIndexPhrase) {
-        this.uvIndexPhrase = uvIndexPhrase;
+    public CurrentConditions setUvIndexDescription(String uvIndexDescription) {
+        this.uvIndexDescription = uvIndexDescription;
         return this;
     }
 
@@ -492,7 +494,7 @@ public final class CurrentConditions {
      *
      * @return the visibility value.
      */
-    public WeatherUnit getVisibility() {
+    public WeatherValue getVisibility() {
         return this.visibility;
     }
 
@@ -503,7 +505,7 @@ public final class CurrentConditions {
      * @param visibility the visibility value to set.
      * @return the CurrentConditions object itself.
      */
-    public CurrentConditions setVisibility(WeatherUnit visibility) {
+    public CurrentConditions setVisibility(WeatherValue visibility) {
         this.visibility = visibility;
         return this;
     }
@@ -549,24 +551,24 @@ public final class CurrentConditions {
     }
 
     /**
-     * Get the ceiling property: Cloud ceiling in specified unit. The ceiling is a measurement of the height of the base
-     * of the lowest clouds.
+     * Get the cloudCeiling property: Cloud ceiling in specified unit. The ceiling is a measurement of the height of the
+     * base of the lowest clouds.
      *
-     * @return the ceiling value.
+     * @return the cloudCeiling value.
      */
-    public WeatherUnit getCeiling() {
-        return this.ceiling;
+    public WeatherValue getCloudCeiling() {
+        return this.cloudCeiling;
     }
 
     /**
-     * Set the ceiling property: Cloud ceiling in specified unit. The ceiling is a measurement of the height of the base
-     * of the lowest clouds.
+     * Set the cloudCeiling property: Cloud ceiling in specified unit. The ceiling is a measurement of the height of the
+     * base of the lowest clouds.
      *
-     * @param ceiling the ceiling value to set.
+     * @param cloudCeiling the cloudCeiling value to set.
      * @return the CurrentConditions object itself.
      */
-    public CurrentConditions setCeiling(WeatherUnit ceiling) {
-        this.ceiling = ceiling;
+    public CurrentConditions setCloudCeiling(WeatherValue cloudCeiling) {
+        this.cloudCeiling = cloudCeiling;
         return this;
     }
 
@@ -575,7 +577,7 @@ public final class CurrentConditions {
      *
      * @return the pressure value.
      */
-    public WeatherUnit getPressure() {
+    public WeatherValue getPressure() {
         return this.pressure;
     }
 
@@ -585,7 +587,7 @@ public final class CurrentConditions {
      * @param pressure the pressure value to set.
      * @return the CurrentConditions object itself.
      */
-    public CurrentConditions setPressure(WeatherUnit pressure) {
+    public CurrentConditions setPressure(WeatherValue pressure) {
         this.pressure = pressure;
         return this;
     }
@@ -611,24 +613,25 @@ public final class CurrentConditions {
     }
 
     /**
-     * Get the past24HourTemperatureDeparture property: Departure from the temperature observed 24 hours ago in
+     * Get the pastTwentyFourHourTemperatureDeparture property: Departure from the temperature observed 24 hours ago in
      * specified unit.
      *
-     * @return the past24HourTemperatureDeparture value.
+     * @return the pastTwentyFourHourTemperatureDeparture value.
      */
-    public WeatherUnit getPast24HourTemperatureDeparture() {
-        return this.past24HourTemperatureDeparture;
+    public WeatherValue getPastTwentyFourHourTemperatureDeparture() {
+        return this.pastTwentyFourHourTemperatureDeparture;
     }
 
     /**
-     * Set the past24HourTemperatureDeparture property: Departure from the temperature observed 24 hours ago in
+     * Set the pastTwentyFourHourTemperatureDeparture property: Departure from the temperature observed 24 hours ago in
      * specified unit.
      *
-     * @param past24HourTemperatureDeparture the past24HourTemperatureDeparture value to set.
+     * @param pastTwentyFourHourTemperatureDeparture the pastTwentyFourHourTemperatureDeparture value to set.
      * @return the CurrentConditions object itself.
      */
-    public CurrentConditions setPast24HourTemperatureDeparture(WeatherUnit past24HourTemperatureDeparture) {
-        this.past24HourTemperatureDeparture = past24HourTemperatureDeparture;
+    public CurrentConditions setPastTwentyFourHourTemperatureDeparture(
+            WeatherValue pastTwentyFourHourTemperatureDeparture) {
+        this.pastTwentyFourHourTemperatureDeparture = pastTwentyFourHourTemperatureDeparture;
         return this;
     }
 
@@ -638,7 +641,7 @@ public final class CurrentConditions {
      *
      * @return the apparentTemperature value.
      */
-    public WeatherUnit getApparentTemperature() {
+    public WeatherValue getApparentTemperature() {
         return this.apparentTemperature;
     }
 
@@ -649,7 +652,7 @@ public final class CurrentConditions {
      * @param apparentTemperature the apparentTemperature value to set.
      * @return the CurrentConditions object itself.
      */
-    public CurrentConditions setApparentTemperature(WeatherUnit apparentTemperature) {
+    public CurrentConditions setApparentTemperature(WeatherValue apparentTemperature) {
         this.apparentTemperature = apparentTemperature;
         return this;
     }
@@ -659,7 +662,7 @@ public final class CurrentConditions {
      *
      * @return the windChillTemperature value.
      */
-    public WeatherUnit getWindChillTemperature() {
+    public WeatherValue getWindChillTemperature() {
         return this.windChillTemperature;
     }
 
@@ -669,7 +672,7 @@ public final class CurrentConditions {
      * @param windChillTemperature the windChillTemperature value to set.
      * @return the CurrentConditions object itself.
      */
-    public CurrentConditions setWindChillTemperature(WeatherUnit windChillTemperature) {
+    public CurrentConditions setWindChillTemperature(WeatherValue windChillTemperature) {
         this.windChillTemperature = windChillTemperature;
         return this;
     }
@@ -680,7 +683,7 @@ public final class CurrentConditions {
      *
      * @return the wetBulbTemperature value.
      */
-    public WeatherUnit getWetBulbTemperature() {
+    public WeatherValue getWetBulbTemperature() {
         return this.wetBulbTemperature;
     }
 
@@ -691,7 +694,7 @@ public final class CurrentConditions {
      * @param wetBulbTemperature the wetBulbTemperature value to set.
      * @return the CurrentConditions object itself.
      */
-    public CurrentConditions setWetBulbTemperature(WeatherUnit wetBulbTemperature) {
+    public CurrentConditions setWetBulbTemperature(WeatherValue wetBulbTemperature) {
         this.wetBulbTemperature = wetBulbTemperature;
         return this;
     }

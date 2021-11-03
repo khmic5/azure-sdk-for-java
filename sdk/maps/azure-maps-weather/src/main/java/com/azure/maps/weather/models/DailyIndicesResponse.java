@@ -4,17 +4,17 @@
 
 package com.azure.maps.weather.models;
 
-import com.azure.core.annotation.Fluent;
+import com.azure.core.annotation.Immutable;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /** This object is returned from a successful Get Daily Indices call. */
-@Fluent
+@Immutable
 public final class DailyIndicesResponse {
     /*
      * A list of all daily indices for the queried location.
      */
-    @JsonProperty(value = "results")
+    @JsonProperty(value = "results", access = JsonProperty.Access.WRITE_ONLY)
     private List<DailyIndex> results;
 
     /**
@@ -24,16 +24,5 @@ public final class DailyIndicesResponse {
      */
     public List<DailyIndex> getResults() {
         return this.results;
-    }
-
-    /**
-     * Set the results property: A list of all daily indices for the queried location.
-     *
-     * @param results the results value to set.
-     * @return the DailyIndicesResponse object itself.
-     */
-    public DailyIndicesResponse setResults(List<DailyIndex> results) {
-        this.results = results;
-        return this;
     }
 }

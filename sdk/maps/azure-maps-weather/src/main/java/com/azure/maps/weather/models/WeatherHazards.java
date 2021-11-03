@@ -20,13 +20,13 @@ public final class WeatherHazards {
      * * `4` - Life threatening, emergency.
      */
     @JsonProperty(value = "maxHazardIndex")
-    private Integer maxHazardIndex;
+    private HazardIndex maxHazardIndex;
 
     /*
      * Details of the weather hazards affecting the trip.
      */
     @JsonProperty(value = "hazardDetails")
-    private List<HazardDetail> hazardDetails;
+    private List<HazardDetail> details;
 
     /**
      * Get the maxHazardIndex property: A severity/hazard index. * `0` - No hazard. * `1` - Be informed, be aware. * `2`
@@ -34,7 +34,7 @@ public final class WeatherHazards {
      *
      * @return the maxHazardIndex value.
      */
-    public Integer getMaxHazardIndex() {
+    public HazardIndex getMaxHazardIndex() {
         return this.maxHazardIndex;
     }
 
@@ -45,28 +45,28 @@ public final class WeatherHazards {
      * @param maxHazardIndex the maxHazardIndex value to set.
      * @return the WeatherHazards object itself.
      */
-    public WeatherHazards setMaxHazardIndex(Integer maxHazardIndex) {
+    public WeatherHazards setMaxHazardIndex(HazardIndex maxHazardIndex) {
         this.maxHazardIndex = maxHazardIndex;
         return this;
     }
 
     /**
-     * Get the hazardDetails property: Details of the weather hazards affecting the trip.
+     * Get the details property: Details of the weather hazards affecting the trip.
      *
-     * @return the hazardDetails value.
+     * @return the details value.
      */
-    public List<HazardDetail> getHazardDetails() {
-        return this.hazardDetails;
+    public List<HazardDetail> getDetails() {
+        return this.details;
     }
 
     /**
-     * Set the hazardDetails property: Details of the weather hazards affecting the trip.
+     * Set the details property: Details of the weather hazards affecting the trip.
      *
-     * @param hazardDetails the hazardDetails value to set.
+     * @param details the details value to set.
      * @return the WeatherHazards object itself.
      */
-    public WeatherHazards setHazardDetails(List<HazardDetail> hazardDetails) {
-        this.hazardDetails = hazardDetails;
+    public WeatherHazards setDetails(List<HazardDetail> details) {
+        this.details = details;
         return this;
     }
 }

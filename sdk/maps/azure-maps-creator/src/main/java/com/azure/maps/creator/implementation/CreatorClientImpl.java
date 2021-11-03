@@ -9,28 +9,31 @@ import com.azure.core.http.HttpPipelineBuilder;
 import com.azure.core.http.policy.CookiePolicy;
 import com.azure.core.http.policy.RetryPolicy;
 import com.azure.core.http.policy.UserAgentPolicy;
+import com.azure.core.util.logging.ClientLogger;
 import com.azure.core.util.serializer.JacksonAdapter;
 import com.azure.core.util.serializer.SerializerAdapter;
 import com.azure.maps.creator.models.Geography;
 
 /** Initializes a new instance of the CreatorClient type. */
 public final class CreatorClientImpl {
+    private final ClientLogger logger = new ClientLogger(CreatorClientImpl.class);
+
     /**
      * Specifies which account is intended for usage in conjunction with the Azure AD security model. It represents a
      * unique ID for the Azure Maps account and can be retrieved from the Azure Maps management plane Account API. To
      * use Azure AD security in Azure Maps see the following [articles](https://aka.ms/amauthdetails) for guidance.
      */
-    private final String xMsClientId;
+    private final String clientId;
 
     /**
      * Gets Specifies which account is intended for usage in conjunction with the Azure AD security model. It represents
      * a unique ID for the Azure Maps account and can be retrieved from the Azure Maps management plane Account API. To
      * use Azure AD security in Azure Maps see the following [articles](https://aka.ms/amauthdetails) for guidance.
      *
-     * @return the xMsClientId value.
+     * @return the clientId value.
      */
-    public String getXMsClientId() {
-        return this.xMsClientId;
+    public String getClientId() {
+        return this.clientId;
     }
 
     /** This parameter specifies where the Azure Maps Creator resource is located. Valid values are us and eu. */
@@ -69,16 +72,16 @@ public final class CreatorClientImpl {
         return this.serializerAdapter;
     }
 
-    /** The AliasImpl object to access its operations. */
-    private final AliasImpl alias;
+    /** The AliasOperationsImpl object to access its operations. */
+    private final AliasOperationsImpl aliasOperations;
 
     /**
-     * Gets the AliasImpl object to access its operations.
+     * Gets the AliasOperationsImpl object to access its operations.
      *
-     * @return the AliasImpl object.
+     * @return the AliasOperationsImpl object.
      */
-    public AliasImpl getAlias() {
-        return this.alias;
+    public AliasOperationsImpl getAliasOperations() {
+        return this.aliasOperations;
     }
 
     /** The DatasImpl object to access its operations. */
@@ -168,20 +171,20 @@ public final class CreatorClientImpl {
     /**
      * Initializes an instance of CreatorClient client.
      *
-     * @param xMsClientId Specifies which account is intended for usage in conjunction with the Azure AD security model.
-     *     It represents a unique ID for the Azure Maps account and can be retrieved from the Azure Maps management
-     *     plane Account API. To use Azure AD security in Azure Maps see the following
+     * @param clientId Specifies which account is intended for usage in conjunction with the Azure AD security model. It
+     *     represents a unique ID for the Azure Maps account and can be retrieved from the Azure Maps management plane
+     *     Account API. To use Azure AD security in Azure Maps see the following
      *     [articles](https://aka.ms/amauthdetails) for guidance.
      * @param geography This parameter specifies where the Azure Maps Creator resource is located. Valid values are us
      *     and eu.
      */
-    public CreatorClientImpl(String xMsClientId, Geography geography) {
+    public CreatorClientImpl(String clientId, Geography geography) {
         this(
                 new HttpPipelineBuilder()
                         .policies(new UserAgentPolicy(), new RetryPolicy(), new CookiePolicy())
                         .build(),
                 JacksonAdapter.createDefaultSerializerAdapter(),
-                xMsClientId,
+                clientId,
                 geography);
     }
 
@@ -189,15 +192,15 @@ public final class CreatorClientImpl {
      * Initializes an instance of CreatorClient client.
      *
      * @param httpPipeline The HTTP pipeline to send requests through.
-     * @param xMsClientId Specifies which account is intended for usage in conjunction with the Azure AD security model.
-     *     It represents a unique ID for the Azure Maps account and can be retrieved from the Azure Maps management
-     *     plane Account API. To use Azure AD security in Azure Maps see the following
+     * @param clientId Specifies which account is intended for usage in conjunction with the Azure AD security model. It
+     *     represents a unique ID for the Azure Maps account and can be retrieved from the Azure Maps management plane
+     *     Account API. To use Azure AD security in Azure Maps see the following
      *     [articles](https://aka.ms/amauthdetails) for guidance.
      * @param geography This parameter specifies where the Azure Maps Creator resource is located. Valid values are us
      *     and eu.
      */
-    public CreatorClientImpl(HttpPipeline httpPipeline, String xMsClientId, Geography geography) {
-        this(httpPipeline, JacksonAdapter.createDefaultSerializerAdapter(), xMsClientId, geography);
+    public CreatorClientImpl(HttpPipeline httpPipeline, String clientId, Geography geography) {
+        this(httpPipeline, JacksonAdapter.createDefaultSerializerAdapter(), clientId, geography);
     }
 
     /**
@@ -205,20 +208,20 @@ public final class CreatorClientImpl {
      *
      * @param httpPipeline The HTTP pipeline to send requests through.
      * @param serializerAdapter The serializer to serialize an object into a string.
-     * @param xMsClientId Specifies which account is intended for usage in conjunction with the Azure AD security model.
-     *     It represents a unique ID for the Azure Maps account and can be retrieved from the Azure Maps management
-     *     plane Account API. To use Azure AD security in Azure Maps see the following
+     * @param clientId Specifies which account is intended for usage in conjunction with the Azure AD security model. It
+     *     represents a unique ID for the Azure Maps account and can be retrieved from the Azure Maps management plane
+     *     Account API. To use Azure AD security in Azure Maps see the following
      *     [articles](https://aka.ms/amauthdetails) for guidance.
      * @param geography This parameter specifies where the Azure Maps Creator resource is located. Valid values are us
      *     and eu.
      */
     public CreatorClientImpl(
-            HttpPipeline httpPipeline, SerializerAdapter serializerAdapter, String xMsClientId, Geography geography) {
+            HttpPipeline httpPipeline, SerializerAdapter serializerAdapter, String clientId, Geography geography) {
         this.httpPipeline = httpPipeline;
         this.serializerAdapter = serializerAdapter;
-        this.xMsClientId = xMsClientId;
+        this.clientId = clientId;
         this.geography = geography;
-        this.alias = new AliasImpl(this);
+        this.aliasOperations = new AliasOperationsImpl(this);
         this.datas = new DatasImpl(this);
         this.datasets = new DatasetsImpl(this);
         this.conversions = new ConversionsImpl(this);

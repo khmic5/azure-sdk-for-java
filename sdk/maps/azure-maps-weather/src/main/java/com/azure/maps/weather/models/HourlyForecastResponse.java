@@ -4,17 +4,17 @@
 
 package com.azure.maps.weather.models;
 
-import com.azure.core.annotation.Fluent;
+import com.azure.core.annotation.Immutable;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /** The HourlyForecastResponse model. */
-@Fluent
+@Immutable
 public final class HourlyForecastResponse {
     /*
      * Forecast data for each returned hour.
      */
-    @JsonProperty(value = "forecasts")
+    @JsonProperty(value = "forecasts", access = JsonProperty.Access.WRITE_ONLY)
     private List<HourlyForecast> forecasts;
 
     /**
@@ -24,16 +24,5 @@ public final class HourlyForecastResponse {
      */
     public List<HourlyForecast> getForecasts() {
         return this.forecasts;
-    }
-
-    /**
-     * Set the forecasts property: Forecast data for each returned hour.
-     *
-     * @param forecasts the forecasts value to set.
-     * @return the HourlyForecastResponse object itself.
-     */
-    public HourlyForecastResponse setForecasts(List<HourlyForecast> forecasts) {
-        this.forecasts = forecasts;
-        return this;
     }
 }

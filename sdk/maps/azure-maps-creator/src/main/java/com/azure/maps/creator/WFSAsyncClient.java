@@ -9,14 +9,15 @@ import com.azure.core.annotation.ServiceClient;
 import com.azure.core.annotation.ServiceMethod;
 import com.azure.core.http.rest.Response;
 import com.azure.maps.creator.implementation.WFSImpl;
-import com.azure.maps.creator.models.CollectionDefinitionResponse;
-import com.azure.maps.creator.models.CollectionInfo;
+import com.azure.maps.creator.models.Collection;
+import com.azure.maps.creator.models.CollectionDefinition;
 import com.azure.maps.creator.models.CollectionsResponse;
-import com.azure.maps.creator.models.ConformanceResponse;
+import com.azure.maps.creator.models.ConformanceResult;
 import com.azure.maps.creator.models.ErrorResponseException;
 import com.azure.maps.creator.models.ExtendedGeoJsonFeatureCollection;
-import com.azure.maps.creator.models.FeatureResponse;
-import com.azure.maps.creator.models.LandingPageResponse;
+import com.azure.maps.creator.models.FeatureResult;
+import com.azure.maps.creator.models.LandingPageResult;
+import java.util.List;
 import reactor.core.publisher.Mono;
 
 /** Initializes a new instance of the asynchronous CreatorClient type. */
@@ -54,7 +55,7 @@ public final class WFSAsyncClient {
      * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<LandingPageResponse>> getLandingPageWithResponse(String datasetId) {
+    public Mono<Response<LandingPageResult>> getLandingPageWithResponse(String datasetId) {
         return this.serviceClient.getLandingPageWithResponseAsync(datasetId);
     }
 
@@ -79,7 +80,7 @@ public final class WFSAsyncClient {
      * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<LandingPageResponse> getLandingPage(String datasetId) {
+    public Mono<LandingPageResult> getLandingPage(String datasetId) {
         return this.serviceClient.getLandingPageAsync(datasetId);
     }
 
@@ -104,8 +105,8 @@ public final class WFSAsyncClient {
      * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<ConformanceResponse>> getConformanceWithResponse(String datasetId) {
-        return this.serviceClient.getConformanceWithResponseAsync(datasetId);
+    public Mono<Response<ConformanceResult>> listConformanceWithResponse(String datasetId) {
+        return this.serviceClient.listConformanceWithResponseAsync(datasetId);
     }
 
     /**
@@ -129,8 +130,8 @@ public final class WFSAsyncClient {
      * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<ConformanceResponse> getConformance(String datasetId) {
-        return this.serviceClient.getConformanceAsync(datasetId);
+    public Mono<ConformanceResult> listConformance(String datasetId) {
+        return this.serviceClient.listConformanceAsync(datasetId);
     }
 
     /**
@@ -205,7 +206,7 @@ public final class WFSAsyncClient {
      * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<CollectionInfo>> getCollectionWithResponse(String datasetId, String collectionId) {
+    public Mono<Response<Collection>> getCollectionWithResponse(String datasetId, String collectionId) {
         return this.serviceClient.getCollectionWithResponseAsync(datasetId, collectionId);
     }
 
@@ -233,7 +234,7 @@ public final class WFSAsyncClient {
      * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<CollectionInfo> getCollection(String datasetId, String collectionId) {
+    public Mono<Collection> getCollection(String datasetId, String collectionId) {
         return this.serviceClient.getCollectionAsync(datasetId, collectionId);
     }
 
@@ -261,7 +262,7 @@ public final class WFSAsyncClient {
      * @return collection of GeoJSON features.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<CollectionDefinitionResponse>> getCollectionDefinitionWithResponse(
+    public Mono<Response<CollectionDefinition>> getCollectionDefinitionWithResponse(
             String datasetId, String collectionId) {
         return this.serviceClient.getCollectionDefinitionWithResponseAsync(datasetId, collectionId);
     }
@@ -290,7 +291,7 @@ public final class WFSAsyncClient {
      * @return collection of GeoJSON features.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<CollectionDefinitionResponse> getCollectionDefinition(String datasetId, String collectionId) {
+    public Mono<CollectionDefinition> getCollectionDefinition(String datasetId, String collectionId) {
         return this.serviceClient.getCollectionDefinitionAsync(datasetId, collectionId);
     }
 
@@ -313,9 +314,9 @@ public final class WFSAsyncClient {
      *     document. Only features that are on the first level of the collection in the response document are counted.
      *     Nested objects contained within the explicitly requested features shall not be counted. * Minimum = 1 *
      *     Maximum = 500 * Default = 10.
-     * @param bbox Only features that have a geometry that intersects the supplied bounding box are selected. * Lower
-     *     left corner, coordinate axis 1 * Lower left corner, coordinate axis 2 * Upper right corner, coordinate axis 1
-     *     * Upper right corner, coordinate axis 2 The coordinate reference system of the values is WGS84
+     * @param boundingBox Only features that have a geometry that intersects the supplied bounding box are selected. *
+     *     Lower left corner, coordinate axis 1 * Lower left corner, coordinate axis 2 * Upper right corner, coordinate
+     *     axis 1 * Upper right corner, coordinate axis 2 The coordinate reference system of the values is WGS84
      *     longitude/latitude (http://www.opengis.net/def/crs/OGC/1.3/CRS84) unless a different coordinate reference
      *     system is specified in the parameter `bbox-crs`. For WGS84 longitude/latitude the values are in most cases
      *     the sequence of minimum longitude, minimum latitude, maximum longitude and maximum latitude. However, in
@@ -335,8 +336,8 @@ public final class WFSAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<ExtendedGeoJsonFeatureCollection>> getFeaturesWithResponse(
-            String datasetId, String collectionId, Integer limit, String bbox, String filter) {
-        return this.serviceClient.getFeaturesWithResponseAsync(datasetId, collectionId, limit, bbox, filter);
+            String datasetId, String collectionId, Integer limit, List<Double> boundingBox, String filter) {
+        return this.serviceClient.getFeaturesWithResponseAsync(datasetId, collectionId, limit, boundingBox, filter);
     }
 
     /**
@@ -358,9 +359,9 @@ public final class WFSAsyncClient {
      *     document. Only features that are on the first level of the collection in the response document are counted.
      *     Nested objects contained within the explicitly requested features shall not be counted. * Minimum = 1 *
      *     Maximum = 500 * Default = 10.
-     * @param bbox Only features that have a geometry that intersects the supplied bounding box are selected. * Lower
-     *     left corner, coordinate axis 1 * Lower left corner, coordinate axis 2 * Upper right corner, coordinate axis 1
-     *     * Upper right corner, coordinate axis 2 The coordinate reference system of the values is WGS84
+     * @param boundingBox Only features that have a geometry that intersects the supplied bounding box are selected. *
+     *     Lower left corner, coordinate axis 1 * Lower left corner, coordinate axis 2 * Upper right corner, coordinate
+     *     axis 1 * Upper right corner, coordinate axis 2 The coordinate reference system of the values is WGS84
      *     longitude/latitude (http://www.opengis.net/def/crs/OGC/1.3/CRS84) unless a different coordinate reference
      *     system is specified in the parameter `bbox-crs`. For WGS84 longitude/latitude the values are in most cases
      *     the sequence of minimum longitude, minimum latitude, maximum longitude and maximum latitude. However, in
@@ -380,8 +381,8 @@ public final class WFSAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<ExtendedGeoJsonFeatureCollection> getFeatures(
-            String datasetId, String collectionId, Integer limit, String bbox, String filter) {
-        return this.serviceClient.getFeaturesAsync(datasetId, collectionId, limit, bbox, filter);
+            String datasetId, String collectionId, Integer limit, List<Double> boundingBox, String filter) {
+        return this.serviceClient.getFeaturesAsync(datasetId, collectionId, limit, boundingBox, filter);
     }
 
     /**
@@ -406,7 +407,7 @@ public final class WFSAsyncClient {
      * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<FeatureResponse>> getFeatureWithResponse(
+    public Mono<Response<FeatureResult>> getFeatureWithResponse(
             String datasetId, String collectionId, String featureId) {
         return this.serviceClient.getFeatureWithResponseAsync(datasetId, collectionId, featureId);
     }
@@ -433,7 +434,7 @@ public final class WFSAsyncClient {
      * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<FeatureResponse> getFeature(String datasetId, String collectionId, String featureId) {
+    public Mono<FeatureResult> getFeature(String datasetId, String collectionId, String featureId) {
         return this.serviceClient.getFeatureAsync(datasetId, collectionId, featureId);
     }
 

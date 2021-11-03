@@ -4,17 +4,17 @@
 
 package com.azure.maps.weather.models;
 
-import com.azure.core.annotation.Fluent;
+import com.azure.core.annotation.Immutable;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /** The MinuteForecastResponse model. */
-@Fluent
+@Immutable
 public final class MinuteForecastResponse {
     /*
      * Phrase summaries for the entire forecast period.
      */
-    @JsonProperty(value = "summary")
+    @JsonProperty(value = "summary", access = JsonProperty.Access.WRITE_ONLY)
     private MinuteForecastSummary summary;
 
     /*
@@ -22,13 +22,13 @@ public final class MinuteForecastResponse {
      * breaks down each potential interval where precipitation starts and
      * stops.
      */
-    @JsonProperty(value = "intervalSummaries")
+    @JsonProperty(value = "intervalSummaries", access = JsonProperty.Access.WRITE_ONLY)
     private List<IntervalSummary> intervalSummaries;
 
     /*
      * Forecast data for each interval in the forecast.
      */
-    @JsonProperty(value = "intervals")
+    @JsonProperty(value = "intervals", access = JsonProperty.Access.WRITE_ONLY)
     private List<ForecastInterval> intervals;
 
     /**
@@ -38,17 +38,6 @@ public final class MinuteForecastResponse {
      */
     public MinuteForecastSummary getSummary() {
         return this.summary;
-    }
-
-    /**
-     * Set the summary property: Phrase summaries for the entire forecast period.
-     *
-     * @param summary the summary value to set.
-     * @return the MinuteForecastResponse object itself.
-     */
-    public MinuteForecastResponse setSummary(MinuteForecastSummary summary) {
-        this.summary = summary;
-        return this;
     }
 
     /**
@@ -62,34 +51,11 @@ public final class MinuteForecastResponse {
     }
 
     /**
-     * Set the intervalSummaries property: Summary information for each interval in the forecast. The Summaries breaks
-     * down each potential interval where precipitation starts and stops.
-     *
-     * @param intervalSummaries the intervalSummaries value to set.
-     * @return the MinuteForecastResponse object itself.
-     */
-    public MinuteForecastResponse setIntervalSummaries(List<IntervalSummary> intervalSummaries) {
-        this.intervalSummaries = intervalSummaries;
-        return this;
-    }
-
-    /**
      * Get the intervals property: Forecast data for each interval in the forecast.
      *
      * @return the intervals value.
      */
     public List<ForecastInterval> getIntervals() {
         return this.intervals;
-    }
-
-    /**
-     * Set the intervals property: Forecast data for each interval in the forecast.
-     *
-     * @param intervals the intervals value to set.
-     * @return the MinuteForecastResponse object itself.
-     */
-    public MinuteForecastResponse setIntervals(List<ForecastInterval> intervals) {
-        this.intervals = intervals;
-        return this;
     }
 }

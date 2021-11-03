@@ -8,25 +8,26 @@ import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceClient;
 import com.azure.core.annotation.ServiceMethod;
 import com.azure.core.util.polling.SyncPoller;
-import com.azure.maps.route.implementation.RoutesImpl;
+import com.azure.maps.route.implementation.RouteClientImpl;
 import com.azure.maps.route.models.AlternativeRouteType;
-import com.azure.maps.route.models.BatchRequestBody;
-import com.azure.maps.route.models.ComputeTravelTimeFor;
+import com.azure.maps.route.models.BatchRequest;
+import com.azure.maps.route.models.ComputeTravelTime;
 import com.azure.maps.route.models.ErrorResponseException;
-import com.azure.maps.route.models.GetRouteRangeResponse;
-import com.azure.maps.route.models.HillinessDegree;
-import com.azure.maps.route.models.PostRouteDirectionsRequestBody;
-import com.azure.maps.route.models.PostRouteMatrixRequestBody;
+import com.azure.maps.route.models.InclineLevel;
+import com.azure.maps.route.models.JsonFormat;
+import com.azure.maps.route.models.Report;
 import com.azure.maps.route.models.ResponseFormat;
 import com.azure.maps.route.models.RouteAvoidType;
-import com.azure.maps.route.models.RouteDirectionsBatchResponse;
-import com.azure.maps.route.models.RouteDirectionsResponse;
+import com.azure.maps.route.models.RouteDirectionParameters;
+import com.azure.maps.route.models.RouteDirections;
+import com.azure.maps.route.models.RouteDirectionsBatchResult;
 import com.azure.maps.route.models.RouteInstructionsType;
-import com.azure.maps.route.models.RouteMatrixResponse;
-import com.azure.maps.route.models.RouteRepresentation;
+import com.azure.maps.route.models.RouteMatrixQuery;
+import com.azure.maps.route.models.RouteMatrixResult;
+import com.azure.maps.route.models.RouteRangeResult;
+import com.azure.maps.route.models.RouteRepresentationForBestOrder;
 import com.azure.maps.route.models.RouteType;
 import com.azure.maps.route.models.SectionType;
-import com.azure.maps.route.models.TextFormat;
 import com.azure.maps.route.models.TravelMode;
 import com.azure.maps.route.models.VehicleEngineType;
 import com.azure.maps.route.models.VehicleLoadType;
@@ -37,14 +38,14 @@ import java.util.List;
 /** Initializes a new instance of the synchronous RouteClient type. */
 @ServiceClient(builder = RouteClientBuilder.class)
 public final class RouteClient {
-    private final RoutesImpl serviceClient;
+    private final RouteClientImpl serviceClient;
 
     /**
-     * Initializes an instance of Routes client.
+     * Initializes an instance of RouteClient client.
      *
      * @param serviceClient the service client implementation.
      */
-    RouteClient(RoutesImpl serviceClient) {
+    RouteClient(RouteClientImpl serviceClient) {
         this.serviceClient = serviceClient;
     }
 
@@ -124,17 +125,17 @@ public final class RouteClient {
      * <p>&gt; HTTP `200 OK` - Matrix request successfully processed. The response body contains all of the results.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param postRouteMatrixRequestBody The matrix of origin and destination coordinates to compute the route distance,
-     *     travel time and other summary for each cell of the matrix based on the input parameters. The minimum and the
-     *     maximum cell count supported are 1 and **700** for async and **100** for sync respectively. For example, it
-     *     can be 35 origins and 20 destinations or 25 origins and 25 destinations for async API.
+     * @param routeMatrixQuery The matrix of origin and destination coordinates to compute the route distance, travel
+     *     time and other summary for each cell of the matrix based on the input parameters. The minimum and the maximum
+     *     cell count supported are 1 and **700** for async and **100** for sync respectively. For example, it can be 35
+     *     origins and 20 destinations or 25 origins and 25 destinations for async API.
      * @param waitForResults Boolean to indicate whether to execute the request synchronously. If set to true, user will
      *     get a 200 response if the request is finished under 120 seconds. Otherwise, user will get a 202 response
      *     right away. Please refer to the API description for more details on 202 response. **Supported only for async
      *     request**.
-     * @param computeTravelTimeFor Specifies whether to return additional travel times using different types of traffic
+     * @param computeTravelTime Specifies whether to return additional travel times using different types of traffic
      *     information (none, historic, live) as well as the default best-estimate travel time.
-     * @param sectionType Specifies which of the section types is reported in the route response.
+     * @param filterSectionType Specifies which of the section types is reported in the route response.
      *     &lt;br&gt;&lt;br&gt;For example if sectionType = pedestrian the sections which are suited for pedestrians
      *     only are returned. Multiple types can be used. The default sectionType refers to the travelMode input. By
      *     default travelMode is set to car.
@@ -164,7 +165,7 @@ public final class RouteClient {
      * @param vehicleWeight Weight of the vehicle in kilograms.
      * @param windingness Level of turns for thrilling route. This parameter can only be used in conjunction with
      *     `routeType`=thrilling.
-     * @param hilliness Degree of hilliness for thrilling route. This parameter can only be used in conjunction with
+     * @param inclineLevel Degree of hilliness for thrilling route. This parameter can only be used in conjunction with
      *     `routeType`=thrilling.
      * @param travelMode The mode of travel for the requested route. If not defined, default is 'car'. Note that the
      *     requested travelMode may not be available for the entire route. Where the requested travelMode is not
@@ -176,9 +177,9 @@ public final class RouteClient {
      *     be specified multiple times in one request, for example,
      *     '&amp;avoid=motorways&amp;avoid=tollRoads&amp;avoid=ferries'. In calculateReachableRange requests, the value
      *     alreadyUsedRoads must not be used.
-     * @param traffic Possible values: * true - Do consider all available traffic information during routing * false -
-     *     Ignore current traffic data during routing. Note that although the current traffic data is ignored during
-     *     routing, the effect of historic traffic on effective road speeds is still incorporated.
+     * @param useTrafficData Possible values: * true - Do consider all available traffic information during routing *
+     *     false - Ignore current traffic data during routing. Note that although the current traffic data is ignored
+     *     during routing, the effect of historic traffic on effective road speeds is still incorporated.
      * @param routeType The type of route requested.
      * @param vehicleLoadType Types of cargo that may be classified as hazardous materials and restricted from some
      *     roads. Available vehicleLoadType values are US Hazmat classes 1 through 9, plus generic classifications for
@@ -190,34 +191,34 @@ public final class RouteClient {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Route Matrix call.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public SyncPoller<RouteMatrixResponse, RouteMatrixResponse> beginPostRouteMatrix(
-            ResponseFormat format,
-            PostRouteMatrixRequestBody postRouteMatrixRequestBody,
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    public SyncPoller<RouteMatrixResult, RouteMatrixResult> beginRequestRouteMatrix(
+            JsonFormat format,
+            RouteMatrixQuery routeMatrixQuery,
             Boolean waitForResults,
-            ComputeTravelTimeFor computeTravelTimeFor,
-            SectionType sectionType,
+            ComputeTravelTime computeTravelTime,
+            SectionType filterSectionType,
             OffsetDateTime arriveAt,
             OffsetDateTime departAt,
             Integer vehicleAxleWeight,
-            Float vehicleLength,
-            Float vehicleHeight,
-            Float vehicleWidth,
+            Double vehicleLength,
+            Double vehicleHeight,
+            Double vehicleWidth,
             Integer vehicleMaxSpeed,
             Integer vehicleWeight,
             WindingnessLevel windingness,
-            HillinessDegree hilliness,
+            InclineLevel inclineLevel,
             TravelMode travelMode,
             List<RouteAvoidType> avoid,
-            Boolean traffic,
+            Boolean useTrafficData,
             RouteType routeType,
             VehicleLoadType vehicleLoadType) {
-        return this.serviceClient.beginPostRouteMatrix(
+        return this.serviceClient.beginRequestRouteMatrix(
                 format,
-                postRouteMatrixRequestBody,
+                routeMatrixQuery,
                 waitForResults,
-                computeTravelTimeFor,
-                sectionType,
+                computeTravelTime,
+                filterSectionType,
                 arriveAt,
                 departAt,
                 vehicleAxleWeight,
@@ -227,10 +228,10 @@ public final class RouteClient {
                 vehicleMaxSpeed,
                 vehicleWeight,
                 windingness,
-                hilliness,
+                inclineLevel,
                 travelMode,
                 avoid,
-                traffic,
+                useTrafficData,
                 routeType,
                 vehicleLoadType);
     }
@@ -260,15 +261,15 @@ public final class RouteClient {
      *
      * <p>&gt; HTTP `200 OK` - Matrix request successfully processed. The response body contains all of the results.
      *
-     * @param format Matrix id received after the Matrix Route request was accepted successfully.
+     * @param matrixId Matrix id received after the Matrix Route request was accepted successfully.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Route Matrix call.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public SyncPoller<RouteMatrixResponse, RouteMatrixResponse> beginGetRouteMatrix(String format) {
-        return this.serviceClient.beginGetRouteMatrix(format);
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    public SyncPoller<RouteMatrixResult, RouteMatrixResult> beginGetRouteMatrix(String matrixId) {
+        return this.serviceClient.beginGetRouteMatrix(matrixId);
     }
 
     /**
@@ -347,17 +348,17 @@ public final class RouteClient {
      * <p>&gt; HTTP `200 OK` - Matrix request successfully processed. The response body contains all of the results.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param postRouteMatrixRequestBody The matrix of origin and destination coordinates to compute the route distance,
-     *     travel time and other summary for each cell of the matrix based on the input parameters. The minimum and the
-     *     maximum cell count supported are 1 and **700** for async and **100** for sync respectively. For example, it
-     *     can be 35 origins and 20 destinations or 25 origins and 25 destinations for async API.
+     * @param routeMatrixQuery The matrix of origin and destination coordinates to compute the route distance, travel
+     *     time and other summary for each cell of the matrix based on the input parameters. The minimum and the maximum
+     *     cell count supported are 1 and **700** for async and **100** for sync respectively. For example, it can be 35
+     *     origins and 20 destinations or 25 origins and 25 destinations for async API.
      * @param waitForResults Boolean to indicate whether to execute the request synchronously. If set to true, user will
      *     get a 200 response if the request is finished under 120 seconds. Otherwise, user will get a 202 response
      *     right away. Please refer to the API description for more details on 202 response. **Supported only for async
      *     request**.
-     * @param computeTravelTimeFor Specifies whether to return additional travel times using different types of traffic
+     * @param computeTravelTime Specifies whether to return additional travel times using different types of traffic
      *     information (none, historic, live) as well as the default best-estimate travel time.
-     * @param sectionType Specifies which of the section types is reported in the route response.
+     * @param filterSectionType Specifies which of the section types is reported in the route response.
      *     &lt;br&gt;&lt;br&gt;For example if sectionType = pedestrian the sections which are suited for pedestrians
      *     only are returned. Multiple types can be used. The default sectionType refers to the travelMode input. By
      *     default travelMode is set to car.
@@ -387,7 +388,7 @@ public final class RouteClient {
      * @param vehicleWeight Weight of the vehicle in kilograms.
      * @param windingness Level of turns for thrilling route. This parameter can only be used in conjunction with
      *     `routeType`=thrilling.
-     * @param hilliness Degree of hilliness for thrilling route. This parameter can only be used in conjunction with
+     * @param inclineLevel Degree of hilliness for thrilling route. This parameter can only be used in conjunction with
      *     `routeType`=thrilling.
      * @param travelMode The mode of travel for the requested route. If not defined, default is 'car'. Note that the
      *     requested travelMode may not be available for the entire route. Where the requested travelMode is not
@@ -399,9 +400,9 @@ public final class RouteClient {
      *     be specified multiple times in one request, for example,
      *     '&amp;avoid=motorways&amp;avoid=tollRoads&amp;avoid=ferries'. In calculateReachableRange requests, the value
      *     alreadyUsedRoads must not be used.
-     * @param traffic Possible values: * true - Do consider all available traffic information during routing * false -
-     *     Ignore current traffic data during routing. Note that although the current traffic data is ignored during
-     *     routing, the effect of historic traffic on effective road speeds is still incorporated.
+     * @param useTrafficData Possible values: * true - Do consider all available traffic information during routing *
+     *     false - Ignore current traffic data during routing. Note that although the current traffic data is ignored
+     *     during routing, the effect of historic traffic on effective road speeds is still incorporated.
      * @param routeType The type of route requested.
      * @param vehicleLoadType Types of cargo that may be classified as hazardous materials and restricted from some
      *     roads. Available vehicleLoadType values are US Hazmat classes 1 through 9, plus generic classifications for
@@ -414,33 +415,33 @@ public final class RouteClient {
      * @return this object is returned from a successful Route Matrix call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public RouteMatrixResponse postRouteMatrixSync(
-            ResponseFormat format,
-            PostRouteMatrixRequestBody postRouteMatrixRequestBody,
+    public RouteMatrixResult requestRouteMatrixSync(
+            JsonFormat format,
+            RouteMatrixQuery routeMatrixQuery,
             Boolean waitForResults,
-            ComputeTravelTimeFor computeTravelTimeFor,
-            SectionType sectionType,
+            ComputeTravelTime computeTravelTime,
+            SectionType filterSectionType,
             OffsetDateTime arriveAt,
             OffsetDateTime departAt,
             Integer vehicleAxleWeight,
-            Float vehicleLength,
-            Float vehicleHeight,
-            Float vehicleWidth,
+            Double vehicleLength,
+            Double vehicleHeight,
+            Double vehicleWidth,
             Integer vehicleMaxSpeed,
             Integer vehicleWeight,
             WindingnessLevel windingness,
-            HillinessDegree hilliness,
+            InclineLevel inclineLevel,
             TravelMode travelMode,
             List<RouteAvoidType> avoid,
-            Boolean traffic,
+            Boolean useTrafficData,
             RouteType routeType,
             VehicleLoadType vehicleLoadType) {
-        return this.serviceClient.postRouteMatrixSync(
+        return this.serviceClient.requestRouteMatrixSync(
                 format,
-                postRouteMatrixRequestBody,
+                routeMatrixQuery,
                 waitForResults,
-                computeTravelTimeFor,
-                sectionType,
+                computeTravelTime,
+                filterSectionType,
                 arriveAt,
                 departAt,
                 vehicleAxleWeight,
@@ -450,10 +451,10 @@ public final class RouteClient {
                 vehicleMaxSpeed,
                 vehicleWeight,
                 windingness,
-                hilliness,
+                inclineLevel,
                 travelMode,
                 avoid,
-                traffic,
+                useTrafficData,
                 routeType,
                 vehicleLoadType);
     }
@@ -474,7 +475,7 @@ public final class RouteClient {
      * explanation of the concepts and parameters involved.
      *
      * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param query The Coordinates through which the route is calculated, delimited by a colon. A minimum of two
+     * @param routePoints The Coordinates through which the route is calculated, delimited by a colon. A minimum of two
      *     coordinates is required. The first one is the origin and the last is the destination of the route. Optional
      *     coordinates in-between act as WayPoints in the route. You can pass up to 150 WayPoints.
      * @param maxAlternatives Number of desired alternative routes to be calculated. Default: 0, minimum: 0 and maximum:
@@ -513,16 +514,17 @@ public final class RouteClient {
      *     tags. The currently supported languages are listed in the [Supported languages
      *     section](https://docs.microsoft.com/azure/azure-maps/supported-languages).
      *     <p>Default value: en-GB.
-     * @param computeBestOrder Re-order the route waypoints using a fast heuristic algorithm to reduce the route length.
-     *     Yields best results when used in conjunction with routeType _shortest_. Notice that origin and destination
-     *     are excluded from the optimized waypoint indices. To include origin and destination in the response, please
-     *     increase all the indices by 1 to account for the origin, and then add the destination as the final index.
-     *     Possible values are true or false. True computes a better order if possible, but is not allowed to be used in
-     *     conjunction with maxAlternatives value greater than 0 or in conjunction with circle waypoints. False will use
-     *     the locations in the given order and not allowed to be used in conjunction with routeRepresentation _none_.
-     * @param routeRepresentation Specifies the representation of the set of routes provided as response. This parameter
-     *     value can only be used in conjunction with computeBestOrder=true.
-     * @param computeTravelTimeFor Specifies whether to return additional travel times using different types of traffic
+     * @param computeBestWaypointOrder Re-order the route waypoints using a fast heuristic algorithm to reduce the route
+     *     length. Yields best results when used in conjunction with routeType _shortest_. Notice that origin and
+     *     destination are excluded from the optimized waypoint indices. To include origin and destination in the
+     *     response, please increase all the indices by 1 to account for the origin, and then add the destination as the
+     *     final index. Possible values are true or false. True computes a better order if possible, but is not allowed
+     *     to be used in conjunction with maxAlternatives value greater than 0 or in conjunction with circle waypoints.
+     *     False will use the locations in the given order and not allowed to be used in conjunction with
+     *     routeRepresentation _none_.
+     * @param routeRepresentationForBestOrder Specifies the representation of the set of routes provided as response.
+     *     This parameter value can only be used in conjunction with computeBestOrder=true.
+     * @param computeTravelTime Specifies whether to return additional travel times using different types of traffic
      *     information (none, historic, live) as well as the default best-estimate travel time.
      * @param vehicleHeading The directional heading of the vehicle in degrees starting at true North and continuing in
      *     clockwise direction. North is 0 degrees, east is 90 degrees, south is 180 degrees, west is 270 degrees.
@@ -530,7 +532,7 @@ public final class RouteClient {
      * @param report Specifies which data should be reported for diagnosis purposes. The only possible value is
      *     _effectiveSettings_. Reports the effective parameters or data used when calling the API. In the case of
      *     defaulted parameters the default will be reflected where the parameter was not specified by the caller.
-     * @param sectionType Specifies which of the section types is reported in the route response.
+     * @param filterSectionType Specifies which of the section types is reported in the route response.
      *     &lt;br&gt;&lt;br&gt;For example if sectionType = pedestrian the sections which are suited for pedestrians
      *     only are returned. Multiple types can be used. The default sectionType refers to the travelMode input. By
      *     default travelMode is set to car.
@@ -558,11 +560,11 @@ public final class RouteClient {
      *     weight restrictions are considered.
      *     <p>* In all other cases, this parameter is ignored.
      *     <p>Sensible Values : for **Combustion Model** : 1600, for **Electric Model** : 1900.
-     * @param vehicleCommercial Vehicle is used for commercial purposes and thus may not be allowed to drive on some
-     *     roads.
+     * @param isCommercialVehicle Whether the vehicle is used for commercial purposes. Commercial vehicles may not be
+     *     allowed to drive on some roads.
      * @param windingness Level of turns for thrilling route. This parameter can only be used in conjunction with
      *     `routeType`=thrilling.
-     * @param hilliness Degree of hilliness for thrilling route. This parameter can only be used in conjunction with
+     * @param inclineLevel Degree of hilliness for thrilling route. This parameter can only be used in conjunction with
      *     `routeType`=thrilling.
      * @param travelMode The mode of travel for the requested route. If not defined, default is 'car'. Note that the
      *     requested travelMode may not be available for the entire route. Where the requested travelMode is not
@@ -574,9 +576,9 @@ public final class RouteClient {
      *     be specified multiple times in one request, for example,
      *     '&amp;avoid=motorways&amp;avoid=tollRoads&amp;avoid=ferries'. In calculateReachableRange requests, the value
      *     alreadyUsedRoads must not be used.
-     * @param traffic Possible values: * true - Do consider all available traffic information during routing * false -
-     *     Ignore current traffic data during routing. Note that although the current traffic data is ignored during
-     *     routing, the effect of historic traffic on effective road speeds is still incorporated.
+     * @param useTrafficData Possible values: * true - Do consider all available traffic information during routing *
+     *     false - Ignore current traffic data during routing. Note that although the current traffic data is ignored
+     *     during routing, the effect of historic traffic on effective road speeds is still incorporated.
      * @param routeType The type of route requested.
      * @param vehicleLoadType Types of cargo that may be classified as hazardous materials and restricted from some
      *     roads. Available vehicleLoadType values are US Hazmat classes 1 through 9, plus generic classifications for
@@ -585,7 +587,7 @@ public final class RouteClient {
      *     considered for travelMode=truck.
      * @param vehicleEngineType Engine type of the vehicle. When a detailed Consumption Model is specified, it must be
      *     consistent with the value of **vehicleEngineType**.
-     * @param constantSpeedConsumptionInLitersPerHundredkm Specifies the speed-dependent component of consumption.
+     * @param constantSpeedConsumptionInLitersPerHundredKm Specifies the speed-dependent component of consumption.
      *     <p>Provided as an unordered list of colon-delimited speed &amp; consumption-rate pairs. The list defines
      *     points on a consumption curve. Consumption rates for speeds not in the list are found as follows:
      *     <p>* by linear interpolation, if the given speed lies in between two speeds in the list
@@ -607,10 +609,10 @@ public final class RouteClient {
      *     the vehicle, in liters per hour.
      *     <p>It can be used to specify consumption due to devices and systems such as AC systems, radio, heating, etc.
      *     <p>Sensible Values : 0.2.
-     * @param fuelEnergyDensityInMJoulesPerLiter Specifies the amount of chemical energy stored in one liter of fuel in
-     *     megajoules (MJ). It is used in conjunction with the ***Efficiency** parameters for conversions between saved
-     *     or consumed energy and fuel. For example, energy density is 34.2 MJ/l for gasoline, and 35.8 MJ/l for Diesel
-     *     fuel.
+     * @param fuelEnergyDensityInMegajoulesPerLiter Specifies the amount of chemical energy stored in one liter of fuel
+     *     in megajoules (MJ). It is used in conjunction with the ***Efficiency** parameters for conversions between
+     *     saved or consumed energy and fuel. For example, energy density is 34.2 MJ/l for gasoline, and 35.8 MJ/l for
+     *     Diesel fuel.
      *     <p>This parameter is required if any ***Efficiency** parameter is set.
      *     <p>Sensible Values : 34.2.
      * @param accelerationEfficiency Specifies the efficiency of converting chemical energy stored in fuel to kinetic
@@ -639,7 +641,7 @@ public final class RouteClient {
      *     <p>Must be paired with **uphillEfficiency**.
      *     <p>The range of values allowed are 0.0 to 1/**uphillEfficiency**.
      *     <p>Sensible Values : for **Combustion Model** : 0.51, for **Electric Model** : 0.73.
-     * @param constantSpeedConsumptionInkWhPerHundredkm Specifies the speed-dependent component of consumption.
+     * @param constantSpeedConsumptionInKwHPerHundredKm Specifies the speed-dependent component of consumption.
      *     <p>Provided as an unordered list of speed/consumption-rate pairs. The list defines points on a consumption
      *     curve. Consumption rates for speeds not in the list are found as follows:
      *     <p>* by linear interpolation, if the given speed lies in between two speeds in the list
@@ -655,16 +657,16 @@ public final class RouteClient {
      *     <p>The valid range for the consumption values(expressed in kWh/100km) is between 0.01 and 100000.0.
      *     <p>Sensible Values : 50,8.2:130,21.3
      *     <p>This parameter is required for **Electric consumption model**.
-     * @param currentChargeInkWh Specifies the current electric energy supply in kilowatt hours (kWh).
+     * @param currentChargeInKwH Specifies the current electric energy supply in kilowatt hours (kWh).
      *     <p>This parameter co-exists with **maxChargeInkWh** parameter.
      *     <p>The range of values allowed are 0.0 to **maxChargeInkWh**.
      *     <p>Sensible Values : 43.
-     * @param maxChargeInkWh Specifies the maximum electric energy supply in kilowatt hours (kWh) that may be stored in
+     * @param maxChargeInKwH Specifies the maximum electric energy supply in kilowatt hours (kWh) that may be stored in
      *     the vehicle's battery.
      *     <p>This parameter co-exists with **currentChargeInkWh** parameter.
      *     <p>Minimum value has to be greater than or equal to **currentChargeInkWh**.
      *     <p>Sensible Values : 85.
-     * @param auxiliaryPowerInkW Specifies the amount of power consumed for sustaining auxiliary systems, in kilowatts
+     * @param auxiliaryPowerInKw Specifies the amount of power consumed for sustaining auxiliary systems, in kilowatts
      *     (kW).
      *     <p>It can be used to specify consumption due to devices and systems such as AC systems, radio, heating, etc.
      *     <p>Sensible Values : 1.7.
@@ -674,9 +676,9 @@ public final class RouteClient {
      * @return this object is returned from a successful Route Directions call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public RouteDirectionsResponse getRouteDirections(
-            TextFormat format,
-            String query,
+    public RouteDirections getRouteDirections(
+            ResponseFormat format,
+            String routePoints,
             Integer maxAlternatives,
             AlternativeRouteType alternativeType,
             Integer minDeviationDistance,
@@ -685,42 +687,42 @@ public final class RouteClient {
             Integer minDeviationTime,
             RouteInstructionsType instructionsType,
             String language,
-            Boolean computeBestOrder,
-            RouteRepresentation routeRepresentation,
-            ComputeTravelTimeFor computeTravelTimeFor,
+            Boolean computeBestWaypointOrder,
+            RouteRepresentationForBestOrder routeRepresentationForBestOrder,
+            ComputeTravelTime computeTravelTime,
             Integer vehicleHeading,
-            String report,
-            SectionType sectionType,
+            Report report,
+            SectionType filterSectionType,
             Integer vehicleAxleWeight,
-            Float vehicleWidth,
-            Float vehicleHeight,
-            Float vehicleLength,
+            Double vehicleWidth,
+            Double vehicleHeight,
+            Double vehicleLength,
             Integer vehicleMaxSpeed,
             Integer vehicleWeight,
-            Boolean vehicleCommercial,
+            Boolean isCommercialVehicle,
             WindingnessLevel windingness,
-            HillinessDegree hilliness,
+            InclineLevel inclineLevel,
             TravelMode travelMode,
             List<RouteAvoidType> avoid,
-            Boolean traffic,
+            Boolean useTrafficData,
             RouteType routeType,
             VehicleLoadType vehicleLoadType,
             VehicleEngineType vehicleEngineType,
-            Float constantSpeedConsumptionInLitersPerHundredkm,
-            Float currentFuelInLiters,
-            Float auxiliaryPowerInLitersPerHour,
-            Float fuelEnergyDensityInMJoulesPerLiter,
-            Float accelerationEfficiency,
-            Float decelerationEfficiency,
-            Float uphillEfficiency,
-            Float downhillEfficiency,
-            String constantSpeedConsumptionInkWhPerHundredkm,
-            String currentChargeInkWh,
-            String maxChargeInkWh,
-            String auxiliaryPowerInkW) {
+            String constantSpeedConsumptionInLitersPerHundredKm,
+            Double currentFuelInLiters,
+            Double auxiliaryPowerInLitersPerHour,
+            Double fuelEnergyDensityInMegajoulesPerLiter,
+            Double accelerationEfficiency,
+            Double decelerationEfficiency,
+            Double uphillEfficiency,
+            Double downhillEfficiency,
+            String constantSpeedConsumptionInKwHPerHundredKm,
+            Double currentChargeInKwH,
+            Double maxChargeInKwH,
+            Double auxiliaryPowerInKw) {
         return this.serviceClient.getRouteDirections(
                 format,
-                query,
+                routePoints,
                 maxAlternatives,
                 alternativeType,
                 minDeviationDistance,
@@ -729,39 +731,39 @@ public final class RouteClient {
                 minDeviationTime,
                 instructionsType,
                 language,
-                computeBestOrder,
-                routeRepresentation,
-                computeTravelTimeFor,
+                computeBestWaypointOrder,
+                routeRepresentationForBestOrder,
+                computeTravelTime,
                 vehicleHeading,
                 report,
-                sectionType,
+                filterSectionType,
                 vehicleAxleWeight,
                 vehicleWidth,
                 vehicleHeight,
                 vehicleLength,
                 vehicleMaxSpeed,
                 vehicleWeight,
-                vehicleCommercial,
+                isCommercialVehicle,
                 windingness,
-                hilliness,
+                inclineLevel,
                 travelMode,
                 avoid,
-                traffic,
+                useTrafficData,
                 routeType,
                 vehicleLoadType,
                 vehicleEngineType,
-                constantSpeedConsumptionInLitersPerHundredkm,
+                constantSpeedConsumptionInLitersPerHundredKm,
                 currentFuelInLiters,
                 auxiliaryPowerInLitersPerHour,
-                fuelEnergyDensityInMJoulesPerLiter,
+                fuelEnergyDensityInMegajoulesPerLiter,
                 accelerationEfficiency,
                 decelerationEfficiency,
                 uphillEfficiency,
                 downhillEfficiency,
-                constantSpeedConsumptionInkWhPerHundredkm,
-                currentChargeInkWh,
-                maxChargeInkWh,
-                auxiliaryPowerInkW);
+                constantSpeedConsumptionInKwHPerHundredKm,
+                currentChargeInKwH,
+                maxChargeInKwH,
+                auxiliaryPowerInKw);
     }
 
     /**
@@ -780,11 +782,11 @@ public final class RouteClient {
      * detailed explanation of the concepts and parameters involved.
      *
      * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param query The Coordinates through which the route is calculated. Needs two coordinates at least. Delimited by
-     *     colon. First one is the origin and the last is the destination of the route. The coordinates are in a
-     *     lat,long format. Optional coordinates in between act as WayPoints in the route.
-     * @param postRouteDirectionsRequestBody Used for reconstructing a route and for calculating zero or more
-     *     alternative routes to this reference route. The provided sequence of coordinates is used as input for route
+     * @param routePoints The Coordinates through which the route is calculated, delimited by a colon. A minimum of two
+     *     coordinates is required. The first one is the origin and the last is the destination of the route. Optional
+     *     coordinates in-between act as WayPoints in the route. You can pass up to 150 WayPoints.
+     * @param routeDirectionParameters Used for reconstructing a route and for calculating zero or more alternative
+     *     routes to this reference route. The provided sequence of coordinates is used as input for route
      *     reconstruction. The alternative routes are calculated between the origin and destination points specified in
      *     the base path parameter locations. If both minDeviationDistance and minDeviationTime are set to zero, then
      *     these origin and destination points are expected to be at (or very near) the beginning and end of the
@@ -826,16 +828,17 @@ public final class RouteClient {
      * @param language The language parameter determines the language of the guidance messages. It does not affect
      *     proper nouns (the names of streets, plazas, etc.) It has no effect when instructionsType=coded. Allowed
      *     values are (a subset of) the IETF language tags described.
-     * @param computeBestOrder Re-order the route waypoints using a fast heuristic algorithm to reduce the route length.
-     *     Yields best results when used in conjunction with routeType _shortest_. Notice that origin and destination
-     *     are excluded from the optimized waypoint indices. To include origin and destination in the response, please
-     *     increase all the indices by 1 to account for the origin, and then add the destination as the final index.
-     *     Possible values are true or false. True computes a better order if possible, but is not allowed to be used in
-     *     conjunction with maxAlternatives value greater than 0 or in conjunction with circle waypoints. False will use
-     *     the locations in the given order and not allowed to be used in conjunction with routeRepresentation _none_.
-     * @param routeRepresentation Specifies the representation of the set of routes provided as response. This parameter
-     *     value can only be used in conjunction with computeBestOrder=true.
-     * @param computeTravelTimeFor Specifies whether to return additional travel times using different types of traffic
+     * @param computeBestWaypointOrder Re-order the route waypoints using a fast heuristic algorithm to reduce the route
+     *     length. Yields best results when used in conjunction with routeType _shortest_. Notice that origin and
+     *     destination are excluded from the optimized waypoint indices. To include origin and destination in the
+     *     response, please increase all the indices by 1 to account for the origin, and then add the destination as the
+     *     final index. Possible values are true or false. True computes a better order if possible, but is not allowed
+     *     to be used in conjunction with maxAlternatives value greater than 0 or in conjunction with circle waypoints.
+     *     False will use the locations in the given order and not allowed to be used in conjunction with
+     *     routeRepresentation _none_.
+     * @param routeRepresentationForBestOrder Specifies the representation of the set of routes provided as response.
+     *     This parameter value can only be used in conjunction with computeBestOrder=true.
+     * @param computeTravelTime Specifies whether to return additional travel times using different types of traffic
      *     information (none, historic, live) as well as the default best-estimate travel time.
      * @param vehicleHeading The directional heading of the vehicle in degrees starting at true North and continuing in
      *     clockwise direction. North is 0 degrees, east is 90 degrees, south is 180 degrees, west is 270 degrees.
@@ -843,7 +846,7 @@ public final class RouteClient {
      * @param report Specifies which data should be reported for diagnosis purposes. The only possible value is
      *     _effectiveSettings_. Reports the effective parameters or data used when calling the API. In the case of
      *     defaulted parameters the default will be reflected where the parameter was not specified by the caller.
-     * @param sectionType Specifies which of the section types is reported in the route response.
+     * @param filterSectionType Specifies which of the section types is reported in the route response.
      *     &lt;br&gt;&lt;br&gt;For example if sectionType = pedestrian the sections which are suited for pedestrians
      *     only are returned. Multiple types can be used. The default sectionType refers to the travelMode input. By
      *     default travelMode is set to car.
@@ -878,11 +881,11 @@ public final class RouteClient {
      *     weight restrictions are considered.
      *     <p>* In all other cases, this parameter is ignored.
      *     <p>Sensible Values : for **Combustion Model** : 1600, for **Electric Model** : 1900.
-     * @param vehicleCommercial Vehicle is used for commercial purposes and thus may not be allowed to drive on some
-     *     roads.
+     * @param isCommercialVehicle Whether the vehicle is used for commercial purposes. Commercial vehicles may not be
+     *     allowed to drive on some roads.
      * @param windingness Level of turns for thrilling route. This parameter can only be used in conjunction with
      *     `routeType`=thrilling.
-     * @param hilliness Degree of hilliness for thrilling route. This parameter can only be used in conjunction with
+     * @param inclineLevel Degree of hilliness for thrilling route. This parameter can only be used in conjunction with
      *     `routeType`=thrilling.
      * @param travelMode The mode of travel for the requested route. If not defined, default is 'car'. Note that the
      *     requested travelMode may not be available for the entire route. Where the requested travelMode is not
@@ -894,9 +897,9 @@ public final class RouteClient {
      *     be specified multiple times in one request, for example,
      *     '&amp;avoid=motorways&amp;avoid=tollRoads&amp;avoid=ferries'. In calculateReachableRange requests, the value
      *     alreadyUsedRoads must not be used.
-     * @param traffic Possible values: * true - Do consider all available traffic information during routing * false -
-     *     Ignore current traffic data during routing. Note that although the current traffic data is ignored during
-     *     routing, the effect of historic traffic on effective road speeds is still incorporated.
+     * @param useTrafficData Possible values: * true - Do consider all available traffic information during routing *
+     *     false - Ignore current traffic data during routing. Note that although the current traffic data is ignored
+     *     during routing, the effect of historic traffic on effective road speeds is still incorporated.
      * @param routeType The type of route requested.
      * @param vehicleLoadType Types of cargo that may be classified as hazardous materials and restricted from some
      *     roads. Available vehicleLoadType values are US Hazmat classes 1 through 9, plus generic classifications for
@@ -905,7 +908,7 @@ public final class RouteClient {
      *     considered for travelMode=truck.
      * @param vehicleEngineType Engine type of the vehicle. When a detailed Consumption Model is specified, it must be
      *     consistent with the value of **vehicleEngineType**.
-     * @param constantSpeedConsumptionInLitersPerHundredkm Specifies the speed-dependent component of consumption.
+     * @param constantSpeedConsumptionInLitersPerHundredKm Specifies the speed-dependent component of consumption.
      *     <p>Provided as an unordered list of colon-delimited speed &amp; consumption-rate pairs. The list defines
      *     points on a consumption curve. Consumption rates for speeds not in the list are found as follows:
      *     <p>* by linear interpolation, if the given speed lies in between two speeds in the list
@@ -927,10 +930,10 @@ public final class RouteClient {
      *     the vehicle, in liters per hour.
      *     <p>It can be used to specify consumption due to devices and systems such as AC systems, radio, heating, etc.
      *     <p>Sensible Values : 0.2.
-     * @param fuelEnergyDensityInMJoulesPerLiter Specifies the amount of chemical energy stored in one liter of fuel in
-     *     megajoules (MJ). It is used in conjunction with the ***Efficiency** parameters for conversions between saved
-     *     or consumed energy and fuel. For example, energy density is 34.2 MJ/l for gasoline, and 35.8 MJ/l for Diesel
-     *     fuel.
+     * @param fuelEnergyDensityInMegajoulesPerLiter Specifies the amount of chemical energy stored in one liter of fuel
+     *     in megajoules (MJ). It is used in conjunction with the ***Efficiency** parameters for conversions between
+     *     saved or consumed energy and fuel. For example, energy density is 34.2 MJ/l for gasoline, and 35.8 MJ/l for
+     *     Diesel fuel.
      *     <p>This parameter is required if any ***Efficiency** parameter is set.
      *     <p>Sensible Values : 34.2.
      * @param accelerationEfficiency Specifies the efficiency of converting chemical energy stored in fuel to kinetic
@@ -959,7 +962,7 @@ public final class RouteClient {
      *     <p>Must be paired with **uphillEfficiency**.
      *     <p>The range of values allowed are 0.0 to 1/**uphillEfficiency**.
      *     <p>Sensible Values : for **Combustion Model** : 0.51, for **Electric Model** : 0.73.
-     * @param constantSpeedConsumptionInkWhPerHundredkm Specifies the speed-dependent component of consumption.
+     * @param constantSpeedConsumptionInKwHPerHundredKm Specifies the speed-dependent component of consumption.
      *     <p>Provided as an unordered list of speed/consumption-rate pairs. The list defines points on a consumption
      *     curve. Consumption rates for speeds not in the list are found as follows:
      *     <p>* by linear interpolation, if the given speed lies in between two speeds in the list
@@ -975,16 +978,16 @@ public final class RouteClient {
      *     <p>The valid range for the consumption values(expressed in kWh/100km) is between 0.01 and 100000.0.
      *     <p>Sensible Values : 50,8.2:130,21.3
      *     <p>This parameter is required for **Electric consumption model**.
-     * @param currentChargeInkWh Specifies the current electric energy supply in kilowatt hours (kWh).
+     * @param currentChargeInKwH Specifies the current electric energy supply in kilowatt hours (kWh).
      *     <p>This parameter co-exists with **maxChargeInkWh** parameter.
      *     <p>The range of values allowed are 0.0 to **maxChargeInkWh**.
      *     <p>Sensible Values : 43.
-     * @param maxChargeInkWh Specifies the maximum electric energy supply in kilowatt hours (kWh) that may be stored in
+     * @param maxChargeInKwH Specifies the maximum electric energy supply in kilowatt hours (kWh) that may be stored in
      *     the vehicle's battery.
      *     <p>This parameter co-exists with **currentChargeInkWh** parameter.
      *     <p>Minimum value has to be greater than or equal to **currentChargeInkWh**.
      *     <p>Sensible Values : 85.
-     * @param auxiliaryPowerInkW Specifies the amount of power consumed for sustaining auxiliary systems, in kilowatts
+     * @param auxiliaryPowerInKw Specifies the amount of power consumed for sustaining auxiliary systems, in kilowatts
      *     (kW).
      *     <p>It can be used to specify consumption due to devices and systems such as AC systems, radio, heating, etc.
      *     <p>Sensible Values : 1.7.
@@ -994,67 +997,67 @@ public final class RouteClient {
      * @return this object is returned from a successful Route Directions call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public RouteDirectionsResponse postRouteDirections(
-            TextFormat format,
-            String query,
-            PostRouteDirectionsRequestBody postRouteDirectionsRequestBody,
+    public RouteDirections getRouteDirectionsWithAdditionalParameters(
+            ResponseFormat format,
+            String routePoints,
+            RouteDirectionParameters routeDirectionParameters,
             Integer maxAlternatives,
             AlternativeRouteType alternativeType,
             Integer minDeviationDistance,
             Integer minDeviationTime,
             RouteInstructionsType instructionsType,
             String language,
-            Boolean computeBestOrder,
-            RouteRepresentation routeRepresentation,
-            ComputeTravelTimeFor computeTravelTimeFor,
+            Boolean computeBestWaypointOrder,
+            RouteRepresentationForBestOrder routeRepresentationForBestOrder,
+            ComputeTravelTime computeTravelTime,
             Integer vehicleHeading,
-            String report,
-            SectionType sectionType,
+            Report report,
+            SectionType filterSectionType,
             OffsetDateTime arriveAt,
             OffsetDateTime departAt,
             Integer vehicleAxleWeight,
-            Float vehicleLength,
-            Float vehicleHeight,
-            Float vehicleWidth,
+            Double vehicleLength,
+            Double vehicleHeight,
+            Double vehicleWidth,
             Integer vehicleMaxSpeed,
             Integer vehicleWeight,
-            Boolean vehicleCommercial,
+            Boolean isCommercialVehicle,
             WindingnessLevel windingness,
-            HillinessDegree hilliness,
+            InclineLevel inclineLevel,
             TravelMode travelMode,
             List<RouteAvoidType> avoid,
-            Boolean traffic,
+            Boolean useTrafficData,
             RouteType routeType,
             VehicleLoadType vehicleLoadType,
             VehicleEngineType vehicleEngineType,
-            Float constantSpeedConsumptionInLitersPerHundredkm,
-            Float currentFuelInLiters,
-            Float auxiliaryPowerInLitersPerHour,
-            Float fuelEnergyDensityInMJoulesPerLiter,
-            Float accelerationEfficiency,
-            Float decelerationEfficiency,
-            Float uphillEfficiency,
-            Float downhillEfficiency,
-            String constantSpeedConsumptionInkWhPerHundredkm,
-            String currentChargeInkWh,
-            String maxChargeInkWh,
-            String auxiliaryPowerInkW) {
-        return this.serviceClient.postRouteDirections(
+            String constantSpeedConsumptionInLitersPerHundredKm,
+            Double currentFuelInLiters,
+            Double auxiliaryPowerInLitersPerHour,
+            Double fuelEnergyDensityInMegajoulesPerLiter,
+            Double accelerationEfficiency,
+            Double decelerationEfficiency,
+            Double uphillEfficiency,
+            Double downhillEfficiency,
+            String constantSpeedConsumptionInKwHPerHundredKm,
+            Double currentChargeInKwH,
+            Double maxChargeInKwH,
+            Double auxiliaryPowerInKw) {
+        return this.serviceClient.getRouteDirectionsWithAdditionalParameters(
                 format,
-                query,
-                postRouteDirectionsRequestBody,
+                routePoints,
+                routeDirectionParameters,
                 maxAlternatives,
                 alternativeType,
                 minDeviationDistance,
                 minDeviationTime,
                 instructionsType,
                 language,
-                computeBestOrder,
-                routeRepresentation,
-                computeTravelTimeFor,
+                computeBestWaypointOrder,
+                routeRepresentationForBestOrder,
+                computeTravelTime,
                 vehicleHeading,
                 report,
-                sectionType,
+                filterSectionType,
                 arriveAt,
                 departAt,
                 vehicleAxleWeight,
@@ -1063,27 +1066,27 @@ public final class RouteClient {
                 vehicleWidth,
                 vehicleMaxSpeed,
                 vehicleWeight,
-                vehicleCommercial,
+                isCommercialVehicle,
                 windingness,
-                hilliness,
+                inclineLevel,
                 travelMode,
                 avoid,
-                traffic,
+                useTrafficData,
                 routeType,
                 vehicleLoadType,
                 vehicleEngineType,
-                constantSpeedConsumptionInLitersPerHundredkm,
+                constantSpeedConsumptionInLitersPerHundredKm,
                 currentFuelInLiters,
                 auxiliaryPowerInLitersPerHour,
-                fuelEnergyDensityInMJoulesPerLiter,
+                fuelEnergyDensityInMegajoulesPerLiter,
                 accelerationEfficiency,
                 decelerationEfficiency,
                 uphillEfficiency,
                 downhillEfficiency,
-                constantSpeedConsumptionInkWhPerHundredkm,
-                currentChargeInkWh,
-                maxChargeInkWh,
-                auxiliaryPowerInkW);
+                constantSpeedConsumptionInKwHPerHundredKm,
+                currentChargeInKwH,
+                maxChargeInKwH,
+                auxiliaryPowerInKw);
     }
 
     /**
@@ -1105,7 +1108,7 @@ public final class RouteClient {
      *     specified Combustion Consumption Model.&lt;br&gt; When fuelBudgetInLiters is used, it is mandatory to specify
      *     a detailed Combustion Consumption Model.&lt;br&gt; Exactly one budget (fuelBudgetInLiters, energyBudgetInkWh,
      *     timeBudgetInSec, or distanceBudgetInMeters) must be used.
-     * @param energyBudgetInkWh Electric energy budget in kilowatt hours (kWh) that determines maximal range which can
+     * @param energyBudgetInKwH Electric energy budget in kilowatt hours (kWh) that determines maximal range which can
      *     be travelled using the specified Electric Consumption Model.&lt;br&gt; When energyBudgetInkWh is used, it is
      *     mandatory to specify a detailed Electric Consumption Model.&lt;br&gt; Exactly one budget (fuelBudgetInLiters,
      *     energyBudgetInkWh, timeBudgetInSec, or distanceBudgetInMeters) must be used.
@@ -1120,9 +1123,9 @@ public final class RouteClient {
      *     specified as a dateTime. When a time zone offset is not specified, it will be assumed to be that of the
      *     origin point. The departAt value must be in the future in the date-time format (1996-12-19T16:39:57-08:00).
      * @param routeType The type of route requested.
-     * @param traffic Possible values: * true - Do consider all available traffic information during routing * false -
-     *     Ignore current traffic data during routing. Note that although the current traffic data is ignored during
-     *     routing, the effect of historic traffic on effective road speeds is still incorporated.
+     * @param useTrafficData Possible values: * true - Do consider all available traffic information during routing *
+     *     false - Ignore current traffic data during routing. Note that although the current traffic data is ignored
+     *     during routing, the effect of historic traffic on effective road speeds is still incorporated.
      * @param avoid Specifies something that the route calculation should try to avoid when determining the route. Can
      *     be specified multiple times in one request, for example,
      *     '&amp;avoid=motorways&amp;avoid=tollRoads&amp;avoid=ferries'. In calculateReachableRange requests, the value
@@ -1133,7 +1136,7 @@ public final class RouteClient {
      *     Note that travel modes bus, motorcycle, taxi and van are BETA functionality. Full restriction data is not
      *     available in all areas. In **calculateReachableRange** requests, the values bicycle and pedestrian must not
      *     be used.
-     * @param hilliness Degree of hilliness for thrilling route. This parameter can only be used in conjunction with
+     * @param inclineLevel Degree of hilliness for thrilling route. This parameter can only be used in conjunction with
      *     `routeType`=thrilling.
      * @param windingness Level of turns for thrilling route. This parameter can only be used in conjunction with
      *     `routeType`=thrilling.
@@ -1161,8 +1164,8 @@ public final class RouteClient {
      *     weight restrictions are considered.
      *     <p>* In all other cases, this parameter is ignored.
      *     <p>Sensible Values : for **Combustion Model** : 1600, for **Electric Model** : 1900.
-     * @param vehicleCommercial Vehicle is used for commercial purposes and thus may not be allowed to drive on some
-     *     roads.
+     * @param isCommercialVehicle Whether the vehicle is used for commercial purposes. Commercial vehicles may not be
+     *     allowed to drive on some roads.
      * @param vehicleLoadType Types of cargo that may be classified as hazardous materials and restricted from some
      *     roads. Available vehicleLoadType values are US Hazmat classes 1 through 9, plus generic classifications for
      *     use in other countries. Values beginning with USHazmat are for US routing while otherHazmat should be used
@@ -1170,7 +1173,7 @@ public final class RouteClient {
      *     considered for travelMode=truck.
      * @param vehicleEngineType Engine type of the vehicle. When a detailed Consumption Model is specified, it must be
      *     consistent with the value of **vehicleEngineType**.
-     * @param constantSpeedConsumptionInLitersPerHundredkm Specifies the speed-dependent component of consumption.
+     * @param constantSpeedConsumptionInLitersPerHundredKm Specifies the speed-dependent component of consumption.
      *     <p>Provided as an unordered list of colon-delimited speed &amp; consumption-rate pairs. The list defines
      *     points on a consumption curve. Consumption rates for speeds not in the list are found as follows:
      *     <p>* by linear interpolation, if the given speed lies in between two speeds in the list
@@ -1192,10 +1195,10 @@ public final class RouteClient {
      *     the vehicle, in liters per hour.
      *     <p>It can be used to specify consumption due to devices and systems such as AC systems, radio, heating, etc.
      *     <p>Sensible Values : 0.2.
-     * @param fuelEnergyDensityInMJoulesPerLiter Specifies the amount of chemical energy stored in one liter of fuel in
-     *     megajoules (MJ). It is used in conjunction with the ***Efficiency** parameters for conversions between saved
-     *     or consumed energy and fuel. For example, energy density is 34.2 MJ/l for gasoline, and 35.8 MJ/l for Diesel
-     *     fuel.
+     * @param fuelEnergyDensityInMegajoulesPerLiter Specifies the amount of chemical energy stored in one liter of fuel
+     *     in megajoules (MJ). It is used in conjunction with the ***Efficiency** parameters for conversions between
+     *     saved or consumed energy and fuel. For example, energy density is 34.2 MJ/l for gasoline, and 35.8 MJ/l for
+     *     Diesel fuel.
      *     <p>This parameter is required if any ***Efficiency** parameter is set.
      *     <p>Sensible Values : 34.2.
      * @param accelerationEfficiency Specifies the efficiency of converting chemical energy stored in fuel to kinetic
@@ -1224,7 +1227,7 @@ public final class RouteClient {
      *     <p>Must be paired with **uphillEfficiency**.
      *     <p>The range of values allowed are 0.0 to 1/**uphillEfficiency**.
      *     <p>Sensible Values : for **Combustion Model** : 0.51, for **Electric Model** : 0.73.
-     * @param constantSpeedConsumptionInkWhPerHundredkm Specifies the speed-dependent component of consumption.
+     * @param constantSpeedConsumptionInKwHPerHundredKm Specifies the speed-dependent component of consumption.
      *     <p>Provided as an unordered list of speed/consumption-rate pairs. The list defines points on a consumption
      *     curve. Consumption rates for speeds not in the list are found as follows:
      *     <p>* by linear interpolation, if the given speed lies in between two speeds in the list
@@ -1240,16 +1243,16 @@ public final class RouteClient {
      *     <p>The valid range for the consumption values(expressed in kWh/100km) is between 0.01 and 100000.0.
      *     <p>Sensible Values : 50,8.2:130,21.3
      *     <p>This parameter is required for **Electric consumption model**.
-     * @param currentChargeInkWh Specifies the current electric energy supply in kilowatt hours (kWh).
+     * @param currentChargeInKwH Specifies the current electric energy supply in kilowatt hours (kWh).
      *     <p>This parameter co-exists with **maxChargeInkWh** parameter.
      *     <p>The range of values allowed are 0.0 to **maxChargeInkWh**.
      *     <p>Sensible Values : 43.
-     * @param maxChargeInkWh Specifies the maximum electric energy supply in kilowatt hours (kWh) that may be stored in
+     * @param maxChargeInKwH Specifies the maximum electric energy supply in kilowatt hours (kWh) that may be stored in
      *     the vehicle's battery.
      *     <p>This parameter co-exists with **currentChargeInkWh** parameter.
      *     <p>Minimum value has to be greater than or equal to **currentChargeInkWh**.
      *     <p>Sensible Values : 85.
-     * @param auxiliaryPowerInkW Specifies the amount of power consumed for sustaining auxiliary systems, in kilowatts
+     * @param auxiliaryPowerInKw Specifies the amount of power consumed for sustaining auxiliary systems, in kilowatts
      *     (kW).
      *     <p>It can be used to specify consumption due to devices and systems such as AC systems, radio, heating, etc.
      *     <p>Sensible Values : 1.7.
@@ -1259,54 +1262,54 @@ public final class RouteClient {
      * @return this object is returned from a successful Route Reachable Range call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public GetRouteRangeResponse getRouteRange(
-            TextFormat format,
-            String query,
-            Float fuelBudgetInLiters,
-            Float energyBudgetInkWh,
-            Float timeBudgetInSec,
-            Float distanceBudgetInMeters,
+    public RouteRangeResult getRouteRange(
+            ResponseFormat format,
+            List<Double> query,
+            Double fuelBudgetInLiters,
+            Double energyBudgetInKwH,
+            Double timeBudgetInSec,
+            Double distanceBudgetInMeters,
             OffsetDateTime departAt,
             RouteType routeType,
-            Boolean traffic,
+            Boolean useTrafficData,
             List<RouteAvoidType> avoid,
             TravelMode travelMode,
-            HillinessDegree hilliness,
+            InclineLevel inclineLevel,
             WindingnessLevel windingness,
             Integer vehicleAxleWeight,
-            Float vehicleWidth,
-            Float vehicleHeight,
-            Float vehicleLength,
+            Double vehicleWidth,
+            Double vehicleHeight,
+            Double vehicleLength,
             Integer vehicleMaxSpeed,
             Integer vehicleWeight,
-            Boolean vehicleCommercial,
+            Boolean isCommercialVehicle,
             VehicleLoadType vehicleLoadType,
             VehicleEngineType vehicleEngineType,
-            Float constantSpeedConsumptionInLitersPerHundredkm,
-            Float currentFuelInLiters,
-            Float auxiliaryPowerInLitersPerHour,
-            Float fuelEnergyDensityInMJoulesPerLiter,
-            Float accelerationEfficiency,
-            Float decelerationEfficiency,
-            Float uphillEfficiency,
-            Float downhillEfficiency,
-            String constantSpeedConsumptionInkWhPerHundredkm,
-            String currentChargeInkWh,
-            String maxChargeInkWh,
-            String auxiliaryPowerInkW) {
+            String constantSpeedConsumptionInLitersPerHundredKm,
+            Double currentFuelInLiters,
+            Double auxiliaryPowerInLitersPerHour,
+            Double fuelEnergyDensityInMegajoulesPerLiter,
+            Double accelerationEfficiency,
+            Double decelerationEfficiency,
+            Double uphillEfficiency,
+            Double downhillEfficiency,
+            String constantSpeedConsumptionInKwHPerHundredKm,
+            Double currentChargeInKwH,
+            Double maxChargeInKwH,
+            Double auxiliaryPowerInKw) {
         return this.serviceClient.getRouteRange(
                 format,
                 query,
                 fuelBudgetInLiters,
-                energyBudgetInkWh,
+                energyBudgetInKwH,
                 timeBudgetInSec,
                 distanceBudgetInMeters,
                 departAt,
                 routeType,
-                traffic,
+                useTrafficData,
                 avoid,
                 travelMode,
-                hilliness,
+                inclineLevel,
                 windingness,
                 vehicleAxleWeight,
                 vehicleWidth,
@@ -1314,21 +1317,21 @@ public final class RouteClient {
                 vehicleLength,
                 vehicleMaxSpeed,
                 vehicleWeight,
-                vehicleCommercial,
+                isCommercialVehicle,
                 vehicleLoadType,
                 vehicleEngineType,
-                constantSpeedConsumptionInLitersPerHundredkm,
+                constantSpeedConsumptionInLitersPerHundredKm,
                 currentFuelInLiters,
                 auxiliaryPowerInLitersPerHour,
-                fuelEnergyDensityInMJoulesPerLiter,
+                fuelEnergyDensityInMegajoulesPerLiter,
                 accelerationEfficiency,
                 decelerationEfficiency,
                 uphillEfficiency,
                 downhillEfficiency,
-                constantSpeedConsumptionInkWhPerHundredkm,
-                currentChargeInkWh,
-                maxChargeInkWh,
-                auxiliaryPowerInkW);
+                constantSpeedConsumptionInKwHPerHundredKm,
+                currentChargeInKwH,
+                maxChargeInKwH,
+                auxiliaryPowerInKw);
     }
 
     /**
@@ -1337,18 +1340,13 @@ public final class RouteClient {
      * <p>**Applies to**: S1 pricing tier.
      *
      * <p>The Route Directions Batch API sends batches of queries to [Route Directions
-     * API](https://docs.microsoft.com/en-us/rest/api/maps/route/getroutedirections) using just a single API call. You
-     * can call Route Directions Batch API to run either asynchronously (async) or synchronously (sync). The async API
-     * allows caller to batch up to **700** queries and sync API up to **100** queries. ### Submit Synchronous Batch
-     * Request The Synchronous API is recommended for lightweight batch requests. When the service receives a request,
-     * it will respond as soon as the batch items are calculated and there will be no possibility to retrieve the
-     * results later. The Synchronous API will return a timeout error (a 408 response) if the request takes longer than
-     * 60 seconds. The number of batch items is limited to **100** for this API. ``` POST
-     * https://atlas.microsoft.com/route/directions/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` ### Submit Asynchronous Batch Request The Asynchronous API is appropriate for processing big volumes of
-     * relatively complex route requests - It allows the retrieval of results in a separate call (multiple downloads are
-     * possible). - The asynchronous API is optimized for reliability and is not expected to run into a timeout. - The
-     * number of batch items is limited to **700** for this API.
+     * API](https://docs.microsoft.com/rest/api/maps/route/getroutedirections) using just a single API call. You can
+     * call Route Directions Batch API to run either asynchronously (async) or synchronously (sync). The async API
+     * allows caller to batch up to **700** queries and sync API up to **100** queries. ### Submit Asynchronous Batch
+     * Request The Asynchronous API is appropriate for processing big volumes of relatively complex route requests - It
+     * allows the retrieval of results in a separate call (multiple downloads are possible). - The asynchronous API is
+     * optimized for reliability and is not expected to run into a timeout. - The number of batch items is limited to
+     * **700** for this API.
      *
      * <p>When you make a request by using async request, by default the service returns a 202 response code along a
      * redirect URL in the Location field of the response header. This URL should be checked periodically until the
@@ -1383,9 +1381,9 @@ public final class RouteClient {
      *
      * <p>A _route directions_ query in a batch is just a partial URL _without_ the protocol, base URL, path,
      * api-version and subscription-key. It can accept any of the supported _route directions_ [URI
-     * parameters](https://docs.microsoft.com/en-us/rest/api/maps/route/getroutedirections#uri-parameters). The string
-     * values in the _route directions_ query must be properly escaped (e.g. " character should be escaped with \\ ) and
-     * it should also be properly URL-encoded.
+     * parameters](https://docs.microsoft.com/rest/api/maps/route/getroutedirections#uri-parameters). The string values
+     * in the _route directions_ query must be properly escaped (e.g. " character should be escaped with \\ ) and it
+     * should also be properly URL-encoded.
      *
      * <p>The async API allows caller to batch up to **700** queries and sync API up to **100** queries, and the batch
      * should contain at least **1** query.
@@ -1413,9 +1411,8 @@ public final class RouteClient {
      * batch request. Each item in `batchItems` contains `statusCode` and `response` fields. Each `response` in
      * `batchItems` is of one of the following types:
      *
-     * <p>-
-     * [`RouteDirectionsResponse`](https://docs.microsoft.com/en-us/rest/api/maps/route/getroutedirections#routedirectionsresponse)
-     * - If the query completed successfully.
+     * <p>- [`RouteDirections`](https://docs.microsoft.com/rest/api/maps/route/getroutedirections#routedirections) - If
+     * the query completed successfully.
      *
      * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
      *
@@ -1433,17 +1430,17 @@ public final class RouteClient {
      * parameters were incorrectly specified or are mutually exclusive." } } } ] } ```.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param postRouteDirectionsBatchRequestBody The list of route directions queries/requests to process. The list can
-     *     contain a max of 700 queries for async and 100 queries for sync version and must contain at least 1 query.
+     * @param routeDirectionsBatchQueries The list of route directions queries/requests to process. The list can contain
+     *     a max of 700 queries for async and 100 queries for sync version and must contain at least 1 query.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Route Directions Batch service call.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public SyncPoller<RouteDirectionsBatchResponse, RouteDirectionsBatchResponse> beginPostRouteDirectionsBatch(
-            ResponseFormat format, BatchRequestBody postRouteDirectionsBatchRequestBody) {
-        return this.serviceClient.beginPostRouteDirectionsBatch(format, postRouteDirectionsBatchRequestBody);
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    public SyncPoller<RouteDirectionsBatchResult, RouteDirectionsBatchResult> beginRequestRouteDirectionsBatch(
+            JsonFormat format, BatchRequest routeDirectionsBatchQueries) {
+        return this.serviceClient.beginRequestRouteDirectionsBatch(format, routeDirectionsBatchQueries);
     }
 
     /**
@@ -1470,9 +1467,8 @@ public final class RouteClient {
      * batch request. Each item in `batchItems` contains `statusCode` and `response` fields. Each `response` in
      * `batchItems` is of one of the following types:
      *
-     * <p>-
-     * [`RouteDirectionsResponse`](https://docs.microsoft.com/en-us/rest/api/maps/route/getroutedirections#routedirectionsresponse)
-     * - If the query completed successfully.
+     * <p>- [`RouteDirections`](https://docs.microsoft.com/rest/api/maps/route/getroutedirections#routedirections) - If
+     * the query completed successfully.
      *
      * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
      *
@@ -1489,16 +1485,16 @@ public final class RouteClient {
      * "statusCode": 400, "response": { "error": { "code": "400 BadRequest", "message": "Bad request: one or more
      * parameters were incorrectly specified or are mutually exclusive." } } } ] } ```.
      *
-     * @param format Batch id for querying the operation.
+     * @param batchId Batch id for querying the operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Route Directions Batch service call.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public SyncPoller<RouteDirectionsBatchResponse, RouteDirectionsBatchResponse> beginGetRouteDirectionsBatch(
-            String format) {
-        return this.serviceClient.beginGetRouteDirectionsBatch(format);
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    public SyncPoller<RouteDirectionsBatchResult, RouteDirectionsBatchResult> beginGetRouteDirectionsBatch(
+            String batchId) {
+        return this.serviceClient.beginGetRouteDirectionsBatch(batchId);
     }
 
     /**
@@ -1507,74 +1503,15 @@ public final class RouteClient {
      * <p>**Applies to**: S1 pricing tier.
      *
      * <p>The Route Directions Batch API sends batches of queries to [Route Directions
-     * API](https://docs.microsoft.com/en-us/rest/api/maps/route/getroutedirections) using just a single API call. You
-     * can call Route Directions Batch API to run either asynchronously (async) or synchronously (sync). The async API
+     * API](https://docs.microsoft.com/rest/api/maps/route/getroutedirections) using just a single API call. You can
+     * call Route Directions Batch API to run either asynchronously (async) or synchronously (sync). The async API
      * allows caller to batch up to **700** queries and sync API up to **100** queries. ### Submit Synchronous Batch
      * Request The Synchronous API is recommended for lightweight batch requests. When the service receives a request,
      * it will respond as soon as the batch items are calculated and there will be no possibility to retrieve the
      * results later. The Synchronous API will return a timeout error (a 408 response) if the request takes longer than
      * 60 seconds. The number of batch items is limited to **100** for this API. ``` POST
      * https://atlas.microsoft.com/route/directions/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` ### Submit Asynchronous Batch Request The Asynchronous API is appropriate for processing big volumes of
-     * relatively complex route requests - It allows the retrieval of results in a separate call (multiple downloads are
-     * possible). - The asynchronous API is optimized for reliability and is not expected to run into a timeout. - The
-     * number of batch items is limited to **700** for this API.
-     *
-     * <p>When you make a request by using async request, by default the service returns a 202 response code along a
-     * redirect URL in the Location field of the response header. This URL should be checked periodically until the
-     * response data or error information is available. The asynchronous responses are stored for **14** days. The
-     * redirect URL returns a 404 response if used after the expiration period.
-     *
-     * <p>Please note that asynchronous batch request is a long-running request. Here's a typical sequence of
-     * operations: 1. Client sends a Route Directions Batch `POST` request to Azure Maps 2. The server will respond with
-     * one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request has been accepted.
-     *
-     * <p>&gt; HTTP `Error` - There was an error processing your Batch request. This could either be a `400 Bad Request`
-     * or any other `Error` status code.
-     *
-     * <p>3. If the batch request was accepted successfully, the `Location` header in the response contains the URL to
-     * download the results of the batch request. This status URI looks like following:
-     *
-     * <p>``` GET https://atlas.microsoft.com/route/directions/batch/{batch-id}?api-version=1.0 ``` Note:- Please
-     * remember to add AUTH information (subscription-key/azure_auth - See [Security](#security)) to the _status URI_
-     * before running it. &lt;br&gt; 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to
-     * download the batch results.
-     *
-     * <p>### POST Body for Batch Request To send the _route directions_ queries you will use a `POST` request where the
-     * request body will contain the `batchItems` array in `json` format and the `Content-Type` header will be set to
-     * `application/json`. Here's a sample request body containing 3 _route directions_ queries:
-     *
-     * <p>```json { "batchItems": [ { "query":
-     * "?query=47.620659,-122.348934:47.610101,-122.342015&amp;travelMode=bicycle&amp;routeType=eco&amp;traffic=false"
-     * }, { "query": "?query=40.759856,-73.985108:40.771136,-73.973506&amp;travelMode=pedestrian&amp;routeType=shortest"
-     * }, { "query": "?query=48.923159,-122.557362:32.621279,-116.840362" } ] } ```
-     *
-     * <p>A _route directions_ query in a batch is just a partial URL _without_ the protocol, base URL, path,
-     * api-version and subscription-key. It can accept any of the supported _route directions_ [URI
-     * parameters](https://docs.microsoft.com/en-us/rest/api/maps/route/getroutedirections#uri-parameters). The string
-     * values in the _route directions_ query must be properly escaped (e.g. " character should be escaped with \\ ) and
-     * it should also be properly URL-encoded.
-     *
-     * <p>The async API allows caller to batch up to **700** queries and sync API up to **100** queries, and the batch
-     * should contain at least **1** query.
-     *
-     * <p>### Download Asynchronous Batch Results To download the async batch results you will issue a `GET` request to
-     * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
-     * `POST` batch request and looks like the following:
-     *
-     * <p>```
-     * https://atlas.microsoft.com/route/directions/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
-     * using the _download URL_. 2. The server will respond with one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
-     * time.
-     *
-     * <p>&gt; HTTP `200 OK` - Batch request successfully processed. The response body contains all the batch results.
-     *
-     * <p>### Batch Response Model The returned data content is similar for async and sync requests. When downloading
+     * ``` ### Batch Response Model The returned data content is similar for async and sync requests. When downloading
      * the results of an async batch request, if the batch has finished processing, the response body contains the batch
      * response. This batch response contains a `summary` component that indicates the `totalRequests` that were part of
      * the original batch request and `successfulRequests`i.e. queries which were executed successfully. The batch
@@ -1583,9 +1520,8 @@ public final class RouteClient {
      * batch request. Each item in `batchItems` contains `statusCode` and `response` fields. Each `response` in
      * `batchItems` is of one of the following types:
      *
-     * <p>-
-     * [`RouteDirectionsResponse`](https://docs.microsoft.com/en-us/rest/api/maps/route/getroutedirections#routedirectionsresponse)
-     * - If the query completed successfully.
+     * <p>- [`RouteDirections`](https://docs.microsoft.com/rest/api/maps/route/getroutedirections#routedirections) - If
+     * the query completed successfully.
      *
      * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
      *
@@ -1603,16 +1539,16 @@ public final class RouteClient {
      * parameters were incorrectly specified or are mutually exclusive." } } } ] } ```.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param postRouteDirectionsBatchRequestBody The list of route directions queries/requests to process. The list can
-     *     contain a max of 700 queries for async and 100 queries for sync version and must contain at least 1 query.
+     * @param routeDirectionsBatchQueries The list of route directions queries/requests to process. The list can contain
+     *     a max of 700 queries for async and 100 queries for sync version and must contain at least 1 query.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Route Directions Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public RouteDirectionsBatchResponse postRouteDirectionsBatchSync(
-            ResponseFormat format, BatchRequestBody postRouteDirectionsBatchRequestBody) {
-        return this.serviceClient.postRouteDirectionsBatchSync(format, postRouteDirectionsBatchRequestBody);
+    public RouteDirectionsBatchResult requestRouteDirectionsBatchSync(
+            JsonFormat format, BatchRequest routeDirectionsBatchQueries) {
+        return this.serviceClient.requestRouteDirectionsBatchSync(format, routeDirectionsBatchQueries);
     }
 }

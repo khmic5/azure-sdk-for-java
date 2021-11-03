@@ -24,12 +24,14 @@ import com.azure.core.http.rest.PagedResponseBase;
 import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.RestProxy;
 import com.azure.core.util.Context;
+import com.azure.core.util.FluxUtil;
+import com.azure.core.util.logging.ClientLogger;
 import com.azure.core.util.polling.DefaultPollingStrategy;
 import com.azure.core.util.polling.PollerFlux;
 import com.azure.core.util.polling.SyncPoller;
 import com.azure.core.util.serializer.TypeReference;
-import com.azure.maps.creator.models.DatasetDetailInfo;
-import com.azure.maps.creator.models.DatasetListResponse;
+import com.azure.maps.creator.models.Dataset;
+import com.azure.maps.creator.models.DatasetListResult;
 import com.azure.maps.creator.models.DatasetsCreateResponse;
 import com.azure.maps.creator.models.DatasetsGetOperationResponse;
 import com.azure.maps.creator.models.ErrorResponseException;
@@ -40,6 +42,8 @@ import reactor.core.publisher.Mono;
 
 /** An instance of this class provides access to all the operations defined in Datasets. */
 public final class DatasetsImpl {
+    private final ClientLogger logger = new ClientLogger(DatasetsImpl.class);
+
     /** The proxy service used to perform REST calls. */
     private final DatasetsService service;
 
@@ -68,60 +72,66 @@ public final class DatasetsImpl {
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<DatasetsCreateResponse> create(
                 @HostParam("geography") Geography geography,
-                @HeaderParam("x-ms-client-id") String xMsClientId,
+                @HeaderParam("x-ms-client-id") String clientId,
                 @QueryParam("api-version") String apiVersion,
                 @QueryParam("conversionId") String conversionId,
                 @QueryParam("datasetId") String datasetId,
-                @QueryParam("description") String descriptionDataset,
-                @HeaderParam("Accept") String accept);
+                @QueryParam("description") String description,
+                @HeaderParam("Accept") String accept,
+                Context context);
 
         @Get("/datasets")
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
-        Mono<Response<DatasetListResponse>> list(
+        Mono<Response<DatasetListResult>> list(
                 @HostParam("geography") Geography geography,
-                @HeaderParam("x-ms-client-id") String xMsClientId,
+                @HeaderParam("x-ms-client-id") String clientId,
                 @QueryParam("api-version") String apiVersion,
-                @HeaderParam("Accept") String accept);
+                @HeaderParam("Accept") String accept,
+                Context context);
 
         @Get("/datasets/{datasetId}")
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
-        Mono<Response<DatasetDetailInfo>> get(
+        Mono<Response<Dataset>> get(
                 @HostParam("geography") Geography geography,
-                @HeaderParam("x-ms-client-id") String xMsClientId,
+                @HeaderParam("x-ms-client-id") String clientId,
                 @PathParam("datasetId") String datasetId,
                 @QueryParam("api-version") String apiVersion,
-                @HeaderParam("Accept") String accept);
+                @HeaderParam("Accept") String accept,
+                Context context);
 
         @Delete("/datasets/{datasetId}")
         @ExpectedResponses({204})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<Response<Void>> delete(
                 @HostParam("geography") Geography geography,
-                @HeaderParam("x-ms-client-id") String xMsClientId,
+                @HeaderParam("x-ms-client-id") String clientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("datasetId") String datasetId,
-                @HeaderParam("Accept") String accept);
+                @HeaderParam("Accept") String accept,
+                Context context);
 
         @Get("/datasets/operations/{operationId}")
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<DatasetsGetOperationResponse> getOperation(
                 @HostParam("geography") Geography geography,
-                @HeaderParam("x-ms-client-id") String xMsClientId,
+                @HeaderParam("x-ms-client-id") String clientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("operationId") String operationId,
-                @HeaderParam("Accept") String accept);
+                @HeaderParam("Accept") String accept,
+                Context context);
 
         @Get("{nextLink}")
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
-        Mono<Response<DatasetListResponse>> listNext(
+        Mono<Response<DatasetListResult>> listNext(
                 @PathParam(value = "nextLink", encoded = true) String nextLink,
                 @HostParam("geography") Geography geography,
-                @HeaderParam("x-ms-client-id") String xMsClientId,
-                @HeaderParam("Accept") String accept);
+                @HeaderParam("x-ms-client-id") String clientId,
+                @HeaderParam("Accept") String accept,
+                Context context);
     }
 
     /**
@@ -154,7 +164,7 @@ public final class DatasetsImpl {
      *     query parameters with same name (if more than one is provided).
      * @param datasetId The ID for the dataset to append with. The dataset must originate from a previous dataset
      *     creation call that matches the datasetId.
-     * @param descriptionDataset The description to be given to the dataset.
+     * @param description The description to be given to the dataset.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -162,17 +172,20 @@ public final class DatasetsImpl {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<DatasetsCreateResponse> createWithResponseAsync(
-            String conversionId, String datasetId, String descriptionDataset) {
+            String conversionId, String datasetId, String description) {
         final String apiVersion = "2.0";
         final String accept = "application/json";
-        return service.create(
-                this.client.getGeography(),
-                this.client.getXMsClientId(),
-                apiVersion,
-                conversionId,
-                datasetId,
-                descriptionDataset,
-                accept);
+        return FluxUtil.withContext(
+                context ->
+                        service.create(
+                                this.client.getGeography(),
+                                this.client.getClientId(),
+                                apiVersion,
+                                conversionId,
+                                datasetId,
+                                description,
+                                accept,
+                                context));
     }
 
     /**
@@ -205,18 +218,72 @@ public final class DatasetsImpl {
      *     query parameters with same name (if more than one is provided).
      * @param datasetId The ID for the dataset to append with. The dataset must originate from a previous dataset
      *     creation call that matches the datasetId.
-     * @param descriptionDataset The description to be given to the dataset.
+     * @param description The description to be given to the dataset.
+     * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the response model for a Long-Running Operations API.
      */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<DatasetsCreateResponse> createWithResponseAsync(
+            String conversionId, String datasetId, String description, Context context) {
+        final String apiVersion = "2.0";
+        final String accept = "application/json";
+        return service.create(
+                this.client.getGeography(),
+                this.client.getClientId(),
+                apiVersion,
+                conversionId,
+                datasetId,
+                description,
+                accept,
+                context);
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>This API allows the caller to create a dataset from data that was uploaded to the Azure Maps Data Service and
+     * converted using the Azure Maps Conversion Service.
+     *
+     * <p>You can use this API in a scenario like uploading a DWG zip package for a building, converting the zip package
+     * using the Azure Maps Conversion Service, and creating a dataset from the converted zip package. The created
+     * dataset can be used to create tilesets using the Azure Maps Tileset Service and can be queried via the Azure Maps
+     * WFS Service.
+     *
+     * <p>### Submit Create Request
+     *
+     * <p>To create your dataset, you will use a `POST` request where the `conversionId` query parameter is an ID that
+     * represents the converted DWG zip package, the `datasetId` parameter will be the ID of a previously created
+     * dataset to append with the current dataset and, optionally, the `description` query parameter will contain a
+     * description (if description is not provided a default description will be given).
+     *
+     * <p>The Create API is a [long-running request](https://aka.ms/am-creator-lrt-v2).
+     *
+     * @param conversionId The unique ID used to create the dataset. The `conversionId` must have been obtained from a
+     *     successful call to the Conversion Service [Convert
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/v2/conversion/convert) and may be provided with multiple
+     *     query parameters with same name (if more than one is provided).
+     * @param datasetId The ID for the dataset to append with. The dataset must originate from a previous dataset
+     *     creation call that matches the datasetId.
+     * @param description The description to be given to the dataset.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response model for a Long-Running Operations API.
+     */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public PollerFlux<LongRunningOperationResult, LongRunningOperationResult> beginCreateAsync(
-            String conversionId, String datasetId, String descriptionDataset) {
+            String conversionId, String datasetId, String description) {
         return PollerFlux.create(
                 Duration.ofSeconds(1),
-                () -> this.createWithResponseAsync(conversionId, datasetId, descriptionDataset),
-                new DefaultPollingStrategy<>(this.client.getHttpPipeline(), Context.NONE),
+                () -> this.createWithResponseAsync(conversionId, datasetId, description),
+                new DefaultPollingStrategy<>(this.client.getHttpPipeline()),
                 new TypeReference<LongRunningOperationResult>() {},
                 new TypeReference<LongRunningOperationResult>() {});
     }
@@ -251,15 +318,107 @@ public final class DatasetsImpl {
      *     query parameters with same name (if more than one is provided).
      * @param datasetId The ID for the dataset to append with. The dataset must originate from a previous dataset
      *     creation call that matches the datasetId.
-     * @param descriptionDataset The description to be given to the dataset.
+     * @param description The description to be given to the dataset.
+     * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the response model for a Long-Running Operations API.
      */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    public PollerFlux<LongRunningOperationResult, LongRunningOperationResult> beginCreateAsync(
+            String conversionId, String datasetId, String description, Context context) {
+        return PollerFlux.create(
+                Duration.ofSeconds(1),
+                () -> this.createWithResponseAsync(conversionId, datasetId, description, context),
+                new DefaultPollingStrategy<>(this.client.getHttpPipeline()),
+                new TypeReference<LongRunningOperationResult>() {},
+                new TypeReference<LongRunningOperationResult>() {});
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>This API allows the caller to create a dataset from data that was uploaded to the Azure Maps Data Service and
+     * converted using the Azure Maps Conversion Service.
+     *
+     * <p>You can use this API in a scenario like uploading a DWG zip package for a building, converting the zip package
+     * using the Azure Maps Conversion Service, and creating a dataset from the converted zip package. The created
+     * dataset can be used to create tilesets using the Azure Maps Tileset Service and can be queried via the Azure Maps
+     * WFS Service.
+     *
+     * <p>### Submit Create Request
+     *
+     * <p>To create your dataset, you will use a `POST` request where the `conversionId` query parameter is an ID that
+     * represents the converted DWG zip package, the `datasetId` parameter will be the ID of a previously created
+     * dataset to append with the current dataset and, optionally, the `description` query parameter will contain a
+     * description (if description is not provided a default description will be given).
+     *
+     * <p>The Create API is a [long-running request](https://aka.ms/am-creator-lrt-v2).
+     *
+     * @param conversionId The unique ID used to create the dataset. The `conversionId` must have been obtained from a
+     *     successful call to the Conversion Service [Convert
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/v2/conversion/convert) and may be provided with multiple
+     *     query parameters with same name (if more than one is provided).
+     * @param datasetId The ID for the dataset to append with. The dataset must originate from a previous dataset
+     *     creation call that matches the datasetId.
+     * @param description The description to be given to the dataset.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response model for a Long-Running Operations API.
+     */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<LongRunningOperationResult, LongRunningOperationResult> beginCreate(
-            String conversionId, String datasetId, String descriptionDataset) {
-        return this.beginCreateAsync(conversionId, datasetId, descriptionDataset).getSyncPoller();
+            String conversionId, String datasetId, String description) {
+        return this.beginCreateAsync(conversionId, datasetId, description).getSyncPoller();
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>This API allows the caller to create a dataset from data that was uploaded to the Azure Maps Data Service and
+     * converted using the Azure Maps Conversion Service.
+     *
+     * <p>You can use this API in a scenario like uploading a DWG zip package for a building, converting the zip package
+     * using the Azure Maps Conversion Service, and creating a dataset from the converted zip package. The created
+     * dataset can be used to create tilesets using the Azure Maps Tileset Service and can be queried via the Azure Maps
+     * WFS Service.
+     *
+     * <p>### Submit Create Request
+     *
+     * <p>To create your dataset, you will use a `POST` request where the `conversionId` query parameter is an ID that
+     * represents the converted DWG zip package, the `datasetId` parameter will be the ID of a previously created
+     * dataset to append with the current dataset and, optionally, the `description` query parameter will contain a
+     * description (if description is not provided a default description will be given).
+     *
+     * <p>The Create API is a [long-running request](https://aka.ms/am-creator-lrt-v2).
+     *
+     * @param conversionId The unique ID used to create the dataset. The `conversionId` must have been obtained from a
+     *     successful call to the Conversion Service [Convert
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/v2/conversion/convert) and may be provided with multiple
+     *     query parameters with same name (if more than one is provided).
+     * @param datasetId The ID for the dataset to append with. The dataset must originate from a previous dataset
+     *     creation call that matches the datasetId.
+     * @param description The description to be given to the dataset.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response model for a Long-Running Operations API.
+     */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    public SyncPoller<LongRunningOperationResult, LongRunningOperationResult> beginCreate(
+            String conversionId, String datasetId, String description, Context context) {
+        return this.beginCreateAsync(conversionId, datasetId, description, context).getSyncPoller();
     }
 
     /**
@@ -296,7 +455,7 @@ public final class DatasetsImpl {
      *
      * <p>```json { "datasets": [ { "timestamp": "2020-01-01T22:50:48.123Z", "datasetId":
      * "f6495f62-94f8-0ec2-c252-45626f82fcb2", "description": "Some description or comment for the dataset.",
-     * "datasetSources": { "conversionIds": [ "15d21452-c9bb-27b6-5e79-743ca5c3205d" ], }, "ontology": "facility-2.0",
+     * "datasetSources": { "conversionIds": [ "15d21452-c9bb-27b6-5e79-743ca5c3205d" ], }, "": "facility-2.0",
      * "featureCounts": { "directoryInfo": 2, "category": 10, "facility": 1, "level": 3, "unit": 183, "zone": 3,
      * "verticalPenetration": 6, "opening": 48, "areaElement": 108 } }, { "timestamp": "2020-01-01T22:57:53.123Z",
      * "datasetId": "8b1288fa-1958-4a2b-b68e-13a7i5af7d7c", "description": "Create from upload
@@ -310,10 +469,17 @@ public final class DatasetsImpl {
      * @return the response model for the Dataset List API.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<PagedResponse<DatasetDetailInfo>> listSinglePageAsync() {
+    public Mono<PagedResponse<Dataset>> listSinglePageAsync() {
         final String apiVersion = "2.0";
         final String accept = "application/json";
-        return service.list(this.client.getGeography(), this.client.getXMsClientId(), apiVersion, accept)
+        return FluxUtil.withContext(
+                        context ->
+                                service.list(
+                                        this.client.getGeography(),
+                                        this.client.getClientId(),
+                                        apiVersion,
+                                        accept,
+                                        context))
                 .map(
                         res ->
                                 new PagedResponseBase<>(
@@ -359,7 +525,72 @@ public final class DatasetsImpl {
      *
      * <p>```json { "datasets": [ { "timestamp": "2020-01-01T22:50:48.123Z", "datasetId":
      * "f6495f62-94f8-0ec2-c252-45626f82fcb2", "description": "Some description or comment for the dataset.",
-     * "datasetSources": { "conversionIds": [ "15d21452-c9bb-27b6-5e79-743ca5c3205d" ], }, "ontology": "facility-2.0",
+     * "datasetSources": { "conversionIds": [ "15d21452-c9bb-27b6-5e79-743ca5c3205d" ], }, "": "facility-2.0",
+     * "featureCounts": { "directoryInfo": 2, "category": 10, "facility": 1, "level": 3, "unit": 183, "zone": 3,
+     * "verticalPenetration": 6, "opening": 48, "areaElement": 108 } }, { "timestamp": "2020-01-01T22:57:53.123Z",
+     * "datasetId": "8b1288fa-1958-4a2b-b68e-13a7i5af7d7c", "description": "Create from upload
+     * '0c1288fa-2058-4a1b-b68d-13a5f5af7d7c'.", "datasetSources": { "conversionIds": [
+     * "0c1288fa-2058-4a1b-b68d-13a5f5af7d7c" ], "appendDatasetId": "46d1edb6-d29e-4786-9589-dbd4efd7a977" },
+     * "ontology": "facility-2.0", "featureCounts": { "directoryInfo": 2, "category": 10, "facility": 1, "level": 3,
+     * "unit": 183, "zone": 3, "verticalPenetration": 6, "opening": 48, "areaElement": 108 } } ] } ```.
+     *
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response model for the Dataset List API.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<PagedResponse<Dataset>> listSinglePageAsync(Context context) {
+        final String apiVersion = "2.0";
+        final String accept = "application/json";
+        return service.list(this.client.getGeography(), this.client.getClientId(), apiVersion, accept, context)
+                .map(
+                        res ->
+                                new PagedResponseBase<>(
+                                        res.getRequest(),
+                                        res.getStatusCode(),
+                                        res.getHeaders(),
+                                        res.getValue().getDatasets(),
+                                        res.getValue().getNextLink(),
+                                        null));
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>This API allows the caller to fetch a list of all previously successfully created datasets.
+     *
+     * <p>### Submit List Request
+     *
+     * <p>To list all your datasets, you will issue a `GET` request with no additional parameters.
+     *
+     * <p>### List Data Response
+     *
+     * <p>The List API returns the complete list of all datasets in `json` format. The response contains the following
+     * fields (if they are not null or empty): &gt; created - The timestamp the dataset was created. &gt; datasetId -
+     * The id for the dataset. &gt; description - The description for the dataset. &gt; datasetSources - The source data
+     * that was used when the create request was issued. &gt; ontology - The source
+     * [ontology](https://docs.microsoft.com/en-us/azure/azure-maps/creator-facility-ontology) that was used in the
+     * conversion service for the input data.&lt;br/&gt;
+     *
+     * <p>The `datasetSources` describes the source data that was used when the create request was issued and contains
+     * the following elements (if they are not null or empty):
+     *
+     * <p>&gt; conversionIds - The list of `conversionId` (null if none were provided). &gt; appendDatasetId - The
+     * `datasetId` that was used for an append operation (null if none was used). &gt;featureCounts - The counts for
+     * each feature type in the dataset.&lt;br/&gt;
+     *
+     * <p>Here's a sample response returning the `timestamp`, `datasetId`, `description`, `datasetSources`, and
+     * `ontology` of 3 dataset resources:
+     *
+     * <p>```json { "datasets": [ { "timestamp": "2020-01-01T22:50:48.123Z", "datasetId":
+     * "f6495f62-94f8-0ec2-c252-45626f82fcb2", "description": "Some description or comment for the dataset.",
+     * "datasetSources": { "conversionIds": [ "15d21452-c9bb-27b6-5e79-743ca5c3205d" ], }, "": "facility-2.0",
      * "featureCounts": { "directoryInfo": 2, "category": 10, "facility": 1, "level": 3, "unit": 183, "zone": 3,
      * "verticalPenetration": 6, "opening": 48, "areaElement": 108 } }, { "timestamp": "2020-01-01T22:57:53.123Z",
      * "datasetId": "8b1288fa-1958-4a2b-b68e-13a7i5af7d7c", "description": "Create from upload
@@ -373,7 +604,7 @@ public final class DatasetsImpl {
      * @return the response model for the Dataset List API.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedFlux<DatasetDetailInfo> listAsync() {
+    public PagedFlux<Dataset> listAsync() {
         return new PagedFlux<>(() -> listSinglePageAsync(), nextLink -> listNextSinglePageAsync(nextLink));
     }
 
@@ -411,7 +642,62 @@ public final class DatasetsImpl {
      *
      * <p>```json { "datasets": [ { "timestamp": "2020-01-01T22:50:48.123Z", "datasetId":
      * "f6495f62-94f8-0ec2-c252-45626f82fcb2", "description": "Some description or comment for the dataset.",
-     * "datasetSources": { "conversionIds": [ "15d21452-c9bb-27b6-5e79-743ca5c3205d" ], }, "ontology": "facility-2.0",
+     * "datasetSources": { "conversionIds": [ "15d21452-c9bb-27b6-5e79-743ca5c3205d" ], }, "": "facility-2.0",
+     * "featureCounts": { "directoryInfo": 2, "category": 10, "facility": 1, "level": 3, "unit": 183, "zone": 3,
+     * "verticalPenetration": 6, "opening": 48, "areaElement": 108 } }, { "timestamp": "2020-01-01T22:57:53.123Z",
+     * "datasetId": "8b1288fa-1958-4a2b-b68e-13a7i5af7d7c", "description": "Create from upload
+     * '0c1288fa-2058-4a1b-b68d-13a5f5af7d7c'.", "datasetSources": { "conversionIds": [
+     * "0c1288fa-2058-4a1b-b68d-13a5f5af7d7c" ], "appendDatasetId": "46d1edb6-d29e-4786-9589-dbd4efd7a977" },
+     * "ontology": "facility-2.0", "featureCounts": { "directoryInfo": 2, "category": 10, "facility": 1, "level": 3,
+     * "unit": 183, "zone": 3, "verticalPenetration": 6, "opening": 48, "areaElement": 108 } } ] } ```.
+     *
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response model for the Dataset List API.
+     */
+    @ServiceMethod(returns = ReturnType.COLLECTION)
+    public PagedFlux<Dataset> listAsync(Context context) {
+        return new PagedFlux<>(
+                () -> listSinglePageAsync(context), nextLink -> listNextSinglePageAsync(nextLink, context));
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>This API allows the caller to fetch a list of all previously successfully created datasets.
+     *
+     * <p>### Submit List Request
+     *
+     * <p>To list all your datasets, you will issue a `GET` request with no additional parameters.
+     *
+     * <p>### List Data Response
+     *
+     * <p>The List API returns the complete list of all datasets in `json` format. The response contains the following
+     * fields (if they are not null or empty): &gt; created - The timestamp the dataset was created. &gt; datasetId -
+     * The id for the dataset. &gt; description - The description for the dataset. &gt; datasetSources - The source data
+     * that was used when the create request was issued. &gt; ontology - The source
+     * [ontology](https://docs.microsoft.com/en-us/azure/azure-maps/creator-facility-ontology) that was used in the
+     * conversion service for the input data.&lt;br/&gt;
+     *
+     * <p>The `datasetSources` describes the source data that was used when the create request was issued and contains
+     * the following elements (if they are not null or empty):
+     *
+     * <p>&gt; conversionIds - The list of `conversionId` (null if none were provided). &gt; appendDatasetId - The
+     * `datasetId` that was used for an append operation (null if none was used). &gt;featureCounts - The counts for
+     * each feature type in the dataset.&lt;br/&gt;
+     *
+     * <p>Here's a sample response returning the `timestamp`, `datasetId`, `description`, `datasetSources`, and
+     * `ontology` of 3 dataset resources:
+     *
+     * <p>```json { "datasets": [ { "timestamp": "2020-01-01T22:50:48.123Z", "datasetId":
+     * "f6495f62-94f8-0ec2-c252-45626f82fcb2", "description": "Some description or comment for the dataset.",
+     * "datasetSources": { "conversionIds": [ "15d21452-c9bb-27b6-5e79-743ca5c3205d" ], }, "": "facility-2.0",
      * "featureCounts": { "directoryInfo": 2, "category": 10, "facility": 1, "level": 3, "unit": 183, "zone": 3,
      * "verticalPenetration": 6, "opening": 48, "areaElement": 108 } }, { "timestamp": "2020-01-01T22:57:53.123Z",
      * "datasetId": "8b1288fa-1958-4a2b-b68e-13a7i5af7d7c", "description": "Create from upload
@@ -425,7 +711,7 @@ public final class DatasetsImpl {
      * @return the response model for the Dataset List API.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedIterable<DatasetDetailInfo> list() {
+    public PagedIterable<Dataset> list() {
         return new PagedIterable<>(listAsync());
     }
 
@@ -436,16 +722,15 @@ public final class DatasetsImpl {
      * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
      * tools that apply to Azure Maps Creator.
      *
-     * <p>This API allows the caller to fetch a previously successfully created dataset.
+     * <p>This API allows the caller to fetch a list of all previously successfully created datasets.
      *
-     * <p>### Submit Get Details Request
+     * <p>### Submit List Request
      *
-     * <p>To get the details for a previously created dataset, you will issue a `GET` request with the `datasetId` in
-     * the path.
+     * <p>To list all your datasets, you will issue a `GET` request with no additional parameters.
      *
-     * <p>### Get Details Response
+     * <p>### List Data Response
      *
-     * <p>The Get Details API returns the details for a dataset in `json` format. The response contains the following
+     * <p>The List API returns the complete list of all datasets in `json` format. The response contains the following
      * fields (if they are not null or empty): &gt; created - The timestamp the dataset was created. &gt; datasetId -
      * The id for the dataset. &gt; description - The description for the dataset. &gt; datasetSources - The source data
      * that was used when the create request was issued. &gt; ontology - The source
@@ -453,30 +738,35 @@ public final class DatasetsImpl {
      * conversion service for the input data.&lt;br/&gt;
      *
      * <p>The `datasetSources` describes the source data that was used when the create request was issued and contains
-     * the following elements (if they are not null or empty): &gt; conversionIds - The list of `conversionId` (null if
-     * none were provided). &gt; appendDatasetId - The `datasetId` that was used for an append operation (null if none
-     * was used). &gt;featureCounts - The counts for each feature type in the dataset.&lt;br/&gt;
+     * the following elements (if they are not null or empty):
+     *
+     * <p>&gt; conversionIds - The list of `conversionId` (null if none were provided). &gt; appendDatasetId - The
+     * `datasetId` that was used for an append operation (null if none was used). &gt;featureCounts - The counts for
+     * each feature type in the dataset.&lt;br/&gt;
      *
      * <p>Here's a sample response returning the `timestamp`, `datasetId`, `description`, `datasetSources`, and
-     * `ontology` of a dataset resource:
+     * `ontology` of 3 dataset resources:
      *
-     * <p>```json { "timestamp": "2020-01-01T22:50:48.123Z", "datasetId": "f6495f62-94f8-0ec2-c252-45626f82fcb2",
-     * "description": "Some description or comment for the dataset.", "datasetSources": { "conversionIds": [
-     * "15d21452-c9bb-27b6-5e79-743ca5c3205d" ], }, "ontology": "facility-2.0", "featureCounts": { "directoryInfo": 2,
-     * "category": 10, "facility": 1, "level": 3, "unit": 183, "zone": 3, "verticalPenetration": 6, "opening": 48,
-     * "areaElement": 108 } } ```.
+     * <p>```json { "datasets": [ { "timestamp": "2020-01-01T22:50:48.123Z", "datasetId":
+     * "f6495f62-94f8-0ec2-c252-45626f82fcb2", "description": "Some description or comment for the dataset.",
+     * "datasetSources": { "conversionIds": [ "15d21452-c9bb-27b6-5e79-743ca5c3205d" ], }, "": "facility-2.0",
+     * "featureCounts": { "directoryInfo": 2, "category": 10, "facility": 1, "level": 3, "unit": 183, "zone": 3,
+     * "verticalPenetration": 6, "opening": 48, "areaElement": 108 } }, { "timestamp": "2020-01-01T22:57:53.123Z",
+     * "datasetId": "8b1288fa-1958-4a2b-b68e-13a7i5af7d7c", "description": "Create from upload
+     * '0c1288fa-2058-4a1b-b68d-13a5f5af7d7c'.", "datasetSources": { "conversionIds": [
+     * "0c1288fa-2058-4a1b-b68d-13a5f5af7d7c" ], "appendDatasetId": "46d1edb6-d29e-4786-9589-dbd4efd7a977" },
+     * "ontology": "facility-2.0", "featureCounts": { "directoryInfo": 2, "category": 10, "facility": 1, "level": 3,
+     * "unit": 183, "zone": 3, "verticalPenetration": 6, "opening": 48, "areaElement": 108 } } ] } ```.
      *
-     * @param datasetId The identifier for the dataset to query from.
+     * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return detail information for the dataset.
+     * @return the response model for the Dataset List API.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<DatasetDetailInfo>> getWithResponseAsync(String datasetId) {
-        final String apiVersion = "2.0";
-        final String accept = "application/json";
-        return service.get(this.client.getGeography(), this.client.getXMsClientId(), datasetId, apiVersion, accept);
+    @ServiceMethod(returns = ReturnType.COLLECTION)
+    public PagedIterable<Dataset> list(Context context) {
+        return new PagedIterable<>(listAsync(context));
     }
 
     /**
@@ -523,10 +813,177 @@ public final class DatasetsImpl {
      * @return detail information for the dataset.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<DatasetDetailInfo> getAsync(String datasetId) {
+    public Mono<Response<Dataset>> getWithResponseAsync(String datasetId) {
+        final String apiVersion = "2.0";
+        final String accept = "application/json";
+        return FluxUtil.withContext(
+                context ->
+                        service.get(
+                                this.client.getGeography(),
+                                this.client.getClientId(),
+                                datasetId,
+                                apiVersion,
+                                accept,
+                                context));
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>This API allows the caller to fetch a previously successfully created dataset.
+     *
+     * <p>### Submit Get Details Request
+     *
+     * <p>To get the details for a previously created dataset, you will issue a `GET` request with the `datasetId` in
+     * the path.
+     *
+     * <p>### Get Details Response
+     *
+     * <p>The Get Details API returns the details for a dataset in `json` format. The response contains the following
+     * fields (if they are not null or empty): &gt; created - The timestamp the dataset was created. &gt; datasetId -
+     * The id for the dataset. &gt; description - The description for the dataset. &gt; datasetSources - The source data
+     * that was used when the create request was issued. &gt; ontology - The source
+     * [ontology](https://docs.microsoft.com/en-us/azure/azure-maps/creator-facility-ontology) that was used in the
+     * conversion service for the input data.&lt;br/&gt;
+     *
+     * <p>The `datasetSources` describes the source data that was used when the create request was issued and contains
+     * the following elements (if they are not null or empty): &gt; conversionIds - The list of `conversionId` (null if
+     * none were provided). &gt; appendDatasetId - The `datasetId` that was used for an append operation (null if none
+     * was used). &gt;featureCounts - The counts for each feature type in the dataset.&lt;br/&gt;
+     *
+     * <p>Here's a sample response returning the `timestamp`, `datasetId`, `description`, `datasetSources`, and
+     * `ontology` of a dataset resource:
+     *
+     * <p>```json { "timestamp": "2020-01-01T22:50:48.123Z", "datasetId": "f6495f62-94f8-0ec2-c252-45626f82fcb2",
+     * "description": "Some description or comment for the dataset.", "datasetSources": { "conversionIds": [
+     * "15d21452-c9bb-27b6-5e79-743ca5c3205d" ], }, "ontology": "facility-2.0", "featureCounts": { "directoryInfo": 2,
+     * "category": 10, "facility": 1, "level": 3, "unit": 183, "zone": 3, "verticalPenetration": 6, "opening": 48,
+     * "areaElement": 108 } } ```.
+     *
+     * @param datasetId The identifier for the dataset to query from.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return detail information for the dataset.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Response<Dataset>> getWithResponseAsync(String datasetId, Context context) {
+        final String apiVersion = "2.0";
+        final String accept = "application/json";
+        return service.get(
+                this.client.getGeography(), this.client.getClientId(), datasetId, apiVersion, accept, context);
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>This API allows the caller to fetch a previously successfully created dataset.
+     *
+     * <p>### Submit Get Details Request
+     *
+     * <p>To get the details for a previously created dataset, you will issue a `GET` request with the `datasetId` in
+     * the path.
+     *
+     * <p>### Get Details Response
+     *
+     * <p>The Get Details API returns the details for a dataset in `json` format. The response contains the following
+     * fields (if they are not null or empty): &gt; created - The timestamp the dataset was created. &gt; datasetId -
+     * The id for the dataset. &gt; description - The description for the dataset. &gt; datasetSources - The source data
+     * that was used when the create request was issued. &gt; ontology - The source
+     * [ontology](https://docs.microsoft.com/en-us/azure/azure-maps/creator-facility-ontology) that was used in the
+     * conversion service for the input data.&lt;br/&gt;
+     *
+     * <p>The `datasetSources` describes the source data that was used when the create request was issued and contains
+     * the following elements (if they are not null or empty): &gt; conversionIds - The list of `conversionId` (null if
+     * none were provided). &gt; appendDatasetId - The `datasetId` that was used for an append operation (null if none
+     * was used). &gt;featureCounts - The counts for each feature type in the dataset.&lt;br/&gt;
+     *
+     * <p>Here's a sample response returning the `timestamp`, `datasetId`, `description`, `datasetSources`, and
+     * `ontology` of a dataset resource:
+     *
+     * <p>```json { "timestamp": "2020-01-01T22:50:48.123Z", "datasetId": "f6495f62-94f8-0ec2-c252-45626f82fcb2",
+     * "description": "Some description or comment for the dataset.", "datasetSources": { "conversionIds": [
+     * "15d21452-c9bb-27b6-5e79-743ca5c3205d" ], }, "ontology": "facility-2.0", "featureCounts": { "directoryInfo": 2,
+     * "category": 10, "facility": 1, "level": 3, "unit": 183, "zone": 3, "verticalPenetration": 6, "opening": 48,
+     * "areaElement": 108 } } ```.
+     *
+     * @param datasetId The identifier for the dataset to query from.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return detail information for the dataset.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Dataset> getAsync(String datasetId) {
         return getWithResponseAsync(datasetId)
                 .flatMap(
-                        (Response<DatasetDetailInfo> res) -> {
+                        (Response<Dataset> res) -> {
+                            if (res.getValue() != null) {
+                                return Mono.just(res.getValue());
+                            } else {
+                                return Mono.empty();
+                            }
+                        });
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>This API allows the caller to fetch a previously successfully created dataset.
+     *
+     * <p>### Submit Get Details Request
+     *
+     * <p>To get the details for a previously created dataset, you will issue a `GET` request with the `datasetId` in
+     * the path.
+     *
+     * <p>### Get Details Response
+     *
+     * <p>The Get Details API returns the details for a dataset in `json` format. The response contains the following
+     * fields (if they are not null or empty): &gt; created - The timestamp the dataset was created. &gt; datasetId -
+     * The id for the dataset. &gt; description - The description for the dataset. &gt; datasetSources - The source data
+     * that was used when the create request was issued. &gt; ontology - The source
+     * [ontology](https://docs.microsoft.com/en-us/azure/azure-maps/creator-facility-ontology) that was used in the
+     * conversion service for the input data.&lt;br/&gt;
+     *
+     * <p>The `datasetSources` describes the source data that was used when the create request was issued and contains
+     * the following elements (if they are not null or empty): &gt; conversionIds - The list of `conversionId` (null if
+     * none were provided). &gt; appendDatasetId - The `datasetId` that was used for an append operation (null if none
+     * was used). &gt;featureCounts - The counts for each feature type in the dataset.&lt;br/&gt;
+     *
+     * <p>Here's a sample response returning the `timestamp`, `datasetId`, `description`, `datasetSources`, and
+     * `ontology` of a dataset resource:
+     *
+     * <p>```json { "timestamp": "2020-01-01T22:50:48.123Z", "datasetId": "f6495f62-94f8-0ec2-c252-45626f82fcb2",
+     * "description": "Some description or comment for the dataset.", "datasetSources": { "conversionIds": [
+     * "15d21452-c9bb-27b6-5e79-743ca5c3205d" ], }, "ontology": "facility-2.0", "featureCounts": { "directoryInfo": 2,
+     * "category": 10, "facility": 1, "level": 3, "unit": 183, "zone": 3, "verticalPenetration": 6, "opening": 48,
+     * "areaElement": 108 } } ```.
+     *
+     * @param datasetId The identifier for the dataset to query from.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return detail information for the dataset.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Dataset> getAsync(String datasetId, Context context) {
+        return getWithResponseAsync(datasetId, context)
+                .flatMap(
+                        (Response<Dataset> res) -> {
                             if (res.getValue() != null) {
                                 return Mono.just(res.getValue());
                             } else {
@@ -579,8 +1036,57 @@ public final class DatasetsImpl {
      * @return detail information for the dataset.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public DatasetDetailInfo get(String datasetId) {
+    public Dataset get(String datasetId) {
         return getAsync(datasetId).block();
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>This API allows the caller to fetch a previously successfully created dataset.
+     *
+     * <p>### Submit Get Details Request
+     *
+     * <p>To get the details for a previously created dataset, you will issue a `GET` request with the `datasetId` in
+     * the path.
+     *
+     * <p>### Get Details Response
+     *
+     * <p>The Get Details API returns the details for a dataset in `json` format. The response contains the following
+     * fields (if they are not null or empty): &gt; created - The timestamp the dataset was created. &gt; datasetId -
+     * The id for the dataset. &gt; description - The description for the dataset. &gt; datasetSources - The source data
+     * that was used when the create request was issued. &gt; ontology - The source
+     * [ontology](https://docs.microsoft.com/en-us/azure/azure-maps/creator-facility-ontology) that was used in the
+     * conversion service for the input data.&lt;br/&gt;
+     *
+     * <p>The `datasetSources` describes the source data that was used when the create request was issued and contains
+     * the following elements (if they are not null or empty): &gt; conversionIds - The list of `conversionId` (null if
+     * none were provided). &gt; appendDatasetId - The `datasetId` that was used for an append operation (null if none
+     * was used). &gt;featureCounts - The counts for each feature type in the dataset.&lt;br/&gt;
+     *
+     * <p>Here's a sample response returning the `timestamp`, `datasetId`, `description`, `datasetSources`, and
+     * `ontology` of a dataset resource:
+     *
+     * <p>```json { "timestamp": "2020-01-01T22:50:48.123Z", "datasetId": "f6495f62-94f8-0ec2-c252-45626f82fcb2",
+     * "description": "Some description or comment for the dataset.", "datasetSources": { "conversionIds": [
+     * "15d21452-c9bb-27b6-5e79-743ca5c3205d" ], }, "ontology": "facility-2.0", "featureCounts": { "directoryInfo": 2,
+     * "category": 10, "facility": 1, "level": 3, "unit": 183, "zone": 3, "verticalPenetration": 6, "opening": 48,
+     * "areaElement": 108 } } ```.
+     *
+     * @param datasetId The identifier for the dataset to query from.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return detail information for the dataset.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<Dataset> getWithResponse(String datasetId, Context context) {
+        return getWithResponseAsync(datasetId, context).block();
     }
 
     /**
@@ -607,7 +1113,44 @@ public final class DatasetsImpl {
     public Mono<Response<Void>> deleteWithResponseAsync(String datasetId) {
         final String apiVersion = "2.0";
         final String accept = "application/json";
-        return service.delete(this.client.getGeography(), this.client.getXMsClientId(), apiVersion, datasetId, accept);
+        return FluxUtil.withContext(
+                context ->
+                        service.delete(
+                                this.client.getGeography(),
+                                this.client.getClientId(),
+                                apiVersion,
+                                datasetId,
+                                accept,
+                                context));
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>You can also use this API to delete old/unused datasets to create space for new Creator content.
+     *
+     * <p>### Submit Delete Request
+     *
+     * <p>To delete your content you will issue a `DELETE` request where the path will contain the `datasetId` of the
+     * dataset to delete.
+     *
+     * @param datasetId The identifier for the dataset to query from.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the completion.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Response<Void>> deleteWithResponseAsync(String datasetId, Context context) {
+        final String apiVersion = "2.0";
+        final String accept = "application/json";
+        return service.delete(
+                this.client.getGeography(), this.client.getClientId(), apiVersion, datasetId, accept, context);
     }
 
     /**
@@ -650,6 +1193,32 @@ public final class DatasetsImpl {
      * dataset to delete.
      *
      * @param datasetId The identifier for the dataset to query from.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the completion.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Void> deleteAsync(String datasetId, Context context) {
+        return deleteWithResponseAsync(datasetId, context).flatMap((Response<Void> res) -> Mono.empty());
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>You can also use this API to delete old/unused datasets to create space for new Creator content.
+     *
+     * <p>### Submit Delete Request
+     *
+     * <p>To delete your content you will issue a `DELETE` request where the path will contain the `datasetId` of the
+     * dataset to delete.
+     *
+     * @param datasetId The identifier for the dataset to query from.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -657,6 +1226,32 @@ public final class DatasetsImpl {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public void delete(String datasetId) {
         deleteAsync(datasetId).block();
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>You can also use this API to delete old/unused datasets to create space for new Creator content.
+     *
+     * <p>### Submit Delete Request
+     *
+     * <p>To delete your content you will issue a `DELETE` request where the path will contain the `datasetId` of the
+     * dataset to delete.
+     *
+     * @param datasetId The identifier for the dataset to query from.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<Void> deleteWithResponse(String datasetId, Context context) {
+        return deleteWithResponseAsync(datasetId, context).block();
     }
 
     /**
@@ -683,8 +1278,44 @@ public final class DatasetsImpl {
     public Mono<DatasetsGetOperationResponse> getOperationWithResponseAsync(String operationId) {
         final String apiVersion = "2.0";
         final String accept = "application/json";
+        return FluxUtil.withContext(
+                context ->
+                        service.getOperation(
+                                this.client.getGeography(),
+                                this.client.getClientId(),
+                                apiVersion,
+                                operationId,
+                                accept,
+                                context));
+    }
+
+    /**
+     * This API allows the caller to view the current progress of a dataset operation and the path is obtained from a
+     * call to the Create API.
+     *
+     * <p>### Submit Operations Request
+     *
+     * <p>To view the current progress of a dataset operation, you will use a `GET` request where the `operationId`
+     * given the path is the ID that represents the operation.
+     *
+     * <p>### Operation Response
+     *
+     * <p>While in progress, a `200-OK` http status code will be returned with no extra headers. If the operation
+     * succeeds, a `200-OK` http status code with Resource-Location header will be returned.
+     *
+     * @param operationId The ID to query the status for the dataset create/import request.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response model for a Long-Running Operations API.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<DatasetsGetOperationResponse> getOperationWithResponseAsync(String operationId, Context context) {
+        final String apiVersion = "2.0";
+        final String accept = "application/json";
         return service.getOperation(
-                this.client.getGeography(), this.client.getXMsClientId(), apiVersion, operationId, accept);
+                this.client.getGeography(), this.client.getClientId(), apiVersion, operationId, accept, context);
     }
 
     /**
@@ -735,6 +1366,40 @@ public final class DatasetsImpl {
      * succeeds, a `200-OK` http status code with Resource-Location header will be returned.
      *
      * @param operationId The ID to query the status for the dataset create/import request.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response model for a Long-Running Operations API.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<LongRunningOperationResult> getOperationAsync(String operationId, Context context) {
+        return getOperationWithResponseAsync(operationId, context)
+                .flatMap(
+                        (DatasetsGetOperationResponse res) -> {
+                            if (res.getValue() != null) {
+                                return Mono.just(res.getValue());
+                            } else {
+                                return Mono.empty();
+                            }
+                        });
+    }
+
+    /**
+     * This API allows the caller to view the current progress of a dataset operation and the path is obtained from a
+     * call to the Create API.
+     *
+     * <p>### Submit Operations Request
+     *
+     * <p>To view the current progress of a dataset operation, you will use a `GET` request where the `operationId`
+     * given the path is the ID that represents the operation.
+     *
+     * <p>### Operation Response
+     *
+     * <p>While in progress, a `200-OK` http status code will be returned with no extra headers. If the operation
+     * succeeds, a `200-OK` http status code with Resource-Location header will be returned.
+     *
+     * @param operationId The ID to query the status for the dataset create/import request.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -743,6 +1408,32 @@ public final class DatasetsImpl {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public LongRunningOperationResult getOperation(String operationId) {
         return getOperationAsync(operationId).block();
+    }
+
+    /**
+     * This API allows the caller to view the current progress of a dataset operation and the path is obtained from a
+     * call to the Create API.
+     *
+     * <p>### Submit Operations Request
+     *
+     * <p>To view the current progress of a dataset operation, you will use a `GET` request where the `operationId`
+     * given the path is the ID that represents the operation.
+     *
+     * <p>### Operation Response
+     *
+     * <p>While in progress, a `200-OK` http status code will be returned with no extra headers. If the operation
+     * succeeds, a `200-OK` http status code with Resource-Location header will be returned.
+     *
+     * @param operationId The ID to query the status for the dataset create/import request.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response model for a Long-Running Operations API.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public DatasetsGetOperationResponse getOperationWithResponse(String operationId, Context context) {
+        return getOperationWithResponseAsync(operationId, context).block();
     }
 
     /**
@@ -755,9 +1446,41 @@ public final class DatasetsImpl {
      * @return the response model for the Dataset List API.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<PagedResponse<DatasetDetailInfo>> listNextSinglePageAsync(String nextLink) {
+    public Mono<PagedResponse<Dataset>> listNextSinglePageAsync(String nextLink) {
         final String accept = "application/json";
-        return service.listNext(nextLink, this.client.getGeography(), this.client.getXMsClientId(), accept)
+        return FluxUtil.withContext(
+                        context ->
+                                service.listNext(
+                                        nextLink,
+                                        this.client.getGeography(),
+                                        this.client.getClientId(),
+                                        accept,
+                                        context))
+                .map(
+                        res ->
+                                new PagedResponseBase<>(
+                                        res.getRequest(),
+                                        res.getStatusCode(),
+                                        res.getHeaders(),
+                                        res.getValue().getDatasets(),
+                                        res.getValue().getNextLink(),
+                                        null));
+    }
+
+    /**
+     * Get the next page of items.
+     *
+     * @param nextLink The nextLink parameter.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response model for the Dataset List API.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<PagedResponse<Dataset>> listNextSinglePageAsync(String nextLink, Context context) {
+        final String accept = "application/json";
+        return service.listNext(nextLink, this.client.getGeography(), this.client.getClientId(), accept, context)
                 .map(
                         res ->
                                 new PagedResponseBase<>(

@@ -13,25 +13,26 @@ public final class IanaId {
     /*
      * Id property
      */
-    @JsonProperty(value = "id", access = JsonProperty.Access.WRITE_ONLY)
+    @JsonProperty(value = "Id", access = JsonProperty.Access.WRITE_ONLY)
     private String id;
 
     /*
      * IsAlias property
      */
-    @JsonProperty(value = "isAlias", access = JsonProperty.Access.WRITE_ONLY)
+    @JsonProperty(value = "IsAlias", access = JsonProperty.Access.WRITE_ONLY)
     private Boolean isAlias;
 
     /*
      * AliasOf property
      */
-    @JsonProperty(value = "aliasOf", access = JsonProperty.Access.WRITE_ONLY)
+    @JsonProperty(value = "AliasOf", access = JsonProperty.Access.WRITE_ONLY)
     private String aliasOf;
 
     /*
-     * HasZone1970Location property
+     * This attribute returns `True` if the IanaId has any country/zone
+     * associated with it.
      */
-    @JsonProperty(value = "hasZone1970Location", access = JsonProperty.Access.WRITE_ONLY)
+    @JsonProperty(value = "HasZone1970Location", access = JsonProperty.Access.WRITE_ONLY)
     private Boolean hasZone1970Location;
 
     /**
@@ -62,7 +63,8 @@ public final class IanaId {
     }
 
     /**
-     * Get the hasZone1970Location property: HasZone1970Location property.
+     * Get the hasZone1970Location property: This attribute returns `True` if the IanaId has any country/zone associated
+     * with it.
      *
      * @return the hasZone1970Location value.
      */

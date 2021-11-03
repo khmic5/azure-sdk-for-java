@@ -15,21 +15,21 @@ public final class DegreeDaySummary {
      * degree C.
      */
     @JsonProperty(value = "heating")
-    private WeatherUnit heating;
+    private WeatherValue heating;
 
     /*
      * Number of degrees that the mean temperature is above 65 degrees F/ 18
      * degree C.
      */
     @JsonProperty(value = "cooling")
-    private WeatherUnit cooling;
+    private WeatherValue cooling;
 
     /**
      * Get the heating property: Number of degrees that the mean temperature is below 65 degrees F/ 18 degree C.
      *
      * @return the heating value.
      */
-    public WeatherUnit getHeating() {
+    public WeatherValue getHeating() {
         return this.heating;
     }
 
@@ -39,7 +39,7 @@ public final class DegreeDaySummary {
      * @param heating the heating value to set.
      * @return the DegreeDaySummary object itself.
      */
-    public DegreeDaySummary setHeating(WeatherUnit heating) {
+    public DegreeDaySummary setHeating(WeatherValue heating) {
         this.heating = heating;
         return this;
     }
@@ -49,7 +49,7 @@ public final class DegreeDaySummary {
      *
      * @return the cooling value.
      */
-    public WeatherUnit getCooling() {
+    public WeatherValue getCooling() {
         return this.cooling;
     }
 
@@ -59,7 +59,7 @@ public final class DegreeDaySummary {
      * @param cooling the cooling value to set.
      * @return the DegreeDaySummary object itself.
      */
-    public DegreeDaySummary setCooling(WeatherUnit cooling) {
+    public DegreeDaySummary setCooling(WeatherValue cooling) {
         this.cooling = cooling;
         return this;
     }

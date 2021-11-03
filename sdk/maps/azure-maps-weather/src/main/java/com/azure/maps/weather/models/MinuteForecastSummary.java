@@ -22,14 +22,14 @@ public final class MinuteForecastSummary {
      * approximately 25 characters.
      */
     @JsonProperty(value = "shortPhrase")
-    private String shortPhrase;
+    private String shortDescription;
 
     /*
      * Summary phrase for the next 120 minutes. Phrase length is approximately
      * 60 characters.
      */
     @JsonProperty(value = "briefPhrase")
-    private String briefPhrase;
+    private String briefDescription;
 
     /*
      * Long summary phrase for the next 120 minutes. Phrase length is 60+
@@ -44,7 +44,7 @@ public final class MinuteForecastSummary {
      * Concepts](https://aka.ms/AzureMapsWeatherConcepts) for details.
      */
     @JsonProperty(value = "iconCode")
-    private Integer iconCode;
+    private IconCode iconCode;
 
     /**
      * Get the briefPhrase60 property: Summary phrase for the next 60 minutes. Phrase length is approximately 60
@@ -69,46 +69,46 @@ public final class MinuteForecastSummary {
     }
 
     /**
-     * Get the shortPhrase property: Short summary phrase for the next 120 minutes. Phrase length is approximately 25
-     * characters.
+     * Get the shortDescription property: Short summary phrase for the next 120 minutes. Phrase length is approximately
+     * 25 characters.
      *
-     * @return the shortPhrase value.
+     * @return the shortDescription value.
      */
-    public String getShortPhrase() {
-        return this.shortPhrase;
+    public String getShortDescription() {
+        return this.shortDescription;
     }
 
     /**
-     * Set the shortPhrase property: Short summary phrase for the next 120 minutes. Phrase length is approximately 25
-     * characters.
+     * Set the shortDescription property: Short summary phrase for the next 120 minutes. Phrase length is approximately
+     * 25 characters.
      *
-     * @param shortPhrase the shortPhrase value to set.
+     * @param shortDescription the shortDescription value to set.
      * @return the MinuteForecastSummary object itself.
      */
-    public MinuteForecastSummary setShortPhrase(String shortPhrase) {
-        this.shortPhrase = shortPhrase;
+    public MinuteForecastSummary setShortDescription(String shortDescription) {
+        this.shortDescription = shortDescription;
         return this;
     }
 
     /**
-     * Get the briefPhrase property: Summary phrase for the next 120 minutes. Phrase length is approximately 60
+     * Get the briefDescription property: Summary phrase for the next 120 minutes. Phrase length is approximately 60
      * characters.
      *
-     * @return the briefPhrase value.
+     * @return the briefDescription value.
      */
-    public String getBriefPhrase() {
-        return this.briefPhrase;
+    public String getBriefDescription() {
+        return this.briefDescription;
     }
 
     /**
-     * Set the briefPhrase property: Summary phrase for the next 120 minutes. Phrase length is approximately 60
+     * Set the briefDescription property: Summary phrase for the next 120 minutes. Phrase length is approximately 60
      * characters.
      *
-     * @param briefPhrase the briefPhrase value to set.
+     * @param briefDescription the briefDescription value to set.
      * @return the MinuteForecastSummary object itself.
      */
-    public MinuteForecastSummary setBriefPhrase(String briefPhrase) {
-        this.briefPhrase = briefPhrase;
+    public MinuteForecastSummary setBriefDescription(String briefDescription) {
+        this.briefDescription = briefDescription;
         return this;
     }
 
@@ -138,7 +138,7 @@ public final class MinuteForecastSummary {
      *
      * @return the iconCode value.
      */
-    public Integer getIconCode() {
+    public IconCode getIconCode() {
         return this.iconCode;
     }
 
@@ -149,7 +149,7 @@ public final class MinuteForecastSummary {
      * @param iconCode the iconCode value to set.
      * @return the MinuteForecastSummary object itself.
      */
-    public MinuteForecastSummary setIconCode(Integer iconCode) {
+    public MinuteForecastSummary setIconCode(IconCode iconCode) {
         this.iconCode = iconCode;
         return this;
     }

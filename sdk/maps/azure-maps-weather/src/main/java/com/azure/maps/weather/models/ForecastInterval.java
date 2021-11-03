@@ -28,13 +28,13 @@ public final class ForecastInterval {
      * A unit that represents forecasted precipitation intensity.
      */
     @JsonProperty(value = "dbz")
-    private Double dbz;
+    private Double decibelRelativeToZ;
 
     /*
      * A short phrase describing precipitation condition for the interval.
      */
     @JsonProperty(value = "shortPhrase")
-    private String shortPhrase;
+    private String shortDescription;
 
     /*
      * Key that specifies the threshold value. Along with precipitationType,
@@ -59,11 +59,11 @@ public final class ForecastInterval {
     private ColorValue simplifiedColor;
 
     /*
-     * Specifies the type of precipitation ("rain" "snow" "ice" or "mix"). If
+     * Specifies the type of precipitation ("Rain" "Snow" "Ice" or "Mix"). If
      * dbz is zero, precipitationType is not present in the response.
      */
     @JsonProperty(value = "precipitationType")
-    private String precipitationType;
+    private PrecipitationType precipitationType;
 
     /*
      * Numeric value representing an image that displays the `iconPhrase`.
@@ -71,7 +71,7 @@ public final class ForecastInterval {
      * Concepts](https://aka.ms/AzureMapsWeatherConcepts) for details.
      */
     @JsonProperty(value = "iconCode")
-    private Integer iconCode;
+    private IconCode iconCode;
 
     /*
      * Percent representing cloud cover.
@@ -122,42 +122,42 @@ public final class ForecastInterval {
     }
 
     /**
-     * Get the dbz property: A unit that represents forecasted precipitation intensity.
+     * Get the decibelRelativeToZ property: A unit that represents forecasted precipitation intensity.
      *
-     * @return the dbz value.
+     * @return the decibelRelativeToZ value.
      */
-    public Double getDbz() {
-        return this.dbz;
+    public Double getDecibelRelativeToZ() {
+        return this.decibelRelativeToZ;
     }
 
     /**
-     * Set the dbz property: A unit that represents forecasted precipitation intensity.
+     * Set the decibelRelativeToZ property: A unit that represents forecasted precipitation intensity.
      *
-     * @param dbz the dbz value to set.
+     * @param decibelRelativeToZ the decibelRelativeToZ value to set.
      * @return the ForecastInterval object itself.
      */
-    public ForecastInterval setDbz(Double dbz) {
-        this.dbz = dbz;
+    public ForecastInterval setDecibelRelativeToZ(Double decibelRelativeToZ) {
+        this.decibelRelativeToZ = decibelRelativeToZ;
         return this;
     }
 
     /**
-     * Get the shortPhrase property: A short phrase describing precipitation condition for the interval.
+     * Get the shortDescription property: A short phrase describing precipitation condition for the interval.
      *
-     * @return the shortPhrase value.
+     * @return the shortDescription value.
      */
-    public String getShortPhrase() {
-        return this.shortPhrase;
+    public String getShortDescription() {
+        return this.shortDescription;
     }
 
     /**
-     * Set the shortPhrase property: A short phrase describing precipitation condition for the interval.
+     * Set the shortDescription property: A short phrase describing precipitation condition for the interval.
      *
-     * @param shortPhrase the shortPhrase value to set.
+     * @param shortDescription the shortDescription value to set.
      * @return the ForecastInterval object itself.
      */
-    public ForecastInterval setShortPhrase(String shortPhrase) {
-        this.shortPhrase = shortPhrase;
+    public ForecastInterval setShortDescription(String shortDescription) {
+        this.shortDescription = shortDescription;
         return this;
     }
 
@@ -228,23 +228,23 @@ public final class ForecastInterval {
     }
 
     /**
-     * Get the precipitationType property: Specifies the type of precipitation ("rain" "snow" "ice" or "mix"). If dbz is
+     * Get the precipitationType property: Specifies the type of precipitation ("Rain" "Snow" "Ice" or "Mix"). If dbz is
      * zero, precipitationType is not present in the response.
      *
      * @return the precipitationType value.
      */
-    public String getPrecipitationType() {
+    public PrecipitationType getPrecipitationType() {
         return this.precipitationType;
     }
 
     /**
-     * Set the precipitationType property: Specifies the type of precipitation ("rain" "snow" "ice" or "mix"). If dbz is
+     * Set the precipitationType property: Specifies the type of precipitation ("Rain" "Snow" "Ice" or "Mix"). If dbz is
      * zero, precipitationType is not present in the response.
      *
      * @param precipitationType the precipitationType value to set.
      * @return the ForecastInterval object itself.
      */
-    public ForecastInterval setPrecipitationType(String precipitationType) {
+    public ForecastInterval setPrecipitationType(PrecipitationType precipitationType) {
         this.precipitationType = precipitationType;
         return this;
     }
@@ -255,7 +255,7 @@ public final class ForecastInterval {
      *
      * @return the iconCode value.
      */
-    public Integer getIconCode() {
+    public IconCode getIconCode() {
         return this.iconCode;
     }
 
@@ -266,7 +266,7 @@ public final class ForecastInterval {
      * @param iconCode the iconCode value to set.
      * @return the ForecastInterval object itself.
      */
-    public ForecastInterval setIconCode(Integer iconCode) {
+    public ForecastInterval setIconCode(IconCode iconCode) {
         this.iconCode = iconCode;
         return this;
     }

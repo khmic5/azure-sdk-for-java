@@ -11,16 +11,16 @@ import java.util.Collection;
 /** Defines values for DayQuarter. */
 public final class DayQuarter extends ExpandableStringEnum<DayQuarter> {
     /** Static value 0 for DayQuarter. */
-    public static final DayQuarter ZERO = fromInt(0);
+    public static final DayQuarter FIRST_QUARTER = fromInt(0);
 
     /** Static value 1 for DayQuarter. */
-    public static final DayQuarter ONE = fromInt(1);
+    public static final DayQuarter SECOND_QUARTER = fromInt(1);
 
     /** Static value 2 for DayQuarter. */
-    public static final DayQuarter TWO = fromInt(2);
+    public static final DayQuarter THIRD_QUARTER = fromInt(2);
 
     /** Static value 3 for DayQuarter. */
-    public static final DayQuarter THREE = fromInt(3);
+    public static final DayQuarter FORTH_QUARTER = fromInt(3);
 
     /**
      * Creates or finds a DayQuarter from its string representation.

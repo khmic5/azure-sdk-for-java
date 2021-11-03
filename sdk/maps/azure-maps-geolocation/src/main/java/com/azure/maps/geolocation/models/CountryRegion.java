@@ -13,18 +13,16 @@ public final class CountryRegion {
     /*
      * The IP Address's 2-character code [(ISO
      * 3166-1)](https://www.iso.org/iso-3166-country-codes.html) of the country
-     * or region as assigned by IANA and regional internet authorities. Please
-     * note, IP address in ranges reserved for special purpose will return Null
-     * for country/region.
+     * or region. Please note, IP address in ranges reserved for special
+     * purpose will return Null for country/region.
      */
     @JsonProperty(value = "isoCode", access = JsonProperty.Access.WRITE_ONLY)
     private String isoCode;
 
     /**
      * Get the isoCode property: The IP Address's 2-character code [(ISO
-     * 3166-1)](https://www.iso.org/iso-3166-country-codes.html) of the country or region as assigned by IANA and
-     * regional internet authorities. Please note, IP address in ranges reserved for special purpose will return Null
-     * for country/region.
+     * 3166-1)](https://www.iso.org/iso-3166-country-codes.html) of the country or region. Please note, IP address in
+     * ranges reserved for special purpose will return Null for country/region.
      *
      * @return the isoCode value.
      */

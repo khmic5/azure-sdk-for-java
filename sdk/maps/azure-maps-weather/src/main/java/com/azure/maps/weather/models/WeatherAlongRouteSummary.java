@@ -16,7 +16,7 @@ public final class WeatherAlongRouteSummary {
      * Concepts](https://aka.ms/AzureMapsWeatherConcepts) for details.
      */
     @JsonProperty(value = "iconCode")
-    private Integer iconCode;
+    private IconCode iconCode;
 
     /*
      * Description of the weather hazard affecting the trip.
@@ -30,7 +30,7 @@ public final class WeatherAlongRouteSummary {
      *
      * @return the iconCode value.
      */
-    public Integer getIconCode() {
+    public IconCode getIconCode() {
         return this.iconCode;
     }
 
@@ -41,7 +41,7 @@ public final class WeatherAlongRouteSummary {
      * @param iconCode the iconCode value to set.
      * @return the WeatherAlongRouteSummary object itself.
      */
-    public WeatherAlongRouteSummary setIconCode(Integer iconCode) {
+    public WeatherAlongRouteSummary setIconCode(IconCode iconCode) {
         this.iconCode = iconCode;
         return this;
     }

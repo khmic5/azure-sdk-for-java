@@ -19,7 +19,7 @@ public final class HazardDetail {
      * * `4` - Life threatening, emergency.
      */
     @JsonProperty(value = "hazardIndex")
-    private Integer hazardIndex;
+    private HazardIndex hazardIndex;
 
     /*
      * A unique identifier (non-displayable) for each type of hazard:
@@ -37,7 +37,7 @@ public final class HazardDetail {
      * precipitation intensity/type.
      */
     @JsonProperty(value = "shortPhrase")
-    private String shortPhrase;
+    private String shortDescription;
 
     /**
      * Get the hazardIndex property: A severity/hazard index. * `0` - No hazard. * `1` - Be informed, be aware. * `2` -
@@ -45,7 +45,7 @@ public final class HazardDetail {
      *
      * @return the hazardIndex value.
      */
-    public Integer getHazardIndex() {
+    public HazardIndex getHazardIndex() {
         return this.hazardIndex;
     }
 
@@ -56,7 +56,7 @@ public final class HazardDetail {
      * @param hazardIndex the hazardIndex value to set.
      * @return the HazardDetail object itself.
      */
-    public HazardDetail setHazardIndex(Integer hazardIndex) {
+    public HazardDetail setHazardIndex(HazardIndex hazardIndex) {
         this.hazardIndex = hazardIndex;
         return this;
     }
@@ -90,24 +90,24 @@ public final class HazardDetail {
     }
 
     /**
-     * Get the shortPhrase property: A displayable short phrase describing the forecasted conditions and precipitation
-     * intensity/type.
+     * Get the shortDescription property: A displayable short phrase describing the forecasted conditions and
+     * precipitation intensity/type.
      *
-     * @return the shortPhrase value.
+     * @return the shortDescription value.
      */
-    public String getShortPhrase() {
-        return this.shortPhrase;
+    public String getShortDescription() {
+        return this.shortDescription;
     }
 
     /**
-     * Set the shortPhrase property: A displayable short phrase describing the forecasted conditions and precipitation
-     * intensity/type.
+     * Set the shortDescription property: A displayable short phrase describing the forecasted conditions and
+     * precipitation intensity/type.
      *
-     * @param shortPhrase the shortPhrase value to set.
+     * @param shortDescription the shortDescription value to set.
      * @return the HazardDetail object itself.
      */
-    public HazardDetail setShortPhrase(String shortPhrase) {
-        this.shortPhrase = shortPhrase;
+    public HazardDetail setShortDescription(String shortDescription) {
+        this.shortDescription = shortDescription;
         return this;
     }
 }

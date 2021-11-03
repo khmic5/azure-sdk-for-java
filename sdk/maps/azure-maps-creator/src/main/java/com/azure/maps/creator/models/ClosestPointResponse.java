@@ -21,7 +21,7 @@ public final class ClosestPointResponse {
      * Closest Point Result Array
      */
     @JsonProperty(value = "result")
-    private List<ClosestPointResultEntry> result;
+    private List<ClosestPoint> result;
 
     /**
      * Get the summary property: Closest Point Summary object.
@@ -37,7 +37,7 @@ public final class ClosestPointResponse {
      *
      * @return the result value.
      */
-    public List<ClosestPointResultEntry> getResult() {
+    public List<ClosestPoint> getResult() {
         return this.result;
     }
 
@@ -47,7 +47,7 @@ public final class ClosestPointResponse {
      * @param result the result value to set.
      * @return the ClosestPointResponse object itself.
      */
-    public ClosestPointResponse setResult(List<ClosestPointResultEntry> result) {
+    public ClosestPointResponse setResult(List<ClosestPoint> result) {
         this.result = result;
         return this;
     }

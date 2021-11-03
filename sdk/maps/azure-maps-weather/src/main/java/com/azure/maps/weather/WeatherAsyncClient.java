@@ -8,31 +8,32 @@ import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceClient;
 import com.azure.core.annotation.ServiceMethod;
 import com.azure.core.http.rest.Response;
-import com.azure.maps.weather.implementation.WeathersImpl;
+import com.azure.maps.weather.implementation.WeatherClientImpl;
 import com.azure.maps.weather.models.CurrentConditionsResponse;
 import com.azure.maps.weather.models.DailyForecastResponse;
 import com.azure.maps.weather.models.DailyIndicesResponse;
 import com.azure.maps.weather.models.ErrorResponseException;
 import com.azure.maps.weather.models.HourlyForecastResponse;
+import com.azure.maps.weather.models.JsonFormat;
 import com.azure.maps.weather.models.MinuteForecastResponse;
 import com.azure.maps.weather.models.QuarterDayForecastResponse;
-import com.azure.maps.weather.models.ResponseFormat;
 import com.azure.maps.weather.models.SevereWeatherAlertsResponse;
 import com.azure.maps.weather.models.WeatherAlongRouteResponse;
 import com.azure.maps.weather.models.WeatherDataUnit;
+import java.util.List;
 import reactor.core.publisher.Mono;
 
 /** Initializes a new instance of the asynchronous WeatherClient type. */
 @ServiceClient(builder = WeatherClientBuilder.class, isAsync = true)
 public final class WeatherAsyncClient {
-    private final WeathersImpl serviceClient;
+    private final WeatherClientImpl serviceClient;
 
     /**
-     * Initializes an instance of Weathers client.
+     * Initializes an instance of WeatherClient client.
      *
      * @param serviceClient the service client implementation.
      */
-    WeatherAsyncClient(WeathersImpl serviceClient) {
+    WeatherAsyncClient(WeatherClientImpl serviceClient) {
         this.serviceClient = serviceClient;
     }
 
@@ -49,9 +50,8 @@ public final class WeatherAsyncClient {
      * can also request hourly forecast for the next 120 (5 days) and 240 hours (10 days).
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param query Coordinates of the location for which hourly forecast information is requested. The applicable query
-     *     is specified as a comma separated string composed by latitude followed by longitude e.g.
-     *     "47.641268,-122.125679".
+     * @param coordinates The applicable query specified as a comma separated string composed by latitude followed by
+     *     longitude e.g. "47.641268,-122.125679".
      * @param unit Specifies to return the data in either metric units or imperial units. Default value is metric.
      * @param duration Time frame of the returned weather forecast. By default, the forecast data for next hour will be
      *     returned. Available values are * `1` - Return forecast data for the next hour. Default value. * `12` - Return
@@ -60,8 +60,8 @@ public final class WeatherAsyncClient {
      *     available in S1 SKU. * `240` - Return hourly forecast for next 240 hours (10 days). Only available in S1 SKU.
      * @param language Language in which search results should be returned. Should be one of supported IETF language
      *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used. Default value is en-us.
-     *     <p>Please refer to [Supported languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
+     *     language is used.
+     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
      *     details.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -70,8 +70,8 @@ public final class WeatherAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<HourlyForecastResponse>> getHourlyForecastWithResponse(
-            ResponseFormat format, String query, WeatherDataUnit unit, Integer duration, String language) {
-        return this.serviceClient.getHourlyForecastWithResponseAsync(format, query, unit, duration, language);
+            JsonFormat format, List<Double> coordinates, WeatherDataUnit unit, Integer duration, String language) {
+        return this.serviceClient.getHourlyForecastWithResponseAsync(format, coordinates, unit, duration, language);
     }
 
     /**
@@ -87,9 +87,8 @@ public final class WeatherAsyncClient {
      * can also request hourly forecast for the next 120 (5 days) and 240 hours (10 days).
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param query Coordinates of the location for which hourly forecast information is requested. The applicable query
-     *     is specified as a comma separated string composed by latitude followed by longitude e.g.
-     *     "47.641268,-122.125679".
+     * @param coordinates The applicable query specified as a comma separated string composed by latitude followed by
+     *     longitude e.g. "47.641268,-122.125679".
      * @param unit Specifies to return the data in either metric units or imperial units. Default value is metric.
      * @param duration Time frame of the returned weather forecast. By default, the forecast data for next hour will be
      *     returned. Available values are * `1` - Return forecast data for the next hour. Default value. * `12` - Return
@@ -98,8 +97,8 @@ public final class WeatherAsyncClient {
      *     available in S1 SKU. * `240` - Return hourly forecast for next 240 hours (10 days). Only available in S1 SKU.
      * @param language Language in which search results should be returned. Should be one of supported IETF language
      *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used. Default value is en-us.
-     *     <p>Please refer to [Supported languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
+     *     language is used.
+     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
      *     details.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -108,8 +107,8 @@ public final class WeatherAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<HourlyForecastResponse> getHourlyForecast(
-            ResponseFormat format, String query, WeatherDataUnit unit, Integer duration, String language) {
-        return this.serviceClient.getHourlyForecastAsync(format, query, unit, duration, language);
+            JsonFormat format, List<Double> coordinates, WeatherDataUnit unit, Integer duration, String language) {
+        return this.serviceClient.getHourlyForecastAsync(format, coordinates, unit, duration, language);
     }
 
     /**
@@ -123,16 +122,15 @@ public final class WeatherAsyncClient {
      * intensity value (dBZ).
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param query Coordinates of the location for which minute forecast information is requested. The applicable query
-     *     is specified as a comma separated string composed by latitude followed by longitude e.g.
-     *     "47.641268,-122.125679".
+     * @param coordinates The applicable query specified as a comma separated string composed by latitude followed by
+     *     longitude e.g. "47.641268,-122.125679".
      * @param interval Specifies time interval in minutes for the returned weather forecast. Supported values are * `1`
      *     - Retrieve forecast for 1-minute intervals. Returned by default. * `5` - Retrieve forecasts for 5-minute
      *     intervals. * `15` - Retrieve forecasts for 15-minute intervals.
      * @param language Language in which search results should be returned. Should be one of supported IETF language
      *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used. Default value is en-us.
-     *     <p>Please refer to [Supported languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
+     *     language is used.
+     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
      *     details.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -141,8 +139,8 @@ public final class WeatherAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<MinuteForecastResponse>> getMinuteForecastWithResponse(
-            ResponseFormat format, String query, Integer interval, String language) {
-        return this.serviceClient.getMinuteForecastWithResponseAsync(format, query, interval, language);
+            JsonFormat format, List<Double> coordinates, Integer interval, String language) {
+        return this.serviceClient.getMinuteForecastWithResponseAsync(format, coordinates, interval, language);
     }
 
     /**
@@ -156,16 +154,15 @@ public final class WeatherAsyncClient {
      * intensity value (dBZ).
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param query Coordinates of the location for which minute forecast information is requested. The applicable query
-     *     is specified as a comma separated string composed by latitude followed by longitude e.g.
-     *     "47.641268,-122.125679".
+     * @param coordinates The applicable query specified as a comma separated string composed by latitude followed by
+     *     longitude e.g. "47.641268,-122.125679".
      * @param interval Specifies time interval in minutes for the returned weather forecast. Supported values are * `1`
      *     - Retrieve forecast for 1-minute intervals. Returned by default. * `5` - Retrieve forecasts for 5-minute
      *     intervals. * `15` - Retrieve forecasts for 15-minute intervals.
      * @param language Language in which search results should be returned. Should be one of supported IETF language
      *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used. Default value is en-us.
-     *     <p>Please refer to [Supported languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
+     *     language is used.
+     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
      *     details.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -174,8 +171,8 @@ public final class WeatherAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<MinuteForecastResponse> getMinuteForecast(
-            ResponseFormat format, String query, Integer interval, String language) {
-        return this.serviceClient.getMinuteForecastAsync(format, query, interval, language);
+            JsonFormat format, List<Double> coordinates, Integer interval, String language) {
+        return this.serviceClient.getMinuteForecastAsync(format, coordinates, interval, language);
     }
 
     /**
@@ -188,9 +185,8 @@ public final class WeatherAsyncClient {
      * such as temperature, humidity, wind, precipitation, and UV index are returned.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param query Coordinates of the location for which quarter-day forecast information is requested. The applicable
-     *     query is specified as a comma separated string composed by latitude followed by longitude e.g.
-     *     "47.641268,-122.125679".
+     * @param coordinates The applicable query specified as a comma separated string composed by latitude followed by
+     *     longitude e.g. "47.641268,-122.125679".
      * @param unit Specifies to return the data in either metric units or imperial units. Default value is metric.
      * @param duration Specifies for how many days the quester-day forecast responses are returned. Supported values
      *     are: * `1` - Return forecast data for the next day. Returned by default. * `5` - Return forecast data for the
@@ -198,8 +194,8 @@ public final class WeatherAsyncClient {
      *     days.
      * @param language Language in which search results should be returned. Should be one of supported IETF language
      *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used. Default value is en-us.
-     *     <p>Please refer to [Supported languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
+     *     language is used.
+     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
      *     details.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -208,8 +204,8 @@ public final class WeatherAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<QuarterDayForecastResponse>> getQuarterDayForecastWithResponse(
-            ResponseFormat format, String query, WeatherDataUnit unit, Integer duration, String language) {
-        return this.serviceClient.getQuarterDayForecastWithResponseAsync(format, query, unit, duration, language);
+            JsonFormat format, List<Double> coordinates, WeatherDataUnit unit, Integer duration, String language) {
+        return this.serviceClient.getQuarterDayForecastWithResponseAsync(format, coordinates, unit, duration, language);
     }
 
     /**
@@ -222,9 +218,8 @@ public final class WeatherAsyncClient {
      * such as temperature, humidity, wind, precipitation, and UV index are returned.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param query Coordinates of the location for which quarter-day forecast information is requested. The applicable
-     *     query is specified as a comma separated string composed by latitude followed by longitude e.g.
-     *     "47.641268,-122.125679".
+     * @param coordinates The applicable query specified as a comma separated string composed by latitude followed by
+     *     longitude e.g. "47.641268,-122.125679".
      * @param unit Specifies to return the data in either metric units or imperial units. Default value is metric.
      * @param duration Specifies for how many days the quester-day forecast responses are returned. Supported values
      *     are: * `1` - Return forecast data for the next day. Returned by default. * `5` - Return forecast data for the
@@ -232,8 +227,8 @@ public final class WeatherAsyncClient {
      *     days.
      * @param language Language in which search results should be returned. Should be one of supported IETF language
      *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used. Default value is en-us.
-     *     <p>Please refer to [Supported languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
+     *     language is used.
+     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
      *     details.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -242,8 +237,8 @@ public final class WeatherAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<QuarterDayForecastResponse> getQuarterDayForecast(
-            ResponseFormat format, String query, WeatherDataUnit unit, Integer duration, String language) {
-        return this.serviceClient.getQuarterDayForecastAsync(format, query, unit, duration, language);
+            JsonFormat format, List<Double> coordinates, WeatherDataUnit unit, Integer duration, String language) {
+        return this.serviceClient.getQuarterDayForecastAsync(format, coordinates, unit, duration, language);
     }
 
     /**
@@ -258,9 +253,8 @@ public final class WeatherAsyncClient {
      * temperature. Additional details such as RealFeel™ Temperature and UV index are also returned.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param query Coordinates of the location for which current conditions information is requested. The applicable
-     *     query is specified as a comma separated string composed by latitude followed by longitude e.g.
-     *     "47.641268,-122.125679".
+     * @param coordinates The applicable query specified as a comma separated string composed by latitude followed by
+     *     longitude e.g. "47.641268,-122.125679".
      * @param unit Specifies to return the data in either metric units or imperial units. Default value is metric.
      * @param details Return full details for the current conditions. Available values are * `true` - Returns full
      *     details. By default all details are returned. * `false` - Returns a truncated version of the current
@@ -272,8 +266,8 @@ public final class WeatherAsyncClient {
      *     24 hours.
      * @param language Language in which search results should be returned. Should be one of supported IETF language
      *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used. Default value is en-us.
-     *     <p>Please refer to [Supported languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
+     *     language is used.
+     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
      *     details.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -282,14 +276,14 @@ public final class WeatherAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<CurrentConditionsResponse>> getCurrentConditionsWithResponse(
-            ResponseFormat format,
-            String query,
+            JsonFormat format,
+            List<Double> coordinates,
             WeatherDataUnit unit,
             String details,
             Integer duration,
             String language) {
         return this.serviceClient.getCurrentConditionsWithResponseAsync(
-                format, query, unit, details, duration, language);
+                format, coordinates, unit, details, duration, language);
     }
 
     /**
@@ -304,9 +298,8 @@ public final class WeatherAsyncClient {
      * temperature. Additional details such as RealFeel™ Temperature and UV index are also returned.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param query Coordinates of the location for which current conditions information is requested. The applicable
-     *     query is specified as a comma separated string composed by latitude followed by longitude e.g.
-     *     "47.641268,-122.125679".
+     * @param coordinates The applicable query specified as a comma separated string composed by latitude followed by
+     *     longitude e.g. "47.641268,-122.125679".
      * @param unit Specifies to return the data in either metric units or imperial units. Default value is metric.
      * @param details Return full details for the current conditions. Available values are * `true` - Returns full
      *     details. By default all details are returned. * `false` - Returns a truncated version of the current
@@ -318,8 +311,8 @@ public final class WeatherAsyncClient {
      *     24 hours.
      * @param language Language in which search results should be returned. Should be one of supported IETF language
      *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used. Default value is en-us.
-     *     <p>Please refer to [Supported languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
+     *     language is used.
+     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
      *     details.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -328,13 +321,13 @@ public final class WeatherAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<CurrentConditionsResponse> getCurrentConditions(
-            ResponseFormat format,
-            String query,
+            JsonFormat format,
+            List<Double> coordinates,
             WeatherDataUnit unit,
             String details,
             Integer duration,
             String language) {
-        return this.serviceClient.getCurrentConditionsAsync(format, query, unit, details, duration, language);
+        return this.serviceClient.getCurrentConditionsAsync(format, coordinates, unit, details, duration, language);
     }
 
     /**
@@ -350,9 +343,8 @@ public final class WeatherAsyncClient {
      * forecast for the next 25 days, and 45 days.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param query Coordinates of the location for which current conditions information is requested. The applicable
-     *     query is specified as a comma separated string composed by latitude followed by longitude e.g.
-     *     "47.641268,-122.125679".
+     * @param coordinates The applicable query specified as a comma separated string composed by latitude followed by
+     *     longitude e.g. "47.641268,-122.125679".
      * @param unit Specifies to return the data in either metric units or imperial units. Default value is metric.
      * @param duration Specifies for how many days the daily forecast responses are returned. Available values are * `1`
      *     - Return forecast data for the next day. Returned by default. * `5` - Return forecast data for the next 5
@@ -360,8 +352,8 @@ public final class WeatherAsyncClient {
      *     Only available in S1 SKU. * `45` - Return forecast data for the next 45 days. Only available in S1 SKU.
      * @param language Language in which search results should be returned. Should be one of supported IETF language
      *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used. Default value is en-us.
-     *     <p>Please refer to [Supported languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
+     *     language is used.
+     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
      *     details.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -370,8 +362,8 @@ public final class WeatherAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<DailyForecastResponse>> getDailyForecastWithResponse(
-            ResponseFormat format, String query, WeatherDataUnit unit, Integer duration, String language) {
-        return this.serviceClient.getDailyForecastWithResponseAsync(format, query, unit, duration, language);
+            JsonFormat format, List<Double> coordinates, WeatherDataUnit unit, Integer duration, String language) {
+        return this.serviceClient.getDailyForecastWithResponseAsync(format, coordinates, unit, duration, language);
     }
 
     /**
@@ -387,9 +379,8 @@ public final class WeatherAsyncClient {
      * forecast for the next 25 days, and 45 days.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param query Coordinates of the location for which current conditions information is requested. The applicable
-     *     query is specified as a comma separated string composed by latitude followed by longitude e.g.
-     *     "47.641268,-122.125679".
+     * @param coordinates The applicable query specified as a comma separated string composed by latitude followed by
+     *     longitude e.g. "47.641268,-122.125679".
      * @param unit Specifies to return the data in either metric units or imperial units. Default value is metric.
      * @param duration Specifies for how many days the daily forecast responses are returned. Available values are * `1`
      *     - Return forecast data for the next day. Returned by default. * `5` - Return forecast data for the next 5
@@ -397,8 +388,8 @@ public final class WeatherAsyncClient {
      *     Only available in S1 SKU. * `45` - Return forecast data for the next 45 days. Only available in S1 SKU.
      * @param language Language in which search results should be returned. Should be one of supported IETF language
      *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used. Default value is en-us.
-     *     <p>Please refer to [Supported languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
+     *     language is used.
+     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
      *     details.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -407,8 +398,8 @@ public final class WeatherAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<DailyForecastResponse> getDailyForecast(
-            ResponseFormat format, String query, WeatherDataUnit unit, Integer duration, String language) {
-        return this.serviceClient.getDailyForecastAsync(format, query, unit, duration, language);
+            JsonFormat format, List<Double> coordinates, WeatherDataUnit unit, Integer duration, String language) {
+        return this.serviceClient.getDailyForecastAsync(format, coordinates, unit, duration, language);
     }
 
     /**
@@ -455,8 +446,8 @@ public final class WeatherAsyncClient {
      *     dissipate over time.
      * @param language Language in which search results should be returned. Should be one of supported IETF language
      *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used. Default value is en-us.
-     *     <p>Please refer to [Supported languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
+     *     language is used.
+     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
      *     details.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -465,7 +456,7 @@ public final class WeatherAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<WeatherAlongRouteResponse>> getWeatherAlongRouteWithResponse(
-            ResponseFormat format, String query, String language) {
+            JsonFormat format, String query, String language) {
         return this.serviceClient.getWeatherAlongRouteWithResponseAsync(format, query, language);
     }
 
@@ -513,8 +504,8 @@ public final class WeatherAsyncClient {
      *     dissipate over time.
      * @param language Language in which search results should be returned. Should be one of supported IETF language
      *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used. Default value is en-us.
-     *     <p>Please refer to [Supported languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
+     *     language is used.
+     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
      *     details.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -522,7 +513,7 @@ public final class WeatherAsyncClient {
      * @return this object is returned from a successful Weather Along Route.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<WeatherAlongRouteResponse> getWeatherAlongRoute(ResponseFormat format, String query, String language) {
+    public Mono<WeatherAlongRouteResponse> getWeatherAlongRoute(JsonFormat format, String query, String language) {
         return this.serviceClient.getWeatherAlongRouteAsync(format, query, language);
     }
 
@@ -541,13 +532,12 @@ public final class WeatherAsyncClient {
      * heat waves or forest fires.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param query Coordinates of the location for which severe weather alerts are requested. The applicable query is
-     *     specified as a comma separated string composed by latitude followed by longitude e.g.
-     *     "47.641268,-122.125679".
+     * @param coordinates The applicable query specified as a comma separated string composed by latitude followed by
+     *     longitude e.g. "47.641268,-122.125679".
      * @param language Language in which search results should be returned. Should be one of supported IETF language
      *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used. Default value is en-us.
-     *     <p>Please refer to [Supported languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
+     *     language is used.
+     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
      *     details.
      * @param details Return full details for the severe weather alerts. Available values are * `true` - Returns full
      *     details. By default all details are returned. * `false` - Returns a truncated version of the alerts data,
@@ -559,8 +549,8 @@ public final class WeatherAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<SevereWeatherAlertsResponse>> getSevereWeatherAlertsWithResponse(
-            ResponseFormat format, String query, String language, String details) {
-        return this.serviceClient.getSevereWeatherAlertsWithResponseAsync(format, query, language, details);
+            JsonFormat format, List<Double> coordinates, String language, String details) {
+        return this.serviceClient.getSevereWeatherAlertsWithResponseAsync(format, coordinates, language, details);
     }
 
     /**
@@ -578,13 +568,12 @@ public final class WeatherAsyncClient {
      * heat waves or forest fires.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param query Coordinates of the location for which severe weather alerts are requested. The applicable query is
-     *     specified as a comma separated string composed by latitude followed by longitude e.g.
-     *     "47.641268,-122.125679".
+     * @param coordinates The applicable query specified as a comma separated string composed by latitude followed by
+     *     longitude e.g. "47.641268,-122.125679".
      * @param language Language in which search results should be returned. Should be one of supported IETF language
      *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used. Default value is en-us.
-     *     <p>Please refer to [Supported languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
+     *     language is used.
+     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
      *     details.
      * @param details Return full details for the severe weather alerts. Available values are * `true` - Returns full
      *     details. By default all details are returned. * `false` - Returns a truncated version of the alerts data,
@@ -596,8 +585,8 @@ public final class WeatherAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<SevereWeatherAlertsResponse> getSevereWeatherAlerts(
-            ResponseFormat format, String query, String language, String details) {
-        return this.serviceClient.getSevereWeatherAlertsAsync(format, query, language, details);
+            JsonFormat format, List<Double> coordinates, String language, String details) {
+        return this.serviceClient.getSevereWeatherAlertsAsync(format, coordinates, language, details);
     }
 
     /**
@@ -614,12 +603,12 @@ public final class WeatherAsyncClient {
      * starting from current day.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param query Coordinates of the location for which daily indices are requested. The applicable query is specified
-     *     as a comma separated string composed by latitude followed by longitude e.g. "47.641268,-122.125679".
+     * @param coordinates The applicable query specified as a comma separated string composed by latitude followed by
+     *     longitude e.g. "47.641268,-122.125679".
      * @param language Language in which search results should be returned. Should be one of supported IETF language
      *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used. Default value is en-us.
-     *     <p>Please refer to [Supported languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
+     *     language is used.
+     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
      *     details.
      * @param duration Specifies for how many days the daily indices are returned. By default, the indices data for the
      *     current day will be returned. When requesting future indices data, the current day is included in the
@@ -640,14 +629,14 @@ public final class WeatherAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<DailyIndicesResponse>> getDailyIndicesWithResponse(
-            ResponseFormat format,
-            String query,
+            JsonFormat format,
+            List<Double> coordinates,
             String language,
             Integer duration,
             Integer indexId,
             Integer indexGroupId) {
         return this.serviceClient.getDailyIndicesWithResponseAsync(
-                format, query, language, duration, indexId, indexGroupId);
+                format, coordinates, language, duration, indexId, indexGroupId);
     }
 
     /**
@@ -664,12 +653,12 @@ public final class WeatherAsyncClient {
      * starting from current day.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param query Coordinates of the location for which daily indices are requested. The applicable query is specified
-     *     as a comma separated string composed by latitude followed by longitude e.g. "47.641268,-122.125679".
+     * @param coordinates The applicable query specified as a comma separated string composed by latitude followed by
+     *     longitude e.g. "47.641268,-122.125679".
      * @param language Language in which search results should be returned. Should be one of supported IETF language
      *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used. Default value is en-us.
-     *     <p>Please refer to [Supported languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
+     *     language is used.
+     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
      *     details.
      * @param duration Specifies for how many days the daily indices are returned. By default, the indices data for the
      *     current day will be returned. When requesting future indices data, the current day is included in the
@@ -690,12 +679,12 @@ public final class WeatherAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<DailyIndicesResponse> getDailyIndices(
-            ResponseFormat format,
-            String query,
+            JsonFormat format,
+            List<Double> coordinates,
             String language,
             Integer duration,
             Integer indexId,
             Integer indexGroupId) {
-        return this.serviceClient.getDailyIndicesAsync(format, query, language, duration, indexId, indexGroupId);
+        return this.serviceClient.getDailyIndicesAsync(format, coordinates, language, duration, indexId, indexGroupId);
     }
 }

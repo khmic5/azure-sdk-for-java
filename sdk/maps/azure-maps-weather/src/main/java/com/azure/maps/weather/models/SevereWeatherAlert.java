@@ -50,7 +50,7 @@ public final class SevereWeatherAlert {
      * countries and therefore not always returned.
      */
     @JsonProperty(value = "class")
-    private String classProperty;
+    private String classification;
 
     /*
      * Severity level of the alert. This field is not available for all
@@ -86,7 +86,7 @@ public final class SevereWeatherAlert {
      * Information about the alert specific to the affected area(s).
      */
     @JsonProperty(value = "alertAreas")
-    private List<AlertArea> alertAreas;
+    private List<AlertDetails> alertDetails;
 
     /**
      * Get the countryCode property: 2-character ISO 3166-1 Alpha-2 country code, for example, "US".
@@ -195,24 +195,24 @@ public final class SevereWeatherAlert {
     }
 
     /**
-     * Get the classProperty property: Classification of the alert. This field is not available for all countries and
+     * Get the classification property: Classification of the alert. This field is not available for all countries and
      * therefore not always returned.
      *
-     * @return the classProperty value.
+     * @return the classification value.
      */
-    public String getClassProperty() {
-        return this.classProperty;
+    public String getClassification() {
+        return this.classification;
     }
 
     /**
-     * Set the classProperty property: Classification of the alert. This field is not available for all countries and
+     * Set the classification property: Classification of the alert. This field is not available for all countries and
      * therefore not always returned.
      *
-     * @param classProperty the classProperty value to set.
+     * @param classification the classification value to set.
      * @return the SevereWeatherAlert object itself.
      */
-    public SevereWeatherAlert setClassProperty(String classProperty) {
-        this.classProperty = classProperty;
+    public SevereWeatherAlert setClassification(String classification) {
+        this.classification = classification;
         return this;
     }
 
@@ -305,22 +305,22 @@ public final class SevereWeatherAlert {
     }
 
     /**
-     * Get the alertAreas property: Information about the alert specific to the affected area(s).
+     * Get the alertDetails property: Information about the alert specific to the affected area(s).
      *
-     * @return the alertAreas value.
+     * @return the alertDetails value.
      */
-    public List<AlertArea> getAlertAreas() {
-        return this.alertAreas;
+    public List<AlertDetails> getAlertDetails() {
+        return this.alertDetails;
     }
 
     /**
-     * Set the alertAreas property: Information about the alert specific to the affected area(s).
+     * Set the alertDetails property: Information about the alert specific to the affected area(s).
      *
-     * @param alertAreas the alertAreas value to set.
+     * @param alertDetails the alertDetails value to set.
      * @return the SevereWeatherAlert object itself.
      */
-    public SevereWeatherAlert setAlertAreas(List<AlertArea> alertAreas) {
-        this.alertAreas = alertAreas;
+    public SevereWeatherAlert setAlertDetails(List<AlertDetails> alertDetails) {
+        this.alertDetails = alertDetails;
         return this;
     }
 }

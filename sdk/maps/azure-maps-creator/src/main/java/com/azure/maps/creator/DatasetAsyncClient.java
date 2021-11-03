@@ -8,11 +8,10 @@ import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceClient;
 import com.azure.core.annotation.ServiceMethod;
 import com.azure.core.http.rest.PagedFlux;
-import com.azure.core.http.rest.PagedResponse;
 import com.azure.core.http.rest.Response;
 import com.azure.core.util.polling.PollerFlux;
 import com.azure.maps.creator.implementation.DatasetsImpl;
-import com.azure.maps.creator.models.DatasetDetailInfo;
+import com.azure.maps.creator.models.Dataset;
 import com.azure.maps.creator.models.DatasetsCreateResponse;
 import com.azure.maps.creator.models.DatasetsGetOperationResponse;
 import com.azure.maps.creator.models.ErrorResponseException;
@@ -63,16 +62,15 @@ public final class DatasetAsyncClient {
      *     query parameters with same name (if more than one is provided).
      * @param datasetId The ID for the dataset to append with. The dataset must originate from a previous dataset
      *     creation call that matches the datasetId.
-     * @param descriptionDataset The description to be given to the dataset.
+     * @param description The description to be given to the dataset.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the response model for a Long-Running Operations API.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<DatasetsCreateResponse> createWithResponse(
-            String conversionId, String datasetId, String descriptionDataset) {
-        return this.serviceClient.createWithResponseAsync(conversionId, datasetId, descriptionDataset);
+    public Mono<DatasetsCreateResponse> createWithResponse(String conversionId, String datasetId, String description) {
+        return this.serviceClient.createWithResponseAsync(conversionId, datasetId, description);
     }
 
     /**
@@ -105,16 +103,16 @@ public final class DatasetAsyncClient {
      *     query parameters with same name (if more than one is provided).
      * @param datasetId The ID for the dataset to append with. The dataset must originate from a previous dataset
      *     creation call that matches the datasetId.
-     * @param descriptionDataset The description to be given to the dataset.
+     * @param description The description to be given to the dataset.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the response model for a Long-Running Operations API.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public PollerFlux<LongRunningOperationResult, LongRunningOperationResult> beginCreate(
-            String conversionId, String datasetId, String descriptionDataset) {
-        return this.serviceClient.beginCreateAsync(conversionId, datasetId, descriptionDataset);
+            String conversionId, String datasetId, String description) {
+        return this.serviceClient.beginCreateAsync(conversionId, datasetId, description);
     }
 
     /**
@@ -151,7 +149,7 @@ public final class DatasetAsyncClient {
      *
      * <p>```json { "datasets": [ { "timestamp": "2020-01-01T22:50:48.123Z", "datasetId":
      * "f6495f62-94f8-0ec2-c252-45626f82fcb2", "description": "Some description or comment for the dataset.",
-     * "datasetSources": { "conversionIds": [ "15d21452-c9bb-27b6-5e79-743ca5c3205d" ], }, "ontology": "facility-2.0",
+     * "datasetSources": { "conversionIds": [ "15d21452-c9bb-27b6-5e79-743ca5c3205d" ], }, "": "facility-2.0",
      * "featureCounts": { "directoryInfo": 2, "category": 10, "facility": 1, "level": 3, "unit": 183, "zone": 3,
      * "verticalPenetration": 6, "opening": 48, "areaElement": 108 } }, { "timestamp": "2020-01-01T22:57:53.123Z",
      * "datasetId": "8b1288fa-1958-4a2b-b68e-13a7i5af7d7c", "description": "Create from upload
@@ -165,59 +163,7 @@ public final class DatasetAsyncClient {
      * @return the response model for the Dataset List API.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public Mono<PagedResponse<DatasetDetailInfo>> listSinglePage() {
-        return this.serviceClient.listSinglePageAsync();
-    }
-
-    /**
-     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
-     *
-     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
-     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
-     * tools that apply to Azure Maps Creator.
-     *
-     * <p>This API allows the caller to fetch a list of all previously successfully created datasets.
-     *
-     * <p>### Submit List Request
-     *
-     * <p>To list all your datasets, you will issue a `GET` request with no additional parameters.
-     *
-     * <p>### List Data Response
-     *
-     * <p>The List API returns the complete list of all datasets in `json` format. The response contains the following
-     * fields (if they are not null or empty): &gt; created - The timestamp the dataset was created. &gt; datasetId -
-     * The id for the dataset. &gt; description - The description for the dataset. &gt; datasetSources - The source data
-     * that was used when the create request was issued. &gt; ontology - The source
-     * [ontology](https://docs.microsoft.com/en-us/azure/azure-maps/creator-facility-ontology) that was used in the
-     * conversion service for the input data.&lt;br/&gt;
-     *
-     * <p>The `datasetSources` describes the source data that was used when the create request was issued and contains
-     * the following elements (if they are not null or empty):
-     *
-     * <p>&gt; conversionIds - The list of `conversionId` (null if none were provided). &gt; appendDatasetId - The
-     * `datasetId` that was used for an append operation (null if none was used). &gt;featureCounts - The counts for
-     * each feature type in the dataset.&lt;br/&gt;
-     *
-     * <p>Here's a sample response returning the `timestamp`, `datasetId`, `description`, `datasetSources`, and
-     * `ontology` of 3 dataset resources:
-     *
-     * <p>```json { "datasets": [ { "timestamp": "2020-01-01T22:50:48.123Z", "datasetId":
-     * "f6495f62-94f8-0ec2-c252-45626f82fcb2", "description": "Some description or comment for the dataset.",
-     * "datasetSources": { "conversionIds": [ "15d21452-c9bb-27b6-5e79-743ca5c3205d" ], }, "ontology": "facility-2.0",
-     * "featureCounts": { "directoryInfo": 2, "category": 10, "facility": 1, "level": 3, "unit": 183, "zone": 3,
-     * "verticalPenetration": 6, "opening": 48, "areaElement": 108 } }, { "timestamp": "2020-01-01T22:57:53.123Z",
-     * "datasetId": "8b1288fa-1958-4a2b-b68e-13a7i5af7d7c", "description": "Create from upload
-     * '0c1288fa-2058-4a1b-b68d-13a5f5af7d7c'.", "datasetSources": { "conversionIds": [
-     * "0c1288fa-2058-4a1b-b68d-13a5f5af7d7c" ], "appendDatasetId": "46d1edb6-d29e-4786-9589-dbd4efd7a977" },
-     * "ontology": "facility-2.0", "featureCounts": { "directoryInfo": 2, "category": 10, "facility": 1, "level": 3,
-     * "unit": 183, "zone": 3, "verticalPenetration": 6, "opening": 48, "areaElement": 108 } } ] } ```.
-     *
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response model for the Dataset List API.
-     */
-    @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedFlux<DatasetDetailInfo> list() {
+    public PagedFlux<Dataset> list() {
         return this.serviceClient.listAsync();
     }
 
@@ -265,7 +211,7 @@ public final class DatasetAsyncClient {
      * @return detail information for the dataset.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<DatasetDetailInfo>> getWithResponse(String datasetId) {
+    public Mono<Response<Dataset>> getWithResponse(String datasetId) {
         return this.serviceClient.getWithResponseAsync(datasetId);
     }
 
@@ -313,7 +259,7 @@ public final class DatasetAsyncClient {
      * @return detail information for the dataset.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<DatasetDetailInfo> get(String datasetId) {
+    public Mono<Dataset> get(String datasetId) {
         return this.serviceClient.getAsync(datasetId);
     }
 
@@ -415,19 +361,5 @@ public final class DatasetAsyncClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<LongRunningOperationResult> getOperation(String operationId) {
         return this.serviceClient.getOperationAsync(operationId);
-    }
-
-    /**
-     * Get the next page of items.
-     *
-     * @param nextLink The nextLink parameter.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response model for the Dataset List API.
-     */
-    @ServiceMethod(returns = ReturnType.COLLECTION)
-    public Mono<PagedResponse<DatasetDetailInfo>> listNextSinglePage(String nextLink) {
-        return this.serviceClient.listNextSinglePageAsync(nextLink);
     }
 }

@@ -9,16 +9,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** An item returned from Route Directions Batch service call. */
 @Immutable
-public final class RouteDirectionsBatchItem extends BatchItem {
+public final class RouteDirectionsBatchItem extends BatchResultItem {
     /*
-     * The result of the query. RouteDirectionsResponse if the query completed
+     * The result of the query. RouteDirections if the query completed
      * successfully, ErrorResponse otherwise.
      */
     @JsonProperty(value = "response", access = JsonProperty.Access.WRITE_ONLY)
     private RouteDirectionsBatchItemResponse response;
 
     /**
-     * Get the response property: The result of the query. RouteDirectionsResponse if the query completed successfully,
+     * Get the response property: The result of the query. RouteDirections if the query completed successfully,
      * ErrorResponse otherwise.
      *
      * @return the response value.

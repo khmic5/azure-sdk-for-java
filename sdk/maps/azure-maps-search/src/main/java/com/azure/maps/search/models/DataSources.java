@@ -18,7 +18,7 @@ public final class DataSources {
      * type == Geography.
      */
     @JsonProperty(value = "geometry")
-    private DataSourcesGeometry geometry;
+    private Geometry geometry;
 
     /**
      * Get the geometry property: Information about the geometric shape of the result. Only present if type ==
@@ -26,7 +26,7 @@ public final class DataSources {
      *
      * @return the geometry value.
      */
-    public DataSourcesGeometry getGeometry() {
+    public Geometry getGeometry() {
         return this.geometry;
     }
 
@@ -37,7 +37,7 @@ public final class DataSources {
      * @param geometry the geometry value to set.
      * @return the DataSources object itself.
      */
-    public DataSources setGeometry(DataSourcesGeometry geometry) {
+    public DataSources setGeometry(Geometry geometry) {
         this.geometry = geometry;
         return this;
     }

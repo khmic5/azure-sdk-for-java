@@ -1,8 +1,8 @@
-# Azure Resource Manager Weather client library for Java
+# Azure Maps SDK Weather client library for Java
 
-Azure Resource Manager Weather client library for Java.
+Azure Maps SDK Weather client library for Java.
 
-This package contains Microsoft Azure SDK for Weather Management SDK.  Package tag 1.0-preview. For documentation on how to use this package, please see [Azure Management Libraries for Java](https://aka.ms/azsdk/java/mgmt).
+This package contains the Azure Maps SDK Weather client library.  Package tag 1.0-preview. For documentation on how to use this package, please see [Azure Management Libraries for Java](https://aka.ms/azsdk/java/mgmt).
 
 ## We'd love to hear your feedback
 
@@ -27,11 +27,11 @@ Various documentation is available to help you get started
 
 ### Adding the package to your product
 
-[//]: # ({x-version-update-start;com.azure.resourcemanager:azure-resourcemanager-weather-generated;current})
+[//]: # ({x-version-update-start;com.azure:azure-maps-weather;current})
 ```xml
 <dependency>
-    <groupId>com.azure.resourcemanager</groupId>
-    <artifactId>azure-resourcemanager-weather-generated</artifactId>
+    <groupId>com.azure.maps</groupId>
+    <artifactId>azure-maps-weather</artifactId>
     <version>1.0.0-beta.1</version>
 </dependency>
 ```
