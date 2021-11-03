@@ -49,39 +49,36 @@ public class DataSample {
         builder.addPolicy(subscriptionKeyPolicy);
         builder.httpLogOptions(new HttpLogOptions().setLogLevel(HttpLogDetailLevel.BODY_AND_HEADERS));
         DataClient client = builder.buildDataClient();
+        Object contentJson = MapsCommon
+            .readJson(MapsCommon.readContent(MapsCommon.getResource("/data_sample_upload.json")), Object.class);
+        SyncPoller<LongRunningOperationResult, LongRunningOperationResult> poller =
+            client.beginUpload(DataFormat.GEOJSON,
+                contentJson, "Test data set " + Math.random());
 
-        try (InputStream stream = MapsCommon.getResource("/data_sample_upload.zip")) {
-            Object contentJson = MapsCommon
-                .readJson(MapsCommon.readContent(MapsCommon.getResource("/data_sample_upload.json")), Object.class);
-            SyncPoller<LongRunningOperationResult, LongRunningOperationResult> poller =
-                client.beginUpload(DataFormat.GEOJSON,
-                    contentJson, "Test data set " + Math.random());
+        // poll and finish
+        System.out.println("Hello");
+        poller.setPollInterval(Duration.ofSeconds(1));
+        // poller.waitForCompletion(Duration.ofSeconds(10));
+        LongRunningOperationResult result = poller.getFinalResult();
+        MapsCommon.print("Operation created with id " + result.getOperationId());
+        MapsCommon.print(result);
 
-            // poll and finish
-            System.out.println("Hello");
-            poller.setPollInterval(Duration.ofSeconds(1));
-            // poller.waitForCompletion(Duration.ofSeconds(10));
-            LongRunningOperationResult result = poller.getFinalResult();
-            MapsCommon.print("Operation created with id " + result.getOperationId());
-            MapsCommon.print(result);
+        // get resource from the header
+        DatasGetOperationResponse uuid = client.getOperationWithResponse(result.getOperationId(), null);
+        MapsCommon.print(uuid);
+        String resourceLocation = uuid.getDeserializedHeaders().getResourceLocation();
+        String udid = MapsCommon.getUid(resourceLocation);
 
-            // get resource from the header
-            DatasGetOperationResponse uuid = client.getOperationWithResponse(result.getOperationId(), null);
-            MapsCommon.print(uuid);
-            String resourceLocation = uuid.getDeserializedHeaders().getResourceLocation();
-            String udid = MapsCommon.getUid(resourceLocation);
-
-            if (udid == null) {
-                System.out.println("Data upload for zip Failed");
-                return;
-            }
-            else {
-                System.out.println("upload successful with " + udid);
-                return;
-            }
-            // client.getDatas().deletePreview(udid);
-            // System.out.println(String.format("Deleted file with udid %s", udid));
+        if (udid == null) {
+            System.out.println("Data upload for zip Failed");
+            return;
         }
+        else {
+            System.out.println("upload successful with " + udid);
+            return;
+        }
+        // client.getDatas().deletePreview(udid);
+        // System.out.println(String.format("Deleted file with udid %s", udid));
 
         /*
         Object contentJson = MapsCommon
@@ -129,6 +126,7 @@ public class DataSample {
             client.getDatas().deletePreview(udid);
             System.out.println(String.format("Deleted file with udid %s", udid));
         }*/
+
     }
 
     /*
