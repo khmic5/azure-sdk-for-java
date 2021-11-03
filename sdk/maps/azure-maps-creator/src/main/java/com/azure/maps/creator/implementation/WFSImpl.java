@@ -18,19 +18,27 @@ import com.azure.core.annotation.ServiceMethod;
 import com.azure.core.annotation.UnexpectedResponseExceptionType;
 import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.RestProxy;
-import com.azure.maps.creator.models.CollectionDefinitionResponse;
-import com.azure.maps.creator.models.CollectionInfo;
+import com.azure.core.util.Context;
+import com.azure.core.util.FluxUtil;
+import com.azure.core.util.logging.ClientLogger;
+import com.azure.core.util.serializer.CollectionFormat;
+import com.azure.core.util.serializer.JacksonAdapter;
+import com.azure.maps.creator.models.Collection;
+import com.azure.maps.creator.models.CollectionDefinition;
 import com.azure.maps.creator.models.CollectionsResponse;
-import com.azure.maps.creator.models.ConformanceResponse;
+import com.azure.maps.creator.models.ConformanceResult;
 import com.azure.maps.creator.models.ErrorResponseException;
 import com.azure.maps.creator.models.ExtendedGeoJsonFeatureCollection;
-import com.azure.maps.creator.models.FeatureResponse;
+import com.azure.maps.creator.models.FeatureResult;
 import com.azure.maps.creator.models.Geography;
-import com.azure.maps.creator.models.LandingPageResponse;
+import com.azure.maps.creator.models.LandingPageResult;
+import java.util.List;
 import reactor.core.publisher.Mono;
 
 /** An instance of this class provides access to all the operations defined in WFS. */
 public final class WFSImpl {
+    private final ClientLogger logger = new ClientLogger(WFSImpl.class);
+
     /** The proxy service used to perform REST calls. */
     private final WFSService service;
 
@@ -57,79 +65,86 @@ public final class WFSImpl {
         @Get("/wfs/datasets/{datasetId}/")
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
-        Mono<Response<LandingPageResponse>> getLandingPage(
+        Mono<Response<LandingPageResult>> getLandingPage(
                 @HostParam("geography") Geography geography,
-                @HeaderParam("x-ms-client-id") String xMsClientId,
+                @HeaderParam("x-ms-client-id") String clientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("datasetId") String datasetId,
-                @HeaderParam("Accept") String accept);
+                @HeaderParam("Accept") String accept,
+                Context context);
 
         @Get("/wfs/datasets/{datasetId}/conformance")
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
-        Mono<Response<ConformanceResponse>> getConformance(
+        Mono<Response<ConformanceResult>> listConformance(
                 @HostParam("geography") Geography geography,
-                @HeaderParam("x-ms-client-id") String xMsClientId,
+                @HeaderParam("x-ms-client-id") String clientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("datasetId") String datasetId,
-                @HeaderParam("Accept") String accept);
+                @HeaderParam("Accept") String accept,
+                Context context);
 
         @Get("/wfs/datasets/{datasetId}/collections")
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<Response<CollectionsResponse>> getCollections(
                 @HostParam("geography") Geography geography,
-                @HeaderParam("x-ms-client-id") String xMsClientId,
+                @HeaderParam("x-ms-client-id") String clientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("datasetId") String datasetId,
-                @HeaderParam("Accept") String accept);
+                @HeaderParam("Accept") String accept,
+                Context context);
 
         @Get("/wfs/datasets/{datasetId}/collections/{collectionId}")
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
-        Mono<Response<CollectionInfo>> getCollection(
+        Mono<Response<Collection>> getCollection(
                 @HostParam("geography") Geography geography,
-                @HeaderParam("x-ms-client-id") String xMsClientId,
+                @HeaderParam("x-ms-client-id") String clientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("datasetId") String datasetId,
                 @PathParam("collectionId") String collectionId,
-                @HeaderParam("Accept") String accept);
+                @HeaderParam("Accept") String accept,
+                Context context);
 
         @Get("/wfs/datasets/{datasetId}/collections/{collectionId}/definition")
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
-        Mono<Response<CollectionDefinitionResponse>> getCollectionDefinition(
+        Mono<Response<CollectionDefinition>> getCollectionDefinition(
                 @HostParam("geography") Geography geography,
-                @HeaderParam("x-ms-client-id") String xMsClientId,
+                @HeaderParam("x-ms-client-id") String clientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("datasetId") String datasetId,
                 @PathParam("collectionId") String collectionId,
-                @HeaderParam("Accept") String accept);
+                @HeaderParam("Accept") String accept,
+                Context context);
 
         @Get("/wfs/datasets/{datasetId}/collections/{collectionId}/items")
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<Response<ExtendedGeoJsonFeatureCollection>> getFeatures(
                 @HostParam("geography") Geography geography,
-                @HeaderParam("x-ms-client-id") String xMsClientId,
+                @HeaderParam("x-ms-client-id") String clientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("datasetId") String datasetId,
                 @PathParam("collectionId") String collectionId,
                 @QueryParam("limit") Integer limit,
-                @QueryParam("bbox") String bbox,
+                @QueryParam("bbox") String boundingBox,
                 @QueryParam("filter") String filter,
-                @HeaderParam("Accept") String accept);
+                @HeaderParam("Accept") String accept,
+                Context context);
 
         @Get("/wfs/datasets/{datasetId}/collections/{collectionId}/items/{featureId}")
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
-        Mono<Response<FeatureResponse>> getFeature(
+        Mono<Response<FeatureResult>> getFeature(
                 @HostParam("geography") Geography geography,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("datasetId") String datasetId,
                 @PathParam("collectionId") String collectionId,
                 @PathParam("featureId") String featureId,
-                @HeaderParam("Accept") String accept);
+                @HeaderParam("Accept") String accept,
+                Context context);
 
         @Delete("/wfs/datasets/{datasetId}/collections/{collectionId}/items/{featureId}")
         @ExpectedResponses({204})
@@ -140,7 +155,8 @@ public final class WFSImpl {
                 @PathParam("datasetId") String datasetId,
                 @PathParam("collectionId") String collectionId,
                 @PathParam("featureId") String featureId,
-                @HeaderParam("Accept") String accept);
+                @HeaderParam("Accept") String accept,
+                Context context);
     }
 
     /**
@@ -164,11 +180,47 @@ public final class WFSImpl {
      * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<LandingPageResponse>> getLandingPageWithResponseAsync(String datasetId) {
+    public Mono<Response<LandingPageResult>> getLandingPageWithResponseAsync(String datasetId) {
+        final String apiVersion = "2.0";
+        final String accept = "application/json";
+        return FluxUtil.withContext(
+                context ->
+                        service.getLandingPage(
+                                this.client.getGeography(),
+                                this.client.getClientId(),
+                                apiVersion,
+                                datasetId,
+                                accept,
+                                context));
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>The Web Feature Service (WFS) API is part of Creator. WFS API follows the [Open Geospatial Consortium API
+     * standard for Features](http://docs.opengeospatial.org/is/17-069r3/17-069r3.html) to query
+     * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create). A dataset consists of multiple
+     * feature collections. A feature collection is a collection of features of a similar type, based on a common
+     * schema. The Get Landing Page API provides links to the API definition, the Conformance statements and the
+     * metadata about the feature data in this dataset.
+     *
+     * @param datasetId The identifier for the dataset to query from.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Response<LandingPageResult>> getLandingPageWithResponseAsync(String datasetId, Context context) {
         final String apiVersion = "2.0";
         final String accept = "application/json";
         return service.getLandingPage(
-                this.client.getGeography(), this.client.getXMsClientId(), apiVersion, datasetId, accept);
+                this.client.getGeography(), this.client.getClientId(), apiVersion, datasetId, accept, context);
     }
 
     /**
@@ -192,10 +244,44 @@ public final class WFSImpl {
      * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<LandingPageResponse> getLandingPageAsync(String datasetId) {
+    public Mono<LandingPageResult> getLandingPageAsync(String datasetId) {
         return getLandingPageWithResponseAsync(datasetId)
                 .flatMap(
-                        (Response<LandingPageResponse> res) -> {
+                        (Response<LandingPageResult> res) -> {
+                            if (res.getValue() != null) {
+                                return Mono.just(res.getValue());
+                            } else {
+                                return Mono.empty();
+                            }
+                        });
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>The Web Feature Service (WFS) API is part of Creator. WFS API follows the [Open Geospatial Consortium API
+     * standard for Features](http://docs.opengeospatial.org/is/17-069r3/17-069r3.html) to query
+     * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create). A dataset consists of multiple
+     * feature collections. A feature collection is a collection of features of a similar type, based on a common
+     * schema. The Get Landing Page API provides links to the API definition, the Conformance statements and the
+     * metadata about the feature data in this dataset.
+     *
+     * @param datasetId The identifier for the dataset to query from.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<LandingPageResult> getLandingPageAsync(String datasetId, Context context) {
+        return getLandingPageWithResponseAsync(datasetId, context)
+                .flatMap(
+                        (Response<LandingPageResult> res) -> {
                             if (res.getValue() != null) {
                                 return Mono.just(res.getValue());
                             } else {
@@ -225,7 +311,7 @@ public final class WFSImpl {
      * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public LandingPageResponse getLandingPage(String datasetId) {
+    public LandingPageResult getLandingPage(String datasetId) {
         return getLandingPageAsync(datasetId).block();
     }
 
@@ -240,21 +326,19 @@ public final class WFSImpl {
      * standard for Features](http://docs.opengeospatial.org/is/17-069r3/17-069r3.html) to query
      * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create). A dataset consists of multiple
      * feature collections. A feature collection is a collection of features of a similar type, based on a common
-     * schema. The Get Requirements Classes lists all requirements classes specified in the standard that the server
-     * conforms to.
+     * schema. The Get Landing Page API provides links to the API definition, the Conformance statements and the
+     * metadata about the feature data in this dataset.
      *
      * @param datasetId The identifier for the dataset to query from.
+     * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<ConformanceResponse>> getConformanceWithResponseAsync(String datasetId) {
-        final String apiVersion = "2.0";
-        final String accept = "application/json";
-        return service.getConformance(
-                this.client.getGeography(), this.client.getXMsClientId(), apiVersion, datasetId, accept);
+    public Response<LandingPageResult> getLandingPageWithResponse(String datasetId, Context context) {
+        return getLandingPageWithResponseAsync(datasetId, context).block();
     }
 
     /**
@@ -278,10 +362,108 @@ public final class WFSImpl {
      * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<ConformanceResponse> getConformanceAsync(String datasetId) {
-        return getConformanceWithResponseAsync(datasetId)
+    public Mono<Response<ConformanceResult>> listConformanceWithResponseAsync(String datasetId) {
+        final String apiVersion = "2.0";
+        final String accept = "application/json";
+        return FluxUtil.withContext(
+                context ->
+                        service.listConformance(
+                                this.client.getGeography(),
+                                this.client.getClientId(),
+                                apiVersion,
+                                datasetId,
+                                accept,
+                                context));
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>The Web Feature Service (WFS) API is part of Creator. WFS API follows the [Open Geospatial Consortium API
+     * standard for Features](http://docs.opengeospatial.org/is/17-069r3/17-069r3.html) to query
+     * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create). A dataset consists of multiple
+     * feature collections. A feature collection is a collection of features of a similar type, based on a common
+     * schema. The Get Requirements Classes lists all requirements classes specified in the standard that the server
+     * conforms to.
+     *
+     * @param datasetId The identifier for the dataset to query from.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Response<ConformanceResult>> listConformanceWithResponseAsync(String datasetId, Context context) {
+        final String apiVersion = "2.0";
+        final String accept = "application/json";
+        return service.listConformance(
+                this.client.getGeography(), this.client.getClientId(), apiVersion, datasetId, accept, context);
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>The Web Feature Service (WFS) API is part of Creator. WFS API follows the [Open Geospatial Consortium API
+     * standard for Features](http://docs.opengeospatial.org/is/17-069r3/17-069r3.html) to query
+     * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create). A dataset consists of multiple
+     * feature collections. A feature collection is a collection of features of a similar type, based on a common
+     * schema. The Get Requirements Classes lists all requirements classes specified in the standard that the server
+     * conforms to.
+     *
+     * @param datasetId The identifier for the dataset to query from.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<ConformanceResult> listConformanceAsync(String datasetId) {
+        return listConformanceWithResponseAsync(datasetId)
                 .flatMap(
-                        (Response<ConformanceResponse> res) -> {
+                        (Response<ConformanceResult> res) -> {
+                            if (res.getValue() != null) {
+                                return Mono.just(res.getValue());
+                            } else {
+                                return Mono.empty();
+                            }
+                        });
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>The Web Feature Service (WFS) API is part of Creator. WFS API follows the [Open Geospatial Consortium API
+     * standard for Features](http://docs.opengeospatial.org/is/17-069r3/17-069r3.html) to query
+     * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create). A dataset consists of multiple
+     * feature collections. A feature collection is a collection of features of a similar type, based on a common
+     * schema. The Get Requirements Classes lists all requirements classes specified in the standard that the server
+     * conforms to.
+     *
+     * @param datasetId The identifier for the dataset to query from.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<ConformanceResult> listConformanceAsync(String datasetId, Context context) {
+        return listConformanceWithResponseAsync(datasetId, context)
+                .flatMap(
+                        (Response<ConformanceResult> res) -> {
                             if (res.getValue() != null) {
                                 return Mono.just(res.getValue());
                             } else {
@@ -311,8 +493,34 @@ public final class WFSImpl {
      * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public ConformanceResponse getConformance(String datasetId) {
-        return getConformanceAsync(datasetId).block();
+    public ConformanceResult listConformance(String datasetId) {
+        return listConformanceAsync(datasetId).block();
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>The Web Feature Service (WFS) API is part of Creator. WFS API follows the [Open Geospatial Consortium API
+     * standard for Features](http://docs.opengeospatial.org/is/17-069r3/17-069r3.html) to query
+     * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create). A dataset consists of multiple
+     * feature collections. A feature collection is a collection of features of a similar type, based on a common
+     * schema. The Get Requirements Classes lists all requirements classes specified in the standard that the server
+     * conforms to.
+     *
+     * @param datasetId The identifier for the dataset to query from.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<ConformanceResult> listConformanceWithResponse(String datasetId, Context context) {
+        return listConformanceWithResponseAsync(datasetId, context).block();
     }
 
     /**
@@ -338,8 +546,43 @@ public final class WFSImpl {
     public Mono<Response<CollectionsResponse>> getCollectionsWithResponseAsync(String datasetId) {
         final String apiVersion = "2.0";
         final String accept = "application/json";
+        return FluxUtil.withContext(
+                context ->
+                        service.getCollections(
+                                this.client.getGeography(),
+                                this.client.getClientId(),
+                                apiVersion,
+                                datasetId,
+                                accept,
+                                context));
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>The Web Feature Service (WFS) API is part of Creator. WFS API follows the [Open Geospatial Consortium API
+     * standard for Features](http://docs.opengeospatial.org/is/17-069r3/17-069r3.html) to query
+     * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create). A dataset consists of multiple
+     * feature collections. A feature collection is a collection of features of a similar type, based on a common
+     * schema. The Collections Description API provides descriptions of all the collections in a given dataset.
+     *
+     * @param datasetId The identifier for the dataset to query from.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Response<CollectionsResponse>> getCollectionsWithResponseAsync(String datasetId, Context context) {
+        final String apiVersion = "2.0";
+        final String accept = "application/json";
         return service.getCollections(
-                this.client.getGeography(), this.client.getXMsClientId(), apiVersion, datasetId, accept);
+                this.client.getGeography(), this.client.getClientId(), apiVersion, datasetId, accept, context);
     }
 
     /**
@@ -388,6 +631,39 @@ public final class WFSImpl {
      * schema. The Collections Description API provides descriptions of all the collections in a given dataset.
      *
      * @param datasetId The identifier for the dataset to query from.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<CollectionsResponse> getCollectionsAsync(String datasetId, Context context) {
+        return getCollectionsWithResponseAsync(datasetId, context)
+                .flatMap(
+                        (Response<CollectionsResponse> res) -> {
+                            if (res.getValue() != null) {
+                                return Mono.just(res.getValue());
+                            } else {
+                                return Mono.empty();
+                            }
+                        });
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>The Web Feature Service (WFS) API is part of Creator. WFS API follows the [Open Geospatial Consortium API
+     * standard for Features](http://docs.opengeospatial.org/is/17-069r3/17-069r3.html) to query
+     * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create). A dataset consists of multiple
+     * feature collections. A feature collection is a collection of features of a similar type, based on a common
+     * schema. The Collections Description API provides descriptions of all the collections in a given dataset.
+     *
+     * @param datasetId The identifier for the dataset to query from.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -409,24 +685,18 @@ public final class WFSImpl {
      * standard for Features](http://docs.opengeospatial.org/is/17-069r3/17-069r3.html) to query
      * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create). A dataset consists of multiple
      * feature collections. A feature collection is a collection of features of a similar type, based on a common
-     * schema.
-     *
-     * <p>The Collection Description API provides the description of a given collection. It includes the links to the
-     * operations that can be performed on the collection.
+     * schema. The Collections Description API provides descriptions of all the collections in a given dataset.
      *
      * @param datasetId The identifier for the dataset to query from.
-     * @param collectionId Identifier (name) of a specific collection.
+     * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<CollectionInfo>> getCollectionWithResponseAsync(String datasetId, String collectionId) {
-        final String apiVersion = "2.0";
-        final String accept = "application/json";
-        return service.getCollection(
-                this.client.getGeography(), this.client.getXMsClientId(), apiVersion, datasetId, collectionId, accept);
+    public Response<CollectionsResponse> getCollectionsWithResponse(String datasetId, Context context) {
+        return getCollectionsWithResponseAsync(datasetId, context).block();
     }
 
     /**
@@ -453,10 +723,125 @@ public final class WFSImpl {
      * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<CollectionInfo> getCollectionAsync(String datasetId, String collectionId) {
+    public Mono<Response<Collection>> getCollectionWithResponseAsync(String datasetId, String collectionId) {
+        final String apiVersion = "2.0";
+        final String accept = "application/json";
+        return FluxUtil.withContext(
+                context ->
+                        service.getCollection(
+                                this.client.getGeography(),
+                                this.client.getClientId(),
+                                apiVersion,
+                                datasetId,
+                                collectionId,
+                                accept,
+                                context));
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>The Web Feature Service (WFS) API is part of Creator. WFS API follows the [Open Geospatial Consortium API
+     * standard for Features](http://docs.opengeospatial.org/is/17-069r3/17-069r3.html) to query
+     * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create). A dataset consists of multiple
+     * feature collections. A feature collection is a collection of features of a similar type, based on a common
+     * schema.
+     *
+     * <p>The Collection Description API provides the description of a given collection. It includes the links to the
+     * operations that can be performed on the collection.
+     *
+     * @param datasetId The identifier for the dataset to query from.
+     * @param collectionId Identifier (name) of a specific collection.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Response<Collection>> getCollectionWithResponseAsync(
+            String datasetId, String collectionId, Context context) {
+        final String apiVersion = "2.0";
+        final String accept = "application/json";
+        return service.getCollection(
+                this.client.getGeography(),
+                this.client.getClientId(),
+                apiVersion,
+                datasetId,
+                collectionId,
+                accept,
+                context);
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>The Web Feature Service (WFS) API is part of Creator. WFS API follows the [Open Geospatial Consortium API
+     * standard for Features](http://docs.opengeospatial.org/is/17-069r3/17-069r3.html) to query
+     * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create). A dataset consists of multiple
+     * feature collections. A feature collection is a collection of features of a similar type, based on a common
+     * schema.
+     *
+     * <p>The Collection Description API provides the description of a given collection. It includes the links to the
+     * operations that can be performed on the collection.
+     *
+     * @param datasetId The identifier for the dataset to query from.
+     * @param collectionId Identifier (name) of a specific collection.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Collection> getCollectionAsync(String datasetId, String collectionId) {
         return getCollectionWithResponseAsync(datasetId, collectionId)
                 .flatMap(
-                        (Response<CollectionInfo> res) -> {
+                        (Response<Collection> res) -> {
+                            if (res.getValue() != null) {
+                                return Mono.just(res.getValue());
+                            } else {
+                                return Mono.empty();
+                            }
+                        });
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>The Web Feature Service (WFS) API is part of Creator. WFS API follows the [Open Geospatial Consortium API
+     * standard for Features](http://docs.opengeospatial.org/is/17-069r3/17-069r3.html) to query
+     * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create). A dataset consists of multiple
+     * feature collections. A feature collection is a collection of features of a similar type, based on a common
+     * schema.
+     *
+     * <p>The Collection Description API provides the description of a given collection. It includes the links to the
+     * operations that can be performed on the collection.
+     *
+     * @param datasetId The identifier for the dataset to query from.
+     * @param collectionId Identifier (name) of a specific collection.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Collection> getCollectionAsync(String datasetId, String collectionId, Context context) {
+        return getCollectionWithResponseAsync(datasetId, collectionId, context)
+                .flatMap(
+                        (Response<Collection> res) -> {
                             if (res.getValue() != null) {
                                 return Mono.just(res.getValue());
                             } else {
@@ -489,7 +874,7 @@ public final class WFSImpl {
      * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public CollectionInfo getCollection(String datasetId, String collectionId) {
+    public Collection getCollection(String datasetId, String collectionId) {
         return getCollectionAsync(datasetId, collectionId).block();
     }
 
@@ -500,29 +885,26 @@ public final class WFSImpl {
      * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
      * tools that apply to Azure Maps Creator.
      *
-     * <p>[This](https://docs.microsoft.com/en-us/azure/azure-maps/creator-indoor-maps) article introduces concepts and
-     * tools that apply to Azure Maps Creator. WFS API follows the [Open Geospatial Consortium API standard for
-     * Features](http://docs.opengeospatial.org/is/17-069r3/17-069r3.html) to query
+     * <p>The Web Feature Service (WFS) API is part of Creator. WFS API follows the [Open Geospatial Consortium API
+     * standard for Features](http://docs.opengeospatial.org/is/17-069r3/17-069r3.html) to query
      * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create). A dataset consists of multiple
      * feature collections. A feature collection is a collection of features of a similar type, based on a common
      * schema.
      *
-     * <p>The Collection Definition API provides the detailed data model of a given collection.
+     * <p>The Collection Description API provides the description of a given collection. It includes the links to the
+     * operations that can be performed on the collection.
      *
      * @param datasetId The identifier for the dataset to query from.
      * @param collectionId Identifier (name) of a specific collection.
+     * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return collection of GeoJSON features.
+     * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<CollectionDefinitionResponse>> getCollectionDefinitionWithResponseAsync(
-            String datasetId, String collectionId) {
-        final String apiVersion = "2.0";
-        final String accept = "application/json";
-        return service.getCollectionDefinition(
-                this.client.getGeography(), this.client.getXMsClientId(), apiVersion, datasetId, collectionId, accept);
+    public Response<Collection> getCollectionWithResponse(String datasetId, String collectionId, Context context) {
+        return getCollectionWithResponseAsync(datasetId, collectionId, context).block();
     }
 
     /**
@@ -549,10 +931,127 @@ public final class WFSImpl {
      * @return collection of GeoJSON features.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<CollectionDefinitionResponse> getCollectionDefinitionAsync(String datasetId, String collectionId) {
+    public Mono<Response<CollectionDefinition>> getCollectionDefinitionWithResponseAsync(
+            String datasetId, String collectionId) {
+        final String apiVersion = "2.0";
+        final String accept = "application/json";
+        return FluxUtil.withContext(
+                context ->
+                        service.getCollectionDefinition(
+                                this.client.getGeography(),
+                                this.client.getClientId(),
+                                apiVersion,
+                                datasetId,
+                                collectionId,
+                                accept,
+                                context));
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>[This](https://docs.microsoft.com/en-us/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator. WFS API follows the [Open Geospatial Consortium API standard for
+     * Features](http://docs.opengeospatial.org/is/17-069r3/17-069r3.html) to query
+     * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create). A dataset consists of multiple
+     * feature collections. A feature collection is a collection of features of a similar type, based on a common
+     * schema.
+     *
+     * <p>The Collection Definition API provides the detailed data model of a given collection.
+     *
+     * @param datasetId The identifier for the dataset to query from.
+     * @param collectionId Identifier (name) of a specific collection.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return collection of GeoJSON features.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Response<CollectionDefinition>> getCollectionDefinitionWithResponseAsync(
+            String datasetId, String collectionId, Context context) {
+        final String apiVersion = "2.0";
+        final String accept = "application/json";
+        return service.getCollectionDefinition(
+                this.client.getGeography(),
+                this.client.getClientId(),
+                apiVersion,
+                datasetId,
+                collectionId,
+                accept,
+                context);
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>[This](https://docs.microsoft.com/en-us/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator. WFS API follows the [Open Geospatial Consortium API standard for
+     * Features](http://docs.opengeospatial.org/is/17-069r3/17-069r3.html) to query
+     * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create). A dataset consists of multiple
+     * feature collections. A feature collection is a collection of features of a similar type, based on a common
+     * schema.
+     *
+     * <p>The Collection Definition API provides the detailed data model of a given collection.
+     *
+     * @param datasetId The identifier for the dataset to query from.
+     * @param collectionId Identifier (name) of a specific collection.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return collection of GeoJSON features.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<CollectionDefinition> getCollectionDefinitionAsync(String datasetId, String collectionId) {
         return getCollectionDefinitionWithResponseAsync(datasetId, collectionId)
                 .flatMap(
-                        (Response<CollectionDefinitionResponse> res) -> {
+                        (Response<CollectionDefinition> res) -> {
+                            if (res.getValue() != null) {
+                                return Mono.just(res.getValue());
+                            } else {
+                                return Mono.empty();
+                            }
+                        });
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>[This](https://docs.microsoft.com/en-us/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator. WFS API follows the [Open Geospatial Consortium API standard for
+     * Features](http://docs.opengeospatial.org/is/17-069r3/17-069r3.html) to query
+     * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create). A dataset consists of multiple
+     * feature collections. A feature collection is a collection of features of a similar type, based on a common
+     * schema.
+     *
+     * <p>The Collection Definition API provides the detailed data model of a given collection.
+     *
+     * @param datasetId The identifier for the dataset to query from.
+     * @param collectionId Identifier (name) of a specific collection.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return collection of GeoJSON features.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<CollectionDefinition> getCollectionDefinitionAsync(
+            String datasetId, String collectionId, Context context) {
+        return getCollectionDefinitionWithResponseAsync(datasetId, collectionId, context)
+                .flatMap(
+                        (Response<CollectionDefinition> res) -> {
                             if (res.getValue() != null) {
                                 return Mono.just(res.getValue());
                             } else {
@@ -585,8 +1084,38 @@ public final class WFSImpl {
      * @return collection of GeoJSON features.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public CollectionDefinitionResponse getCollectionDefinition(String datasetId, String collectionId) {
+    public CollectionDefinition getCollectionDefinition(String datasetId, String collectionId) {
         return getCollectionDefinitionAsync(datasetId, collectionId).block();
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>[This](https://docs.microsoft.com/en-us/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator. WFS API follows the [Open Geospatial Consortium API standard for
+     * Features](http://docs.opengeospatial.org/is/17-069r3/17-069r3.html) to query
+     * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create). A dataset consists of multiple
+     * feature collections. A feature collection is a collection of features of a similar type, based on a common
+     * schema.
+     *
+     * <p>The Collection Definition API provides the detailed data model of a given collection.
+     *
+     * @param datasetId The identifier for the dataset to query from.
+     * @param collectionId Identifier (name) of a specific collection.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return collection of GeoJSON features.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<CollectionDefinition> getCollectionDefinitionWithResponse(
+            String datasetId, String collectionId, Context context) {
+        return getCollectionDefinitionWithResponseAsync(datasetId, collectionId, context).block();
     }
 
     /**
@@ -608,9 +1137,9 @@ public final class WFSImpl {
      *     document. Only features that are on the first level of the collection in the response document are counted.
      *     Nested objects contained within the explicitly requested features shall not be counted. * Minimum = 1 *
      *     Maximum = 500 * Default = 10.
-     * @param bbox Only features that have a geometry that intersects the supplied bounding box are selected. * Lower
-     *     left corner, coordinate axis 1 * Lower left corner, coordinate axis 2 * Upper right corner, coordinate axis 1
-     *     * Upper right corner, coordinate axis 2 The coordinate reference system of the values is WGS84
+     * @param boundingBox Only features that have a geometry that intersects the supplied bounding box are selected. *
+     *     Lower left corner, coordinate axis 1 * Lower left corner, coordinate axis 2 * Upper right corner, coordinate
+     *     axis 1 * Upper right corner, coordinate axis 2 The coordinate reference system of the values is WGS84
      *     longitude/latitude (http://www.opengis.net/def/crs/OGC/1.3/CRS84) unless a different coordinate reference
      *     system is specified in the parameter `bbox-crs`. For WGS84 longitude/latitude the values are in most cases
      *     the sequence of minimum longitude, minimum latitude, maximum longitude and maximum latitude. However, in
@@ -630,19 +1159,24 @@ public final class WFSImpl {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<ExtendedGeoJsonFeatureCollection>> getFeaturesWithResponseAsync(
-            String datasetId, String collectionId, Integer limit, String bbox, String filter) {
+            String datasetId, String collectionId, Integer limit, List<Double> boundingBox, String filter) {
         final String apiVersion = "2.0";
         final String accept = "application/json";
-        return service.getFeatures(
-                this.client.getGeography(),
-                this.client.getXMsClientId(),
-                apiVersion,
-                datasetId,
-                collectionId,
-                limit,
-                bbox,
-                filter,
-                accept);
+        String boundingBoxConverted =
+                JacksonAdapter.createDefaultSerializerAdapter().serializeList(boundingBox, CollectionFormat.CSV);
+        return FluxUtil.withContext(
+                context ->
+                        service.getFeatures(
+                                this.client.getGeography(),
+                                this.client.getClientId(),
+                                apiVersion,
+                                datasetId,
+                                collectionId,
+                                limit,
+                                boundingBoxConverted,
+                                filter,
+                                accept,
+                                context));
     }
 
     /**
@@ -664,9 +1198,74 @@ public final class WFSImpl {
      *     document. Only features that are on the first level of the collection in the response document are counted.
      *     Nested objects contained within the explicitly requested features shall not be counted. * Minimum = 1 *
      *     Maximum = 500 * Default = 10.
-     * @param bbox Only features that have a geometry that intersects the supplied bounding box are selected. * Lower
-     *     left corner, coordinate axis 1 * Lower left corner, coordinate axis 2 * Upper right corner, coordinate axis 1
-     *     * Upper right corner, coordinate axis 2 The coordinate reference system of the values is WGS84
+     * @param boundingBox Only features that have a geometry that intersects the supplied bounding box are selected. *
+     *     Lower left corner, coordinate axis 1 * Lower left corner, coordinate axis 2 * Upper right corner, coordinate
+     *     axis 1 * Upper right corner, coordinate axis 2 The coordinate reference system of the values is WGS84
+     *     longitude/latitude (http://www.opengis.net/def/crs/OGC/1.3/CRS84) unless a different coordinate reference
+     *     system is specified in the parameter `bbox-crs`. For WGS84 longitude/latitude the values are in most cases
+     *     the sequence of minimum longitude, minimum latitude, maximum longitude and maximum latitude. However, in
+     *     cases where the box spans the antimeridian the first value (west-most box edge) is larger than the third
+     *     value (east-most box edge).
+     * @param filter Filter expression to search for features with specific property values in a given collection. Only
+     *     feature properties of scalar type and equals operator are supported. This is a special parameter where the
+     *     parameter name is a case sensitive property name. The scheme for this parameter is {property name}={property
+     *     value}. Unless "filter" is one of the property names in the collection, "filter" should not be used as a
+     *     parameter name. To search for features with "name" property value "21N13", use "name=21N13". Multiple filters
+     *     are supported and should be represented as multiple query parameters. E.g.,
+     *     &lt;property1&gt;=&lt;value1&gt;&amp;&lt;property2&gt;=&lt;value2&gt; String values are case sensitive.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return a valid `GeoJSON FeatureCollection` object type extended with numberReturned and links array.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Response<ExtendedGeoJsonFeatureCollection>> getFeaturesWithResponseAsync(
+            String datasetId,
+            String collectionId,
+            Integer limit,
+            List<Double> boundingBox,
+            String filter,
+            Context context) {
+        final String apiVersion = "2.0";
+        final String accept = "application/json";
+        String boundingBoxConverted =
+                JacksonAdapter.createDefaultSerializerAdapter().serializeList(boundingBox, CollectionFormat.CSV);
+        return service.getFeatures(
+                this.client.getGeography(),
+                this.client.getClientId(),
+                apiVersion,
+                datasetId,
+                collectionId,
+                limit,
+                boundingBoxConverted,
+                filter,
+                accept,
+                context);
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>The Web Feature Service (WFS) API is part of Creator. WFS API follows the [Open Geospatial Consortium API
+     * standard for Features](http://docs.opengeospatial.org/is/17-069r3/17-069r3.html) to query
+     * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create). A dataset consists of multiple
+     * feature collections. A feature collection is a collection of features of a similar type, based on a common
+     * schema. The Get Features API returns the list of features in the given collection.
+     *
+     * @param datasetId The identifier for the dataset to query from.
+     * @param collectionId Identifier (name) of a specific collection.
+     * @param limit The optional limit parameter limits the number of features that are presented in the response
+     *     document. Only features that are on the first level of the collection in the response document are counted.
+     *     Nested objects contained within the explicitly requested features shall not be counted. * Minimum = 1 *
+     *     Maximum = 500 * Default = 10.
+     * @param boundingBox Only features that have a geometry that intersects the supplied bounding box are selected. *
+     *     Lower left corner, coordinate axis 1 * Lower left corner, coordinate axis 2 * Upper right corner, coordinate
+     *     axis 1 * Upper right corner, coordinate axis 2 The coordinate reference system of the values is WGS84
      *     longitude/latitude (http://www.opengis.net/def/crs/OGC/1.3/CRS84) unless a different coordinate reference
      *     system is specified in the parameter `bbox-crs`. For WGS84 longitude/latitude the values are in most cases
      *     the sequence of minimum longitude, minimum latitude, maximum longitude and maximum latitude. However, in
@@ -686,8 +1285,8 @@ public final class WFSImpl {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<ExtendedGeoJsonFeatureCollection> getFeaturesAsync(
-            String datasetId, String collectionId, Integer limit, String bbox, String filter) {
-        return getFeaturesWithResponseAsync(datasetId, collectionId, limit, bbox, filter)
+            String datasetId, String collectionId, Integer limit, List<Double> boundingBox, String filter) {
+        return getFeaturesWithResponseAsync(datasetId, collectionId, limit, boundingBox, filter)
                 .flatMap(
                         (Response<ExtendedGeoJsonFeatureCollection> res) -> {
                             if (res.getValue() != null) {
@@ -717,9 +1316,68 @@ public final class WFSImpl {
      *     document. Only features that are on the first level of the collection in the response document are counted.
      *     Nested objects contained within the explicitly requested features shall not be counted. * Minimum = 1 *
      *     Maximum = 500 * Default = 10.
-     * @param bbox Only features that have a geometry that intersects the supplied bounding box are selected. * Lower
-     *     left corner, coordinate axis 1 * Lower left corner, coordinate axis 2 * Upper right corner, coordinate axis 1
-     *     * Upper right corner, coordinate axis 2 The coordinate reference system of the values is WGS84
+     * @param boundingBox Only features that have a geometry that intersects the supplied bounding box are selected. *
+     *     Lower left corner, coordinate axis 1 * Lower left corner, coordinate axis 2 * Upper right corner, coordinate
+     *     axis 1 * Upper right corner, coordinate axis 2 The coordinate reference system of the values is WGS84
+     *     longitude/latitude (http://www.opengis.net/def/crs/OGC/1.3/CRS84) unless a different coordinate reference
+     *     system is specified in the parameter `bbox-crs`. For WGS84 longitude/latitude the values are in most cases
+     *     the sequence of minimum longitude, minimum latitude, maximum longitude and maximum latitude. However, in
+     *     cases where the box spans the antimeridian the first value (west-most box edge) is larger than the third
+     *     value (east-most box edge).
+     * @param filter Filter expression to search for features with specific property values in a given collection. Only
+     *     feature properties of scalar type and equals operator are supported. This is a special parameter where the
+     *     parameter name is a case sensitive property name. The scheme for this parameter is {property name}={property
+     *     value}. Unless "filter" is one of the property names in the collection, "filter" should not be used as a
+     *     parameter name. To search for features with "name" property value "21N13", use "name=21N13". Multiple filters
+     *     are supported and should be represented as multiple query parameters. E.g.,
+     *     &lt;property1&gt;=&lt;value1&gt;&amp;&lt;property2&gt;=&lt;value2&gt; String values are case sensitive.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return a valid `GeoJSON FeatureCollection` object type extended with numberReturned and links array.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<ExtendedGeoJsonFeatureCollection> getFeaturesAsync(
+            String datasetId,
+            String collectionId,
+            Integer limit,
+            List<Double> boundingBox,
+            String filter,
+            Context context) {
+        return getFeaturesWithResponseAsync(datasetId, collectionId, limit, boundingBox, filter, context)
+                .flatMap(
+                        (Response<ExtendedGeoJsonFeatureCollection> res) -> {
+                            if (res.getValue() != null) {
+                                return Mono.just(res.getValue());
+                            } else {
+                                return Mono.empty();
+                            }
+                        });
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>The Web Feature Service (WFS) API is part of Creator. WFS API follows the [Open Geospatial Consortium API
+     * standard for Features](http://docs.opengeospatial.org/is/17-069r3/17-069r3.html) to query
+     * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create). A dataset consists of multiple
+     * feature collections. A feature collection is a collection of features of a similar type, based on a common
+     * schema. The Get Features API returns the list of features in the given collection.
+     *
+     * @param datasetId The identifier for the dataset to query from.
+     * @param collectionId Identifier (name) of a specific collection.
+     * @param limit The optional limit parameter limits the number of features that are presented in the response
+     *     document. Only features that are on the first level of the collection in the response document are counted.
+     *     Nested objects contained within the explicitly requested features shall not be counted. * Minimum = 1 *
+     *     Maximum = 500 * Default = 10.
+     * @param boundingBox Only features that have a geometry that intersects the supplied bounding box are selected. *
+     *     Lower left corner, coordinate axis 1 * Lower left corner, coordinate axis 2 * Upper right corner, coordinate
+     *     axis 1 * Upper right corner, coordinate axis 2 The coordinate reference system of the values is WGS84
      *     longitude/latitude (http://www.opengis.net/def/crs/OGC/1.3/CRS84) unless a different coordinate reference
      *     system is specified in the parameter `bbox-crs`. For WGS84 longitude/latitude the values are in most cases
      *     the sequence of minimum longitude, minimum latitude, maximum longitude and maximum latitude. However, in
@@ -739,8 +1397,59 @@ public final class WFSImpl {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public ExtendedGeoJsonFeatureCollection getFeatures(
-            String datasetId, String collectionId, Integer limit, String bbox, String filter) {
-        return getFeaturesAsync(datasetId, collectionId, limit, bbox, filter).block();
+            String datasetId, String collectionId, Integer limit, List<Double> boundingBox, String filter) {
+        return getFeaturesAsync(datasetId, collectionId, limit, boundingBox, filter).block();
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>The Web Feature Service (WFS) API is part of Creator. WFS API follows the [Open Geospatial Consortium API
+     * standard for Features](http://docs.opengeospatial.org/is/17-069r3/17-069r3.html) to query
+     * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create). A dataset consists of multiple
+     * feature collections. A feature collection is a collection of features of a similar type, based on a common
+     * schema. The Get Features API returns the list of features in the given collection.
+     *
+     * @param datasetId The identifier for the dataset to query from.
+     * @param collectionId Identifier (name) of a specific collection.
+     * @param limit The optional limit parameter limits the number of features that are presented in the response
+     *     document. Only features that are on the first level of the collection in the response document are counted.
+     *     Nested objects contained within the explicitly requested features shall not be counted. * Minimum = 1 *
+     *     Maximum = 500 * Default = 10.
+     * @param boundingBox Only features that have a geometry that intersects the supplied bounding box are selected. *
+     *     Lower left corner, coordinate axis 1 * Lower left corner, coordinate axis 2 * Upper right corner, coordinate
+     *     axis 1 * Upper right corner, coordinate axis 2 The coordinate reference system of the values is WGS84
+     *     longitude/latitude (http://www.opengis.net/def/crs/OGC/1.3/CRS84) unless a different coordinate reference
+     *     system is specified in the parameter `bbox-crs`. For WGS84 longitude/latitude the values are in most cases
+     *     the sequence of minimum longitude, minimum latitude, maximum longitude and maximum latitude. However, in
+     *     cases where the box spans the antimeridian the first value (west-most box edge) is larger than the third
+     *     value (east-most box edge).
+     * @param filter Filter expression to search for features with specific property values in a given collection. Only
+     *     feature properties of scalar type and equals operator are supported. This is a special parameter where the
+     *     parameter name is a case sensitive property name. The scheme for this parameter is {property name}={property
+     *     value}. Unless "filter" is one of the property names in the collection, "filter" should not be used as a
+     *     parameter name. To search for features with "name" property value "21N13", use "name=21N13". Multiple filters
+     *     are supported and should be represented as multiple query parameters. E.g.,
+     *     &lt;property1&gt;=&lt;value1&gt;&amp;&lt;property2&gt;=&lt;value2&gt; String values are case sensitive.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return a valid `GeoJSON FeatureCollection` object type extended with numberReturned and links array.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<ExtendedGeoJsonFeatureCollection> getFeaturesWithResponse(
+            String datasetId,
+            String collectionId,
+            Integer limit,
+            List<Double> boundingBox,
+            String filter,
+            Context context) {
+        return getFeaturesWithResponseAsync(datasetId, collectionId, limit, boundingBox, filter, context).block();
     }
 
     /**
@@ -765,11 +1474,51 @@ public final class WFSImpl {
      * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<FeatureResponse>> getFeatureWithResponseAsync(
+    public Mono<Response<FeatureResult>> getFeatureWithResponseAsync(
             String datasetId, String collectionId, String featureId) {
         final String apiVersion = "2.0";
         final String accept = "application/json";
-        return service.getFeature(this.client.getGeography(), apiVersion, datasetId, collectionId, featureId, accept);
+        return FluxUtil.withContext(
+                context ->
+                        service.getFeature(
+                                this.client.getGeography(),
+                                apiVersion,
+                                datasetId,
+                                collectionId,
+                                featureId,
+                                accept,
+                                context));
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>The Web Feature Service (WFS) API is part of Creator. WFS API follows the [Open Geospatial Consortium API
+     * standard for Features](http://docs.opengeospatial.org/is/17-069r3/17-069r3.html) to query
+     * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create). A dataset consists of multiple
+     * feature collections. A feature collection is a collection of features of a similar type, based on a common
+     * schema. The Get Feature API returns the feature identified by the provided id in the given collection.
+     *
+     * @param datasetId The identifier for the dataset to query from.
+     * @param collectionId Identifier (name) of a specific collection.
+     * @param featureId Local identifier of a specific feature.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Response<FeatureResult>> getFeatureWithResponseAsync(
+            String datasetId, String collectionId, String featureId, Context context) {
+        final String apiVersion = "2.0";
+        final String accept = "application/json";
+        return service.getFeature(
+                this.client.getGeography(), apiVersion, datasetId, collectionId, featureId, accept, context);
     }
 
     /**
@@ -794,10 +1543,46 @@ public final class WFSImpl {
      * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<FeatureResponse> getFeatureAsync(String datasetId, String collectionId, String featureId) {
+    public Mono<FeatureResult> getFeatureAsync(String datasetId, String collectionId, String featureId) {
         return getFeatureWithResponseAsync(datasetId, collectionId, featureId)
                 .flatMap(
-                        (Response<FeatureResponse> res) -> {
+                        (Response<FeatureResult> res) -> {
+                            if (res.getValue() != null) {
+                                return Mono.just(res.getValue());
+                            } else {
+                                return Mono.empty();
+                            }
+                        });
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>The Web Feature Service (WFS) API is part of Creator. WFS API follows the [Open Geospatial Consortium API
+     * standard for Features](http://docs.opengeospatial.org/is/17-069r3/17-069r3.html) to query
+     * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create). A dataset consists of multiple
+     * feature collections. A feature collection is a collection of features of a similar type, based on a common
+     * schema. The Get Feature API returns the feature identified by the provided id in the given collection.
+     *
+     * @param datasetId The identifier for the dataset to query from.
+     * @param collectionId Identifier (name) of a specific collection.
+     * @param featureId Local identifier of a specific feature.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<FeatureResult> getFeatureAsync(
+            String datasetId, String collectionId, String featureId, Context context) {
+        return getFeatureWithResponseAsync(datasetId, collectionId, featureId, context)
+                .flatMap(
+                        (Response<FeatureResult> res) -> {
                             if (res.getValue() != null) {
                                 return Mono.just(res.getValue());
                             } else {
@@ -828,8 +1613,36 @@ public final class WFSImpl {
      * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public FeatureResponse getFeature(String datasetId, String collectionId, String featureId) {
+    public FeatureResult getFeature(String datasetId, String collectionId, String featureId) {
         return getFeatureAsync(datasetId, collectionId, featureId).block();
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>The Web Feature Service (WFS) API is part of Creator. WFS API follows the [Open Geospatial Consortium API
+     * standard for Features](http://docs.opengeospatial.org/is/17-069r3/17-069r3.html) to query
+     * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create). A dataset consists of multiple
+     * feature collections. A feature collection is a collection of features of a similar type, based on a common
+     * schema. The Get Feature API returns the feature identified by the provided id in the given collection.
+     *
+     * @param datasetId The identifier for the dataset to query from.
+     * @param collectionId Identifier (name) of a specific collection.
+     * @param featureId Local identifier of a specific feature.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<FeatureResult> getFeatureWithResponse(
+            String datasetId, String collectionId, String featureId, Context context) {
+        return getFeatureWithResponseAsync(datasetId, collectionId, featureId, context).block();
     }
 
     /**
@@ -860,8 +1673,49 @@ public final class WFSImpl {
             String datasetId, String collectionId, String featureId) {
         final String apiVersion = "2.0";
         final String accept = "application/json";
+        return FluxUtil.withContext(
+                context ->
+                        service.deleteFeature(
+                                this.client.getGeography(),
+                                apiVersion,
+                                datasetId,
+                                collectionId,
+                                featureId,
+                                accept,
+                                context));
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>The Web Feature Service (WFS) API is part of Creator. WFS API follows the [Open Geospatial Consortium API
+     * standard for Features](http://docs.opengeospatial.org/is/17-069r3/17-069r3.html) to query
+     * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create). A dataset consists of multiple
+     * feature collections. A feature collection is a collection of features of a similar type, based on a common
+     * schema. The Delete Feature API deletes the feature identified by the provided id in the given collection. At this
+     * point this API supports only facility features. Deleting a facility feature deletes all the child features of
+     * that facility recursively.
+     *
+     * @param datasetId The identifier for the dataset to query from.
+     * @param collectionId Identifier (name) of a specific collection.
+     * @param featureId Local identifier of a specific feature.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the completion.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Response<Void>> deleteFeatureWithResponseAsync(
+            String datasetId, String collectionId, String featureId, Context context) {
+        final String apiVersion = "2.0";
+        final String accept = "application/json";
         return service.deleteFeature(
-                this.client.getGeography(), apiVersion, datasetId, collectionId, featureId, accept);
+                this.client.getGeography(), apiVersion, datasetId, collectionId, featureId, accept, context);
     }
 
     /**
@@ -911,6 +1765,36 @@ public final class WFSImpl {
      * @param datasetId The identifier for the dataset to query from.
      * @param collectionId Identifier (name) of a specific collection.
      * @param featureId Local identifier of a specific feature.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the completion.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Void> deleteFeatureAsync(String datasetId, String collectionId, String featureId, Context context) {
+        return deleteFeatureWithResponseAsync(datasetId, collectionId, featureId, context)
+                .flatMap((Response<Void> res) -> Mono.empty());
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>The Web Feature Service (WFS) API is part of Creator. WFS API follows the [Open Geospatial Consortium API
+     * standard for Features](http://docs.opengeospatial.org/is/17-069r3/17-069r3.html) to query
+     * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create). A dataset consists of multiple
+     * feature collections. A feature collection is a collection of features of a similar type, based on a common
+     * schema. The Delete Feature API deletes the feature identified by the provided id in the given collection. At this
+     * point this API supports only facility features. Deleting a facility feature deletes all the child features of
+     * that facility recursively.
+     *
+     * @param datasetId The identifier for the dataset to query from.
+     * @param collectionId Identifier (name) of a specific collection.
+     * @param featureId Local identifier of a specific feature.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -918,5 +1802,35 @@ public final class WFSImpl {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public void deleteFeature(String datasetId, String collectionId, String featureId) {
         deleteFeatureAsync(datasetId, collectionId, featureId).block();
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>The Web Feature Service (WFS) API is part of Creator. WFS API follows the [Open Geospatial Consortium API
+     * standard for Features](http://docs.opengeospatial.org/is/17-069r3/17-069r3.html) to query
+     * [Datasets](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create). A dataset consists of multiple
+     * feature collections. A feature collection is a collection of features of a similar type, based on a common
+     * schema. The Delete Feature API deletes the feature identified by the provided id in the given collection. At this
+     * point this API supports only facility features. Deleting a facility feature deletes all the child features of
+     * that facility recursively.
+     *
+     * @param datasetId The identifier for the dataset to query from.
+     * @param collectionId Identifier (name) of a specific collection.
+     * @param featureId Local identifier of a specific feature.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<Void> deleteFeatureWithResponse(
+            String datasetId, String collectionId, String featureId, Context context) {
+        return deleteFeatureWithResponseAsync(datasetId, collectionId, featureId, context).block();
     }
 }

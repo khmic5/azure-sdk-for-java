@@ -8,26 +8,24 @@ import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceClient;
 import com.azure.core.annotation.ServiceMethod;
 import com.azure.core.http.rest.PagedFlux;
-import com.azure.core.http.rest.PagedResponse;
 import com.azure.core.http.rest.Response;
-import com.azure.maps.creator.implementation.AliasImpl;
+import com.azure.maps.creator.implementation.AliasOperationsImpl;
+import com.azure.maps.creator.models.Alias;
 import com.azure.maps.creator.models.AliasCreateResponse;
-import com.azure.maps.creator.models.AliasListItem;
-import com.azure.maps.creator.models.AliasesCreateResponse;
 import com.azure.maps.creator.models.ErrorResponseException;
 import reactor.core.publisher.Mono;
 
 /** Initializes a new instance of the asynchronous CreatorClient type. */
 @ServiceClient(builder = CreatorClientBuilder.class, isAsync = true)
 public final class AliasAsyncClient {
-    private final AliasImpl serviceClient;
+    private final AliasOperationsImpl serviceClient;
 
     /**
-     * Initializes an instance of Alias client.
+     * Initializes an instance of AliasOperations client.
      *
      * @param serviceClient the service client implementation.
      */
-    AliasAsyncClient(AliasImpl serviceClient) {
+    AliasAsyncClient(AliasOperationsImpl serviceClient) {
         this.serviceClient = serviceClient;
     }
 
@@ -60,7 +58,7 @@ public final class AliasAsyncClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response model for the Alias Create API for the case when the alias was successfully created.
+     * @return detailed information for the alias.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<AliasCreateResponse> createWithResponse(String creatorDataItemId) {
@@ -96,10 +94,10 @@ public final class AliasAsyncClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response model for the Alias Create API for the case when the alias was successfully created.
+     * @return detailed information for the alias.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<AliasesCreateResponse> create(String creatorDataItemId) {
+    public Mono<Alias> create(String creatorDataItemId) {
         return this.serviceClient.createAsync(creatorDataItemId);
     }
 
@@ -137,45 +135,7 @@ public final class AliasAsyncClient {
      * @return the response model for the List API.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public Mono<PagedResponse<AliasListItem>> listSinglePage() {
-        return this.serviceClient.listSinglePageAsync();
-    }
-
-    /**
-     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
-     *
-     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
-     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
-     * tools that apply to Azure Maps Creator.
-     *
-     * <p>This API allows the caller to fetch a list of all previously successfully created aliases.
-     *
-     * <p>### Submit List Request
-     *
-     * <p>To list all your aliases, you will issue a `GET` request with no additional parameters.
-     *
-     * <p>### List Data Response
-     *
-     * <p>The List API returns the complete list of all aliases in `json` format. The response contains the following
-     * details for each alias resource: &gt; createdTimestamp - The timestamp that the alias was created. Format
-     * yyyy-MM-ddTHH:mm:ss.sssZ &gt; aliasId - The id for the alias. &gt; creatorDataItemId - The id for the creator
-     * data item that this alias references (could be null if the alias has not been assigned). &gt;
-     * lastUpdatedTimestamp - The last time the alias was assigned to a resource. Format yyyy-MM-ddTHH:mm:ss.sssZ
-     *
-     * <p>A sample response returning 2 alias resources:
-     *
-     * <p>```json { "aliases": [ { "createdTimestamp": "2020-02-13T21:19:11.123Z", "aliasId":
-     * "a8a4b8bb-ecf4-fb27-a618-f41721552766", "creatorDataItemId": "e89aebb9-70a3-8fe1-32bb-1fbd0c725f14",
-     * "lastUpdatedTimestamp": "2020-02-13T21:19:22.123Z" }, { "createdTimestamp": "2020-02-18T19:53:33.123Z",
-     * "aliasId": "1856dbfc-7a66-ee5a-bf8d-51dbfe1906f6", "creatorDataItemId": null, "lastUpdatedTimestamp":
-     * "2020-02-18T19:53:33.123Z" } ] } ```.
-     *
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response model for the List API.
-     */
-    @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedFlux<AliasListItem> list() {
+    public PagedFlux<Alias> list() {
         return this.serviceClient.listAsync();
     }
 
@@ -210,7 +170,7 @@ public final class AliasAsyncClient {
      * @return detailed information for the alias.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<AliasListItem>> assignWithResponse(String aliasId, String creatorDataItemId) {
+    public Mono<Response<Alias>> assignWithResponse(String aliasId, String creatorDataItemId) {
         return this.serviceClient.assignWithResponseAsync(aliasId, creatorDataItemId);
     }
 
@@ -245,7 +205,7 @@ public final class AliasAsyncClient {
      * @return detailed information for the alias.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<AliasListItem> assign(String aliasId, String creatorDataItemId) {
+    public Mono<Alias> assign(String aliasId, String creatorDataItemId) {
         return this.serviceClient.assignAsync(aliasId, creatorDataItemId);
     }
 
@@ -345,8 +305,8 @@ public final class AliasAsyncClient {
      * @return detailed information for the alias.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<AliasListItem>> getDetailsWithResponse(String aliasId) {
-        return this.serviceClient.getDetailsWithResponseAsync(aliasId);
+    public Mono<Response<Alias>> getWithResponse(String aliasId) {
+        return this.serviceClient.getWithResponseAsync(aliasId);
     }
 
     /**
@@ -381,21 +341,7 @@ public final class AliasAsyncClient {
      * @return detailed information for the alias.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<AliasListItem> getDetails(String aliasId) {
-        return this.serviceClient.getDetailsAsync(aliasId);
-    }
-
-    /**
-     * Get the next page of items.
-     *
-     * @param nextLink The nextLink parameter.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response model for the List API.
-     */
-    @ServiceMethod(returns = ReturnType.COLLECTION)
-    public Mono<PagedResponse<AliasListItem>> listNextSinglePage(String nextLink) {
-        return this.serviceClient.listNextSinglePageAsync(nextLink);
+    public Mono<Alias> get(String aliasId) {
+        return this.serviceClient.getAsync(aliasId);
     }
 }

@@ -16,53 +16,53 @@ public final class SevereWeatherAlertDescription {
      * request.
      */
     @JsonProperty(value = "localized")
-    private String localized;
+    private String description;
 
     /*
      * Description of the alert in English (en-US).
      */
     @JsonProperty(value = "english")
-    private String english;
+    private String status;
 
     /**
-     * Get the localized property: Description of the alert in the specified language. By default English (en-US) is
+     * Get the description property: Description of the alert in the specified language. By default English (en-US) is
      * returned if the language parameter is not specified in the request.
      *
-     * @return the localized value.
+     * @return the description value.
      */
-    public String getLocalized() {
-        return this.localized;
+    public String getDescription() {
+        return this.description;
     }
 
     /**
-     * Set the localized property: Description of the alert in the specified language. By default English (en-US) is
+     * Set the description property: Description of the alert in the specified language. By default English (en-US) is
      * returned if the language parameter is not specified in the request.
      *
-     * @param localized the localized value to set.
+     * @param description the description value to set.
      * @return the SevereWeatherAlertDescription object itself.
      */
-    public SevereWeatherAlertDescription setLocalized(String localized) {
-        this.localized = localized;
+    public SevereWeatherAlertDescription setDescription(String description) {
+        this.description = description;
         return this;
     }
 
     /**
-     * Get the english property: Description of the alert in English (en-US).
+     * Get the status property: Description of the alert in English (en-US).
      *
-     * @return the english value.
+     * @return the status value.
      */
-    public String getEnglish() {
-        return this.english;
+    public String getStatus() {
+        return this.status;
     }
 
     /**
-     * Set the english property: Description of the alert in English (en-US).
+     * Set the status property: Description of the alert in English (en-US).
      *
-     * @param english the english value to set.
+     * @param status the status value to set.
      * @return the SevereWeatherAlertDescription object itself.
      */
-    public SevereWeatherAlertDescription setEnglish(String english) {
-        this.english = english;
+    public SevereWeatherAlertDescription setStatus(String status) {
+        this.status = status;
         return this;
     }
 }

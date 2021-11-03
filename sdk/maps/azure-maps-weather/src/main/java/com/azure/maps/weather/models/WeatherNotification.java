@@ -26,7 +26,7 @@ public final class WeatherNotification {
      * * `4` - Life threatening, emergency.
      */
     @JsonProperty(value = "hazardIndex")
-    private Integer hazardIndex;
+    private HazardIndex hazardIndex;
 
     /*
      * A unique identifier (non-displayable) for each type of hazard:
@@ -44,7 +44,7 @@ public final class WeatherNotification {
      * precipitation intensity/type.
      */
     @JsonProperty(value = "shortPhrase")
-    private String shortPhrase;
+    private String shortDescription;
 
     /**
      * Get the type property: A type of notification generated to warn drivers of the onset of a hazard, or increase in
@@ -74,7 +74,7 @@ public final class WeatherNotification {
      *
      * @return the hazardIndex value.
      */
-    public Integer getHazardIndex() {
+    public HazardIndex getHazardIndex() {
         return this.hazardIndex;
     }
 
@@ -85,7 +85,7 @@ public final class WeatherNotification {
      * @param hazardIndex the hazardIndex value to set.
      * @return the WeatherNotification object itself.
      */
-    public WeatherNotification setHazardIndex(Integer hazardIndex) {
+    public WeatherNotification setHazardIndex(HazardIndex hazardIndex) {
         this.hazardIndex = hazardIndex;
         return this;
     }
@@ -119,24 +119,24 @@ public final class WeatherNotification {
     }
 
     /**
-     * Get the shortPhrase property: A displayable short phrase describing the forecasted conditions and precipitation
-     * intensity/type.
+     * Get the shortDescription property: A displayable short phrase describing the forecasted conditions and
+     * precipitation intensity/type.
      *
-     * @return the shortPhrase value.
+     * @return the shortDescription value.
      */
-    public String getShortPhrase() {
-        return this.shortPhrase;
+    public String getShortDescription() {
+        return this.shortDescription;
     }
 
     /**
-     * Set the shortPhrase property: A displayable short phrase describing the forecasted conditions and precipitation
-     * intensity/type.
+     * Set the shortDescription property: A displayable short phrase describing the forecasted conditions and
+     * precipitation intensity/type.
      *
-     * @param shortPhrase the shortPhrase value to set.
+     * @param shortDescription the shortDescription value to set.
      * @return the WeatherNotification object itself.
      */
-    public WeatherNotification setShortPhrase(String shortPhrase) {
-        this.shortPhrase = shortPhrase;
+    public WeatherNotification setShortDescription(String shortDescription) {
+        this.shortDescription = shortDescription;
         return this;
     }
 }

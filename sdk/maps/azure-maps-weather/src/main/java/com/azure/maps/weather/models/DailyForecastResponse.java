@@ -4,24 +4,24 @@
 
 package com.azure.maps.weather.models;
 
-import com.azure.core.annotation.Fluent;
+import com.azure.core.annotation.Immutable;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /** The DailyForecastResponse model. */
-@Fluent
+@Immutable
 public final class DailyForecastResponse {
     /*
      * Summary for the main conditions for the requested time period. Notice
      * that summary can cover only part of the time period.
      */
-    @JsonProperty(value = "summary")
+    @JsonProperty(value = "summary", access = JsonProperty.Access.WRITE_ONLY)
     private DailyForecastSummary summary;
 
     /*
      * Forecast data for each requested day.
      */
-    @JsonProperty(value = "forecasts")
+    @JsonProperty(value = "forecasts", access = JsonProperty.Access.WRITE_ONLY)
     private List<DailyForecast> forecasts;
 
     /**
@@ -35,34 +35,11 @@ public final class DailyForecastResponse {
     }
 
     /**
-     * Set the summary property: Summary for the main conditions for the requested time period. Notice that summary can
-     * cover only part of the time period.
-     *
-     * @param summary the summary value to set.
-     * @return the DailyForecastResponse object itself.
-     */
-    public DailyForecastResponse setSummary(DailyForecastSummary summary) {
-        this.summary = summary;
-        return this;
-    }
-
-    /**
      * Get the forecasts property: Forecast data for each requested day.
      *
      * @return the forecasts value.
      */
     public List<DailyForecast> getForecasts() {
         return this.forecasts;
-    }
-
-    /**
-     * Set the forecasts property: Forecast data for each requested day.
-     *
-     * @param forecasts the forecasts value to set.
-     * @return the DailyForecastResponse object itself.
-     */
-    public DailyForecastResponse setForecasts(List<DailyForecast> forecasts) {
-        this.forecasts = forecasts;
-        return this;
     }
 }

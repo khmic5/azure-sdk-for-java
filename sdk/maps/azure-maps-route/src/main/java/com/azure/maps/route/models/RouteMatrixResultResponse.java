@@ -14,14 +14,14 @@ public final class RouteMatrixResultResponse {
      * Summary object for route section.
      */
     @JsonProperty(value = "routeSummary", access = JsonProperty.Access.WRITE_ONLY)
-    private RouteResultLegSummary routeSummary;
+    private RouteLegSummary summary;
 
     /**
-     * Get the routeSummary property: Summary object for route section.
+     * Get the summary property: Summary object for route section.
      *
-     * @return the routeSummary value.
+     * @return the summary value.
      */
-    public RouteResultLegSummary getRouteSummary() {
-        return this.routeSummary;
+    public RouteLegSummary getSummary() {
+        return this.summary;
     }
 }

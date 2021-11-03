@@ -15,56 +15,56 @@ public final class PrecipitationSummary {
      * past hour.
      */
     @JsonProperty(value = "pastHour")
-    private WeatherUnit pastHour;
+    private WeatherValue pastHour;
 
     /*
      * The amount of precipitation (liquid equivalent) that has fallen in the
      * past three hours.
      */
-    @JsonProperty(value = "past3Hours")
-    private WeatherUnit past3Hours;
+    @JsonProperty(value = "pastThreeHours")
+    private WeatherValue pastThreeHours;
 
     /*
      * The amount of precipitation (liquid equivalent) that has fallen in the
      * past six hours. Contains Metric and Imperial Values.
      */
-    @JsonProperty(value = "past6Hours")
-    private WeatherUnit past6Hours;
+    @JsonProperty(value = "pastSixHours")
+    private WeatherValue pastSixHours;
 
     /*
      * The amount of precipitation (liquid equivalent) that has fallen in the
      * past nine hours.
      */
-    @JsonProperty(value = "past9Hours")
-    private WeatherUnit past9Hours;
+    @JsonProperty(value = "pastNineHours")
+    private WeatherValue pastNineHours;
 
     /*
      * The amount of precipitation (liquid equivalent) that has fallen in the
      * past 12 hours.
      */
-    @JsonProperty(value = "past12Hours")
-    private WeatherUnit past12Hours;
+    @JsonProperty(value = "pastTwelveHours")
+    private WeatherValue pastTwelveHours;
 
     /*
      * The amount of precipitation (liquid equivalent) that has fallen in the
      * past 18 hours.
      */
-    @JsonProperty(value = "past18Hours")
-    private WeatherUnit past18Hours;
+    @JsonProperty(value = "pastEighteenHours")
+    private WeatherValue pastEighteenHours;
 
     /*
      * The amount of precipitation (liquid equivalent) that has fallen in the
      * past 24 hours.
      */
-    @JsonProperty(value = "past24Hours")
-    private WeatherUnit past24Hours;
+    @JsonProperty(value = "pastTwentyFourHours")
+    private WeatherValue pastTwentyFourHours;
 
     /**
      * Get the pastHour property: The amount of precipitation (liquid equivalent) that has fallen in the past hour.
      *
      * @return the pastHour value.
      */
-    public WeatherUnit getPastHour() {
+    public WeatherValue getPastHour() {
         return this.pastHour;
     }
 
@@ -74,140 +74,140 @@ public final class PrecipitationSummary {
      * @param pastHour the pastHour value to set.
      * @return the PrecipitationSummary object itself.
      */
-    public PrecipitationSummary setPastHour(WeatherUnit pastHour) {
+    public PrecipitationSummary setPastHour(WeatherValue pastHour) {
         this.pastHour = pastHour;
         return this;
     }
 
     /**
-     * Get the past3Hours property: The amount of precipitation (liquid equivalent) that has fallen in the past three
-     * hours.
+     * Get the pastThreeHours property: The amount of precipitation (liquid equivalent) that has fallen in the past
+     * three hours.
      *
-     * @return the past3Hours value.
+     * @return the pastThreeHours value.
      */
-    public WeatherUnit getPast3Hours() {
-        return this.past3Hours;
+    public WeatherValue getPastThreeHours() {
+        return this.pastThreeHours;
     }
 
     /**
-     * Set the past3Hours property: The amount of precipitation (liquid equivalent) that has fallen in the past three
-     * hours.
+     * Set the pastThreeHours property: The amount of precipitation (liquid equivalent) that has fallen in the past
+     * three hours.
      *
-     * @param past3Hours the past3Hours value to set.
+     * @param pastThreeHours the pastThreeHours value to set.
      * @return the PrecipitationSummary object itself.
      */
-    public PrecipitationSummary setPast3Hours(WeatherUnit past3Hours) {
-        this.past3Hours = past3Hours;
+    public PrecipitationSummary setPastThreeHours(WeatherValue pastThreeHours) {
+        this.pastThreeHours = pastThreeHours;
         return this;
     }
 
     /**
-     * Get the past6Hours property: The amount of precipitation (liquid equivalent) that has fallen in the past six
+     * Get the pastSixHours property: The amount of precipitation (liquid equivalent) that has fallen in the past six
      * hours. Contains Metric and Imperial Values.
      *
-     * @return the past6Hours value.
+     * @return the pastSixHours value.
      */
-    public WeatherUnit getPast6Hours() {
-        return this.past6Hours;
+    public WeatherValue getPastSixHours() {
+        return this.pastSixHours;
     }
 
     /**
-     * Set the past6Hours property: The amount of precipitation (liquid equivalent) that has fallen in the past six
+     * Set the pastSixHours property: The amount of precipitation (liquid equivalent) that has fallen in the past six
      * hours. Contains Metric and Imperial Values.
      *
-     * @param past6Hours the past6Hours value to set.
+     * @param pastSixHours the pastSixHours value to set.
      * @return the PrecipitationSummary object itself.
      */
-    public PrecipitationSummary setPast6Hours(WeatherUnit past6Hours) {
-        this.past6Hours = past6Hours;
+    public PrecipitationSummary setPastSixHours(WeatherValue pastSixHours) {
+        this.pastSixHours = pastSixHours;
         return this;
     }
 
     /**
-     * Get the past9Hours property: The amount of precipitation (liquid equivalent) that has fallen in the past nine
+     * Get the pastNineHours property: The amount of precipitation (liquid equivalent) that has fallen in the past nine
      * hours.
      *
-     * @return the past9Hours value.
+     * @return the pastNineHours value.
      */
-    public WeatherUnit getPast9Hours() {
-        return this.past9Hours;
+    public WeatherValue getPastNineHours() {
+        return this.pastNineHours;
     }
 
     /**
-     * Set the past9Hours property: The amount of precipitation (liquid equivalent) that has fallen in the past nine
+     * Set the pastNineHours property: The amount of precipitation (liquid equivalent) that has fallen in the past nine
      * hours.
      *
-     * @param past9Hours the past9Hours value to set.
+     * @param pastNineHours the pastNineHours value to set.
      * @return the PrecipitationSummary object itself.
      */
-    public PrecipitationSummary setPast9Hours(WeatherUnit past9Hours) {
-        this.past9Hours = past9Hours;
+    public PrecipitationSummary setPastNineHours(WeatherValue pastNineHours) {
+        this.pastNineHours = pastNineHours;
         return this;
     }
 
     /**
-     * Get the past12Hours property: The amount of precipitation (liquid equivalent) that has fallen in the past 12
+     * Get the pastTwelveHours property: The amount of precipitation (liquid equivalent) that has fallen in the past 12
      * hours.
      *
-     * @return the past12Hours value.
+     * @return the pastTwelveHours value.
      */
-    public WeatherUnit getPast12Hours() {
-        return this.past12Hours;
+    public WeatherValue getPastTwelveHours() {
+        return this.pastTwelveHours;
     }
 
     /**
-     * Set the past12Hours property: The amount of precipitation (liquid equivalent) that has fallen in the past 12
+     * Set the pastTwelveHours property: The amount of precipitation (liquid equivalent) that has fallen in the past 12
      * hours.
      *
-     * @param past12Hours the past12Hours value to set.
+     * @param pastTwelveHours the pastTwelveHours value to set.
      * @return the PrecipitationSummary object itself.
      */
-    public PrecipitationSummary setPast12Hours(WeatherUnit past12Hours) {
-        this.past12Hours = past12Hours;
+    public PrecipitationSummary setPastTwelveHours(WeatherValue pastTwelveHours) {
+        this.pastTwelveHours = pastTwelveHours;
         return this;
     }
 
     /**
-     * Get the past18Hours property: The amount of precipitation (liquid equivalent) that has fallen in the past 18
-     * hours.
+     * Get the pastEighteenHours property: The amount of precipitation (liquid equivalent) that has fallen in the past
+     * 18 hours.
      *
-     * @return the past18Hours value.
+     * @return the pastEighteenHours value.
      */
-    public WeatherUnit getPast18Hours() {
-        return this.past18Hours;
+    public WeatherValue getPastEighteenHours() {
+        return this.pastEighteenHours;
     }
 
     /**
-     * Set the past18Hours property: The amount of precipitation (liquid equivalent) that has fallen in the past 18
-     * hours.
+     * Set the pastEighteenHours property: The amount of precipitation (liquid equivalent) that has fallen in the past
+     * 18 hours.
      *
-     * @param past18Hours the past18Hours value to set.
+     * @param pastEighteenHours the pastEighteenHours value to set.
      * @return the PrecipitationSummary object itself.
      */
-    public PrecipitationSummary setPast18Hours(WeatherUnit past18Hours) {
-        this.past18Hours = past18Hours;
+    public PrecipitationSummary setPastEighteenHours(WeatherValue pastEighteenHours) {
+        this.pastEighteenHours = pastEighteenHours;
         return this;
     }
 
     /**
-     * Get the past24Hours property: The amount of precipitation (liquid equivalent) that has fallen in the past 24
-     * hours.
+     * Get the pastTwentyFourHours property: The amount of precipitation (liquid equivalent) that has fallen in the past
+     * 24 hours.
      *
-     * @return the past24Hours value.
+     * @return the pastTwentyFourHours value.
      */
-    public WeatherUnit getPast24Hours() {
-        return this.past24Hours;
+    public WeatherValue getPastTwentyFourHours() {
+        return this.pastTwentyFourHours;
     }
 
     /**
-     * Set the past24Hours property: The amount of precipitation (liquid equivalent) that has fallen in the past 24
-     * hours.
+     * Set the pastTwentyFourHours property: The amount of precipitation (liquid equivalent) that has fallen in the past
+     * 24 hours.
      *
-     * @param past24Hours the past24Hours value to set.
+     * @param pastTwentyFourHours the pastTwentyFourHours value to set.
      * @return the PrecipitationSummary object itself.
      */
-    public PrecipitationSummary setPast24Hours(WeatherUnit past24Hours) {
-        this.past24Hours = past24Hours;
+    public PrecipitationSummary setPastTwentyFourHours(WeatherValue pastTwentyFourHours) {
+        this.pastTwentyFourHours = pastTwentyFourHours;
         return this;
     }
 }

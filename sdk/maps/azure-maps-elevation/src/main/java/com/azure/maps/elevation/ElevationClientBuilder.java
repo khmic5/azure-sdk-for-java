@@ -6,8 +6,10 @@ package com.azure.maps.elevation;
 
 import com.azure.core.annotation.ServiceClientBuilder;
 import com.azure.core.http.HttpClient;
+import com.azure.core.http.HttpHeaders;
 import com.azure.core.http.HttpPipeline;
 import com.azure.core.http.HttpPipelineBuilder;
+import com.azure.core.http.policy.AddHeadersPolicy;
 import com.azure.core.http.policy.CookiePolicy;
 import com.azure.core.http.policy.HttpLogOptions;
 import com.azure.core.http.policy.HttpLoggingPolicy;
@@ -15,7 +17,9 @@ import com.azure.core.http.policy.HttpPipelinePolicy;
 import com.azure.core.http.policy.HttpPolicyProviders;
 import com.azure.core.http.policy.RetryPolicy;
 import com.azure.core.http.policy.UserAgentPolicy;
+import com.azure.core.util.ClientOptions;
 import com.azure.core.util.Configuration;
+import com.azure.core.util.CoreUtils;
 import com.azure.core.util.serializer.JacksonAdapter;
 import com.azure.core.util.serializer.SerializerAdapter;
 import com.azure.maps.elevation.implementation.ElevationClientImpl;
@@ -47,18 +51,18 @@ public final class ElevationClientBuilder {
      * Account API. To use Azure AD security in Azure Maps see the following
      * [articles](https://aka.ms/amauthdetails) for guidance.
      */
-    private String xMsClientId;
+    private String clientId;
 
     /**
      * Sets Specifies which account is intended for usage in conjunction with the Azure AD security model. It represents
      * a unique ID for the Azure Maps account and can be retrieved from the Azure Maps management plane Account API. To
      * use Azure AD security in Azure Maps see the following [articles](https://aka.ms/amauthdetails) for guidance.
      *
-     * @param xMsClientId the xMsClientId value.
+     * @param clientId the clientId value.
      * @return the ElevationClientBuilder.
      */
-    public ElevationClientBuilder xMsClientId(String xMsClientId) {
-        this.xMsClientId = xMsClientId;
+    public ElevationClientBuilder clientId(String clientId) {
+        this.clientId = clientId;
         return this;
     }
 
@@ -197,6 +201,23 @@ public final class ElevationClientBuilder {
      */
     private final List<HttpPipelinePolicy> pipelinePolicies;
 
+    /*
+     * The client options such as application ID and custom headers to set on a
+     * request.
+     */
+    private ClientOptions clientOptions;
+
+    /**
+     * Sets The client options such as application ID and custom headers to set on a request.
+     *
+     * @param clientOptions the clientOptions value.
+     * @return the ElevationClientBuilder.
+     */
+    public ElevationClientBuilder clientOptions(ClientOptions clientOptions) {
+        this.clientOptions = clientOptions;
+        return this;
+    }
+
     /**
      * Adds a custom Http pipeline policy.
      *
@@ -226,8 +247,7 @@ public final class ElevationClientBuilder {
         if (serializerAdapter == null) {
             this.serializerAdapter = JacksonAdapter.createDefaultSerializerAdapter();
         }
-        ElevationClientImpl client =
-                new ElevationClientImpl(pipeline, serializerAdapter, xMsClientId, host, apiVersion);
+        ElevationClientImpl client = new ElevationClientImpl(pipeline, serializerAdapter, clientId, host, apiVersion);
         return client;
     }
 
@@ -237,11 +257,19 @@ public final class ElevationClientBuilder {
         if (httpLogOptions == null) {
             httpLogOptions = new HttpLogOptions();
         }
+        if (clientOptions == null) {
+            clientOptions = new ClientOptions();
+        }
         List<HttpPipelinePolicy> policies = new ArrayList<>();
         String clientName = properties.getOrDefault(SDK_NAME, "UnknownName");
         String clientVersion = properties.getOrDefault(SDK_VERSION, "UnknownVersion");
-        policies.add(
-                new UserAgentPolicy(httpLogOptions.getApplicationId(), clientName, clientVersion, buildConfiguration));
+        String applicationId = CoreUtils.getApplicationId(clientOptions, httpLogOptions);
+        policies.add(new UserAgentPolicy(applicationId, clientName, clientVersion, buildConfiguration));
+        HttpHeaders headers = new HttpHeaders();
+        clientOptions.getHeaders().forEach(header -> headers.set(header.getName(), header.getValue()));
+        if (headers.getSize() > 0) {
+            policies.add(new AddHeadersPolicy(headers));
+        }
         HttpPolicyProviders.addBeforeRetryPolicies(policies);
         policies.add(retryPolicy == null ? new RetryPolicy() : retryPolicy);
         policies.add(new CookiePolicy());
@@ -262,7 +290,7 @@ public final class ElevationClientBuilder {
      * @return an instance of ElevationAsyncClient.
      */
     public ElevationAsyncClient buildAsyncClient() {
-        return new ElevationAsyncClient(buildInnerClient().getElevations());
+        return new ElevationAsyncClient(buildInnerClient());
     }
 
     /**
@@ -271,6 +299,6 @@ public final class ElevationClientBuilder {
      * @return an instance of ElevationClient.
      */
     public ElevationClient buildClient() {
-        return new ElevationClient(buildInnerClient().getElevations());
+        return new ElevationClient(buildInnerClient());
     }
 }

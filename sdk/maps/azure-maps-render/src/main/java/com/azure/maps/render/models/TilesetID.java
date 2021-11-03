@@ -31,8 +31,14 @@ public final class TilesetID extends ExpandableStringEnum<TilesetID> {
     /** Static value microsoft.base.labels.road for TilesetID. */
     public static final TilesetID MICROSOFT_BASE_LABELS_ROAD = fromString("microsoft.base.labels.road");
 
+    /** Static value microsoft.base.labels.darkgrey for TilesetID. */
+    public static final TilesetID MICROSOFT_BASE_LABELS_DARKGREY = fromString("microsoft.base.labels.darkgrey");
+
     /** Static value microsoft.base.hybrid.road for TilesetID. */
     public static final TilesetID MICROSOFT_BASE_HYBRID_ROAD = fromString("microsoft.base.hybrid.road");
+
+    /** Static value microsoft.base.hybrid.darkgrey for TilesetID. */
+    public static final TilesetID MICROSOFT_BASE_HYBRID_DARKGREY = fromString("microsoft.base.hybrid.darkgrey");
 
     /** Static value microsoft.imagery for TilesetID. */
     public static final TilesetID MICROSOFT_IMAGERY = fromString("microsoft.imagery");
@@ -48,6 +54,33 @@ public final class TilesetID extends ExpandableStringEnum<TilesetID> {
 
     /** Static value microsoft.dem.contours for TilesetID. */
     public static final TilesetID MICROSOFT_DEM_CONTOURS = fromString("microsoft.dem.contours");
+
+    /** Static value microsoft.traffic.absolute for TilesetID. */
+    public static final TilesetID MICROSOFT_TRAFFIC_ABSOLUTE = fromString("microsoft.traffic.absolute");
+
+    /** Static value microsoft.traffic.absolute.main for TilesetID. */
+    public static final TilesetID MICROSOFT_TRAFFIC_ABSOLUTE_MAIN = fromString("microsoft.traffic.absolute.main");
+
+    /** Static value microsoft.traffic.relative for TilesetID. */
+    public static final TilesetID MICROSOFT_TRAFFIC_RELATIVE = fromString("microsoft.traffic.relative");
+
+    /** Static value microsoft.traffic.relative.main for TilesetID. */
+    public static final TilesetID MICROSOFT_TRAFFIC_RELATIVE_MAIN = fromString("microsoft.traffic.relative.main");
+
+    /** Static value microsoft.traffic.relative.dark for TilesetID. */
+    public static final TilesetID MICROSOFT_TRAFFIC_RELATIVE_DARK = fromString("microsoft.traffic.relative.dark");
+
+    /** Static value microsoft.traffic.delay for TilesetID. */
+    public static final TilesetID MICROSOFT_TRAFFIC_DELAY = fromString("microsoft.traffic.delay");
+
+    /** Static value microsoft.traffic.delay.main for TilesetID. */
+    public static final TilesetID MICROSOFT_TRAFFIC_DELAY_MAIN = fromString("microsoft.traffic.delay.main");
+
+    /** Static value microsoft.traffic.reduced.main for TilesetID. */
+    public static final TilesetID MICROSOFT_TRAFFIC_REDUCED_MAIN = fromString("microsoft.traffic.reduced.main");
+
+    /** Static value microsoft.traffic.incident for TilesetID. */
+    public static final TilesetID MICROSOFT_TRAFFIC_INCIDENT = fromString("microsoft.traffic.incident");
 
     /**
      * Creates or finds a TilesetID from its string representation.

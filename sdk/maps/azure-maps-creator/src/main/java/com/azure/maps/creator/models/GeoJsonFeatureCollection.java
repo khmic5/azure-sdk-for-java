@@ -6,7 +6,6 @@ package com.azure.maps.creator.models;
 
 import com.azure.core.annotation.Fluent;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import java.util.List;
@@ -15,15 +14,10 @@ import java.util.List;
  * A valid `GeoJSON FeatureCollection` object type. Please refer to [RFC
  * 7946](https://tools.ietf.org/html/rfc7946#section-3.3) for details.
  */
-@JsonTypeInfo(
-        use = JsonTypeInfo.Id.NAME,
-        include = JsonTypeInfo.As.PROPERTY,
-        property = "type",
-        defaultImpl = GeoJsonFeatureCollection.class)
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonTypeName("FeatureCollection")
-@JsonSubTypes({@JsonSubTypes.Type(name = "FeatureCollection", value = ExtendedGeoJsonFeatureCollection.class)})
 @Fluent
-public class GeoJsonFeatureCollection extends GeoJsonObject {
+public final class GeoJsonFeatureCollection extends GeoJsonObject {
     /*
      * Contains a list of valid `GeoJSON Feature` objects.
      */

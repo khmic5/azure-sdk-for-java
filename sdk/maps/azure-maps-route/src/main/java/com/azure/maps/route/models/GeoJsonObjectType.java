@@ -4,52 +4,65 @@
 
 package com.azure.maps.route.models;
 
-import com.azure.core.util.ExpandableStringEnum;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import java.util.Collection;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 /** Defines values for GeoJsonObjectType. */
-public final class GeoJsonObjectType extends ExpandableStringEnum<GeoJsonObjectType> {
-    /** Static value Point for GeoJsonObjectType. */
-    public static final GeoJsonObjectType GEO_JSON_POINT = fromString("Point");
+public enum GeoJsonObjectType {
+    /** Enum value Point. */
+    GEO_JSON_POINT("Point"),
 
-    /** Static value MultiPoint for GeoJsonObjectType. */
-    public static final GeoJsonObjectType GEO_JSON_MULTI_POINT = fromString("MultiPoint");
+    /** Enum value MultiPoint. */
+    GEO_JSON_MULTI_POINT("MultiPoint"),
 
-    /** Static value LineString for GeoJsonObjectType. */
-    public static final GeoJsonObjectType GEO_JSON_LINE_STRING = fromString("LineString");
+    /** Enum value LineString. */
+    GEO_JSON_LINE_STRING("LineString"),
 
-    /** Static value MultiLineString for GeoJsonObjectType. */
-    public static final GeoJsonObjectType GEO_JSON_MULTI_LINE_STRING = fromString("MultiLineString");
+    /** Enum value MultiLineString. */
+    GEO_JSON_MULTI_LINE_STRING("MultiLineString"),
 
-    /** Static value Polygon for GeoJsonObjectType. */
-    public static final GeoJsonObjectType GEO_JSON_POLYGON = fromString("Polygon");
+    /** Enum value Polygon. */
+    GEO_JSON_POLYGON("Polygon"),
 
-    /** Static value MultiPolygon for GeoJsonObjectType. */
-    public static final GeoJsonObjectType GEO_JSON_MULTI_POLYGON = fromString("MultiPolygon");
+    /** Enum value MultiPolygon. */
+    GEO_JSON_MULTI_POLYGON("MultiPolygon"),
 
-    /** Static value GeometryCollection for GeoJsonObjectType. */
-    public static final GeoJsonObjectType GEO_JSON_GEOMETRY_COLLECTION = fromString("GeometryCollection");
+    /** Enum value GeometryCollection. */
+    GEO_JSON_GEOMETRY_COLLECTION("GeometryCollection"),
 
-    /** Static value Feature for GeoJsonObjectType. */
-    public static final GeoJsonObjectType GEO_JSON_FEATURE = fromString("Feature");
+    /** Enum value Feature. */
+    GEO_JSON_FEATURE("Feature"),
 
-    /** Static value FeatureCollection for GeoJsonObjectType. */
-    public static final GeoJsonObjectType GEO_JSON_FEATURE_COLLECTION = fromString("FeatureCollection");
+    /** Enum value FeatureCollection. */
+    GEO_JSON_FEATURE_COLLECTION("FeatureCollection");
 
-    /**
-     * Creates or finds a GeoJsonObjectType from its string representation.
-     *
-     * @param name a name to look for.
-     * @return the corresponding GeoJsonObjectType.
-     */
-    @JsonCreator
-    public static GeoJsonObjectType fromString(String name) {
-        return fromString(name, GeoJsonObjectType.class);
+    /** The actual serialized value for a GeoJsonObjectType instance. */
+    private final String value;
+
+    GeoJsonObjectType(String value) {
+        this.value = value;
     }
 
-    /** @return known GeoJsonObjectType values. */
-    public static Collection<GeoJsonObjectType> values() {
-        return values(GeoJsonObjectType.class);
+    /**
+     * Parses a serialized value to a GeoJsonObjectType instance.
+     *
+     * @param value the serialized value to parse.
+     * @return the parsed GeoJsonObjectType object, or null if unable to parse.
+     */
+    @JsonCreator
+    public static GeoJsonObjectType fromString(String value) {
+        GeoJsonObjectType[] items = GeoJsonObjectType.values();
+        for (GeoJsonObjectType item : items) {
+            if (item.toString().equalsIgnoreCase(value)) {
+                return item;
+            }
+        }
+        return null;
+    }
+
+    @JsonValue
+    @Override
+    public String toString() {
+        return this.value;
     }
 }

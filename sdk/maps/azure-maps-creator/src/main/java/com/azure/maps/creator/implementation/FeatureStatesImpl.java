@@ -25,18 +25,23 @@ import com.azure.core.http.rest.PagedResponse;
 import com.azure.core.http.rest.PagedResponseBase;
 import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.RestProxy;
+import com.azure.core.util.Context;
+import com.azure.core.util.FluxUtil;
+import com.azure.core.util.logging.ClientLogger;
 import com.azure.maps.creator.models.ErrorResponseException;
 import com.azure.maps.creator.models.FeatureStatesStructure;
 import com.azure.maps.creator.models.Geography;
-import com.azure.maps.creator.models.StatesetCreatedResponse;
-import com.azure.maps.creator.models.StatesetGetResponse;
-import com.azure.maps.creator.models.StatesetInfoObject;
-import com.azure.maps.creator.models.StatesetListResponse;
-import com.azure.maps.creator.models.StylesObject;
+import com.azure.maps.creator.models.Stateset;
+import com.azure.maps.creator.models.StatesetCreatedResult;
+import com.azure.maps.creator.models.StatesetInfo;
+import com.azure.maps.creator.models.StatesetListResult;
+import com.azure.maps.creator.models.StyleRules;
 import reactor.core.publisher.Mono;
 
 /** An instance of this class provides access to all the operations defined in FeatureStates. */
 public final class FeatureStatesImpl {
+    private final ClientLogger logger = new ClientLogger(FeatureStatesImpl.class);
+
     /** The proxy service used to perform REST calls. */
     private final FeatureStatesService service;
 
@@ -64,98 +69,107 @@ public final class FeatureStatesImpl {
         @Post("/featureStateSets")
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
-        Mono<Response<StatesetCreatedResponse>> createStateset(
+        Mono<Response<StatesetCreatedResult>> createStateset(
                 @HostParam("geography") Geography geography,
-                @HeaderParam("x-ms-client-id") String xMsClientId,
+                @HeaderParam("x-ms-client-id") String clientId,
                 @QueryParam("api-version") String apiVersion,
                 @QueryParam("datasetId") String datasetId,
                 @QueryParam("description") String description,
-                @BodyParam("application/json") StylesObject statesetCreateRequestBody,
-                @HeaderParam("Accept") String accept);
+                @BodyParam("application/json") StyleRules styleRules,
+                @HeaderParam("Accept") String accept,
+                Context context);
 
         @Get("/featureStateSets")
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
-        Mono<Response<StatesetListResponse>> listStateset(
+        Mono<Response<StatesetListResult>> listStatesets(
                 @HostParam("geography") Geography geography,
-                @HeaderParam("x-ms-client-id") String xMsClientId,
+                @HeaderParam("x-ms-client-id") String clientId,
                 @QueryParam("api-version") String apiVersion,
-                @HeaderParam("Accept") String accept);
+                @HeaderParam("Accept") String accept,
+                Context context);
 
         @Put("/featureStateSets/{statesetId}")
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
-        Mono<Response<Void>> putStateset(
+        Mono<Response<Void>> updateStateset(
                 @HostParam("geography") Geography geography,
-                @HeaderParam("x-ms-client-id") String xMsClientId,
+                @HeaderParam("x-ms-client-id") String clientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("statesetId") String statesetId,
-                @BodyParam("application/json") StylesObject statesetStyleUpdateRequestBody,
-                @HeaderParam("Accept") String accept);
+                @BodyParam("application/json") StyleRules styleRules,
+                @HeaderParam("Accept") String accept,
+                Context context);
 
         @Delete("/featureStateSets/{statesetId}")
         @ExpectedResponses({204})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<Response<Void>> deleteStateset(
                 @HostParam("geography") Geography geography,
-                @HeaderParam("x-ms-client-id") String xMsClientId,
+                @HeaderParam("x-ms-client-id") String clientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("statesetId") String statesetId,
-                @HeaderParam("Accept") String accept);
+                @HeaderParam("Accept") String accept,
+                Context context);
 
         @Get("/featureStateSets/{statesetId}")
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
-        Mono<Response<StatesetGetResponse>> getStateset(
+        Mono<Response<Stateset>> getStateset(
                 @HostParam("geography") Geography geography,
-                @HeaderParam("x-ms-client-id") String xMsClientId,
+                @HeaderParam("x-ms-client-id") String clientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("statesetId") String statesetId,
-                @HeaderParam("Accept") String accept);
+                @HeaderParam("Accept") String accept,
+                Context context);
 
         @Put("/featureStateSets/{statesetId}/featureStates/{featureId}")
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<Response<Void>> updateStates(
                 @HostParam("geography") Geography geography,
-                @HeaderParam("x-ms-client-id") String xMsClientId,
+                @HeaderParam("x-ms-client-id") String clientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("statesetId") String statesetId,
                 @PathParam("featureId") String featureId,
-                @BodyParam("application/json") FeatureStatesStructure featureStateUpdateRequestBody,
-                @HeaderParam("Accept") String accept);
+                @BodyParam("application/json") FeatureStatesStructure featureStates,
+                @HeaderParam("Accept") String accept,
+                Context context);
 
         @Delete("/featureStateSets/{statesetId}/featureStates/{featureId}")
         @ExpectedResponses({204})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<Response<Void>> deleteState(
                 @HostParam("geography") Geography geography,
-                @HeaderParam("x-ms-client-id") String xMsClientId,
+                @HeaderParam("x-ms-client-id") String clientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("statesetId") String statesetId,
                 @PathParam("featureId") String featureId,
-                @QueryParam("stateKeyName") String stateKeyName,
-                @HeaderParam("Accept") String accept);
+                @QueryParam("stateKeyName") String keyName,
+                @HeaderParam("Accept") String accept,
+                Context context);
 
         @Get("/featureStateSets/{statesetId}/featureStates/{featureId}")
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
-        Mono<Response<FeatureStatesStructure>> getStates(
+        Mono<Response<FeatureStatesStructure>> listStates(
                 @HostParam("geography") Geography geography,
-                @HeaderParam("x-ms-client-id") String xMsClientId,
+                @HeaderParam("x-ms-client-id") String clientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("statesetId") String statesetId,
                 @PathParam("featureId") String featureId,
-                @HeaderParam("Accept") String accept);
+                @HeaderParam("Accept") String accept,
+                Context context);
 
         @Get("{nextLink}")
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
-        Mono<Response<StatesetListResponse>> listStatesetNext(
+        Mono<Response<StatesetListResult>> listStatesetsNext(
                 @PathParam(value = "nextLink", encoded = true) String nextLink,
                 @HostParam("geography") Geography geography,
-                @HeaderParam("x-ms-client-id") String xMsClientId,
-                @HeaderParam("Accept") String accept);
+                @HeaderParam("x-ms-client-id") String clientId,
+                @HeaderParam("Accept") String accept,
+                Context context);
     }
 
     /**
@@ -189,7 +203,7 @@ public final class FeatureStatesImpl {
      *
      * @param datasetId The datasetId must have been obtained from a successful [Dataset Create
      *     API](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create) call.
-     * @param statesetCreateRequestBody The stateset style JSON data.
+     * @param styleRules The stateset style JSON data.
      * @param description Description for the stateset. Max length allowed is 1000.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -197,18 +211,76 @@ public final class FeatureStatesImpl {
      * @return the response model for the successful Stateset Create API.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<StatesetCreatedResponse>> createStatesetWithResponseAsync(
-            String datasetId, StylesObject statesetCreateRequestBody, String description) {
+    public Mono<Response<StatesetCreatedResult>> createStatesetWithResponseAsync(
+            String datasetId, StyleRules styleRules, String description) {
+        final String apiVersion = "2.0";
+        final String accept = "application/json";
+        return FluxUtil.withContext(
+                context ->
+                        service.createStateset(
+                                this.client.getGeography(),
+                                this.client.getClientId(),
+                                apiVersion,
+                                datasetId,
+                                description,
+                                styleRules,
+                                accept,
+                                context));
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>This POST API allows the user to create a new Stateset and define stateset style using request body.
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. The Feature State API is part of Creator.
+     *
+     * <p>The Feature State service allows the user to update the states of a feature and query them to be used in other
+     * services. The dynamic properties of a feature that don't belong to the dataset are referred to as *states* here.
+     *
+     * <p>This Feature State service pivot on the Stateset. Like Tileset, Stateset encapsulates the storage mechanism
+     * for feature states for a dataset.
+     *
+     * <p>Once the stateset is created, users can use that statesetId to post feature state updates and retrieve the
+     * current feature states. A feature can have only one state at a given point in time.
+     *
+     * <p>Feature state is defined by the key name, value and the timestamp. When a feature state update is posted to
+     * Azure Maps, the state value gets updated only if the provided state’s timestamp is later than the stored
+     * timestamp.
+     *
+     * <p>Azure Maps MapControl provides a way to use these feature states to style the features. Please refer to the
+     * [State Tile documentation](https://docs.microsoft.com/en-us/rest/api/maps/render/get-map-state-tile-preview) for
+     * more information.
+     *
+     * @param datasetId The datasetId must have been obtained from a successful [Dataset Create
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create) call.
+     * @param styleRules The stateset style JSON data.
+     * @param description Description for the stateset. Max length allowed is 1000.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response model for the successful Stateset Create API.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Response<StatesetCreatedResult>> createStatesetWithResponseAsync(
+            String datasetId, StyleRules styleRules, String description, Context context) {
         final String apiVersion = "2.0";
         final String accept = "application/json";
         return service.createStateset(
                 this.client.getGeography(),
-                this.client.getXMsClientId(),
+                this.client.getClientId(),
                 apiVersion,
                 datasetId,
                 description,
-                statesetCreateRequestBody,
-                accept);
+                styleRules,
+                accept,
+                context);
     }
 
     /**
@@ -242,7 +314,7 @@ public final class FeatureStatesImpl {
      *
      * @param datasetId The datasetId must have been obtained from a successful [Dataset Create
      *     API](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create) call.
-     * @param statesetCreateRequestBody The stateset style JSON data.
+     * @param styleRules The stateset style JSON data.
      * @param description Description for the stateset. Max length allowed is 1000.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -250,11 +322,11 @@ public final class FeatureStatesImpl {
      * @return the response model for the successful Stateset Create API.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<StatesetCreatedResponse> createStatesetAsync(
-            String datasetId, StylesObject statesetCreateRequestBody, String description) {
-        return createStatesetWithResponseAsync(datasetId, statesetCreateRequestBody, description)
+    public Mono<StatesetCreatedResult> createStatesetAsync(
+            String datasetId, StyleRules styleRules, String description) {
+        return createStatesetWithResponseAsync(datasetId, styleRules, description)
                 .flatMap(
-                        (Response<StatesetCreatedResponse> res) -> {
+                        (Response<StatesetCreatedResult> res) -> {
                             if (res.getValue() != null) {
                                 return Mono.just(res.getValue());
                             } else {
@@ -294,7 +366,60 @@ public final class FeatureStatesImpl {
      *
      * @param datasetId The datasetId must have been obtained from a successful [Dataset Create
      *     API](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create) call.
-     * @param statesetCreateRequestBody The stateset style JSON data.
+     * @param styleRules The stateset style JSON data.
+     * @param description Description for the stateset. Max length allowed is 1000.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response model for the successful Stateset Create API.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<StatesetCreatedResult> createStatesetAsync(
+            String datasetId, StyleRules styleRules, String description, Context context) {
+        return createStatesetWithResponseAsync(datasetId, styleRules, description, context)
+                .flatMap(
+                        (Response<StatesetCreatedResult> res) -> {
+                            if (res.getValue() != null) {
+                                return Mono.just(res.getValue());
+                            } else {
+                                return Mono.empty();
+                            }
+                        });
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>This POST API allows the user to create a new Stateset and define stateset style using request body.
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. The Feature State API is part of Creator.
+     *
+     * <p>The Feature State service allows the user to update the states of a feature and query them to be used in other
+     * services. The dynamic properties of a feature that don't belong to the dataset are referred to as *states* here.
+     *
+     * <p>This Feature State service pivot on the Stateset. Like Tileset, Stateset encapsulates the storage mechanism
+     * for feature states for a dataset.
+     *
+     * <p>Once the stateset is created, users can use that statesetId to post feature state updates and retrieve the
+     * current feature states. A feature can have only one state at a given point in time.
+     *
+     * <p>Feature state is defined by the key name, value and the timestamp. When a feature state update is posted to
+     * Azure Maps, the state value gets updated only if the provided state’s timestamp is later than the stored
+     * timestamp.
+     *
+     * <p>Azure Maps MapControl provides a way to use these feature states to style the features. Please refer to the
+     * [State Tile documentation](https://docs.microsoft.com/en-us/rest/api/maps/render/get-map-state-tile-preview) for
+     * more information.
+     *
+     * @param datasetId The datasetId must have been obtained from a successful [Dataset Create
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create) call.
+     * @param styleRules The stateset style JSON data.
      * @param description Description for the stateset. Max length allowed is 1000.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -302,9 +427,53 @@ public final class FeatureStatesImpl {
      * @return the response model for the successful Stateset Create API.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public StatesetCreatedResponse createStateset(
-            String datasetId, StylesObject statesetCreateRequestBody, String description) {
-        return createStatesetAsync(datasetId, statesetCreateRequestBody, description).block();
+    public StatesetCreatedResult createStateset(String datasetId, StyleRules styleRules, String description) {
+        return createStatesetAsync(datasetId, styleRules, description).block();
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>This POST API allows the user to create a new Stateset and define stateset style using request body.
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. The Feature State API is part of Creator.
+     *
+     * <p>The Feature State service allows the user to update the states of a feature and query them to be used in other
+     * services. The dynamic properties of a feature that don't belong to the dataset are referred to as *states* here.
+     *
+     * <p>This Feature State service pivot on the Stateset. Like Tileset, Stateset encapsulates the storage mechanism
+     * for feature states for a dataset.
+     *
+     * <p>Once the stateset is created, users can use that statesetId to post feature state updates and retrieve the
+     * current feature states. A feature can have only one state at a given point in time.
+     *
+     * <p>Feature state is defined by the key name, value and the timestamp. When a feature state update is posted to
+     * Azure Maps, the state value gets updated only if the provided state’s timestamp is later than the stored
+     * timestamp.
+     *
+     * <p>Azure Maps MapControl provides a way to use these feature states to style the features. Please refer to the
+     * [State Tile documentation](https://docs.microsoft.com/en-us/rest/api/maps/render/get-map-state-tile-preview) for
+     * more information.
+     *
+     * @param datasetId The datasetId must have been obtained from a successful [Dataset Create
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create) call.
+     * @param styleRules The stateset style JSON data.
+     * @param description Description for the stateset. Max length allowed is 1000.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response model for the successful Stateset Create API.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<StatesetCreatedResult> createStatesetWithResponse(
+            String datasetId, StyleRules styleRules, String description, Context context) {
+        return createStatesetWithResponseAsync(datasetId, styleRules, description, context).block();
     }
 
     /**
@@ -321,10 +490,48 @@ public final class FeatureStatesImpl {
      * @return the response model for the successful Stateset List API.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<PagedResponse<StatesetInfoObject>> listStatesetSinglePageAsync() {
+    public Mono<PagedResponse<StatesetInfo>> listStatesetsSinglePageAsync() {
         final String apiVersion = "2.0";
         final String accept = "application/json";
-        return service.listStateset(this.client.getGeography(), this.client.getXMsClientId(), apiVersion, accept)
+        return FluxUtil.withContext(
+                        context ->
+                                service.listStatesets(
+                                        this.client.getGeography(),
+                                        this.client.getClientId(),
+                                        apiVersion,
+                                        accept,
+                                        context))
+                .map(
+                        res ->
+                                new PagedResponseBase<>(
+                                        res.getRequest(),
+                                        res.getStatusCode(),
+                                        res.getHeaders(),
+                                        res.getValue().getStatesets(),
+                                        res.getValue().getNextLink(),
+                                        null));
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>This API allows the caller to fetch a list of all previously successfully created statesets.
+     *
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response model for the successful Stateset List API.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<PagedResponse<StatesetInfo>> listStatesetsSinglePageAsync(Context context) {
+        final String apiVersion = "2.0";
+        final String accept = "application/json";
+        return service.listStatesets(this.client.getGeography(), this.client.getClientId(), apiVersion, accept, context)
                 .map(
                         res ->
                                 new PagedResponseBase<>(
@@ -350,9 +557,31 @@ public final class FeatureStatesImpl {
      * @return the response model for the successful Stateset List API.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedFlux<StatesetInfoObject> listStatesetAsync() {
+    public PagedFlux<StatesetInfo> listStatesetsAsync() {
         return new PagedFlux<>(
-                () -> listStatesetSinglePageAsync(), nextLink -> listStatesetNextSinglePageAsync(nextLink));
+                () -> listStatesetsSinglePageAsync(), nextLink -> listStatesetsNextSinglePageAsync(nextLink));
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>This API allows the caller to fetch a list of all previously successfully created statesets.
+     *
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response model for the successful Stateset List API.
+     */
+    @ServiceMethod(returns = ReturnType.COLLECTION)
+    public PagedFlux<StatesetInfo> listStatesetsAsync(Context context) {
+        return new PagedFlux<>(
+                () -> listStatesetsSinglePageAsync(context),
+                nextLink -> listStatesetsNextSinglePageAsync(nextLink, context));
     }
 
     /**
@@ -369,8 +598,28 @@ public final class FeatureStatesImpl {
      * @return the response model for the successful Stateset List API.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedIterable<StatesetInfoObject> listStateset() {
-        return new PagedIterable<>(listStatesetAsync());
+    public PagedIterable<StatesetInfo> listStatesets() {
+        return new PagedIterable<>(listStatesetsAsync());
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>This API allows the caller to fetch a list of all previously successfully created statesets.
+     *
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response model for the successful Stateset List API.
+     */
+    @ServiceMethod(returns = ReturnType.COLLECTION)
+    public PagedIterable<StatesetInfo> listStatesets(Context context) {
+        return new PagedIterable<>(listStatesetsAsync(context));
     }
 
     /**
@@ -383,25 +632,27 @@ public final class FeatureStatesImpl {
      * <p>This PUT API allows the user to update the stateset style rules.
      *
      * @param statesetId The stateset id that was created.
-     * @param statesetStyleUpdateRequestBody The stateset style JSON data. Only style rules are allowed to be updated,
-     *     update on keyname and type is not allowed.
+     * @param styleRules The stateset style JSON data. Only style rules are allowed to be updated, update on keyname and
+     *     type is not allowed.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the completion.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<Void>> putStatesetWithResponseAsync(
-            String statesetId, StylesObject statesetStyleUpdateRequestBody) {
+    public Mono<Response<Void>> updateStatesetWithResponseAsync(String statesetId, StyleRules styleRules) {
         final String apiVersion = "2.0";
         final String accept = "application/json";
-        return service.putStateset(
-                this.client.getGeography(),
-                this.client.getXMsClientId(),
-                apiVersion,
-                statesetId,
-                statesetStyleUpdateRequestBody,
-                accept);
+        return FluxUtil.withContext(
+                context ->
+                        service.updateStateset(
+                                this.client.getGeography(),
+                                this.client.getClientId(),
+                                apiVersion,
+                                statesetId,
+                                styleRules,
+                                accept,
+                                context));
     }
 
     /**
@@ -414,16 +665,72 @@ public final class FeatureStatesImpl {
      * <p>This PUT API allows the user to update the stateset style rules.
      *
      * @param statesetId The stateset id that was created.
-     * @param statesetStyleUpdateRequestBody The stateset style JSON data. Only style rules are allowed to be updated,
-     *     update on keyname and type is not allowed.
+     * @param styleRules The stateset style JSON data. Only style rules are allowed to be updated, update on keyname and
+     *     type is not allowed.
+     * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the completion.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Void> putStatesetAsync(String statesetId, StylesObject statesetStyleUpdateRequestBody) {
-        return putStatesetWithResponseAsync(statesetId, statesetStyleUpdateRequestBody)
+    public Mono<Response<Void>> updateStatesetWithResponseAsync(
+            String statesetId, StyleRules styleRules, Context context) {
+        final String apiVersion = "2.0";
+        final String accept = "application/json";
+        return service.updateStateset(
+                this.client.getGeography(),
+                this.client.getClientId(),
+                apiVersion,
+                statesetId,
+                styleRules,
+                accept,
+                context);
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>This PUT API allows the user to update the stateset style rules.
+     *
+     * @param statesetId The stateset id that was created.
+     * @param styleRules The stateset style JSON data. Only style rules are allowed to be updated, update on keyname and
+     *     type is not allowed.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the completion.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Void> updateStatesetAsync(String statesetId, StyleRules styleRules) {
+        return updateStatesetWithResponseAsync(statesetId, styleRules).flatMap((Response<Void> res) -> Mono.empty());
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>This PUT API allows the user to update the stateset style rules.
+     *
+     * @param statesetId The stateset id that was created.
+     * @param styleRules The stateset style JSON data. Only style rules are allowed to be updated, update on keyname and
+     *     type is not allowed.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the completion.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Void> updateStatesetAsync(String statesetId, StyleRules styleRules, Context context) {
+        return updateStatesetWithResponseAsync(statesetId, styleRules, context)
                 .flatMap((Response<Void> res) -> Mono.empty());
     }
 
@@ -437,15 +744,38 @@ public final class FeatureStatesImpl {
      * <p>This PUT API allows the user to update the stateset style rules.
      *
      * @param statesetId The stateset id that was created.
-     * @param statesetStyleUpdateRequestBody The stateset style JSON data. Only style rules are allowed to be updated,
-     *     update on keyname and type is not allowed.
+     * @param styleRules The stateset style JSON data. Only style rules are allowed to be updated, update on keyname and
+     *     type is not allowed.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public void putStateset(String statesetId, StylesObject statesetStyleUpdateRequestBody) {
-        putStatesetAsync(statesetId, statesetStyleUpdateRequestBody).block();
+    public void updateStateset(String statesetId, StyleRules styleRules) {
+        updateStatesetAsync(statesetId, styleRules).block();
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>This PUT API allows the user to update the stateset style rules.
+     *
+     * @param statesetId The stateset id that was created.
+     * @param styleRules The stateset style JSON data. Only style rules are allowed to be updated, update on keyname and
+     *     type is not allowed.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<Void> updateStatesetWithResponse(String statesetId, StyleRules styleRules, Context context) {
+        return updateStatesetWithResponseAsync(statesetId, styleRules, context).block();
     }
 
     /**
@@ -467,8 +797,39 @@ public final class FeatureStatesImpl {
     public Mono<Response<Void>> deleteStatesetWithResponseAsync(String statesetId) {
         final String apiVersion = "2.0";
         final String accept = "application/json";
+        return FluxUtil.withContext(
+                context ->
+                        service.deleteStateset(
+                                this.client.getGeography(),
+                                this.client.getClientId(),
+                                apiVersion,
+                                statesetId,
+                                accept,
+                                context));
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>This DELETE API allows the user to delete the stateset and the associated data.
+     *
+     * @param statesetId The stateset id that was created.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the completion.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Response<Void>> deleteStatesetWithResponseAsync(String statesetId, Context context) {
+        final String apiVersion = "2.0";
+        final String accept = "application/json";
         return service.deleteStateset(
-                this.client.getGeography(), this.client.getXMsClientId(), apiVersion, statesetId, accept);
+                this.client.getGeography(), this.client.getClientId(), apiVersion, statesetId, accept, context);
     }
 
     /**
@@ -501,6 +862,27 @@ public final class FeatureStatesImpl {
      * <p>This DELETE API allows the user to delete the stateset and the associated data.
      *
      * @param statesetId The stateset id that was created.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the completion.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Void> deleteStatesetAsync(String statesetId, Context context) {
+        return deleteStatesetWithResponseAsync(statesetId, context).flatMap((Response<Void> res) -> Mono.empty());
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>This DELETE API allows the user to delete the stateset and the associated data.
+     *
+     * @param statesetId The stateset id that was created.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -517,22 +899,18 @@ public final class FeatureStatesImpl {
      * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
      * tools that apply to Azure Maps Creator.
      *
-     * <p>This GET API allows the user to get the stateset Information.
-     *
-     * <p>The stateset Information includes the datasetId associated to the stateset, and the styles of that stateset.
+     * <p>This DELETE API allows the user to delete the stateset and the associated data.
      *
      * @param statesetId The stateset id that was created.
+     * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response model for the successful Stateset Get API.
+     * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<StatesetGetResponse>> getStatesetWithResponseAsync(String statesetId) {
-        final String apiVersion = "2.0";
-        final String accept = "application/json";
-        return service.getStateset(
-                this.client.getGeography(), this.client.getXMsClientId(), apiVersion, statesetId, accept);
+    public Response<Void> deleteStatesetWithResponse(String statesetId, Context context) {
+        return deleteStatesetWithResponseAsync(statesetId, context).block();
     }
 
     /**
@@ -553,10 +931,99 @@ public final class FeatureStatesImpl {
      * @return the response model for the successful Stateset Get API.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<StatesetGetResponse> getStatesetAsync(String statesetId) {
+    public Mono<Response<Stateset>> getStatesetWithResponseAsync(String statesetId) {
+        final String apiVersion = "2.0";
+        final String accept = "application/json";
+        return FluxUtil.withContext(
+                context ->
+                        service.getStateset(
+                                this.client.getGeography(),
+                                this.client.getClientId(),
+                                apiVersion,
+                                statesetId,
+                                accept,
+                                context));
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>This GET API allows the user to get the stateset Information.
+     *
+     * <p>The stateset Information includes the datasetId associated to the stateset, and the styles of that stateset.
+     *
+     * @param statesetId The stateset id that was created.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response model for the successful Stateset Get API.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Response<Stateset>> getStatesetWithResponseAsync(String statesetId, Context context) {
+        final String apiVersion = "2.0";
+        final String accept = "application/json";
+        return service.getStateset(
+                this.client.getGeography(), this.client.getClientId(), apiVersion, statesetId, accept, context);
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>This GET API allows the user to get the stateset Information.
+     *
+     * <p>The stateset Information includes the datasetId associated to the stateset, and the styles of that stateset.
+     *
+     * @param statesetId The stateset id that was created.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response model for the successful Stateset Get API.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Stateset> getStatesetAsync(String statesetId) {
         return getStatesetWithResponseAsync(statesetId)
                 .flatMap(
-                        (Response<StatesetGetResponse> res) -> {
+                        (Response<Stateset> res) -> {
+                            if (res.getValue() != null) {
+                                return Mono.just(res.getValue());
+                            } else {
+                                return Mono.empty();
+                            }
+                        });
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>This GET API allows the user to get the stateset Information.
+     *
+     * <p>The stateset Information includes the datasetId associated to the stateset, and the styles of that stateset.
+     *
+     * @param statesetId The stateset id that was created.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response model for the successful Stateset Get API.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Stateset> getStatesetAsync(String statesetId, Context context) {
+        return getStatesetWithResponseAsync(statesetId, context)
+                .flatMap(
+                        (Response<Stateset> res) -> {
                             if (res.getValue() != null) {
                                 return Mono.just(res.getValue());
                             } else {
@@ -583,7 +1050,7 @@ public final class FeatureStatesImpl {
      * @return the response model for the successful Stateset Get API.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public StatesetGetResponse getStateset(String statesetId) {
+    public Stateset getStateset(String statesetId) {
         return getStatesetAsync(statesetId).block();
     }
 
@@ -594,13 +1061,36 @@ public final class FeatureStatesImpl {
      * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
      * tools that apply to Azure Maps Creator.
      *
+     * <p>This GET API allows the user to get the stateset Information.
+     *
+     * <p>The stateset Information includes the datasetId associated to the stateset, and the styles of that stateset.
+     *
+     * @param statesetId The stateset id that was created.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response model for the successful Stateset Get API.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<Stateset> getStatesetWithResponse(String statesetId, Context context) {
+        return getStatesetWithResponseAsync(statesetId, context).block();
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
      * <p>This PUT API allows the user to update the state of the given feature in the given stateset.
      *
      * @param statesetId The stateset id that was created.
      * @param featureId The id of a feature in the given dataset. If the featureId is not present in the dataset, Bad
      *     Request response will be returned.
-     * @param featureStateUpdateRequestBody The feature state JSON data. A feature can have only one state at a given
-     *     point in time. The specified state keyname must have been defined during the stateset creation.
+     * @param featureStates The feature state JSON data. A feature can have only one state at a given point in time. The
+     *     specified state keyname must have been defined during the stateset creation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -608,17 +1098,20 @@ public final class FeatureStatesImpl {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<Void>> updateStatesWithResponseAsync(
-            String statesetId, String featureId, FeatureStatesStructure featureStateUpdateRequestBody) {
+            String statesetId, String featureId, FeatureStatesStructure featureStates) {
         final String apiVersion = "2.0";
         final String accept = "application/json";
-        return service.updateStates(
-                this.client.getGeography(),
-                this.client.getXMsClientId(),
-                apiVersion,
-                statesetId,
-                featureId,
-                featureStateUpdateRequestBody,
-                accept);
+        return FluxUtil.withContext(
+                context ->
+                        service.updateStates(
+                                this.client.getGeography(),
+                                this.client.getClientId(),
+                                apiVersion,
+                                statesetId,
+                                featureId,
+                                featureStates,
+                                accept,
+                                context));
     }
 
     /**
@@ -633,8 +1126,70 @@ public final class FeatureStatesImpl {
      * @param statesetId The stateset id that was created.
      * @param featureId The id of a feature in the given dataset. If the featureId is not present in the dataset, Bad
      *     Request response will be returned.
-     * @param featureStateUpdateRequestBody The feature state JSON data. A feature can have only one state at a given
-     *     point in time. The specified state keyname must have been defined during the stateset creation.
+     * @param featureStates The feature state JSON data. A feature can have only one state at a given point in time. The
+     *     specified state keyname must have been defined during the stateset creation.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the completion.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Response<Void>> updateStatesWithResponseAsync(
+            String statesetId, String featureId, FeatureStatesStructure featureStates, Context context) {
+        final String apiVersion = "2.0";
+        final String accept = "application/json";
+        return service.updateStates(
+                this.client.getGeography(),
+                this.client.getClientId(),
+                apiVersion,
+                statesetId,
+                featureId,
+                featureStates,
+                accept,
+                context);
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>This PUT API allows the user to update the state of the given feature in the given stateset.
+     *
+     * @param statesetId The stateset id that was created.
+     * @param featureId The id of a feature in the given dataset. If the featureId is not present in the dataset, Bad
+     *     Request response will be returned.
+     * @param featureStates The feature state JSON data. A feature can have only one state at a given point in time. The
+     *     specified state keyname must have been defined during the stateset creation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the completion.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Void> updateStatesAsync(String statesetId, String featureId, FeatureStatesStructure featureStates) {
+        return updateStatesWithResponseAsync(statesetId, featureId, featureStates)
+                .flatMap((Response<Void> res) -> Mono.empty());
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>This PUT API allows the user to update the state of the given feature in the given stateset.
+     *
+     * @param statesetId The stateset id that was created.
+     * @param featureId The id of a feature in the given dataset. If the featureId is not present in the dataset, Bad
+     *     Request response will be returned.
+     * @param featureStates The feature state JSON data. A feature can have only one state at a given point in time. The
+     *     specified state keyname must have been defined during the stateset creation.
+     * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -642,8 +1197,8 @@ public final class FeatureStatesImpl {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Void> updateStatesAsync(
-            String statesetId, String featureId, FeatureStatesStructure featureStateUpdateRequestBody) {
-        return updateStatesWithResponseAsync(statesetId, featureId, featureStateUpdateRequestBody)
+            String statesetId, String featureId, FeatureStatesStructure featureStates, Context context) {
+        return updateStatesWithResponseAsync(statesetId, featureId, featureStates, context)
                 .flatMap((Response<Void> res) -> Mono.empty());
     }
 
@@ -659,16 +1214,41 @@ public final class FeatureStatesImpl {
      * @param statesetId The stateset id that was created.
      * @param featureId The id of a feature in the given dataset. If the featureId is not present in the dataset, Bad
      *     Request response will be returned.
-     * @param featureStateUpdateRequestBody The feature state JSON data. A feature can have only one state at a given
-     *     point in time. The specified state keyname must have been defined during the stateset creation.
+     * @param featureStates The feature state JSON data. A feature can have only one state at a given point in time. The
+     *     specified state keyname must have been defined during the stateset creation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public void updateStates(
-            String statesetId, String featureId, FeatureStatesStructure featureStateUpdateRequestBody) {
-        updateStatesAsync(statesetId, featureId, featureStateUpdateRequestBody).block();
+    public void updateStates(String statesetId, String featureId, FeatureStatesStructure featureStates) {
+        updateStatesAsync(statesetId, featureId, featureStates).block();
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>This PUT API allows the user to update the state of the given feature in the given stateset.
+     *
+     * @param statesetId The stateset id that was created.
+     * @param featureId The id of a feature in the given dataset. If the featureId is not present in the dataset, Bad
+     *     Request response will be returned.
+     * @param featureStates The feature state JSON data. A feature can have only one state at a given point in time. The
+     *     specified state keyname must have been defined during the stateset creation.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<Void> updateStatesWithResponse(
+            String statesetId, String featureId, FeatureStatesStructure featureStates, Context context) {
+        return updateStatesWithResponseAsync(statesetId, featureId, featureStates, context).block();
     }
 
     /**
@@ -684,24 +1264,63 @@ public final class FeatureStatesImpl {
      * @param statesetId The stateset id that was created.
      * @param featureId The id of a feature in the given stateset. If no state was set for the featureId in the stateset
      *     earlier, Bad Request response will be returned.
-     * @param stateKeyName The Name of the state to be deleted.
+     * @param keyName The Name of the state to be deleted.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the completion.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<Void>> deleteStateWithResponseAsync(String statesetId, String featureId, String stateKeyName) {
+    public Mono<Response<Void>> deleteStateWithResponseAsync(String statesetId, String featureId, String keyName) {
+        final String apiVersion = "2.0";
+        final String accept = "application/json";
+        return FluxUtil.withContext(
+                context ->
+                        service.deleteState(
+                                this.client.getGeography(),
+                                this.client.getClientId(),
+                                apiVersion,
+                                statesetId,
+                                featureId,
+                                keyName,
+                                accept,
+                                context));
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>This API deletes the state information identified by the StateKeyName parameter for the feature identified by
+     * the FeatureId parameter in the the stateset.
+     *
+     * @param statesetId The stateset id that was created.
+     * @param featureId The id of a feature in the given stateset. If no state was set for the featureId in the stateset
+     *     earlier, Bad Request response will be returned.
+     * @param keyName The Name of the state to be deleted.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the completion.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Response<Void>> deleteStateWithResponseAsync(
+            String statesetId, String featureId, String keyName, Context context) {
         final String apiVersion = "2.0";
         final String accept = "application/json";
         return service.deleteState(
                 this.client.getGeography(),
-                this.client.getXMsClientId(),
+                this.client.getClientId(),
                 apiVersion,
                 statesetId,
                 featureId,
-                stateKeyName,
-                accept);
+                keyName,
+                accept,
+                context);
     }
 
     /**
@@ -717,15 +1336,15 @@ public final class FeatureStatesImpl {
      * @param statesetId The stateset id that was created.
      * @param featureId The id of a feature in the given stateset. If no state was set for the featureId in the stateset
      *     earlier, Bad Request response will be returned.
-     * @param stateKeyName The Name of the state to be deleted.
+     * @param keyName The Name of the state to be deleted.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the completion.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Void> deleteStateAsync(String statesetId, String featureId, String stateKeyName) {
-        return deleteStateWithResponseAsync(statesetId, featureId, stateKeyName)
+    public Mono<Void> deleteStateAsync(String statesetId, String featureId, String keyName) {
+        return deleteStateWithResponseAsync(statesetId, featureId, keyName)
                 .flatMap((Response<Void> res) -> Mono.empty());
     }
 
@@ -742,14 +1361,66 @@ public final class FeatureStatesImpl {
      * @param statesetId The stateset id that was created.
      * @param featureId The id of a feature in the given stateset. If no state was set for the featureId in the stateset
      *     earlier, Bad Request response will be returned.
-     * @param stateKeyName The Name of the state to be deleted.
+     * @param keyName The Name of the state to be deleted.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the completion.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Void> deleteStateAsync(String statesetId, String featureId, String keyName, Context context) {
+        return deleteStateWithResponseAsync(statesetId, featureId, keyName, context)
+                .flatMap((Response<Void> res) -> Mono.empty());
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>This API deletes the state information identified by the StateKeyName parameter for the feature identified by
+     * the FeatureId parameter in the the stateset.
+     *
+     * @param statesetId The stateset id that was created.
+     * @param featureId The id of a feature in the given stateset. If no state was set for the featureId in the stateset
+     *     earlier, Bad Request response will be returned.
+     * @param keyName The Name of the state to be deleted.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public void deleteState(String statesetId, String featureId, String stateKeyName) {
-        deleteStateAsync(statesetId, featureId, stateKeyName).block();
+    public void deleteState(String statesetId, String featureId, String keyName) {
+        deleteStateAsync(statesetId, featureId, keyName).block();
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>This API deletes the state information identified by the StateKeyName parameter for the feature identified by
+     * the FeatureId parameter in the the stateset.
+     *
+     * @param statesetId The stateset id that was created.
+     * @param featureId The id of a feature in the given stateset. If no state was set for the featureId in the stateset
+     *     earlier, Bad Request response will be returned.
+     * @param keyName The Name of the state to be deleted.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<Void> deleteStateWithResponse(
+            String statesetId, String featureId, String keyName, Context context) {
+        return deleteStateWithResponseAsync(statesetId, featureId, keyName, context).block();
     }
 
     /**
@@ -770,11 +1441,52 @@ public final class FeatureStatesImpl {
      * @return the feature states model for a feature.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<FeatureStatesStructure>> getStatesWithResponseAsync(String statesetId, String featureId) {
+    public Mono<Response<FeatureStatesStructure>> listStatesWithResponseAsync(String statesetId, String featureId) {
         final String apiVersion = "2.0";
         final String accept = "application/json";
-        return service.getStates(
-                this.client.getGeography(), this.client.getXMsClientId(), apiVersion, statesetId, featureId, accept);
+        return FluxUtil.withContext(
+                context ->
+                        service.listStates(
+                                this.client.getGeography(),
+                                this.client.getClientId(),
+                                apiVersion,
+                                statesetId,
+                                featureId,
+                                accept,
+                                context));
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>This API returns the current state information associated with the given feature in the given stateset.
+     *
+     * @param statesetId The stateset id that was created.
+     * @param featureId The id of a feature in the given stateset. If no state was set for the featureId in the stateset
+     *     earlier, Bad Request response will be returned.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the feature states model for a feature.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Response<FeatureStatesStructure>> listStatesWithResponseAsync(
+            String statesetId, String featureId, Context context) {
+        final String apiVersion = "2.0";
+        final String accept = "application/json";
+        return service.listStates(
+                this.client.getGeography(),
+                this.client.getClientId(),
+                apiVersion,
+                statesetId,
+                featureId,
+                accept,
+                context);
     }
 
     /**
@@ -795,8 +1507,39 @@ public final class FeatureStatesImpl {
      * @return the feature states model for a feature.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<FeatureStatesStructure> getStatesAsync(String statesetId, String featureId) {
-        return getStatesWithResponseAsync(statesetId, featureId)
+    public Mono<FeatureStatesStructure> listStatesAsync(String statesetId, String featureId) {
+        return listStatesWithResponseAsync(statesetId, featureId)
+                .flatMap(
+                        (Response<FeatureStatesStructure> res) -> {
+                            if (res.getValue() != null) {
+                                return Mono.just(res.getValue());
+                            } else {
+                                return Mono.empty();
+                            }
+                        });
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>This API returns the current state information associated with the given feature in the given stateset.
+     *
+     * @param statesetId The stateset id that was created.
+     * @param featureId The id of a feature in the given stateset. If no state was set for the featureId in the stateset
+     *     earlier, Bad Request response will be returned.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the feature states model for a feature.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<FeatureStatesStructure> listStatesAsync(String statesetId, String featureId, Context context) {
+        return listStatesWithResponseAsync(statesetId, featureId, context)
                 .flatMap(
                         (Response<FeatureStatesStructure> res) -> {
                             if (res.getValue() != null) {
@@ -825,8 +1568,32 @@ public final class FeatureStatesImpl {
      * @return the feature states model for a feature.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public FeatureStatesStructure getStates(String statesetId, String featureId) {
-        return getStatesAsync(statesetId, featureId).block();
+    public FeatureStatesStructure listStates(String statesetId, String featureId) {
+        return listStatesAsync(statesetId, featureId).block();
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>This API returns the current state information associated with the given feature in the given stateset.
+     *
+     * @param statesetId The stateset id that was created.
+     * @param featureId The id of a feature in the given stateset. If no state was set for the featureId in the stateset
+     *     earlier, Bad Request response will be returned.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the feature states model for a feature.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<FeatureStatesStructure> listStatesWithResponse(
+            String statesetId, String featureId, Context context) {
+        return listStatesWithResponseAsync(statesetId, featureId, context).block();
     }
 
     /**
@@ -839,9 +1606,42 @@ public final class FeatureStatesImpl {
      * @return the response model for the successful Stateset List API.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<PagedResponse<StatesetInfoObject>> listStatesetNextSinglePageAsync(String nextLink) {
+    public Mono<PagedResponse<StatesetInfo>> listStatesetsNextSinglePageAsync(String nextLink) {
         final String accept = "application/json";
-        return service.listStatesetNext(nextLink, this.client.getGeography(), this.client.getXMsClientId(), accept)
+        return FluxUtil.withContext(
+                        context ->
+                                service.listStatesetsNext(
+                                        nextLink,
+                                        this.client.getGeography(),
+                                        this.client.getClientId(),
+                                        accept,
+                                        context))
+                .map(
+                        res ->
+                                new PagedResponseBase<>(
+                                        res.getRequest(),
+                                        res.getStatusCode(),
+                                        res.getHeaders(),
+                                        res.getValue().getStatesets(),
+                                        res.getValue().getNextLink(),
+                                        null));
+    }
+
+    /**
+     * Get the next page of items.
+     *
+     * @param nextLink The nextLink parameter.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response model for the successful Stateset List API.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<PagedResponse<StatesetInfo>> listStatesetsNextSinglePageAsync(String nextLink, Context context) {
+        final String accept = "application/json";
+        return service.listStatesetsNext(
+                        nextLink, this.client.getGeography(), this.client.getClientId(), accept, context)
                 .map(
                         res ->
                                 new PagedResponseBase<>(

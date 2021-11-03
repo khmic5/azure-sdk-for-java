@@ -17,26 +17,26 @@ public final class DailyForecast {
      * for example, 2019-10-27T19:39:57-08:00.
      */
     @JsonProperty(value = "date")
-    private OffsetDateTime date;
+    private OffsetDateTime dateTime;
 
     /*
      * Temperature values for the day.
      */
     @JsonProperty(value = "temperature")
-    private WeatherUnitRange temperature;
+    private WeatherValueRange temperature;
 
     /*
      * RealFeel™ Temperature being returned.
      */
     @JsonProperty(value = "realFeelTemperature")
-    private WeatherUnitRange realFeelTemperature;
+    private WeatherValueRange realFeelTemperature;
 
     /*
      * RealFeel™ Temperature being returned. Describes what the temperature
      * really feels like in the shade.
      */
     @JsonProperty(value = "realFeelTemperatureShade")
-    private WeatherUnitRange realFeelTemperatureShade;
+    private WeatherValueRange realFeelTemperatureShade;
 
     /*
      * Hours of sun.
@@ -45,28 +45,29 @@ public final class DailyForecast {
     private Float hoursOfSun;
 
     /*
-     * Summary of Heating Degree Day or Cooling Degree Day information
+     * Summary for mean temperature of Heating Degree Day or Cooling Degree Day
+     * information
      */
     @JsonProperty(value = "degreeDaySummary")
-    private DegreeDaySummary degreeDaySummary;
+    private DegreeDaySummary meanTemperatureDeviation;
 
     /*
-     * airAndPollen
+     * Air quality
      */
     @JsonProperty(value = "airAndPollen")
-    private List<AirAndPollen> airAndPollen;
+    private List<AirAndPollen> airQuality;
 
     /*
-     * Day
+     * Day forecast detail
      */
     @JsonProperty(value = "day")
-    private DayOrNight day;
+    private DailyForecastDetail daytimeForecast;
 
     /*
-     * Night
+     * Night forecast detail
      */
     @JsonProperty(value = "night")
-    private DayOrNight night;
+    private DailyForecastDetail nighttimeForecast;
 
     /*
      * Source(s) of the forecast data.
@@ -75,24 +76,24 @@ public final class DailyForecast {
     private List<String> sources;
 
     /**
-     * Get the date property: Date and time of the current observation displayed in ISO 8601 format, for example,
+     * Get the dateTime property: Date and time of the current observation displayed in ISO 8601 format, for example,
      * 2019-10-27T19:39:57-08:00.
      *
-     * @return the date value.
+     * @return the dateTime value.
      */
-    public OffsetDateTime getDate() {
-        return this.date;
+    public OffsetDateTime getDateTime() {
+        return this.dateTime;
     }
 
     /**
-     * Set the date property: Date and time of the current observation displayed in ISO 8601 format, for example,
+     * Set the dateTime property: Date and time of the current observation displayed in ISO 8601 format, for example,
      * 2019-10-27T19:39:57-08:00.
      *
-     * @param date the date value to set.
+     * @param dateTime the dateTime value to set.
      * @return the DailyForecast object itself.
      */
-    public DailyForecast setDate(OffsetDateTime date) {
-        this.date = date;
+    public DailyForecast setDateTime(OffsetDateTime dateTime) {
+        this.dateTime = dateTime;
         return this;
     }
 
@@ -101,7 +102,7 @@ public final class DailyForecast {
      *
      * @return the temperature value.
      */
-    public WeatherUnitRange getTemperature() {
+    public WeatherValueRange getTemperature() {
         return this.temperature;
     }
 
@@ -111,7 +112,7 @@ public final class DailyForecast {
      * @param temperature the temperature value to set.
      * @return the DailyForecast object itself.
      */
-    public DailyForecast setTemperature(WeatherUnitRange temperature) {
+    public DailyForecast setTemperature(WeatherValueRange temperature) {
         this.temperature = temperature;
         return this;
     }
@@ -121,7 +122,7 @@ public final class DailyForecast {
      *
      * @return the realFeelTemperature value.
      */
-    public WeatherUnitRange getRealFeelTemperature() {
+    public WeatherValueRange getRealFeelTemperature() {
         return this.realFeelTemperature;
     }
 
@@ -131,7 +132,7 @@ public final class DailyForecast {
      * @param realFeelTemperature the realFeelTemperature value to set.
      * @return the DailyForecast object itself.
      */
-    public DailyForecast setRealFeelTemperature(WeatherUnitRange realFeelTemperature) {
+    public DailyForecast setRealFeelTemperature(WeatherValueRange realFeelTemperature) {
         this.realFeelTemperature = realFeelTemperature;
         return this;
     }
@@ -142,7 +143,7 @@ public final class DailyForecast {
      *
      * @return the realFeelTemperatureShade value.
      */
-    public WeatherUnitRange getRealFeelTemperatureShade() {
+    public WeatherValueRange getRealFeelTemperatureShade() {
         return this.realFeelTemperatureShade;
     }
 
@@ -153,7 +154,7 @@ public final class DailyForecast {
      * @param realFeelTemperatureShade the realFeelTemperatureShade value to set.
      * @return the DailyForecast object itself.
      */
-    public DailyForecast setRealFeelTemperatureShade(WeatherUnitRange realFeelTemperatureShade) {
+    public DailyForecast setRealFeelTemperatureShade(WeatherValueRange realFeelTemperatureShade) {
         this.realFeelTemperatureShade = realFeelTemperatureShade;
         return this;
     }
@@ -179,82 +180,84 @@ public final class DailyForecast {
     }
 
     /**
-     * Get the degreeDaySummary property: Summary of Heating Degree Day or Cooling Degree Day information.
+     * Get the meanTemperatureDeviation property: Summary for mean temperature of Heating Degree Day or Cooling Degree
+     * Day information.
      *
-     * @return the degreeDaySummary value.
+     * @return the meanTemperatureDeviation value.
      */
-    public DegreeDaySummary getDegreeDaySummary() {
-        return this.degreeDaySummary;
+    public DegreeDaySummary getMeanTemperatureDeviation() {
+        return this.meanTemperatureDeviation;
     }
 
     /**
-     * Set the degreeDaySummary property: Summary of Heating Degree Day or Cooling Degree Day information.
+     * Set the meanTemperatureDeviation property: Summary for mean temperature of Heating Degree Day or Cooling Degree
+     * Day information.
      *
-     * @param degreeDaySummary the degreeDaySummary value to set.
+     * @param meanTemperatureDeviation the meanTemperatureDeviation value to set.
      * @return the DailyForecast object itself.
      */
-    public DailyForecast setDegreeDaySummary(DegreeDaySummary degreeDaySummary) {
-        this.degreeDaySummary = degreeDaySummary;
+    public DailyForecast setMeanTemperatureDeviation(DegreeDaySummary meanTemperatureDeviation) {
+        this.meanTemperatureDeviation = meanTemperatureDeviation;
         return this;
     }
 
     /**
-     * Get the airAndPollen property: airAndPollen.
+     * Get the airQuality property: Air quality.
      *
-     * @return the airAndPollen value.
+     * @return the airQuality value.
      */
-    public List<AirAndPollen> getAirAndPollen() {
-        return this.airAndPollen;
+    public List<AirAndPollen> getAirQuality() {
+        return this.airQuality;
     }
 
     /**
-     * Set the airAndPollen property: airAndPollen.
+     * Set the airQuality property: Air quality.
      *
-     * @param airAndPollen the airAndPollen value to set.
+     * @param airQuality the airQuality value to set.
      * @return the DailyForecast object itself.
      */
-    public DailyForecast setAirAndPollen(List<AirAndPollen> airAndPollen) {
-        this.airAndPollen = airAndPollen;
+    public DailyForecast setAirQuality(List<AirAndPollen> airQuality) {
+        this.airQuality = airQuality;
         return this;
     }
 
     /**
-     * Get the day property: Day.
+     * Get the daytimeForecast property: Day forecast detail.
      *
-     * @return the day value.
+     * @return the daytimeForecast value.
      */
-    public DayOrNight getDay() {
-        return this.day;
+    public DailyForecastDetail getDaytimeForecast() {
+        return this.daytimeForecast;
     }
 
     /**
-     * Set the day property: Day.
+     * Set the daytimeForecast property: Day forecast detail.
      *
-     * @param day the day value to set.
+     * @param daytimeForecast the daytimeForecast value to set.
      * @return the DailyForecast object itself.
      */
-    public DailyForecast setDay(DayOrNight day) {
-        this.day = day;
+    public DailyForecast setDaytimeForecast(DailyForecastDetail daytimeForecast) {
+        this.daytimeForecast = daytimeForecast;
         return this;
     }
 
     /**
-     * Get the night property: Night.
+     * Get the nighttimeForecast property: Night forecast detail.
      *
-     * @return the night value.
+     * @return the nighttimeForecast value.
      */
-    public DayOrNight getNight() {
-        return this.night;
+    public DailyForecastDetail getNighttimeForecast() {
+        return this.nighttimeForecast;
     }
 
     /**
-     * Set the night property: Night.
+     * Set the nighttimeForecast property: Night forecast detail.
      *
-     * @param night the night value to set.
+     * @param nighttimeForecast the nighttimeForecast value to set.
      * @return the DailyForecast object itself.
      */
-    public DailyForecast setNight(DayOrNight night) {
-        this.night = night;
+    public DailyForecast setNighttimeForecast(DailyForecastDetail nighttimeForecast) {
+        this.nighttimeForecast = nighttimeForecast;
         return this;
     }
 

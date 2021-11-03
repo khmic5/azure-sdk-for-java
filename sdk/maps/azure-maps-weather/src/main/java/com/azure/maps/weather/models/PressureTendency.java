@@ -14,7 +14,7 @@ public final class PressureTendency {
      * Description of the pressure tendency in specified language
      */
     @JsonProperty(value = "localizedDescription")
-    private String localizedDescription;
+    private String description;
 
     /*
      * Pressure tendency code regardless of language. One of F=Falling,
@@ -24,22 +24,22 @@ public final class PressureTendency {
     private String code;
 
     /**
-     * Get the localizedDescription property: Description of the pressure tendency in specified language.
+     * Get the description property: Description of the pressure tendency in specified language.
      *
-     * @return the localizedDescription value.
+     * @return the description value.
      */
-    public String getLocalizedDescription() {
-        return this.localizedDescription;
+    public String getDescription() {
+        return this.description;
     }
 
     /**
-     * Set the localizedDescription property: Description of the pressure tendency in specified language.
+     * Set the description property: Description of the pressure tendency in specified language.
      *
-     * @param localizedDescription the localizedDescription value to set.
+     * @param description the description value to set.
      * @return the PressureTendency object itself.
      */
-    public PressureTendency setLocalizedDescription(String localizedDescription) {
-        this.localizedDescription = localizedDescription;
+    public PressureTendency setDescription(String description) {
+        this.description = description;
         return this;
     }
 

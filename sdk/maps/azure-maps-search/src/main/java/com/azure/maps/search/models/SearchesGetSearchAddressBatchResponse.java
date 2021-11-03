@@ -10,7 +10,7 @@ import com.azure.core.http.rest.ResponseBase;
 
 /** Contains all response data for the getSearchAddressBatch operation. */
 public final class SearchesGetSearchAddressBatchResponse
-        extends ResponseBase<SearchesGetSearchAddressBatchHeaders, SearchAddressBatchResponse> {
+        extends ResponseBase<SearchesGetSearchAddressBatchHeaders, SearchAddressBatchProcessResult> {
     /**
      * Creates an instance of SearchesGetSearchAddressBatchResponse.
      *
@@ -24,14 +24,14 @@ public final class SearchesGetSearchAddressBatchResponse
             HttpRequest request,
             int statusCode,
             HttpHeaders rawHeaders,
-            SearchAddressBatchResponse value,
+            SearchAddressBatchProcessResult value,
             SearchesGetSearchAddressBatchHeaders headers) {
         super(request, statusCode, rawHeaders, value, headers);
     }
 
     /** @return the deserialized response body. */
     @Override
-    public SearchAddressBatchResponse getValue() {
+    public SearchAddressBatchProcessResult getValue() {
         return super.getValue();
     }
 }

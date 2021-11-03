@@ -8,15 +8,15 @@ import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceClient;
 import com.azure.core.annotation.ServiceMethod;
 import com.azure.core.http.rest.PagedFlux;
-import com.azure.core.http.rest.PagedResponse;
 import com.azure.core.http.rest.Response;
 import com.azure.core.util.polling.PollerFlux;
 import com.azure.maps.creator.implementation.ConversionsImpl;
-import com.azure.maps.creator.models.ConversionListDetailInfo;
+import com.azure.maps.creator.models.Conversion;
 import com.azure.maps.creator.models.ConversionsConvertResponse;
 import com.azure.maps.creator.models.ConversionsGetOperationResponse;
 import com.azure.maps.creator.models.ErrorResponseException;
 import com.azure.maps.creator.models.LongRunningOperationResult;
+import com.azure.maps.creator.models.OutputOntology;
 import reactor.core.publisher.Mono;
 
 /** Initializes a new instance of the asynchronous CreatorClient type. */
@@ -83,7 +83,7 @@ public final class ConversionAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<ConversionsConvertResponse> convertWithResponse(
-            String udid, String outputOntology, String description) {
+            String udid, OutputOntology outputOntology, String description) {
         return this.serviceClient.convertWithResponseAsync(udid, outputOntology, description);
     }
 
@@ -135,9 +135,9 @@ public final class ConversionAsyncClient {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the response model for a Long-Running Operations API.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public PollerFlux<LongRunningOperationResult, LongRunningOperationResult> beginConvert(
-            String udid, String outputOntology, String description) {
+            String udid, OutputOntology outputOntology, String description) {
         return this.serviceClient.beginConvertAsync(udid, outputOntology, description);
     }
 
@@ -177,47 +177,7 @@ public final class ConversionAsyncClient {
      * @return the response model for the Conversion List API.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public Mono<PagedResponse<ConversionListDetailInfo>> listSinglePage() {
-        return this.serviceClient.listSinglePageAsync();
-    }
-
-    /**
-     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
-     *
-     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
-     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
-     * tools that apply to Azure Maps Creator.
-     *
-     * <p>This API allows the caller to fetch a list of all successful data conversions submitted previously using the
-     * [Conversion API](https://docs.microsoft.com/en-us/rest/api/maps/v2/conversion/convert).
-     *
-     * <p>### Submit List Request
-     *
-     * <p>To list all successful conversions you will issue a `GET` request with no additional parameters.
-     *
-     * <p>### List Data Response
-     *
-     * <p>The Conversion List API returns the complete list of all conversion details in `json` format.&lt;br&gt;
-     *
-     * <p>Here is a sample response returning the details of two successful conversion requests:
-     *
-     * <p>&lt;br&gt;
-     *
-     * <p>```json { "conversions": [ { "conversionId": "54398242-ea6c-1f31-4fa6-79b1ae0fc24d", "udid":
-     * "31838736-8b84-11ea-bc55-0242ac130003", "created": "5/19/2020 9:00:00 AM +00:00", "description": "User provided
-     * description.", "featureCounts": { "DIR": 1, "LVL": 3, "FCL": 1, "UNIT": 150, "CTG": 8, "AEL": 0, "OPN": 10 } }, {
-     * "conversionId": "2acf7d32-8b84-11ea-bc55-0242ac130003", "udid": "1214bc58-8b84-11ea-bc55-0242ac1300039",
-     * "created": "5/19/2020 9:00:00 AM +00:00", "description": "User provided description.", "featureCounts": { "DIR":
-     * 1, "LVL": 3, "FCL": 1, "UNIT": 150, "CTG": 8, "AEL": 0, "OPN": 10 } } ] } ```
-     *
-     * <p>&lt;br&gt;.
-     *
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response model for the Conversion List API.
-     */
-    @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedFlux<ConversionListDetailInfo> list() {
+    public PagedFlux<Conversion> list() {
         return this.serviceClient.listAsync();
     }
 
@@ -239,7 +199,7 @@ public final class ConversionAsyncClient {
      * @return detail information for the conversion requests.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<ConversionListDetailInfo>> getWithResponse(String conversionId) {
+    public Mono<Response<Conversion>> getWithResponse(String conversionId) {
         return this.serviceClient.getWithResponseAsync(conversionId);
     }
 
@@ -261,7 +221,7 @@ public final class ConversionAsyncClient {
      * @return detail information for the conversion requests.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<ConversionListDetailInfo> get(String conversionId) {
+    public Mono<Conversion> get(String conversionId) {
         return this.serviceClient.getAsync(conversionId);
     }
 
@@ -359,19 +319,5 @@ public final class ConversionAsyncClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<LongRunningOperationResult> getOperation(String operationId) {
         return this.serviceClient.getOperationAsync(operationId);
-    }
-
-    /**
-     * Get the next page of items.
-     *
-     * @param nextLink The nextLink parameter.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response model for the Conversion List API.
-     */
-    @ServiceMethod(returns = ReturnType.COLLECTION)
-    public Mono<PagedResponse<ConversionListDetailInfo>> listNextSinglePage(String nextLink) {
-        return this.serviceClient.listNextSinglePageAsync(nextLink);
     }
 }

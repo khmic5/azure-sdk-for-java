@@ -11,19 +11,21 @@ import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.StreamResponse;
 import com.azure.maps.traffic.implementation.TrafficsImpl;
 import com.azure.maps.traffic.models.ErrorResponseException;
+import com.azure.maps.traffic.models.IncidentDetailStyle;
 import com.azure.maps.traffic.models.IncidentGeometryType;
 import com.azure.maps.traffic.models.ProjectionStandard;
+import com.azure.maps.traffic.models.ResponseFormat;
 import com.azure.maps.traffic.models.SpeedUnit;
-import com.azure.maps.traffic.models.TextFormat;
 import com.azure.maps.traffic.models.TileFormat;
-import com.azure.maps.traffic.models.TrafficFlowSegmentResult;
+import com.azure.maps.traffic.models.TileIndex;
+import com.azure.maps.traffic.models.TrafficFlowSegmentData;
 import com.azure.maps.traffic.models.TrafficFlowSegmentStyle;
 import com.azure.maps.traffic.models.TrafficFlowTileStyle;
-import com.azure.maps.traffic.models.TrafficIncidentDetailResult;
-import com.azure.maps.traffic.models.TrafficIncidentDetailStyle;
+import com.azure.maps.traffic.models.TrafficIncidentDetail;
 import com.azure.maps.traffic.models.TrafficIncidentTileStyle;
-import com.azure.maps.traffic.models.TrafficIncidentViewportResult;
+import com.azure.maps.traffic.models.TrafficIncidentViewport;
 import java.nio.ByteBuffer;
+import java.util.List;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -56,14 +58,7 @@ public final class TrafficAsyncClient {
      * @param zoom Zoom level for the desired tile. For _raster_ tiles, value must be in the range: 0-22 (inclusive).
      *     For _vector_ tiles, value must be in the range: 0-22 (inclusive). Please see [Zoom Levels and Tile
      *     Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
-     * @param xTileIndex X coordinate of the tile on zoom grid. Value must be in the range [0,
-     *     2&lt;sup&gt;`zoom`&lt;/sup&gt; -1].
-     *     <p>Please see [Zoom Levels and Tile
-     *     Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
-     * @param yTileIndex Y coordinate of the tile on zoom grid. Value must be in the range [0,
-     *     2&lt;sup&gt;`zoom`&lt;/sup&gt; -1].
-     *     <p>Please see [Zoom Levels and Tile
-     *     Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
+     * @param tileIndex Parameter group.
      * @param thickness The value of the width of the line representing traffic. This value is a multiplier and the
      *     accepted values range from 1 - 20. The default value is 10. This parameter is not valid when format is pbf.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -73,14 +68,8 @@ public final class TrafficAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<StreamResponse> getTrafficFlowTileWithResponse(
-            TileFormat format,
-            TrafficFlowTileStyle style,
-            int zoom,
-            int xTileIndex,
-            int yTileIndex,
-            Integer thickness) {
-        return this.serviceClient.getTrafficFlowTileWithResponseAsync(
-                format, style, zoom, xTileIndex, yTileIndex, thickness);
+            TileFormat format, TrafficFlowTileStyle style, int zoom, TileIndex tileIndex, Integer thickness) {
+        return this.serviceClient.getTrafficFlowTileWithResponseAsync(format, style, zoom, tileIndex, thickness);
     }
 
     /**
@@ -98,14 +87,7 @@ public final class TrafficAsyncClient {
      * @param zoom Zoom level for the desired tile. For _raster_ tiles, value must be in the range: 0-22 (inclusive).
      *     For _vector_ tiles, value must be in the range: 0-22 (inclusive). Please see [Zoom Levels and Tile
      *     Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
-     * @param xTileIndex X coordinate of the tile on zoom grid. Value must be in the range [0,
-     *     2&lt;sup&gt;`zoom`&lt;/sup&gt; -1].
-     *     <p>Please see [Zoom Levels and Tile
-     *     Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
-     * @param yTileIndex Y coordinate of the tile on zoom grid. Value must be in the range [0,
-     *     2&lt;sup&gt;`zoom`&lt;/sup&gt; -1].
-     *     <p>Please see [Zoom Levels and Tile
-     *     Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
+     * @param tileIndex Parameter group.
      * @param thickness The value of the width of the line representing traffic. This value is a multiplier and the
      *     accepted values range from 1 - 20. The default value is 10. This parameter is not valid when format is pbf.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -115,13 +97,8 @@ public final class TrafficAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Flux<ByteBuffer> getTrafficFlowTile(
-            TileFormat format,
-            TrafficFlowTileStyle style,
-            int zoom,
-            int xTileIndex,
-            int yTileIndex,
-            Integer thickness) {
-        return this.serviceClient.getTrafficFlowTileAsync(format, style, zoom, xTileIndex, yTileIndex, thickness);
+            TileFormat format, TrafficFlowTileStyle style, int zoom, TileIndex tileIndex, Integer thickness) {
+        return this.serviceClient.getTrafficFlowTileAsync(format, style, zoom, tileIndex, thickness);
     }
 
     /**
@@ -141,8 +118,10 @@ public final class TrafficAsyncClient {
      * @param zoom Zoom level for the desired tile. Zoom value must be in the range: 0-22 (inclusive). Please see [Zoom
      *     Levels and Tile
      *     Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
-     * @param query Coordinates of the point close to the road segment. They have to be comma-separated and calculated
-     *     using EPSG4326 projection.
+     * @param coordinates Coordinates of the point close to the road segment. This parameter is a list of four
+     *     coordinates, containing two coordinate pairs (lat, long, lat, long), and calculated using EPSG4326
+     *     projection. When this endpoint is called directly, coordinates are passed in as a single string containing
+     *     four coordinates, separated by commas.
      * @param unit Unit of speed in KMPH or MPH.
      * @param thickness The value of the width of the line representing traffic. This value is a multiplier and the
      *     accepted values range from 1 - 20. The default value is 10.
@@ -153,16 +132,16 @@ public final class TrafficAsyncClient {
      * @return this object is returned from a successful Traffic Flow Segment call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<TrafficFlowSegmentResult>> getTrafficFlowSegmentWithResponse(
-            TextFormat format,
+    public Mono<Response<TrafficFlowSegmentData>> getTrafficFlowSegmentWithResponse(
+            ResponseFormat format,
             TrafficFlowSegmentStyle style,
             int zoom,
-            String query,
+            List<Double> coordinates,
             SpeedUnit unit,
             Integer thickness,
             Boolean openLr) {
         return this.serviceClient.getTrafficFlowSegmentWithResponseAsync(
-                format, style, zoom, query, unit, thickness, openLr);
+                format, style, zoom, coordinates, unit, thickness, openLr);
     }
 
     /**
@@ -182,8 +161,10 @@ public final class TrafficAsyncClient {
      * @param zoom Zoom level for the desired tile. Zoom value must be in the range: 0-22 (inclusive). Please see [Zoom
      *     Levels and Tile
      *     Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
-     * @param query Coordinates of the point close to the road segment. They have to be comma-separated and calculated
-     *     using EPSG4326 projection.
+     * @param coordinates Coordinates of the point close to the road segment. This parameter is a list of four
+     *     coordinates, containing two coordinate pairs (lat, long, lat, long), and calculated using EPSG4326
+     *     projection. When this endpoint is called directly, coordinates are passed in as a single string containing
+     *     four coordinates, separated by commas.
      * @param unit Unit of speed in KMPH or MPH.
      * @param thickness The value of the width of the line representing traffic. This value is a multiplier and the
      *     accepted values range from 1 - 20. The default value is 10.
@@ -194,15 +175,15 @@ public final class TrafficAsyncClient {
      * @return this object is returned from a successful Traffic Flow Segment call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<TrafficFlowSegmentResult> getTrafficFlowSegment(
-            TextFormat format,
+    public Mono<TrafficFlowSegmentData> getTrafficFlowSegment(
+            ResponseFormat format,
             TrafficFlowSegmentStyle style,
             int zoom,
-            String query,
+            List<Double> coordinates,
             SpeedUnit unit,
             Integer thickness,
             Boolean openLr) {
-        return this.serviceClient.getTrafficFlowSegmentAsync(format, style, zoom, query, unit, thickness, openLr);
+        return this.serviceClient.getTrafficFlowSegmentAsync(format, style, zoom, coordinates, unit, thickness, openLr);
     }
 
     /**
@@ -219,14 +200,7 @@ public final class TrafficAsyncClient {
      * @param zoom Zoom level for the desired tile. For _raster_ tiles, value must be in the range: 0-22 (inclusive).
      *     For _vector_ tiles, value must be in the range: 0-22 (inclusive). Please see [Zoom Levels and Tile
      *     Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
-     * @param xTileIndex X coordinate of the tile on zoom grid. Value must be in the range [0,
-     *     2&lt;sup&gt;`zoom`&lt;/sup&gt; -1].
-     *     <p>Please see [Zoom Levels and Tile
-     *     Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
-     * @param yTileIndex Y coordinate of the tile on zoom grid. Value must be in the range [0,
-     *     2&lt;sup&gt;`zoom`&lt;/sup&gt; -1].
-     *     <p>Please see [Zoom Levels and Tile
-     *     Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
+     * @param tileIndex Parameter group.
      * @param trafficState Reference value for the state of traffic at a particular time, obtained from the Viewport API
      *     call, trafficModelId attribute in trafficState field. It is updated every minute, and is valid for two
      *     minutes before it times out. Use -1 to get the most recent traffic information. Default: most recent traffic
@@ -238,14 +212,8 @@ public final class TrafficAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<StreamResponse> getTrafficIncidentTileWithResponse(
-            TileFormat format,
-            TrafficIncidentTileStyle style,
-            int zoom,
-            int xTileIndex,
-            int yTileIndex,
-            String trafficState) {
-        return this.serviceClient.getTrafficIncidentTileWithResponseAsync(
-                format, style, zoom, xTileIndex, yTileIndex, trafficState);
+            TileFormat format, TrafficIncidentTileStyle style, int zoom, TileIndex tileIndex, String trafficState) {
+        return this.serviceClient.getTrafficIncidentTileWithResponseAsync(format, style, zoom, tileIndex, trafficState);
     }
 
     /**
@@ -262,14 +230,7 @@ public final class TrafficAsyncClient {
      * @param zoom Zoom level for the desired tile. For _raster_ tiles, value must be in the range: 0-22 (inclusive).
      *     For _vector_ tiles, value must be in the range: 0-22 (inclusive). Please see [Zoom Levels and Tile
      *     Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
-     * @param xTileIndex X coordinate of the tile on zoom grid. Value must be in the range [0,
-     *     2&lt;sup&gt;`zoom`&lt;/sup&gt; -1].
-     *     <p>Please see [Zoom Levels and Tile
-     *     Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
-     * @param yTileIndex Y coordinate of the tile on zoom grid. Value must be in the range [0,
-     *     2&lt;sup&gt;`zoom`&lt;/sup&gt; -1].
-     *     <p>Please see [Zoom Levels and Tile
-     *     Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
+     * @param tileIndex Parameter group.
      * @param trafficState Reference value for the state of traffic at a particular time, obtained from the Viewport API
      *     call, trafficModelId attribute in trafficState field. It is updated every minute, and is valid for two
      *     minutes before it times out. Use -1 to get the most recent traffic information. Default: most recent traffic
@@ -281,14 +242,8 @@ public final class TrafficAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Flux<ByteBuffer> getTrafficIncidentTile(
-            TileFormat format,
-            TrafficIncidentTileStyle style,
-            int zoom,
-            int xTileIndex,
-            int yTileIndex,
-            String trafficState) {
-        return this.serviceClient.getTrafficIncidentTileAsync(
-                format, style, zoom, xTileIndex, yTileIndex, trafficState);
+            TileFormat format, TrafficIncidentTileStyle style, int zoom, TileIndex tileIndex, String trafficState) {
+        return this.serviceClient.getTrafficIncidentTileAsync(format, style, zoom, tileIndex, trafficState);
     }
 
     /**
@@ -339,10 +294,10 @@ public final class TrafficAsyncClient {
      * @return this object is returned from a successful Traffic incident Detail call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<TrafficIncidentDetailResult>> getTrafficIncidentDetailWithResponse(
-            TextFormat format,
-            TrafficIncidentDetailStyle style,
-            String boundingbox,
+    public Mono<Response<TrafficIncidentDetail>> getTrafficIncidentDetailWithResponse(
+            ResponseFormat format,
+            IncidentDetailStyle style,
+            List<Double> boundingbox,
             int boundingZoom,
             String trafficmodelid,
             String language,
@@ -411,10 +366,10 @@ public final class TrafficAsyncClient {
      * @return this object is returned from a successful Traffic incident Detail call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<TrafficIncidentDetailResult> getTrafficIncidentDetail(
-            TextFormat format,
-            TrafficIncidentDetailStyle style,
-            String boundingbox,
+    public Mono<TrafficIncidentDetail> getTrafficIncidentDetail(
+            ResponseFormat format,
+            IncidentDetailStyle style,
+            List<Double> boundingbox,
             int boundingZoom,
             String trafficmodelid,
             String language,
@@ -451,17 +406,19 @@ public final class TrafficAsyncClient {
      * @param boundingbox Bounding box of the map viewport in
      *     [EPSG900913](http://docs.openlayers.org/library/spherical_mercator.html) projection. The `boundingbox` is
      *     represented by two value pairs describing it's corners (first pair for lower left corner and second for upper
-     *     right). All values should be separated by commas (e.g., _minY,minX,maxY,maxX_). The maximum size of the
-     *     bounding box that can be passed is dependent on the requested zoom level. The width and height cannot exceed
-     *     4092 pixels when rendered on the given zoom level.&lt;br&gt;&lt;br&gt;NOTE: Bounding boxes that cross the
-     *     180° meridian require special treatment. For such boxes, the eastern _maxX_ value will be negative, and thus
-     *     less than the _minX_ value west of the 180° meridian. To address that, the value 40075016.6855874 should be
-     *     added to the true _maxX_ value before it is passed in the request.
+     *     right). When this endpoint is called directly, all values should be separated by commas (e.g.,
+     *     _minY,minX,maxY,maxX_). The maximum size of the bounding box that can be passed is dependent on the requested
+     *     zoom level. The width and height cannot exceed 4092 pixels when rendered on the given zoom
+     *     level.&lt;br&gt;&lt;br&gt;NOTE: Bounding boxes that cross the 180° meridian require special treatment. For
+     *     such boxes, the eastern _maxX_ value will be negative, and thus less than the _minX_ value west of the 180°
+     *     meridian. To address that, the value 40075016.6855874 should be added to the true _maxX_ value before it is
+     *     passed in the request.
      * @param boundingzoom Zoom level of the map viewport. Used to determine whether the view can be zoomed in.
      * @param overviewbox Bounding box of the overview map in
      *     [EPSG900913](http://docs.openlayers.org/library/spherical_mercator.html) projection.&lt;br&gt;&lt;br&gt;Used
      *     in case the overview box/mini map has different copyright data than the main map. If there is no mini map,
-     *     the same coordinates as `boundingBox` is used.
+     *     the same coordinates as `boundingBox` is used. When this endpoint is called directly, coordinates are passed
+     *     in as a single string containing four coordinates, separated by commas.
      * @param overviewzoom Zoom level of the overview map. If there is no mini map, use the same zoom level as
      *     boundingZoom.
      * @param copyright Determines what copyright information to return. When true the copyright text is returned; when
@@ -472,11 +429,11 @@ public final class TrafficAsyncClient {
      * @return this object is returned from a successful Traffic Incident Viewport call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<TrafficIncidentViewportResult>> getTrafficIncidentViewportWithResponse(
-            TextFormat format,
-            String boundingbox,
+    public Mono<Response<TrafficIncidentViewport>> getTrafficIncidentViewportWithResponse(
+            ResponseFormat format,
+            List<Double> boundingbox,
             int boundingzoom,
-            String overviewbox,
+            List<Double> overviewbox,
             int overviewzoom,
             Boolean copyright) {
         return this.serviceClient.getTrafficIncidentViewportWithResponseAsync(
@@ -499,17 +456,19 @@ public final class TrafficAsyncClient {
      * @param boundingbox Bounding box of the map viewport in
      *     [EPSG900913](http://docs.openlayers.org/library/spherical_mercator.html) projection. The `boundingbox` is
      *     represented by two value pairs describing it's corners (first pair for lower left corner and second for upper
-     *     right). All values should be separated by commas (e.g., _minY,minX,maxY,maxX_). The maximum size of the
-     *     bounding box that can be passed is dependent on the requested zoom level. The width and height cannot exceed
-     *     4092 pixels when rendered on the given zoom level.&lt;br&gt;&lt;br&gt;NOTE: Bounding boxes that cross the
-     *     180° meridian require special treatment. For such boxes, the eastern _maxX_ value will be negative, and thus
-     *     less than the _minX_ value west of the 180° meridian. To address that, the value 40075016.6855874 should be
-     *     added to the true _maxX_ value before it is passed in the request.
+     *     right). When this endpoint is called directly, all values should be separated by commas (e.g.,
+     *     _minY,minX,maxY,maxX_). The maximum size of the bounding box that can be passed is dependent on the requested
+     *     zoom level. The width and height cannot exceed 4092 pixels when rendered on the given zoom
+     *     level.&lt;br&gt;&lt;br&gt;NOTE: Bounding boxes that cross the 180° meridian require special treatment. For
+     *     such boxes, the eastern _maxX_ value will be negative, and thus less than the _minX_ value west of the 180°
+     *     meridian. To address that, the value 40075016.6855874 should be added to the true _maxX_ value before it is
+     *     passed in the request.
      * @param boundingzoom Zoom level of the map viewport. Used to determine whether the view can be zoomed in.
      * @param overviewbox Bounding box of the overview map in
      *     [EPSG900913](http://docs.openlayers.org/library/spherical_mercator.html) projection.&lt;br&gt;&lt;br&gt;Used
      *     in case the overview box/mini map has different copyright data than the main map. If there is no mini map,
-     *     the same coordinates as `boundingBox` is used.
+     *     the same coordinates as `boundingBox` is used. When this endpoint is called directly, coordinates are passed
+     *     in as a single string containing four coordinates, separated by commas.
      * @param overviewzoom Zoom level of the overview map. If there is no mini map, use the same zoom level as
      *     boundingZoom.
      * @param copyright Determines what copyright information to return. When true the copyright text is returned; when
@@ -520,11 +479,11 @@ public final class TrafficAsyncClient {
      * @return this object is returned from a successful Traffic Incident Viewport call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<TrafficIncidentViewportResult> getTrafficIncidentViewport(
-            TextFormat format,
-            String boundingbox,
+    public Mono<TrafficIncidentViewport> getTrafficIncidentViewport(
+            ResponseFormat format,
+            List<Double> boundingbox,
             int boundingzoom,
-            String overviewbox,
+            List<Double> overviewbox,
             int overviewzoom,
             Boolean copyright) {
         return this.serviceClient.getTrafficIncidentViewportAsync(

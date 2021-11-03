@@ -13,7 +13,7 @@ public final class TimezoneIanaVersionResult {
     /*
      * Version property
      */
-    @JsonProperty(value = "version", access = JsonProperty.Access.WRITE_ONLY)
+    @JsonProperty(value = "Version", access = JsonProperty.Access.WRITE_ONLY)
     private String version;
 
     /**

@@ -16,7 +16,7 @@ public final class HourlyForecast {
      * 2019-10-27T19:39:57-08:00.
      */
     @JsonProperty(value = "date")
-    private OffsetDateTime date;
+    private OffsetDateTime dateTime;
 
     /*
      * Numeric value representing an image that displays the `iconPhrase`.
@@ -24,7 +24,7 @@ public final class HourlyForecast {
      * Concepts](https://aka.ms/AzureMapsWeatherConcepts) for details.
      */
     @JsonProperty(value = "iconCode")
-    private Integer iconCode;
+    private IconCode iconCode;
 
     /*
      * Phrase description of the weather icon.
@@ -49,21 +49,21 @@ public final class HourlyForecast {
      * Temperature being returned.
      */
     @JsonProperty(value = "temperature")
-    private WeatherUnit temperature;
+    private WeatherValue temperature;
 
     /*
      * RealFeel™ Temperature being returned. Describes what the temperature
      * really feels like in the shade.
      */
     @JsonProperty(value = "realFeelTemperature")
-    private WeatherUnit realFeelTemperature;
+    private WeatherValue realFeelTemperature;
 
     /*
      * The temperature to which air may be cooled by evaporating water into it
      * at constant pressure until it reaches saturation.
      */
     @JsonProperty(value = "wetBulbTemperature")
-    private WeatherUnit wetBulbTemperature;
+    private WeatherValue wetBulbTemperature;
 
     /*
      * The dewpoint temperature in specified unit. The dewpoint temperature is
@@ -71,7 +71,7 @@ public final class HourlyForecast {
      * saturation.
      */
     @JsonProperty(value = "dewPoint")
-    private WeatherUnit dewPoint;
+    private WeatherValue dewPoint;
 
     /*
      * Wind details being returned including speed and direction.
@@ -98,14 +98,14 @@ public final class HourlyForecast {
      * object or light can be clearly discerned.
      */
     @JsonProperty(value = "visibility")
-    private WeatherUnit visibility;
+    private WeatherValue visibility;
 
     /*
      * Cloud ceiling in specified unit. The ceiling is a measurement of the
      * height of the base of the lowest clouds.
      */
     @JsonProperty(value = "ceiling")
-    private WeatherUnit ceiling;
+    private WeatherValue cloudCeiling;
 
     /*
      * Measure of the strength of the ultraviolet radiation from the sun.
@@ -123,7 +123,7 @@ public final class HourlyForecast {
      * Phrase associated with the `uvIndex`.
      */
     @JsonProperty(value = "uvIndexPhrase")
-    private String uvIndexPhrase;
+    private String uvIndexDescription;
 
     /*
      * Percent representing the probability of precipitation. For example,
@@ -154,25 +154,25 @@ public final class HourlyForecast {
      * Total liquid equivalent of precipitation during the forecast period.
      */
     @JsonProperty(value = "totalLiquid")
-    private WeatherUnit totalLiquid;
+    private WeatherValue totalLiquid;
 
     /*
      * Rain
      */
     @JsonProperty(value = "rain")
-    private WeatherUnit rain;
+    private WeatherValue rain;
 
     /*
      * Snow
      */
     @JsonProperty(value = "snow")
-    private WeatherUnit snow;
+    private WeatherValue snow;
 
     /*
      * Ice
      */
     @JsonProperty(value = "ice")
-    private WeatherUnit ice;
+    private WeatherValue ice;
 
     /*
      * Percent representing cloud cover.
@@ -181,22 +181,24 @@ public final class HourlyForecast {
     private Integer cloudCover;
 
     /**
-     * Get the date property: Date and time of the forecast in ISO 8601 format, for example, 2019-10-27T19:39:57-08:00.
+     * Get the dateTime property: Date and time of the forecast in ISO 8601 format, for example,
+     * 2019-10-27T19:39:57-08:00.
      *
-     * @return the date value.
+     * @return the dateTime value.
      */
-    public OffsetDateTime getDate() {
-        return this.date;
+    public OffsetDateTime getDateTime() {
+        return this.dateTime;
     }
 
     /**
-     * Set the date property: Date and time of the forecast in ISO 8601 format, for example, 2019-10-27T19:39:57-08:00.
+     * Set the dateTime property: Date and time of the forecast in ISO 8601 format, for example,
+     * 2019-10-27T19:39:57-08:00.
      *
-     * @param date the date value to set.
+     * @param dateTime the dateTime value to set.
      * @return the HourlyForecast object itself.
      */
-    public HourlyForecast setDate(OffsetDateTime date) {
-        this.date = date;
+    public HourlyForecast setDateTime(OffsetDateTime dateTime) {
+        this.dateTime = dateTime;
         return this;
     }
 
@@ -206,7 +208,7 @@ public final class HourlyForecast {
      *
      * @return the iconCode value.
      */
-    public Integer getIconCode() {
+    public IconCode getIconCode() {
         return this.iconCode;
     }
 
@@ -217,7 +219,7 @@ public final class HourlyForecast {
      * @param iconCode the iconCode value to set.
      * @return the HourlyForecast object itself.
      */
-    public HourlyForecast setIconCode(Integer iconCode) {
+    public HourlyForecast setIconCode(IconCode iconCode) {
         this.iconCode = iconCode;
         return this;
     }
@@ -289,7 +291,7 @@ public final class HourlyForecast {
      *
      * @return the temperature value.
      */
-    public WeatherUnit getTemperature() {
+    public WeatherValue getTemperature() {
         return this.temperature;
     }
 
@@ -299,7 +301,7 @@ public final class HourlyForecast {
      * @param temperature the temperature value to set.
      * @return the HourlyForecast object itself.
      */
-    public HourlyForecast setTemperature(WeatherUnit temperature) {
+    public HourlyForecast setTemperature(WeatherValue temperature) {
         this.temperature = temperature;
         return this;
     }
@@ -310,7 +312,7 @@ public final class HourlyForecast {
      *
      * @return the realFeelTemperature value.
      */
-    public WeatherUnit getRealFeelTemperature() {
+    public WeatherValue getRealFeelTemperature() {
         return this.realFeelTemperature;
     }
 
@@ -321,7 +323,7 @@ public final class HourlyForecast {
      * @param realFeelTemperature the realFeelTemperature value to set.
      * @return the HourlyForecast object itself.
      */
-    public HourlyForecast setRealFeelTemperature(WeatherUnit realFeelTemperature) {
+    public HourlyForecast setRealFeelTemperature(WeatherValue realFeelTemperature) {
         this.realFeelTemperature = realFeelTemperature;
         return this;
     }
@@ -332,7 +334,7 @@ public final class HourlyForecast {
      *
      * @return the wetBulbTemperature value.
      */
-    public WeatherUnit getWetBulbTemperature() {
+    public WeatherValue getWetBulbTemperature() {
         return this.wetBulbTemperature;
     }
 
@@ -343,7 +345,7 @@ public final class HourlyForecast {
      * @param wetBulbTemperature the wetBulbTemperature value to set.
      * @return the HourlyForecast object itself.
      */
-    public HourlyForecast setWetBulbTemperature(WeatherUnit wetBulbTemperature) {
+    public HourlyForecast setWetBulbTemperature(WeatherValue wetBulbTemperature) {
         this.wetBulbTemperature = wetBulbTemperature;
         return this;
     }
@@ -354,7 +356,7 @@ public final class HourlyForecast {
      *
      * @return the dewPoint value.
      */
-    public WeatherUnit getDewPoint() {
+    public WeatherValue getDewPoint() {
         return this.dewPoint;
     }
 
@@ -365,7 +367,7 @@ public final class HourlyForecast {
      * @param dewPoint the dewPoint value to set.
      * @return the HourlyForecast object itself.
      */
-    public HourlyForecast setDewPoint(WeatherUnit dewPoint) {
+    public HourlyForecast setDewPoint(WeatherValue dewPoint) {
         this.dewPoint = dewPoint;
         return this;
     }
@@ -438,7 +440,7 @@ public final class HourlyForecast {
      *
      * @return the visibility value.
      */
-    public WeatherUnit getVisibility() {
+    public WeatherValue getVisibility() {
         return this.visibility;
     }
 
@@ -449,30 +451,30 @@ public final class HourlyForecast {
      * @param visibility the visibility value to set.
      * @return the HourlyForecast object itself.
      */
-    public HourlyForecast setVisibility(WeatherUnit visibility) {
+    public HourlyForecast setVisibility(WeatherValue visibility) {
         this.visibility = visibility;
         return this;
     }
 
     /**
-     * Get the ceiling property: Cloud ceiling in specified unit. The ceiling is a measurement of the height of the base
-     * of the lowest clouds.
+     * Get the cloudCeiling property: Cloud ceiling in specified unit. The ceiling is a measurement of the height of the
+     * base of the lowest clouds.
      *
-     * @return the ceiling value.
+     * @return the cloudCeiling value.
      */
-    public WeatherUnit getCeiling() {
-        return this.ceiling;
+    public WeatherValue getCloudCeiling() {
+        return this.cloudCeiling;
     }
 
     /**
-     * Set the ceiling property: Cloud ceiling in specified unit. The ceiling is a measurement of the height of the base
-     * of the lowest clouds.
+     * Set the cloudCeiling property: Cloud ceiling in specified unit. The ceiling is a measurement of the height of the
+     * base of the lowest clouds.
      *
-     * @param ceiling the ceiling value to set.
+     * @param cloudCeiling the cloudCeiling value to set.
      * @return the HourlyForecast object itself.
      */
-    public HourlyForecast setCeiling(WeatherUnit ceiling) {
-        this.ceiling = ceiling;
+    public HourlyForecast setCloudCeiling(WeatherValue cloudCeiling) {
+        this.cloudCeiling = cloudCeiling;
         return this;
     }
 
@@ -503,22 +505,22 @@ public final class HourlyForecast {
     }
 
     /**
-     * Get the uvIndexPhrase property: Phrase associated with the `uvIndex`.
+     * Get the uvIndexDescription property: Phrase associated with the `uvIndex`.
      *
-     * @return the uvIndexPhrase value.
+     * @return the uvIndexDescription value.
      */
-    public String getUvIndexPhrase() {
-        return this.uvIndexPhrase;
+    public String getUvIndexDescription() {
+        return this.uvIndexDescription;
     }
 
     /**
-     * Set the uvIndexPhrase property: Phrase associated with the `uvIndex`.
+     * Set the uvIndexDescription property: Phrase associated with the `uvIndex`.
      *
-     * @param uvIndexPhrase the uvIndexPhrase value to set.
+     * @param uvIndexDescription the uvIndexDescription value to set.
      * @return the HourlyForecast object itself.
      */
-    public HourlyForecast setUvIndexPhrase(String uvIndexPhrase) {
-        this.uvIndexPhrase = uvIndexPhrase;
+    public HourlyForecast setUvIndexDescription(String uvIndexDescription) {
+        this.uvIndexDescription = uvIndexDescription;
         return this;
     }
 
@@ -609,7 +611,7 @@ public final class HourlyForecast {
      *
      * @return the totalLiquid value.
      */
-    public WeatherUnit getTotalLiquid() {
+    public WeatherValue getTotalLiquid() {
         return this.totalLiquid;
     }
 
@@ -619,7 +621,7 @@ public final class HourlyForecast {
      * @param totalLiquid the totalLiquid value to set.
      * @return the HourlyForecast object itself.
      */
-    public HourlyForecast setTotalLiquid(WeatherUnit totalLiquid) {
+    public HourlyForecast setTotalLiquid(WeatherValue totalLiquid) {
         this.totalLiquid = totalLiquid;
         return this;
     }
@@ -629,7 +631,7 @@ public final class HourlyForecast {
      *
      * @return the rain value.
      */
-    public WeatherUnit getRain() {
+    public WeatherValue getRain() {
         return this.rain;
     }
 
@@ -639,7 +641,7 @@ public final class HourlyForecast {
      * @param rain the rain value to set.
      * @return the HourlyForecast object itself.
      */
-    public HourlyForecast setRain(WeatherUnit rain) {
+    public HourlyForecast setRain(WeatherValue rain) {
         this.rain = rain;
         return this;
     }
@@ -649,7 +651,7 @@ public final class HourlyForecast {
      *
      * @return the snow value.
      */
-    public WeatherUnit getSnow() {
+    public WeatherValue getSnow() {
         return this.snow;
     }
 
@@ -659,7 +661,7 @@ public final class HourlyForecast {
      * @param snow the snow value to set.
      * @return the HourlyForecast object itself.
      */
-    public HourlyForecast setSnow(WeatherUnit snow) {
+    public HourlyForecast setSnow(WeatherValue snow) {
         this.snow = snow;
         return this;
     }
@@ -669,7 +671,7 @@ public final class HourlyForecast {
      *
      * @return the ice value.
      */
-    public WeatherUnit getIce() {
+    public WeatherValue getIce() {
         return this.ice;
     }
 
@@ -679,7 +681,7 @@ public final class HourlyForecast {
      * @param ice the ice value to set.
      * @return the HourlyForecast object itself.
      */
-    public HourlyForecast setIce(WeatherUnit ice) {
+    public HourlyForecast setIce(WeatherValue ice) {
         this.ice = ice;
         return this;
     }

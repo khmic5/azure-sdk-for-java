@@ -7,26 +7,24 @@ package com.azure.maps.elevation;
 import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceClient;
 import com.azure.core.annotation.ServiceMethod;
-import com.azure.maps.elevation.implementation.ElevationsImpl;
-import com.azure.maps.elevation.models.BoundingBoxResult;
-import com.azure.maps.elevation.models.CoordinatesPairAbbreviated;
+import com.azure.maps.elevation.implementation.ElevationClientImpl;
+import com.azure.maps.elevation.models.ElevationResult;
 import com.azure.maps.elevation.models.ErrorResponseException;
-import com.azure.maps.elevation.models.LinesResult;
-import com.azure.maps.elevation.models.PointsResult;
-import com.azure.maps.elevation.models.ResponseFormat;
+import com.azure.maps.elevation.models.JsonFormat;
+import com.azure.maps.elevation.models.LatLongPairAbbreviated;
 import java.util.List;
 
 /** Initializes a new instance of the synchronous ElevationClient type. */
 @ServiceClient(builder = ElevationClientBuilder.class)
 public final class ElevationClient {
-    private final ElevationsImpl serviceClient;
+    private final ElevationClientImpl serviceClient;
 
     /**
-     * Initializes an instance of Elevations client.
+     * Initializes an instance of ElevationClient client.
      *
      * @param serviceClient the service client implementation.
      */
-    ElevationClient(ElevationsImpl serviceClient) {
+    ElevationClient(ElevationClientImpl serviceClient) {
         this.serviceClient = serviceClient;
     }
 
@@ -39,7 +37,9 @@ public final class ElevationClient {
      * <p>Due to the URL character length limit of 2048, it's not possible to pass more than 100 coordinates as a
      * pipeline delimited string in a URL GET request. If you intend to pass more than 100 coordinates as a pipeline
      * delimited string, use the [POST Data For
-     * Points](https://docs.microsoft.com/en-us/rest/api/maps/elevation/postdataforpoints).
+     * Points](https://docs.microsoft.com/rest/api/maps/elevation/postdataforpoints).
+     *
+     * <p>The result will be in the same sequence of points listed in the request.
      *
      * @param format Desired format of the response. Only `json` format is supported.
      * @param points The string representation of a list of points. A point is defined in lon/lat WGS84 coordinate
@@ -50,10 +50,10 @@ public final class ElevationClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response from a successful Elevation Points request.
+     * @return the response from a successful Get Data for Bounding Box API.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public PointsResult getDataForPoints(ResponseFormat format, List<String> points) {
+    public ElevationResult getDataForPoints(JsonFormat format, List<String> points) {
         return this.serviceClient.getDataForPoints(format, points);
     }
 
@@ -61,24 +61,27 @@ public final class ElevationClient {
      * **Applies to**: S1 pricing tier.
      *
      * <p>The Post Data for Points API provides elevation data for multiple points. A point is defined lon/lat
-     * coordinate format. Use the POST endpoint only if you intend to pass multiple points in the request. If you intend
-     * to pass a single coordinate into the API, use the [GET Data For Points
-     * API](https://docs.microsoft.com/en-us/rest/api/maps/elevation/getdataforpoints).
+     * coordinate format.
+     *
+     * <p>Use the POST endpoint only if you intend to pass multiple points in the request. If you intend to pass a
+     * single coordinate into the API, use the [GET Data For Points
+     * API](https://docs.microsoft.com/rest/api/maps/elevation/getdataforpoints).
+     *
+     * <p>The result will be in the same sequence of points listed in the request.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param pointsRequestBody The string representation of a list of points. A point is defined in lon/lat WGS84
-     *     coordinate reference system format. Each points in a list should be separated by the pipe ('|') character.
-     *     The number of points that can be requested in a POST request ranges from 2 to 2,000. The resolution of the
-     *     elevation data will be the highest for a single point and will decrease if multiple points are spread further
-     *     apart.
+     * @param points The string representation of a list of points. A point is defined in lon/lat WGS84 coordinate
+     *     reference system format. Each points in a list should be separated by the pipe ('|') character. The number of
+     *     points that can be requested in a POST request ranges from 2 to 2,000. The resolution of the elevation data
+     *     will be the highest for a single point and will decrease if multiple points are spread further apart.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response from a successful Elevation Points request.
+     * @return the response from a successful Get Data for Bounding Box API.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public PointsResult postDataForPoints(ResponseFormat format, List<CoordinatesPairAbbreviated> pointsRequestBody) {
-        return this.serviceClient.postDataForPoints(format, pointsRequestBody);
+    public ElevationResult postDataForPoints(JsonFormat format, List<LatLongPairAbbreviated> points) {
+        return this.serviceClient.postDataForPoints(format, points);
     }
 
     /**
@@ -88,12 +91,13 @@ public final class ElevationClient {
      *
      * <p>A polyline is defined by passing in between 2 and N endpoint coordinates separated by a pipe ('|') character.
      * In addition to passing in endpoints, customers can specify the number of sample points that will be used to
-     * divide polyline into equally spaced segments. Elevation data at both start and endpoints and equally spaced
-     * points along the polyline will be returned.
+     * divide polyline into equally spaced segments.
      *
-     * <p>A line between two endpoints is a straight Cartesian line, the shortest line between those two points in the
-     * coordinate reference system. Note that the point is chosen based on Euclidean distance and may markedly differ
-     * from the geodesic path along the curved surface of the reference ellipsoid.
+     * <p>Elevation data at both start and endpoints, as well as equally spaced points along the polyline will be
+     * returned. The results will be listed in the direction from the first endpoint towards the last endpoint. A line
+     * between two endpoints is a straight Cartesian line, the shortest line between those two points in the coordinate
+     * reference system. Note that the point is chosen based on Euclidean distance and may markedly differ from the
+     * geodesic path along the curved surface of the reference ellipsoid.
      *
      * @param format Desired format of the response. Only `json` format is supported.
      * @param lines The string representation of a polyline path. A polyline is defined by endpoint coordinates, with
@@ -108,45 +112,47 @@ public final class ElevationClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response from a successful Elevation Polyline request.
+     * @return the response from a successful Get Data for Bounding Box API.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public LinesResult getDataForPolyline(ResponseFormat format, List<String> lines, Integer samples) {
+    public ElevationResult getDataForPolyline(JsonFormat format, List<String> lines, Integer samples) {
         return this.serviceClient.getDataForPolyline(format, lines, samples);
     }
 
     /**
      * **Applies to**: S1 pricing tier.
      *
-     * <p>The Post Data for Polyline API provides elevation data along a polyline. A polyline is defined by passing in
-     * between 2 and N endpoint coordinates separated by a pipe ('|') character. In addition to passing in endpoints,
-     * customers can specify the number of sample points that will be used to divide polyline into equally spaced
-     * segments.
+     * <p>The Post Data for Polyline API provides elevation data along a polyline.
      *
-     * <p>Elevation data at both start and end points and equally spaced points along the polyline will be returned. A
-     * line between two endpoints is a straight Cartesian line, the shortest line between those two points in the
-     * coordinate reference system. Note that the point is chosen based on Euclidean distance and may markedly differ
-     * from the geodesic path along the curved surface of the reference ellipsoid.
+     * <p>A polyline is defined by passing in between 2 and N endpoint coordinates separated by a pipe ('|') character.
+     * In addition to passing in endpoints, customers can specify the number of sample points that will be used to
+     * divide polyline into equally spaced segments.
+     *
+     * <p>Elevation data at both start and end points, as well as equally spaced points along the polyline will be
+     * returned. The results will be listed in the direction from the first endpoint towards the last endpoint. A line
+     * between two endpoints is a straight Cartesian line, the shortest line between those two points in the coordinate
+     * reference system. Note that the point is chosen based on Euclidean distance and may markedly differ from the
+     * geodesic path along the curved surface of the reference ellipsoid.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param linesRequestBody The string representation of a polyline path. A polyline is defined by endpoint
-     *     coordinates, with each endpoint separated by a pipe ('|') character. The polyline should be defined in the
-     *     following format: `[longitude_point1, latitude_point1 | longitude_point2, latitude_point2, ...,
-     *     longitude_pointN, latitude_pointN]`. The longitude and latitude values refer to the World Geodetic System
-     *     (WGS84) coordinate reference system. The resolution of the data used to compute the elevation will depend on
-     *     the distance between the endpoints.
+     * @param polyline The string representation of a polyline path. A polyline is defined by endpoint coordinates, with
+     *     each endpoint separated by a pipe ('|') character. The polyline should be defined in the following format:
+     *     `[longitude_point1, latitude_point1 | longitude_point2, latitude_point2, ..., longitude_pointN,
+     *     latitude_pointN]`. The longitude and latitude values refer to the World Geodetic System (WGS84) coordinate
+     *     reference system. The resolution of the data used to compute the elevation will depend on the distance
+     *     between the endpoints.
      * @param samples The samples parameter specifies the number of equally spaced points at which elevation values
      *     should be provided along a polyline path. The number of samples should range from 2 to 2,000. Default value
      *     is 10.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response from a successful Elevation Polyline request.
+     * @return the response from a successful Get Data for Bounding Box API.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public LinesResult postDataForPolyline(
-            ResponseFormat format, List<CoordinatesPairAbbreviated> linesRequestBody, Integer samples) {
-        return this.serviceClient.postDataForPolyline(format, linesRequestBody, samples);
+    public ElevationResult postDataForPolyline(
+            JsonFormat format, List<LatLongPairAbbreviated> polyline, Integer samples) {
+        return this.serviceClient.postDataForPolyline(format, polyline, samples);
     }
 
     /**
@@ -167,16 +173,16 @@ public final class ElevationClient {
      *     WGS84 longitude and latitude of the northeast corner. The string is presented in the following format:
      *     `[SouthwestCorner_Longitude, SouthwestCorner_Latitude, NortheastCorner_Longitude, NortheastCorner_Latitude]`.
      * @param rows Specifies the number of rows to use to divide the bounding box area into a grid. The number of
-     *     vertices in the grid should be less than 2,000.
+     *     vertices (rows x columns) in the grid should be less than 2,000.
      * @param columns Specifies the number of columns to use to divide the bounding box area into a grid. The number of
-     *     vertices in the grid should be less than 2,000.
+     *     vertices (rows x columns) in the grid should be less than 2,000.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the response from a successful Get Data for Bounding Box API.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public BoundingBoxResult getDataForBoundingBox(ResponseFormat format, List<String> bounds, int rows, int columns) {
+    public ElevationResult getDataForBoundingBox(JsonFormat format, List<Float> bounds, int rows, int columns) {
         return this.serviceClient.getDataForBoundingBox(format, bounds, rows, columns);
     }
 }

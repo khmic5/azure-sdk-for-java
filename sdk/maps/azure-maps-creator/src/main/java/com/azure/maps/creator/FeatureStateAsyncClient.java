@@ -8,15 +8,14 @@ import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceClient;
 import com.azure.core.annotation.ServiceMethod;
 import com.azure.core.http.rest.PagedFlux;
-import com.azure.core.http.rest.PagedResponse;
 import com.azure.core.http.rest.Response;
 import com.azure.maps.creator.implementation.FeatureStatesImpl;
 import com.azure.maps.creator.models.ErrorResponseException;
 import com.azure.maps.creator.models.FeatureStatesStructure;
-import com.azure.maps.creator.models.StatesetCreatedResponse;
-import com.azure.maps.creator.models.StatesetGetResponse;
-import com.azure.maps.creator.models.StatesetInfoObject;
-import com.azure.maps.creator.models.StylesObject;
+import com.azure.maps.creator.models.Stateset;
+import com.azure.maps.creator.models.StatesetCreatedResult;
+import com.azure.maps.creator.models.StatesetInfo;
+import com.azure.maps.creator.models.StyleRules;
 import reactor.core.publisher.Mono;
 
 /** Initializes a new instance of the asynchronous CreatorClient type. */
@@ -64,7 +63,7 @@ public final class FeatureStateAsyncClient {
      *
      * @param datasetId The datasetId must have been obtained from a successful [Dataset Create
      *     API](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create) call.
-     * @param statesetCreateRequestBody The stateset style JSON data.
+     * @param styleRules The stateset style JSON data.
      * @param description Description for the stateset. Max length allowed is 1000.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -72,9 +71,9 @@ public final class FeatureStateAsyncClient {
      * @return the response model for the successful Stateset Create API.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<StatesetCreatedResponse>> createStatesetWithResponse(
-            String datasetId, StylesObject statesetCreateRequestBody, String description) {
-        return this.serviceClient.createStatesetWithResponseAsync(datasetId, statesetCreateRequestBody, description);
+    public Mono<Response<StatesetCreatedResult>> createStatesetWithResponse(
+            String datasetId, StyleRules styleRules, String description) {
+        return this.serviceClient.createStatesetWithResponseAsync(datasetId, styleRules, description);
     }
 
     /**
@@ -108,7 +107,7 @@ public final class FeatureStateAsyncClient {
      *
      * @param datasetId The datasetId must have been obtained from a successful [Dataset Create
      *     API](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset/create) call.
-     * @param statesetCreateRequestBody The stateset style JSON data.
+     * @param styleRules The stateset style JSON data.
      * @param description Description for the stateset. Max length allowed is 1000.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -116,9 +115,8 @@ public final class FeatureStateAsyncClient {
      * @return the response model for the successful Stateset Create API.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<StatesetCreatedResponse> createStateset(
-            String datasetId, StylesObject statesetCreateRequestBody, String description) {
-        return this.serviceClient.createStatesetAsync(datasetId, statesetCreateRequestBody, description);
+    public Mono<StatesetCreatedResult> createStateset(String datasetId, StyleRules styleRules, String description) {
+        return this.serviceClient.createStatesetAsync(datasetId, styleRules, description);
     }
 
     /**
@@ -135,26 +133,8 @@ public final class FeatureStateAsyncClient {
      * @return the response model for the successful Stateset List API.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public Mono<PagedResponse<StatesetInfoObject>> listStatesetSinglePage() {
-        return this.serviceClient.listStatesetSinglePageAsync();
-    }
-
-    /**
-     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
-     *
-     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
-     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
-     * tools that apply to Azure Maps Creator.
-     *
-     * <p>This API allows the caller to fetch a list of all previously successfully created statesets.
-     *
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response model for the successful Stateset List API.
-     */
-    @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedFlux<StatesetInfoObject> listStateset() {
-        return this.serviceClient.listStatesetAsync();
+    public PagedFlux<StatesetInfo> listStatesets() {
+        return this.serviceClient.listStatesetsAsync();
     }
 
     /**
@@ -167,17 +147,16 @@ public final class FeatureStateAsyncClient {
      * <p>This PUT API allows the user to update the stateset style rules.
      *
      * @param statesetId The stateset id that was created.
-     * @param statesetStyleUpdateRequestBody The stateset style JSON data. Only style rules are allowed to be updated,
-     *     update on keyname and type is not allowed.
+     * @param styleRules The stateset style JSON data. Only style rules are allowed to be updated, update on keyname and
+     *     type is not allowed.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the completion.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<Void>> putStatesetWithResponse(
-            String statesetId, StylesObject statesetStyleUpdateRequestBody) {
-        return this.serviceClient.putStatesetWithResponseAsync(statesetId, statesetStyleUpdateRequestBody);
+    public Mono<Response<Void>> updateStatesetWithResponse(String statesetId, StyleRules styleRules) {
+        return this.serviceClient.updateStatesetWithResponseAsync(statesetId, styleRules);
     }
 
     /**
@@ -190,16 +169,16 @@ public final class FeatureStateAsyncClient {
      * <p>This PUT API allows the user to update the stateset style rules.
      *
      * @param statesetId The stateset id that was created.
-     * @param statesetStyleUpdateRequestBody The stateset style JSON data. Only style rules are allowed to be updated,
-     *     update on keyname and type is not allowed.
+     * @param styleRules The stateset style JSON data. Only style rules are allowed to be updated, update on keyname and
+     *     type is not allowed.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the completion.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Void> putStateset(String statesetId, StylesObject statesetStyleUpdateRequestBody) {
-        return this.serviceClient.putStatesetAsync(statesetId, statesetStyleUpdateRequestBody);
+    public Mono<Void> updateStateset(String statesetId, StyleRules styleRules) {
+        return this.serviceClient.updateStatesetAsync(statesetId, styleRules);
     }
 
     /**
@@ -260,7 +239,7 @@ public final class FeatureStateAsyncClient {
      * @return the response model for the successful Stateset Get API.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<StatesetGetResponse>> getStatesetWithResponse(String statesetId) {
+    public Mono<Response<Stateset>> getStatesetWithResponse(String statesetId) {
         return this.serviceClient.getStatesetWithResponseAsync(statesetId);
     }
 
@@ -282,7 +261,7 @@ public final class FeatureStateAsyncClient {
      * @return the response model for the successful Stateset Get API.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<StatesetGetResponse> getStateset(String statesetId) {
+    public Mono<Stateset> getStateset(String statesetId) {
         return this.serviceClient.getStatesetAsync(statesetId);
     }
 
@@ -298,8 +277,8 @@ public final class FeatureStateAsyncClient {
      * @param statesetId The stateset id that was created.
      * @param featureId The id of a feature in the given dataset. If the featureId is not present in the dataset, Bad
      *     Request response will be returned.
-     * @param featureStateUpdateRequestBody The feature state JSON data. A feature can have only one state at a given
-     *     point in time. The specified state keyname must have been defined during the stateset creation.
+     * @param featureStates The feature state JSON data. A feature can have only one state at a given point in time. The
+     *     specified state keyname must have been defined during the stateset creation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -307,8 +286,8 @@ public final class FeatureStateAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<Void>> updateStatesWithResponse(
-            String statesetId, String featureId, FeatureStatesStructure featureStateUpdateRequestBody) {
-        return this.serviceClient.updateStatesWithResponseAsync(statesetId, featureId, featureStateUpdateRequestBody);
+            String statesetId, String featureId, FeatureStatesStructure featureStates) {
+        return this.serviceClient.updateStatesWithResponseAsync(statesetId, featureId, featureStates);
     }
 
     /**
@@ -323,17 +302,16 @@ public final class FeatureStateAsyncClient {
      * @param statesetId The stateset id that was created.
      * @param featureId The id of a feature in the given dataset. If the featureId is not present in the dataset, Bad
      *     Request response will be returned.
-     * @param featureStateUpdateRequestBody The feature state JSON data. A feature can have only one state at a given
-     *     point in time. The specified state keyname must have been defined during the stateset creation.
+     * @param featureStates The feature state JSON data. A feature can have only one state at a given point in time. The
+     *     specified state keyname must have been defined during the stateset creation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the completion.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Void> updateStates(
-            String statesetId, String featureId, FeatureStatesStructure featureStateUpdateRequestBody) {
-        return this.serviceClient.updateStatesAsync(statesetId, featureId, featureStateUpdateRequestBody);
+    public Mono<Void> updateStates(String statesetId, String featureId, FeatureStatesStructure featureStates) {
+        return this.serviceClient.updateStatesAsync(statesetId, featureId, featureStates);
     }
 
     /**
@@ -349,15 +327,15 @@ public final class FeatureStateAsyncClient {
      * @param statesetId The stateset id that was created.
      * @param featureId The id of a feature in the given stateset. If no state was set for the featureId in the stateset
      *     earlier, Bad Request response will be returned.
-     * @param stateKeyName The Name of the state to be deleted.
+     * @param keyName The Name of the state to be deleted.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the completion.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<Void>> deleteStateWithResponse(String statesetId, String featureId, String stateKeyName) {
-        return this.serviceClient.deleteStateWithResponseAsync(statesetId, featureId, stateKeyName);
+    public Mono<Response<Void>> deleteStateWithResponse(String statesetId, String featureId, String keyName) {
+        return this.serviceClient.deleteStateWithResponseAsync(statesetId, featureId, keyName);
     }
 
     /**
@@ -373,15 +351,15 @@ public final class FeatureStateAsyncClient {
      * @param statesetId The stateset id that was created.
      * @param featureId The id of a feature in the given stateset. If no state was set for the featureId in the stateset
      *     earlier, Bad Request response will be returned.
-     * @param stateKeyName The Name of the state to be deleted.
+     * @param keyName The Name of the state to be deleted.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the completion.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Void> deleteState(String statesetId, String featureId, String stateKeyName) {
-        return this.serviceClient.deleteStateAsync(statesetId, featureId, stateKeyName);
+    public Mono<Void> deleteState(String statesetId, String featureId, String keyName) {
+        return this.serviceClient.deleteStateAsync(statesetId, featureId, keyName);
     }
 
     /**
@@ -402,8 +380,8 @@ public final class FeatureStateAsyncClient {
      * @return the feature states model for a feature.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<FeatureStatesStructure>> getStatesWithResponse(String statesetId, String featureId) {
-        return this.serviceClient.getStatesWithResponseAsync(statesetId, featureId);
+    public Mono<Response<FeatureStatesStructure>> listStatesWithResponse(String statesetId, String featureId) {
+        return this.serviceClient.listStatesWithResponseAsync(statesetId, featureId);
     }
 
     /**
@@ -424,21 +402,7 @@ public final class FeatureStateAsyncClient {
      * @return the feature states model for a feature.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<FeatureStatesStructure> getStates(String statesetId, String featureId) {
-        return this.serviceClient.getStatesAsync(statesetId, featureId);
-    }
-
-    /**
-     * Get the next page of items.
-     *
-     * @param nextLink The nextLink parameter.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response model for the successful Stateset List API.
-     */
-    @ServiceMethod(returns = ReturnType.COLLECTION)
-    public Mono<PagedResponse<StatesetInfoObject>> listStatesetNextSinglePage(String nextLink) {
-        return this.serviceClient.listStatesetNextSinglePageAsync(nextLink);
+    public Mono<FeatureStatesStructure> listStates(String statesetId, String featureId) {
+        return this.serviceClient.listStatesAsync(statesetId, featureId);
     }
 }

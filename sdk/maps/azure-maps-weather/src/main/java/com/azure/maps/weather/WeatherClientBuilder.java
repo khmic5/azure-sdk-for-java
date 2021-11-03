@@ -6,8 +6,10 @@ package com.azure.maps.weather;
 
 import com.azure.core.annotation.ServiceClientBuilder;
 import com.azure.core.http.HttpClient;
+import com.azure.core.http.HttpHeaders;
 import com.azure.core.http.HttpPipeline;
 import com.azure.core.http.HttpPipelineBuilder;
+import com.azure.core.http.policy.AddHeadersPolicy;
 import com.azure.core.http.policy.CookiePolicy;
 import com.azure.core.http.policy.HttpLogOptions;
 import com.azure.core.http.policy.HttpLoggingPolicy;
@@ -15,7 +17,9 @@ import com.azure.core.http.policy.HttpPipelinePolicy;
 import com.azure.core.http.policy.HttpPolicyProviders;
 import com.azure.core.http.policy.RetryPolicy;
 import com.azure.core.http.policy.UserAgentPolicy;
+import com.azure.core.util.ClientOptions;
 import com.azure.core.util.Configuration;
+import com.azure.core.util.CoreUtils;
 import com.azure.core.util.serializer.JacksonAdapter;
 import com.azure.core.util.serializer.SerializerAdapter;
 import com.azure.maps.weather.implementation.WeatherClientImpl;
@@ -47,18 +51,18 @@ public final class WeatherClientBuilder {
      * Account API. To use Azure AD security in Azure Maps see the following
      * [articles](https://aka.ms/amauthdetails) for guidance.
      */
-    private String xMsClientId;
+    private String clientId;
 
     /**
      * Sets Specifies which account is intended for usage in conjunction with the Azure AD security model. It represents
      * a unique ID for the Azure Maps account and can be retrieved from the Azure Maps management plane Account API. To
      * use Azure AD security in Azure Maps see the following [articles](https://aka.ms/amauthdetails) for guidance.
      *
-     * @param xMsClientId the xMsClientId value.
+     * @param clientId the clientId value.
      * @return the WeatherClientBuilder.
      */
-    public WeatherClientBuilder xMsClientId(String xMsClientId) {
-        this.xMsClientId = xMsClientId;
+    public WeatherClientBuilder clientId(String clientId) {
+        this.clientId = clientId;
         return this;
     }
 
@@ -197,6 +201,23 @@ public final class WeatherClientBuilder {
      */
     private final List<HttpPipelinePolicy> pipelinePolicies;
 
+    /*
+     * The client options such as application ID and custom headers to set on a
+     * request.
+     */
+    private ClientOptions clientOptions;
+
+    /**
+     * Sets The client options such as application ID and custom headers to set on a request.
+     *
+     * @param clientOptions the clientOptions value.
+     * @return the WeatherClientBuilder.
+     */
+    public WeatherClientBuilder clientOptions(ClientOptions clientOptions) {
+        this.clientOptions = clientOptions;
+        return this;
+    }
+
     /**
      * Adds a custom Http pipeline policy.
      *
@@ -226,7 +247,7 @@ public final class WeatherClientBuilder {
         if (serializerAdapter == null) {
             this.serializerAdapter = JacksonAdapter.createDefaultSerializerAdapter();
         }
-        WeatherClientImpl client = new WeatherClientImpl(pipeline, serializerAdapter, xMsClientId, host, apiVersion);
+        WeatherClientImpl client = new WeatherClientImpl(pipeline, serializerAdapter, clientId, host, apiVersion);
         return client;
     }
 
@@ -236,11 +257,19 @@ public final class WeatherClientBuilder {
         if (httpLogOptions == null) {
             httpLogOptions = new HttpLogOptions();
         }
+        if (clientOptions == null) {
+            clientOptions = new ClientOptions();
+        }
         List<HttpPipelinePolicy> policies = new ArrayList<>();
         String clientName = properties.getOrDefault(SDK_NAME, "UnknownName");
         String clientVersion = properties.getOrDefault(SDK_VERSION, "UnknownVersion");
-        policies.add(
-                new UserAgentPolicy(httpLogOptions.getApplicationId(), clientName, clientVersion, buildConfiguration));
+        String applicationId = CoreUtils.getApplicationId(clientOptions, httpLogOptions);
+        policies.add(new UserAgentPolicy(applicationId, clientName, clientVersion, buildConfiguration));
+        HttpHeaders headers = new HttpHeaders();
+        clientOptions.getHeaders().forEach(header -> headers.set(header.getName(), header.getValue()));
+        if (headers.getSize() > 0) {
+            policies.add(new AddHeadersPolicy(headers));
+        }
         HttpPolicyProviders.addBeforeRetryPolicies(policies);
         policies.add(retryPolicy == null ? new RetryPolicy() : retryPolicy);
         policies.add(new CookiePolicy());
@@ -261,7 +290,7 @@ public final class WeatherClientBuilder {
      * @return an instance of WeatherAsyncClient.
      */
     public WeatherAsyncClient buildAsyncClient() {
-        return new WeatherAsyncClient(buildInnerClient().getWeathers());
+        return new WeatherAsyncClient(buildInnerClient());
     }
 
     /**
@@ -270,6 +299,6 @@ public final class WeatherClientBuilder {
      * @return an instance of WeatherClient.
      */
     public WeatherClient buildClient() {
-        return new WeatherClient(buildInnerClient().getWeathers());
+        return new WeatherClient(buildInnerClient());
     }
 }

@@ -8,13 +8,12 @@ import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceClient;
 import com.azure.core.annotation.ServiceMethod;
 import com.azure.core.http.rest.PagedFlux;
-import com.azure.core.http.rest.PagedResponse;
 import com.azure.core.http.rest.Response;
 import com.azure.core.util.polling.PollerFlux;
 import com.azure.maps.creator.implementation.TilesetsImpl;
 import com.azure.maps.creator.models.ErrorResponseException;
 import com.azure.maps.creator.models.LongRunningOperationResult;
-import com.azure.maps.creator.models.TilesetDetailInfo;
+import com.azure.maps.creator.models.Tileset;
 import com.azure.maps.creator.models.TilesetsCreateResponse;
 import com.azure.maps.creator.models.TilesetsGetOperationResponse;
 import reactor.core.publisher.Mono;
@@ -98,7 +97,7 @@ public final class TilesetAsyncClient {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the response model for a Long-Running Operations API.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public PollerFlux<LongRunningOperationResult, LongRunningOperationResult> beginCreate(
             String datasetId, String description) {
         return this.serviceClient.beginCreateAsync(datasetId, description);
@@ -118,25 +117,7 @@ public final class TilesetAsyncClient {
      * @return the response model for the Tileset List API.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public Mono<PagedResponse<TilesetDetailInfo>> listSinglePage() {
-        return this.serviceClient.listSinglePageAsync();
-    }
-
-    /**
-     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
-     *
-     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
-     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
-     * tools that apply to Azure Maps Creator.
-     *
-     * <p>This API allows the caller to fetch a list of all tilesets created. &lt;br&gt;.
-     *
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response model for the Tileset List API.
-     */
-    @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedFlux<TilesetDetailInfo> list() {
+    public PagedFlux<Tileset> list() {
         return this.serviceClient.listAsync();
     }
 
@@ -156,7 +137,7 @@ public final class TilesetAsyncClient {
      * @return detail information for the data.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<TilesetDetailInfo>> getWithResponse(String tilesetId) {
+    public Mono<Response<Tileset>> getWithResponse(String tilesetId) {
         return this.serviceClient.getWithResponseAsync(tilesetId);
     }
 
@@ -176,7 +157,7 @@ public final class TilesetAsyncClient {
      * @return detail information for the data.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<TilesetDetailInfo> get(String tilesetId) {
+    public Mono<Tileset> get(String tilesetId) {
         return this.serviceClient.getAsync(tilesetId);
     }
 
@@ -294,19 +275,5 @@ public final class TilesetAsyncClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<LongRunningOperationResult> getOperation(String operationId) {
         return this.serviceClient.getOperationAsync(operationId);
-    }
-
-    /**
-     * Get the next page of items.
-     *
-     * @param nextLink The nextLink parameter.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response model for the Tileset List API.
-     */
-    @ServiceMethod(returns = ReturnType.COLLECTION)
-    public Mono<PagedResponse<TilesetDetailInfo>> listNextSinglePage(String nextLink) {
-        return this.serviceClient.listNextSinglePageAsync(nextLink);
     }
 }

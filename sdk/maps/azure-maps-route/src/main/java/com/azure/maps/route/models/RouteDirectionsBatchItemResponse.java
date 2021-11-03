@@ -7,9 +7,9 @@ package com.azure.maps.route.models;
 import com.azure.core.annotation.Fluent;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** The result of the query. RouteDirectionsResponse if the query completed successfully, ErrorResponse otherwise. */
+/** The result of the query. RouteDirections if the query completed successfully, ErrorResponse otherwise. */
 @Fluent
-public final class RouteDirectionsBatchItemResponse extends RouteDirectionsResponse {
+public final class RouteDirectionsBatchItemResponse extends RouteDirections {
     /*
      * The error object.
      */

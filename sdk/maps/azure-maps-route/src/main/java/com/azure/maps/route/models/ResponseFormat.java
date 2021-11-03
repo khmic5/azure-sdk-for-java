@@ -13,6 +13,9 @@ public final class ResponseFormat extends ExpandableStringEnum<ResponseFormat> {
     /** Static value json for ResponseFormat. */
     public static final ResponseFormat JSON = fromString("json");
 
+    /** Static value xml for ResponseFormat. */
+    public static final ResponseFormat XML = fromString("xml");
+
     /**
      * Creates or finds a ResponseFormat from its string representation.
      *

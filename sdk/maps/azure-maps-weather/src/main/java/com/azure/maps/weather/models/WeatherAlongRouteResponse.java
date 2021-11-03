@@ -4,25 +4,25 @@
 
 package com.azure.maps.weather.models;
 
-import com.azure.core.annotation.Fluent;
+import com.azure.core.annotation.Immutable;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /** This object is returned from a successful Weather Along Route. */
-@Fluent
+@Immutable
 public final class WeatherAlongRouteResponse {
     /*
      * Short summary of the weather along the route.
      */
-    @JsonProperty(value = "summary")
+    @JsonProperty(value = "summary", access = JsonProperty.Access.WRITE_ONLY)
     private WeatherAlongRouteSummary summary;
 
     /*
      * Data for each waypoint returned in the same order as specified in the
      * request.
      */
-    @JsonProperty(value = "waypoints")
-    private List<WeatherWaypoint> waypoints;
+    @JsonProperty(value = "waypoints", access = JsonProperty.Access.WRITE_ONLY)
+    private List<WaypointForecast> waypoints;
 
     /**
      * Get the summary property: Short summary of the weather along the route.
@@ -34,33 +34,11 @@ public final class WeatherAlongRouteResponse {
     }
 
     /**
-     * Set the summary property: Short summary of the weather along the route.
-     *
-     * @param summary the summary value to set.
-     * @return the WeatherAlongRouteResponse object itself.
-     */
-    public WeatherAlongRouteResponse setSummary(WeatherAlongRouteSummary summary) {
-        this.summary = summary;
-        return this;
-    }
-
-    /**
      * Get the waypoints property: Data for each waypoint returned in the same order as specified in the request.
      *
      * @return the waypoints value.
      */
-    public List<WeatherWaypoint> getWaypoints() {
+    public List<WaypointForecast> getWaypoints() {
         return this.waypoints;
-    }
-
-    /**
-     * Set the waypoints property: Data for each waypoint returned in the same order as specified in the request.
-     *
-     * @param waypoints the waypoints value to set.
-     * @return the WeatherAlongRouteResponse object itself.
-     */
-    public WeatherAlongRouteResponse setWaypoints(List<WeatherWaypoint> waypoints) {
-        this.waypoints = waypoints;
-        return this;
     }
 }

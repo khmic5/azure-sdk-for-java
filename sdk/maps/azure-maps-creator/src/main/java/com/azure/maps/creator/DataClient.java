@@ -7,12 +7,16 @@ package com.azure.maps.creator;
 import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceClient;
 import com.azure.core.annotation.ServiceMethod;
+import com.azure.core.http.rest.Response;
+import com.azure.core.http.rest.StreamResponse;
+import com.azure.core.util.Context;
 import com.azure.core.util.polling.SyncPoller;
 import com.azure.maps.creator.implementation.DatasImpl;
+import com.azure.maps.creator.models.DataFormat;
+import com.azure.maps.creator.models.DatasGetOperationResponse;
 import com.azure.maps.creator.models.ErrorResponseException;
 import com.azure.maps.creator.models.LongRunningOperationResult;
-import com.azure.maps.creator.models.MapDataListResponse;
-import com.azure.maps.creator.models.UploadDataFormat;
+import com.azure.maps.creator.models.MapDataListResult;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import reactor.core.publisher.Flux;
@@ -66,23 +70,19 @@ public final class DataClient {
      * You can always use the [Data Delete API](https://docs.microsoft.com/rest/api/maps/data-v2/delete-preview) to
      * delete old/unused content and create space for new uploads.
      *
-     * @param uploadDataFormat Data format of the content being uploaded.
+     * @param dataFormat Data format of the content being uploaded.
      * @param uploadContent The content to upload.
      * @param contentLength The contentLength parameter.
-     * @param uploadDataDescription The description to be given to the upload.
+     * @param description The description to be given to the upload.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the response model for a Long-Running Operations API.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public SyncPoller<LongRunningOperationResult, LongRunningOperationResult> beginUploadPreview(
-            UploadDataFormat uploadDataFormat,
-            Flux<ByteBuffer> uploadContent,
-            long contentLength,
-            String uploadDataDescription) {
-        return this.serviceClient.beginUploadPreview(
-                uploadDataFormat, uploadContent, contentLength, uploadDataDescription);
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    public SyncPoller<LongRunningOperationResult, LongRunningOperationResult> beginUpload(
+            DataFormat dataFormat, Flux<ByteBuffer> uploadContent, long contentLength, String description) {
+        return this.serviceClient.beginUpload(dataFormat, uploadContent, contentLength, description);
     }
 
     /**
@@ -120,18 +120,123 @@ public final class DataClient {
      * You can always use the [Data Delete API](https://docs.microsoft.com/rest/api/maps/data-v2/delete-preview) to
      * delete old/unused content and create space for new uploads.
      *
-     * @param uploadDataFormat Data format of the content being uploaded.
+     * @param dataFormat Data format of the content being uploaded.
      * @param uploadContent The content to upload.
-     * @param uploadDataDescription The description to be given to the upload.
+     * @param contentLength The contentLength parameter.
+     * @param description The description to be given to the upload.
+     * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the response model for a Long-Running Operations API.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public SyncPoller<LongRunningOperationResult, LongRunningOperationResult> beginUploadPreview(
-            UploadDataFormat uploadDataFormat, Object uploadContent, String uploadDataDescription) {
-        return this.serviceClient.beginUploadPreview(uploadDataFormat, uploadContent, uploadDataDescription);
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    public SyncPoller<LongRunningOperationResult, LongRunningOperationResult> beginUpload(
+            DataFormat dataFormat,
+            Flux<ByteBuffer> uploadContent,
+            long contentLength,
+            String description,
+            Context context) {
+        return this.serviceClient.beginUpload(dataFormat, uploadContent, contentLength, description, context);
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>The Data Upload API allows the caller to upload data content to the Azure Maps service. You can use this API
+     * in a scenario like uploading a collection of Geofences in `GeoJSON` format, for use in our [Azure Maps Geofencing
+     * Service](https://docs.microsoft.com/rest/api/maps/spatial).
+     *
+     * <p>## Submit Upload Request
+     *
+     * <p>To upload your content you will use a `POST` request. The request body will contain the data to upload. The
+     * `dataFormat` query parameter will contain the format for the data, the `dataSharingLevel` query parameter can
+     * contain the sharing level for the data. The `Content-Type` header will be set to the content type of the data.
+     *
+     * <p>For example, to upload a collection of geofences in `GeoJSON` format, set the request body to the geofence
+     * content. Set the `dataFormat` query parameter to _geojson_, and set the `Content-Type` header to either one of
+     * the following media types:
+     *
+     * <p>- `application/json` - `application/vnd.geo+json` - `application/octet-stream`
+     *
+     * <p>Here's a sample request body for uploading a simple Geofence represented as a circle geometry using a center
+     * point and a radius. The sample below is in `GeoJSON`:
+     *
+     * <p>```json { "type": "FeatureCollection", "features": [{ "type": "Feature", "geometry": { "type": "Point",
+     * "coordinates": [-122.126986, 47.639754] }, "properties": { "geometryId": "001", "radius": 500 } }] } ```
+     *
+     * <p>The Data Upload API performs a [long-running request](https://aka.ms/am-creator-lrt-v2).
+     *
+     * <p>## Data Upload Limits
+     *
+     * <p>Please, be aware that currently every Azure Maps account has a [data storage
+     * limit](https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/azure-subscription-service-limits#azure-maps-limits).
+     * Once the storage limit is reached, all the new upload API calls will return a `409 Conflict` http error response.
+     * You can always use the [Data Delete API](https://docs.microsoft.com/rest/api/maps/data-v2/delete-preview) to
+     * delete old/unused content and create space for new uploads.
+     *
+     * @param dataFormat Data format of the content being uploaded.
+     * @param uploadContent The content to upload.
+     * @param description The description to be given to the upload.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response model for a Long-Running Operations API.
+     */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    public SyncPoller<LongRunningOperationResult, LongRunningOperationResult> beginUpload(
+            DataFormat dataFormat, Object uploadContent, String description) {
+        return this.serviceClient.beginUpload(dataFormat, uploadContent, description);
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>The Data Upload API allows the caller to upload data content to the Azure Maps service. You can use this API
+     * in a scenario like uploading a collection of Geofences in `GeoJSON` format, for use in our [Azure Maps Geofencing
+     * Service](https://docs.microsoft.com/rest/api/maps/spatial).
+     *
+     * <p>## Submit Upload Request
+     *
+     * <p>To upload your content you will use a `POST` request. The request body will contain the data to upload. The
+     * `dataFormat` query parameter will contain the format for the data, the `dataSharingLevel` query parameter can
+     * contain the sharing level for the data. The `Content-Type` header will be set to the content type of the data.
+     *
+     * <p>For example, to upload a collection of geofences in `GeoJSON` format, set the request body to the geofence
+     * content. Set the `dataFormat` query parameter to _geojson_, and set the `Content-Type` header to either one of
+     * the following media types:
+     *
+     * <p>- `application/json` - `application/vnd.geo+json` - `application/octet-stream`
+     *
+     * <p>Here's a sample request body for uploading a simple Geofence represented as a circle geometry using a center
+     * point and a radius. The sample below is in `GeoJSON`:
+     *
+     * <p>```json { "type": "FeatureCollection", "features": [{ "type": "Feature", "geometry": { "type": "Point",
+     * "coordinates": [-122.126986, 47.639754] }, "properties": { "geometryId": "001", "radius": 500 } }] } ```
+     *
+     * <p>The Data Upload API performs a [long-running request](https://aka.ms/am-creator-lrt-v2).
+     *
+     * <p>## Data Upload Limits
+     *
+     * <p>Please, be aware that currently every Azure Maps account has a [data storage
+     * limit](https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/azure-subscription-service-limits#azure-maps-limits).
+     * Once the storage limit is reached, all the new upload API calls will return a `409 Conflict` http error response.
+     * You can always use the [Data Delete API](https://docs.microsoft.com/rest/api/maps/data-v2/delete-preview) to
+     * delete old/unused content and create space for new uploads.
+     *
+     * @param dataFormat Data format of the content being uploaded.
+     * @param uploadContent The content to upload.
+     * @param description The description to be given to the upload.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response model for a Long-Running Operations API.
+     */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    public SyncPoller<LongRunningOperationResult, LongRunningOperationResult> beginUpload(
+            DataFormat dataFormat, Object uploadContent, String description, Context context) {
+        return this.serviceClient.beginUpload(dataFormat, uploadContent, description, context);
     }
 
     /**
@@ -172,8 +277,52 @@ public final class DataClient {
      * @return the response model for the Data List API.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public MapDataListResponse listPreview() {
-        return this.serviceClient.listPreview();
+    public MapDataListResult list() {
+        return this.serviceClient.list();
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>This API allows the caller to fetch a list of all content uploaded previously using the [Data Upload
+     * API](https://docs.microsoft.com/en-us/rest/api/maps/data-v2/upload-preview).
+     *
+     * <p>### Submit List Request
+     *
+     * <p>To list all your map data content you will issue a `GET` request with no additional parameters.
+     *
+     * <p>### List Data Response
+     *
+     * <p>The Data List API returns the complete list of all data in `json` format. The response contains the following
+     * details for each data resource:
+     *
+     * <p>&gt; udid - The unique data id for the data resource.
+     *
+     * <p>&gt; location - The location of the data resource. Execute a HTTP `GET` on this location to download the data.
+     *
+     * <p>Here's a sample response returning the `udid` and `location` of 3 data resources:
+     *
+     * <p>&lt;br&gt;
+     *
+     * <p>```json { "mapDataList": [ { "udid": "9a1288fa-1858-4a3b-b68d-13a8j5af7d7c", "location":
+     * "https://us.atlas.microsoft.com/mapData/9a1288fa-1858-4a3b-b68d-13a8j5af7d7c?api-version=1.0", "sizeInBytes":
+     * 29920, "uploadStatus": "Completed" }, { "udid": "8b1288fa-1958-4a2b-b68e-13a7i5af7d7c", "location":
+     * "https://us.atlas.microsoft.com/mapData/8b1288fa-1958-4a2b-b68e-13a7i5af7d7c?api-version=1.0", "sizeInBytes":
+     * 1339, "uploadStatus": "Completed" }, { "udid": "7c1288fa-2058-4a1b-b68f-13a6h5af7d7c", "location":
+     * "https://us.atlas.microsoft.com/mapData/7c1288fa-2058-4a1b-b68f-13a6h5af7d7c?api-version=1.0", "sizeInBytes":
+     * 1650, "uploadStatus": "Pending" }] } ```
+     *
+     * <p>&lt;br&gt;.
+     *
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response model for the Data List API.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<MapDataListResult> listWithResponse(Context context) {
+        return this.serviceClient.listWithResponse(context);
     }
 
     /**
@@ -218,19 +367,77 @@ public final class DataClient {
      * You can always use the [Data Delete API](https://docs.microsoft.com/rest/api/maps/data-v2/delete-preview) to
      * delete old/unused content and create space for new uploads.
      *
-     * @param uniqueDataId The unique data id for the content. The `udid` must have been obtained from a successful
-     *     [Data Upload API](https://docs.microsoft.com/en-us/rest/api/maps/data-v2/upload-preview) call.
+     * @param udid The unique data id for the content. The `udid` must have been obtained from a successful [Data Upload
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/data-v2/upload-preview) call.
      * @param updateContent The new content that will update/replace the previously uploaded content.
-     * @param uploadDataDescription The description to be given to the upload.
+     * @param description The description to be given to the upload.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the response model for a Long-Running Operations API.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public SyncPoller<LongRunningOperationResult, LongRunningOperationResult> beginUpdatePreview(
-            String uniqueDataId, Object updateContent, String uploadDataDescription) {
-        return this.serviceClient.beginUpdatePreview(uniqueDataId, updateContent, uploadDataDescription);
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    public SyncPoller<LongRunningOperationResult, LongRunningOperationResult> beginUpdate(
+            String udid, Object updateContent, String description) {
+        return this.serviceClient.beginUpdate(udid, updateContent, description);
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>The Data Update API allows the caller to update a previously uploaded data content.
+     *
+     * <p>You can use this API in a scenario like adding or removing geofences to or from an existing collection of
+     * geofences. Geofences are uploaded using the [Data Upload
+     * API](https://docs.microsoft.com/rest/api/maps/data-v2/upload-preview), for use in the [Azure Maps Geofencing
+     * Service](https://docs.microsoft.com/rest/api/maps/spatial).
+     *
+     * <p>Please note that the Update API will *replace* and *override* the existing data content.
+     *
+     * <p>## Submit Update Request
+     *
+     * <p>To update your content you will use a `PUT` request. The request body will contain the new data that will
+     * replace the existing data. The `Content-Type` header will be set to the content type of the data, and the path
+     * will contain the `udid` of the data to be update.
+     *
+     * <p>For example, to update a collection of geofences that were previously uploaded using the Upload API, place the
+     * new geofence content in the request body. Set the `udid` parameter in the path to the `udid` of the data received
+     * previously in the upload API response. And set the `Content-Type` header to one of the following media types:
+     *
+     * <p>- `application/json` - `application/vnd.geo+json` - `application/octet-stream`
+     *
+     * <p>Here's a sample request body for updating a simple Geofence. It's represented as a circle geometry using a
+     * center point and a radius. The sample below is in `GeoJSON`:
+     *
+     * <p>```json { "type": "FeatureCollection", "features": [{ "type": "Feature", "geometry": { "type": "Point",
+     * "coordinates": [-122.126986, 47.639754] }, "properties": { "geometryId": "001", "radius": 500 } }] } ```
+     *
+     * <p>The previously uploaded geofence had a radius of 100m. The above request will update it to 500m.
+     *
+     * <p>The Data Update API performs a [long-running request](https://aka.ms/am-creator-lrt-v2).
+     *
+     * <p>## Data Update Limits
+     *
+     * <p>Please, be aware that currently every Azure Maps account has a [data storage
+     * limit](https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/azure-subscription-service-limits#azure-maps-limits).
+     * Once the storage limit is reached, all the new upload API calls will return a `409 Conflict` http error response.
+     * You can always use the [Data Delete API](https://docs.microsoft.com/rest/api/maps/data-v2/delete-preview) to
+     * delete old/unused content and create space for new uploads.
+     *
+     * @param udid The unique data id for the content. The `udid` must have been obtained from a successful [Data Upload
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/data-v2/upload-preview) call.
+     * @param updateContent The new content that will update/replace the previously uploaded content.
+     * @param description The description to be given to the upload.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response model for a Long-Running Operations API.
+     */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    public SyncPoller<LongRunningOperationResult, LongRunningOperationResult> beginUpdate(
+            String udid, Object updateContent, String description, Context context) {
+        return this.serviceClient.beginUpdate(udid, updateContent, description, context);
     }
 
     /**
@@ -263,16 +470,59 @@ public final class DataClient {
      * <p>```json { "type": "FeatureCollection", "features": [{ "type": "Feature", "geometry": { "type": "Point",
      * "coordinates": [-122.126986, 47.639754] }, "properties": { "geometryId": "001", "radius": 500 } }] } ```.
      *
-     * @param uniqueDataId The unique data id for the content. The `udid` must have been obtained from a successful
-     *     [Data Upload API](https://docs.microsoft.com/en-us/rest/api/maps/data-v2/upload-preview) call.
+     * @param udid The unique data id for the content. The `udid` must have been obtained from a successful [Data Upload
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/data-v2/upload-preview) call.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public InputStream downloadPreview(String uniqueDataId) {
-        return this.serviceClient.downloadPreview(uniqueDataId);
+    public InputStream download(String udid) {
+        return this.serviceClient.download(udid);
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>This API allows the caller to download a previously uploaded data content.&lt;br&gt; You can use this API in a
+     * scenario like downloading an existing collection of geofences uploaded previously using the [Data Upload
+     * API](https://docs.microsoft.com/en-us/rest/api/maps/data-v2/upload-preview) for use in our [Azure Maps Geofencing
+     * Service](https://docs.microsoft.com/en-us/rest/api/maps/spatial).
+     *
+     * <p>### Submit Download Request
+     *
+     * <p>To download your content you will use a `GET` request where the path will contain the `udid` of the data to
+     * download. Optionally, you can also pass in an `Accept` header to specify a preference for the `Content-Type` of
+     * the data response. &lt;br&gt; For example, to download a collection of geofences previously uploaded using the
+     * Upload API, set the `udid` parameter in the path to the `udid` of the data received previously in the upload API
+     * response and set the `Accept` header to either one of the following media types:
+     *
+     * <p>- `application/json` - `application/vnd.geo+json` - `application/octet-stream`
+     *
+     * <p>### Download Data Response
+     *
+     * <p>The Download API will return a HTTP `200 OK` response if the data resource with the passed-in `udid` is found,
+     * where the response body will contain the content of the data resource.&lt;br&gt; A HTTP `400 Bad Request` error
+     * response will be returned if the data resource with the passed-in `udid` is not found.&lt;br&gt;
+     *
+     * <p>Here's a sample response body for a simple geofence represented in `GeoJSON` uploaded previously using the
+     * Upload API: &lt;br&gt;
+     *
+     * <p>```json { "type": "FeatureCollection", "features": [{ "type": "Feature", "geometry": { "type": "Point",
+     * "coordinates": [-122.126986, 47.639754] }, "properties": { "geometryId": "001", "radius": 500 } }] } ```.
+     *
+     * @param udid The unique data id for the content. The `udid` must have been obtained from a successful [Data Upload
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/data-v2/upload-preview) call.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public StreamResponse downloadWithResponse(String udid, Context context) {
+        return this.serviceClient.downloadWithResponse(udid, context);
     }
 
     /**
@@ -296,15 +546,49 @@ public final class DataClient {
      * deleted successfully.&lt;br&gt; A HTTP `400 Bad Request` error response will be returned if the data resource
      * with the passed-in `udid` is not found.
      *
-     * @param uniqueDataId The unique data id for the content. The `udid` must have been obtained from a successful
-     *     [Data Upload API](https://docs.microsoft.com/en-us/rest/api/maps/data-v2/upload-preview) call.
+     * @param udid The unique data id for the content. The `udid` must have been obtained from a successful [Data Upload
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/data-v2/upload-preview) call.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public void deletePreview(String uniqueDataId) {
-        this.serviceClient.deletePreview(uniqueDataId);
+    public void delete(String udid) {
+        this.serviceClient.delete(udid);
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>This API allows the caller to delete a previously uploaded data content.&lt;br&gt; You can use this API in a
+     * scenario like removing geofences previously uploaded using the [Data Upload
+     * API](https://docs.microsoft.com/en-us/rest/api/maps/data-v2/upload-preview) for use in our [Azure Maps Geofencing
+     * Service](https://docs.microsoft.com/en-us/rest/api/maps/spatial). You can also use this API to delete old/unused
+     * uploaded content and create space for new content.
+     *
+     * <p>### Submit Delete Request
+     *
+     * <p>To delete your content you will issue a `DELETE` request where the path will contain the `udid` of the data to
+     * delete.&lt;br&gt; For example, to delete a collection of geofences previously uploaded using the Upload API, set
+     * the `udid` parameter in the path to the `udid` of the data received previously in the upload API response.
+     *
+     * <p>### Delete Data Response
+     *
+     * <p>The Data Delete API returns a HTTP `204 No Content` response with an empty body, if the data resource was
+     * deleted successfully.&lt;br&gt; A HTTP `400 Bad Request` error response will be returned if the data resource
+     * with the passed-in `udid` is not found.
+     *
+     * @param udid The unique data id for the content. The `udid` must have been obtained from a successful [Data Upload
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/data-v2/upload-preview) call.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<Void> deleteWithResponse(String udid, Context context) {
+        return this.serviceClient.deleteWithResponse(udid, context);
     }
 
     /**
@@ -318,7 +602,23 @@ public final class DataClient {
      * @return the response model for a Long-Running Operations API.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public LongRunningOperationResult getOperationPreview(String operationId) {
-        return this.serviceClient.getOperationPreview(operationId);
+    public LongRunningOperationResult getOperation(String operationId) {
+        return this.serviceClient.getOperation(operationId);
+    }
+
+    /**
+     * This path will be obtained from a call to POST /mapData. While in progress, an http200 will be returned with no
+     * extra headers - followed by an http200 with Resource-Location header once completed.
+     *
+     * @param operationId The ID to query the status for the data upload request.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response model for a Long-Running Operations API.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public DatasGetOperationResponse getOperationWithResponse(String operationId, Context context) {
+        return this.serviceClient.getOperationWithResponse(operationId, context);
     }
 }

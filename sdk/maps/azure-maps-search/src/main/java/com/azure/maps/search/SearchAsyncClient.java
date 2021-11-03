@@ -10,30 +10,32 @@ import com.azure.core.annotation.ServiceMethod;
 import com.azure.core.http.rest.Response;
 import com.azure.core.util.polling.PollerFlux;
 import com.azure.maps.search.implementation.SearchesImpl;
-import com.azure.maps.search.models.BatchRequestBody;
-import com.azure.maps.search.models.ConnectorSet;
-import com.azure.maps.search.models.EntityType;
+import com.azure.maps.search.models.BatchRequest;
+import com.azure.maps.search.models.ElectricVehicleConnector;
 import com.azure.maps.search.models.ErrorResponseException;
-import com.azure.maps.search.models.OpeningHours;
+import com.azure.maps.search.models.GeographicEntityType;
+import com.azure.maps.search.models.JsonFormat;
+import com.azure.maps.search.models.LocalizedMapView;
+import com.azure.maps.search.models.OperatingHoursRange;
+import com.azure.maps.search.models.PointOfInterestCategoryTreeResult;
+import com.azure.maps.search.models.PointOfInterestExtendedPostalCodes;
+import com.azure.maps.search.models.PolygonResult;
 import com.azure.maps.search.models.ResponseFormat;
-import com.azure.maps.search.models.SearchAddressBatchResponse;
-import com.azure.maps.search.models.SearchAddressReverseBatchResponse;
-import com.azure.maps.search.models.SearchAddressReverseCrossStreetResponse;
-import com.azure.maps.search.models.SearchAddressReverseResponse;
-import com.azure.maps.search.models.SearchAlongRouteRequestBody;
-import com.azure.maps.search.models.SearchCommonResponse;
-import com.azure.maps.search.models.SearchFuzzyBatchResponse;
-import com.azure.maps.search.models.SearchIndexSet;
-import com.azure.maps.search.models.SearchInsideGeometryRequestBody;
-import com.azure.maps.search.models.SearchPoiCategoryTreeResponse;
-import com.azure.maps.search.models.SearchPolygonResponse;
+import com.azure.maps.search.models.ReverseSearchAddressBatchProcessResult;
+import com.azure.maps.search.models.ReverseSearchAddressResult;
+import com.azure.maps.search.models.ReverseSearchCrossStreetAddressResult;
+import com.azure.maps.search.models.RoadUseType;
+import com.azure.maps.search.models.SearchAddressBatchProcessResult;
+import com.azure.maps.search.models.SearchAddressResult;
+import com.azure.maps.search.models.SearchAlongRouteRequest;
+import com.azure.maps.search.models.SearchIndexes;
+import com.azure.maps.search.models.SearchInsideGeometryRequest;
+import com.azure.maps.search.models.SearchesFuzzySearchBatchResponse;
+import com.azure.maps.search.models.SearchesGetFuzzySearchBatchResponse;
+import com.azure.maps.search.models.SearchesGetReverseSearchAddressBatchResponse;
 import com.azure.maps.search.models.SearchesGetSearchAddressBatchResponse;
-import com.azure.maps.search.models.SearchesGetSearchAddressReverseBatchResponse;
-import com.azure.maps.search.models.SearchesGetSearchFuzzyBatchResponse;
-import com.azure.maps.search.models.SearchesPostSearchAddressBatchResponse;
-import com.azure.maps.search.models.SearchesPostSearchAddressReverseBatchResponse;
-import com.azure.maps.search.models.SearchesPostSearchFuzzyBatchResponse;
-import com.azure.maps.search.models.TextFormat;
+import com.azure.maps.search.models.SearchesReverseSearchAddressBatchResponse;
+import com.azure.maps.search.models.SearchesSearchAddressBatchResponse;
 import java.util.List;
 import reactor.core.publisher.Mono;
 
@@ -58,7 +60,7 @@ public final class SearchAsyncClient {
      *
      * <p>The Get Polygon service allows you to request the geometry data such as a city or country outline for a set of
      * entities, previously retrieved from an Online Search request in GeoJSON format. The geometry ID is returned in
-     * the dataSources object under "geometry" and "id" in either a Search Address or Search Fuzzy call.
+     * the sourceGeometry object under "geometry" and "id" in either a Search Address or Search Fuzzy call.
      *
      * <p>Please note that any geometry ID retrieved from an Online Search endpoint has a limited lifetime. The client
      * should not store geometry IDs in persistent storage for later referral, as the stability of these identifiers is
@@ -67,16 +69,15 @@ public final class SearchAsyncClient {
      * requests up to 20 identifiers.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param geometries Comma separated list of geometry UUIDs, previously retrieved from an Online Search request.
+     * @param geometryIds Comma separated list of geometry UUIDs, previously retrieved from an Online Search request.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search Polygon call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<SearchPolygonResponse>> getSearchPolygonWithResponse(
-            ResponseFormat format, List<String> geometries) {
-        return this.serviceClient.getSearchPolygonWithResponseAsync(format, geometries);
+    public Mono<Response<PolygonResult>> getPolygonWithResponse(JsonFormat format, List<String> geometryIds) {
+        return this.serviceClient.getPolygonWithResponseAsync(format, geometryIds);
     }
 
     /**
@@ -86,7 +87,7 @@ public final class SearchAsyncClient {
      *
      * <p>The Get Polygon service allows you to request the geometry data such as a city or country outline for a set of
      * entities, previously retrieved from an Online Search request in GeoJSON format. The geometry ID is returned in
-     * the dataSources object under "geometry" and "id" in either a Search Address or Search Fuzzy call.
+     * the sourceGeometry object under "geometry" and "id" in either a Search Address or Search Fuzzy call.
      *
      * <p>Please note that any geometry ID retrieved from an Online Search endpoint has a limited lifetime. The client
      * should not store geometry IDs in persistent storage for later referral, as the stability of these identifiers is
@@ -95,15 +96,15 @@ public final class SearchAsyncClient {
      * requests up to 20 identifiers.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param geometries Comma separated list of geometry UUIDs, previously retrieved from an Online Search request.
+     * @param geometryIds Comma separated list of geometry UUIDs, previously retrieved from an Online Search request.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search Polygon call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchPolygonResponse> getSearchPolygon(ResponseFormat format, List<String> geometries) {
-        return this.serviceClient.getSearchPolygonAsync(format, geometries);
+    public Mono<PolygonResult> getPolygon(JsonFormat format, List<String> geometryIds) {
+        return this.serviceClient.getPolygonAsync(format, geometryIds);
     }
 
     /**
@@ -128,12 +129,12 @@ public final class SearchAsyncClient {
      * @param query The applicable query string (e.g., "seattle", "pizza"). Can _also_ be specified as a comma separated
      *     string composed by latitude followed by longitude (e.g., "47.641268, -122.125679"). Must be properly URL
      *     encoded.
-     * @param typeahead Boolean. If the typeahead flag is set, the query will be interpreted as a partial input and the
-     *     search will enter predictive mode.
-     * @param limit Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
-     * @param ofs Starting offset of the returned results within the full result set. Default: 0, minimum: 0 and
+     * @param isTypeAhead Boolean. If the typeahead flag is set, the query will be interpreted as a partial input and
+     *     the search will enter predictive mode.
+     * @param top Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
+     * @param skip Starting offset of the returned results within the full result set. Default: 0, minimum: 0 and
      *     maximum: 1900.
-     * @param categorySet A comma-separated list of category set IDs which could be used to restrict the result to
+     * @param categoryFilter A comma-separated list of category set IDs which could be used to restrict the result to
      *     specific Points of Interest categories. ID order does not matter. When multiple category identifiers are
      *     provided, only POIs that belong to (at least) one of the categories from the provided list will be returned.
      *     The list of supported categories can be discovered using  [POI Categories
@@ -141,18 +142,18 @@ public final class SearchAsyncClient {
      *     <p>* **categorySet=7315** (Search Points of Interest from category Restaurant)
      *     <p>* **categorySet=7315025,7315017** (Search Points of Interest of category either Italian or French
      *     Restaurant).
-     * @param countrySet Comma separated string of country codes, e.g. FR,ES. This will limit the search to the
+     * @param countryFilter Comma separated string of country codes, e.g. FR,ES. This will limit the search to the
      *     specified countries.
      * @param lat Latitude where results should be biased. E.g. 37.337.
      * @param lon Longitude where results should be biased. E.g. -121.89.
-     * @param radius The radius in meters to for the results to be constrained to the defined area.
+     * @param radiusInMeters The radius in meters to for the results to be constrained to the defined area.
      * @param topLeft Top left position of the bounding box. E.g. 37.553,-122.453.
      * @param btmRight Bottom right position of the bounding box. E.g. 37.553,-122.453.
      * @param language Language in which search results should be returned. Should be one of supported IETF language
      *     tags, case insensitive. When data in specified language is not available for a specific field, default
      *     language is used.
-     *     <p>Please refer to [Supported
-     *     Languages](https://docs.microsoft.com/en-us/azure/azure-maps/supported-languages) for details.
+     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
+     *     details.
      * @param extendedPostalCodesFor Indexes for which extended postal codes should be included in the results.
      *     <p>Available indexes are:
      *     <p>**Addr** = Address ranges
@@ -189,17 +190,17 @@ public final class SearchAsyncClient {
      * @param idxSet A comma separated list of indexes which should be utilized for the search. Item order does not
      *     matter. Available indexes are: Addr = Address range interpolation, Geo = Geographies, PAD = Point Addresses,
      *     POI = Points of interest, Str = Streets, Xstr = Cross Streets (intersections).
-     * @param brandSet A comma-separated list of brand names which could be used to restrict the result to specific
+     * @param brandFilter A comma-separated list of brand names which could be used to restrict the result to specific
      *     brands. Item order does not matter. When multiple brands are provided, only results that belong to (at least)
      *     one of the provided list will be returned. Brands that contain a "," in their name should be put into quotes.
      *     <p>Usage examples:
      *     <p>brandSet=Foo
      *     <p>brandSet=Foo,Bar
      *     <p>brandSet="A,B,C Comma",Bar.
-     * @param connectorSet A comma-separated list of connector types which could be used to restrict the result to
-     *     Electric Vehicle Station supporting specific connector types. Item order does not matter. When multiple
-     *     connector types are provided, only results that belong to (at least) one of the provided list will be
-     *     returned.
+     * @param electricVehicleConnectorFilter A comma-separated list of connector types which could be used to restrict
+     *     the result to Electric Vehicle Station supporting specific connector types. Item order does not matter. When
+     *     multiple connector types are provided, only results that belong to (at least) one of the provided list will
+     *     be returned.
      *     <p>Available connector types are: * `StandardHouseholdCountrySpecific` - These are the standard household
      *     connectors for a certain region. They are all AC single phase and the standard Voltage and standard Amperage.
      *     See also: [Plug &amp; socket types - World
@@ -227,58 +228,68 @@ public final class SearchAsyncClient {
      *     in Europe.
      *     <p>Usage examples:
      *     <p>connectorSet=IEC62196Type2CableAttached connectorSet=IEC62196Type2Outlet,IEC62196Type2CableAttached.
-     * @param view The View parameter specifies which set of geopolitically disputed content is returned via Azure Maps
-     *     services, including borders and labels displayed on the map. The View parameter (also referred to as “user
-     *     region parameter”) will show the correct maps for that country/region. By default, the View parameter is set
-     *     to “Unified” even if you haven’t defined it in the request. It is your responsibility to determine the
-     *     location of your users, and then set the View parameter correctly for that location. Alternatively, you have
-     *     the option to set ‘View=Auto’, which will return the map data based on the IP address of the request. The
-     *     View parameter in Azure Maps must be used in compliance with applicable laws, including those regarding
-     *     mapping, of the country where maps, images and other data and third party content that you are authorized to
-     *     access via Azure Maps is made available. Example: view=IN.
+     * @param entityType Specifies the level of filtering performed on geographies. Narrows the search for specified
+     *     geography entity types, e.g. return only municipality. The resulting response will contain the geography ID
+     *     as well as the entity type matched. If you provide more than one entity as a comma separated list, endpoint
+     *     will return the 'smallest entity available'. Returned Geometry ID can be used to get the geometry of that
+     *     geography via [Get Search Polygon](https://docs.microsoft.com/rest/api/maps/search/getsearchpolygon) API. The
+     *     following parameters are ignored when entityType is set:
+     *     <p>* heading * number * returnRoadUse * returnSpeedLimit * roadUse * returnMatchType.
+     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
+     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
+     *     different views of such regions, and the View parameter allows your application to comply with the view
+     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
+     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
+     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
+     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
+     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
+     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
+     *     made available. Example: view=IN.
      *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
      *     available Views.
-     * @param openingHours Hours of operation for a POI (Points of Interest). The availability of hours of operation
-     *     will vary based on the data available. Supported value: nextSevenDays.
+     * @param operatingHours Hours of operation for a POI (Points of Interest). The availability of hours of operation
+     *     will vary based on the data available. If not passed, then no opening hours information will be returned.
+     *     Supported value: nextSevenDays.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<SearchCommonResponse>> getSearchFuzzyWithResponse(
-            TextFormat format,
+    public Mono<Response<SearchAddressResult>> fuzzySearchWithResponse(
+            ResponseFormat format,
             String query,
-            Boolean typeahead,
-            Integer limit,
-            Integer ofs,
-            List<Integer> categorySet,
-            List<String> countrySet,
-            Float lat,
-            Float lon,
-            Float radius,
+            Boolean isTypeAhead,
+            Integer top,
+            Integer skip,
+            List<Integer> categoryFilter,
+            List<String> countryFilter,
+            Double lat,
+            Double lon,
+            Integer radiusInMeters,
             String topLeft,
             String btmRight,
             String language,
-            String extendedPostalCodesFor,
+            List<SearchIndexes> extendedPostalCodesFor,
             Integer minFuzzyLevel,
             Integer maxFuzzyLevel,
-            List<SearchIndexSet> idxSet,
-            List<String> brandSet,
-            List<ConnectorSet> connectorSet,
-            String view,
-            OpeningHours openingHours) {
-        return this.serviceClient.getSearchFuzzyWithResponseAsync(
+            List<SearchIndexes> idxSet,
+            List<String> brandFilter,
+            List<ElectricVehicleConnector> electricVehicleConnectorFilter,
+            GeographicEntityType entityType,
+            LocalizedMapView localizedMapView,
+            OperatingHoursRange operatingHours) {
+        return this.serviceClient.fuzzySearchWithResponseAsync(
                 format,
                 query,
-                typeahead,
-                limit,
-                ofs,
-                categorySet,
-                countrySet,
+                isTypeAhead,
+                top,
+                skip,
+                categoryFilter,
+                countryFilter,
                 lat,
                 lon,
-                radius,
+                radiusInMeters,
                 topLeft,
                 btmRight,
                 language,
@@ -286,10 +297,11 @@ public final class SearchAsyncClient {
                 minFuzzyLevel,
                 maxFuzzyLevel,
                 idxSet,
-                brandSet,
-                connectorSet,
-                view,
-                openingHours);
+                brandFilter,
+                electricVehicleConnectorFilter,
+                entityType,
+                localizedMapView,
+                operatingHours);
     }
 
     /**
@@ -314,12 +326,12 @@ public final class SearchAsyncClient {
      * @param query The applicable query string (e.g., "seattle", "pizza"). Can _also_ be specified as a comma separated
      *     string composed by latitude followed by longitude (e.g., "47.641268, -122.125679"). Must be properly URL
      *     encoded.
-     * @param typeahead Boolean. If the typeahead flag is set, the query will be interpreted as a partial input and the
-     *     search will enter predictive mode.
-     * @param limit Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
-     * @param ofs Starting offset of the returned results within the full result set. Default: 0, minimum: 0 and
+     * @param isTypeAhead Boolean. If the typeahead flag is set, the query will be interpreted as a partial input and
+     *     the search will enter predictive mode.
+     * @param top Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
+     * @param skip Starting offset of the returned results within the full result set. Default: 0, minimum: 0 and
      *     maximum: 1900.
-     * @param categorySet A comma-separated list of category set IDs which could be used to restrict the result to
+     * @param categoryFilter A comma-separated list of category set IDs which could be used to restrict the result to
      *     specific Points of Interest categories. ID order does not matter. When multiple category identifiers are
      *     provided, only POIs that belong to (at least) one of the categories from the provided list will be returned.
      *     The list of supported categories can be discovered using  [POI Categories
@@ -327,18 +339,18 @@ public final class SearchAsyncClient {
      *     <p>* **categorySet=7315** (Search Points of Interest from category Restaurant)
      *     <p>* **categorySet=7315025,7315017** (Search Points of Interest of category either Italian or French
      *     Restaurant).
-     * @param countrySet Comma separated string of country codes, e.g. FR,ES. This will limit the search to the
+     * @param countryFilter Comma separated string of country codes, e.g. FR,ES. This will limit the search to the
      *     specified countries.
      * @param lat Latitude where results should be biased. E.g. 37.337.
      * @param lon Longitude where results should be biased. E.g. -121.89.
-     * @param radius The radius in meters to for the results to be constrained to the defined area.
+     * @param radiusInMeters The radius in meters to for the results to be constrained to the defined area.
      * @param topLeft Top left position of the bounding box. E.g. 37.553,-122.453.
      * @param btmRight Bottom right position of the bounding box. E.g. 37.553,-122.453.
      * @param language Language in which search results should be returned. Should be one of supported IETF language
      *     tags, case insensitive. When data in specified language is not available for a specific field, default
      *     language is used.
-     *     <p>Please refer to [Supported
-     *     Languages](https://docs.microsoft.com/en-us/azure/azure-maps/supported-languages) for details.
+     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
+     *     details.
      * @param extendedPostalCodesFor Indexes for which extended postal codes should be included in the results.
      *     <p>Available indexes are:
      *     <p>**Addr** = Address ranges
@@ -375,17 +387,17 @@ public final class SearchAsyncClient {
      * @param idxSet A comma separated list of indexes which should be utilized for the search. Item order does not
      *     matter. Available indexes are: Addr = Address range interpolation, Geo = Geographies, PAD = Point Addresses,
      *     POI = Points of interest, Str = Streets, Xstr = Cross Streets (intersections).
-     * @param brandSet A comma-separated list of brand names which could be used to restrict the result to specific
+     * @param brandFilter A comma-separated list of brand names which could be used to restrict the result to specific
      *     brands. Item order does not matter. When multiple brands are provided, only results that belong to (at least)
      *     one of the provided list will be returned. Brands that contain a "," in their name should be put into quotes.
      *     <p>Usage examples:
      *     <p>brandSet=Foo
      *     <p>brandSet=Foo,Bar
      *     <p>brandSet="A,B,C Comma",Bar.
-     * @param connectorSet A comma-separated list of connector types which could be used to restrict the result to
-     *     Electric Vehicle Station supporting specific connector types. Item order does not matter. When multiple
-     *     connector types are provided, only results that belong to (at least) one of the provided list will be
-     *     returned.
+     * @param electricVehicleConnectorFilter A comma-separated list of connector types which could be used to restrict
+     *     the result to Electric Vehicle Station supporting specific connector types. Item order does not matter. When
+     *     multiple connector types are provided, only results that belong to (at least) one of the provided list will
+     *     be returned.
      *     <p>Available connector types are: * `StandardHouseholdCountrySpecific` - These are the standard household
      *     connectors for a certain region. They are all AC single phase and the standard Voltage and standard Amperage.
      *     See also: [Plug &amp; socket types - World
@@ -413,58 +425,68 @@ public final class SearchAsyncClient {
      *     in Europe.
      *     <p>Usage examples:
      *     <p>connectorSet=IEC62196Type2CableAttached connectorSet=IEC62196Type2Outlet,IEC62196Type2CableAttached.
-     * @param view The View parameter specifies which set of geopolitically disputed content is returned via Azure Maps
-     *     services, including borders and labels displayed on the map. The View parameter (also referred to as “user
-     *     region parameter”) will show the correct maps for that country/region. By default, the View parameter is set
-     *     to “Unified” even if you haven’t defined it in the request. It is your responsibility to determine the
-     *     location of your users, and then set the View parameter correctly for that location. Alternatively, you have
-     *     the option to set ‘View=Auto’, which will return the map data based on the IP address of the request. The
-     *     View parameter in Azure Maps must be used in compliance with applicable laws, including those regarding
-     *     mapping, of the country where maps, images and other data and third party content that you are authorized to
-     *     access via Azure Maps is made available. Example: view=IN.
+     * @param entityType Specifies the level of filtering performed on geographies. Narrows the search for specified
+     *     geography entity types, e.g. return only municipality. The resulting response will contain the geography ID
+     *     as well as the entity type matched. If you provide more than one entity as a comma separated list, endpoint
+     *     will return the 'smallest entity available'. Returned Geometry ID can be used to get the geometry of that
+     *     geography via [Get Search Polygon](https://docs.microsoft.com/rest/api/maps/search/getsearchpolygon) API. The
+     *     following parameters are ignored when entityType is set:
+     *     <p>* heading * number * returnRoadUse * returnSpeedLimit * roadUse * returnMatchType.
+     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
+     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
+     *     different views of such regions, and the View parameter allows your application to comply with the view
+     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
+     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
+     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
+     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
+     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
+     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
+     *     made available. Example: view=IN.
      *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
      *     available Views.
-     * @param openingHours Hours of operation for a POI (Points of Interest). The availability of hours of operation
-     *     will vary based on the data available. Supported value: nextSevenDays.
+     * @param operatingHours Hours of operation for a POI (Points of Interest). The availability of hours of operation
+     *     will vary based on the data available. If not passed, then no opening hours information will be returned.
+     *     Supported value: nextSevenDays.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchCommonResponse> getSearchFuzzy(
-            TextFormat format,
+    public Mono<SearchAddressResult> fuzzySearch(
+            ResponseFormat format,
             String query,
-            Boolean typeahead,
-            Integer limit,
-            Integer ofs,
-            List<Integer> categorySet,
-            List<String> countrySet,
-            Float lat,
-            Float lon,
-            Float radius,
+            Boolean isTypeAhead,
+            Integer top,
+            Integer skip,
+            List<Integer> categoryFilter,
+            List<String> countryFilter,
+            Double lat,
+            Double lon,
+            Integer radiusInMeters,
             String topLeft,
             String btmRight,
             String language,
-            String extendedPostalCodesFor,
+            List<SearchIndexes> extendedPostalCodesFor,
             Integer minFuzzyLevel,
             Integer maxFuzzyLevel,
-            List<SearchIndexSet> idxSet,
-            List<String> brandSet,
-            List<ConnectorSet> connectorSet,
-            String view,
-            OpeningHours openingHours) {
-        return this.serviceClient.getSearchFuzzyAsync(
+            List<SearchIndexes> idxSet,
+            List<String> brandFilter,
+            List<ElectricVehicleConnector> electricVehicleConnectorFilter,
+            GeographicEntityType entityType,
+            LocalizedMapView localizedMapView,
+            OperatingHoursRange operatingHours) {
+        return this.serviceClient.fuzzySearchAsync(
                 format,
                 query,
-                typeahead,
-                limit,
-                ofs,
-                categorySet,
-                countrySet,
+                isTypeAhead,
+                top,
+                skip,
+                categoryFilter,
+                countryFilter,
                 lat,
                 lon,
-                radius,
+                radiusInMeters,
                 topLeft,
                 btmRight,
                 language,
@@ -472,10 +494,11 @@ public final class SearchAsyncClient {
                 minFuzzyLevel,
                 maxFuzzyLevel,
                 idxSet,
-                brandSet,
-                connectorSet,
-                view,
-                openingHours);
+                brandFilter,
+                electricVehicleConnectorFilter,
+                entityType,
+                localizedMapView,
+                operatingHours);
     }
 
     /**
@@ -490,12 +513,12 @@ public final class SearchAsyncClient {
      *
      * @param format Desired format of the response. Value can be either _json_ or _xml_.
      * @param query The POI name to search for (e.g., "statue of liberty", "starbucks"), must be properly URL encoded.
-     * @param typeahead Boolean. If the typeahead flag is set, the query will be interpreted as a partial input and the
-     *     search will enter predictive mode.
-     * @param limit Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
-     * @param ofs Starting offset of the returned results within the full result set. Default: 0, minimum: 0 and
+     * @param isTypeAhead Boolean. If the typeahead flag is set, the query will be interpreted as a partial input and
+     *     the search will enter predictive mode.
+     * @param top Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
+     * @param skip Starting offset of the returned results within the full result set. Default: 0, minimum: 0 and
      *     maximum: 1900.
-     * @param categorySet A comma-separated list of category set IDs which could be used to restrict the result to
+     * @param categoryFilter A comma-separated list of category set IDs which could be used to restrict the result to
      *     specific Points of Interest categories. ID order does not matter. When multiple category identifiers are
      *     provided, only POIs that belong to (at least) one of the categories from the provided list will be returned.
      *     The list of supported categories can be discovered using  [POI Categories
@@ -503,18 +526,18 @@ public final class SearchAsyncClient {
      *     <p>* **categorySet=7315** (Search Points of Interest from category Restaurant)
      *     <p>* **categorySet=7315025,7315017** (Search Points of Interest of category either Italian or French
      *     Restaurant).
-     * @param countrySet Comma separated string of country codes, e.g. FR,ES. This will limit the search to the
+     * @param countryFilter Comma separated string of country codes, e.g. FR,ES. This will limit the search to the
      *     specified countries.
      * @param lat Latitude where results should be biased. E.g. 37.337.
      * @param lon Longitude where results should be biased. E.g. -121.89.
-     * @param radius The radius in meters to for the results to be constrained to the defined area.
+     * @param radiusInMeters The radius in meters to for the results to be constrained to the defined area.
      * @param topLeft Top left position of the bounding box. E.g. 37.553,-122.453.
      * @param btmRight Bottom right position of the bounding box. E.g. 37.553,-122.453.
      * @param language Language in which search results should be returned. Should be one of supported IETF language
      *     tags, case insensitive. When data in specified language is not available for a specific field, default
      *     language is used.
-     *     <p>Please refer to [Supported
-     *     Languages](https://docs.microsoft.com/en-us/azure/azure-maps/supported-languages) for details.
+     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
+     *     details.
      * @param extendedPostalCodesFor Indexes for which extended postal codes should be included in the results.
      *     <p>Available indexes are:
      *     <p>**POI** = Points of Interest
@@ -525,17 +548,17 @@ public final class SearchAsyncClient {
      *     <p>extendedPostalCodesFor=None
      *     <p>Extended postal code is returned as an **extendedPostalCode** property of an address. Availability is
      *     region-dependent.
-     * @param brandSet A comma-separated list of brand names which could be used to restrict the result to specific
+     * @param brandFilter A comma-separated list of brand names which could be used to restrict the result to specific
      *     brands. Item order does not matter. When multiple brands are provided, only results that belong to (at least)
      *     one of the provided list will be returned. Brands that contain a "," in their name should be put into quotes.
      *     <p>Usage examples:
      *     <p>brandSet=Foo
      *     <p>brandSet=Foo,Bar
      *     <p>brandSet="A,B,C Comma",Bar.
-     * @param connectorSet A comma-separated list of connector types which could be used to restrict the result to
-     *     Electric Vehicle Station supporting specific connector types. Item order does not matter. When multiple
-     *     connector types are provided, only results that belong to (at least) one of the provided list will be
-     *     returned.
+     * @param electricVehicleConnectorFilter A comma-separated list of connector types which could be used to restrict
+     *     the result to Electric Vehicle Station supporting specific connector types. Item order does not matter. When
+     *     multiple connector types are provided, only results that belong to (at least) one of the provided list will
+     *     be returned.
      *     <p>Available connector types are: * `StandardHouseholdCountrySpecific` - These are the standard household
      *     connectors for a certain region. They are all AC single phase and the standard Voltage and standard Amperage.
      *     See also: [Plug &amp; socket types - World
@@ -563,63 +586,65 @@ public final class SearchAsyncClient {
      *     in Europe.
      *     <p>Usage examples:
      *     <p>connectorSet=IEC62196Type2CableAttached connectorSet=IEC62196Type2Outlet,IEC62196Type2CableAttached.
-     * @param view The View parameter specifies which set of geopolitically disputed content is returned via Azure Maps
-     *     services, including borders and labels displayed on the map. The View parameter (also referred to as “user
-     *     region parameter”) will show the correct maps for that country/region. By default, the View parameter is set
-     *     to “Unified” even if you haven’t defined it in the request. It is your responsibility to determine the
-     *     location of your users, and then set the View parameter correctly for that location. Alternatively, you have
-     *     the option to set ‘View=Auto’, which will return the map data based on the IP address of the request. The
-     *     View parameter in Azure Maps must be used in compliance with applicable laws, including those regarding
-     *     mapping, of the country where maps, images and other data and third party content that you are authorized to
-     *     access via Azure Maps is made available. Example: view=IN.
+     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
+     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
+     *     different views of such regions, and the View parameter allows your application to comply with the view
+     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
+     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
+     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
+     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
+     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
+     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
+     *     made available. Example: view=IN.
      *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
      *     available Views.
-     * @param openingHours Hours of operation for a POI (Points of Interest). The availability of hours of operation
-     *     will vary based on the data available. Supported value: nextSevenDays.
+     * @param operatingHours Hours of operation for a POI (Points of Interest). The availability of hours of operation
+     *     will vary based on the data available. If not passed, then no opening hours information will be returned.
+     *     Supported value: nextSevenDays.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<SearchCommonResponse>> getSearchPOIWithResponse(
-            TextFormat format,
+    public Mono<Response<SearchAddressResult>> searchPointOfInterestWithResponse(
+            ResponseFormat format,
             String query,
-            Boolean typeahead,
-            Integer limit,
-            Integer ofs,
-            List<Integer> categorySet,
-            List<String> countrySet,
-            Float lat,
-            Float lon,
-            Float radius,
+            Boolean isTypeAhead,
+            Integer top,
+            Integer skip,
+            List<Integer> categoryFilter,
+            List<String> countryFilter,
+            Double lat,
+            Double lon,
+            Integer radiusInMeters,
             String topLeft,
             String btmRight,
             String language,
-            String extendedPostalCodesFor,
-            List<String> brandSet,
-            List<ConnectorSet> connectorSet,
-            String view,
-            OpeningHours openingHours) {
-        return this.serviceClient.getSearchPOIWithResponseAsync(
+            List<PointOfInterestExtendedPostalCodes> extendedPostalCodesFor,
+            List<String> brandFilter,
+            List<ElectricVehicleConnector> electricVehicleConnectorFilter,
+            LocalizedMapView localizedMapView,
+            OperatingHoursRange operatingHours) {
+        return this.serviceClient.searchPointOfInterestWithResponseAsync(
                 format,
                 query,
-                typeahead,
-                limit,
-                ofs,
-                categorySet,
-                countrySet,
+                isTypeAhead,
+                top,
+                skip,
+                categoryFilter,
+                countryFilter,
                 lat,
                 lon,
-                radius,
+                radiusInMeters,
                 topLeft,
                 btmRight,
                 language,
                 extendedPostalCodesFor,
-                brandSet,
-                connectorSet,
-                view,
-                openingHours);
+                brandFilter,
+                electricVehicleConnectorFilter,
+                localizedMapView,
+                operatingHours);
     }
 
     /**
@@ -634,12 +659,12 @@ public final class SearchAsyncClient {
      *
      * @param format Desired format of the response. Value can be either _json_ or _xml_.
      * @param query The POI name to search for (e.g., "statue of liberty", "starbucks"), must be properly URL encoded.
-     * @param typeahead Boolean. If the typeahead flag is set, the query will be interpreted as a partial input and the
-     *     search will enter predictive mode.
-     * @param limit Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
-     * @param ofs Starting offset of the returned results within the full result set. Default: 0, minimum: 0 and
+     * @param isTypeAhead Boolean. If the typeahead flag is set, the query will be interpreted as a partial input and
+     *     the search will enter predictive mode.
+     * @param top Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
+     * @param skip Starting offset of the returned results within the full result set. Default: 0, minimum: 0 and
      *     maximum: 1900.
-     * @param categorySet A comma-separated list of category set IDs which could be used to restrict the result to
+     * @param categoryFilter A comma-separated list of category set IDs which could be used to restrict the result to
      *     specific Points of Interest categories. ID order does not matter. When multiple category identifiers are
      *     provided, only POIs that belong to (at least) one of the categories from the provided list will be returned.
      *     The list of supported categories can be discovered using  [POI Categories
@@ -647,18 +672,18 @@ public final class SearchAsyncClient {
      *     <p>* **categorySet=7315** (Search Points of Interest from category Restaurant)
      *     <p>* **categorySet=7315025,7315017** (Search Points of Interest of category either Italian or French
      *     Restaurant).
-     * @param countrySet Comma separated string of country codes, e.g. FR,ES. This will limit the search to the
+     * @param countryFilter Comma separated string of country codes, e.g. FR,ES. This will limit the search to the
      *     specified countries.
      * @param lat Latitude where results should be biased. E.g. 37.337.
      * @param lon Longitude where results should be biased. E.g. -121.89.
-     * @param radius The radius in meters to for the results to be constrained to the defined area.
+     * @param radiusInMeters The radius in meters to for the results to be constrained to the defined area.
      * @param topLeft Top left position of the bounding box. E.g. 37.553,-122.453.
      * @param btmRight Bottom right position of the bounding box. E.g. 37.553,-122.453.
      * @param language Language in which search results should be returned. Should be one of supported IETF language
      *     tags, case insensitive. When data in specified language is not available for a specific field, default
      *     language is used.
-     *     <p>Please refer to [Supported
-     *     Languages](https://docs.microsoft.com/en-us/azure/azure-maps/supported-languages) for details.
+     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
+     *     details.
      * @param extendedPostalCodesFor Indexes for which extended postal codes should be included in the results.
      *     <p>Available indexes are:
      *     <p>**POI** = Points of Interest
@@ -669,17 +694,17 @@ public final class SearchAsyncClient {
      *     <p>extendedPostalCodesFor=None
      *     <p>Extended postal code is returned as an **extendedPostalCode** property of an address. Availability is
      *     region-dependent.
-     * @param brandSet A comma-separated list of brand names which could be used to restrict the result to specific
+     * @param brandFilter A comma-separated list of brand names which could be used to restrict the result to specific
      *     brands. Item order does not matter. When multiple brands are provided, only results that belong to (at least)
      *     one of the provided list will be returned. Brands that contain a "," in their name should be put into quotes.
      *     <p>Usage examples:
      *     <p>brandSet=Foo
      *     <p>brandSet=Foo,Bar
      *     <p>brandSet="A,B,C Comma",Bar.
-     * @param connectorSet A comma-separated list of connector types which could be used to restrict the result to
-     *     Electric Vehicle Station supporting specific connector types. Item order does not matter. When multiple
-     *     connector types are provided, only results that belong to (at least) one of the provided list will be
-     *     returned.
+     * @param electricVehicleConnectorFilter A comma-separated list of connector types which could be used to restrict
+     *     the result to Electric Vehicle Station supporting specific connector types. Item order does not matter. When
+     *     multiple connector types are provided, only results that belong to (at least) one of the provided list will
+     *     be returned.
      *     <p>Available connector types are: * `StandardHouseholdCountrySpecific` - These are the standard household
      *     connectors for a certain region. They are all AC single phase and the standard Voltage and standard Amperage.
      *     See also: [Plug &amp; socket types - World
@@ -707,63 +732,65 @@ public final class SearchAsyncClient {
      *     in Europe.
      *     <p>Usage examples:
      *     <p>connectorSet=IEC62196Type2CableAttached connectorSet=IEC62196Type2Outlet,IEC62196Type2CableAttached.
-     * @param view The View parameter specifies which set of geopolitically disputed content is returned via Azure Maps
-     *     services, including borders and labels displayed on the map. The View parameter (also referred to as “user
-     *     region parameter”) will show the correct maps for that country/region. By default, the View parameter is set
-     *     to “Unified” even if you haven’t defined it in the request. It is your responsibility to determine the
-     *     location of your users, and then set the View parameter correctly for that location. Alternatively, you have
-     *     the option to set ‘View=Auto’, which will return the map data based on the IP address of the request. The
-     *     View parameter in Azure Maps must be used in compliance with applicable laws, including those regarding
-     *     mapping, of the country where maps, images and other data and third party content that you are authorized to
-     *     access via Azure Maps is made available. Example: view=IN.
+     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
+     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
+     *     different views of such regions, and the View parameter allows your application to comply with the view
+     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
+     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
+     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
+     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
+     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
+     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
+     *     made available. Example: view=IN.
      *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
      *     available Views.
-     * @param openingHours Hours of operation for a POI (Points of Interest). The availability of hours of operation
-     *     will vary based on the data available. Supported value: nextSevenDays.
+     * @param operatingHours Hours of operation for a POI (Points of Interest). The availability of hours of operation
+     *     will vary based on the data available. If not passed, then no opening hours information will be returned.
+     *     Supported value: nextSevenDays.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchCommonResponse> getSearchPOI(
-            TextFormat format,
+    public Mono<SearchAddressResult> searchPointOfInterest(
+            ResponseFormat format,
             String query,
-            Boolean typeahead,
-            Integer limit,
-            Integer ofs,
-            List<Integer> categorySet,
-            List<String> countrySet,
-            Float lat,
-            Float lon,
-            Float radius,
+            Boolean isTypeAhead,
+            Integer top,
+            Integer skip,
+            List<Integer> categoryFilter,
+            List<String> countryFilter,
+            Double lat,
+            Double lon,
+            Integer radiusInMeters,
             String topLeft,
             String btmRight,
             String language,
-            String extendedPostalCodesFor,
-            List<String> brandSet,
-            List<ConnectorSet> connectorSet,
-            String view,
-            OpeningHours openingHours) {
-        return this.serviceClient.getSearchPOIAsync(
+            List<PointOfInterestExtendedPostalCodes> extendedPostalCodesFor,
+            List<String> brandFilter,
+            List<ElectricVehicleConnector> electricVehicleConnectorFilter,
+            LocalizedMapView localizedMapView,
+            OperatingHoursRange operatingHours) {
+        return this.serviceClient.searchPointOfInterestAsync(
                 format,
                 query,
-                typeahead,
-                limit,
-                ofs,
-                categorySet,
-                countrySet,
+                isTypeAhead,
+                top,
+                skip,
+                categoryFilter,
+                countryFilter,
                 lat,
                 lon,
-                radius,
+                radiusInMeters,
                 topLeft,
                 btmRight,
                 language,
                 extendedPostalCodesFor,
-                brandSet,
-                connectorSet,
-                view,
-                openingHours);
+                brandFilter,
+                electricVehicleConnectorFilter,
+                localizedMapView,
+                operatingHours);
     }
 
     /**
@@ -778,10 +805,10 @@ public final class SearchAsyncClient {
      * @param format Desired format of the response. Value can be either _json_ or _xml_.
      * @param lat Latitude where results should be biased. E.g. 37.337.
      * @param lon Longitude where results should be biased. E.g. -121.89.
-     * @param limit Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
-     * @param ofs Starting offset of the returned results within the full result set. Default: 0, minimum: 0 and
+     * @param top Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
+     * @param skip Starting offset of the returned results within the full result set. Default: 0, minimum: 0 and
      *     maximum: 1900.
-     * @param categorySet A comma-separated list of category set IDs which could be used to restrict the result to
+     * @param categoryFilter A comma-separated list of category set IDs which could be used to restrict the result to
      *     specific Points of Interest categories. ID order does not matter. When multiple category identifiers are
      *     provided, only POIs that belong to (at least) one of the categories from the provided list will be returned.
      *     The list of supported categories can be discovered using  [POI Categories
@@ -789,15 +816,15 @@ public final class SearchAsyncClient {
      *     <p>* **categorySet=7315** (Search Points of Interest from category Restaurant)
      *     <p>* **categorySet=7315025,7315017** (Search Points of Interest of category either Italian or French
      *     Restaurant).
-     * @param countrySet Comma separated string of country codes, e.g. FR,ES. This will limit the search to the
+     * @param countryFilter Comma separated string of country codes, e.g. FR,ES. This will limit the search to the
      *     specified countries.
-     * @param radius The radius in meters to for the results to be constrained to the defined area, Min value is 1, Max
-     *     Value is 50000.
+     * @param radiusInMeters The radius in meters to for the results to be constrained to the defined area, Min value is
+     *     1, Max Value is 50000.
      * @param language Language in which search results should be returned. Should be one of supported IETF language
      *     tags, case insensitive. When data in specified language is not available for a specific field, default
      *     language is used.
-     *     <p>Please refer to [Supported
-     *     Languages](https://docs.microsoft.com/en-us/azure/azure-maps/supported-languages) for details.
+     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
+     *     details.
      * @param extendedPostalCodesFor Indexes for which extended postal codes should be included in the results.
      *     <p>Available indexes are:
      *     <p>**Addr** = Address ranges
@@ -815,17 +842,17 @@ public final class SearchAsyncClient {
      *     <p>extendedPostalCodesFor=None
      *     <p>Extended postal code is returned as an **extendedPostalCode** property of an address. Availability is
      *     region-dependent.
-     * @param brandSet A comma-separated list of brand names which could be used to restrict the result to specific
+     * @param brandFilter A comma-separated list of brand names which could be used to restrict the result to specific
      *     brands. Item order does not matter. When multiple brands are provided, only results that belong to (at least)
      *     one of the provided list will be returned. Brands that contain a "," in their name should be put into quotes.
      *     <p>Usage examples:
      *     <p>brandSet=Foo
      *     <p>brandSet=Foo,Bar
      *     <p>brandSet="A,B,C Comma",Bar.
-     * @param connectorSet A comma-separated list of connector types which could be used to restrict the result to
-     *     Electric Vehicle Station supporting specific connector types. Item order does not matter. When multiple
-     *     connector types are provided, only results that belong to (at least) one of the provided list will be
-     *     returned.
+     * @param electricVehicleConnectorFilter A comma-separated list of connector types which could be used to restrict
+     *     the result to Electric Vehicle Station supporting specific connector types. Item order does not matter. When
+     *     multiple connector types are provided, only results that belong to (at least) one of the provided list will
+     *     be returned.
      *     <p>Available connector types are: * `StandardHouseholdCountrySpecific` - These are the standard household
      *     connectors for a certain region. They are all AC single phase and the standard Voltage and standard Amperage.
      *     See also: [Plug &amp; socket types - World
@@ -853,15 +880,16 @@ public final class SearchAsyncClient {
      *     in Europe.
      *     <p>Usage examples:
      *     <p>connectorSet=IEC62196Type2CableAttached connectorSet=IEC62196Type2Outlet,IEC62196Type2CableAttached.
-     * @param view The View parameter specifies which set of geopolitically disputed content is returned via Azure Maps
-     *     services, including borders and labels displayed on the map. The View parameter (also referred to as “user
-     *     region parameter”) will show the correct maps for that country/region. By default, the View parameter is set
-     *     to “Unified” even if you haven’t defined it in the request. It is your responsibility to determine the
-     *     location of your users, and then set the View parameter correctly for that location. Alternatively, you have
-     *     the option to set ‘View=Auto’, which will return the map data based on the IP address of the request. The
-     *     View parameter in Azure Maps must be used in compliance with applicable laws, including those regarding
-     *     mapping, of the country where maps, images and other data and third party content that you are authorized to
-     *     access via Azure Maps is made available. Example: view=IN.
+     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
+     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
+     *     different views of such regions, and the View parameter allows your application to comply with the view
+     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
+     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
+     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
+     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
+     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
+     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
+     *     made available. Example: view=IN.
      *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
      *     available Views.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -870,34 +898,34 @@ public final class SearchAsyncClient {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<SearchCommonResponse>> getSearchNearbyWithResponse(
-            TextFormat format,
-            float lat,
-            float lon,
-            Integer limit,
-            Integer ofs,
-            List<Integer> categorySet,
-            List<String> countrySet,
-            Float radius,
+    public Mono<Response<SearchAddressResult>> searchNearbyPointOfInterestWithResponse(
+            ResponseFormat format,
+            double lat,
+            double lon,
+            Integer top,
+            Integer skip,
+            List<Integer> categoryFilter,
+            List<String> countryFilter,
+            Integer radiusInMeters,
             String language,
-            String extendedPostalCodesFor,
-            List<String> brandSet,
-            List<ConnectorSet> connectorSet,
-            String view) {
-        return this.serviceClient.getSearchNearbyWithResponseAsync(
+            List<SearchIndexes> extendedPostalCodesFor,
+            List<String> brandFilter,
+            List<ElectricVehicleConnector> electricVehicleConnectorFilter,
+            LocalizedMapView localizedMapView) {
+        return this.serviceClient.searchNearbyPointOfInterestWithResponseAsync(
                 format,
                 lat,
                 lon,
-                limit,
-                ofs,
-                categorySet,
-                countrySet,
-                radius,
+                top,
+                skip,
+                categoryFilter,
+                countryFilter,
+                radiusInMeters,
                 language,
                 extendedPostalCodesFor,
-                brandSet,
-                connectorSet,
-                view);
+                brandFilter,
+                electricVehicleConnectorFilter,
+                localizedMapView);
     }
 
     /**
@@ -912,10 +940,10 @@ public final class SearchAsyncClient {
      * @param format Desired format of the response. Value can be either _json_ or _xml_.
      * @param lat Latitude where results should be biased. E.g. 37.337.
      * @param lon Longitude where results should be biased. E.g. -121.89.
-     * @param limit Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
-     * @param ofs Starting offset of the returned results within the full result set. Default: 0, minimum: 0 and
+     * @param top Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
+     * @param skip Starting offset of the returned results within the full result set. Default: 0, minimum: 0 and
      *     maximum: 1900.
-     * @param categorySet A comma-separated list of category set IDs which could be used to restrict the result to
+     * @param categoryFilter A comma-separated list of category set IDs which could be used to restrict the result to
      *     specific Points of Interest categories. ID order does not matter. When multiple category identifiers are
      *     provided, only POIs that belong to (at least) one of the categories from the provided list will be returned.
      *     The list of supported categories can be discovered using  [POI Categories
@@ -923,15 +951,15 @@ public final class SearchAsyncClient {
      *     <p>* **categorySet=7315** (Search Points of Interest from category Restaurant)
      *     <p>* **categorySet=7315025,7315017** (Search Points of Interest of category either Italian or French
      *     Restaurant).
-     * @param countrySet Comma separated string of country codes, e.g. FR,ES. This will limit the search to the
+     * @param countryFilter Comma separated string of country codes, e.g. FR,ES. This will limit the search to the
      *     specified countries.
-     * @param radius The radius in meters to for the results to be constrained to the defined area, Min value is 1, Max
-     *     Value is 50000.
+     * @param radiusInMeters The radius in meters to for the results to be constrained to the defined area, Min value is
+     *     1, Max Value is 50000.
      * @param language Language in which search results should be returned. Should be one of supported IETF language
      *     tags, case insensitive. When data in specified language is not available for a specific field, default
      *     language is used.
-     *     <p>Please refer to [Supported
-     *     Languages](https://docs.microsoft.com/en-us/azure/azure-maps/supported-languages) for details.
+     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
+     *     details.
      * @param extendedPostalCodesFor Indexes for which extended postal codes should be included in the results.
      *     <p>Available indexes are:
      *     <p>**Addr** = Address ranges
@@ -949,17 +977,17 @@ public final class SearchAsyncClient {
      *     <p>extendedPostalCodesFor=None
      *     <p>Extended postal code is returned as an **extendedPostalCode** property of an address. Availability is
      *     region-dependent.
-     * @param brandSet A comma-separated list of brand names which could be used to restrict the result to specific
+     * @param brandFilter A comma-separated list of brand names which could be used to restrict the result to specific
      *     brands. Item order does not matter. When multiple brands are provided, only results that belong to (at least)
      *     one of the provided list will be returned. Brands that contain a "," in their name should be put into quotes.
      *     <p>Usage examples:
      *     <p>brandSet=Foo
      *     <p>brandSet=Foo,Bar
      *     <p>brandSet="A,B,C Comma",Bar.
-     * @param connectorSet A comma-separated list of connector types which could be used to restrict the result to
-     *     Electric Vehicle Station supporting specific connector types. Item order does not matter. When multiple
-     *     connector types are provided, only results that belong to (at least) one of the provided list will be
-     *     returned.
+     * @param electricVehicleConnectorFilter A comma-separated list of connector types which could be used to restrict
+     *     the result to Electric Vehicle Station supporting specific connector types. Item order does not matter. When
+     *     multiple connector types are provided, only results that belong to (at least) one of the provided list will
+     *     be returned.
      *     <p>Available connector types are: * `StandardHouseholdCountrySpecific` - These are the standard household
      *     connectors for a certain region. They are all AC single phase and the standard Voltage and standard Amperage.
      *     See also: [Plug &amp; socket types - World
@@ -987,15 +1015,16 @@ public final class SearchAsyncClient {
      *     in Europe.
      *     <p>Usage examples:
      *     <p>connectorSet=IEC62196Type2CableAttached connectorSet=IEC62196Type2Outlet,IEC62196Type2CableAttached.
-     * @param view The View parameter specifies which set of geopolitically disputed content is returned via Azure Maps
-     *     services, including borders and labels displayed on the map. The View parameter (also referred to as “user
-     *     region parameter”) will show the correct maps for that country/region. By default, the View parameter is set
-     *     to “Unified” even if you haven’t defined it in the request. It is your responsibility to determine the
-     *     location of your users, and then set the View parameter correctly for that location. Alternatively, you have
-     *     the option to set ‘View=Auto’, which will return the map data based on the IP address of the request. The
-     *     View parameter in Azure Maps must be used in compliance with applicable laws, including those regarding
-     *     mapping, of the country where maps, images and other data and third party content that you are authorized to
-     *     access via Azure Maps is made available. Example: view=IN.
+     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
+     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
+     *     different views of such regions, and the View parameter allows your application to comply with the view
+     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
+     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
+     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
+     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
+     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
+     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
+     *     made available. Example: view=IN.
      *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
      *     available Views.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1004,34 +1033,34 @@ public final class SearchAsyncClient {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchCommonResponse> getSearchNearby(
-            TextFormat format,
-            float lat,
-            float lon,
-            Integer limit,
-            Integer ofs,
-            List<Integer> categorySet,
-            List<String> countrySet,
-            Float radius,
+    public Mono<SearchAddressResult> searchNearbyPointOfInterest(
+            ResponseFormat format,
+            double lat,
+            double lon,
+            Integer top,
+            Integer skip,
+            List<Integer> categoryFilter,
+            List<String> countryFilter,
+            Integer radiusInMeters,
             String language,
-            String extendedPostalCodesFor,
-            List<String> brandSet,
-            List<ConnectorSet> connectorSet,
-            String view) {
-        return this.serviceClient.getSearchNearbyAsync(
+            List<SearchIndexes> extendedPostalCodesFor,
+            List<String> brandFilter,
+            List<ElectricVehicleConnector> electricVehicleConnectorFilter,
+            LocalizedMapView localizedMapView) {
+        return this.serviceClient.searchNearbyPointOfInterestAsync(
                 format,
                 lat,
                 lon,
-                limit,
-                ofs,
-                categorySet,
-                countrySet,
-                radius,
+                top,
+                skip,
+                categoryFilter,
+                countryFilter,
+                radiusInMeters,
                 language,
                 extendedPostalCodesFor,
-                brandSet,
-                connectorSet,
-                view);
+                brandFilter,
+                electricVehicleConnectorFilter,
+                localizedMapView);
     }
 
     /**
@@ -1049,12 +1078,12 @@ public final class SearchAsyncClient {
      *     API](https://aka.ms/AzureMapsPOICategoryTree). List of available categories can also be found
      *     [here](https://docs.microsoft.com/azure/azure-maps/supported-search-categories). We recommend to use POI
      *     Search Category Tree API to request the supported categories.
-     * @param typeahead Boolean. If the typeahead flag is set, the query will be interpreted as a partial input and the
-     *     search will enter predictive mode.
-     * @param limit Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
-     * @param ofs Starting offset of the returned results within the full result set. Default: 0, minimum: 0 and
+     * @param isTypeAhead Boolean. If the typeahead flag is set, the query will be interpreted as a partial input and
+     *     the search will enter predictive mode.
+     * @param top Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
+     * @param skip Starting offset of the returned results within the full result set. Default: 0, minimum: 0 and
      *     maximum: 1900.
-     * @param categorySet A comma-separated list of category set IDs which could be used to restrict the result to
+     * @param categoryFilter A comma-separated list of category set IDs which could be used to restrict the result to
      *     specific Points of Interest categories. ID order does not matter. When multiple category identifiers are
      *     provided, only POIs that belong to (at least) one of the categories from the provided list will be returned.
      *     The list of supported categories can be discovered using  [POI Categories
@@ -1062,18 +1091,18 @@ public final class SearchAsyncClient {
      *     <p>* **categorySet=7315** (Search Points of Interest from category Restaurant)
      *     <p>* **categorySet=7315025,7315017** (Search Points of Interest of category either Italian or French
      *     Restaurant).
-     * @param countrySet Comma separated string of country codes, e.g. FR,ES. This will limit the search to the
+     * @param countryFilter Comma separated string of country codes, e.g. FR,ES. This will limit the search to the
      *     specified countries.
      * @param lat Latitude where results should be biased. E.g. 37.337.
      * @param lon Longitude where results should be biased. E.g. -121.89.
-     * @param radius The radius in meters to for the results to be constrained to the defined area.
+     * @param radiusInMeters The radius in meters to for the results to be constrained to the defined area.
      * @param topLeft Top left position of the bounding box. E.g. 37.553,-122.453.
      * @param btmRight Bottom right position of the bounding box. E.g. 37.553,-122.453.
      * @param language Language in which search results should be returned. Should be one of supported IETF language
      *     tags, case insensitive. When data in specified language is not available for a specific field, default
      *     language is used.
-     *     <p>Please refer to [Supported
-     *     Languages](https://docs.microsoft.com/en-us/azure/azure-maps/supported-languages) for details.
+     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
+     *     details.
      * @param extendedPostalCodesFor Indexes for which extended postal codes should be included in the results.
      *     <p>Available indexes are:
      *     <p>**Addr** = Address ranges
@@ -1091,17 +1120,17 @@ public final class SearchAsyncClient {
      *     <p>extendedPostalCodesFor=None
      *     <p>Extended postal code is returned as an **extendedPostalCode** property of an address. Availability is
      *     region-dependent.
-     * @param brandSet A comma-separated list of brand names which could be used to restrict the result to specific
+     * @param brandFilter A comma-separated list of brand names which could be used to restrict the result to specific
      *     brands. Item order does not matter. When multiple brands are provided, only results that belong to (at least)
      *     one of the provided list will be returned. Brands that contain a "," in their name should be put into quotes.
      *     <p>Usage examples:
      *     <p>brandSet=Foo
      *     <p>brandSet=Foo,Bar
      *     <p>brandSet="A,B,C Comma",Bar.
-     * @param connectorSet A comma-separated list of connector types which could be used to restrict the result to
-     *     Electric Vehicle Station supporting specific connector types. Item order does not matter. When multiple
-     *     connector types are provided, only results that belong to (at least) one of the provided list will be
-     *     returned.
+     * @param electricVehicleConnectorFilter A comma-separated list of connector types which could be used to restrict
+     *     the result to Electric Vehicle Station supporting specific connector types. Item order does not matter. When
+     *     multiple connector types are provided, only results that belong to (at least) one of the provided list will
+     *     be returned.
      *     <p>Available connector types are: * `StandardHouseholdCountrySpecific` - These are the standard household
      *     connectors for a certain region. They are all AC single phase and the standard Voltage and standard Amperage.
      *     See also: [Plug &amp; socket types - World
@@ -1129,63 +1158,65 @@ public final class SearchAsyncClient {
      *     in Europe.
      *     <p>Usage examples:
      *     <p>connectorSet=IEC62196Type2CableAttached connectorSet=IEC62196Type2Outlet,IEC62196Type2CableAttached.
-     * @param view The View parameter specifies which set of geopolitically disputed content is returned via Azure Maps
-     *     services, including borders and labels displayed on the map. The View parameter (also referred to as “user
-     *     region parameter”) will show the correct maps for that country/region. By default, the View parameter is set
-     *     to “Unified” even if you haven’t defined it in the request. It is your responsibility to determine the
-     *     location of your users, and then set the View parameter correctly for that location. Alternatively, you have
-     *     the option to set ‘View=Auto’, which will return the map data based on the IP address of the request. The
-     *     View parameter in Azure Maps must be used in compliance with applicable laws, including those regarding
-     *     mapping, of the country where maps, images and other data and third party content that you are authorized to
-     *     access via Azure Maps is made available. Example: view=IN.
+     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
+     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
+     *     different views of such regions, and the View parameter allows your application to comply with the view
+     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
+     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
+     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
+     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
+     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
+     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
+     *     made available. Example: view=IN.
      *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
      *     available Views.
-     * @param openingHours Hours of operation for a POI (Points of Interest). The availability of hours of operation
-     *     will vary based on the data available. Supported value: nextSevenDays.
+     * @param operatingHours Hours of operation for a POI (Points of Interest). The availability of hours of operation
+     *     will vary based on the data available. If not passed, then no opening hours information will be returned.
+     *     Supported value: nextSevenDays.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<SearchCommonResponse>> getSearchPOICategoryWithResponse(
-            TextFormat format,
+    public Mono<Response<SearchAddressResult>> searchPointOfInterestCategoryWithResponse(
+            ResponseFormat format,
             String query,
-            Boolean typeahead,
-            Integer limit,
-            Integer ofs,
-            List<Integer> categorySet,
-            List<String> countrySet,
-            Float lat,
-            Float lon,
-            Float radius,
+            Boolean isTypeAhead,
+            Integer top,
+            Integer skip,
+            List<Integer> categoryFilter,
+            List<String> countryFilter,
+            Double lat,
+            Double lon,
+            Integer radiusInMeters,
             String topLeft,
             String btmRight,
             String language,
-            String extendedPostalCodesFor,
-            List<String> brandSet,
-            List<ConnectorSet> connectorSet,
-            String view,
-            OpeningHours openingHours) {
-        return this.serviceClient.getSearchPOICategoryWithResponseAsync(
+            List<SearchIndexes> extendedPostalCodesFor,
+            List<String> brandFilter,
+            List<ElectricVehicleConnector> electricVehicleConnectorFilter,
+            LocalizedMapView localizedMapView,
+            OperatingHoursRange operatingHours) {
+        return this.serviceClient.searchPointOfInterestCategoryWithResponseAsync(
                 format,
                 query,
-                typeahead,
-                limit,
-                ofs,
-                categorySet,
-                countrySet,
+                isTypeAhead,
+                top,
+                skip,
+                categoryFilter,
+                countryFilter,
                 lat,
                 lon,
-                radius,
+                radiusInMeters,
                 topLeft,
                 btmRight,
                 language,
                 extendedPostalCodesFor,
-                brandSet,
-                connectorSet,
-                view,
-                openingHours);
+                brandFilter,
+                electricVehicleConnectorFilter,
+                localizedMapView,
+                operatingHours);
     }
 
     /**
@@ -1203,12 +1234,12 @@ public final class SearchAsyncClient {
      *     API](https://aka.ms/AzureMapsPOICategoryTree). List of available categories can also be found
      *     [here](https://docs.microsoft.com/azure/azure-maps/supported-search-categories). We recommend to use POI
      *     Search Category Tree API to request the supported categories.
-     * @param typeahead Boolean. If the typeahead flag is set, the query will be interpreted as a partial input and the
-     *     search will enter predictive mode.
-     * @param limit Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
-     * @param ofs Starting offset of the returned results within the full result set. Default: 0, minimum: 0 and
+     * @param isTypeAhead Boolean. If the typeahead flag is set, the query will be interpreted as a partial input and
+     *     the search will enter predictive mode.
+     * @param top Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
+     * @param skip Starting offset of the returned results within the full result set. Default: 0, minimum: 0 and
      *     maximum: 1900.
-     * @param categorySet A comma-separated list of category set IDs which could be used to restrict the result to
+     * @param categoryFilter A comma-separated list of category set IDs which could be used to restrict the result to
      *     specific Points of Interest categories. ID order does not matter. When multiple category identifiers are
      *     provided, only POIs that belong to (at least) one of the categories from the provided list will be returned.
      *     The list of supported categories can be discovered using  [POI Categories
@@ -1216,18 +1247,18 @@ public final class SearchAsyncClient {
      *     <p>* **categorySet=7315** (Search Points of Interest from category Restaurant)
      *     <p>* **categorySet=7315025,7315017** (Search Points of Interest of category either Italian or French
      *     Restaurant).
-     * @param countrySet Comma separated string of country codes, e.g. FR,ES. This will limit the search to the
+     * @param countryFilter Comma separated string of country codes, e.g. FR,ES. This will limit the search to the
      *     specified countries.
      * @param lat Latitude where results should be biased. E.g. 37.337.
      * @param lon Longitude where results should be biased. E.g. -121.89.
-     * @param radius The radius in meters to for the results to be constrained to the defined area.
+     * @param radiusInMeters The radius in meters to for the results to be constrained to the defined area.
      * @param topLeft Top left position of the bounding box. E.g. 37.553,-122.453.
      * @param btmRight Bottom right position of the bounding box. E.g. 37.553,-122.453.
      * @param language Language in which search results should be returned. Should be one of supported IETF language
      *     tags, case insensitive. When data in specified language is not available for a specific field, default
      *     language is used.
-     *     <p>Please refer to [Supported
-     *     Languages](https://docs.microsoft.com/en-us/azure/azure-maps/supported-languages) for details.
+     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
+     *     details.
      * @param extendedPostalCodesFor Indexes for which extended postal codes should be included in the results.
      *     <p>Available indexes are:
      *     <p>**Addr** = Address ranges
@@ -1245,17 +1276,17 @@ public final class SearchAsyncClient {
      *     <p>extendedPostalCodesFor=None
      *     <p>Extended postal code is returned as an **extendedPostalCode** property of an address. Availability is
      *     region-dependent.
-     * @param brandSet A comma-separated list of brand names which could be used to restrict the result to specific
+     * @param brandFilter A comma-separated list of brand names which could be used to restrict the result to specific
      *     brands. Item order does not matter. When multiple brands are provided, only results that belong to (at least)
      *     one of the provided list will be returned. Brands that contain a "," in their name should be put into quotes.
      *     <p>Usage examples:
      *     <p>brandSet=Foo
      *     <p>brandSet=Foo,Bar
      *     <p>brandSet="A,B,C Comma",Bar.
-     * @param connectorSet A comma-separated list of connector types which could be used to restrict the result to
-     *     Electric Vehicle Station supporting specific connector types. Item order does not matter. When multiple
-     *     connector types are provided, only results that belong to (at least) one of the provided list will be
-     *     returned.
+     * @param electricVehicleConnectorFilter A comma-separated list of connector types which could be used to restrict
+     *     the result to Electric Vehicle Station supporting specific connector types. Item order does not matter. When
+     *     multiple connector types are provided, only results that belong to (at least) one of the provided list will
+     *     be returned.
      *     <p>Available connector types are: * `StandardHouseholdCountrySpecific` - These are the standard household
      *     connectors for a certain region. They are all AC single phase and the standard Voltage and standard Amperage.
      *     See also: [Plug &amp; socket types - World
@@ -1283,63 +1314,65 @@ public final class SearchAsyncClient {
      *     in Europe.
      *     <p>Usage examples:
      *     <p>connectorSet=IEC62196Type2CableAttached connectorSet=IEC62196Type2Outlet,IEC62196Type2CableAttached.
-     * @param view The View parameter specifies which set of geopolitically disputed content is returned via Azure Maps
-     *     services, including borders and labels displayed on the map. The View parameter (also referred to as “user
-     *     region parameter”) will show the correct maps for that country/region. By default, the View parameter is set
-     *     to “Unified” even if you haven’t defined it in the request. It is your responsibility to determine the
-     *     location of your users, and then set the View parameter correctly for that location. Alternatively, you have
-     *     the option to set ‘View=Auto’, which will return the map data based on the IP address of the request. The
-     *     View parameter in Azure Maps must be used in compliance with applicable laws, including those regarding
-     *     mapping, of the country where maps, images and other data and third party content that you are authorized to
-     *     access via Azure Maps is made available. Example: view=IN.
+     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
+     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
+     *     different views of such regions, and the View parameter allows your application to comply with the view
+     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
+     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
+     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
+     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
+     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
+     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
+     *     made available. Example: view=IN.
      *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
      *     available Views.
-     * @param openingHours Hours of operation for a POI (Points of Interest). The availability of hours of operation
-     *     will vary based on the data available. Supported value: nextSevenDays.
+     * @param operatingHours Hours of operation for a POI (Points of Interest). The availability of hours of operation
+     *     will vary based on the data available. If not passed, then no opening hours information will be returned.
+     *     Supported value: nextSevenDays.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchCommonResponse> getSearchPOICategory(
-            TextFormat format,
+    public Mono<SearchAddressResult> searchPointOfInterestCategory(
+            ResponseFormat format,
             String query,
-            Boolean typeahead,
-            Integer limit,
-            Integer ofs,
-            List<Integer> categorySet,
-            List<String> countrySet,
-            Float lat,
-            Float lon,
-            Float radius,
+            Boolean isTypeAhead,
+            Integer top,
+            Integer skip,
+            List<Integer> categoryFilter,
+            List<String> countryFilter,
+            Double lat,
+            Double lon,
+            Integer radiusInMeters,
             String topLeft,
             String btmRight,
             String language,
-            String extendedPostalCodesFor,
-            List<String> brandSet,
-            List<ConnectorSet> connectorSet,
-            String view,
-            OpeningHours openingHours) {
-        return this.serviceClient.getSearchPOICategoryAsync(
+            List<SearchIndexes> extendedPostalCodesFor,
+            List<String> brandFilter,
+            List<ElectricVehicleConnector> electricVehicleConnectorFilter,
+            LocalizedMapView localizedMapView,
+            OperatingHoursRange operatingHours) {
+        return this.serviceClient.searchPointOfInterestCategoryAsync(
                 format,
                 query,
-                typeahead,
-                limit,
-                ofs,
-                categorySet,
-                countrySet,
+                isTypeAhead,
+                top,
+                skip,
+                categoryFilter,
+                countryFilter,
                 lat,
                 lon,
-                radius,
+                radiusInMeters,
                 topLeft,
                 btmRight,
                 language,
                 extendedPostalCodesFor,
-                brandSet,
-                connectorSet,
-                view,
-                openingHours);
+                brandFilter,
+                electricVehicleConnectorFilter,
+                localizedMapView,
+                operatingHours);
     }
 
     /**
@@ -1364,9 +1397,9 @@ public final class SearchAsyncClient {
      * @return this object is returned from a successful POI Category Tree call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<SearchPoiCategoryTreeResponse>> getSearchPOICategoryTreePreviewWithResponse(
-            ResponseFormat format, String language) {
-        return this.serviceClient.getSearchPOICategoryTreePreviewWithResponseAsync(format, language);
+    public Mono<Response<PointOfInterestCategoryTreeResult>> getPointOfInterestCategoryTreeWithResponse(
+            JsonFormat format, String language) {
+        return this.serviceClient.getPointOfInterestCategoryTreeWithResponseAsync(format, language);
     }
 
     /**
@@ -1391,8 +1424,8 @@ public final class SearchAsyncClient {
      * @return this object is returned from a successful POI Category Tree call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchPoiCategoryTreeResponse> getSearchPOICategoryTreePreview(ResponseFormat format, String language) {
-        return this.serviceClient.getSearchPOICategoryTreePreviewAsync(format, language);
+    public Mono<PointOfInterestCategoryTreeResult> getPointOfInterestCategoryTree(JsonFormat format, String language) {
+        return this.serviceClient.getPointOfInterestCategoryTreeAsync(format, language);
     }
 
     /**
@@ -1409,23 +1442,23 @@ public final class SearchAsyncClient {
      *
      * @param format Desired format of the response. Value can be either _json_ or _xml_.
      * @param query The address to search for (e.g., "1 Microsoft way, Redmond, WA"), must be properly URL encoded.
-     * @param typeahead Boolean. If the typeahead flag is set, the query will be interpreted as a partial input and the
-     *     search will enter predictive mode.
-     * @param limit Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
-     * @param ofs Starting offset of the returned results within the full result set. Default: 0, minimum: 0 and
+     * @param isTypeAhead Boolean. If the typeahead flag is set, the query will be interpreted as a partial input and
+     *     the search will enter predictive mode.
+     * @param top Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
+     * @param skip Starting offset of the returned results within the full result set. Default: 0, minimum: 0 and
      *     maximum: 1900.
-     * @param countrySet Comma separated string of country codes, e.g. FR,ES. This will limit the search to the
+     * @param countryFilter Comma separated string of country codes, e.g. FR,ES. This will limit the search to the
      *     specified countries.
      * @param lat Latitude where results should be biased. E.g. 37.337.
      * @param lon Longitude where results should be biased. E.g. -121.89.
-     * @param radius The radius in meters to for the results to be constrained to the defined area.
+     * @param radiusInMeters The radius in meters to for the results to be constrained to the defined area.
      * @param topLeft Top left position of the bounding box. E.g. 37.553,-122.453.
      * @param btmRight Bottom right position of the bounding box. E.g. 37.553,-122.453.
      * @param language Language in which search results should be returned. Should be one of supported IETF language
      *     tags, case insensitive. When data in specified language is not available for a specific field, default
      *     language is used.
-     *     <p>Please refer to [Supported
-     *     Languages](https://docs.microsoft.com/en-us/azure/azure-maps/supported-languages) for details.
+     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
+     *     details.
      * @param extendedPostalCodesFor Indexes for which extended postal codes should be included in the results.
      *     <p>Available indexes are:
      *     <p>**Addr** = Address ranges
@@ -1443,15 +1476,23 @@ public final class SearchAsyncClient {
      *     <p>extendedPostalCodesFor=None
      *     <p>Extended postal code is returned as an **extendedPostalCode** property of an address. Availability is
      *     region-dependent.
-     * @param view The View parameter specifies which set of geopolitically disputed content is returned via Azure Maps
-     *     services, including borders and labels displayed on the map. The View parameter (also referred to as “user
-     *     region parameter”) will show the correct maps for that country/region. By default, the View parameter is set
-     *     to “Unified” even if you haven’t defined it in the request. It is your responsibility to determine the
-     *     location of your users, and then set the View parameter correctly for that location. Alternatively, you have
-     *     the option to set ‘View=Auto’, which will return the map data based on the IP address of the request. The
-     *     View parameter in Azure Maps must be used in compliance with applicable laws, including those regarding
-     *     mapping, of the country where maps, images and other data and third party content that you are authorized to
-     *     access via Azure Maps is made available. Example: view=IN.
+     * @param entityType Specifies the level of filtering performed on geographies. Narrows the search for specified
+     *     geography entity types, e.g. return only municipality. The resulting response will contain the geography ID
+     *     as well as the entity type matched. If you provide more than one entity as a comma separated list, endpoint
+     *     will return the 'smallest entity available'. Returned Geometry ID can be used to get the geometry of that
+     *     geography via [Get Search Polygon](https://docs.microsoft.com/rest/api/maps/search/getsearchpolygon) API. The
+     *     following parameters are ignored when entityType is set:
+     *     <p>* heading * number * returnRoadUse * returnSpeedLimit * roadUse * returnMatchType.
+     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
+     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
+     *     different views of such regions, and the View parameter allows your application to comply with the view
+     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
+     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
+     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
+     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
+     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
+     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
+     *     made available. Example: view=IN.
      *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
      *     available Views.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1460,36 +1501,38 @@ public final class SearchAsyncClient {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<SearchCommonResponse>> getSearchAddressWithResponse(
-            TextFormat format,
+    public Mono<Response<SearchAddressResult>> searchAddressWithResponse(
+            ResponseFormat format,
             String query,
-            Boolean typeahead,
-            Integer limit,
-            Integer ofs,
-            List<String> countrySet,
-            Float lat,
-            Float lon,
-            Float radius,
+            Boolean isTypeAhead,
+            Integer top,
+            Integer skip,
+            List<String> countryFilter,
+            Double lat,
+            Double lon,
+            Integer radiusInMeters,
             String topLeft,
             String btmRight,
             String language,
-            String extendedPostalCodesFor,
-            String view) {
-        return this.serviceClient.getSearchAddressWithResponseAsync(
+            List<SearchIndexes> extendedPostalCodesFor,
+            GeographicEntityType entityType,
+            LocalizedMapView localizedMapView) {
+        return this.serviceClient.searchAddressWithResponseAsync(
                 format,
                 query,
-                typeahead,
-                limit,
-                ofs,
-                countrySet,
+                isTypeAhead,
+                top,
+                skip,
+                countryFilter,
                 lat,
                 lon,
-                radius,
+                radiusInMeters,
                 topLeft,
                 btmRight,
                 language,
                 extendedPostalCodesFor,
-                view);
+                entityType,
+                localizedMapView);
     }
 
     /**
@@ -1506,23 +1549,23 @@ public final class SearchAsyncClient {
      *
      * @param format Desired format of the response. Value can be either _json_ or _xml_.
      * @param query The address to search for (e.g., "1 Microsoft way, Redmond, WA"), must be properly URL encoded.
-     * @param typeahead Boolean. If the typeahead flag is set, the query will be interpreted as a partial input and the
-     *     search will enter predictive mode.
-     * @param limit Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
-     * @param ofs Starting offset of the returned results within the full result set. Default: 0, minimum: 0 and
+     * @param isTypeAhead Boolean. If the typeahead flag is set, the query will be interpreted as a partial input and
+     *     the search will enter predictive mode.
+     * @param top Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
+     * @param skip Starting offset of the returned results within the full result set. Default: 0, minimum: 0 and
      *     maximum: 1900.
-     * @param countrySet Comma separated string of country codes, e.g. FR,ES. This will limit the search to the
+     * @param countryFilter Comma separated string of country codes, e.g. FR,ES. This will limit the search to the
      *     specified countries.
      * @param lat Latitude where results should be biased. E.g. 37.337.
      * @param lon Longitude where results should be biased. E.g. -121.89.
-     * @param radius The radius in meters to for the results to be constrained to the defined area.
+     * @param radiusInMeters The radius in meters to for the results to be constrained to the defined area.
      * @param topLeft Top left position of the bounding box. E.g. 37.553,-122.453.
      * @param btmRight Bottom right position of the bounding box. E.g. 37.553,-122.453.
      * @param language Language in which search results should be returned. Should be one of supported IETF language
      *     tags, case insensitive. When data in specified language is not available for a specific field, default
      *     language is used.
-     *     <p>Please refer to [Supported
-     *     Languages](https://docs.microsoft.com/en-us/azure/azure-maps/supported-languages) for details.
+     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
+     *     details.
      * @param extendedPostalCodesFor Indexes for which extended postal codes should be included in the results.
      *     <p>Available indexes are:
      *     <p>**Addr** = Address ranges
@@ -1540,15 +1583,23 @@ public final class SearchAsyncClient {
      *     <p>extendedPostalCodesFor=None
      *     <p>Extended postal code is returned as an **extendedPostalCode** property of an address. Availability is
      *     region-dependent.
-     * @param view The View parameter specifies which set of geopolitically disputed content is returned via Azure Maps
-     *     services, including borders and labels displayed on the map. The View parameter (also referred to as “user
-     *     region parameter”) will show the correct maps for that country/region. By default, the View parameter is set
-     *     to “Unified” even if you haven’t defined it in the request. It is your responsibility to determine the
-     *     location of your users, and then set the View parameter correctly for that location. Alternatively, you have
-     *     the option to set ‘View=Auto’, which will return the map data based on the IP address of the request. The
-     *     View parameter in Azure Maps must be used in compliance with applicable laws, including those regarding
-     *     mapping, of the country where maps, images and other data and third party content that you are authorized to
-     *     access via Azure Maps is made available. Example: view=IN.
+     * @param entityType Specifies the level of filtering performed on geographies. Narrows the search for specified
+     *     geography entity types, e.g. return only municipality. The resulting response will contain the geography ID
+     *     as well as the entity type matched. If you provide more than one entity as a comma separated list, endpoint
+     *     will return the 'smallest entity available'. Returned Geometry ID can be used to get the geometry of that
+     *     geography via [Get Search Polygon](https://docs.microsoft.com/rest/api/maps/search/getsearchpolygon) API. The
+     *     following parameters are ignored when entityType is set:
+     *     <p>* heading * number * returnRoadUse * returnSpeedLimit * roadUse * returnMatchType.
+     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
+     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
+     *     different views of such regions, and the View parameter allows your application to comply with the view
+     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
+     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
+     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
+     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
+     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
+     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
+     *     made available. Example: view=IN.
      *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
      *     available Views.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1557,36 +1608,38 @@ public final class SearchAsyncClient {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchCommonResponse> getSearchAddress(
-            TextFormat format,
+    public Mono<SearchAddressResult> searchAddress(
+            ResponseFormat format,
             String query,
-            Boolean typeahead,
-            Integer limit,
-            Integer ofs,
-            List<String> countrySet,
-            Float lat,
-            Float lon,
-            Float radius,
+            Boolean isTypeAhead,
+            Integer top,
+            Integer skip,
+            List<String> countryFilter,
+            Double lat,
+            Double lon,
+            Integer radiusInMeters,
             String topLeft,
             String btmRight,
             String language,
-            String extendedPostalCodesFor,
-            String view) {
-        return this.serviceClient.getSearchAddressAsync(
+            List<SearchIndexes> extendedPostalCodesFor,
+            GeographicEntityType entityType,
+            LocalizedMapView localizedMapView) {
+        return this.serviceClient.searchAddressAsync(
                 format,
                 query,
-                typeahead,
-                limit,
-                ofs,
-                countrySet,
+                isTypeAhead,
+                top,
+                skip,
+                countryFilter,
                 lat,
                 lon,
-                radius,
+                radiusInMeters,
                 topLeft,
                 btmRight,
                 language,
                 extendedPostalCodesFor,
-                view);
+                entityType,
+                localizedMapView);
     }
 
     /**
@@ -1605,20 +1658,20 @@ public final class SearchAsyncClient {
      * @param language Language in which search results should be returned. Should be one of supported IETF language
      *     tags, case insensitive. When data in specified language is not available for a specific field, default
      *     language is used.
-     *     <p>Please refer to [Supported
-     *     Languages](https://docs.microsoft.com/en-us/azure/azure-maps/supported-languages) for details.
-     * @param returnSpeedLimit Boolean. To enable return of the posted speed limit.
+     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
+     *     details.
+     * @param includeSpeedLimit Boolean. To enable return of the posted speed limit.
      * @param heading The directional heading of the vehicle in degrees, for travel along a segment of roadway. 0 is
      *     North, 90 is East and so on, values range from -360 to 360. The precision can include upto one decimal place.
-     * @param radius The radius in meters to for the results to be constrained to the defined area.
+     * @param radiusInMeters The radius in meters to for the results to be constrained to the defined area.
      * @param number If a number is sent in along with the request, the response may include the side of the street
      *     (Left/Right) and also an offset position for that number.
-     * @param returnRoadUse Boolean. To enable return of the road use array for reverse geocodes at street level.
+     * @param includeRoadUse Boolean. To enable return of the road use array for reverse geocodes at street level.
      * @param roadUse To restrict reverse geocodes to a certain type of road use. The road use array for reverse
      *     geocodes can be one or more of LimitedAccess, Arterial, Terminal, Ramp, Rotary, LocalStreet.
      * @param allowFreeformNewline Format of newlines in the formatted address.
      *     <p>If true, the address will contain newlines. If false, newlines will be converted to commas.
-     * @param returnMatchType Include information on the type of match the geocoder achieved in the response.
+     * @param includeMatchType Include information on the type of match the geocoder achieved in the response.
      * @param entityType Specifies the level of filtering performed on geographies. Narrows the search for specified
      *     geography entity types, e.g. return only municipality. The resulting response will contain the geography ID
      *     as well as the entity type matched. If you provide more than one entity as a comma separated list, endpoint
@@ -1626,15 +1679,16 @@ public final class SearchAsyncClient {
      *     geography via [Get Search Polygon](https://docs.microsoft.com/rest/api/maps/search/getsearchpolygon) API. The
      *     following parameters are ignored when entityType is set:
      *     <p>* heading * number * returnRoadUse * returnSpeedLimit * roadUse * returnMatchType.
-     * @param view The View parameter specifies which set of geopolitically disputed content is returned via Azure Maps
-     *     services, including borders and labels displayed on the map. The View parameter (also referred to as “user
-     *     region parameter”) will show the correct maps for that country/region. By default, the View parameter is set
-     *     to “Unified” even if you haven’t defined it in the request. It is your responsibility to determine the
-     *     location of your users, and then set the View parameter correctly for that location. Alternatively, you have
-     *     the option to set ‘View=Auto’, which will return the map data based on the IP address of the request. The
-     *     View parameter in Azure Maps must be used in compliance with applicable laws, including those regarding
-     *     mapping, of the country where maps, images and other data and third party content that you are authorized to
-     *     access via Azure Maps is made available. Example: view=IN.
+     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
+     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
+     *     different views of such regions, and the View parameter allows your application to comply with the view
+     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
+     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
+     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
+     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
+     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
+     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
+     *     made available. Example: view=IN.
      *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
      *     available Views.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1643,34 +1697,34 @@ public final class SearchAsyncClient {
      * @return this object is returned from a successful Search Address Reverse call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<SearchAddressReverseResponse>> getSearchAddressReverseWithResponse(
-            TextFormat format,
-            String query,
+    public Mono<Response<ReverseSearchAddressResult>> reverseSearchAddressWithResponse(
+            ResponseFormat format,
+            List<Double> query,
             String language,
-            Boolean returnSpeedLimit,
-            Float heading,
-            Float radius,
+            Boolean includeSpeedLimit,
+            Integer heading,
+            Integer radiusInMeters,
             String number,
-            Boolean returnRoadUse,
-            String roadUse,
+            Boolean includeRoadUse,
+            List<RoadUseType> roadUse,
             Boolean allowFreeformNewline,
-            Boolean returnMatchType,
-            EntityType entityType,
-            String view) {
-        return this.serviceClient.getSearchAddressReverseWithResponseAsync(
+            Boolean includeMatchType,
+            GeographicEntityType entityType,
+            LocalizedMapView localizedMapView) {
+        return this.serviceClient.reverseSearchAddressWithResponseAsync(
                 format,
                 query,
                 language,
-                returnSpeedLimit,
+                includeSpeedLimit,
                 heading,
-                radius,
+                radiusInMeters,
                 number,
-                returnRoadUse,
+                includeRoadUse,
                 roadUse,
                 allowFreeformNewline,
-                returnMatchType,
+                includeMatchType,
                 entityType,
-                view);
+                localizedMapView);
     }
 
     /**
@@ -1689,20 +1743,20 @@ public final class SearchAsyncClient {
      * @param language Language in which search results should be returned. Should be one of supported IETF language
      *     tags, case insensitive. When data in specified language is not available for a specific field, default
      *     language is used.
-     *     <p>Please refer to [Supported
-     *     Languages](https://docs.microsoft.com/en-us/azure/azure-maps/supported-languages) for details.
-     * @param returnSpeedLimit Boolean. To enable return of the posted speed limit.
+     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
+     *     details.
+     * @param includeSpeedLimit Boolean. To enable return of the posted speed limit.
      * @param heading The directional heading of the vehicle in degrees, for travel along a segment of roadway. 0 is
      *     North, 90 is East and so on, values range from -360 to 360. The precision can include upto one decimal place.
-     * @param radius The radius in meters to for the results to be constrained to the defined area.
+     * @param radiusInMeters The radius in meters to for the results to be constrained to the defined area.
      * @param number If a number is sent in along with the request, the response may include the side of the street
      *     (Left/Right) and also an offset position for that number.
-     * @param returnRoadUse Boolean. To enable return of the road use array for reverse geocodes at street level.
+     * @param includeRoadUse Boolean. To enable return of the road use array for reverse geocodes at street level.
      * @param roadUse To restrict reverse geocodes to a certain type of road use. The road use array for reverse
      *     geocodes can be one or more of LimitedAccess, Arterial, Terminal, Ramp, Rotary, LocalStreet.
      * @param allowFreeformNewline Format of newlines in the formatted address.
      *     <p>If true, the address will contain newlines. If false, newlines will be converted to commas.
-     * @param returnMatchType Include information on the type of match the geocoder achieved in the response.
+     * @param includeMatchType Include information on the type of match the geocoder achieved in the response.
      * @param entityType Specifies the level of filtering performed on geographies. Narrows the search for specified
      *     geography entity types, e.g. return only municipality. The resulting response will contain the geography ID
      *     as well as the entity type matched. If you provide more than one entity as a comma separated list, endpoint
@@ -1710,15 +1764,16 @@ public final class SearchAsyncClient {
      *     geography via [Get Search Polygon](https://docs.microsoft.com/rest/api/maps/search/getsearchpolygon) API. The
      *     following parameters are ignored when entityType is set:
      *     <p>* heading * number * returnRoadUse * returnSpeedLimit * roadUse * returnMatchType.
-     * @param view The View parameter specifies which set of geopolitically disputed content is returned via Azure Maps
-     *     services, including borders and labels displayed on the map. The View parameter (also referred to as “user
-     *     region parameter”) will show the correct maps for that country/region. By default, the View parameter is set
-     *     to “Unified” even if you haven’t defined it in the request. It is your responsibility to determine the
-     *     location of your users, and then set the View parameter correctly for that location. Alternatively, you have
-     *     the option to set ‘View=Auto’, which will return the map data based on the IP address of the request. The
-     *     View parameter in Azure Maps must be used in compliance with applicable laws, including those regarding
-     *     mapping, of the country where maps, images and other data and third party content that you are authorized to
-     *     access via Azure Maps is made available. Example: view=IN.
+     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
+     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
+     *     different views of such regions, and the View parameter allows your application to comply with the view
+     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
+     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
+     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
+     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
+     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
+     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
+     *     made available. Example: view=IN.
      *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
      *     available Views.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1727,34 +1782,34 @@ public final class SearchAsyncClient {
      * @return this object is returned from a successful Search Address Reverse call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchAddressReverseResponse> getSearchAddressReverse(
-            TextFormat format,
-            String query,
+    public Mono<ReverseSearchAddressResult> reverseSearchAddress(
+            ResponseFormat format,
+            List<Double> query,
             String language,
-            Boolean returnSpeedLimit,
-            Float heading,
-            Float radius,
+            Boolean includeSpeedLimit,
+            Integer heading,
+            Integer radiusInMeters,
             String number,
-            Boolean returnRoadUse,
-            String roadUse,
+            Boolean includeRoadUse,
+            List<RoadUseType> roadUse,
             Boolean allowFreeformNewline,
-            Boolean returnMatchType,
-            EntityType entityType,
-            String view) {
-        return this.serviceClient.getSearchAddressReverseAsync(
+            Boolean includeMatchType,
+            GeographicEntityType entityType,
+            LocalizedMapView localizedMapView) {
+        return this.serviceClient.reverseSearchAddressAsync(
                 format,
                 query,
                 language,
-                returnSpeedLimit,
+                includeSpeedLimit,
                 heading,
-                radius,
+                radiusInMeters,
                 number,
-                returnRoadUse,
+                includeRoadUse,
                 roadUse,
                 allowFreeformNewline,
-                returnMatchType,
+                includeMatchType,
                 entityType,
-                view);
+                localizedMapView);
     }
 
     /**
@@ -1770,24 +1825,25 @@ public final class SearchAsyncClient {
      * @param format Desired format of the response. Value can be either _json_ or _xml_.
      * @param query The applicable query specified as a comma separated string composed by latitude followed by
      *     longitude e.g. "47.641268,-122.125679".
-     * @param limit Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
+     * @param top Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
      * @param heading The directional heading of the vehicle in degrees, for travel along a segment of roadway. 0 is
      *     North, 90 is East and so on, values range from -360 to 360. The precision can include upto one decimal place.
-     * @param radius The radius in meters to for the results to be constrained to the defined area.
+     * @param radiusInMeters The radius in meters to for the results to be constrained to the defined area.
      * @param language Language in which search results should be returned. Should be one of supported IETF language
      *     tags, case insensitive. When data in specified language is not available for a specific field, default
      *     language is used.
-     *     <p>Please refer to [Supported
-     *     Languages](https://docs.microsoft.com/en-us/azure/azure-maps/supported-languages) for details.
-     * @param view The View parameter specifies which set of geopolitically disputed content is returned via Azure Maps
-     *     services, including borders and labels displayed on the map. The View parameter (also referred to as “user
-     *     region parameter”) will show the correct maps for that country/region. By default, the View parameter is set
-     *     to “Unified” even if you haven’t defined it in the request. It is your responsibility to determine the
-     *     location of your users, and then set the View parameter correctly for that location. Alternatively, you have
-     *     the option to set ‘View=Auto’, which will return the map data based on the IP address of the request. The
-     *     View parameter in Azure Maps must be used in compliance with applicable laws, including those regarding
-     *     mapping, of the country where maps, images and other data and third party content that you are authorized to
-     *     access via Azure Maps is made available. Example: view=IN.
+     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
+     *     details.
+     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
+     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
+     *     different views of such regions, and the View parameter allows your application to comply with the view
+     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
+     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
+     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
+     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
+     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
+     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
+     *     made available. Example: view=IN.
      *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
      *     available Views.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1796,10 +1852,16 @@ public final class SearchAsyncClient {
      * @return this object is returned from a successful Search Address Reverse CrossStreet call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<SearchAddressReverseCrossStreetResponse>> getSearchAddressReverseCrossStreetWithResponse(
-            TextFormat format, String query, Integer limit, Float heading, Float radius, String language, String view) {
-        return this.serviceClient.getSearchAddressReverseCrossStreetWithResponseAsync(
-                format, query, limit, heading, radius, language, view);
+    public Mono<Response<ReverseSearchCrossStreetAddressResult>> reverseSearchCrossStreetAddressWithResponse(
+            ResponseFormat format,
+            List<Double> query,
+            Integer top,
+            Integer heading,
+            Integer radiusInMeters,
+            String language,
+            LocalizedMapView localizedMapView) {
+        return this.serviceClient.reverseSearchCrossStreetAddressWithResponseAsync(
+                format, query, top, heading, radiusInMeters, language, localizedMapView);
     }
 
     /**
@@ -1815,24 +1877,25 @@ public final class SearchAsyncClient {
      * @param format Desired format of the response. Value can be either _json_ or _xml_.
      * @param query The applicable query specified as a comma separated string composed by latitude followed by
      *     longitude e.g. "47.641268,-122.125679".
-     * @param limit Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
+     * @param top Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
      * @param heading The directional heading of the vehicle in degrees, for travel along a segment of roadway. 0 is
      *     North, 90 is East and so on, values range from -360 to 360. The precision can include upto one decimal place.
-     * @param radius The radius in meters to for the results to be constrained to the defined area.
+     * @param radiusInMeters The radius in meters to for the results to be constrained to the defined area.
      * @param language Language in which search results should be returned. Should be one of supported IETF language
      *     tags, case insensitive. When data in specified language is not available for a specific field, default
      *     language is used.
-     *     <p>Please refer to [Supported
-     *     Languages](https://docs.microsoft.com/en-us/azure/azure-maps/supported-languages) for details.
-     * @param view The View parameter specifies which set of geopolitically disputed content is returned via Azure Maps
-     *     services, including borders and labels displayed on the map. The View parameter (also referred to as “user
-     *     region parameter”) will show the correct maps for that country/region. By default, the View parameter is set
-     *     to “Unified” even if you haven’t defined it in the request. It is your responsibility to determine the
-     *     location of your users, and then set the View parameter correctly for that location. Alternatively, you have
-     *     the option to set ‘View=Auto’, which will return the map data based on the IP address of the request. The
-     *     View parameter in Azure Maps must be used in compliance with applicable laws, including those regarding
-     *     mapping, of the country where maps, images and other data and third party content that you are authorized to
-     *     access via Azure Maps is made available. Example: view=IN.
+     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
+     *     details.
+     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
+     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
+     *     different views of such regions, and the View parameter allows your application to comply with the view
+     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
+     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
+     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
+     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
+     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
+     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
+     *     made available. Example: view=IN.
      *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
      *     available Views.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1841,10 +1904,16 @@ public final class SearchAsyncClient {
      * @return this object is returned from a successful Search Address Reverse CrossStreet call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchAddressReverseCrossStreetResponse> getSearchAddressReverseCrossStreet(
-            TextFormat format, String query, Integer limit, Float heading, Float radius, String language, String view) {
-        return this.serviceClient.getSearchAddressReverseCrossStreetAsync(
-                format, query, limit, heading, radius, language, view);
+    public Mono<ReverseSearchCrossStreetAddressResult> reverseSearchCrossStreetAddress(
+            ResponseFormat format,
+            List<Double> query,
+            Integer top,
+            Integer heading,
+            Integer radiusInMeters,
+            String language,
+            LocalizedMapView localizedMapView) {
+        return this.serviceClient.reverseSearchCrossStreetAddressAsync(
+                format, query, top, heading, radiusInMeters, language, localizedMapView);
     }
 
     /**
@@ -1862,12 +1931,12 @@ public final class SearchAsyncClient {
      * @param language Language in which search results should be returned. Should be one of supported IETF language
      *     tags, case insensitive. When data in specified language is not available for a specific field, default
      *     language is used.
-     *     <p>Please refer to [Supported
-     *     Languages](https://docs.microsoft.com/en-us/azure/azure-maps/supported-languages) for details.
+     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
+     *     details.
      * @param countryCode The 2 or 3 letter [ISO3166-1](https://www.iso.org/iso-3166-country-codes.html) country code
      *     portion of an address. E.g. US.
-     * @param limit Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
-     * @param ofs Starting offset of the returned results within the full result set. Default: 0, minimum: 0 and
+     * @param top Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
+     * @param skip Starting offset of the returned results within the full result set. Default: 0, minimum: 0 and
      *     maximum: 1900.
      * @param streetNumber The street number portion of an address.
      * @param streetName The street name portion of an address.
@@ -1895,15 +1964,23 @@ public final class SearchAsyncClient {
      *     <p>extendedPostalCodesFor=None
      *     <p>Extended postal code is returned as an **extendedPostalCode** property of an address. Availability is
      *     region-dependent.
-     * @param view The View parameter specifies which set of geopolitically disputed content is returned via Azure Maps
-     *     services, including borders and labels displayed on the map. The View parameter (also referred to as “user
-     *     region parameter”) will show the correct maps for that country/region. By default, the View parameter is set
-     *     to “Unified” even if you haven’t defined it in the request. It is your responsibility to determine the
-     *     location of your users, and then set the View parameter correctly for that location. Alternatively, you have
-     *     the option to set ‘View=Auto’, which will return the map data based on the IP address of the request. The
-     *     View parameter in Azure Maps must be used in compliance with applicable laws, including those regarding
-     *     mapping, of the country where maps, images and other data and third party content that you are authorized to
-     *     access via Azure Maps is made available. Example: view=IN.
+     * @param entityType Specifies the level of filtering performed on geographies. Narrows the search for specified
+     *     geography entity types, e.g. return only municipality. The resulting response will contain the geography ID
+     *     as well as the entity type matched. If you provide more than one entity as a comma separated list, endpoint
+     *     will return the 'smallest entity available'. Returned Geometry ID can be used to get the geometry of that
+     *     geography via [Get Search Polygon](https://docs.microsoft.com/rest/api/maps/search/getsearchpolygon) API. The
+     *     following parameters are ignored when entityType is set:
+     *     <p>* heading * number * returnRoadUse * returnSpeedLimit * roadUse * returnMatchType.
+     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
+     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
+     *     different views of such regions, and the View parameter allows your application to comply with the view
+     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
+     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
+     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
+     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
+     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
+     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
+     *     made available. Example: view=IN.
      *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
      *     available Views.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1912,12 +1989,12 @@ public final class SearchAsyncClient {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<SearchCommonResponse>> getSearchAddressStructuredWithResponse(
-            TextFormat format,
+    public Mono<Response<SearchAddressResult>> searchStructuredAddressWithResponse(
+            ResponseFormat format,
             String language,
             String countryCode,
-            Integer limit,
-            Integer ofs,
+            Integer top,
+            Integer skip,
             String streetNumber,
             String streetName,
             String crossStreet,
@@ -1927,14 +2004,15 @@ public final class SearchAsyncClient {
             String countrySecondarySubdivision,
             String countrySubdivision,
             String postalCode,
-            String extendedPostalCodesFor,
-            String view) {
-        return this.serviceClient.getSearchAddressStructuredWithResponseAsync(
+            List<SearchIndexes> extendedPostalCodesFor,
+            GeographicEntityType entityType,
+            LocalizedMapView localizedMapView) {
+        return this.serviceClient.searchStructuredAddressWithResponseAsync(
                 format,
                 language,
                 countryCode,
-                limit,
-                ofs,
+                top,
+                skip,
                 streetNumber,
                 streetName,
                 crossStreet,
@@ -1945,7 +2023,8 @@ public final class SearchAsyncClient {
                 countrySubdivision,
                 postalCode,
                 extendedPostalCodesFor,
-                view);
+                entityType,
+                localizedMapView);
     }
 
     /**
@@ -1963,12 +2042,12 @@ public final class SearchAsyncClient {
      * @param language Language in which search results should be returned. Should be one of supported IETF language
      *     tags, case insensitive. When data in specified language is not available for a specific field, default
      *     language is used.
-     *     <p>Please refer to [Supported
-     *     Languages](https://docs.microsoft.com/en-us/azure/azure-maps/supported-languages) for details.
+     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
+     *     details.
      * @param countryCode The 2 or 3 letter [ISO3166-1](https://www.iso.org/iso-3166-country-codes.html) country code
      *     portion of an address. E.g. US.
-     * @param limit Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
-     * @param ofs Starting offset of the returned results within the full result set. Default: 0, minimum: 0 and
+     * @param top Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
+     * @param skip Starting offset of the returned results within the full result set. Default: 0, minimum: 0 and
      *     maximum: 1900.
      * @param streetNumber The street number portion of an address.
      * @param streetName The street name portion of an address.
@@ -1996,15 +2075,23 @@ public final class SearchAsyncClient {
      *     <p>extendedPostalCodesFor=None
      *     <p>Extended postal code is returned as an **extendedPostalCode** property of an address. Availability is
      *     region-dependent.
-     * @param view The View parameter specifies which set of geopolitically disputed content is returned via Azure Maps
-     *     services, including borders and labels displayed on the map. The View parameter (also referred to as “user
-     *     region parameter”) will show the correct maps for that country/region. By default, the View parameter is set
-     *     to “Unified” even if you haven’t defined it in the request. It is your responsibility to determine the
-     *     location of your users, and then set the View parameter correctly for that location. Alternatively, you have
-     *     the option to set ‘View=Auto’, which will return the map data based on the IP address of the request. The
-     *     View parameter in Azure Maps must be used in compliance with applicable laws, including those regarding
-     *     mapping, of the country where maps, images and other data and third party content that you are authorized to
-     *     access via Azure Maps is made available. Example: view=IN.
+     * @param entityType Specifies the level of filtering performed on geographies. Narrows the search for specified
+     *     geography entity types, e.g. return only municipality. The resulting response will contain the geography ID
+     *     as well as the entity type matched. If you provide more than one entity as a comma separated list, endpoint
+     *     will return the 'smallest entity available'. Returned Geometry ID can be used to get the geometry of that
+     *     geography via [Get Search Polygon](https://docs.microsoft.com/rest/api/maps/search/getsearchpolygon) API. The
+     *     following parameters are ignored when entityType is set:
+     *     <p>* heading * number * returnRoadUse * returnSpeedLimit * roadUse * returnMatchType.
+     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
+     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
+     *     different views of such regions, and the View parameter allows your application to comply with the view
+     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
+     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
+     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
+     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
+     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
+     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
+     *     made available. Example: view=IN.
      *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
      *     available Views.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -2013,12 +2100,12 @@ public final class SearchAsyncClient {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchCommonResponse> getSearchAddressStructured(
-            TextFormat format,
+    public Mono<SearchAddressResult> searchStructuredAddress(
+            ResponseFormat format,
             String language,
             String countryCode,
-            Integer limit,
-            Integer ofs,
+            Integer top,
+            Integer skip,
             String streetNumber,
             String streetName,
             String crossStreet,
@@ -2028,14 +2115,15 @@ public final class SearchAsyncClient {
             String countrySecondarySubdivision,
             String countrySubdivision,
             String postalCode,
-            String extendedPostalCodesFor,
-            String view) {
-        return this.serviceClient.getSearchAddressStructuredAsync(
+            List<SearchIndexes> extendedPostalCodesFor,
+            GeographicEntityType entityType,
+            LocalizedMapView localizedMapView) {
+        return this.serviceClient.searchStructuredAddressAsync(
                 format,
                 language,
                 countryCode,
-                limit,
-                ofs,
+                top,
+                skip,
                 streetNumber,
                 streetName,
                 crossStreet,
@@ -2046,7 +2134,8 @@ public final class SearchAsyncClient {
                 countrySubdivision,
                 postalCode,
                 extendedPostalCodesFor,
-                view);
+                entityType,
+                localizedMapView);
     }
 
     /**
@@ -2078,16 +2167,16 @@ public final class SearchAsyncClient {
      * @param format Desired format of the response. Value can be either _json_ or _xml_.
      * @param query The POI name to search for (e.g., "statue of liberty", "starbucks", "pizza"). Must be properly URL
      *     encoded.
-     * @param searchInsideGeometryRequestBody This represents the geometry for one or more geographical features (parks,
-     *     state boundary etc.) to search in and should be a GeoJSON compliant type. Please refer to [RFC
+     * @param geometry This represents the geometry for one or more geographical features (parks, state boundary etc.)
+     *     to search in and should be a GeoJSON compliant type. Please refer to [RFC
      *     7946](https://tools.ietf.org/html/rfc7946) for details.
-     * @param limit Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
+     * @param top Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
      * @param language Language in which search results should be returned. Should be one of supported IETF language
      *     tags, case insensitive. When data in specified language is not available for a specific field, default
      *     language is used.
-     *     <p>Please refer to [Supported
-     *     Languages](https://docs.microsoft.com/en-us/azure/azure-maps/supported-languages) for details.
-     * @param categorySet A comma-separated list of category set IDs which could be used to restrict the result to
+     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
+     *     details.
+     * @param categoryFilter A comma-separated list of category set IDs which could be used to restrict the result to
      *     specific Points of Interest categories. ID order does not matter. When multiple category identifiers are
      *     provided, only POIs that belong to (at least) one of the categories from the provided list will be returned.
      *     The list of supported categories can be discovered using  [POI Categories
@@ -2115,47 +2204,49 @@ public final class SearchAsyncClient {
      * @param idxSet A comma separated list of indexes which should be utilized for the search. Item order does not
      *     matter. Available indexes are: Addr = Address range interpolation, Geo = Geographies, PAD = Point Addresses,
      *     POI = Points of interest, Str = Streets, Xstr = Cross Streets (intersections).
-     * @param view The View parameter specifies which set of geopolitically disputed content is returned via Azure Maps
-     *     services, including borders and labels displayed on the map. The View parameter (also referred to as “user
-     *     region parameter”) will show the correct maps for that country/region. By default, the View parameter is set
-     *     to “Unified” even if you haven’t defined it in the request. It is your responsibility to determine the
-     *     location of your users, and then set the View parameter correctly for that location. Alternatively, you have
-     *     the option to set ‘View=Auto’, which will return the map data based on the IP address of the request. The
-     *     View parameter in Azure Maps must be used in compliance with applicable laws, including those regarding
-     *     mapping, of the country where maps, images and other data and third party content that you are authorized to
-     *     access via Azure Maps is made available. Example: view=IN.
+     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
+     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
+     *     different views of such regions, and the View parameter allows your application to comply with the view
+     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
+     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
+     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
+     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
+     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
+     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
+     *     made available. Example: view=IN.
      *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
      *     available Views.
-     * @param openingHours Hours of operation for a POI (Points of Interest). The availability of hours of operation
-     *     will vary based on the data available. Supported value: nextSevenDays.
+     * @param operatingHours Hours of operation for a POI (Points of Interest). The availability of hours of operation
+     *     will vary based on the data available. If not passed, then no opening hours information will be returned.
+     *     Supported value: nextSevenDays.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<SearchCommonResponse>> postSearchInsideGeometryWithResponse(
-            TextFormat format,
+    public Mono<Response<SearchAddressResult>> searchInsideGeometryWithResponse(
+            ResponseFormat format,
             String query,
-            SearchInsideGeometryRequestBody searchInsideGeometryRequestBody,
-            Integer limit,
+            SearchInsideGeometryRequest geometry,
+            Integer top,
             String language,
-            List<Integer> categorySet,
-            String extendedPostalCodesFor,
-            List<SearchIndexSet> idxSet,
-            String view,
-            OpeningHours openingHours) {
-        return this.serviceClient.postSearchInsideGeometryWithResponseAsync(
+            List<Integer> categoryFilter,
+            List<SearchIndexes> extendedPostalCodesFor,
+            List<SearchIndexes> idxSet,
+            LocalizedMapView localizedMapView,
+            OperatingHoursRange operatingHours) {
+        return this.serviceClient.searchInsideGeometryWithResponseAsync(
                 format,
                 query,
-                searchInsideGeometryRequestBody,
-                limit,
+                geometry,
+                top,
                 language,
-                categorySet,
+                categoryFilter,
                 extendedPostalCodesFor,
                 idxSet,
-                view,
-                openingHours);
+                localizedMapView,
+                operatingHours);
     }
 
     /**
@@ -2187,16 +2278,16 @@ public final class SearchAsyncClient {
      * @param format Desired format of the response. Value can be either _json_ or _xml_.
      * @param query The POI name to search for (e.g., "statue of liberty", "starbucks", "pizza"). Must be properly URL
      *     encoded.
-     * @param searchInsideGeometryRequestBody This represents the geometry for one or more geographical features (parks,
-     *     state boundary etc.) to search in and should be a GeoJSON compliant type. Please refer to [RFC
+     * @param geometry This represents the geometry for one or more geographical features (parks, state boundary etc.)
+     *     to search in and should be a GeoJSON compliant type. Please refer to [RFC
      *     7946](https://tools.ietf.org/html/rfc7946) for details.
-     * @param limit Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
+     * @param top Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
      * @param language Language in which search results should be returned. Should be one of supported IETF language
      *     tags, case insensitive. When data in specified language is not available for a specific field, default
      *     language is used.
-     *     <p>Please refer to [Supported
-     *     Languages](https://docs.microsoft.com/en-us/azure/azure-maps/supported-languages) for details.
-     * @param categorySet A comma-separated list of category set IDs which could be used to restrict the result to
+     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
+     *     details.
+     * @param categoryFilter A comma-separated list of category set IDs which could be used to restrict the result to
      *     specific Points of Interest categories. ID order does not matter. When multiple category identifiers are
      *     provided, only POIs that belong to (at least) one of the categories from the provided list will be returned.
      *     The list of supported categories can be discovered using  [POI Categories
@@ -2224,47 +2315,49 @@ public final class SearchAsyncClient {
      * @param idxSet A comma separated list of indexes which should be utilized for the search. Item order does not
      *     matter. Available indexes are: Addr = Address range interpolation, Geo = Geographies, PAD = Point Addresses,
      *     POI = Points of interest, Str = Streets, Xstr = Cross Streets (intersections).
-     * @param view The View parameter specifies which set of geopolitically disputed content is returned via Azure Maps
-     *     services, including borders and labels displayed on the map. The View parameter (also referred to as “user
-     *     region parameter”) will show the correct maps for that country/region. By default, the View parameter is set
-     *     to “Unified” even if you haven’t defined it in the request. It is your responsibility to determine the
-     *     location of your users, and then set the View parameter correctly for that location. Alternatively, you have
-     *     the option to set ‘View=Auto’, which will return the map data based on the IP address of the request. The
-     *     View parameter in Azure Maps must be used in compliance with applicable laws, including those regarding
-     *     mapping, of the country where maps, images and other data and third party content that you are authorized to
-     *     access via Azure Maps is made available. Example: view=IN.
+     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
+     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
+     *     different views of such regions, and the View parameter allows your application to comply with the view
+     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
+     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
+     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
+     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
+     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
+     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
+     *     made available. Example: view=IN.
      *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
      *     available Views.
-     * @param openingHours Hours of operation for a POI (Points of Interest). The availability of hours of operation
-     *     will vary based on the data available. Supported value: nextSevenDays.
+     * @param operatingHours Hours of operation for a POI (Points of Interest). The availability of hours of operation
+     *     will vary based on the data available. If not passed, then no opening hours information will be returned.
+     *     Supported value: nextSevenDays.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchCommonResponse> postSearchInsideGeometry(
-            TextFormat format,
+    public Mono<SearchAddressResult> searchInsideGeometry(
+            ResponseFormat format,
             String query,
-            SearchInsideGeometryRequestBody searchInsideGeometryRequestBody,
-            Integer limit,
+            SearchInsideGeometryRequest geometry,
+            Integer top,
             String language,
-            List<Integer> categorySet,
-            String extendedPostalCodesFor,
-            List<SearchIndexSet> idxSet,
-            String view,
-            OpeningHours openingHours) {
-        return this.serviceClient.postSearchInsideGeometryAsync(
+            List<Integer> categoryFilter,
+            List<SearchIndexes> extendedPostalCodesFor,
+            List<SearchIndexes> idxSet,
+            LocalizedMapView localizedMapView,
+            OperatingHoursRange operatingHours) {
+        return this.serviceClient.searchInsideGeometryAsync(
                 format,
                 query,
-                searchInsideGeometryRequestBody,
-                limit,
+                geometry,
+                top,
                 language,
-                categorySet,
+                categoryFilter,
                 extendedPostalCodesFor,
                 idxSet,
-                view,
-                openingHours);
+                localizedMapView,
+                operatingHours);
     }
 
     /**
@@ -2284,9 +2377,17 @@ public final class SearchAsyncClient {
      * @param query The POI name to search for (e.g., "statue of liberty", "starbucks", "pizza"). Must be properly URL
      *     encoded.
      * @param maxDetourTime Maximum detour time of the point of interest in seconds. Max value is 3600 seconds.
-     * @param searchAlongRouteRequestBody This represents the route to search along and should be a valid `GeoJSON
-     *     LineString` type. Please refer to [RFC 7946](https://tools.ietf.org/html/rfc7946#section-3.1.4) for details.
-     * @param categorySet A comma-separated list of category set IDs which could be used to restrict the result to
+     * @param route This represents the route to search along and should be a valid `GeoJSON LineString` type. Please
+     *     refer to [RFC 7946](https://tools.ietf.org/html/rfc7946#section-3.1.4) for details.
+     * @param top Maximum number of responses that will be returned. Default value is 10. Max value is 20.
+     * @param brandFilter A comma-separated list of brand names which could be used to restrict the result to specific
+     *     brands. Item order does not matter. When multiple brands are provided, only results that belong to (at least)
+     *     one of the provided list will be returned. Brands that contain a "," in their name should be put into quotes.
+     *     <p>Usage examples:
+     *     <p>brandSet=Foo
+     *     <p>brandSet=Foo,Bar
+     *     <p>brandSet="A,B,C Comma",Bar.
+     * @param categoryFilter A comma-separated list of category set IDs which could be used to restrict the result to
      *     specific Points of Interest categories. ID order does not matter. When multiple category identifiers are
      *     provided, only POIs that belong to (at least) one of the categories from the provided list will be returned.
      *     The list of supported categories can be discovered using  [POI Categories
@@ -2294,18 +2395,10 @@ public final class SearchAsyncClient {
      *     <p>* **categorySet=7315** (Search Points of Interest from category Restaurant)
      *     <p>* **categorySet=7315025,7315017** (Search Points of Interest of category either Italian or French
      *     Restaurant).
-     * @param limit Maximum number of responses that will be returned. Default value is 10. Max value is 20.
-     * @param brandSet A comma-separated list of brand names which could be used to restrict the result to specific
-     *     brands. Item order does not matter. When multiple brands are provided, only results that belong to (at least)
-     *     one of the provided list will be returned. Brands that contain a "," in their name should be put into quotes.
-     *     <p>Usage examples:
-     *     <p>brandSet=Foo
-     *     <p>brandSet=Foo,Bar
-     *     <p>brandSet="A,B,C Comma",Bar.
-     * @param connectorSet A comma-separated list of connector types which could be used to restrict the result to
-     *     Electric Vehicle Station supporting specific connector types. Item order does not matter. When multiple
-     *     connector types are provided, only results that belong to (at least) one of the provided list will be
-     *     returned.
+     * @param electricVehicleConnectorFilter A comma-separated list of connector types which could be used to restrict
+     *     the result to Electric Vehicle Station supporting specific connector types. Item order does not matter. When
+     *     multiple connector types are provided, only results that belong to (at least) one of the provided list will
+     *     be returned.
      *     <p>Available connector types are: * `StandardHouseholdCountrySpecific` - These are the standard household
      *     connectors for a certain region. They are all AC single phase and the standard Voltage and standard Amperage.
      *     See also: [Plug &amp; socket types - World
@@ -2333,47 +2426,49 @@ public final class SearchAsyncClient {
      *     in Europe.
      *     <p>Usage examples:
      *     <p>connectorSet=IEC62196Type2CableAttached connectorSet=IEC62196Type2Outlet,IEC62196Type2CableAttached.
-     * @param view The View parameter specifies which set of geopolitically disputed content is returned via Azure Maps
-     *     services, including borders and labels displayed on the map. The View parameter (also referred to as “user
-     *     region parameter”) will show the correct maps for that country/region. By default, the View parameter is set
-     *     to “Unified” even if you haven’t defined it in the request. It is your responsibility to determine the
-     *     location of your users, and then set the View parameter correctly for that location. Alternatively, you have
-     *     the option to set ‘View=Auto’, which will return the map data based on the IP address of the request. The
-     *     View parameter in Azure Maps must be used in compliance with applicable laws, including those regarding
-     *     mapping, of the country where maps, images and other data and third party content that you are authorized to
-     *     access via Azure Maps is made available. Example: view=IN.
+     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
+     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
+     *     different views of such regions, and the View parameter allows your application to comply with the view
+     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
+     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
+     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
+     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
+     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
+     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
+     *     made available. Example: view=IN.
      *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
      *     available Views.
-     * @param openingHours Hours of operation for a POI (Points of Interest). The availability of hours of operation
-     *     will vary based on the data available. Supported value: nextSevenDays.
+     * @param operatingHours Hours of operation for a POI (Points of Interest). The availability of hours of operation
+     *     will vary based on the data available. If not passed, then no opening hours information will be returned.
+     *     Supported value: nextSevenDays.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<SearchCommonResponse>> postSearchAlongRouteWithResponse(
-            TextFormat format,
+    public Mono<Response<SearchAddressResult>> searchAlongRouteWithResponse(
+            ResponseFormat format,
             String query,
             int maxDetourTime,
-            SearchAlongRouteRequestBody searchAlongRouteRequestBody,
-            List<Integer> categorySet,
-            Integer limit,
-            List<String> brandSet,
-            List<ConnectorSet> connectorSet,
-            String view,
-            OpeningHours openingHours) {
-        return this.serviceClient.postSearchAlongRouteWithResponseAsync(
+            SearchAlongRouteRequest route,
+            Integer top,
+            List<String> brandFilter,
+            List<Integer> categoryFilter,
+            List<ElectricVehicleConnector> electricVehicleConnectorFilter,
+            LocalizedMapView localizedMapView,
+            OperatingHoursRange operatingHours) {
+        return this.serviceClient.searchAlongRouteWithResponseAsync(
                 format,
                 query,
                 maxDetourTime,
-                searchAlongRouteRequestBody,
-                categorySet,
-                limit,
-                brandSet,
-                connectorSet,
-                view,
-                openingHours);
+                route,
+                top,
+                brandFilter,
+                categoryFilter,
+                electricVehicleConnectorFilter,
+                localizedMapView,
+                operatingHours);
     }
 
     /**
@@ -2393,9 +2488,17 @@ public final class SearchAsyncClient {
      * @param query The POI name to search for (e.g., "statue of liberty", "starbucks", "pizza"). Must be properly URL
      *     encoded.
      * @param maxDetourTime Maximum detour time of the point of interest in seconds. Max value is 3600 seconds.
-     * @param searchAlongRouteRequestBody This represents the route to search along and should be a valid `GeoJSON
-     *     LineString` type. Please refer to [RFC 7946](https://tools.ietf.org/html/rfc7946#section-3.1.4) for details.
-     * @param categorySet A comma-separated list of category set IDs which could be used to restrict the result to
+     * @param route This represents the route to search along and should be a valid `GeoJSON LineString` type. Please
+     *     refer to [RFC 7946](https://tools.ietf.org/html/rfc7946#section-3.1.4) for details.
+     * @param top Maximum number of responses that will be returned. Default value is 10. Max value is 20.
+     * @param brandFilter A comma-separated list of brand names which could be used to restrict the result to specific
+     *     brands. Item order does not matter. When multiple brands are provided, only results that belong to (at least)
+     *     one of the provided list will be returned. Brands that contain a "," in their name should be put into quotes.
+     *     <p>Usage examples:
+     *     <p>brandSet=Foo
+     *     <p>brandSet=Foo,Bar
+     *     <p>brandSet="A,B,C Comma",Bar.
+     * @param categoryFilter A comma-separated list of category set IDs which could be used to restrict the result to
      *     specific Points of Interest categories. ID order does not matter. When multiple category identifiers are
      *     provided, only POIs that belong to (at least) one of the categories from the provided list will be returned.
      *     The list of supported categories can be discovered using  [POI Categories
@@ -2403,18 +2506,10 @@ public final class SearchAsyncClient {
      *     <p>* **categorySet=7315** (Search Points of Interest from category Restaurant)
      *     <p>* **categorySet=7315025,7315017** (Search Points of Interest of category either Italian or French
      *     Restaurant).
-     * @param limit Maximum number of responses that will be returned. Default value is 10. Max value is 20.
-     * @param brandSet A comma-separated list of brand names which could be used to restrict the result to specific
-     *     brands. Item order does not matter. When multiple brands are provided, only results that belong to (at least)
-     *     one of the provided list will be returned. Brands that contain a "," in their name should be put into quotes.
-     *     <p>Usage examples:
-     *     <p>brandSet=Foo
-     *     <p>brandSet=Foo,Bar
-     *     <p>brandSet="A,B,C Comma",Bar.
-     * @param connectorSet A comma-separated list of connector types which could be used to restrict the result to
-     *     Electric Vehicle Station supporting specific connector types. Item order does not matter. When multiple
-     *     connector types are provided, only results that belong to (at least) one of the provided list will be
-     *     returned.
+     * @param electricVehicleConnectorFilter A comma-separated list of connector types which could be used to restrict
+     *     the result to Electric Vehicle Station supporting specific connector types. Item order does not matter. When
+     *     multiple connector types are provided, only results that belong to (at least) one of the provided list will
+     *     be returned.
      *     <p>Available connector types are: * `StandardHouseholdCountrySpecific` - These are the standard household
      *     connectors for a certain region. They are all AC single phase and the standard Voltage and standard Amperage.
      *     See also: [Plug &amp; socket types - World
@@ -2442,47 +2537,49 @@ public final class SearchAsyncClient {
      *     in Europe.
      *     <p>Usage examples:
      *     <p>connectorSet=IEC62196Type2CableAttached connectorSet=IEC62196Type2Outlet,IEC62196Type2CableAttached.
-     * @param view The View parameter specifies which set of geopolitically disputed content is returned via Azure Maps
-     *     services, including borders and labels displayed on the map. The View parameter (also referred to as “user
-     *     region parameter”) will show the correct maps for that country/region. By default, the View parameter is set
-     *     to “Unified” even if you haven’t defined it in the request. It is your responsibility to determine the
-     *     location of your users, and then set the View parameter correctly for that location. Alternatively, you have
-     *     the option to set ‘View=Auto’, which will return the map data based on the IP address of the request. The
-     *     View parameter in Azure Maps must be used in compliance with applicable laws, including those regarding
-     *     mapping, of the country where maps, images and other data and third party content that you are authorized to
-     *     access via Azure Maps is made available. Example: view=IN.
+     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
+     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
+     *     different views of such regions, and the View parameter allows your application to comply with the view
+     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
+     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
+     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
+     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
+     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
+     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
+     *     made available. Example: view=IN.
      *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
      *     available Views.
-     * @param openingHours Hours of operation for a POI (Points of Interest). The availability of hours of operation
-     *     will vary based on the data available. Supported value: nextSevenDays.
+     * @param operatingHours Hours of operation for a POI (Points of Interest). The availability of hours of operation
+     *     will vary based on the data available. If not passed, then no opening hours information will be returned.
+     *     Supported value: nextSevenDays.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchCommonResponse> postSearchAlongRoute(
-            TextFormat format,
+    public Mono<SearchAddressResult> searchAlongRoute(
+            ResponseFormat format,
             String query,
             int maxDetourTime,
-            SearchAlongRouteRequestBody searchAlongRouteRequestBody,
-            List<Integer> categorySet,
-            Integer limit,
-            List<String> brandSet,
-            List<ConnectorSet> connectorSet,
-            String view,
-            OpeningHours openingHours) {
-        return this.serviceClient.postSearchAlongRouteAsync(
+            SearchAlongRouteRequest route,
+            Integer top,
+            List<String> brandFilter,
+            List<Integer> categoryFilter,
+            List<ElectricVehicleConnector> electricVehicleConnectorFilter,
+            LocalizedMapView localizedMapView,
+            OperatingHoursRange operatingHours) {
+        return this.serviceClient.searchAlongRouteAsync(
                 format,
                 query,
                 maxDetourTime,
-                searchAlongRouteRequestBody,
-                categorySet,
-                limit,
-                brandSet,
-                connectorSet,
-                view,
-                openingHours);
+                route,
+                top,
+                brandFilter,
+                categoryFilter,
+                electricVehicleConnectorFilter,
+                localizedMapView,
+                operatingHours);
     }
 
     /**
@@ -2491,13 +2588,13 @@ public final class SearchAsyncClient {
      * <p>**Applies to**: S1 pricing tier.
      *
      * <p>The Search Address Batch API sends batches of queries to [Search Fuzzy
-     * API](https://docs.microsoft.com/en-us/rest/api/maps/search/getsearchfuzzy) using just a single API call. You can
-     * call Search Address Fuzzy Batch API to run either asynchronously (async) or synchronously (sync). The async API
-     * allows caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous Batch
-     * Request The Synchronous API is recommended for lightweight batch requests. When the service receives a request,
-     * it will respond as soon as the batch items are calculated and there will be no possibility to retrieve the
-     * results later. The Synchronous API will return a timeout error (a 408 response) if the request takes longer than
-     * 60 seconds. The number of batch items is limited to **100** for this API. ``` POST
+     * API](https://docs.microsoft.com/rest/api/maps/search/getsearchfuzzy) using just a single API call. You can call
+     * Search Address Fuzzy Batch API to run either asynchronously (async) or synchronously (sync). The async API allows
+     * caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous Batch Request
+     * The Synchronous API is recommended for lightweight batch requests. When the service receives a request, it will
+     * respond as soon as the batch items are calculated and there will be no possibility to retrieve the results later.
+     * The Synchronous API will return a timeout error (a 408 response) if the request takes longer than 60 seconds. The
+     * number of batch items is limited to **100** for this API. ``` POST
      * https://atlas.microsoft.com/search/fuzzy/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
      * ``` ### Submit Asynchronous Batch Request The Asynchronous API is appropriate for processing big volumes of
      * relatively complex search requests - It allows the retrieval of results in a separate call (multiple downloads
@@ -2536,9 +2633,9 @@ public final class SearchAsyncClient {
      *
      * <p>A _search fuzzy_ query in a batch is just a partial URL _without_ the protocol, base URL, path, api-version
      * and subscription-key. It can accept any of the supported _search fuzzy_ [URI
-     * parameters](https://docs.microsoft.com/en-us/rest/api/maps/search/getsearchfuzzy#uri-parameters). The string
-     * values in the _search fuzzy_ query must be properly escaped (e.g. " character should be escaped with \\ ) and it
-     * should also be properly URL-encoded.
+     * parameters](https://docs.microsoft.com/rest/api/maps/search/getsearchfuzzy#uri-parameters). The string values in
+     * the _search fuzzy_ query must be properly escaped (e.g. " character should be escaped with \\ ) and it should
+     * also be properly URL-encoded.
      *
      * <p>The async API allows caller to batch up to **10,000** queries and sync API up to **100** queries, and the
      * batch should contain at least **1** query.
@@ -2567,8 +2664,8 @@ public final class SearchAsyncClient {
      * `batchItems` is of one of the following types:
      *
      * <p>-
-     * [`SearchCommonResponse`](https://docs.microsoft.com/en-us/rest/api/maps/search/getsearchfuzzy#searchcommonresponse)
-     * - If the query completed successfully.
+     * [`SearchAddressResponse`](https://docs.microsoft.com/rest/api/maps/search/getsearchfuzzy#SearchAddressResponse) -
+     * If the query completed successfully.
      *
      * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
      *
@@ -2589,12 +2686,12 @@ public final class SearchAsyncClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Search Fuzzy Batch service call.
+     * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<SearchFuzzyBatchResponse>> postSearchFuzzyBatchSyncWithResponse(
-            ResponseFormat format, BatchRequestBody searchFuzzyBatchRequestBody) {
-        return this.serviceClient.postSearchFuzzyBatchSyncWithResponseAsync(format, searchFuzzyBatchRequestBody);
+    public Mono<Response<SearchAddressBatchProcessResult>> fuzzySearchBatchSyncWithResponse(
+            JsonFormat format, BatchRequest searchFuzzyBatchRequestBody) {
+        return this.serviceClient.fuzzySearchBatchSyncWithResponseAsync(format, searchFuzzyBatchRequestBody);
     }
 
     /**
@@ -2603,13 +2700,13 @@ public final class SearchAsyncClient {
      * <p>**Applies to**: S1 pricing tier.
      *
      * <p>The Search Address Batch API sends batches of queries to [Search Fuzzy
-     * API](https://docs.microsoft.com/en-us/rest/api/maps/search/getsearchfuzzy) using just a single API call. You can
-     * call Search Address Fuzzy Batch API to run either asynchronously (async) or synchronously (sync). The async API
-     * allows caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous Batch
-     * Request The Synchronous API is recommended for lightweight batch requests. When the service receives a request,
-     * it will respond as soon as the batch items are calculated and there will be no possibility to retrieve the
-     * results later. The Synchronous API will return a timeout error (a 408 response) if the request takes longer than
-     * 60 seconds. The number of batch items is limited to **100** for this API. ``` POST
+     * API](https://docs.microsoft.com/rest/api/maps/search/getsearchfuzzy) using just a single API call. You can call
+     * Search Address Fuzzy Batch API to run either asynchronously (async) or synchronously (sync). The async API allows
+     * caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous Batch Request
+     * The Synchronous API is recommended for lightweight batch requests. When the service receives a request, it will
+     * respond as soon as the batch items are calculated and there will be no possibility to retrieve the results later.
+     * The Synchronous API will return a timeout error (a 408 response) if the request takes longer than 60 seconds. The
+     * number of batch items is limited to **100** for this API. ``` POST
      * https://atlas.microsoft.com/search/fuzzy/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
      * ``` ### Submit Asynchronous Batch Request The Asynchronous API is appropriate for processing big volumes of
      * relatively complex search requests - It allows the retrieval of results in a separate call (multiple downloads
@@ -2648,9 +2745,9 @@ public final class SearchAsyncClient {
      *
      * <p>A _search fuzzy_ query in a batch is just a partial URL _without_ the protocol, base URL, path, api-version
      * and subscription-key. It can accept any of the supported _search fuzzy_ [URI
-     * parameters](https://docs.microsoft.com/en-us/rest/api/maps/search/getsearchfuzzy#uri-parameters). The string
-     * values in the _search fuzzy_ query must be properly escaped (e.g. " character should be escaped with \\ ) and it
-     * should also be properly URL-encoded.
+     * parameters](https://docs.microsoft.com/rest/api/maps/search/getsearchfuzzy#uri-parameters). The string values in
+     * the _search fuzzy_ query must be properly escaped (e.g. " character should be escaped with \\ ) and it should
+     * also be properly URL-encoded.
      *
      * <p>The async API allows caller to batch up to **10,000** queries and sync API up to **100** queries, and the
      * batch should contain at least **1** query.
@@ -2679,8 +2776,8 @@ public final class SearchAsyncClient {
      * `batchItems` is of one of the following types:
      *
      * <p>-
-     * [`SearchCommonResponse`](https://docs.microsoft.com/en-us/rest/api/maps/search/getsearchfuzzy#searchcommonresponse)
-     * - If the query completed successfully.
+     * [`SearchAddressResponse`](https://docs.microsoft.com/rest/api/maps/search/getsearchfuzzy#SearchAddressResponse) -
+     * If the query completed successfully.
      *
      * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
      *
@@ -2701,12 +2798,12 @@ public final class SearchAsyncClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Search Fuzzy Batch service call.
+     * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchFuzzyBatchResponse> postSearchFuzzyBatchSync(
-            ResponseFormat format, BatchRequestBody searchFuzzyBatchRequestBody) {
-        return this.serviceClient.postSearchFuzzyBatchSyncAsync(format, searchFuzzyBatchRequestBody);
+    public Mono<SearchAddressBatchProcessResult> fuzzySearchBatchSync(
+            JsonFormat format, BatchRequest searchFuzzyBatchRequestBody) {
+        return this.serviceClient.fuzzySearchBatchSyncAsync(format, searchFuzzyBatchRequestBody);
     }
 
     /**
@@ -2715,13 +2812,13 @@ public final class SearchAsyncClient {
      * <p>**Applies to**: S1 pricing tier.
      *
      * <p>The Search Address Batch API sends batches of queries to [Search Fuzzy
-     * API](https://docs.microsoft.com/en-us/rest/api/maps/search/getsearchfuzzy) using just a single API call. You can
-     * call Search Address Fuzzy Batch API to run either asynchronously (async) or synchronously (sync). The async API
-     * allows caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous Batch
-     * Request The Synchronous API is recommended for lightweight batch requests. When the service receives a request,
-     * it will respond as soon as the batch items are calculated and there will be no possibility to retrieve the
-     * results later. The Synchronous API will return a timeout error (a 408 response) if the request takes longer than
-     * 60 seconds. The number of batch items is limited to **100** for this API. ``` POST
+     * API](https://docs.microsoft.com/rest/api/maps/search/getsearchfuzzy) using just a single API call. You can call
+     * Search Address Fuzzy Batch API to run either asynchronously (async) or synchronously (sync). The async API allows
+     * caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous Batch Request
+     * The Synchronous API is recommended for lightweight batch requests. When the service receives a request, it will
+     * respond as soon as the batch items are calculated and there will be no possibility to retrieve the results later.
+     * The Synchronous API will return a timeout error (a 408 response) if the request takes longer than 60 seconds. The
+     * number of batch items is limited to **100** for this API. ``` POST
      * https://atlas.microsoft.com/search/fuzzy/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
      * ``` ### Submit Asynchronous Batch Request The Asynchronous API is appropriate for processing big volumes of
      * relatively complex search requests - It allows the retrieval of results in a separate call (multiple downloads
@@ -2760,9 +2857,9 @@ public final class SearchAsyncClient {
      *
      * <p>A _search fuzzy_ query in a batch is just a partial URL _without_ the protocol, base URL, path, api-version
      * and subscription-key. It can accept any of the supported _search fuzzy_ [URI
-     * parameters](https://docs.microsoft.com/en-us/rest/api/maps/search/getsearchfuzzy#uri-parameters). The string
-     * values in the _search fuzzy_ query must be properly escaped (e.g. " character should be escaped with \\ ) and it
-     * should also be properly URL-encoded.
+     * parameters](https://docs.microsoft.com/rest/api/maps/search/getsearchfuzzy#uri-parameters). The string values in
+     * the _search fuzzy_ query must be properly escaped (e.g. " character should be escaped with \\ ) and it should
+     * also be properly URL-encoded.
      *
      * <p>The async API allows caller to batch up to **10,000** queries and sync API up to **100** queries, and the
      * batch should contain at least **1** query.
@@ -2791,8 +2888,8 @@ public final class SearchAsyncClient {
      * `batchItems` is of one of the following types:
      *
      * <p>-
-     * [`SearchCommonResponse`](https://docs.microsoft.com/en-us/rest/api/maps/search/getsearchfuzzy#searchcommonresponse)
-     * - If the query completed successfully.
+     * [`SearchAddressResponse`](https://docs.microsoft.com/rest/api/maps/search/getsearchfuzzy#SearchAddressResponse) -
+     * If the query completed successfully.
      *
      * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
      *
@@ -2813,12 +2910,12 @@ public final class SearchAsyncClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Search Fuzzy Batch service call.
+     * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchesPostSearchFuzzyBatchResponse> postSearchFuzzyBatchWithResponse(
-            ResponseFormat format, BatchRequestBody searchFuzzyBatchRequestBody) {
-        return this.serviceClient.postSearchFuzzyBatchWithResponseAsync(format, searchFuzzyBatchRequestBody);
+    public Mono<SearchesFuzzySearchBatchResponse> fuzzySearchBatchWithResponse(
+            JsonFormat format, BatchRequest searchFuzzyBatchRequestBody) {
+        return this.serviceClient.fuzzySearchBatchWithResponseAsync(format, searchFuzzyBatchRequestBody);
     }
 
     /**
@@ -2827,13 +2924,13 @@ public final class SearchAsyncClient {
      * <p>**Applies to**: S1 pricing tier.
      *
      * <p>The Search Address Batch API sends batches of queries to [Search Fuzzy
-     * API](https://docs.microsoft.com/en-us/rest/api/maps/search/getsearchfuzzy) using just a single API call. You can
-     * call Search Address Fuzzy Batch API to run either asynchronously (async) or synchronously (sync). The async API
-     * allows caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous Batch
-     * Request The Synchronous API is recommended for lightweight batch requests. When the service receives a request,
-     * it will respond as soon as the batch items are calculated and there will be no possibility to retrieve the
-     * results later. The Synchronous API will return a timeout error (a 408 response) if the request takes longer than
-     * 60 seconds. The number of batch items is limited to **100** for this API. ``` POST
+     * API](https://docs.microsoft.com/rest/api/maps/search/getsearchfuzzy) using just a single API call. You can call
+     * Search Address Fuzzy Batch API to run either asynchronously (async) or synchronously (sync). The async API allows
+     * caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous Batch Request
+     * The Synchronous API is recommended for lightweight batch requests. When the service receives a request, it will
+     * respond as soon as the batch items are calculated and there will be no possibility to retrieve the results later.
+     * The Synchronous API will return a timeout error (a 408 response) if the request takes longer than 60 seconds. The
+     * number of batch items is limited to **100** for this API. ``` POST
      * https://atlas.microsoft.com/search/fuzzy/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
      * ``` ### Submit Asynchronous Batch Request The Asynchronous API is appropriate for processing big volumes of
      * relatively complex search requests - It allows the retrieval of results in a separate call (multiple downloads
@@ -2872,9 +2969,9 @@ public final class SearchAsyncClient {
      *
      * <p>A _search fuzzy_ query in a batch is just a partial URL _without_ the protocol, base URL, path, api-version
      * and subscription-key. It can accept any of the supported _search fuzzy_ [URI
-     * parameters](https://docs.microsoft.com/en-us/rest/api/maps/search/getsearchfuzzy#uri-parameters). The string
-     * values in the _search fuzzy_ query must be properly escaped (e.g. " character should be escaped with \\ ) and it
-     * should also be properly URL-encoded.
+     * parameters](https://docs.microsoft.com/rest/api/maps/search/getsearchfuzzy#uri-parameters). The string values in
+     * the _search fuzzy_ query must be properly escaped (e.g. " character should be escaped with \\ ) and it should
+     * also be properly URL-encoded.
      *
      * <p>The async API allows caller to batch up to **10,000** queries and sync API up to **100** queries, and the
      * batch should contain at least **1** query.
@@ -2903,8 +3000,8 @@ public final class SearchAsyncClient {
      * `batchItems` is of one of the following types:
      *
      * <p>-
-     * [`SearchCommonResponse`](https://docs.microsoft.com/en-us/rest/api/maps/search/getsearchfuzzy#searchcommonresponse)
-     * - If the query completed successfully.
+     * [`SearchAddressResponse`](https://docs.microsoft.com/rest/api/maps/search/getsearchfuzzy#SearchAddressResponse) -
+     * If the query completed successfully.
      *
      * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
      *
@@ -2925,12 +3022,12 @@ public final class SearchAsyncClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Search Fuzzy Batch service call.
+     * @return this object is returned from a successful Search Address Batch service call.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public PollerFlux<SearchFuzzyBatchResponse, SearchFuzzyBatchResponse> beginPostSearchFuzzyBatch(
-            ResponseFormat format, BatchRequestBody searchFuzzyBatchRequestBody) {
-        return this.serviceClient.beginPostSearchFuzzyBatchAsync(format, searchFuzzyBatchRequestBody);
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    public PollerFlux<SearchAddressBatchProcessResult, SearchAddressBatchProcessResult> beginFuzzySearchBatch(
+            JsonFormat format, BatchRequest searchFuzzyBatchRequestBody) {
+        return this.serviceClient.beginFuzzySearchBatchAsync(format, searchFuzzyBatchRequestBody);
     }
 
     /**
@@ -2939,13 +3036,13 @@ public final class SearchAsyncClient {
      * <p>**Applies to**: S1 pricing tier.
      *
      * <p>The Search Address Batch API sends batches of queries to [Search Fuzzy
-     * API](https://docs.microsoft.com/en-us/rest/api/maps/search/getsearchfuzzy) using just a single API call. You can
-     * call Search Address Fuzzy Batch API to run either asynchronously (async) or synchronously (sync). The async API
-     * allows caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous Batch
-     * Request The Synchronous API is recommended for lightweight batch requests. When the service receives a request,
-     * it will respond as soon as the batch items are calculated and there will be no possibility to retrieve the
-     * results later. The Synchronous API will return a timeout error (a 408 response) if the request takes longer than
-     * 60 seconds. The number of batch items is limited to **100** for this API. ``` POST
+     * API](https://docs.microsoft.com/rest/api/maps/search/getsearchfuzzy) using just a single API call. You can call
+     * Search Address Fuzzy Batch API to run either asynchronously (async) or synchronously (sync). The async API allows
+     * caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous Batch Request
+     * The Synchronous API is recommended for lightweight batch requests. When the service receives a request, it will
+     * respond as soon as the batch items are calculated and there will be no possibility to retrieve the results later.
+     * The Synchronous API will return a timeout error (a 408 response) if the request takes longer than 60 seconds. The
+     * number of batch items is limited to **100** for this API. ``` POST
      * https://atlas.microsoft.com/search/fuzzy/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
      * ``` ### Submit Asynchronous Batch Request The Asynchronous API is appropriate for processing big volumes of
      * relatively complex search requests - It allows the retrieval of results in a separate call (multiple downloads
@@ -2984,9 +3081,9 @@ public final class SearchAsyncClient {
      *
      * <p>A _search fuzzy_ query in a batch is just a partial URL _without_ the protocol, base URL, path, api-version
      * and subscription-key. It can accept any of the supported _search fuzzy_ [URI
-     * parameters](https://docs.microsoft.com/en-us/rest/api/maps/search/getsearchfuzzy#uri-parameters). The string
-     * values in the _search fuzzy_ query must be properly escaped (e.g. " character should be escaped with \\ ) and it
-     * should also be properly URL-encoded.
+     * parameters](https://docs.microsoft.com/rest/api/maps/search/getsearchfuzzy#uri-parameters). The string values in
+     * the _search fuzzy_ query must be properly escaped (e.g. " character should be escaped with \\ ) and it should
+     * also be properly URL-encoded.
      *
      * <p>The async API allows caller to batch up to **10,000** queries and sync API up to **100** queries, and the
      * batch should contain at least **1** query.
@@ -3015,8 +3112,8 @@ public final class SearchAsyncClient {
      * `batchItems` is of one of the following types:
      *
      * <p>-
-     * [`SearchCommonResponse`](https://docs.microsoft.com/en-us/rest/api/maps/search/getsearchfuzzy#searchcommonresponse)
-     * - If the query completed successfully.
+     * [`SearchAddressResponse`](https://docs.microsoft.com/rest/api/maps/search/getsearchfuzzy#SearchAddressResponse) -
+     * If the query completed successfully.
      *
      * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
      *
@@ -3031,15 +3128,15 @@ public final class SearchAsyncClient {
      * BadRequest", "message": "Bad request: one or more parameters were incorrectly specified or are mutually
      * exclusive." } } } ] } ```.
      *
-     * @param format Batch id for querying the operation.
+     * @param batchId Batch id for querying the operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Search Fuzzy Batch service call.
+     * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchesGetSearchFuzzyBatchResponse> getSearchFuzzyBatchWithResponse(String format) {
-        return this.serviceClient.getSearchFuzzyBatchWithResponseAsync(format);
+    public Mono<SearchesGetFuzzySearchBatchResponse> getFuzzySearchBatchWithResponse(String batchId) {
+        return this.serviceClient.getFuzzySearchBatchWithResponseAsync(batchId);
     }
 
     /**
@@ -3048,13 +3145,13 @@ public final class SearchAsyncClient {
      * <p>**Applies to**: S1 pricing tier.
      *
      * <p>The Search Address Batch API sends batches of queries to [Search Fuzzy
-     * API](https://docs.microsoft.com/en-us/rest/api/maps/search/getsearchfuzzy) using just a single API call. You can
-     * call Search Address Fuzzy Batch API to run either asynchronously (async) or synchronously (sync). The async API
-     * allows caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous Batch
-     * Request The Synchronous API is recommended for lightweight batch requests. When the service receives a request,
-     * it will respond as soon as the batch items are calculated and there will be no possibility to retrieve the
-     * results later. The Synchronous API will return a timeout error (a 408 response) if the request takes longer than
-     * 60 seconds. The number of batch items is limited to **100** for this API. ``` POST
+     * API](https://docs.microsoft.com/rest/api/maps/search/getsearchfuzzy) using just a single API call. You can call
+     * Search Address Fuzzy Batch API to run either asynchronously (async) or synchronously (sync). The async API allows
+     * caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous Batch Request
+     * The Synchronous API is recommended for lightweight batch requests. When the service receives a request, it will
+     * respond as soon as the batch items are calculated and there will be no possibility to retrieve the results later.
+     * The Synchronous API will return a timeout error (a 408 response) if the request takes longer than 60 seconds. The
+     * number of batch items is limited to **100** for this API. ``` POST
      * https://atlas.microsoft.com/search/fuzzy/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
      * ``` ### Submit Asynchronous Batch Request The Asynchronous API is appropriate for processing big volumes of
      * relatively complex search requests - It allows the retrieval of results in a separate call (multiple downloads
@@ -3093,9 +3190,9 @@ public final class SearchAsyncClient {
      *
      * <p>A _search fuzzy_ query in a batch is just a partial URL _without_ the protocol, base URL, path, api-version
      * and subscription-key. It can accept any of the supported _search fuzzy_ [URI
-     * parameters](https://docs.microsoft.com/en-us/rest/api/maps/search/getsearchfuzzy#uri-parameters). The string
-     * values in the _search fuzzy_ query must be properly escaped (e.g. " character should be escaped with \\ ) and it
-     * should also be properly URL-encoded.
+     * parameters](https://docs.microsoft.com/rest/api/maps/search/getsearchfuzzy#uri-parameters). The string values in
+     * the _search fuzzy_ query must be properly escaped (e.g. " character should be escaped with \\ ) and it should
+     * also be properly URL-encoded.
      *
      * <p>The async API allows caller to batch up to **10,000** queries and sync API up to **100** queries, and the
      * batch should contain at least **1** query.
@@ -3124,8 +3221,8 @@ public final class SearchAsyncClient {
      * `batchItems` is of one of the following types:
      *
      * <p>-
-     * [`SearchCommonResponse`](https://docs.microsoft.com/en-us/rest/api/maps/search/getsearchfuzzy#searchcommonresponse)
-     * - If the query completed successfully.
+     * [`SearchAddressResponse`](https://docs.microsoft.com/rest/api/maps/search/getsearchfuzzy#SearchAddressResponse) -
+     * If the query completed successfully.
      *
      * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
      *
@@ -3140,15 +3237,16 @@ public final class SearchAsyncClient {
      * BadRequest", "message": "Bad request: one or more parameters were incorrectly specified or are mutually
      * exclusive." } } } ] } ```.
      *
-     * @param format Batch id for querying the operation.
+     * @param batchId Batch id for querying the operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Search Fuzzy Batch service call.
+     * @return this object is returned from a successful Search Address Batch service call.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public PollerFlux<SearchFuzzyBatchResponse, SearchFuzzyBatchResponse> beginGetSearchFuzzyBatch(String format) {
-        return this.serviceClient.beginGetSearchFuzzyBatchAsync(format);
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    public PollerFlux<SearchAddressBatchProcessResult, SearchAddressBatchProcessResult> beginGetFuzzySearchBatch(
+            String batchId) {
+        return this.serviceClient.beginGetFuzzySearchBatchAsync(batchId);
     }
 
     /**
@@ -3157,13 +3255,13 @@ public final class SearchAsyncClient {
      * <p>**Applies to**: S1 pricing tier.
      *
      * <p>The Search Address Batch API sends batches of queries to [Search Address
-     * API](https://docs.microsoft.com/en-us/rest/api/maps/search/getsearchaddress) using just a single API call. You
-     * can call Search Address Batch API to run either asynchronously (async) or synchronously (sync). The async API
-     * allows caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous Batch
-     * Request The Synchronous API is recommended for lightweight batch requests. When the service receives a request,
-     * it will respond as soon as the batch items are calculated and there will be no possibility to retrieve the
-     * results later. The Synchronous API will return a timeout error (a 408 response) if the request takes longer than
-     * 60 seconds. The number of batch items is limited to **100** for this API. ``` POST
+     * API](https://docs.microsoft.com/rest/api/maps/search/getsearchaddress) using just a single API call. You can call
+     * Search Address Batch API to run either asynchronously (async) or synchronously (sync). The async API allows
+     * caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous Batch Request
+     * The Synchronous API is recommended for lightweight batch requests. When the service receives a request, it will
+     * respond as soon as the batch items are calculated and there will be no possibility to retrieve the results later.
+     * The Synchronous API will return a timeout error (a 408 response) if the request takes longer than 60 seconds. The
+     * number of batch items is limited to **100** for this API. ``` POST
      * https://atlas.microsoft.com/search/address/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
      * ``` ### Submit Asynchronous Batch Request The Asynchronous API is appropriate for processing big volumes of
      * relatively complex search requests - It allows the retrieval of results in a separate call (multiple downloads
@@ -3203,9 +3301,9 @@ public final class SearchAsyncClient {
      *
      * <p>A _search address_ query in a batch is just a partial URL _without_ the protocol, base URL, path, api-version
      * and subscription-key. It can accept any of the supported _search address_ [URI
-     * parameters](https://docs.microsoft.com/en-us/rest/api/maps/search/getsearchaddress#uri-parameters). The string
-     * values in the _search address_ query must be properly escaped (e.g. " character should be escaped with \\ ) and
-     * it should also be properly URL-encoded.
+     * parameters](https://docs.microsoft.com/rest/api/maps/search/getsearchaddress#uri-parameters). The string values
+     * in the _search address_ query must be properly escaped (e.g. " character should be escaped with \\ ) and it
+     * should also be properly URL-encoded.
      *
      * <p>The async API allows caller to batch up to **10,000** queries and sync API up to **100** queries, and the
      * batch should contain at least **1** query.
@@ -3234,7 +3332,7 @@ public final class SearchAsyncClient {
      * `batchItems` is of one of the following types:
      *
      * <p>-
-     * [`SearchCommonResponse`](https://docs.microsoft.com/en-us/rest/api/maps/search/getsearchaddress#SearchCommonResponse)
+     * [`SearchAddressResponse`](https://docs.microsoft.com/rest/api/maps/search/getsearchaddress#SearchAddressResponse)
      * - If the query completed successfully.
      *
      * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
@@ -3257,9 +3355,9 @@ public final class SearchAsyncClient {
      * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<SearchAddressBatchResponse>> postSearchAddressBatchSyncWithResponse(
-            ResponseFormat format, BatchRequestBody searchAddressBatchRequestBody) {
-        return this.serviceClient.postSearchAddressBatchSyncWithResponseAsync(format, searchAddressBatchRequestBody);
+    public Mono<Response<SearchAddressBatchProcessResult>> searchAddressBatchSyncWithResponse(
+            JsonFormat format, BatchRequest searchAddressBatchRequestBody) {
+        return this.serviceClient.searchAddressBatchSyncWithResponseAsync(format, searchAddressBatchRequestBody);
     }
 
     /**
@@ -3268,13 +3366,13 @@ public final class SearchAsyncClient {
      * <p>**Applies to**: S1 pricing tier.
      *
      * <p>The Search Address Batch API sends batches of queries to [Search Address
-     * API](https://docs.microsoft.com/en-us/rest/api/maps/search/getsearchaddress) using just a single API call. You
-     * can call Search Address Batch API to run either asynchronously (async) or synchronously (sync). The async API
-     * allows caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous Batch
-     * Request The Synchronous API is recommended for lightweight batch requests. When the service receives a request,
-     * it will respond as soon as the batch items are calculated and there will be no possibility to retrieve the
-     * results later. The Synchronous API will return a timeout error (a 408 response) if the request takes longer than
-     * 60 seconds. The number of batch items is limited to **100** for this API. ``` POST
+     * API](https://docs.microsoft.com/rest/api/maps/search/getsearchaddress) using just a single API call. You can call
+     * Search Address Batch API to run either asynchronously (async) or synchronously (sync). The async API allows
+     * caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous Batch Request
+     * The Synchronous API is recommended for lightweight batch requests. When the service receives a request, it will
+     * respond as soon as the batch items are calculated and there will be no possibility to retrieve the results later.
+     * The Synchronous API will return a timeout error (a 408 response) if the request takes longer than 60 seconds. The
+     * number of batch items is limited to **100** for this API. ``` POST
      * https://atlas.microsoft.com/search/address/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
      * ``` ### Submit Asynchronous Batch Request The Asynchronous API is appropriate for processing big volumes of
      * relatively complex search requests - It allows the retrieval of results in a separate call (multiple downloads
@@ -3314,9 +3412,9 @@ public final class SearchAsyncClient {
      *
      * <p>A _search address_ query in a batch is just a partial URL _without_ the protocol, base URL, path, api-version
      * and subscription-key. It can accept any of the supported _search address_ [URI
-     * parameters](https://docs.microsoft.com/en-us/rest/api/maps/search/getsearchaddress#uri-parameters). The string
-     * values in the _search address_ query must be properly escaped (e.g. " character should be escaped with \\ ) and
-     * it should also be properly URL-encoded.
+     * parameters](https://docs.microsoft.com/rest/api/maps/search/getsearchaddress#uri-parameters). The string values
+     * in the _search address_ query must be properly escaped (e.g. " character should be escaped with \\ ) and it
+     * should also be properly URL-encoded.
      *
      * <p>The async API allows caller to batch up to **10,000** queries and sync API up to **100** queries, and the
      * batch should contain at least **1** query.
@@ -3345,7 +3443,7 @@ public final class SearchAsyncClient {
      * `batchItems` is of one of the following types:
      *
      * <p>-
-     * [`SearchCommonResponse`](https://docs.microsoft.com/en-us/rest/api/maps/search/getsearchaddress#SearchCommonResponse)
+     * [`SearchAddressResponse`](https://docs.microsoft.com/rest/api/maps/search/getsearchaddress#SearchAddressResponse)
      * - If the query completed successfully.
      *
      * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
@@ -3368,9 +3466,9 @@ public final class SearchAsyncClient {
      * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchAddressBatchResponse> postSearchAddressBatchSync(
-            ResponseFormat format, BatchRequestBody searchAddressBatchRequestBody) {
-        return this.serviceClient.postSearchAddressBatchSyncAsync(format, searchAddressBatchRequestBody);
+    public Mono<SearchAddressBatchProcessResult> searchAddressBatchSync(
+            JsonFormat format, BatchRequest searchAddressBatchRequestBody) {
+        return this.serviceClient.searchAddressBatchSyncAsync(format, searchAddressBatchRequestBody);
     }
 
     /**
@@ -3379,13 +3477,13 @@ public final class SearchAsyncClient {
      * <p>**Applies to**: S1 pricing tier.
      *
      * <p>The Search Address Batch API sends batches of queries to [Search Address
-     * API](https://docs.microsoft.com/en-us/rest/api/maps/search/getsearchaddress) using just a single API call. You
-     * can call Search Address Batch API to run either asynchronously (async) or synchronously (sync). The async API
-     * allows caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous Batch
-     * Request The Synchronous API is recommended for lightweight batch requests. When the service receives a request,
-     * it will respond as soon as the batch items are calculated and there will be no possibility to retrieve the
-     * results later. The Synchronous API will return a timeout error (a 408 response) if the request takes longer than
-     * 60 seconds. The number of batch items is limited to **100** for this API. ``` POST
+     * API](https://docs.microsoft.com/rest/api/maps/search/getsearchaddress) using just a single API call. You can call
+     * Search Address Batch API to run either asynchronously (async) or synchronously (sync). The async API allows
+     * caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous Batch Request
+     * The Synchronous API is recommended for lightweight batch requests. When the service receives a request, it will
+     * respond as soon as the batch items are calculated and there will be no possibility to retrieve the results later.
+     * The Synchronous API will return a timeout error (a 408 response) if the request takes longer than 60 seconds. The
+     * number of batch items is limited to **100** for this API. ``` POST
      * https://atlas.microsoft.com/search/address/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
      * ``` ### Submit Asynchronous Batch Request The Asynchronous API is appropriate for processing big volumes of
      * relatively complex search requests - It allows the retrieval of results in a separate call (multiple downloads
@@ -3425,9 +3523,9 @@ public final class SearchAsyncClient {
      *
      * <p>A _search address_ query in a batch is just a partial URL _without_ the protocol, base URL, path, api-version
      * and subscription-key. It can accept any of the supported _search address_ [URI
-     * parameters](https://docs.microsoft.com/en-us/rest/api/maps/search/getsearchaddress#uri-parameters). The string
-     * values in the _search address_ query must be properly escaped (e.g. " character should be escaped with \\ ) and
-     * it should also be properly URL-encoded.
+     * parameters](https://docs.microsoft.com/rest/api/maps/search/getsearchaddress#uri-parameters). The string values
+     * in the _search address_ query must be properly escaped (e.g. " character should be escaped with \\ ) and it
+     * should also be properly URL-encoded.
      *
      * <p>The async API allows caller to batch up to **10,000** queries and sync API up to **100** queries, and the
      * batch should contain at least **1** query.
@@ -3456,7 +3554,7 @@ public final class SearchAsyncClient {
      * `batchItems` is of one of the following types:
      *
      * <p>-
-     * [`SearchCommonResponse`](https://docs.microsoft.com/en-us/rest/api/maps/search/getsearchaddress#SearchCommonResponse)
+     * [`SearchAddressResponse`](https://docs.microsoft.com/rest/api/maps/search/getsearchaddress#SearchAddressResponse)
      * - If the query completed successfully.
      *
      * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
@@ -3479,9 +3577,9 @@ public final class SearchAsyncClient {
      * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchesPostSearchAddressBatchResponse> postSearchAddressBatchWithResponse(
-            ResponseFormat format, BatchRequestBody searchAddressBatchRequestBody) {
-        return this.serviceClient.postSearchAddressBatchWithResponseAsync(format, searchAddressBatchRequestBody);
+    public Mono<SearchesSearchAddressBatchResponse> searchAddressBatchWithResponse(
+            JsonFormat format, BatchRequest searchAddressBatchRequestBody) {
+        return this.serviceClient.searchAddressBatchWithResponseAsync(format, searchAddressBatchRequestBody);
     }
 
     /**
@@ -3490,13 +3588,13 @@ public final class SearchAsyncClient {
      * <p>**Applies to**: S1 pricing tier.
      *
      * <p>The Search Address Batch API sends batches of queries to [Search Address
-     * API](https://docs.microsoft.com/en-us/rest/api/maps/search/getsearchaddress) using just a single API call. You
-     * can call Search Address Batch API to run either asynchronously (async) or synchronously (sync). The async API
-     * allows caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous Batch
-     * Request The Synchronous API is recommended for lightweight batch requests. When the service receives a request,
-     * it will respond as soon as the batch items are calculated and there will be no possibility to retrieve the
-     * results later. The Synchronous API will return a timeout error (a 408 response) if the request takes longer than
-     * 60 seconds. The number of batch items is limited to **100** for this API. ``` POST
+     * API](https://docs.microsoft.com/rest/api/maps/search/getsearchaddress) using just a single API call. You can call
+     * Search Address Batch API to run either asynchronously (async) or synchronously (sync). The async API allows
+     * caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous Batch Request
+     * The Synchronous API is recommended for lightweight batch requests. When the service receives a request, it will
+     * respond as soon as the batch items are calculated and there will be no possibility to retrieve the results later.
+     * The Synchronous API will return a timeout error (a 408 response) if the request takes longer than 60 seconds. The
+     * number of batch items is limited to **100** for this API. ``` POST
      * https://atlas.microsoft.com/search/address/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
      * ``` ### Submit Asynchronous Batch Request The Asynchronous API is appropriate for processing big volumes of
      * relatively complex search requests - It allows the retrieval of results in a separate call (multiple downloads
@@ -3536,9 +3634,9 @@ public final class SearchAsyncClient {
      *
      * <p>A _search address_ query in a batch is just a partial URL _without_ the protocol, base URL, path, api-version
      * and subscription-key. It can accept any of the supported _search address_ [URI
-     * parameters](https://docs.microsoft.com/en-us/rest/api/maps/search/getsearchaddress#uri-parameters). The string
-     * values in the _search address_ query must be properly escaped (e.g. " character should be escaped with \\ ) and
-     * it should also be properly URL-encoded.
+     * parameters](https://docs.microsoft.com/rest/api/maps/search/getsearchaddress#uri-parameters). The string values
+     * in the _search address_ query must be properly escaped (e.g. " character should be escaped with \\ ) and it
+     * should also be properly URL-encoded.
      *
      * <p>The async API allows caller to batch up to **10,000** queries and sync API up to **100** queries, and the
      * batch should contain at least **1** query.
@@ -3567,7 +3665,7 @@ public final class SearchAsyncClient {
      * `batchItems` is of one of the following types:
      *
      * <p>-
-     * [`SearchCommonResponse`](https://docs.microsoft.com/en-us/rest/api/maps/search/getsearchaddress#SearchCommonResponse)
+     * [`SearchAddressResponse`](https://docs.microsoft.com/rest/api/maps/search/getsearchaddress#SearchAddressResponse)
      * - If the query completed successfully.
      *
      * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
@@ -3589,10 +3687,10 @@ public final class SearchAsyncClient {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search Address Batch service call.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public PollerFlux<SearchAddressBatchResponse, SearchAddressBatchResponse> beginPostSearchAddressBatch(
-            ResponseFormat format, BatchRequestBody searchAddressBatchRequestBody) {
-        return this.serviceClient.beginPostSearchAddressBatchAsync(format, searchAddressBatchRequestBody);
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    public PollerFlux<SearchAddressBatchProcessResult, SearchAddressBatchProcessResult> beginSearchAddressBatch(
+            JsonFormat format, BatchRequest searchAddressBatchRequestBody) {
+        return this.serviceClient.beginSearchAddressBatchAsync(format, searchAddressBatchRequestBody);
     }
 
     /**
@@ -3601,13 +3699,13 @@ public final class SearchAsyncClient {
      * <p>**Applies to**: S1 pricing tier.
      *
      * <p>The Search Address Batch API sends batches of queries to [Search Address
-     * API](https://docs.microsoft.com/en-us/rest/api/maps/search/getsearchaddress) using just a single API call. You
-     * can call Search Address Batch API to run either asynchronously (async) or synchronously (sync). The async API
-     * allows caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous Batch
-     * Request The Synchronous API is recommended for lightweight batch requests. When the service receives a request,
-     * it will respond as soon as the batch items are calculated and there will be no possibility to retrieve the
-     * results later. The Synchronous API will return a timeout error (a 408 response) if the request takes longer than
-     * 60 seconds. The number of batch items is limited to **100** for this API. ``` POST
+     * API](https://docs.microsoft.com/rest/api/maps/search/getsearchaddress) using just a single API call. You can call
+     * Search Address Batch API to run either asynchronously (async) or synchronously (sync). The async API allows
+     * caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous Batch Request
+     * The Synchronous API is recommended for lightweight batch requests. When the service receives a request, it will
+     * respond as soon as the batch items are calculated and there will be no possibility to retrieve the results later.
+     * The Synchronous API will return a timeout error (a 408 response) if the request takes longer than 60 seconds. The
+     * number of batch items is limited to **100** for this API. ``` POST
      * https://atlas.microsoft.com/search/address/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
      * ``` ### Submit Asynchronous Batch Request The Asynchronous API is appropriate for processing big volumes of
      * relatively complex search requests - It allows the retrieval of results in a separate call (multiple downloads
@@ -3647,9 +3745,9 @@ public final class SearchAsyncClient {
      *
      * <p>A _search address_ query in a batch is just a partial URL _without_ the protocol, base URL, path, api-version
      * and subscription-key. It can accept any of the supported _search address_ [URI
-     * parameters](https://docs.microsoft.com/en-us/rest/api/maps/search/getsearchaddress#uri-parameters). The string
-     * values in the _search address_ query must be properly escaped (e.g. " character should be escaped with \\ ) and
-     * it should also be properly URL-encoded.
+     * parameters](https://docs.microsoft.com/rest/api/maps/search/getsearchaddress#uri-parameters). The string values
+     * in the _search address_ query must be properly escaped (e.g. " character should be escaped with \\ ) and it
+     * should also be properly URL-encoded.
      *
      * <p>The async API allows caller to batch up to **10,000** queries and sync API up to **100** queries, and the
      * batch should contain at least **1** query.
@@ -3678,7 +3776,7 @@ public final class SearchAsyncClient {
      * `batchItems` is of one of the following types:
      *
      * <p>-
-     * [`SearchCommonResponse`](https://docs.microsoft.com/en-us/rest/api/maps/search/getsearchaddress#SearchCommonResponse)
+     * [`SearchAddressResponse`](https://docs.microsoft.com/rest/api/maps/search/getsearchaddress#SearchAddressResponse)
      * - If the query completed successfully.
      *
      * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
@@ -3692,15 +3790,15 @@ public final class SearchAsyncClient {
      * "response": { "error": { "code": "400 BadRequest", "message": "Bad request: one or more parameters were
      * incorrectly specified or are mutually exclusive." } } } ] } ```.
      *
-     * @param format Batch id for querying the operation.
+     * @param batchId Batch id for querying the operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchesGetSearchAddressBatchResponse> getSearchAddressBatchWithResponse(String format) {
-        return this.serviceClient.getSearchAddressBatchWithResponseAsync(format);
+    public Mono<SearchesGetSearchAddressBatchResponse> getSearchAddressBatchWithResponse(String batchId) {
+        return this.serviceClient.getSearchAddressBatchWithResponseAsync(batchId);
     }
 
     /**
@@ -3709,13 +3807,13 @@ public final class SearchAsyncClient {
      * <p>**Applies to**: S1 pricing tier.
      *
      * <p>The Search Address Batch API sends batches of queries to [Search Address
-     * API](https://docs.microsoft.com/en-us/rest/api/maps/search/getsearchaddress) using just a single API call. You
-     * can call Search Address Batch API to run either asynchronously (async) or synchronously (sync). The async API
-     * allows caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous Batch
-     * Request The Synchronous API is recommended for lightweight batch requests. When the service receives a request,
-     * it will respond as soon as the batch items are calculated and there will be no possibility to retrieve the
-     * results later. The Synchronous API will return a timeout error (a 408 response) if the request takes longer than
-     * 60 seconds. The number of batch items is limited to **100** for this API. ``` POST
+     * API](https://docs.microsoft.com/rest/api/maps/search/getsearchaddress) using just a single API call. You can call
+     * Search Address Batch API to run either asynchronously (async) or synchronously (sync). The async API allows
+     * caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous Batch Request
+     * The Synchronous API is recommended for lightweight batch requests. When the service receives a request, it will
+     * respond as soon as the batch items are calculated and there will be no possibility to retrieve the results later.
+     * The Synchronous API will return a timeout error (a 408 response) if the request takes longer than 60 seconds. The
+     * number of batch items is limited to **100** for this API. ``` POST
      * https://atlas.microsoft.com/search/address/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
      * ``` ### Submit Asynchronous Batch Request The Asynchronous API is appropriate for processing big volumes of
      * relatively complex search requests - It allows the retrieval of results in a separate call (multiple downloads
@@ -3755,9 +3853,9 @@ public final class SearchAsyncClient {
      *
      * <p>A _search address_ query in a batch is just a partial URL _without_ the protocol, base URL, path, api-version
      * and subscription-key. It can accept any of the supported _search address_ [URI
-     * parameters](https://docs.microsoft.com/en-us/rest/api/maps/search/getsearchaddress#uri-parameters). The string
-     * values in the _search address_ query must be properly escaped (e.g. " character should be escaped with \\ ) and
-     * it should also be properly URL-encoded.
+     * parameters](https://docs.microsoft.com/rest/api/maps/search/getsearchaddress#uri-parameters). The string values
+     * in the _search address_ query must be properly escaped (e.g. " character should be escaped with \\ ) and it
+     * should also be properly URL-encoded.
      *
      * <p>The async API allows caller to batch up to **10,000** queries and sync API up to **100** queries, and the
      * batch should contain at least **1** query.
@@ -3786,7 +3884,7 @@ public final class SearchAsyncClient {
      * `batchItems` is of one of the following types:
      *
      * <p>-
-     * [`SearchCommonResponse`](https://docs.microsoft.com/en-us/rest/api/maps/search/getsearchaddress#SearchCommonResponse)
+     * [`SearchAddressResponse`](https://docs.microsoft.com/rest/api/maps/search/getsearchaddress#SearchAddressResponse)
      * - If the query completed successfully.
      *
      * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
@@ -3800,16 +3898,16 @@ public final class SearchAsyncClient {
      * "response": { "error": { "code": "400 BadRequest", "message": "Bad request: one or more parameters were
      * incorrectly specified or are mutually exclusive." } } } ] } ```.
      *
-     * @param format Batch id for querying the operation.
+     * @param batchId Batch id for querying the operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search Address Batch service call.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public PollerFlux<SearchAddressBatchResponse, SearchAddressBatchResponse> beginGetSearchAddressBatch(
-            String format) {
-        return this.serviceClient.beginGetSearchAddressBatchAsync(format);
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    public PollerFlux<SearchAddressBatchProcessResult, SearchAddressBatchProcessResult> beginGetSearchAddressBatch(
+            String batchId) {
+        return this.serviceClient.beginGetSearchAddressBatchAsync(batchId);
     }
 
     /**
@@ -3818,13 +3916,13 @@ public final class SearchAsyncClient {
      * <p>**Applies to**: S1 pricing tier.
      *
      * <p>The Search Address Batch API sends batches of queries to [Search Address Reverse
-     * API](https://docs.microsoft.com/en-us/rest/api/maps/search/getsearchaddressreverse) using just a single API call.
-     * You can call Search Address Reverse Batch API to run either asynchronously (async) or synchronously (sync). The
-     * async API allows caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit
-     * Synchronous Batch Request The Synchronous API is recommended for lightweight batch requests. When the service
-     * receives a request, it will respond as soon as the batch items are calculated and there will be no possibility to
-     * retrieve the results later. The Synchronous API will return a timeout error (a 408 response) if the request takes
-     * longer than 60 seconds. The number of batch items is limited to **100** for this API. ``` POST
+     * API](https://docs.microsoft.com/rest/api/maps/search/getsearchaddressreverse) using just a single API call. You
+     * can call Search Address Reverse Batch API to run either asynchronously (async) or synchronously (sync). The async
+     * API allows caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous
+     * Batch Request The Synchronous API is recommended for lightweight batch requests. When the service receives a
+     * request, it will respond as soon as the batch items are calculated and there will be no possibility to retrieve
+     * the results later. The Synchronous API will return a timeout error (a 408 response) if the request takes longer
+     * than 60 seconds. The number of batch items is limited to **100** for this API. ``` POST
      * https://atlas.microsoft.com/search/address/reverse/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
      * ``` ### Submit Asynchronous Batch Request The Asynchronous API is appropriate for processing big volumes of
      * relatively complex search requests - It allows the retrieval of results in a separate call (multiple downloads
@@ -3862,9 +3960,9 @@ public final class SearchAsyncClient {
      *
      * <p>A _search address reverse_ query in a batch is just a partial URL _without_ the protocol, base URL, path,
      * api-version and subscription-key. It can accept any of the supported _search address reverse_ [URI
-     * parameters](https://docs.microsoft.com/en-us/rest/api/maps/search/getsearchaddressreverse#uri-parameters). The
-     * string values in the _search address reverse_ query must be properly escaped (e.g. " character should be escaped
-     * with \\ ) and it should also be properly URL-encoded.
+     * parameters](https://docs.microsoft.com/rest/api/maps/search/getsearchaddressreverse#uri-parameters). The string
+     * values in the _search address reverse_ query must be properly escaped (e.g. " character should be escaped with \\
+     * ) and it should also be properly URL-encoded.
      *
      * <p>The async API allows caller to batch up to **10,000** queries and sync API up to **100** queries, and the
      * batch should contain at least **1** query.
@@ -3893,7 +3991,7 @@ public final class SearchAsyncClient {
      * `batchItems` is of one of the following types:
      *
      * <p>-
-     * [`SearchAddressReverseResponse`](https://docs.microsoft.com/en-us/rest/api/maps/search/getsearchaddressreverse#searchaddressreverseresponse)
+     * [`SearchAddressReverseResponse`](https://docs.microsoft.com/rest/api/maps/search/getsearchaddressreverse#searchaddressreverseresponse)
      * - If the query completed successfully.
      *
      * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
@@ -3917,9 +4015,9 @@ public final class SearchAsyncClient {
      * @return this object is returned from a successful Search Address Reverse Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<SearchAddressReverseBatchResponse>> postSearchAddressReverseBatchSyncWithResponse(
-            ResponseFormat format, BatchRequestBody searchAddressReverseBatchRequestBody) {
-        return this.serviceClient.postSearchAddressReverseBatchSyncWithResponseAsync(
+    public Mono<Response<ReverseSearchAddressBatchProcessResult>> reverseSearchAddressBatchSyncWithResponse(
+            JsonFormat format, BatchRequest searchAddressReverseBatchRequestBody) {
+        return this.serviceClient.reverseSearchAddressBatchSyncWithResponseAsync(
                 format, searchAddressReverseBatchRequestBody);
     }
 
@@ -3929,13 +4027,13 @@ public final class SearchAsyncClient {
      * <p>**Applies to**: S1 pricing tier.
      *
      * <p>The Search Address Batch API sends batches of queries to [Search Address Reverse
-     * API](https://docs.microsoft.com/en-us/rest/api/maps/search/getsearchaddressreverse) using just a single API call.
-     * You can call Search Address Reverse Batch API to run either asynchronously (async) or synchronously (sync). The
-     * async API allows caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit
-     * Synchronous Batch Request The Synchronous API is recommended for lightweight batch requests. When the service
-     * receives a request, it will respond as soon as the batch items are calculated and there will be no possibility to
-     * retrieve the results later. The Synchronous API will return a timeout error (a 408 response) if the request takes
-     * longer than 60 seconds. The number of batch items is limited to **100** for this API. ``` POST
+     * API](https://docs.microsoft.com/rest/api/maps/search/getsearchaddressreverse) using just a single API call. You
+     * can call Search Address Reverse Batch API to run either asynchronously (async) or synchronously (sync). The async
+     * API allows caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous
+     * Batch Request The Synchronous API is recommended for lightweight batch requests. When the service receives a
+     * request, it will respond as soon as the batch items are calculated and there will be no possibility to retrieve
+     * the results later. The Synchronous API will return a timeout error (a 408 response) if the request takes longer
+     * than 60 seconds. The number of batch items is limited to **100** for this API. ``` POST
      * https://atlas.microsoft.com/search/address/reverse/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
      * ``` ### Submit Asynchronous Batch Request The Asynchronous API is appropriate for processing big volumes of
      * relatively complex search requests - It allows the retrieval of results in a separate call (multiple downloads
@@ -3973,9 +4071,9 @@ public final class SearchAsyncClient {
      *
      * <p>A _search address reverse_ query in a batch is just a partial URL _without_ the protocol, base URL, path,
      * api-version and subscription-key. It can accept any of the supported _search address reverse_ [URI
-     * parameters](https://docs.microsoft.com/en-us/rest/api/maps/search/getsearchaddressreverse#uri-parameters). The
-     * string values in the _search address reverse_ query must be properly escaped (e.g. " character should be escaped
-     * with \\ ) and it should also be properly URL-encoded.
+     * parameters](https://docs.microsoft.com/rest/api/maps/search/getsearchaddressreverse#uri-parameters). The string
+     * values in the _search address reverse_ query must be properly escaped (e.g. " character should be escaped with \\
+     * ) and it should also be properly URL-encoded.
      *
      * <p>The async API allows caller to batch up to **10,000** queries and sync API up to **100** queries, and the
      * batch should contain at least **1** query.
@@ -4004,7 +4102,7 @@ public final class SearchAsyncClient {
      * `batchItems` is of one of the following types:
      *
      * <p>-
-     * [`SearchAddressReverseResponse`](https://docs.microsoft.com/en-us/rest/api/maps/search/getsearchaddressreverse#searchaddressreverseresponse)
+     * [`SearchAddressReverseResponse`](https://docs.microsoft.com/rest/api/maps/search/getsearchaddressreverse#searchaddressreverseresponse)
      * - If the query completed successfully.
      *
      * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
@@ -4028,9 +4126,9 @@ public final class SearchAsyncClient {
      * @return this object is returned from a successful Search Address Reverse Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchAddressReverseBatchResponse> postSearchAddressReverseBatchSync(
-            ResponseFormat format, BatchRequestBody searchAddressReverseBatchRequestBody) {
-        return this.serviceClient.postSearchAddressReverseBatchSyncAsync(format, searchAddressReverseBatchRequestBody);
+    public Mono<ReverseSearchAddressBatchProcessResult> reverseSearchAddressBatchSync(
+            JsonFormat format, BatchRequest searchAddressReverseBatchRequestBody) {
+        return this.serviceClient.reverseSearchAddressBatchSyncAsync(format, searchAddressReverseBatchRequestBody);
     }
 
     /**
@@ -4039,13 +4137,13 @@ public final class SearchAsyncClient {
      * <p>**Applies to**: S1 pricing tier.
      *
      * <p>The Search Address Batch API sends batches of queries to [Search Address Reverse
-     * API](https://docs.microsoft.com/en-us/rest/api/maps/search/getsearchaddressreverse) using just a single API call.
-     * You can call Search Address Reverse Batch API to run either asynchronously (async) or synchronously (sync). The
-     * async API allows caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit
-     * Synchronous Batch Request The Synchronous API is recommended for lightweight batch requests. When the service
-     * receives a request, it will respond as soon as the batch items are calculated and there will be no possibility to
-     * retrieve the results later. The Synchronous API will return a timeout error (a 408 response) if the request takes
-     * longer than 60 seconds. The number of batch items is limited to **100** for this API. ``` POST
+     * API](https://docs.microsoft.com/rest/api/maps/search/getsearchaddressreverse) using just a single API call. You
+     * can call Search Address Reverse Batch API to run either asynchronously (async) or synchronously (sync). The async
+     * API allows caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous
+     * Batch Request The Synchronous API is recommended for lightweight batch requests. When the service receives a
+     * request, it will respond as soon as the batch items are calculated and there will be no possibility to retrieve
+     * the results later. The Synchronous API will return a timeout error (a 408 response) if the request takes longer
+     * than 60 seconds. The number of batch items is limited to **100** for this API. ``` POST
      * https://atlas.microsoft.com/search/address/reverse/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
      * ``` ### Submit Asynchronous Batch Request The Asynchronous API is appropriate for processing big volumes of
      * relatively complex search requests - It allows the retrieval of results in a separate call (multiple downloads
@@ -4083,9 +4181,9 @@ public final class SearchAsyncClient {
      *
      * <p>A _search address reverse_ query in a batch is just a partial URL _without_ the protocol, base URL, path,
      * api-version and subscription-key. It can accept any of the supported _search address reverse_ [URI
-     * parameters](https://docs.microsoft.com/en-us/rest/api/maps/search/getsearchaddressreverse#uri-parameters). The
-     * string values in the _search address reverse_ query must be properly escaped (e.g. " character should be escaped
-     * with \\ ) and it should also be properly URL-encoded.
+     * parameters](https://docs.microsoft.com/rest/api/maps/search/getsearchaddressreverse#uri-parameters). The string
+     * values in the _search address reverse_ query must be properly escaped (e.g. " character should be escaped with \\
+     * ) and it should also be properly URL-encoded.
      *
      * <p>The async API allows caller to batch up to **10,000** queries and sync API up to **100** queries, and the
      * batch should contain at least **1** query.
@@ -4114,7 +4212,7 @@ public final class SearchAsyncClient {
      * `batchItems` is of one of the following types:
      *
      * <p>-
-     * [`SearchAddressReverseResponse`](https://docs.microsoft.com/en-us/rest/api/maps/search/getsearchaddressreverse#searchaddressreverseresponse)
+     * [`SearchAddressReverseResponse`](https://docs.microsoft.com/rest/api/maps/search/getsearchaddressreverse#searchaddressreverseresponse)
      * - If the query completed successfully.
      *
      * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
@@ -4138,9 +4236,9 @@ public final class SearchAsyncClient {
      * @return this object is returned from a successful Search Address Reverse Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchesPostSearchAddressReverseBatchResponse> postSearchAddressReverseBatchWithResponse(
-            ResponseFormat format, BatchRequestBody searchAddressReverseBatchRequestBody) {
-        return this.serviceClient.postSearchAddressReverseBatchWithResponseAsync(
+    public Mono<SearchesReverseSearchAddressBatchResponse> reverseSearchAddressBatchWithResponse(
+            JsonFormat format, BatchRequest searchAddressReverseBatchRequestBody) {
+        return this.serviceClient.reverseSearchAddressBatchWithResponseAsync(
                 format, searchAddressReverseBatchRequestBody);
     }
 
@@ -4150,13 +4248,13 @@ public final class SearchAsyncClient {
      * <p>**Applies to**: S1 pricing tier.
      *
      * <p>The Search Address Batch API sends batches of queries to [Search Address Reverse
-     * API](https://docs.microsoft.com/en-us/rest/api/maps/search/getsearchaddressreverse) using just a single API call.
-     * You can call Search Address Reverse Batch API to run either asynchronously (async) or synchronously (sync). The
-     * async API allows caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit
-     * Synchronous Batch Request The Synchronous API is recommended for lightweight batch requests. When the service
-     * receives a request, it will respond as soon as the batch items are calculated and there will be no possibility to
-     * retrieve the results later. The Synchronous API will return a timeout error (a 408 response) if the request takes
-     * longer than 60 seconds. The number of batch items is limited to **100** for this API. ``` POST
+     * API](https://docs.microsoft.com/rest/api/maps/search/getsearchaddressreverse) using just a single API call. You
+     * can call Search Address Reverse Batch API to run either asynchronously (async) or synchronously (sync). The async
+     * API allows caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous
+     * Batch Request The Synchronous API is recommended for lightweight batch requests. When the service receives a
+     * request, it will respond as soon as the batch items are calculated and there will be no possibility to retrieve
+     * the results later. The Synchronous API will return a timeout error (a 408 response) if the request takes longer
+     * than 60 seconds. The number of batch items is limited to **100** for this API. ``` POST
      * https://atlas.microsoft.com/search/address/reverse/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
      * ``` ### Submit Asynchronous Batch Request The Asynchronous API is appropriate for processing big volumes of
      * relatively complex search requests - It allows the retrieval of results in a separate call (multiple downloads
@@ -4194,9 +4292,9 @@ public final class SearchAsyncClient {
      *
      * <p>A _search address reverse_ query in a batch is just a partial URL _without_ the protocol, base URL, path,
      * api-version and subscription-key. It can accept any of the supported _search address reverse_ [URI
-     * parameters](https://docs.microsoft.com/en-us/rest/api/maps/search/getsearchaddressreverse#uri-parameters). The
-     * string values in the _search address reverse_ query must be properly escaped (e.g. " character should be escaped
-     * with \\ ) and it should also be properly URL-encoded.
+     * parameters](https://docs.microsoft.com/rest/api/maps/search/getsearchaddressreverse#uri-parameters). The string
+     * values in the _search address reverse_ query must be properly escaped (e.g. " character should be escaped with \\
+     * ) and it should also be properly URL-encoded.
      *
      * <p>The async API allows caller to batch up to **10,000** queries and sync API up to **100** queries, and the
      * batch should contain at least **1** query.
@@ -4225,7 +4323,7 @@ public final class SearchAsyncClient {
      * `batchItems` is of one of the following types:
      *
      * <p>-
-     * [`SearchAddressReverseResponse`](https://docs.microsoft.com/en-us/rest/api/maps/search/getsearchaddressreverse#searchaddressreverseresponse)
+     * [`SearchAddressReverseResponse`](https://docs.microsoft.com/rest/api/maps/search/getsearchaddressreverse#searchaddressreverseresponse)
      * - If the query completed successfully.
      *
      * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
@@ -4248,11 +4346,10 @@ public final class SearchAsyncClient {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search Address Reverse Batch service call.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public PollerFlux<SearchAddressReverseBatchResponse, SearchAddressReverseBatchResponse>
-            beginPostSearchAddressReverseBatch(
-                    ResponseFormat format, BatchRequestBody searchAddressReverseBatchRequestBody) {
-        return this.serviceClient.beginPostSearchAddressReverseBatchAsync(format, searchAddressReverseBatchRequestBody);
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    public PollerFlux<ReverseSearchAddressBatchProcessResult, ReverseSearchAddressBatchProcessResult>
+            beginReverseSearchAddressBatch(JsonFormat format, BatchRequest searchAddressReverseBatchRequestBody) {
+        return this.serviceClient.beginReverseSearchAddressBatchAsync(format, searchAddressReverseBatchRequestBody);
     }
 
     /**
@@ -4261,13 +4358,13 @@ public final class SearchAsyncClient {
      * <p>**Applies to**: S1 pricing tier.
      *
      * <p>The Search Address Batch API sends batches of queries to [Search Address Reverse
-     * API](https://docs.microsoft.com/en-us/rest/api/maps/search/getsearchaddressreverse) using just a single API call.
-     * You can call Search Address Reverse Batch API to run either asynchronously (async) or synchronously (sync). The
-     * async API allows caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit
-     * Synchronous Batch Request The Synchronous API is recommended for lightweight batch requests. When the service
-     * receives a request, it will respond as soon as the batch items are calculated and there will be no possibility to
-     * retrieve the results later. The Synchronous API will return a timeout error (a 408 response) if the request takes
-     * longer than 60 seconds. The number of batch items is limited to **100** for this API. ``` POST
+     * API](https://docs.microsoft.com/rest/api/maps/search/getsearchaddressreverse) using just a single API call. You
+     * can call Search Address Reverse Batch API to run either asynchronously (async) or synchronously (sync). The async
+     * API allows caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous
+     * Batch Request The Synchronous API is recommended for lightweight batch requests. When the service receives a
+     * request, it will respond as soon as the batch items are calculated and there will be no possibility to retrieve
+     * the results later. The Synchronous API will return a timeout error (a 408 response) if the request takes longer
+     * than 60 seconds. The number of batch items is limited to **100** for this API. ``` POST
      * https://atlas.microsoft.com/search/address/reverse/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
      * ``` ### Submit Asynchronous Batch Request The Asynchronous API is appropriate for processing big volumes of
      * relatively complex search requests - It allows the retrieval of results in a separate call (multiple downloads
@@ -4305,9 +4402,9 @@ public final class SearchAsyncClient {
      *
      * <p>A _search address reverse_ query in a batch is just a partial URL _without_ the protocol, base URL, path,
      * api-version and subscription-key. It can accept any of the supported _search address reverse_ [URI
-     * parameters](https://docs.microsoft.com/en-us/rest/api/maps/search/getsearchaddressreverse#uri-parameters). The
-     * string values in the _search address reverse_ query must be properly escaped (e.g. " character should be escaped
-     * with \\ ) and it should also be properly URL-encoded.
+     * parameters](https://docs.microsoft.com/rest/api/maps/search/getsearchaddressreverse#uri-parameters). The string
+     * values in the _search address reverse_ query must be properly escaped (e.g. " character should be escaped with \\
+     * ) and it should also be properly URL-encoded.
      *
      * <p>The async API allows caller to batch up to **10,000** queries and sync API up to **100** queries, and the
      * batch should contain at least **1** query.
@@ -4336,7 +4433,7 @@ public final class SearchAsyncClient {
      * `batchItems` is of one of the following types:
      *
      * <p>-
-     * [`SearchAddressReverseResponse`](https://docs.microsoft.com/en-us/rest/api/maps/search/getsearchaddressreverse#searchaddressreverseresponse)
+     * [`SearchAddressReverseResponse`](https://docs.microsoft.com/rest/api/maps/search/getsearchaddressreverse#searchaddressreverseresponse)
      * - If the query completed successfully.
      *
      * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
@@ -4351,15 +4448,15 @@ public final class SearchAsyncClient {
      * } }, { "statusCode": 400, "response": { "error": { "code": "400 BadRequest", "message": "Bad request: one or more
      * parameters were incorrectly specified or are mutually exclusive." } } } ] } ```.
      *
-     * @param format Batch id for querying the operation.
+     * @param batchId Batch id for querying the operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search Address Reverse Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchesGetSearchAddressReverseBatchResponse> getSearchAddressReverseBatchWithResponse(String format) {
-        return this.serviceClient.getSearchAddressReverseBatchWithResponseAsync(format);
+    public Mono<SearchesGetReverseSearchAddressBatchResponse> getReverseSearchAddressBatchWithResponse(String batchId) {
+        return this.serviceClient.getReverseSearchAddressBatchWithResponseAsync(batchId);
     }
 
     /**
@@ -4368,13 +4465,13 @@ public final class SearchAsyncClient {
      * <p>**Applies to**: S1 pricing tier.
      *
      * <p>The Search Address Batch API sends batches of queries to [Search Address Reverse
-     * API](https://docs.microsoft.com/en-us/rest/api/maps/search/getsearchaddressreverse) using just a single API call.
-     * You can call Search Address Reverse Batch API to run either asynchronously (async) or synchronously (sync). The
-     * async API allows caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit
-     * Synchronous Batch Request The Synchronous API is recommended for lightweight batch requests. When the service
-     * receives a request, it will respond as soon as the batch items are calculated and there will be no possibility to
-     * retrieve the results later. The Synchronous API will return a timeout error (a 408 response) if the request takes
-     * longer than 60 seconds. The number of batch items is limited to **100** for this API. ``` POST
+     * API](https://docs.microsoft.com/rest/api/maps/search/getsearchaddressreverse) using just a single API call. You
+     * can call Search Address Reverse Batch API to run either asynchronously (async) or synchronously (sync). The async
+     * API allows caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous
+     * Batch Request The Synchronous API is recommended for lightweight batch requests. When the service receives a
+     * request, it will respond as soon as the batch items are calculated and there will be no possibility to retrieve
+     * the results later. The Synchronous API will return a timeout error (a 408 response) if the request takes longer
+     * than 60 seconds. The number of batch items is limited to **100** for this API. ``` POST
      * https://atlas.microsoft.com/search/address/reverse/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
      * ``` ### Submit Asynchronous Batch Request The Asynchronous API is appropriate for processing big volumes of
      * relatively complex search requests - It allows the retrieval of results in a separate call (multiple downloads
@@ -4412,9 +4509,9 @@ public final class SearchAsyncClient {
      *
      * <p>A _search address reverse_ query in a batch is just a partial URL _without_ the protocol, base URL, path,
      * api-version and subscription-key. It can accept any of the supported _search address reverse_ [URI
-     * parameters](https://docs.microsoft.com/en-us/rest/api/maps/search/getsearchaddressreverse#uri-parameters). The
-     * string values in the _search address reverse_ query must be properly escaped (e.g. " character should be escaped
-     * with \\ ) and it should also be properly URL-encoded.
+     * parameters](https://docs.microsoft.com/rest/api/maps/search/getsearchaddressreverse#uri-parameters). The string
+     * values in the _search address reverse_ query must be properly escaped (e.g. " character should be escaped with \\
+     * ) and it should also be properly URL-encoded.
      *
      * <p>The async API allows caller to batch up to **10,000** queries and sync API up to **100** queries, and the
      * batch should contain at least **1** query.
@@ -4443,7 +4540,7 @@ public final class SearchAsyncClient {
      * `batchItems` is of one of the following types:
      *
      * <p>-
-     * [`SearchAddressReverseResponse`](https://docs.microsoft.com/en-us/rest/api/maps/search/getsearchaddressreverse#searchaddressreverseresponse)
+     * [`SearchAddressReverseResponse`](https://docs.microsoft.com/rest/api/maps/search/getsearchaddressreverse#searchaddressreverseresponse)
      * - If the query completed successfully.
      *
      * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
@@ -4458,15 +4555,15 @@ public final class SearchAsyncClient {
      * } }, { "statusCode": 400, "response": { "error": { "code": "400 BadRequest", "message": "Bad request: one or more
      * parameters were incorrectly specified or are mutually exclusive." } } } ] } ```.
      *
-     * @param format Batch id for querying the operation.
+     * @param batchId Batch id for querying the operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search Address Reverse Batch service call.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public PollerFlux<SearchAddressReverseBatchResponse, SearchAddressReverseBatchResponse>
-            beginGetSearchAddressReverseBatch(String format) {
-        return this.serviceClient.beginGetSearchAddressReverseBatchAsync(format);
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    public PollerFlux<ReverseSearchAddressBatchProcessResult, ReverseSearchAddressBatchProcessResult>
+            beginGetReverseSearchAddressBatch(String batchId) {
+        return this.serviceClient.beginGetReverseSearchAddressBatchAsync(batchId);
     }
 }

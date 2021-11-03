@@ -15,7 +15,7 @@ public final class AirAndPollen {
      * quality, tree and UV index.
      */
     @JsonProperty(value = "name")
-    private String name;
+    private String description;
 
     /*
      * Value of the given type above. Values associated with mold, grass, weed
@@ -45,27 +45,27 @@ public final class AirAndPollen {
      * pollution.
      */
     @JsonProperty(value = "type")
-    private String type;
+    private String airQualityType;
 
     /**
-     * Get the name property: Name of the pollen or pollutant. For example, grass, mold, weed, air quality, tree and UV
-     * index.
+     * Get the description property: Name of the pollen or pollutant. For example, grass, mold, weed, air quality, tree
+     * and UV index.
      *
-     * @return the name value.
+     * @return the description value.
      */
-    public String getName() {
-        return this.name;
+    public String getDescription() {
+        return this.description;
     }
 
     /**
-     * Set the name property: Name of the pollen or pollutant. For example, grass, mold, weed, air quality, tree and UV
-     * index.
+     * Set the description property: Name of the pollen or pollutant. For example, grass, mold, weed, air quality, tree
+     * and UV index.
      *
-     * @param name the name value to set.
+     * @param description the description value to set.
      * @return the AirAndPollen object itself.
      */
-    public AirAndPollen setName(String name) {
-        this.name = name;
+    public AirAndPollen setDescription(String description) {
+        this.description = description;
         return this;
     }
 
@@ -136,22 +136,22 @@ public final class AirAndPollen {
     }
 
     /**
-     * Get the type property: Only exists for air quality. Examples include ozone and particle pollution.
+     * Get the airQualityType property: Only exists for air quality. Examples include ozone and particle pollution.
      *
-     * @return the type value.
+     * @return the airQualityType value.
      */
-    public String getType() {
-        return this.type;
+    public String getAirQualityType() {
+        return this.airQualityType;
     }
 
     /**
-     * Set the type property: Only exists for air quality. Examples include ozone and particle pollution.
+     * Set the airQualityType property: Only exists for air quality. Examples include ozone and particle pollution.
      *
-     * @param type the type value to set.
+     * @param airQualityType the airQualityType value to set.
      * @return the AirAndPollen object itself.
      */
-    public AirAndPollen setType(String type) {
-        this.type = type;
+    public AirAndPollen setAirQualityType(String airQualityType) {
+        this.airQualityType = airQualityType;
         return this;
     }
 }

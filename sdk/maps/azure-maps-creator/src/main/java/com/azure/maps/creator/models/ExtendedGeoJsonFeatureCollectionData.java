@@ -27,7 +27,7 @@ public class ExtendedGeoJsonFeatureCollectionData {
      * Links to other WFS endpoints.
      */
     @JsonProperty(value = "links")
-    private List<WfsEndpointLink> links;
+    private List<WFSEndpointLink> links;
 
     /**
      * Get the ontology property: The ontology version of this dataset.
@@ -63,7 +63,7 @@ public class ExtendedGeoJsonFeatureCollectionData {
      *
      * @return the links value.
      */
-    public List<WfsEndpointLink> getLinks() {
+    public List<WFSEndpointLink> getLinks() {
         return this.links;
     }
 
@@ -73,7 +73,7 @@ public class ExtendedGeoJsonFeatureCollectionData {
      * @param links the links value to set.
      * @return the ExtendedGeoJsonFeatureCollectionData object itself.
      */
-    public ExtendedGeoJsonFeatureCollectionData setLinks(List<WfsEndpointLink> links) {
+    public ExtendedGeoJsonFeatureCollectionData setLinks(List<WFSEndpointLink> links) {
         this.links = links;
         return this;
     }

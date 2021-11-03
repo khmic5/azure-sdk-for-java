@@ -11,10 +11,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @Fluent
 public final class ClosestPointSummary {
     /*
-     * A location represented as a latitude and longitude
+     * A location represented as a latitude and longitude using short names
+     * 'lat' & 'lon'.
      */
     @JsonProperty(value = "sourcePoint")
-    private SpatialCoordinate sourcePoint;
+    private LatLongPairAbbreviated sourcePoint;
 
     /*
      * A unique data id (udid) for the uploaded content
@@ -29,21 +30,23 @@ public final class ClosestPointSummary {
     private String information;
 
     /**
-     * Get the sourcePoint property: A location represented as a latitude and longitude.
+     * Get the sourcePoint property: A location represented as a latitude and longitude using short names 'lat' &amp;
+     * 'lon'.
      *
      * @return the sourcePoint value.
      */
-    public SpatialCoordinate getSourcePoint() {
+    public LatLongPairAbbreviated getSourcePoint() {
         return this.sourcePoint;
     }
 
     /**
-     * Set the sourcePoint property: A location represented as a latitude and longitude.
+     * Set the sourcePoint property: A location represented as a latitude and longitude using short names 'lat' &amp;
+     * 'lon'.
      *
      * @param sourcePoint the sourcePoint value to set.
      * @return the ClosestPointSummary object itself.
      */
-    public ClosestPointSummary setSourcePoint(SpatialCoordinate sourcePoint) {
+    public ClosestPointSummary setSourcePoint(LatLongPairAbbreviated sourcePoint) {
         this.sourcePoint = sourcePoint;
         return this;
     }

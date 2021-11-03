@@ -47,7 +47,7 @@ public final class DailyIndex {
      * the index value falls under, for example "Very Good".
      */
     @JsonProperty(value = "category")
-    private String category;
+    private String categoryDescription;
 
     /*
      * Level that the index value falls under, represented by an integer. This
@@ -61,12 +61,12 @@ public final class DailyIndex {
 
     /*
      * Describes the direction of the `value` and `categoryValue`. For example,
-     * when `ascending`=True, the poorest index value is 0 and the best index
-     * value is 10. When `ascending`=True, the poorest index value is 10 and
-     * the best index value is 0.
+     * when set to `true`, the poorest index value is 0 and the best index
+     * value is 10. When set to `true`, the poorest index value is 10 and the
+     * best index value is 0.
      */
     @JsonProperty(value = "ascending")
-    private Boolean ascending;
+    private Boolean isAscending;
 
     /*
      * A textual explanation that can be used for display purposes to summarize
@@ -166,24 +166,24 @@ public final class DailyIndex {
     }
 
     /**
-     * Get the category property: Textual description for `categoryValue` corresponding to the level that the index
-     * value falls under, for example "Very Good".
+     * Get the categoryDescription property: Textual description for `categoryValue` corresponding to the level that the
+     * index value falls under, for example "Very Good".
      *
-     * @return the category value.
+     * @return the categoryDescription value.
      */
-    public String getCategory() {
-        return this.category;
+    public String getCategoryDescription() {
+        return this.categoryDescription;
     }
 
     /**
-     * Set the category property: Textual description for `categoryValue` corresponding to the level that the index
-     * value falls under, for example "Very Good".
+     * Set the categoryDescription property: Textual description for `categoryValue` corresponding to the level that the
+     * index value falls under, for example "Very Good".
      *
-     * @param category the category value to set.
+     * @param categoryDescription the categoryDescription value to set.
      * @return the DailyIndex object itself.
      */
-    public DailyIndex setCategory(String category) {
-        this.category = category;
+    public DailyIndex setCategoryDescription(String categoryDescription) {
+        this.categoryDescription = categoryDescription;
         return this;
     }
 
@@ -214,26 +214,26 @@ public final class DailyIndex {
     }
 
     /**
-     * Get the ascending property: Describes the direction of the `value` and `categoryValue`. For example, when
-     * `ascending`=True, the poorest index value is 0 and the best index value is 10. When `ascending`=True, the poorest
-     * index value is 10 and the best index value is 0.
+     * Get the isAscending property: Describes the direction of the `value` and `categoryValue`. For example, when set
+     * to `true`, the poorest index value is 0 and the best index value is 10. When set to `true`, the poorest index
+     * value is 10 and the best index value is 0.
      *
-     * @return the ascending value.
+     * @return the isAscending value.
      */
     public Boolean isAscending() {
-        return this.ascending;
+        return this.isAscending;
     }
 
     /**
-     * Set the ascending property: Describes the direction of the `value` and `categoryValue`. For example, when
-     * `ascending`=True, the poorest index value is 0 and the best index value is 10. When `ascending`=True, the poorest
-     * index value is 10 and the best index value is 0.
+     * Set the isAscending property: Describes the direction of the `value` and `categoryValue`. For example, when set
+     * to `true`, the poorest index value is 0 and the best index value is 10. When set to `true`, the poorest index
+     * value is 10 and the best index value is 0.
      *
-     * @param ascending the ascending value to set.
+     * @param isAscending the isAscending value to set.
      * @return the DailyIndex object itself.
      */
-    public DailyIndex setAscending(Boolean ascending) {
-        this.ascending = ascending;
+    public DailyIndex setIsAscending(Boolean isAscending) {
+        this.isAscending = isAscending;
         return this;
     }
 

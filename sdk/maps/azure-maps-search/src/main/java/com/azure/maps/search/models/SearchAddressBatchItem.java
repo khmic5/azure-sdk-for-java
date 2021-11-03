@@ -9,16 +9,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** An item returned from Search Address Batch service call. */
 @Immutable
-public final class SearchAddressBatchItem extends BatchItem {
+public final class SearchAddressBatchItem extends BatchResultItem {
     /*
-     * The result of the query. SearchCommonResponse if the query completed
+     * The result of the query. SearchAddressResponse if the query completed
      * successfully, ErrorResponse otherwise.
      */
     @JsonProperty(value = "response", access = JsonProperty.Access.WRITE_ONLY)
     private SearchAddressBatchItemResponse response;
 
     /**
-     * Get the response property: The result of the query. SearchCommonResponse if the query completed successfully,
+     * Get the response property: The result of the query. SearchAddressResponse if the query completed successfully,
      * ErrorResponse otherwise.
      *
      * @return the response value.

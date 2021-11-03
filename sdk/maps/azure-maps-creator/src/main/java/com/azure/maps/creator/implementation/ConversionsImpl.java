@@ -24,22 +24,27 @@ import com.azure.core.http.rest.PagedResponseBase;
 import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.RestProxy;
 import com.azure.core.util.Context;
+import com.azure.core.util.FluxUtil;
+import com.azure.core.util.logging.ClientLogger;
 import com.azure.core.util.polling.DefaultPollingStrategy;
 import com.azure.core.util.polling.PollerFlux;
 import com.azure.core.util.polling.SyncPoller;
 import com.azure.core.util.serializer.TypeReference;
-import com.azure.maps.creator.models.ConversionListDetailInfo;
-import com.azure.maps.creator.models.ConversionListResponse;
+import com.azure.maps.creator.models.Conversion;
+import com.azure.maps.creator.models.ConversionListResult;
 import com.azure.maps.creator.models.ConversionsConvertResponse;
 import com.azure.maps.creator.models.ConversionsGetOperationResponse;
 import com.azure.maps.creator.models.ErrorResponseException;
 import com.azure.maps.creator.models.Geography;
 import com.azure.maps.creator.models.LongRunningOperationResult;
+import com.azure.maps.creator.models.OutputOntology;
 import java.time.Duration;
 import reactor.core.publisher.Mono;
 
 /** An instance of this class provides access to all the operations defined in Conversions. */
 public final class ConversionsImpl {
+    private final ClientLogger logger = new ClientLogger(ConversionsImpl.class);
+
     /** The proxy service used to perform REST calls. */
     private final ConversionsService service;
 
@@ -69,41 +74,45 @@ public final class ConversionsImpl {
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<ConversionsConvertResponse> convert(
                 @HostParam("geography") Geography geography,
-                @HeaderParam("x-ms-client-id") String xMsClientId,
+                @HeaderParam("x-ms-client-id") String clientId,
                 @QueryParam("api-version") String apiVersion,
                 @QueryParam("udid") String udid,
-                @QueryParam("outputOntology") String outputOntology,
+                @QueryParam("outputOntology") OutputOntology outputOntology,
                 @QueryParam("description") String description,
-                @HeaderParam("Accept") String accept);
+                @HeaderParam("Accept") String accept,
+                Context context);
 
         @Get("/conversions")
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
-        Mono<Response<ConversionListResponse>> list(
+        Mono<Response<ConversionListResult>> list(
                 @HostParam("geography") Geography geography,
-                @HeaderParam("x-ms-client-id") String xMsClientId,
+                @HeaderParam("x-ms-client-id") String clientId,
                 @QueryParam("api-version") String apiVersion,
-                @HeaderParam("Accept") String accept);
+                @HeaderParam("Accept") String accept,
+                Context context);
 
         @Get("/conversions/{conversionId}")
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
-        Mono<Response<ConversionListDetailInfo>> get(
+        Mono<Response<Conversion>> get(
                 @HostParam("geography") Geography geography,
-                @HeaderParam("x-ms-client-id") String xMsClientId,
+                @HeaderParam("x-ms-client-id") String clientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("conversionId") String conversionId,
-                @HeaderParam("Accept") String accept);
+                @HeaderParam("Accept") String accept,
+                Context context);
 
         @Delete("/conversions/{conversionId}")
         @ExpectedResponses({204})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<Response<Void>> delete(
                 @HostParam("geography") Geography geography,
-                @HeaderParam("x-ms-client-id") String xMsClientId,
+                @HeaderParam("x-ms-client-id") String clientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("conversionId") String conversionId,
-                @HeaderParam("Accept") String accept);
+                @HeaderParam("Accept") String accept,
+                Context context);
 
         @Get("/conversions/operations/{operationId}")
         @ExpectedResponses({200})
@@ -112,16 +121,18 @@ public final class ConversionsImpl {
                 @HostParam("geography") Geography geography,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("operationId") String operationId,
-                @HeaderParam("Accept") String accept);
+                @HeaderParam("Accept") String accept,
+                Context context);
 
         @Get("{nextLink}")
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
-        Mono<Response<ConversionListResponse>> listNext(
+        Mono<Response<ConversionListResult>> listNext(
                 @PathParam(value = "nextLink", encoded = true) String nextLink,
                 @HostParam("geography") Geography geography,
-                @HeaderParam("x-ms-client-id") String xMsClientId,
-                @HeaderParam("Accept") String accept);
+                @HeaderParam("x-ms-client-id") String clientId,
+                @HeaderParam("Accept") String accept,
+                Context context);
     }
 
     /**
@@ -174,17 +185,85 @@ public final class ConversionsImpl {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<ConversionsConvertResponse> convertWithResponseAsync(
-            String udid, String outputOntology, String description) {
+            String udid, OutputOntology outputOntology, String description) {
+        final String apiVersion = "2.0";
+        final String accept = "application/json";
+        return FluxUtil.withContext(
+                context ->
+                        service.convert(
+                                this.client.getGeography(),
+                                this.client.getClientId(),
+                                apiVersion,
+                                udid,
+                                outputOntology,
+                                description,
+                                accept,
+                                context));
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>The Conversion API lets the caller import a set of DWG design files as a zipped [Drawing
+     * Package](https://aka.ms/am-drawing-package) into Azure Maps. The [Drawing
+     * Package](https://aka.ms/am-drawing-package) should first be uploaded using the [Azure Maps Data
+     * Service](https://docs.microsoft.com/rest/api/maps/data). Once uploaded, use the `udid` returned by the [Data
+     * Upload API](https://docs.microsoft.com/rest/api/maps/data-v2/upload-preview) to call this Conversion API.
+     *
+     * <p>## Convert DWG package
+     *
+     * <p>The Conversion API performs a [long-running request](https://aka.ms/am-creator-lrt-v2).
+     *
+     * <p>## Debug DWG package issues
+     *
+     * <p>During the Conversion process, if there are any issues with the DWG package [errors and
+     * warnings](https://aka.ms/am-conversion-errors) are provided in the response along with a *diagnostic package* to
+     * visualize and diagnose these issues. In case any issues are encountered with your DWG package, the Conversion
+     * operation status process as detailed [here](https://aka.ms/am-creator-lrt-v2) returns the location of the
+     * *diagnostic package* that can be downloaded by the caller to help them visualize and diagnose these issues. The
+     * *diagnostic package* location can be found in the properties section of the conversion operation status response
+     * and looks like the following:
+     *
+     * <p>```json { "properties": { "diagnosticPackageLocation":
+     * "https://us.atlas.microsoft.com/mapdata/{DiagnosticPackageId}?api-version=1.0" } } ```
+     *
+     * <p>The *diagnostic package* can be downloaded by executing a `HTTP GET` request on the
+     * `diagnosticPackageLocation`. For more details on how to use the tool to visualize and diagnose all the errors and
+     * warnings see [Drawing Error Visualizer](https://aka.ms/am-drawing-errors-visualizer). &lt;br&gt;
+     *
+     * <p>A conversion operation will be marked as *success* if there are zero or more warnings but will be marked as
+     * *failed* if any errors are encountered.
+     *
+     * @param udid The unique data id for the content. The `udid` must have been obtained from a successful [Data Upload
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/data-v2/upload-preview) call.
+     * @param outputOntology Output ontology version. "facility-2.0" is the only supported value at this time. Please
+     *     refer to this [article](https://docs.microsoft.com/en-us/azure/azure-maps/creator-facility-ontology) for more
+     *     information about Azure Maps Creator ontologies.
+     * @param description User provided description of the content being converted.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response model for a Long-Running Operations API.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<ConversionsConvertResponse> convertWithResponseAsync(
+            String udid, OutputOntology outputOntology, String description, Context context) {
         final String apiVersion = "2.0";
         final String accept = "application/json";
         return service.convert(
                 this.client.getGeography(),
-                this.client.getXMsClientId(),
+                this.client.getClientId(),
                 apiVersion,
                 udid,
                 outputOntology,
                 description,
-                accept);
+                accept,
+                context);
     }
 
     /**
@@ -235,12 +314,73 @@ public final class ConversionsImpl {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the response model for a Long-Running Operations API.
      */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public PollerFlux<LongRunningOperationResult, LongRunningOperationResult> beginConvertAsync(
-            String udid, String outputOntology, String description) {
+            String udid, OutputOntology outputOntology, String description) {
         return PollerFlux.create(
                 Duration.ofSeconds(1),
                 () -> this.convertWithResponseAsync(udid, outputOntology, description),
-                new DefaultPollingStrategy<>(this.client.getHttpPipeline(), Context.NONE),
+                new DefaultPollingStrategy<>(this.client.getHttpPipeline()),
+                new TypeReference<LongRunningOperationResult>() {},
+                new TypeReference<LongRunningOperationResult>() {});
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>The Conversion API lets the caller import a set of DWG design files as a zipped [Drawing
+     * Package](https://aka.ms/am-drawing-package) into Azure Maps. The [Drawing
+     * Package](https://aka.ms/am-drawing-package) should first be uploaded using the [Azure Maps Data
+     * Service](https://docs.microsoft.com/rest/api/maps/data). Once uploaded, use the `udid` returned by the [Data
+     * Upload API](https://docs.microsoft.com/rest/api/maps/data-v2/upload-preview) to call this Conversion API.
+     *
+     * <p>## Convert DWG package
+     *
+     * <p>The Conversion API performs a [long-running request](https://aka.ms/am-creator-lrt-v2).
+     *
+     * <p>## Debug DWG package issues
+     *
+     * <p>During the Conversion process, if there are any issues with the DWG package [errors and
+     * warnings](https://aka.ms/am-conversion-errors) are provided in the response along with a *diagnostic package* to
+     * visualize and diagnose these issues. In case any issues are encountered with your DWG package, the Conversion
+     * operation status process as detailed [here](https://aka.ms/am-creator-lrt-v2) returns the location of the
+     * *diagnostic package* that can be downloaded by the caller to help them visualize and diagnose these issues. The
+     * *diagnostic package* location can be found in the properties section of the conversion operation status response
+     * and looks like the following:
+     *
+     * <p>```json { "properties": { "diagnosticPackageLocation":
+     * "https://us.atlas.microsoft.com/mapdata/{DiagnosticPackageId}?api-version=1.0" } } ```
+     *
+     * <p>The *diagnostic package* can be downloaded by executing a `HTTP GET` request on the
+     * `diagnosticPackageLocation`. For more details on how to use the tool to visualize and diagnose all the errors and
+     * warnings see [Drawing Error Visualizer](https://aka.ms/am-drawing-errors-visualizer). &lt;br&gt;
+     *
+     * <p>A conversion operation will be marked as *success* if there are zero or more warnings but will be marked as
+     * *failed* if any errors are encountered.
+     *
+     * @param udid The unique data id for the content. The `udid` must have been obtained from a successful [Data Upload
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/data-v2/upload-preview) call.
+     * @param outputOntology Output ontology version. "facility-2.0" is the only supported value at this time. Please
+     *     refer to this [article](https://docs.microsoft.com/en-us/azure/azure-maps/creator-facility-ontology) for more
+     *     information about Azure Maps Creator ontologies.
+     * @param description User provided description of the content being converted.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response model for a Long-Running Operations API.
+     */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    public PollerFlux<LongRunningOperationResult, LongRunningOperationResult> beginConvertAsync(
+            String udid, OutputOntology outputOntology, String description, Context context) {
+        return PollerFlux.create(
+                Duration.ofSeconds(1),
+                () -> this.convertWithResponseAsync(udid, outputOntology, description, context),
+                new DefaultPollingStrategy<>(this.client.getHttpPipeline()),
                 new TypeReference<LongRunningOperationResult>() {},
                 new TypeReference<LongRunningOperationResult>() {});
     }
@@ -293,9 +433,65 @@ public final class ConversionsImpl {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the response model for a Long-Running Operations API.
      */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<LongRunningOperationResult, LongRunningOperationResult> beginConvert(
-            String udid, String outputOntology, String description) {
+            String udid, OutputOntology outputOntology, String description) {
         return this.beginConvertAsync(udid, outputOntology, description).getSyncPoller();
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>The Conversion API lets the caller import a set of DWG design files as a zipped [Drawing
+     * Package](https://aka.ms/am-drawing-package) into Azure Maps. The [Drawing
+     * Package](https://aka.ms/am-drawing-package) should first be uploaded using the [Azure Maps Data
+     * Service](https://docs.microsoft.com/rest/api/maps/data). Once uploaded, use the `udid` returned by the [Data
+     * Upload API](https://docs.microsoft.com/rest/api/maps/data-v2/upload-preview) to call this Conversion API.
+     *
+     * <p>## Convert DWG package
+     *
+     * <p>The Conversion API performs a [long-running request](https://aka.ms/am-creator-lrt-v2).
+     *
+     * <p>## Debug DWG package issues
+     *
+     * <p>During the Conversion process, if there are any issues with the DWG package [errors and
+     * warnings](https://aka.ms/am-conversion-errors) are provided in the response along with a *diagnostic package* to
+     * visualize and diagnose these issues. In case any issues are encountered with your DWG package, the Conversion
+     * operation status process as detailed [here](https://aka.ms/am-creator-lrt-v2) returns the location of the
+     * *diagnostic package* that can be downloaded by the caller to help them visualize and diagnose these issues. The
+     * *diagnostic package* location can be found in the properties section of the conversion operation status response
+     * and looks like the following:
+     *
+     * <p>```json { "properties": { "diagnosticPackageLocation":
+     * "https://us.atlas.microsoft.com/mapdata/{DiagnosticPackageId}?api-version=1.0" } } ```
+     *
+     * <p>The *diagnostic package* can be downloaded by executing a `HTTP GET` request on the
+     * `diagnosticPackageLocation`. For more details on how to use the tool to visualize and diagnose all the errors and
+     * warnings see [Drawing Error Visualizer](https://aka.ms/am-drawing-errors-visualizer). &lt;br&gt;
+     *
+     * <p>A conversion operation will be marked as *success* if there are zero or more warnings but will be marked as
+     * *failed* if any errors are encountered.
+     *
+     * @param udid The unique data id for the content. The `udid` must have been obtained from a successful [Data Upload
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/data-v2/upload-preview) call.
+     * @param outputOntology Output ontology version. "facility-2.0" is the only supported value at this time. Please
+     *     refer to this [article](https://docs.microsoft.com/en-us/azure/azure-maps/creator-facility-ontology) for more
+     *     information about Azure Maps Creator ontologies.
+     * @param description User provided description of the content being converted.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response model for a Long-Running Operations API.
+     */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    public SyncPoller<LongRunningOperationResult, LongRunningOperationResult> beginConvert(
+            String udid, OutputOntology outputOntology, String description, Context context) {
+        return this.beginConvertAsync(udid, outputOntology, description, context).getSyncPoller();
     }
 
     /**
@@ -334,10 +530,70 @@ public final class ConversionsImpl {
      * @return the response model for the Conversion List API.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<PagedResponse<ConversionListDetailInfo>> listSinglePageAsync() {
+    public Mono<PagedResponse<Conversion>> listSinglePageAsync() {
         final String apiVersion = "2.0";
         final String accept = "application/json";
-        return service.list(this.client.getGeography(), this.client.getXMsClientId(), apiVersion, accept)
+        return FluxUtil.withContext(
+                        context ->
+                                service.list(
+                                        this.client.getGeography(),
+                                        this.client.getClientId(),
+                                        apiVersion,
+                                        accept,
+                                        context))
+                .map(
+                        res ->
+                                new PagedResponseBase<>(
+                                        res.getRequest(),
+                                        res.getStatusCode(),
+                                        res.getHeaders(),
+                                        res.getValue().getConversions(),
+                                        res.getValue().getNextLink(),
+                                        null));
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>This API allows the caller to fetch a list of all successful data conversions submitted previously using the
+     * [Conversion API](https://docs.microsoft.com/en-us/rest/api/maps/v2/conversion/convert).
+     *
+     * <p>### Submit List Request
+     *
+     * <p>To list all successful conversions you will issue a `GET` request with no additional parameters.
+     *
+     * <p>### List Data Response
+     *
+     * <p>The Conversion List API returns the complete list of all conversion details in `json` format.&lt;br&gt;
+     *
+     * <p>Here is a sample response returning the details of two successful conversion requests:
+     *
+     * <p>&lt;br&gt;
+     *
+     * <p>```json { "conversions": [ { "conversionId": "54398242-ea6c-1f31-4fa6-79b1ae0fc24d", "udid":
+     * "31838736-8b84-11ea-bc55-0242ac130003", "created": "5/19/2020 9:00:00 AM +00:00", "description": "User provided
+     * description.", "featureCounts": { "DIR": 1, "LVL": 3, "FCL": 1, "UNIT": 150, "CTG": 8, "AEL": 0, "OPN": 10 } }, {
+     * "conversionId": "2acf7d32-8b84-11ea-bc55-0242ac130003", "udid": "1214bc58-8b84-11ea-bc55-0242ac1300039",
+     * "created": "5/19/2020 9:00:00 AM +00:00", "description": "User provided description.", "featureCounts": { "DIR":
+     * 1, "LVL": 3, "FCL": 1, "UNIT": 150, "CTG": 8, "AEL": 0, "OPN": 10 } } ] } ```
+     *
+     * <p>&lt;br&gt;.
+     *
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response model for the Conversion List API.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<PagedResponse<Conversion>> listSinglePageAsync(Context context) {
+        final String apiVersion = "2.0";
+        final String accept = "application/json";
+        return service.list(this.client.getGeography(), this.client.getClientId(), apiVersion, accept, context)
                 .map(
                         res ->
                                 new PagedResponseBase<>(
@@ -385,8 +641,51 @@ public final class ConversionsImpl {
      * @return the response model for the Conversion List API.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedFlux<ConversionListDetailInfo> listAsync() {
+    public PagedFlux<Conversion> listAsync() {
         return new PagedFlux<>(() -> listSinglePageAsync(), nextLink -> listNextSinglePageAsync(nextLink));
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>This API allows the caller to fetch a list of all successful data conversions submitted previously using the
+     * [Conversion API](https://docs.microsoft.com/en-us/rest/api/maps/v2/conversion/convert).
+     *
+     * <p>### Submit List Request
+     *
+     * <p>To list all successful conversions you will issue a `GET` request with no additional parameters.
+     *
+     * <p>### List Data Response
+     *
+     * <p>The Conversion List API returns the complete list of all conversion details in `json` format.&lt;br&gt;
+     *
+     * <p>Here is a sample response returning the details of two successful conversion requests:
+     *
+     * <p>&lt;br&gt;
+     *
+     * <p>```json { "conversions": [ { "conversionId": "54398242-ea6c-1f31-4fa6-79b1ae0fc24d", "udid":
+     * "31838736-8b84-11ea-bc55-0242ac130003", "created": "5/19/2020 9:00:00 AM +00:00", "description": "User provided
+     * description.", "featureCounts": { "DIR": 1, "LVL": 3, "FCL": 1, "UNIT": 150, "CTG": 8, "AEL": 0, "OPN": 10 } }, {
+     * "conversionId": "2acf7d32-8b84-11ea-bc55-0242ac130003", "udid": "1214bc58-8b84-11ea-bc55-0242ac1300039",
+     * "created": "5/19/2020 9:00:00 AM +00:00", "description": "User provided description.", "featureCounts": { "DIR":
+     * 1, "LVL": 3, "FCL": 1, "UNIT": 150, "CTG": 8, "AEL": 0, "OPN": 10 } } ] } ```
+     *
+     * <p>&lt;br&gt;.
+     *
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response model for the Conversion List API.
+     */
+    @ServiceMethod(returns = ReturnType.COLLECTION)
+    public PagedFlux<Conversion> listAsync(Context context) {
+        return new PagedFlux<>(
+                () -> listSinglePageAsync(context), nextLink -> listNextSinglePageAsync(nextLink, context));
     }
 
     /**
@@ -425,7 +724,7 @@ public final class ConversionsImpl {
      * @return the response model for the Conversion List API.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedIterable<ConversionListDetailInfo> list() {
+    public PagedIterable<Conversion> list() {
         return new PagedIterable<>(listAsync());
     }
 
@@ -436,21 +735,39 @@ public final class ConversionsImpl {
      * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
      * tools that apply to Azure Maps Creator.
      *
-     * <p>This API allows the caller to fetch a successful data conversion submitted previously using the [Conversion
-     * API](https://docs.microsoft.com/en-us/rest/api/maps/v2/conversion/convert).
+     * <p>This API allows the caller to fetch a list of all successful data conversions submitted previously using the
+     * [Conversion API](https://docs.microsoft.com/en-us/rest/api/maps/v2/conversion/convert).
      *
-     * @param conversionId The conversion id for the content. The `conversionId` must have been obtained from a
-     *     successful [Conversion API](https://docs.microsoft.com/en-us/rest/api/maps/v2/conversion/convert) call.
+     * <p>### Submit List Request
+     *
+     * <p>To list all successful conversions you will issue a `GET` request with no additional parameters.
+     *
+     * <p>### List Data Response
+     *
+     * <p>The Conversion List API returns the complete list of all conversion details in `json` format.&lt;br&gt;
+     *
+     * <p>Here is a sample response returning the details of two successful conversion requests:
+     *
+     * <p>&lt;br&gt;
+     *
+     * <p>```json { "conversions": [ { "conversionId": "54398242-ea6c-1f31-4fa6-79b1ae0fc24d", "udid":
+     * "31838736-8b84-11ea-bc55-0242ac130003", "created": "5/19/2020 9:00:00 AM +00:00", "description": "User provided
+     * description.", "featureCounts": { "DIR": 1, "LVL": 3, "FCL": 1, "UNIT": 150, "CTG": 8, "AEL": 0, "OPN": 10 } }, {
+     * "conversionId": "2acf7d32-8b84-11ea-bc55-0242ac130003", "udid": "1214bc58-8b84-11ea-bc55-0242ac1300039",
+     * "created": "5/19/2020 9:00:00 AM +00:00", "description": "User provided description.", "featureCounts": { "DIR":
+     * 1, "LVL": 3, "FCL": 1, "UNIT": 150, "CTG": 8, "AEL": 0, "OPN": 10 } } ] } ```
+     *
+     * <p>&lt;br&gt;.
+     *
+     * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return detail information for the conversion requests.
+     * @return the response model for the Conversion List API.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<ConversionListDetailInfo>> getWithResponseAsync(String conversionId) {
-        final String apiVersion = "2.0";
-        final String accept = "application/json";
-        return service.get(this.client.getGeography(), this.client.getXMsClientId(), apiVersion, conversionId, accept);
+    @ServiceMethod(returns = ReturnType.COLLECTION)
+    public PagedIterable<Conversion> list(Context context) {
+        return new PagedIterable<>(listAsync(context));
     }
 
     /**
@@ -471,10 +788,99 @@ public final class ConversionsImpl {
      * @return detail information for the conversion requests.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<ConversionListDetailInfo> getAsync(String conversionId) {
+    public Mono<Response<Conversion>> getWithResponseAsync(String conversionId) {
+        final String apiVersion = "2.0";
+        final String accept = "application/json";
+        return FluxUtil.withContext(
+                context ->
+                        service.get(
+                                this.client.getGeography(),
+                                this.client.getClientId(),
+                                apiVersion,
+                                conversionId,
+                                accept,
+                                context));
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>This API allows the caller to fetch a successful data conversion submitted previously using the [Conversion
+     * API](https://docs.microsoft.com/en-us/rest/api/maps/v2/conversion/convert).
+     *
+     * @param conversionId The conversion id for the content. The `conversionId` must have been obtained from a
+     *     successful [Conversion API](https://docs.microsoft.com/en-us/rest/api/maps/v2/conversion/convert) call.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return detail information for the conversion requests.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Response<Conversion>> getWithResponseAsync(String conversionId, Context context) {
+        final String apiVersion = "2.0";
+        final String accept = "application/json";
+        return service.get(
+                this.client.getGeography(), this.client.getClientId(), apiVersion, conversionId, accept, context);
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>This API allows the caller to fetch a successful data conversion submitted previously using the [Conversion
+     * API](https://docs.microsoft.com/en-us/rest/api/maps/v2/conversion/convert).
+     *
+     * @param conversionId The conversion id for the content. The `conversionId` must have been obtained from a
+     *     successful [Conversion API](https://docs.microsoft.com/en-us/rest/api/maps/v2/conversion/convert) call.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return detail information for the conversion requests.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Conversion> getAsync(String conversionId) {
         return getWithResponseAsync(conversionId)
                 .flatMap(
-                        (Response<ConversionListDetailInfo> res) -> {
+                        (Response<Conversion> res) -> {
+                            if (res.getValue() != null) {
+                                return Mono.just(res.getValue());
+                            } else {
+                                return Mono.empty();
+                            }
+                        });
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>This API allows the caller to fetch a successful data conversion submitted previously using the [Conversion
+     * API](https://docs.microsoft.com/en-us/rest/api/maps/v2/conversion/convert).
+     *
+     * @param conversionId The conversion id for the content. The `conversionId` must have been obtained from a
+     *     successful [Conversion API](https://docs.microsoft.com/en-us/rest/api/maps/v2/conversion/convert) call.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return detail information for the conversion requests.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Conversion> getAsync(String conversionId, Context context) {
+        return getWithResponseAsync(conversionId, context)
+                .flatMap(
+                        (Response<Conversion> res) -> {
                             if (res.getValue() != null) {
                                 return Mono.just(res.getValue());
                             } else {
@@ -501,8 +907,31 @@ public final class ConversionsImpl {
      * @return detail information for the conversion requests.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public ConversionListDetailInfo get(String conversionId) {
+    public Conversion get(String conversionId) {
         return getAsync(conversionId).block();
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>This API allows the caller to fetch a successful data conversion submitted previously using the [Conversion
+     * API](https://docs.microsoft.com/en-us/rest/api/maps/v2/conversion/convert).
+     *
+     * @param conversionId The conversion id for the content. The `conversionId` must have been obtained from a
+     *     successful [Conversion API](https://docs.microsoft.com/en-us/rest/api/maps/v2/conversion/convert) call.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return detail information for the conversion requests.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<Conversion> getWithResponse(String conversionId, Context context) {
+        return getWithResponseAsync(conversionId, context).block();
     }
 
     /**
@@ -537,8 +966,52 @@ public final class ConversionsImpl {
     public Mono<Response<Void>> deleteWithResponseAsync(String conversionId) {
         final String apiVersion = "2.0";
         final String accept = "application/json";
+        return FluxUtil.withContext(
+                context ->
+                        service.delete(
+                                this.client.getGeography(),
+                                this.client.getClientId(),
+                                apiVersion,
+                                conversionId,
+                                accept,
+                                context));
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>This API allows the caller to delete any data conversions created previously using the [Conversion
+     * API](https://docs.microsoft.com/en-us/rest/api/maps/v2/conversion/convert).
+     *
+     * <p>### Submit Delete Request
+     *
+     * <p>To delete your conversion data you will issue a `DELETE` request where the path will contain the
+     * `conversionId` of the data to delete.
+     *
+     * <p>### Conversion Delete Response
+     *
+     * <p>The Conversion Delete API returns a HTTP `204 No Content` response with an empty body, if the converted data
+     * resources were deleted successfully.&lt;br&gt; A HTTP `400 Bad Request` error response will be returned if no
+     * resource associated with the passed-in `conversionId` is found.
+     *
+     * @param conversionId The conversion id for the content. The `conversionId` must have been obtained from a
+     *     successful [Conversion API](https://docs.microsoft.com/en-us/rest/api/maps/v2/conversion/convert) call.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the completion.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Response<Void>> deleteWithResponseAsync(String conversionId, Context context) {
+        final String apiVersion = "2.0";
+        final String accept = "application/json";
         return service.delete(
-                this.client.getGeography(), this.client.getXMsClientId(), apiVersion, conversionId, accept);
+                this.client.getGeography(), this.client.getClientId(), apiVersion, conversionId, accept, context);
     }
 
     /**
@@ -597,6 +1070,40 @@ public final class ConversionsImpl {
      *
      * @param conversionId The conversion id for the content. The `conversionId` must have been obtained from a
      *     successful [Conversion API](https://docs.microsoft.com/en-us/rest/api/maps/v2/conversion/convert) call.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the completion.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Void> deleteAsync(String conversionId, Context context) {
+        return deleteWithResponseAsync(conversionId, context).flatMap((Response<Void> res) -> Mono.empty());
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>This API allows the caller to delete any data conversions created previously using the [Conversion
+     * API](https://docs.microsoft.com/en-us/rest/api/maps/v2/conversion/convert).
+     *
+     * <p>### Submit Delete Request
+     *
+     * <p>To delete your conversion data you will issue a `DELETE` request where the path will contain the
+     * `conversionId` of the data to delete.
+     *
+     * <p>### Conversion Delete Response
+     *
+     * <p>The Conversion Delete API returns a HTTP `204 No Content` response with an empty body, if the converted data
+     * resources were deleted successfully.&lt;br&gt; A HTTP `400 Bad Request` error response will be returned if no
+     * resource associated with the passed-in `conversionId` is found.
+     *
+     * @param conversionId The conversion id for the content. The `conversionId` must have been obtained from a
+     *     successful [Conversion API](https://docs.microsoft.com/en-us/rest/api/maps/v2/conversion/convert) call.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -604,6 +1111,40 @@ public final class ConversionsImpl {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public void delete(String conversionId) {
         deleteAsync(conversionId).block();
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Creator makes it possible to develop applications based on your private indoor map data using Azure Maps API
+     * and SDK. [This](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps) article introduces concepts and
+     * tools that apply to Azure Maps Creator.
+     *
+     * <p>This API allows the caller to delete any data conversions created previously using the [Conversion
+     * API](https://docs.microsoft.com/en-us/rest/api/maps/v2/conversion/convert).
+     *
+     * <p>### Submit Delete Request
+     *
+     * <p>To delete your conversion data you will issue a `DELETE` request where the path will contain the
+     * `conversionId` of the data to delete.
+     *
+     * <p>### Conversion Delete Response
+     *
+     * <p>The Conversion Delete API returns a HTTP `204 No Content` response with an empty body, if the converted data
+     * resources were deleted successfully.&lt;br&gt; A HTTP `400 Bad Request` error response will be returned if no
+     * resource associated with the passed-in `conversionId` is found.
+     *
+     * @param conversionId The conversion id for the content. The `conversionId` must have been obtained from a
+     *     successful [Conversion API](https://docs.microsoft.com/en-us/rest/api/maps/v2/conversion/convert) call.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<Void> deleteWithResponse(String conversionId, Context context) {
+        return deleteWithResponseAsync(conversionId, context).block();
     }
 
     /**
@@ -620,7 +1161,26 @@ public final class ConversionsImpl {
     public Mono<ConversionsGetOperationResponse> getOperationWithResponseAsync(String operationId) {
         final String apiVersion = "2.0";
         final String accept = "application/json";
-        return service.getOperation(this.client.getGeography(), apiVersion, operationId, accept);
+        return FluxUtil.withContext(
+                context -> service.getOperation(this.client.getGeography(), apiVersion, operationId, accept, context));
+    }
+
+    /**
+     * This path will be obtained from a call to POST /conversions. While in progress, an http200 will be returned with
+     * no extra headers - followed by an http200 with Resource-Location header once successfully completed.
+     *
+     * @param operationId The ID to query the status for the Conversion create/import request.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response model for a Long-Running Operations API.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<ConversionsGetOperationResponse> getOperationWithResponseAsync(String operationId, Context context) {
+        final String apiVersion = "2.0";
+        final String accept = "application/json";
+        return service.getOperation(this.client.getGeography(), apiVersion, operationId, accept, context);
     }
 
     /**
@@ -651,6 +1211,30 @@ public final class ConversionsImpl {
      * no extra headers - followed by an http200 with Resource-Location header once successfully completed.
      *
      * @param operationId The ID to query the status for the Conversion create/import request.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response model for a Long-Running Operations API.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<LongRunningOperationResult> getOperationAsync(String operationId, Context context) {
+        return getOperationWithResponseAsync(operationId, context)
+                .flatMap(
+                        (ConversionsGetOperationResponse res) -> {
+                            if (res.getValue() != null) {
+                                return Mono.just(res.getValue());
+                            } else {
+                                return Mono.empty();
+                            }
+                        });
+    }
+
+    /**
+     * This path will be obtained from a call to POST /conversions. While in progress, an http200 will be returned with
+     * no extra headers - followed by an http200 with Resource-Location header once successfully completed.
+     *
+     * @param operationId The ID to query the status for the Conversion create/import request.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -659,6 +1243,22 @@ public final class ConversionsImpl {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public LongRunningOperationResult getOperation(String operationId) {
         return getOperationAsync(operationId).block();
+    }
+
+    /**
+     * This path will be obtained from a call to POST /conversions. While in progress, an http200 will be returned with
+     * no extra headers - followed by an http200 with Resource-Location header once successfully completed.
+     *
+     * @param operationId The ID to query the status for the Conversion create/import request.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response model for a Long-Running Operations API.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public ConversionsGetOperationResponse getOperationWithResponse(String operationId, Context context) {
+        return getOperationWithResponseAsync(operationId, context).block();
     }
 
     /**
@@ -671,9 +1271,41 @@ public final class ConversionsImpl {
      * @return the response model for the Conversion List API.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<PagedResponse<ConversionListDetailInfo>> listNextSinglePageAsync(String nextLink) {
+    public Mono<PagedResponse<Conversion>> listNextSinglePageAsync(String nextLink) {
         final String accept = "application/json";
-        return service.listNext(nextLink, this.client.getGeography(), this.client.getXMsClientId(), accept)
+        return FluxUtil.withContext(
+                        context ->
+                                service.listNext(
+                                        nextLink,
+                                        this.client.getGeography(),
+                                        this.client.getClientId(),
+                                        accept,
+                                        context))
+                .map(
+                        res ->
+                                new PagedResponseBase<>(
+                                        res.getRequest(),
+                                        res.getStatusCode(),
+                                        res.getHeaders(),
+                                        res.getValue().getConversions(),
+                                        res.getValue().getNextLink(),
+                                        null));
+    }
+
+    /**
+     * Get the next page of items.
+     *
+     * @param nextLink The nextLink parameter.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response model for the Conversion List API.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<PagedResponse<Conversion>> listNextSinglePageAsync(String nextLink, Context context) {
+        final String accept = "application/json";
+        return service.listNext(nextLink, this.client.getGeography(), this.client.getClientId(), accept, context)
                 .map(
                         res ->
                                 new PagedResponseBase<>(

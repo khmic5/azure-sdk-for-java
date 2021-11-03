@@ -4,17 +4,17 @@
 
 package com.azure.maps.weather.models;
 
-import com.azure.core.annotation.Fluent;
+import com.azure.core.annotation.Immutable;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /** This object is returned from a successful Get Severe Weather Alerts call. */
-@Fluent
+@Immutable
 public final class SevereWeatherAlertsResponse {
     /*
      * A list of all severe weather alerts for the queried location.
      */
-    @JsonProperty(value = "results")
+    @JsonProperty(value = "results", access = JsonProperty.Access.WRITE_ONLY)
     private List<SevereWeatherAlert> results;
 
     /**
@@ -24,16 +24,5 @@ public final class SevereWeatherAlertsResponse {
      */
     public List<SevereWeatherAlert> getResults() {
         return this.results;
-    }
-
-    /**
-     * Set the results property: A list of all severe weather alerts for the queried location.
-     *
-     * @param results the results value to set.
-     * @return the SevereWeatherAlertsResponse object itself.
-     */
-    public SevereWeatherAlertsResponse setResults(List<SevereWeatherAlert> results) {
-        this.results = results;
-        return this;
     }
 }

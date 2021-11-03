@@ -9,7 +9,7 @@ import com.azure.core.http.HttpRequest;
 import com.azure.core.http.rest.ResponseBase;
 
 /** Contains all response data for the create operation. */
-public final class AliasCreateResponse extends ResponseBase<AliasCreateHeaders, AliasesCreateResponse> {
+public final class AliasCreateResponse extends ResponseBase<AliasCreateHeaders, Alias> {
     /**
      * Creates an instance of AliasCreateResponse.
      *
@@ -20,17 +20,13 @@ public final class AliasCreateResponse extends ResponseBase<AliasCreateHeaders, 
      * @param headers the deserialized headers of the HTTP response.
      */
     public AliasCreateResponse(
-            HttpRequest request,
-            int statusCode,
-            HttpHeaders rawHeaders,
-            AliasesCreateResponse value,
-            AliasCreateHeaders headers) {
+            HttpRequest request, int statusCode, HttpHeaders rawHeaders, Alias value, AliasCreateHeaders headers) {
         super(request, statusCode, rawHeaders, value, headers);
     }
 
     /** @return the deserialized response body. */
     @Override
-    public AliasesCreateResponse getValue() {
+    public Alias getValue() {
         return super.getValue();
     }
 }

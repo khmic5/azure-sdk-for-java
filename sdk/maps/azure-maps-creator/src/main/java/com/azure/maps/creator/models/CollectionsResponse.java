@@ -21,13 +21,13 @@ public final class CollectionsResponse {
      * Links to other WFS endpoints.
      */
     @JsonProperty(value = "links", required = true)
-    private List<WfsEndpointLink> links;
+    private List<WFSEndpointLink> links;
 
     /*
      * All the collections in a given dataset.
      */
     @JsonProperty(value = "collections", required = true)
-    private List<CollectionInfo> collections;
+    private List<Collection> collections;
 
     /**
      * Get the ontology property: The ontology version of this dataset.
@@ -43,7 +43,7 @@ public final class CollectionsResponse {
      *
      * @return the links value.
      */
-    public List<WfsEndpointLink> getLinks() {
+    public List<WFSEndpointLink> getLinks() {
         return this.links;
     }
 
@@ -53,7 +53,7 @@ public final class CollectionsResponse {
      * @param links the links value to set.
      * @return the CollectionsResponse object itself.
      */
-    public CollectionsResponse setLinks(List<WfsEndpointLink> links) {
+    public CollectionsResponse setLinks(List<WFSEndpointLink> links) {
         this.links = links;
         return this;
     }
@@ -63,7 +63,7 @@ public final class CollectionsResponse {
      *
      * @return the collections value.
      */
-    public List<CollectionInfo> getCollections() {
+    public List<Collection> getCollections() {
         return this.collections;
     }
 
@@ -73,7 +73,7 @@ public final class CollectionsResponse {
      * @param collections the collections value to set.
      * @return the CollectionsResponse object itself.
      */
-    public CollectionsResponse setCollections(List<CollectionInfo> collections) {
+    public CollectionsResponse setCollections(List<Collection> collections) {
         this.collections = collections;
         return this;
     }

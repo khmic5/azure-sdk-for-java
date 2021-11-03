@@ -13,78 +13,78 @@ public final class TemperatureSummary {
     /*
      * Summary of temperature fluctuations over the past 6 hours.
      */
-    @JsonProperty(value = "past6Hours")
-    private TemperatureSummaryPast6Hours past6Hours;
+    @JsonProperty(value = "pastSixHours")
+    private PastHoursTemperature pastSixHours;
 
     /*
      * Summary of temperature fluctuations over the past 12 hours.
      */
-    @JsonProperty(value = "past12Hours")
-    private TemperatureSummaryPast12Hours past12Hours;
+    @JsonProperty(value = "pastTwelveHours")
+    private PastHoursTemperature pastTwelveHours;
 
     /*
      * Summary of temperature fluctuations over the past 24 hours.
      */
-    @JsonProperty(value = "past24Hours")
-    private TemperatureSummaryPast24Hours past24Hours;
+    @JsonProperty(value = "pastTwentyFourHours")
+    private PastHoursTemperature pastTwentyFourHours;
 
     /**
-     * Get the past6Hours property: Summary of temperature fluctuations over the past 6 hours.
+     * Get the pastSixHours property: Summary of temperature fluctuations over the past 6 hours.
      *
-     * @return the past6Hours value.
+     * @return the pastSixHours value.
      */
-    public TemperatureSummaryPast6Hours getPast6Hours() {
-        return this.past6Hours;
+    public PastHoursTemperature getPastSixHours() {
+        return this.pastSixHours;
     }
 
     /**
-     * Set the past6Hours property: Summary of temperature fluctuations over the past 6 hours.
+     * Set the pastSixHours property: Summary of temperature fluctuations over the past 6 hours.
      *
-     * @param past6Hours the past6Hours value to set.
+     * @param pastSixHours the pastSixHours value to set.
      * @return the TemperatureSummary object itself.
      */
-    public TemperatureSummary setPast6Hours(TemperatureSummaryPast6Hours past6Hours) {
-        this.past6Hours = past6Hours;
+    public TemperatureSummary setPastSixHours(PastHoursTemperature pastSixHours) {
+        this.pastSixHours = pastSixHours;
         return this;
     }
 
     /**
-     * Get the past12Hours property: Summary of temperature fluctuations over the past 12 hours.
+     * Get the pastTwelveHours property: Summary of temperature fluctuations over the past 12 hours.
      *
-     * @return the past12Hours value.
+     * @return the pastTwelveHours value.
      */
-    public TemperatureSummaryPast12Hours getPast12Hours() {
-        return this.past12Hours;
+    public PastHoursTemperature getPastTwelveHours() {
+        return this.pastTwelveHours;
     }
 
     /**
-     * Set the past12Hours property: Summary of temperature fluctuations over the past 12 hours.
+     * Set the pastTwelveHours property: Summary of temperature fluctuations over the past 12 hours.
      *
-     * @param past12Hours the past12Hours value to set.
+     * @param pastTwelveHours the pastTwelveHours value to set.
      * @return the TemperatureSummary object itself.
      */
-    public TemperatureSummary setPast12Hours(TemperatureSummaryPast12Hours past12Hours) {
-        this.past12Hours = past12Hours;
+    public TemperatureSummary setPastTwelveHours(PastHoursTemperature pastTwelveHours) {
+        this.pastTwelveHours = pastTwelveHours;
         return this;
     }
 
     /**
-     * Get the past24Hours property: Summary of temperature fluctuations over the past 24 hours.
+     * Get the pastTwentyFourHours property: Summary of temperature fluctuations over the past 24 hours.
      *
-     * @return the past24Hours value.
+     * @return the pastTwentyFourHours value.
      */
-    public TemperatureSummaryPast24Hours getPast24Hours() {
-        return this.past24Hours;
+    public PastHoursTemperature getPastTwentyFourHours() {
+        return this.pastTwentyFourHours;
     }
 
     /**
-     * Set the past24Hours property: Summary of temperature fluctuations over the past 24 hours.
+     * Set the pastTwentyFourHours property: Summary of temperature fluctuations over the past 24 hours.
      *
-     * @param past24Hours the past24Hours value to set.
+     * @param pastTwentyFourHours the pastTwentyFourHours value to set.
      * @return the TemperatureSummary object itself.
      */
-    public TemperatureSummary setPast24Hours(TemperatureSummaryPast24Hours past24Hours) {
-        this.past24Hours = past24Hours;
+    public TemperatureSummary setPastTwentyFourHours(PastHoursTemperature pastTwentyFourHours) {
+        this.pastTwentyFourHours = pastTwentyFourHours;
         return this;
     }
 }

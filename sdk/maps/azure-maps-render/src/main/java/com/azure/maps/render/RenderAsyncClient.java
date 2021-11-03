@@ -9,23 +9,24 @@ import com.azure.core.annotation.ServiceClient;
 import com.azure.core.annotation.ServiceMethod;
 import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.StreamResponse;
-import com.azure.maps.render.implementation.RendersImpl;
+import com.azure.maps.render.implementation.RenderClientImpl;
+import com.azure.maps.render.models.BoundingBox;
+import com.azure.maps.render.models.Copyright;
+import com.azure.maps.render.models.CopyrightCaption;
 import com.azure.maps.render.models.ErrorResponseException;
-import com.azure.maps.render.models.GetCopyrightCaptionResult;
-import com.azure.maps.render.models.GetCopyrightForTileResult;
-import com.azure.maps.render.models.GetCopyrightForWorldResult;
-import com.azure.maps.render.models.GetCopyrightFromBoundingBoxResult;
 import com.azure.maps.render.models.IncludeText;
+import com.azure.maps.render.models.LocalizedMapView;
+import com.azure.maps.render.models.MapAttribution;
 import com.azure.maps.render.models.MapImageStyle;
-import com.azure.maps.render.models.MapImageryStyle;
-import com.azure.maps.render.models.MapTileLayer;
 import com.azure.maps.render.models.MapTileSize;
-import com.azure.maps.render.models.MapTileStyle;
+import com.azure.maps.render.models.MapTileset;
 import com.azure.maps.render.models.RasterTileFormat;
+import com.azure.maps.render.models.ResponseFormat;
 import com.azure.maps.render.models.StaticMapLayer;
-import com.azure.maps.render.models.TextFormat;
-import com.azure.maps.render.models.TileFormat;
+import com.azure.maps.render.models.TileIndex;
+import com.azure.maps.render.models.TilesetID;
 import java.nio.ByteBuffer;
+import java.time.OffsetDateTime;
 import java.util.List;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -33,15 +34,300 @@ import reactor.core.publisher.Mono;
 /** Initializes a new instance of the asynchronous RenderClient type. */
 @ServiceClient(builder = RenderClientBuilder.class, isAsync = true)
 public final class RenderAsyncClient {
-    private final RendersImpl serviceClient;
+    private final RenderClientImpl serviceClient;
 
     /**
-     * Initializes an instance of Renders client.
+     * Initializes an instance of RenderClient client.
      *
      * @param serviceClient the service client implementation.
      */
-    RenderAsyncClient(RendersImpl serviceClient) {
+    RenderAsyncClient(RenderClientImpl serviceClient) {
         this.serviceClient = serviceClient;
+    }
+
+    /**
+     * **Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>The Get Map Tiles API allows users to request map tiles in vector or raster formats typically to be integrated
+     * into a map control or SDK. Some example tiles that can be requested are Azure Maps road tiles, real-time Weather
+     * Radar tiles or the map tiles created using [Azure Maps Creator](https://aka.ms/amcreator). By default, Azure Maps
+     * uses vector tiles for its web map control (Web SDK) and Android SDK.
+     *
+     * @param tilesetId A tileset is a collection of raster or vector data broken up into a uniform grid of square tiles
+     *     at preset zoom levels. Every tileset has a **tilesetId** to use when making requests. The **tilesetId** for
+     *     tilesets created using [Azure Maps Creator](https://aka.ms/amcreator) are generated through the [Tileset
+     *     Create API](https://docs.microsoft.com/en-us/rest/api/maps/tileset). The ready-to-use tilesets supplied by
+     *     Azure Maps are listed below. For example, microsoft.base.
+     * @param tileIndex Parameter group.
+     * @param timeStamp The desired date and time of the requested tile. This parameter must be specified in the
+     *     standard date-time format (e.g. 2019-11-14T16:03:00-08:00), as defined by [ISO
+     *     8601](https://en.wikipedia.org/wiki/ISO_8601). This parameter is only supported when tilesetId parameter is
+     *     set to one of the values below.
+     *     <p>* microsoft.weather.infrared.main: We provide tiles up to 3 hours in the past. Tiles are available in
+     *     10-minute intervals. We round the timeStamp value to the nearest 10-minute time frame. *
+     *     microsoft.weather.radar.main: We provide tiles up to 1.5 hours in the past and up to 2 hours in the future.
+     *     Tiles are available in 5-minute intervals. We round the timeStamp value to the nearest 5-minute time frame.
+     * @param tileSize The size of the returned map tile in pixels.
+     * @param language Language in which search results should be returned. Should be one of supported IETF language
+     *     tags, case insensitive. When data in specified language is not available for a specific field, default
+     *     language is used.
+     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
+     *     details.
+     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
+     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
+     *     different views of such regions, and the View parameter allows your application to comply with the view
+     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
+     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
+     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
+     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
+     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
+     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
+     *     made available. Example: view=IN.
+     *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
+     *     available Views.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<StreamResponse> getMapTileV2WithResponse(
+            TilesetID tilesetId,
+            TileIndex tileIndex,
+            OffsetDateTime timeStamp,
+            MapTileSize tileSize,
+            String language,
+            LocalizedMapView localizedMapView) {
+        return this.serviceClient.getMapTileV2WithResponseAsync(
+                tilesetId, tileIndex, timeStamp, tileSize, language, localizedMapView);
+    }
+
+    /**
+     * **Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>The Get Map Tiles API allows users to request map tiles in vector or raster formats typically to be integrated
+     * into a map control or SDK. Some example tiles that can be requested are Azure Maps road tiles, real-time Weather
+     * Radar tiles or the map tiles created using [Azure Maps Creator](https://aka.ms/amcreator). By default, Azure Maps
+     * uses vector tiles for its web map control (Web SDK) and Android SDK.
+     *
+     * @param tilesetId A tileset is a collection of raster or vector data broken up into a uniform grid of square tiles
+     *     at preset zoom levels. Every tileset has a **tilesetId** to use when making requests. The **tilesetId** for
+     *     tilesets created using [Azure Maps Creator](https://aka.ms/amcreator) are generated through the [Tileset
+     *     Create API](https://docs.microsoft.com/en-us/rest/api/maps/tileset). The ready-to-use tilesets supplied by
+     *     Azure Maps are listed below. For example, microsoft.base.
+     * @param tileIndex Parameter group.
+     * @param timeStamp The desired date and time of the requested tile. This parameter must be specified in the
+     *     standard date-time format (e.g. 2019-11-14T16:03:00-08:00), as defined by [ISO
+     *     8601](https://en.wikipedia.org/wiki/ISO_8601). This parameter is only supported when tilesetId parameter is
+     *     set to one of the values below.
+     *     <p>* microsoft.weather.infrared.main: We provide tiles up to 3 hours in the past. Tiles are available in
+     *     10-minute intervals. We round the timeStamp value to the nearest 10-minute time frame. *
+     *     microsoft.weather.radar.main: We provide tiles up to 1.5 hours in the past and up to 2 hours in the future.
+     *     Tiles are available in 5-minute intervals. We round the timeStamp value to the nearest 5-minute time frame.
+     * @param tileSize The size of the returned map tile in pixels.
+     * @param language Language in which search results should be returned. Should be one of supported IETF language
+     *     tags, case insensitive. When data in specified language is not available for a specific field, default
+     *     language is used.
+     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
+     *     details.
+     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
+     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
+     *     different views of such regions, and the View parameter allows your application to comply with the view
+     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
+     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
+     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
+     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
+     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
+     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
+     *     made available. Example: view=IN.
+     *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
+     *     available Views.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Flux<ByteBuffer> getMapTileV2(
+            TilesetID tilesetId,
+            TileIndex tileIndex,
+            OffsetDateTime timeStamp,
+            MapTileSize tileSize,
+            String language,
+            LocalizedMapView localizedMapView) {
+        return this.serviceClient.getMapTileV2Async(
+                tilesetId, tileIndex, timeStamp, tileSize, language, localizedMapView);
+    }
+
+    /**
+     * **Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>The Get Map Tileset API allows users to request metadata for a tileset.
+     *
+     * @param tilesetId A tileset is a collection of raster or vector data broken up into a uniform grid of square tiles
+     *     at preset zoom levels. Every tileset has a **tilesetId** to use when making requests. The **tilesetId** for
+     *     tilesets created using [Azure Maps Creator](https://aka.ms/amcreator) are generated through the [Tileset
+     *     Create API](https://docs.microsoft.com/en-us/rest/api/maps/tileset). The ready-to-use tilesets supplied by
+     *     Azure Maps are listed below. For example, microsoft.base.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return metadata for a tileset in the TileJSON format.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Response<MapTileset>> getMapTilesetWithResponse(TilesetID tilesetId) {
+        return this.serviceClient.getMapTilesetWithResponseAsync(tilesetId);
+    }
+
+    /**
+     * **Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>The Get Map Tileset API allows users to request metadata for a tileset.
+     *
+     * @param tilesetId A tileset is a collection of raster or vector data broken up into a uniform grid of square tiles
+     *     at preset zoom levels. Every tileset has a **tilesetId** to use when making requests. The **tilesetId** for
+     *     tilesets created using [Azure Maps Creator](https://aka.ms/amcreator) are generated through the [Tileset
+     *     Create API](https://docs.microsoft.com/en-us/rest/api/maps/tileset). The ready-to-use tilesets supplied by
+     *     Azure Maps are listed below. For example, microsoft.base.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return metadata for a tileset in the TileJSON format.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<MapTileset> getMapTileset(TilesetID tilesetId) {
+        return this.serviceClient.getMapTilesetAsync(tilesetId);
+    }
+
+    /**
+     * **Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>The Get Map Attribution API allows users to request map copyright attribution information for a section of a
+     * tileset.
+     *
+     * @param tilesetId A tileset is a collection of raster or vector data broken up into a uniform grid of square tiles
+     *     at preset zoom levels. Every tileset has a **tilesetId** to use when making requests. The **tilesetId** for
+     *     tilesets created using [Azure Maps Creator](https://aka.ms/amcreator) are generated through the [Tileset
+     *     Create API](https://docs.microsoft.com/en-us/rest/api/maps/tileset). The ready-to-use tilesets supplied by
+     *     Azure Maps are listed below. For example, microsoft.base.
+     * @param zoom Zoom level for the desired map attribution.
+     * @param bounds The string that represents the rectangular area of a bounding box. The bounds parameter is defined
+     *     by the 4 bounding box coordinates, with WGS84 longitude and latitude of the southwest corner followed by
+     *     WGS84 longitude and latitude of the northeast corner. The string is presented in the following format:
+     *     `[SouthwestCorner_Longitude, SouthwestCorner_Latitude, NortheastCorner_Longitude, NortheastCorner_Latitude]`.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return copyright attribution for the requested section of a tileset.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Response<MapAttribution>> getMapAttributionWithResponse(
+            TilesetID tilesetId, int zoom, List<Double> bounds) {
+        return this.serviceClient.getMapAttributionWithResponseAsync(tilesetId, zoom, bounds);
+    }
+
+    /**
+     * **Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>The Get Map Attribution API allows users to request map copyright attribution information for a section of a
+     * tileset.
+     *
+     * @param tilesetId A tileset is a collection of raster or vector data broken up into a uniform grid of square tiles
+     *     at preset zoom levels. Every tileset has a **tilesetId** to use when making requests. The **tilesetId** for
+     *     tilesets created using [Azure Maps Creator](https://aka.ms/amcreator) are generated through the [Tileset
+     *     Create API](https://docs.microsoft.com/en-us/rest/api/maps/tileset). The ready-to-use tilesets supplied by
+     *     Azure Maps are listed below. For example, microsoft.base.
+     * @param zoom Zoom level for the desired map attribution.
+     * @param bounds The string that represents the rectangular area of a bounding box. The bounds parameter is defined
+     *     by the 4 bounding box coordinates, with WGS84 longitude and latitude of the southwest corner followed by
+     *     WGS84 longitude and latitude of the northeast corner. The string is presented in the following format:
+     *     `[SouthwestCorner_Longitude, SouthwestCorner_Latitude, NortheastCorner_Longitude, NortheastCorner_Latitude]`.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return copyright attribution for the requested section of a tileset.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<MapAttribution> getMapAttribution(TilesetID tilesetId, int zoom, List<Double> bounds) {
+        return this.serviceClient.getMapAttributionAsync(tilesetId, zoom, bounds);
+    }
+
+    /**
+     * **Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>Fetches state tiles in vector format typically to be integrated into indoor maps module of map control or SDK.
+     * The map control will call this API after user turns on dynamic styling (see [Zoom Levels and Tile
+     * Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid)).
+     *
+     * @param statesetId The stateset id.
+     * @param tileIndex Parameter group.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<StreamResponse> getMapStateTileWithResponse(String statesetId, TileIndex tileIndex) {
+        return this.serviceClient.getMapStateTileWithResponseAsync(statesetId, tileIndex);
+    }
+
+    /**
+     * **Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>Fetches state tiles in vector format typically to be integrated into indoor maps module of map control or SDK.
+     * The map control will call this API after user turns on dynamic styling (see [Zoom Levels and Tile
+     * Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid)).
+     *
+     * @param statesetId The stateset id.
+     * @param tileIndex Parameter group.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Flux<ByteBuffer> getMapStateTile(String statesetId, TileIndex tileIndex) {
+        return this.serviceClient.getMapStateTileAsync(statesetId, tileIndex);
+    }
+
+    /**
+     * **Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>Copyrights API is designed to serve copyright information for Render Tile service. In addition to basic
+     * copyright for the whole map, API is serving specific groups of copyrights for some countries.
+     *
+     * <p>As an alternative to copyrights for map request, one can receive captions for displaying the map provider
+     * information on the map.
+     *
+     * @param format Desired format of the response. Value can be either _json_ or _xml_.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful copyright call.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Response<CopyrightCaption>> getCopyrightCaptionWithResponse(ResponseFormat format) {
+        return this.serviceClient.getCopyrightCaptionWithResponseAsync(format);
+    }
+
+    /**
+     * **Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>Copyrights API is designed to serve copyright information for Render Tile service. In addition to basic
+     * copyright for the whole map, API is serving specific groups of copyrights for some countries.
+     *
+     * <p>As an alternative to copyrights for map request, one can receive captions for displaying the map provider
+     * information on the map.
+     *
+     * @param format Desired format of the response. Value can be either _json_ or _xml_.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful copyright call.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<CopyrightCaption> getCopyrightCaption(ResponseFormat format) {
+        return this.serviceClient.getCopyrightCaptionAsync(format);
     }
 
     /**
@@ -86,7 +372,7 @@ public final class RenderAsyncClient {
      * @param center Coordinates of the center point. Format: 'lon,lat'. Projection used - EPSG:3857. Longitude range:
      *     -180 to 180. Latitude range: -85 to 85.
      *     <p>Note: Either center or bbox are required parameters. They are mutually exclusive.
-     * @param bbox Bounding box. Projection used - EPSG:3857. Format : 'minLon, minLat, maxLon, maxLat'.
+     * @param boundingBox Bounding box. Projection used - EPSG:3857. Format : 'minLon, minLat, maxLon, maxLat'.
      *     <p>Note: Either bbox or center are required parameters. They are mutually exclusive. It shouldn’t be used
      *     with height or width.
      *     <p>The maximum allowed ranges for Lat and Lon are defined for each zoom level in the table at the top of this
@@ -98,17 +384,18 @@ public final class RenderAsyncClient {
      * @param language Language in which search results should be returned. Should be one of supported IETF language
      *     tags, case insensitive. When data in specified language is not available for a specific field, default
      *     language is used.
-     *     <p>Please refer to [Supported
-     *     Languages](https://docs.microsoft.com/en-us/azure/azure-maps/supported-languages) for details.
-     * @param view The View parameter specifies which set of geopolitically disputed content is returned via Azure Maps
-     *     services, including borders and labels displayed on the map. The View parameter (also referred to as “user
-     *     region parameter”) will show the correct maps for that country/region. By default, the View parameter is set
-     *     to “Unified” even if you haven’t defined it in the request. It is your responsibility to determine the
-     *     location of your users, and then set the View parameter correctly for that location. Alternatively, you have
-     *     the option to set ‘View=Auto’, which will return the map data based on the IP address of the request. The
-     *     View parameter in Azure Maps must be used in compliance with applicable laws, including those regarding
-     *     mapping, of the country where maps, images and other data and third party content that you are authorized to
-     *     access via Azure Maps is made available. Example: view=IN.
+     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
+     *     details.
+     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
+     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
+     *     different views of such regions, and the View parameter allows your application to comply with the view
+     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
+     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
+     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
+     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
+     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
+     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
+     *     made available. Example: view=IN.
      *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
      *     available Views.
      * @param pins Pushpin style and instances. Use this parameter to optionally add pushpins to the image. The pushpin
@@ -257,16 +544,16 @@ public final class RenderAsyncClient {
             StaticMapLayer layer,
             MapImageStyle style,
             Integer zoom,
-            String center,
-            String bbox,
+            List<Double> center,
+            List<Double> boundingBox,
             Integer height,
             Integer width,
             String language,
-            String view,
+            LocalizedMapView localizedMapView,
             List<String> pins,
             List<String> path) {
         return this.serviceClient.getMapStaticImageWithResponseAsync(
-                format, layer, style, zoom, center, bbox, height, width, language, view, pins, path);
+                format, layer, style, zoom, center, boundingBox, height, width, language, localizedMapView, pins, path);
     }
 
     /**
@@ -311,7 +598,7 @@ public final class RenderAsyncClient {
      * @param center Coordinates of the center point. Format: 'lon,lat'. Projection used - EPSG:3857. Longitude range:
      *     -180 to 180. Latitude range: -85 to 85.
      *     <p>Note: Either center or bbox are required parameters. They are mutually exclusive.
-     * @param bbox Bounding box. Projection used - EPSG:3857. Format : 'minLon, minLat, maxLon, maxLat'.
+     * @param boundingBox Bounding box. Projection used - EPSG:3857. Format : 'minLon, minLat, maxLon, maxLat'.
      *     <p>Note: Either bbox or center are required parameters. They are mutually exclusive. It shouldn’t be used
      *     with height or width.
      *     <p>The maximum allowed ranges for Lat and Lon are defined for each zoom level in the table at the top of this
@@ -323,17 +610,18 @@ public final class RenderAsyncClient {
      * @param language Language in which search results should be returned. Should be one of supported IETF language
      *     tags, case insensitive. When data in specified language is not available for a specific field, default
      *     language is used.
-     *     <p>Please refer to [Supported
-     *     Languages](https://docs.microsoft.com/en-us/azure/azure-maps/supported-languages) for details.
-     * @param view The View parameter specifies which set of geopolitically disputed content is returned via Azure Maps
-     *     services, including borders and labels displayed on the map. The View parameter (also referred to as “user
-     *     region parameter”) will show the correct maps for that country/region. By default, the View parameter is set
-     *     to “Unified” even if you haven’t defined it in the request. It is your responsibility to determine the
-     *     location of your users, and then set the View parameter correctly for that location. Alternatively, you have
-     *     the option to set ‘View=Auto’, which will return the map data based on the IP address of the request. The
-     *     View parameter in Azure Maps must be used in compliance with applicable laws, including those regarding
-     *     mapping, of the country where maps, images and other data and third party content that you are authorized to
-     *     access via Azure Maps is made available. Example: view=IN.
+     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
+     *     details.
+     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
+     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
+     *     different views of such regions, and the View parameter allows your application to comply with the view
+     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
+     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
+     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
+     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
+     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
+     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
+     *     made available. Example: view=IN.
      *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
      *     available Views.
      * @param pins Pushpin style and instances. Use this parameter to optionally add pushpins to the image. The pushpin
@@ -482,305 +770,16 @@ public final class RenderAsyncClient {
             StaticMapLayer layer,
             MapImageStyle style,
             Integer zoom,
-            String center,
-            String bbox,
+            List<Double> center,
+            List<Double> boundingBox,
             Integer height,
             Integer width,
             String language,
-            String view,
+            LocalizedMapView localizedMapView,
             List<String> pins,
             List<String> path) {
         return this.serviceClient.getMapStaticImageAsync(
-                format, layer, style, zoom, center, bbox, height, width, language, view, pins, path);
-    }
-
-    /**
-     * **Applies to**: S0 and S1 pricing tiers.
-     *
-     * <p>Fetches map tiles in vector or raster format typically to be integrated into a new map control or SDK. By
-     * default, Azure uses vector map tiles for its web map control (see [Zoom Levels and Tile
-     * Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid))
-     *
-     * <p>**Note**: Weather tiles are only available via [Get Map Tile V2 API](https://aka.ms/AzureMapsWeatherTiles). We
-     * recommend to start to use the new [Get Map Tile V2 API](https://aka.ms/GetMapTileV2).
-     *
-     * @param format Desired format of the response. Possible values are png &amp; pbf.
-     * @param layer Map layer requested. Possible values are basic, hybrid, labels and terra.
-     * @param style Map style to be returned. Possible values are main, dark, and shaded_relief.
-     * @param zoom Zoom level for the desired tile. For _raster_ tiles, value must be in the range: 0-18 (inclusive).
-     *     Terra raster tiles, values must be in the range 0-6 (inclusive). For _vector_ tiles, value must be in the
-     *     range: 0-22 (inclusive). Please see [Zoom Levels and Tile
-     *     Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
-     * @param xTileIndex X coordinate of the tile on zoom grid. Value must be in the range [0,
-     *     2&lt;sup&gt;`zoom`&lt;/sup&gt; -1].
-     *     <p>Please see [Zoom Levels and Tile
-     *     Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
-     * @param yTileIndex Y coordinate of the tile on zoom grid. Value must be in the range [0,
-     *     2&lt;sup&gt;`zoom`&lt;/sup&gt; -1].
-     *     <p>Please see [Zoom Levels and Tile
-     *     Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
-     * @param tileSize The size of the returned map tile in pixels.
-     * @param language Language in which search results should be returned. Should be one of supported IETF language
-     *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used.
-     *     <p>Please refer to [Supported
-     *     Languages](https://docs.microsoft.com/en-us/azure/azure-maps/supported-languages) for details.
-     * @param view The View parameter specifies which set of geopolitically disputed content is returned via Azure Maps
-     *     services, including borders and labels displayed on the map. The View parameter (also referred to as “user
-     *     region parameter”) will show the correct maps for that country/region. By default, the View parameter is set
-     *     to “Unified” even if you haven’t defined it in the request. It is your responsibility to determine the
-     *     location of your users, and then set the View parameter correctly for that location. Alternatively, you have
-     *     the option to set ‘View=Auto’, which will return the map data based on the IP address of the request. The
-     *     View parameter in Azure Maps must be used in compliance with applicable laws, including those regarding
-     *     mapping, of the country where maps, images and other data and third party content that you are authorized to
-     *     access via Azure Maps is made available. Example: view=IN.
-     *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
-     *     available Views.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<StreamResponse> getMapTileWithResponse(
-            TileFormat format,
-            MapTileLayer layer,
-            MapTileStyle style,
-            int zoom,
-            int xTileIndex,
-            int yTileIndex,
-            MapTileSize tileSize,
-            String language,
-            String view) {
-        return this.serviceClient.getMapTileWithResponseAsync(
-                format, layer, style, zoom, xTileIndex, yTileIndex, tileSize, language, view);
-    }
-
-    /**
-     * **Applies to**: S0 and S1 pricing tiers.
-     *
-     * <p>Fetches map tiles in vector or raster format typically to be integrated into a new map control or SDK. By
-     * default, Azure uses vector map tiles for its web map control (see [Zoom Levels and Tile
-     * Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid))
-     *
-     * <p>**Note**: Weather tiles are only available via [Get Map Tile V2 API](https://aka.ms/AzureMapsWeatherTiles). We
-     * recommend to start to use the new [Get Map Tile V2 API](https://aka.ms/GetMapTileV2).
-     *
-     * @param format Desired format of the response. Possible values are png &amp; pbf.
-     * @param layer Map layer requested. Possible values are basic, hybrid, labels and terra.
-     * @param style Map style to be returned. Possible values are main, dark, and shaded_relief.
-     * @param zoom Zoom level for the desired tile. For _raster_ tiles, value must be in the range: 0-18 (inclusive).
-     *     Terra raster tiles, values must be in the range 0-6 (inclusive). For _vector_ tiles, value must be in the
-     *     range: 0-22 (inclusive). Please see [Zoom Levels and Tile
-     *     Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
-     * @param xTileIndex X coordinate of the tile on zoom grid. Value must be in the range [0,
-     *     2&lt;sup&gt;`zoom`&lt;/sup&gt; -1].
-     *     <p>Please see [Zoom Levels and Tile
-     *     Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
-     * @param yTileIndex Y coordinate of the tile on zoom grid. Value must be in the range [0,
-     *     2&lt;sup&gt;`zoom`&lt;/sup&gt; -1].
-     *     <p>Please see [Zoom Levels and Tile
-     *     Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
-     * @param tileSize The size of the returned map tile in pixels.
-     * @param language Language in which search results should be returned. Should be one of supported IETF language
-     *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used.
-     *     <p>Please refer to [Supported
-     *     Languages](https://docs.microsoft.com/en-us/azure/azure-maps/supported-languages) for details.
-     * @param view The View parameter specifies which set of geopolitically disputed content is returned via Azure Maps
-     *     services, including borders and labels displayed on the map. The View parameter (also referred to as “user
-     *     region parameter”) will show the correct maps for that country/region. By default, the View parameter is set
-     *     to “Unified” even if you haven’t defined it in the request. It is your responsibility to determine the
-     *     location of your users, and then set the View parameter correctly for that location. Alternatively, you have
-     *     the option to set ‘View=Auto’, which will return the map data based on the IP address of the request. The
-     *     View parameter in Azure Maps must be used in compliance with applicable laws, including those regarding
-     *     mapping, of the country where maps, images and other data and third party content that you are authorized to
-     *     access via Azure Maps is made available. Example: view=IN.
-     *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
-     *     available Views.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Flux<ByteBuffer> getMapTile(
-            TileFormat format,
-            MapTileLayer layer,
-            MapTileStyle style,
-            int zoom,
-            int xTileIndex,
-            int yTileIndex,
-            MapTileSize tileSize,
-            String language,
-            String view) {
-        return this.serviceClient.getMapTileAsync(
-                format, layer, style, zoom, xTileIndex, yTileIndex, tileSize, language, view);
-    }
-
-    /**
-     * **Applies to**: S0 and S1 pricing tiers.
-     *
-     * <p>Fetches state tiles in vector format typically to be integrated into indoor maps module of map control or SDK.
-     * The map control will call this API after user turns on dynamic styling (see [Zoom Levels and Tile
-     * Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid)).
-     *
-     * @param zoom Zoom level for the desired tile. Zoom value must be in the range: 0-20 (inclusive).
-     *     <p>Please see [Zoom Levels and Tile
-     *     Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
-     * @param xTileIndex X coordinate of the tile on zoom grid. Value must be in the range [0,
-     *     2&lt;sup&gt;`zoom`&lt;/sup&gt; -1].
-     *     <p>Please see [Zoom Levels and Tile
-     *     Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
-     * @param yTileIndex Y coordinate of the tile on zoom grid. Value must be in the range [0,
-     *     2&lt;sup&gt;`zoom`&lt;/sup&gt; -1].
-     *     <p>Please see [Zoom Levels and Tile
-     *     Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
-     * @param statesetId The stateset id.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<StreamResponse> getMapStateTilePreviewWithResponse(
-            int zoom, int xTileIndex, int yTileIndex, String statesetId) {
-        return this.serviceClient.getMapStateTilePreviewWithResponseAsync(zoom, xTileIndex, yTileIndex, statesetId);
-    }
-
-    /**
-     * **Applies to**: S0 and S1 pricing tiers.
-     *
-     * <p>Fetches state tiles in vector format typically to be integrated into indoor maps module of map control or SDK.
-     * The map control will call this API after user turns on dynamic styling (see [Zoom Levels and Tile
-     * Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid)).
-     *
-     * @param zoom Zoom level for the desired tile. Zoom value must be in the range: 0-20 (inclusive).
-     *     <p>Please see [Zoom Levels and Tile
-     *     Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
-     * @param xTileIndex X coordinate of the tile on zoom grid. Value must be in the range [0,
-     *     2&lt;sup&gt;`zoom`&lt;/sup&gt; -1].
-     *     <p>Please see [Zoom Levels and Tile
-     *     Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
-     * @param yTileIndex Y coordinate of the tile on zoom grid. Value must be in the range [0,
-     *     2&lt;sup&gt;`zoom`&lt;/sup&gt; -1].
-     *     <p>Please see [Zoom Levels and Tile
-     *     Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
-     * @param statesetId The stateset id.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Flux<ByteBuffer> getMapStateTilePreview(int zoom, int xTileIndex, int yTileIndex, String statesetId) {
-        return this.serviceClient.getMapStateTilePreviewAsync(zoom, xTileIndex, yTileIndex, statesetId);
-    }
-
-    /**
-     * **Applies to**: S0 and S1 pricing tiers.
-     *
-     * <p>Copyrights API is designed to serve copyright information for Render Tile service. In addition to basic
-     * copyright for the whole map, API is serving specific groups of copyrights for some countries.
-     *
-     * <p>As an alternative to copyrights for map request, one can receive captions for displaying the map provider
-     * information on the map.
-     *
-     * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Get Copyright Caption call.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<GetCopyrightCaptionResult>> getCopyrightCaptionWithResponse(TextFormat format) {
-        return this.serviceClient.getCopyrightCaptionWithResponseAsync(format);
-    }
-
-    /**
-     * **Applies to**: S0 and S1 pricing tiers.
-     *
-     * <p>Copyrights API is designed to serve copyright information for Render Tile service. In addition to basic
-     * copyright for the whole map, API is serving specific groups of copyrights for some countries.
-     *
-     * <p>As an alternative to copyrights for map request, one can receive captions for displaying the map provider
-     * information on the map.
-     *
-     * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Get Copyright Caption call.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<GetCopyrightCaptionResult> getCopyrightCaption(TextFormat format) {
-        return this.serviceClient.getCopyrightCaptionAsync(format);
-    }
-
-    /**
-     * **Applies to:** S1 pricing tier.
-     *
-     * <p>This service returns a map image tile with size 256x256, given the x and y coordinates and zoom level. Zoom
-     * level ranges from 1 to 19. The current available style value is 'satellite' which provides satellite imagery
-     * alone.
-     *
-     * <p>**Note**: We recommend to start to use the new [Get Map Tile V2 API](https://aka.ms/GetMapTileV2).
-     *
-     * @param format Desired format of the response. Possible value: png.
-     * @param style Map style to be returned. __Possible values:__ satellite.
-     * @param zoom Zoom level for the desired tile. Zoom value must be in the range: 1-19 (inclusive). Please see [Zoom
-     *     Levels and Tile
-     *     Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
-     * @param xTileIndex X coordinate of the tile on zoom grid. Value must be in the range [0,
-     *     2&lt;sup&gt;`zoom`&lt;/sup&gt; -1].
-     *     <p>Please see [Zoom Levels and Tile
-     *     Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
-     * @param yTileIndex Y coordinate of the tile on zoom grid. Value must be in the range [0,
-     *     2&lt;sup&gt;`zoom`&lt;/sup&gt; -1].
-     *     <p>Please see [Zoom Levels and Tile
-     *     Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<StreamResponse> getMapImageryTileWithResponse(
-            RasterTileFormat format, MapImageryStyle style, int zoom, int xTileIndex, int yTileIndex) {
-        return this.serviceClient.getMapImageryTileWithResponseAsync(format, style, zoom, xTileIndex, yTileIndex);
-    }
-
-    /**
-     * **Applies to:** S1 pricing tier.
-     *
-     * <p>This service returns a map image tile with size 256x256, given the x and y coordinates and zoom level. Zoom
-     * level ranges from 1 to 19. The current available style value is 'satellite' which provides satellite imagery
-     * alone.
-     *
-     * <p>**Note**: We recommend to start to use the new [Get Map Tile V2 API](https://aka.ms/GetMapTileV2).
-     *
-     * @param format Desired format of the response. Possible value: png.
-     * @param style Map style to be returned. __Possible values:__ satellite.
-     * @param zoom Zoom level for the desired tile. Zoom value must be in the range: 1-19 (inclusive). Please see [Zoom
-     *     Levels and Tile
-     *     Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
-     * @param xTileIndex X coordinate of the tile on zoom grid. Value must be in the range [0,
-     *     2&lt;sup&gt;`zoom`&lt;/sup&gt; -1].
-     *     <p>Please see [Zoom Levels and Tile
-     *     Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
-     * @param yTileIndex Y coordinate of the tile on zoom grid. Value must be in the range [0,
-     *     2&lt;sup&gt;`zoom`&lt;/sup&gt; -1].
-     *     <p>Please see [Zoom Levels and Tile
-     *     Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Flux<ByteBuffer> getMapImageryTile(
-            RasterTileFormat format, MapImageryStyle style, int zoom, int xTileIndex, int yTileIndex) {
-        return this.serviceClient.getMapImageryTileAsync(format, style, zoom, xTileIndex, yTileIndex);
+                format, layer, style, zoom, center, boundingBox, height, width, language, localizedMapView, pins, path);
     }
 
     /**
@@ -790,22 +789,18 @@ public final class RenderAsyncClient {
      * maximum longitude and latitude (EPSG-3857) coordinates.
      *
      * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param mincoordinates Minimum coordinates of bounding box in latitude longitude coordinate system. E.g.
-     *     52.41064,4.84228.
-     * @param maxcoordinates Maximum coordinates of bounding box in latitude longitude coordinate system. E.g.
-     *     52.41064,4.84228.
-     * @param text Yes/no value to exclude textual data from response. Only images and country names will be in
+     * @param boundingBox Parameter group.
+     * @param includeText Yes/no value to exclude textual data from response. Only images and country names will be in
      *     response.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Get Copyright From Bounding Box call.
+     * @return this object is returned from a successful copyright request.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<GetCopyrightFromBoundingBoxResult>> getCopyrightFromBoundingBoxWithResponse(
-            TextFormat format, String mincoordinates, String maxcoordinates, IncludeText text) {
-        return this.serviceClient.getCopyrightFromBoundingBoxWithResponseAsync(
-                format, mincoordinates, maxcoordinates, text);
+    public Mono<Response<Copyright>> getCopyrightFromBoundingBoxWithResponse(
+            ResponseFormat format, BoundingBox boundingBox, IncludeText includeText) {
+        return this.serviceClient.getCopyrightFromBoundingBoxWithResponseAsync(format, boundingBox, includeText);
     }
 
     /**
@@ -815,21 +810,18 @@ public final class RenderAsyncClient {
      * maximum longitude and latitude (EPSG-3857) coordinates.
      *
      * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param mincoordinates Minimum coordinates of bounding box in latitude longitude coordinate system. E.g.
-     *     52.41064,4.84228.
-     * @param maxcoordinates Maximum coordinates of bounding box in latitude longitude coordinate system. E.g.
-     *     52.41064,4.84228.
-     * @param text Yes/no value to exclude textual data from response. Only images and country names will be in
+     * @param boundingBox Parameter group.
+     * @param includeText Yes/no value to exclude textual data from response. Only images and country names will be in
      *     response.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Get Copyright From Bounding Box call.
+     * @return this object is returned from a successful copyright request.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<GetCopyrightFromBoundingBoxResult> getCopyrightFromBoundingBox(
-            TextFormat format, String mincoordinates, String maxcoordinates, IncludeText text) {
-        return this.serviceClient.getCopyrightFromBoundingBoxAsync(format, mincoordinates, maxcoordinates, text);
+    public Mono<Copyright> getCopyrightFromBoundingBox(
+            ResponseFormat format, BoundingBox boundingBox, IncludeText includeText) {
+        return this.serviceClient.getCopyrightFromBoundingBoxAsync(format, boundingBox, includeText);
     }
 
     /**
@@ -841,28 +833,18 @@ public final class RenderAsyncClient {
      * should specify the tile's zoom level and x and y coordinates (see: Zoom Levels and Tile Grid).
      *
      * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param zoom Zoom level for the desired tile. Zoom value must be in the range: 0-18 (inclusive).
-     *     <p>Please see [Zoom Levels and Tile
-     *     Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
-     * @param xTileIndex X coordinate of the tile on zoom grid. Value must be in the range [0,
-     *     2&lt;sup&gt;`zoom`&lt;/sup&gt; -1].
-     *     <p>Please see [Zoom Levels and Tile
-     *     Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
-     * @param yTileIndex Y coordinate of the tile on zoom grid. Value must be in the range [0,
-     *     2&lt;sup&gt;`zoom`&lt;/sup&gt; -1].
-     *     <p>Please see [Zoom Levels and Tile
-     *     Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
-     * @param text Yes/no value to exclude textual data from response. Only images and country names will be in
+     * @param tileIndex Parameter group.
+     * @param includeText Yes/no value to exclude textual data from response. Only images and country names will be in
      *     response.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Get Copyright For Tile call.
+     * @return this object is returned from a successful copyright request.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<GetCopyrightForTileResult>> getCopyrightForTileWithResponse(
-            TextFormat format, int zoom, int xTileIndex, int yTileIndex, IncludeText text) {
-        return this.serviceClient.getCopyrightForTileWithResponseAsync(format, zoom, xTileIndex, yTileIndex, text);
+    public Mono<Response<Copyright>> getCopyrightForTileWithResponse(
+            ResponseFormat format, TileIndex tileIndex, IncludeText includeText) {
+        return this.serviceClient.getCopyrightForTileWithResponseAsync(format, tileIndex, includeText);
     }
 
     /**
@@ -874,28 +856,17 @@ public final class RenderAsyncClient {
      * should specify the tile's zoom level and x and y coordinates (see: Zoom Levels and Tile Grid).
      *
      * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param zoom Zoom level for the desired tile. Zoom value must be in the range: 0-18 (inclusive).
-     *     <p>Please see [Zoom Levels and Tile
-     *     Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
-     * @param xTileIndex X coordinate of the tile on zoom grid. Value must be in the range [0,
-     *     2&lt;sup&gt;`zoom`&lt;/sup&gt; -1].
-     *     <p>Please see [Zoom Levels and Tile
-     *     Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
-     * @param yTileIndex Y coordinate of the tile on zoom grid. Value must be in the range [0,
-     *     2&lt;sup&gt;`zoom`&lt;/sup&gt; -1].
-     *     <p>Please see [Zoom Levels and Tile
-     *     Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
-     * @param text Yes/no value to exclude textual data from response. Only images and country names will be in
+     * @param tileIndex Parameter group.
+     * @param includeText Yes/no value to exclude textual data from response. Only images and country names will be in
      *     response.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Get Copyright For Tile call.
+     * @return this object is returned from a successful copyright request.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<GetCopyrightForTileResult> getCopyrightForTile(
-            TextFormat format, int zoom, int xTileIndex, int yTileIndex, IncludeText text) {
-        return this.serviceClient.getCopyrightForTileAsync(format, zoom, xTileIndex, yTileIndex, text);
+    public Mono<Copyright> getCopyrightForTile(ResponseFormat format, TileIndex tileIndex, IncludeText includeText) {
+        return this.serviceClient.getCopyrightForTileAsync(format, tileIndex, includeText);
     }
 
     /**
@@ -907,17 +878,16 @@ public final class RenderAsyncClient {
      * specify a tile or bounding box.
      *
      * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param text Yes/no value to exclude textual data from response. Only images and country names will be in
+     * @param includeText Yes/no value to exclude textual data from response. Only images and country names will be in
      *     response.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Get Copyright For World call.
+     * @return this object is returned from a successful copyright request.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<GetCopyrightForWorldResult>> getCopyrightForWorldWithResponse(
-            TextFormat format, IncludeText text) {
-        return this.serviceClient.getCopyrightForWorldWithResponseAsync(format, text);
+    public Mono<Response<Copyright>> getCopyrightForWorldWithResponse(ResponseFormat format, IncludeText includeText) {
+        return this.serviceClient.getCopyrightForWorldWithResponseAsync(format, includeText);
     }
 
     /**
@@ -929,15 +899,15 @@ public final class RenderAsyncClient {
      * specify a tile or bounding box.
      *
      * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param text Yes/no value to exclude textual data from response. Only images and country names will be in
+     * @param includeText Yes/no value to exclude textual data from response. Only images and country names will be in
      *     response.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Get Copyright For World call.
+     * @return this object is returned from a successful copyright request.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<GetCopyrightForWorldResult> getCopyrightForWorld(TextFormat format, IncludeText text) {
-        return this.serviceClient.getCopyrightForWorldAsync(format, text);
+    public Mono<Copyright> getCopyrightForWorld(ResponseFormat format, IncludeText includeText) {
+        return this.serviceClient.getCopyrightForWorldAsync(format, includeText);
     }
 }

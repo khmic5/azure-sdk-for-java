@@ -15,14 +15,14 @@ public final class FeatureStatesStructure {
      * The feature states array.
      */
     @JsonProperty(value = "states")
-    private List<FeatureStateObject> states;
+    private List<FeatureState> states;
 
     /**
      * Get the states property: The feature states array.
      *
      * @return the states value.
      */
-    public List<FeatureStateObject> getStates() {
+    public List<FeatureState> getStates() {
         return this.states;
     }
 
@@ -32,7 +32,7 @@ public final class FeatureStatesStructure {
      * @param states the states value to set.
      * @return the FeatureStatesStructure object itself.
      */
-    public FeatureStatesStructure setStates(List<FeatureStateObject> states) {
+    public FeatureStatesStructure setStates(List<FeatureState> states) {
         this.states = states;
         return this;
     }

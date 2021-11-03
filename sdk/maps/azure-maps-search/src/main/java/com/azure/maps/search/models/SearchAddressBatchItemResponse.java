@@ -7,9 +7,9 @@ package com.azure.maps.search.models;
 import com.azure.core.annotation.Fluent;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** The result of the query. SearchCommonResponse if the query completed successfully, ErrorResponse otherwise. */
+/** The result of the query. SearchAddressResponse if the query completed successfully, ErrorResponse otherwise. */
 @Fluent
-public final class SearchAddressBatchItemResponse extends SearchCommonResponse {
+public final class SearchAddressBatchItemResponse extends SearchAddressResult {
     /*
      * The error object.
      */

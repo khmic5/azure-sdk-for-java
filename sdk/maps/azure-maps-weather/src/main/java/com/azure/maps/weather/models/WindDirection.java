@@ -23,7 +23,7 @@ public final class WindDirection {
      * Direction abbreviation in the specified language.
      */
     @JsonProperty(value = "localizedDescription")
-    private String localizedDescription;
+    private String description;
 
     /**
      * Get the degrees property: Wind direction in Azimuth degrees, starting at true North and continuing in clockwise
@@ -50,22 +50,22 @@ public final class WindDirection {
     }
 
     /**
-     * Get the localizedDescription property: Direction abbreviation in the specified language.
+     * Get the description property: Direction abbreviation in the specified language.
      *
-     * @return the localizedDescription value.
+     * @return the description value.
      */
-    public String getLocalizedDescription() {
-        return this.localizedDescription;
+    public String getDescription() {
+        return this.description;
     }
 
     /**
-     * Set the localizedDescription property: Direction abbreviation in the specified language.
+     * Set the description property: Direction abbreviation in the specified language.
      *
-     * @param localizedDescription the localizedDescription value to set.
+     * @param description the description value to set.
      * @return the WindDirection object itself.
      */
-    public WindDirection setLocalizedDescription(String localizedDescription) {
-        this.localizedDescription = localizedDescription;
+    public WindDirection setDescription(String description) {
+        this.description = description;
         return this;
     }
 }

@@ -11,7 +11,7 @@ import java.util.Collection;
 /** Defines values for SectionType. */
 public final class SectionType extends ExpandableStringEnum<SectionType> {
     /** Static value carTrain for SectionType. */
-    public static final SectionType CAR_TRAIN = fromString("carTrain");
+    public static final SectionType CAR_OR_TRAIN = fromString("carTrain");
 
     /** Static value country for SectionType. */
     public static final SectionType COUNTRY = fromString("country");
@@ -39,6 +39,12 @@ public final class SectionType extends ExpandableStringEnum<SectionType> {
 
     /** Static value tunnel for SectionType. */
     public static final SectionType TUNNEL = fromString("tunnel");
+
+    /** Static value carpool for SectionType. */
+    public static final SectionType CARPOOL = fromString("carpool");
+
+    /** Static value urban for SectionType. */
+    public static final SectionType URBAN = fromString("urban");
 
     /**
      * Creates or finds a SectionType from its string representation.

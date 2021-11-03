@@ -9,7 +9,7 @@ import com.azure.core.http.HttpRequest;
 import com.azure.core.http.rest.ResponseBase;
 
 /** Contains all response data for the getGeofence operation. */
-public final class SpatialsGetGeofenceResponse extends ResponseBase<SpatialsGetGeofenceHeaders, GeofenceResponse> {
+public final class SpatialsGetGeofenceResponse extends ResponseBase<SpatialsGetGeofenceHeaders, Geofence> {
     /**
      * Creates an instance of SpatialsGetGeofenceResponse.
      *
@@ -23,14 +23,14 @@ public final class SpatialsGetGeofenceResponse extends ResponseBase<SpatialsGetG
             HttpRequest request,
             int statusCode,
             HttpHeaders rawHeaders,
-            GeofenceResponse value,
+            Geofence value,
             SpatialsGetGeofenceHeaders headers) {
         super(request, statusCode, rawHeaders, value, headers);
     }
 
     /** @return the deserialized response body. */
     @Override
-    public GeofenceResponse getValue() {
+    public Geofence getValue() {
         return super.getValue();
     }
 }

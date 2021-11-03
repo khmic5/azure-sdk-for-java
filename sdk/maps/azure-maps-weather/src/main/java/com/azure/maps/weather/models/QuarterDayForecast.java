@@ -15,7 +15,7 @@ public final class QuarterDayForecast {
      * Date of the forecast as example, 2019-10-27T00:00:00
      */
     @JsonProperty(value = "date")
-    private String date;
+    private OffsetDateTime dateTime;
 
     /*
      * Date and time of the beginning of the forecast quarter displayed in ISO
@@ -36,7 +36,7 @@ public final class QuarterDayForecast {
      * Concepts](https://aka.ms/AzureMapsWeatherConcepts) for details.
      */
     @JsonProperty(value = "iconCode")
-    private Integer iconCode;
+    private IconCode iconCode;
 
     /*
      * Phrase description of the icon. Displayed in specified language. For
@@ -55,13 +55,13 @@ public final class QuarterDayForecast {
      * Temperature values for the quarter.
      */
     @JsonProperty(value = "temperature")
-    private WeatherUnitRange temperature;
+    private WeatherValueRange temperature;
 
     /*
      * RealFeel™ Temperature values for the quarter.
      */
     @JsonProperty(value = "realFeelTemperature")
-    private WeatherUnitRange realFeelTemperature;
+    private WeatherValueRange realFeelTemperature;
 
     /*
      * The dewpoint temperature in specified unit. The dewpoint temperature is
@@ -69,7 +69,7 @@ public final class QuarterDayForecast {
      * saturation.
      */
     @JsonProperty(value = "dewPoint")
-    private WeatherUnit dewPoint;
+    private WeatherValue dewPoint;
 
     /*
      * Relative humidity is the amount of water vapor present in air expressed
@@ -96,7 +96,7 @@ public final class QuarterDayForecast {
      * object or light can be clearly discerned.
      */
     @JsonProperty(value = "visibility")
-    private WeatherUnit visibility;
+    private WeatherValue visibility;
 
     /*
      * Percent representing cloud cover.
@@ -112,11 +112,11 @@ public final class QuarterDayForecast {
     private Boolean hasPrecipitation;
 
     /*
-     * Specifies the type of precipitation ("rain" "snow" "ice" or "mix"). If
-     * dbz = zero, precipitationType is not present in the response.
+     * Specifies the type of precipitation ("Rain" "Snow" "Ice" or "Mix"). If
+     * dbz is zero, precipitationType is not present in the response.
      */
     @JsonProperty(value = "precipitationType")
-    private String precipitationType;
+    private PrecipitationType precipitationType;
 
     /*
      * Description of the intensity.
@@ -142,43 +142,43 @@ public final class QuarterDayForecast {
      * Total liquid equivalent of precipitation during the forecast period.
      */
     @JsonProperty(value = "totalLiquid")
-    private WeatherUnit totalLiquid;
+    private WeatherValue totalLiquid;
 
     /*
      * Rain
      */
     @JsonProperty(value = "rain")
-    private WeatherUnit rain;
+    private WeatherValue rain;
 
     /*
      * Snow
      */
     @JsonProperty(value = "snow")
-    private WeatherUnit snow;
+    private WeatherValue snow;
 
     /*
      * Ice
      */
     @JsonProperty(value = "ice")
-    private WeatherUnit ice;
+    private WeatherValue ice;
 
     /**
-     * Get the date property: Date of the forecast as example, 2019-10-27T00:00:00.
+     * Get the dateTime property: Date of the forecast as example, 2019-10-27T00:00:00.
      *
-     * @return the date value.
+     * @return the dateTime value.
      */
-    public String getDate() {
-        return this.date;
+    public OffsetDateTime getDateTime() {
+        return this.dateTime;
     }
 
     /**
-     * Set the date property: Date of the forecast as example, 2019-10-27T00:00:00.
+     * Set the dateTime property: Date of the forecast as example, 2019-10-27T00:00:00.
      *
-     * @param date the date value to set.
+     * @param dateTime the dateTime value to set.
      * @return the QuarterDayForecast object itself.
      */
-    public QuarterDayForecast setDate(String date) {
-        this.date = date;
+    public QuarterDayForecast setDateTime(OffsetDateTime dateTime) {
+        this.dateTime = dateTime;
         return this;
     }
 
@@ -230,7 +230,7 @@ public final class QuarterDayForecast {
      *
      * @return the iconCode value.
      */
-    public Integer getIconCode() {
+    public IconCode getIconCode() {
         return this.iconCode;
     }
 
@@ -241,7 +241,7 @@ public final class QuarterDayForecast {
      * @param iconCode the iconCode value to set.
      * @return the QuarterDayForecast object itself.
      */
-    public QuarterDayForecast setIconCode(Integer iconCode) {
+    public QuarterDayForecast setIconCode(IconCode iconCode) {
         this.iconCode = iconCode;
         return this;
     }
@@ -293,7 +293,7 @@ public final class QuarterDayForecast {
      *
      * @return the temperature value.
      */
-    public WeatherUnitRange getTemperature() {
+    public WeatherValueRange getTemperature() {
         return this.temperature;
     }
 
@@ -303,7 +303,7 @@ public final class QuarterDayForecast {
      * @param temperature the temperature value to set.
      * @return the QuarterDayForecast object itself.
      */
-    public QuarterDayForecast setTemperature(WeatherUnitRange temperature) {
+    public QuarterDayForecast setTemperature(WeatherValueRange temperature) {
         this.temperature = temperature;
         return this;
     }
@@ -313,7 +313,7 @@ public final class QuarterDayForecast {
      *
      * @return the realFeelTemperature value.
      */
-    public WeatherUnitRange getRealFeelTemperature() {
+    public WeatherValueRange getRealFeelTemperature() {
         return this.realFeelTemperature;
     }
 
@@ -323,7 +323,7 @@ public final class QuarterDayForecast {
      * @param realFeelTemperature the realFeelTemperature value to set.
      * @return the QuarterDayForecast object itself.
      */
-    public QuarterDayForecast setRealFeelTemperature(WeatherUnitRange realFeelTemperature) {
+    public QuarterDayForecast setRealFeelTemperature(WeatherValueRange realFeelTemperature) {
         this.realFeelTemperature = realFeelTemperature;
         return this;
     }
@@ -334,7 +334,7 @@ public final class QuarterDayForecast {
      *
      * @return the dewPoint value.
      */
-    public WeatherUnit getDewPoint() {
+    public WeatherValue getDewPoint() {
         return this.dewPoint;
     }
 
@@ -345,7 +345,7 @@ public final class QuarterDayForecast {
      * @param dewPoint the dewPoint value to set.
      * @return the QuarterDayForecast object itself.
      */
-    public QuarterDayForecast setDewPoint(WeatherUnit dewPoint) {
+    public QuarterDayForecast setDewPoint(WeatherValue dewPoint) {
         this.dewPoint = dewPoint;
         return this;
     }
@@ -418,7 +418,7 @@ public final class QuarterDayForecast {
      *
      * @return the visibility value.
      */
-    public WeatherUnit getVisibility() {
+    public WeatherValue getVisibility() {
         return this.visibility;
     }
 
@@ -429,7 +429,7 @@ public final class QuarterDayForecast {
      * @param visibility the visibility value to set.
      * @return the QuarterDayForecast object itself.
      */
-    public QuarterDayForecast setVisibility(WeatherUnit visibility) {
+    public QuarterDayForecast setVisibility(WeatherValue visibility) {
         this.visibility = visibility;
         return this;
     }
@@ -477,23 +477,23 @@ public final class QuarterDayForecast {
     }
 
     /**
-     * Get the precipitationType property: Specifies the type of precipitation ("rain" "snow" "ice" or "mix"). If dbz =
+     * Get the precipitationType property: Specifies the type of precipitation ("Rain" "Snow" "Ice" or "Mix"). If dbz is
      * zero, precipitationType is not present in the response.
      *
      * @return the precipitationType value.
      */
-    public String getPrecipitationType() {
+    public PrecipitationType getPrecipitationType() {
         return this.precipitationType;
     }
 
     /**
-     * Set the precipitationType property: Specifies the type of precipitation ("rain" "snow" "ice" or "mix"). If dbz =
+     * Set the precipitationType property: Specifies the type of precipitation ("Rain" "Snow" "Ice" or "Mix"). If dbz is
      * zero, precipitationType is not present in the response.
      *
      * @param precipitationType the precipitationType value to set.
      * @return the QuarterDayForecast object itself.
      */
-    public QuarterDayForecast setPrecipitationType(String precipitationType) {
+    public QuarterDayForecast setPrecipitationType(PrecipitationType precipitationType) {
         this.precipitationType = precipitationType;
         return this;
     }
@@ -567,7 +567,7 @@ public final class QuarterDayForecast {
      *
      * @return the totalLiquid value.
      */
-    public WeatherUnit getTotalLiquid() {
+    public WeatherValue getTotalLiquid() {
         return this.totalLiquid;
     }
 
@@ -577,7 +577,7 @@ public final class QuarterDayForecast {
      * @param totalLiquid the totalLiquid value to set.
      * @return the QuarterDayForecast object itself.
      */
-    public QuarterDayForecast setTotalLiquid(WeatherUnit totalLiquid) {
+    public QuarterDayForecast setTotalLiquid(WeatherValue totalLiquid) {
         this.totalLiquid = totalLiquid;
         return this;
     }
@@ -587,7 +587,7 @@ public final class QuarterDayForecast {
      *
      * @return the rain value.
      */
-    public WeatherUnit getRain() {
+    public WeatherValue getRain() {
         return this.rain;
     }
 
@@ -597,7 +597,7 @@ public final class QuarterDayForecast {
      * @param rain the rain value to set.
      * @return the QuarterDayForecast object itself.
      */
-    public QuarterDayForecast setRain(WeatherUnit rain) {
+    public QuarterDayForecast setRain(WeatherValue rain) {
         this.rain = rain;
         return this;
     }
@@ -607,7 +607,7 @@ public final class QuarterDayForecast {
      *
      * @return the snow value.
      */
-    public WeatherUnit getSnow() {
+    public WeatherValue getSnow() {
         return this.snow;
     }
 
@@ -617,7 +617,7 @@ public final class QuarterDayForecast {
      * @param snow the snow value to set.
      * @return the QuarterDayForecast object itself.
      */
-    public QuarterDayForecast setSnow(WeatherUnit snow) {
+    public QuarterDayForecast setSnow(WeatherValue snow) {
         this.snow = snow;
         return this;
     }
@@ -627,7 +627,7 @@ public final class QuarterDayForecast {
      *
      * @return the ice value.
      */
-    public WeatherUnit getIce() {
+    public WeatherValue getIce() {
         return this.ice;
     }
 
@@ -637,7 +637,7 @@ public final class QuarterDayForecast {
      * @param ice the ice value to set.
      * @return the QuarterDayForecast object itself.
      */
-    public QuarterDayForecast setIce(WeatherUnit ice) {
+    public QuarterDayForecast setIce(WeatherValue ice) {
         this.ice = ice;
         return this;
     }

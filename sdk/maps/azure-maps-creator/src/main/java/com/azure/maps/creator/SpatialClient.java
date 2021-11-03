@@ -7,17 +7,22 @@ package com.azure.maps.creator;
 import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceClient;
 import com.azure.core.annotation.ServiceMethod;
+import com.azure.core.http.rest.Response;
+import com.azure.core.util.Context;
 import com.azure.maps.creator.implementation.SpatialsImpl;
 import com.azure.maps.creator.models.BufferRequestBody;
-import com.azure.maps.creator.models.BufferResponse;
+import com.azure.maps.creator.models.BufferResult;
 import com.azure.maps.creator.models.ClosestPointResponse;
 import com.azure.maps.creator.models.ErrorResponseException;
 import com.azure.maps.creator.models.GeoJsonFeatureCollection;
+import com.azure.maps.creator.models.Geofence;
 import com.azure.maps.creator.models.GeofenceMode;
-import com.azure.maps.creator.models.GeofenceResponse;
-import com.azure.maps.creator.models.GreatCircleDistanceResponse;
-import com.azure.maps.creator.models.PointInPolygonResponse;
-import com.azure.maps.creator.models.ResponseFormat;
+import com.azure.maps.creator.models.GreatCircleDistanceResult;
+import com.azure.maps.creator.models.JsonFormat;
+import com.azure.maps.creator.models.PointInPolygonResult;
+import com.azure.maps.creator.models.Position;
+import com.azure.maps.creator.models.SpatialsGetGeofenceResponse;
+import com.azure.maps.creator.models.SpatialsPostGeofenceResponse;
 import java.time.OffsetDateTime;
 
 /** Initializes a new instance of the synchronous CreatorClient type. */
@@ -80,14 +85,13 @@ public final class SpatialClient {
      *     FeatureCollection object. Please refer to [RFC 7946](https://tools.ietf.org/html/rfc7946#section-3.3) for
      *     details. All the feature's properties should contain `geometryId`, which is used for identifying the geometry
      *     and is case-sensitive.
-     * @param latitude The latitude of the location being passed. Example: 48.36.
-     * @param longitude The longitude of the location being passed. Example: -124.63.
-     * @param z The sea level in meter of the location being passed. If this parameter is presented, 2D extrusion is
-     *     used. Example: 200.
+     * @param position Parameter group.
+     * @param altitude The sea level in meter of the location being passed. If this parameter is presented, 2D extrusion
+     *     is used. Example: 200.
      * @param userTime The user request time. If not presented in the request, the default value is DateTime.Now.
-     * @param searchBuffer The radius of the buffer around the geofence in meters that defines how far to search inside
-     *     and outside the border of the fence against the coordinate that was provided when calculating the result. The
-     *     minimum value is 0, and the maximum is 500. The default value is 50.
+     * @param searchBufferInMeters The radius of the buffer around the geofence in meters that defines how far to search
+     *     inside and outside the border of the fence against the coordinate that was provided when calculating the
+     *     result. The minimum value is 0, and the maximum is 500. The default value is 50.
      * @param isAsync If true, the request will use async event mechanism; if false, the request will be synchronized
      *     and do not trigger any event. The default value is false.
      * @param mode Mode of the geofencing async event mechanism.
@@ -97,19 +101,96 @@ public final class SpatialClient {
      * @return this object is returned from a geofence proximity call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public GeofenceResponse getGeofence(
-            ResponseFormat format,
+    public Geofence getGeofence(
+            JsonFormat format,
             String deviceId,
             String udid,
-            float latitude,
-            float longitude,
-            Float z,
+            Position position,
+            Float altitude,
             OffsetDateTime userTime,
-            Float searchBuffer,
+            Float searchBufferInMeters,
             Boolean isAsync,
             GeofenceMode mode) {
         return this.serviceClient.getGeofence(
-                format, deviceId, udid, latitude, longitude, z, userTime, searchBuffer, isAsync, mode);
+                format, deviceId, udid, position, altitude, userTime, searchBufferInMeters, isAsync, mode);
+    }
+
+    /**
+     * **Search Geofence Get API**
+     *
+     * <p>**Applies to:** S1 Pricing tier.
+     *
+     * <p>The Geofence Get API allows you to retrieve the proximity of a coordinate to a geofence that has been uploaded
+     * to the Data service. You can use the [Data Upload
+     * API](https://docs.microsoft.com/en-us/rest/api/maps/data/uploadPreview) to upload a geofence or set of fences.
+     * See [Geofencing GeoJSON data](https://docs.microsoft.com/en-us/azure/azure-maps/geofence-geojson) for more
+     * details on the geofence data format. To query the proximity of a coordinate, you supply the location of the
+     * object you are tracking as well as the ID for the fence or set of fences, and the response will contain
+     * information about the distance from the outer edge of the geofence. A negative value signifies that the
+     * coordinate is inside of the fence while a positive value means that it is outside of the
+     * fence.&lt;br&gt;&lt;br&gt;This API can be used for a variety of scenarios that include things like asset
+     * tracking, fleet management, or setting up alerts for moving objects.
+     *
+     * <p>The API supports [integration with Event
+     * Grid](https://docs.microsoft.com/azure/azure-maps/azure-maps-event-grid-integration). The isAsync parameter is
+     * used to enable integration with Event Grid (disabled by default). To test this API, you can upload the sample
+     * data from Post Geofence API examples(Request Body) via Data Upload API and replace the [udid] from the sample
+     * request below with the udid returned by Data Upload API.
+     *
+     * <p>### Geofencing InnerError code
+     *
+     * <p>In geofencing response error contract, `innererror` is an object containing service specific information about
+     * the error. `code` is a property in `innererror` which can map to a specific geofencing error type. The table
+     * belows shows the code mapping between all the known client error type to the corresponding geofencing error
+     * `message`.
+     *
+     * <p>innererror.code | error.message ---------------------------- | --------------------------------------
+     * NullDeviceId | Device Id should not be null. NullUdid | Udid should not be null. UdidWrongFormat| Udid should be
+     * acquired from user data ingestion API. InvalidUserTime| Usertime is invalid. InvalidSearchBuffer| Searchbuffer is
+     * invalid. InvalidSearchRange| The value range of searchbuffer should be from 0 to 500 meters. InvalidLatLon| Lat
+     * and/or lon parameters are invalid. InvalidIsAsyncValue| The IsAsync parameter is invalid. InvalidModeValue| The
+     * mode parameter invalid. InvalidJson| Geofencing data is not a valid json file. NotSupportedGeoJson| Geofencing
+     * data can't be read as a Feature or FeatureCollections. InvalidGeoJson| Geofencing data is invalid.
+     * NoUserDataWithAccountOrSubscription| Can't find user geofencing data with provided account-id and/or
+     * subscription-id. NoUserDataWithUdid| Can't find user geofencing data with provided udid.
+     *
+     * @param format Desired format of the response. Only `json` format is supported.
+     * @param deviceId ID of the device.
+     * @param udid The unique id returned from [Data Upload
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/data/uploadPreview) after uploading a valid GeoJSON
+     *     FeatureCollection object. Please refer to [RFC 7946](https://tools.ietf.org/html/rfc7946#section-3.3) for
+     *     details. All the feature's properties should contain `geometryId`, which is used for identifying the geometry
+     *     and is case-sensitive.
+     * @param position Parameter group.
+     * @param altitude The sea level in meter of the location being passed. If this parameter is presented, 2D extrusion
+     *     is used. Example: 200.
+     * @param userTime The user request time. If not presented in the request, the default value is DateTime.Now.
+     * @param searchBufferInMeters The radius of the buffer around the geofence in meters that defines how far to search
+     *     inside and outside the border of the fence against the coordinate that was provided when calculating the
+     *     result. The minimum value is 0, and the maximum is 500. The default value is 50.
+     * @param isAsync If true, the request will use async event mechanism; if false, the request will be synchronized
+     *     and do not trigger any event. The default value is false.
+     * @param mode Mode of the geofencing async event mechanism.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a geofence proximity call.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public SpatialsGetGeofenceResponse getGeofenceWithResponse(
+            JsonFormat format,
+            String deviceId,
+            String udid,
+            Position position,
+            Float altitude,
+            OffsetDateTime userTime,
+            Float searchBufferInMeters,
+            Boolean isAsync,
+            GeofenceMode mode,
+            Context context) {
+        return this.serviceClient.getGeofenceWithResponse(
+                format, deviceId, udid, position, altitude, userTime, searchBufferInMeters, isAsync, mode, context);
     }
 
     /**
@@ -129,10 +210,9 @@ public final class SpatialClient {
      *
      * @param format Desired format of the response. Only `json` format is supported.
      * @param deviceId ID of the device.
-     * @param latitude The latitude of the location being passed. Example: 48.36.
-     * @param longitude The longitude of the location being passed. Example: -124.63.
      * @param searchGeofenceRequestBody The geofencing GeoJSON data.
-     * @param z The sea level in meter of the location being passed. If this parameter is presented, 2D extrusion
+     * @param position Parameter group.
+     * @param altitude The sea level in meter of the location being passed. If this parameter is presented, 2D extrusion
      *     geofencing is applied. Example: 200.
      * @param userTime The user request time. If not presented in the request, the default value is DateTime.UtcNow.
      * @param searchBuffer The radius of the buffer around the geofence in meters that defines how far to search inside
@@ -147,28 +227,77 @@ public final class SpatialClient {
      * @return this object is returned from a geofence proximity call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public GeofenceResponse postGeofence(
-            ResponseFormat format,
+    public Geofence postGeofence(
+            JsonFormat format,
             String deviceId,
-            float latitude,
-            float longitude,
             GeoJsonFeatureCollection searchGeofenceRequestBody,
-            Float z,
+            Position position,
+            Float altitude,
             OffsetDateTime userTime,
             Float searchBuffer,
             Boolean isAsync,
             GeofenceMode mode) {
         return this.serviceClient.postGeofence(
+                format, deviceId, searchGeofenceRequestBody, position, altitude, userTime, searchBuffer, isAsync, mode);
+    }
+
+    /**
+     * **Search Geofence Post API** **Applies to:** S1 Pricing tier. The Geofence Post API allows you to retrieve the
+     * proximity of a coordinate to a provided geofence or set of fences. With POST call, you do not have to upload the
+     * fence data in advance, instead you supply the location of the object you are tracking in query parameters as well
+     * as the fence or set of fences data in post request body. See [Geofencing GeoJSON
+     * data](https://docs.microsoft.com/en-us/azure/azure-maps/geofence-geojson) for more details on the geofence data
+     * format. The response will contain information about the distance from the outer edge of the geofence. A negative
+     * value signifies that the coordinate is inside of the fence while a positive value means that it is outside of the
+     * fence.&lt;br&gt;&lt;br&gt;This API can be used for a variety of scenarios that include things like asset
+     * tracking, fleet management, or setting up alerts for moving objects.
+     *
+     * <p>The API supports [integration with Event
+     * Grid](https://docs.microsoft.com/azure/azure-maps/azure-maps-event-grid-integration). The isAsync parameter is
+     * used to enable integration with Event Grid (disabled by default).
+     *
+     * @param format Desired format of the response. Only `json` format is supported.
+     * @param deviceId ID of the device.
+     * @param searchGeofenceRequestBody The geofencing GeoJSON data.
+     * @param position Parameter group.
+     * @param altitude The sea level in meter of the location being passed. If this parameter is presented, 2D extrusion
+     *     geofencing is applied. Example: 200.
+     * @param userTime The user request time. If not presented in the request, the default value is DateTime.UtcNow.
+     * @param searchBuffer The radius of the buffer around the geofence in meters that defines how far to search inside
+     *     and outside the border of the fence against the coordinate that was provided when calculating the result. The
+     *     minimum value is 0, and the maximum is 500. The default value is 50.
+     * @param isAsync If true, the request will use async event mechanism; if false, the request will be synchronized
+     *     and do not trigger any event. The default value is false.
+     * @param mode Mode of the geofencing async event mechanism.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a geofence proximity call.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public SpatialsPostGeofenceResponse postGeofenceWithResponse(
+            JsonFormat format,
+            String deviceId,
+            GeoJsonFeatureCollection searchGeofenceRequestBody,
+            Position position,
+            Float altitude,
+            OffsetDateTime userTime,
+            Float searchBuffer,
+            Boolean isAsync,
+            GeofenceMode mode,
+            Context context) {
+        return this.serviceClient.postGeofenceWithResponse(
                 format,
                 deviceId,
-                latitude,
-                longitude,
                 searchGeofenceRequestBody,
-                z,
+                position,
+                altitude,
                 userTime,
                 searchBuffer,
                 isAsync,
-                mode);
+                mode,
+                context);
     }
 
     /**
@@ -193,8 +322,36 @@ public final class SpatialClient {
      * @return this object is returned from a successful Spatial Buffer call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public BufferResponse postBuffer(ResponseFormat format, BufferRequestBody bufferRequestBody) {
+    public BufferResult postBuffer(JsonFormat format, BufferRequestBody bufferRequestBody) {
         return this.serviceClient.postBuffer(format, bufferRequestBody);
+    }
+
+    /**
+     * **Applies to**: S1 pricing tier.
+     *
+     * <p>This API returns a FeatureCollection where each Feature is a buffer around the corresponding indexed Feature
+     * of the input. The buffer could be either on the outside or the inside of the provided Feature, depending on the
+     * distance provided in the input. There must be either one distance provided per Feature in the FeatureCollection
+     * input, or if only one distance is provided, then that distance is applied to every Feature in the collection. The
+     * positive (or negative) buffer of a geometry is defined as the Minkowski sum (or difference) of the geometry with
+     * a circle of radius equal to the absolute value of the buffer distance. The buffer API always returns a polygonal
+     * result. The negative or zero-distance buffer of lines and points is always an empty polygon. The input may
+     * contain a collection of Point, MultiPoint, Polygon, MultiPolygon, LineString and MultiLineString.
+     * GeometryCollection will be ignored if provided.
+     *
+     * @param format Desired format of the response. Only `json` format is supported.
+     * @param bufferRequestBody The FeatureCollection and the list of distances (one per feature or one for all
+     *     features).
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful Spatial Buffer call.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<BufferResult> postBufferWithResponse(
+            JsonFormat format, BufferRequestBody bufferRequestBody, Context context) {
+        return this.serviceClient.postBufferWithResponse(format, bufferRequestBody, context);
     }
 
     /**
@@ -235,8 +392,52 @@ public final class SpatialClient {
      * @return this object is returned from a successful Spatial Buffer call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public BufferResponse getBuffer(ResponseFormat format, String udid, String distances) {
+    public BufferResult getBuffer(JsonFormat format, String udid, String distances) {
         return this.serviceClient.getBuffer(format, udid, distances);
+    }
+
+    /**
+     * **Applies to**: S1 pricing tier.
+     *
+     * <p>This API returns a FeatureCollection where each Feature is a buffer around the corresponding indexed Feature
+     * of the input. The buffer could be either on the outside or the inside of the provided Feature, depending on the
+     * distance provided in the input. There must be either one distance provided per Feature in the FeatureCollection
+     * input, or if only one distance is provided, then that distance is applied to every Feature in the collection. The
+     * positive (or negative) buffer of a geometry is defined as the Minkowski sum (or difference) of the geometry with
+     * a circle of radius equal to the absolute value of the buffer distance. The buffer API always returns a polygonal
+     * result. The negative or zero-distance buffer of lines and points is always an empty polygon. The input features
+     * are provided by a GeoJSON file which is uploaded via [Data Upload
+     * API](https://docs.microsoft.com/en-us/rest/api/maps/data/uploadPreview) and referenced by a unique udid. The
+     * GeoJSON file may contain a collection of Point, MultiPoint, Polygon, MultiPolygon, LineString and
+     * MultiLineString. GeometryCollection will be ignored if provided.
+     *
+     * <p>To test this API, you can upload the sample data from [Post Buffer
+     * API](https://docs.microsoft.com/en-us/rest/api/maps/spatial/postbuffer#examples) examples(Request Body without
+     * distances array) via [Data Upload API](https://docs.microsoft.com/en-us/rest/api/maps/data/uploadPreview) and
+     * replace the [udid] from the [sample request
+     * below](https://docs.microsoft.com/en-us/rest/api/maps/spatial/getbuffer#examples) with the udid returned by Data
+     * Upload API.
+     *
+     * @param format Desired format of the response. Only `json` format is supported.
+     * @param udid The unique id returned from [Data Upload
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/data/uploadPreview) after uploading a valid GeoJSON
+     *     FeatureCollection object. Please refer to [RFC 7946](https://tools.ietf.org/html/rfc7946#section-3.3) for
+     *     details. All the feature's properties should contain `geometryId`, which is used for identifying the geometry
+     *     and is case-sensitive.
+     * @param distances The list of distances (one per feature or one for all features), delimited by semicolons. For
+     *     example, 12.34;-56.78. Positive distance will generate a buffer outside of the feature, whereas negative
+     *     distance will generate a buffer inside of the feature. If the negative distance larger than the geometry
+     *     itself, an empty polygon will be returned.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful Spatial Buffer call.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<BufferResult> getBufferWithResponse(
+            JsonFormat format, String udid, String distances, Context context) {
+        return this.serviceClient.getBufferWithResponse(format, udid, distances, context);
     }
 
     /**
@@ -249,11 +450,10 @@ public final class SpatialClient {
      * latitude, longitude, and distance in meters from the closest point.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param latitude The latitude of the location being passed. Example: 48.36.
-     * @param longitude The longitude of the location being passed. Example: -124.63.
      * @param closestPointRequestBody The FeatureCollection of Point geometries from which closest point to source point
      *     should be determined. All the feature's properties should contain `geometryId`, which is used for identifying
      *     the geometry and is case-sensitive.
+     * @param position Parameter group.
      * @param numberOfClosestPoints The number of closest points expected from response. Default: 1, minimum: 1 and
      *     maximum: 50.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -263,13 +463,44 @@ public final class SpatialClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public ClosestPointResponse postClosestPoint(
-            ResponseFormat format,
-            float latitude,
-            float longitude,
+            JsonFormat format,
             GeoJsonFeatureCollection closestPointRequestBody,
+            Position position,
             Integer numberOfClosestPoints) {
-        return this.serviceClient.postClosestPoint(
-                format, latitude, longitude, closestPointRequestBody, numberOfClosestPoints);
+        return this.serviceClient.postClosestPoint(format, closestPointRequestBody, position, numberOfClosestPoints);
+    }
+
+    /**
+     * **Applies to**: S1 pricing tier.
+     *
+     * <p>This API returns the closest point between a base point and a given set of target points. The set of target
+     * points is provided by user data in post request body. The user data may only contain a collection of Point
+     * geometry. MultiPoint or other geometries will be ignored if provided. The algorithm does not take into account
+     * routing or traffic. The maximum number of points accepted is 100,000. Information returned includes closest point
+     * latitude, longitude, and distance in meters from the closest point.
+     *
+     * @param format Desired format of the response. Only `json` format is supported.
+     * @param closestPointRequestBody The FeatureCollection of Point geometries from which closest point to source point
+     *     should be determined. All the feature's properties should contain `geometryId`, which is used for identifying
+     *     the geometry and is case-sensitive.
+     * @param position Parameter group.
+     * @param numberOfClosestPoints The number of closest points expected from response. Default: 1, minimum: 1 and
+     *     maximum: 50.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful Spatial Closest Point call.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<ClosestPointResponse> postClosestPointWithResponse(
+            JsonFormat format,
+            GeoJsonFeatureCollection closestPointRequestBody,
+            Position position,
+            Integer numberOfClosestPoints,
+            Context context) {
+        return this.serviceClient.postClosestPointWithResponse(
+                format, closestPointRequestBody, position, numberOfClosestPoints, context);
     }
 
     /**
@@ -295,8 +526,7 @@ public final class SpatialClient {
      *     FeatureCollection object. Please refer to [RFC 7946](https://tools.ietf.org/html/rfc7946#section-3.3) for
      *     details. All the feature's properties should contain `geometryId`, which is used for identifying the geometry
      *     and is case-sensitive.
-     * @param latitude The latitude of the location being passed. Example: 48.36.
-     * @param longitude The longitude of the location being passed. Example: -124.63.
+     * @param position Parameter group.
      * @param numberOfClosestPoints The number of closest points expected from response. Default: 1, minimum: 1 and
      *     maximum: 50.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -306,8 +536,46 @@ public final class SpatialClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public ClosestPointResponse getClosestPoint(
-            ResponseFormat format, String udid, float latitude, float longitude, Integer numberOfClosestPoints) {
-        return this.serviceClient.getClosestPoint(format, udid, latitude, longitude, numberOfClosestPoints);
+            JsonFormat format, String udid, Position position, Integer numberOfClosestPoints) {
+        return this.serviceClient.getClosestPoint(format, udid, position, numberOfClosestPoints);
+    }
+
+    /**
+     * **Applies to**: S1 pricing tier.
+     *
+     * <p>This API returns the closest point between a base point and a given set of points in the user uploaded data
+     * set identified by udid. The set of target points is provided by a GeoJSON file which is uploaded via [Data Upload
+     * API](https://docs.microsoft.com/en-us/rest/api/maps/data/uploadPreview) and referenced by a unique udid. The
+     * GeoJSON file may only contain a collection of Point geometry. MultiPoint or other geometries will be ignored if
+     * provided. The maximum number of points accepted is 100,000. The algorithm does not take into account routing or
+     * traffic. Information returned includes closest point latitude, longitude, and distance in meters from the closest
+     * point.
+     *
+     * <p>To test this API, you can upload the sample data from [Post Closest Point
+     * API](https://docs.microsoft.com/en-us/rest/api/maps/spatial/postclosestpoint#examples) examples(Request Body) via
+     * [Data Upload API](https://docs.microsoft.com/en-us/rest/api/maps/data/uploadPreview) and replace the [udid] from
+     * the [sample request below](https://docs.microsoft.com/en-us/rest/api/maps/spatial/getclosestpoint#examples) with
+     * the udid returned by Data Upload API.
+     *
+     * @param format Desired format of the response. Only `json` format is supported.
+     * @param udid The unique id returned from [Data Upload
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/data/uploadPreview) after uploading a valid GeoJSON
+     *     FeatureCollection object. Please refer to [RFC 7946](https://tools.ietf.org/html/rfc7946#section-3.3) for
+     *     details. All the feature's properties should contain `geometryId`, which is used for identifying the geometry
+     *     and is case-sensitive.
+     * @param position Parameter group.
+     * @param numberOfClosestPoints The number of closest points expected from response. Default: 1, minimum: 1 and
+     *     maximum: 50.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful Spatial Closest Point call.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<ClosestPointResponse> getClosestPointWithResponse(
+            JsonFormat format, String udid, Position position, Integer numberOfClosestPoints, Context context) {
+        return this.serviceClient.getClosestPointWithResponse(format, udid, position, numberOfClosestPoints, context);
     }
 
     /**
@@ -321,23 +589,46 @@ public final class SpatialClient {
      * form a Polygon is 10,000.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param latitude The latitude of the location being passed. Example: 48.36.
-     * @param longitude The longitude of the location being passed. Example: -124.63.
      * @param pointInPolygonRequestBody A FeatureCollection with a set of Polygon/MultiPolygon geometries. The maximum
      *     number of vertices accepted to form a Polygon is 10,000. All the feature's properties should contain
      *     `geometryId`, which is used for identifying the geometry and is case-sensitive.
+     * @param position Parameter group.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return returns true if point is within the polygon, false otherwise.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public PointInPolygonResponse postPointInPolygon(
-            ResponseFormat format,
-            float latitude,
-            float longitude,
-            GeoJsonFeatureCollection pointInPolygonRequestBody) {
-        return this.serviceClient.postPointInPolygon(format, latitude, longitude, pointInPolygonRequestBody);
+    public PointInPolygonResult postPointInPolygon(
+            JsonFormat format, GeoJsonFeatureCollection pointInPolygonRequestBody, Position position) {
+        return this.serviceClient.postPointInPolygon(format, pointInPolygonRequestBody, position);
+    }
+
+    /**
+     * **Applies to**: S1 pricing tier.
+     *
+     * <p>This API returns a boolean value indicating whether a point is inside a set of polygons. The user data may
+     * contain Polygon and MultiPolygon geometries, other geometries will be ignored if provided. If the point is inside
+     * or on the boundary of one of these polygons, the value returned is true. In all other cases, the value returned
+     * is false. When the point is inside multiple polygons, the result will give intersecting geometries section to
+     * show all valid geometries (referenced by geometryId) in user data. The maximum number of vertices accepted to
+     * form a Polygon is 10,000.
+     *
+     * @param format Desired format of the response. Only `json` format is supported.
+     * @param pointInPolygonRequestBody A FeatureCollection with a set of Polygon/MultiPolygon geometries. The maximum
+     *     number of vertices accepted to form a Polygon is 10,000. All the feature's properties should contain
+     *     `geometryId`, which is used for identifying the geometry and is case-sensitive.
+     * @param position Parameter group.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return returns true if point is within the polygon, false otherwise.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<PointInPolygonResult> postPointInPolygonWithResponse(
+            JsonFormat format, GeoJsonFeatureCollection pointInPolygonRequestBody, Position position, Context context) {
+        return this.serviceClient.postPointInPolygonWithResponse(format, pointInPolygonRequestBody, position, context);
     }
 
     /**
@@ -365,17 +656,53 @@ public final class SpatialClient {
      *     FeatureCollection object. Please refer to [RFC 7946](https://tools.ietf.org/html/rfc7946#section-3.3) for
      *     details. All the feature's properties should contain `geometryId`, which is used for identifying the geometry
      *     and is case-sensitive.
-     * @param latitude The latitude of the location being passed. Example: 48.36.
-     * @param longitude The longitude of the location being passed. Example: -124.63.
+     * @param position Parameter group.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return returns true if point is within the polygon, false otherwise.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public PointInPolygonResponse getPointInPolygon(
-            ResponseFormat format, String udid, float latitude, float longitude) {
-        return this.serviceClient.getPointInPolygon(format, udid, latitude, longitude);
+    public PointInPolygonResult evaluatePointInPolygon(JsonFormat format, String udid, Position position) {
+        return this.serviceClient.evaluatePointInPolygon(format, udid, position);
+    }
+
+    /**
+     * **Applies to**: S1 pricing tier.
+     *
+     * <p>This API returns a boolean value indicating whether a point is inside a set of polygons. The set of polygons
+     * is provided by a GeoJSON file which is uploaded via [Data Upload
+     * API](https://docs.microsoft.com/en-us/rest/api/maps/data/uploadPreview) and referenced by a unique udid. The
+     * GeoJSON file may contain Polygon and MultiPolygon geometries, other geometries will be ignored if provided. If
+     * the point is inside or on the boundary of one of these polygons, the value returned is true. In all other cases,
+     * the value returned is false. When the point is inside multiple polygons, the result will give intersecting
+     * geometries section to show all valid geometries(referenced by geometryId) in user data. The maximum number of
+     * vertices accepted to form a Polygon is 10,000.
+     *
+     * <p>To test this API, you can upload the sample data from [Post Point In Polygon
+     * API](https://docs.microsoft.com/en-us/rest/api/maps/spatial/postpointinpolygon#examples) examples(Request Body)
+     * via [Data Upload API](https://docs.microsoft.com/en-us/rest/api/maps/data/uploadPreview) and replace the [udid]
+     * from the [sample request
+     * below](https://docs.microsoft.com/en-us/rest/api/maps/spatial/getpointinpolygon#examples) with the udid returned
+     * by Data Upload API.
+     *
+     * @param format Desired format of the response. Only `json` format is supported.
+     * @param udid The unique id returned from [Data Upload
+     *     API](https://docs.microsoft.com/en-us/rest/api/maps/data/uploadPreview) after uploading a valid GeoJSON
+     *     FeatureCollection object. Please refer to [RFC 7946](https://tools.ietf.org/html/rfc7946#section-3.3) for
+     *     details. All the feature's properties should contain `geometryId`, which is used for identifying the geometry
+     *     and is case-sensitive.
+     * @param position Parameter group.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return returns true if point is within the polygon, false otherwise.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<PointInPolygonResult> evaluatePointInPolygonWithResponse(
+            JsonFormat format, String udid, Position position, Context context) {
+        return this.serviceClient.evaluatePointInPolygonWithResponse(format, udid, position, context);
     }
 
     /**
@@ -396,7 +723,31 @@ public final class SpatialClient {
      * @return this object is returned from a successful Great Circle Distance call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public GreatCircleDistanceResponse getGreatCircleDistance(ResponseFormat format, String query) {
+    public GreatCircleDistanceResult getGreatCircleDistance(JsonFormat format, String query) {
         return this.serviceClient.getGreatCircleDistance(format, query);
+    }
+
+    /**
+     * **Applies to**: S1 pricing tier.
+     *
+     * <p>This API will return the great-circle or shortest distance between two points on the surface of a sphere,
+     * measured along the surface of the sphere. This differs from calculating a straight line through the sphere's
+     * interior. This method is helpful for estimating travel distances for airplanes by calculating the shortest
+     * distance between airports.
+     *
+     * @param format Desired format of the response. Only `json` format is supported.
+     * @param query The Coordinates through which the distance is calculated, delimited by a colon. Two coordinates are
+     *     required. The first one is the source point coordinate and the last is the target point coordinate. For
+     *     example, 47.622942,122.316456:57.673988,127.121513.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful Great Circle Distance call.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<GreatCircleDistanceResult> getGreatCircleDistanceWithResponse(
+            JsonFormat format, String query, Context context) {
+        return this.serviceClient.getGreatCircleDistanceWithResponse(format, query, context);
     }
 }

@@ -6,18 +6,20 @@ package com.azure.maps.creator.models;
 
 import com.azure.core.annotation.Fluent;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
 import java.util.List;
 
 /**
  * A valid `GeoJSON FeatureCollection` object type extended with numberReturned and links array. Please refer to [RFC
  * 7946](https://tools.ietf.org/html/rfc7946#section-3.3) for details.
  */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonTypeName("FeatureCollection")
 @Fluent
-public final class ExtendedGeoJsonFeatureCollection extends GeoJsonFeatureCollection {
+public final class ExtendedGeoJsonFeatureCollection extends GeoJsonFeatureCollectionData {
+    /*
+     * Specifies the `GeoJSON` type: FeatureCollection.
+     */
+    @JsonProperty(value = "type")
+    private GeoJsonObjectType type;
+
     /*
      * The ontology version of this dataset.
      */
@@ -34,7 +36,27 @@ public final class ExtendedGeoJsonFeatureCollection extends GeoJsonFeatureCollec
      * Links to other WFS endpoints.
      */
     @JsonProperty(value = "links")
-    private List<WfsEndpointLink> links;
+    private List<WFSEndpointLink> links;
+
+    /**
+     * Get the type property: Specifies the `GeoJSON` type: FeatureCollection.
+     *
+     * @return the type value.
+     */
+    public GeoJsonObjectType getType() {
+        return this.type;
+    }
+
+    /**
+     * Set the type property: Specifies the `GeoJSON` type: FeatureCollection.
+     *
+     * @param type the type value to set.
+     * @return the ExtendedGeoJsonFeatureCollection object itself.
+     */
+    public ExtendedGeoJsonFeatureCollection setType(GeoJsonObjectType type) {
+        this.type = type;
+        return this;
+    }
 
     /**
      * Get the ontology property: The ontology version of this dataset.
@@ -70,7 +92,7 @@ public final class ExtendedGeoJsonFeatureCollection extends GeoJsonFeatureCollec
      *
      * @return the links value.
      */
-    public List<WfsEndpointLink> getLinks() {
+    public List<WFSEndpointLink> getLinks() {
         return this.links;
     }
 
@@ -80,7 +102,7 @@ public final class ExtendedGeoJsonFeatureCollection extends GeoJsonFeatureCollec
      * @param links the links value to set.
      * @return the ExtendedGeoJsonFeatureCollection object itself.
      */
-    public ExtendedGeoJsonFeatureCollection setLinks(List<WfsEndpointLink> links) {
+    public ExtendedGeoJsonFeatureCollection setLinks(List<WFSEndpointLink> links) {
         this.links = links;
         return this;
     }

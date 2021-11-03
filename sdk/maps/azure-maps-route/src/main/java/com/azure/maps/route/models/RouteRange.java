@@ -15,20 +15,20 @@ public final class RouteRange {
      * Center point of the reachable range
      */
     @JsonProperty(value = "center")
-    private CoordinatesPair center;
+    private LatLongPair center;
 
     /*
      * Polygon boundary of the reachable range represented as a list of points.
      */
     @JsonProperty(value = "boundary", access = JsonProperty.Access.WRITE_ONLY)
-    private List<CoordinatesPair> boundary;
+    private List<LatLongPair> boundary;
 
     /**
      * Get the center property: Center point of the reachable range.
      *
      * @return the center value.
      */
-    public CoordinatesPair getCenter() {
+    public LatLongPair getCenter() {
         return this.center;
     }
 
@@ -38,7 +38,7 @@ public final class RouteRange {
      * @param center the center value to set.
      * @return the RouteRange object itself.
      */
-    public RouteRange setCenter(CoordinatesPair center) {
+    public RouteRange setCenter(LatLongPair center) {
         this.center = center;
         return this;
     }
@@ -48,7 +48,7 @@ public final class RouteRange {
      *
      * @return the boundary value.
      */
-    public List<CoordinatesPair> getBoundary() {
+    public List<LatLongPair> getBoundary() {
         return this.boundary;
     }
 }

@@ -32,13 +32,13 @@ public final class IntervalSummary {
      * Short summary phrase. Phrase length is approximately 25 characters.
      */
     @JsonProperty(value = "shortPhrase")
-    private String shortPhrase;
+    private String shortDescription;
 
     /*
      * Brief summary phrase. Phrase length is approximately 60 characters.
      */
     @JsonProperty(value = "briefPhrase")
-    private String briefPhrase;
+    private String briefDescription;
 
     /*
      * Long summary phrase. Phrase length is 60+ characters.
@@ -52,7 +52,7 @@ public final class IntervalSummary {
      * Concepts](https://aka.ms/AzureMapsWeatherConcepts) for details.
      */
     @JsonProperty(value = "iconCode")
-    private Integer iconCode;
+    private IconCode iconCode;
 
     /**
      * Get the startMinute property: The first minute to which the summary applies.
@@ -115,42 +115,42 @@ public final class IntervalSummary {
     }
 
     /**
-     * Get the shortPhrase property: Short summary phrase. Phrase length is approximately 25 characters.
+     * Get the shortDescription property: Short summary phrase. Phrase length is approximately 25 characters.
      *
-     * @return the shortPhrase value.
+     * @return the shortDescription value.
      */
-    public String getShortPhrase() {
-        return this.shortPhrase;
+    public String getShortDescription() {
+        return this.shortDescription;
     }
 
     /**
-     * Set the shortPhrase property: Short summary phrase. Phrase length is approximately 25 characters.
+     * Set the shortDescription property: Short summary phrase. Phrase length is approximately 25 characters.
      *
-     * @param shortPhrase the shortPhrase value to set.
+     * @param shortDescription the shortDescription value to set.
      * @return the IntervalSummary object itself.
      */
-    public IntervalSummary setShortPhrase(String shortPhrase) {
-        this.shortPhrase = shortPhrase;
+    public IntervalSummary setShortDescription(String shortDescription) {
+        this.shortDescription = shortDescription;
         return this;
     }
 
     /**
-     * Get the briefPhrase property: Brief summary phrase. Phrase length is approximately 60 characters.
+     * Get the briefDescription property: Brief summary phrase. Phrase length is approximately 60 characters.
      *
-     * @return the briefPhrase value.
+     * @return the briefDescription value.
      */
-    public String getBriefPhrase() {
-        return this.briefPhrase;
+    public String getBriefDescription() {
+        return this.briefDescription;
     }
 
     /**
-     * Set the briefPhrase property: Brief summary phrase. Phrase length is approximately 60 characters.
+     * Set the briefDescription property: Brief summary phrase. Phrase length is approximately 60 characters.
      *
-     * @param briefPhrase the briefPhrase value to set.
+     * @param briefDescription the briefDescription value to set.
      * @return the IntervalSummary object itself.
      */
-    public IntervalSummary setBriefPhrase(String briefPhrase) {
-        this.briefPhrase = briefPhrase;
+    public IntervalSummary setBriefDescription(String briefDescription) {
+        this.briefDescription = briefDescription;
         return this;
     }
 
@@ -180,7 +180,7 @@ public final class IntervalSummary {
      *
      * @return the iconCode value.
      */
-    public Integer getIconCode() {
+    public IconCode getIconCode() {
         return this.iconCode;
     }
 
@@ -191,7 +191,7 @@ public final class IntervalSummary {
      * @param iconCode the iconCode value to set.
      * @return the IntervalSummary object itself.
      */
-    public IntervalSummary setIconCode(Integer iconCode) {
+    public IntervalSummary setIconCode(IconCode iconCode) {
         this.iconCode = iconCode;
         return this;
     }

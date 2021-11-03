@@ -17,7 +17,7 @@ public final class RouteType extends ExpandableStringEnum<RouteType> {
     public static final RouteType SHORTEST = fromString("shortest");
 
     /** Static value eco for RouteType. */
-    public static final RouteType ECO = fromString("eco");
+    public static final RouteType ECONOMY = fromString("eco");
 
     /** Static value thrilling for RouteType. */
     public static final RouteType THRILLING = fromString("thrilling");

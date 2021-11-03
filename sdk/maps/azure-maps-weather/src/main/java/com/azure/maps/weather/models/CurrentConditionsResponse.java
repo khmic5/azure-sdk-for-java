@@ -4,17 +4,17 @@
 
 package com.azure.maps.weather.models;
 
-import com.azure.core.annotation.Fluent;
+import com.azure.core.annotation.Immutable;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /** The CurrentConditionsResponse model. */
-@Fluent
+@Immutable
 public final class CurrentConditionsResponse {
     /*
      * Detailed current weather conditions.
      */
-    @JsonProperty(value = "results")
+    @JsonProperty(value = "results", access = JsonProperty.Access.WRITE_ONLY)
     private List<CurrentConditions> results;
 
     /**
@@ -24,16 +24,5 @@ public final class CurrentConditionsResponse {
      */
     public List<CurrentConditions> getResults() {
         return this.results;
-    }
-
-    /**
-     * Set the results property: Detailed current weather conditions.
-     *
-     * @param results the results value to set.
-     * @return the CurrentConditionsResponse object itself.
-     */
-    public CurrentConditionsResponse setResults(List<CurrentConditions> results) {
-        this.results = results;
-        return this;
     }
 }
