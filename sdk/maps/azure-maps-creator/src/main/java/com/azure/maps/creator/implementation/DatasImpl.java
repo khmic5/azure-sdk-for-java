@@ -25,7 +25,6 @@ import com.azure.core.http.rest.StreamResponse;
 import com.azure.core.util.Context;
 import com.azure.core.util.FluxUtil;
 import com.azure.core.util.logging.ClientLogger;
-import com.azure.core.util.polling.DefaultPollingStrategy;
 import com.azure.core.util.polling.PollerFlux;
 import com.azure.core.util.polling.SyncPoller;
 import com.azure.core.util.serializer.TypeReference;
@@ -348,7 +347,7 @@ public final class DatasImpl {
         return PollerFlux.create(
                 Duration.ofSeconds(1),
                 () -> this.uploadWithResponseAsync(dataFormat, uploadContent, contentLength, description),
-                new DefaultPollingStrategy<>(this.client.getHttpPipeline()),
+                new com.azure.maps.creator.polling.OperationResourcePollingStrategy<>(this.client.getHttpPipeline()),
                 new TypeReference<LongRunningOperationResult>() {},
                 new TypeReference<LongRunningOperationResult>() {});
     }
@@ -409,7 +408,7 @@ public final class DatasImpl {
         return PollerFlux.create(
                 Duration.ofSeconds(1),
                 () -> this.uploadWithResponseAsync(dataFormat, uploadContent, contentLength, description, context),
-                new DefaultPollingStrategy<>(this.client.getHttpPipeline()),
+                new com.azure.maps.creator.polling.OperationResourcePollingStrategy<>(this.client.getHttpPipeline()),
                 new TypeReference<LongRunningOperationResult>() {},
                 new TypeReference<LongRunningOperationResult>() {});
     }
@@ -694,7 +693,7 @@ public final class DatasImpl {
         return PollerFlux.create(
                 Duration.ofSeconds(1),
                 () -> this.uploadWithResponseAsync(dataFormat, uploadContent, description),
-                new DefaultPollingStrategy<>(this.client.getHttpPipeline()),
+                new com.azure.maps.creator.polling.OperationResourcePollingStrategy<>(this.client.getHttpPipeline()),
                 new TypeReference<LongRunningOperationResult>() {},
                 new TypeReference<LongRunningOperationResult>() {});
     }
@@ -750,7 +749,7 @@ public final class DatasImpl {
         return PollerFlux.create(
                 Duration.ofSeconds(1),
                 () -> this.uploadWithResponseAsync(dataFormat, uploadContent, description, context),
-                new DefaultPollingStrategy<>(this.client.getHttpPipeline()),
+                new com.azure.maps.creator.polling.OperationResourcePollingStrategy<>(this.client.getHttpPipeline()),
                 new TypeReference<LongRunningOperationResult>() {},
                 new TypeReference<LongRunningOperationResult>() {});
     }
@@ -1333,7 +1332,7 @@ public final class DatasImpl {
         return PollerFlux.create(
                 Duration.ofSeconds(1),
                 () -> this.updateWithResponseAsync(udid, updateContent, description),
-                new DefaultPollingStrategy<>(this.client.getHttpPipeline()),
+                new com.azure.maps.creator.polling.OperationResourcePollingStrategy<>(this.client.getHttpPipeline()),
                 new TypeReference<LongRunningOperationResult>() {},
                 new TypeReference<LongRunningOperationResult>() {});
     }
@@ -1397,7 +1396,7 @@ public final class DatasImpl {
         return PollerFlux.create(
                 Duration.ofSeconds(1),
                 () -> this.updateWithResponseAsync(udid, updateContent, description, context),
-                new DefaultPollingStrategy<>(this.client.getHttpPipeline()),
+                new com.azure.maps.creator.polling.OperationResourcePollingStrategy<>(this.client.getHttpPipeline()),
                 new TypeReference<LongRunningOperationResult>() {},
                 new TypeReference<LongRunningOperationResult>() {});
     }

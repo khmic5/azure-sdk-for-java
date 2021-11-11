@@ -56,8 +56,9 @@ public class DataSample {
                 contentJson, "Test data set " + Math.random());
 
         // poll and finish
-        System.out.println("Hello " + poller.poll().getValue().getOperationId());
-        poller.setPollInterval(Duration.ofSeconds(1));
+        // this is a bug that should be addressed in Creator
+        String operationId = poller.poll().getValue().getOperationId());
+        // poller.setPollInterval(Duration.ofSeconds(1));
         // poller.waitForCompletion(Duration.ofSeconds(10));
         LongRunningOperationResult result = poller.getFinalResult();
         MapsCommon.print("Operation created with id " + result.getOperationId());
