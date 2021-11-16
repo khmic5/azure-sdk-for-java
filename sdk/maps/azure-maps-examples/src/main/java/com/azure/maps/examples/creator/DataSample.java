@@ -57,16 +57,13 @@ public class DataSample {
 
         // poll and finish
         // this is a bug that should be addressed in Creator
-        String operationId = poller.poll().getValue().getOperationId());
-        // poller.setPollInterval(Duration.ofSeconds(1));
-        // poller.waitForCompletion(Duration.ofSeconds(10));
-        LongRunningOperationResult result = poller.getFinalResult();
-        MapsCommon.print("Operation created with id " + result.getOperationId());
-        MapsCommon.print(result);
+        String operationId = poller.poll().getValue().getOperationId();
+        poller.waitForCompletion();
+        // This does not work because the result isn't a LROResult.
+        // LongRunningOperationResult result = poller.getFinalResult();
 
         // get resource from the header
-        DatasGetOperationResponse uuid = client.getOperationWithResponse(result.getOperationId(), null);
-        MapsCommon.print(uuid);
+        DatasGetOperationResponse uuid = client.getOperationWithResponse(operationId, null);
         String resourceLocation = uuid.getDeserializedHeaders().getResourceLocation();
         String udid = MapsCommon.getUid(resourceLocation);
 
@@ -76,8 +73,9 @@ public class DataSample {
         }
         else {
             System.out.println("upload successful with " + udid);
-            return;
         }
+
+        client.delete(udid);
         // client.getDatas().deletePreview(udid);
         // System.out.println(String.format("Deleted file with udid %s", udid));
 
