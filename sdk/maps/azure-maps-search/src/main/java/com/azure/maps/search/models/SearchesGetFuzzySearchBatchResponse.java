@@ -7,6 +7,7 @@ package com.azure.maps.search.models;
 import com.azure.core.http.HttpHeaders;
 import com.azure.core.http.HttpRequest;
 import com.azure.core.http.rest.ResponseBase;
+import com.azure.maps.search.implementation.models.SearchesGetFuzzySearchBatchHeaders;
 
 /** Contains all response data for the getFuzzySearchBatch operation. */
 public final class SearchesGetFuzzySearchBatchResponse

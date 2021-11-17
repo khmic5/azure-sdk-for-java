@@ -23,6 +23,8 @@ import com.azure.core.util.CoreUtils;
 import com.azure.core.util.serializer.JacksonAdapter;
 import com.azure.core.util.serializer.SerializerAdapter;
 import com.azure.maps.search.implementation.SearchClientImpl;
+import com.azure.maps.search.implementation.SearchClientImplBuilder;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -247,7 +249,17 @@ public final class SearchClientBuilder {
         if (serializerAdapter == null) {
             this.serializerAdapter = JacksonAdapter.createDefaultSerializerAdapter();
         }
-        SearchClientImpl client = new SearchClientImpl(pipeline, serializerAdapter, clientId, host, apiVersion);
+        // client impl
+        SearchClientImplBuilder builder = new SearchClientImplBuilder();
+        builder.host(this.host);
+        builder.apiVersion(this.apiVersion);
+        builder.pipeline(this.pipeline);
+        builder.serializerAdapter(this.serializerAdapter);
+        builder.clientId(this.clientId);
+        builder.httpClient(this.httpClient);
+        builder.httpLogOptions(this.httpLogOptions);
+
+        SearchClientImpl client = builder.buildClient();
         return client;
     }
 

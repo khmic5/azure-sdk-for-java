@@ -80,16 +80,20 @@ public class SearchSample {
 
         // Search fuzzy - https://docs.microsoft.com/en-us/rest/api/maps/search/get-search-fuzzy
         System.out.println("Search Fuzzy:");
-        SearchAddressResult results = client.fuzzySearch(ResponseFormat.JSON, "seattle", null, null, null, null,
+        SearchAddressResult results = client.fuzzySearch(ResponseFormat.JSON, "starbucks", null, null, null, null,
             null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
         MapsCommon.print(results);
 
         // Get polygon - https://docs.microsoft.com/en-us/rest/api/maps/search/get-search-polygon
-        List<String> ids = results.getResults().stream().map(item -> item.getDataSources().getGeometry().getId())
+        List<String> ids = results.getResults().stream()
+                .filter(item -> item.getDataSources() != null && item.getDataSources().getGeometry() != null)
+                .map(item -> item.getDataSources().getGeometry().getId())
                 .collect(Collectors.toList());
 
-        System.out.println("Get Polygon:");
-        MapsCommon.print(client.getPolygon(JsonFormat.JSON, ids));
+        if (ids != null && !ids.isEmpty()) {
+            System.out.println("Get Polygon:");
+            MapsCommon.print(client.getPolygon(JsonFormat.JSON, ids));
+        }
 
         // Search nearby - https://docs.microsoft.com/en-us/rest/api/maps/search/get-search-nearby
         System.out.println("Search Nearby:");
