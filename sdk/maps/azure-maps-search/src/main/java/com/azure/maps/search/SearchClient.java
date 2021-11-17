@@ -71,6 +71,8 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public PolygonResult getPolygon(JsonFormat format, List<String> geometryIds) {
+
+        // hello world
         return this.serviceClient.getPolygon(format, geometryIds);
     }
 

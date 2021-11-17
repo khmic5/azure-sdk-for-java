@@ -7,6 +7,7 @@ package com.azure.maps.search.models;
 import com.azure.core.http.HttpHeaders;
 import com.azure.core.http.HttpRequest;
 import com.azure.core.http.rest.ResponseBase;
+import com.azure.maps.search.implementation.models.SearchesReverseSearchAddressBatchHeaders;
 
 /** Contains all response data for the reverseSearchAddressBatch operation. */
 public final class SearchesReverseSearchAddressBatchResponse

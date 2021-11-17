@@ -3027,6 +3027,8 @@ public final class SearchAsyncClient {
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public PollerFlux<SearchAddressBatchProcessResult, SearchAddressBatchProcessResult> beginFuzzySearchBatch(
             JsonFormat format, BatchRequest searchFuzzyBatchRequestBody) {
+
+                // hello
         return this.serviceClient.beginFuzzySearchBatchAsync(format, searchFuzzyBatchRequestBody);
     }
 

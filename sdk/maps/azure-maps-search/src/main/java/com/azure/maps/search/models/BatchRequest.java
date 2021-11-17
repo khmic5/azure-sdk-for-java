@@ -5,6 +5,7 @@
 package com.azure.maps.search.models;
 
 import com.azure.core.annotation.Fluent;
+import com.azure.maps.search.implementation.models.BatchRequestItem;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 

@@ -105,7 +105,7 @@ public final class SearchClientImpl {
      * @param host server parameter.
      * @param apiVersion Api Version.
      */
-    public SearchClientImpl(String clientId, String host, String apiVersion) {
+    SearchClientImpl(String clientId, String host, String apiVersion) {
         this(
                 new HttpPipelineBuilder()
                         .policies(new UserAgentPolicy(), new RetryPolicy(), new CookiePolicy())
@@ -127,7 +127,7 @@ public final class SearchClientImpl {
      * @param host server parameter.
      * @param apiVersion Api Version.
      */
-    public SearchClientImpl(HttpPipeline httpPipeline, String clientId, String host, String apiVersion) {
+    SearchClientImpl(HttpPipeline httpPipeline, String clientId, String host, String apiVersion) {
         this(httpPipeline, JacksonAdapter.createDefaultSerializerAdapter(), clientId, host, apiVersion);
     }
 
@@ -143,7 +143,7 @@ public final class SearchClientImpl {
      * @param host server parameter.
      * @param apiVersion Api Version.
      */
-    public SearchClientImpl(
+    SearchClientImpl(
             HttpPipeline httpPipeline,
             SerializerAdapter serializerAdapter,
             String clientId,
