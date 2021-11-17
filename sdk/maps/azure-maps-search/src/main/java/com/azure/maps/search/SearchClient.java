@@ -70,10 +70,8 @@ public final class SearchClient {
      * @return this object is returned from a successful Search Polygon call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public PolygonResult getPolygon(JsonFormat format, List<String> geometryIds) {
-
-        // hello world
-        return this.serviceClient.getPolygon(format, geometryIds);
+    public PolygonResult getPolygon(List<String> geometryIds) {
+        return this.serviceClient.getPolygon(JsonFormat.JSON, geometryIds);
     }
 
     /**
@@ -100,9 +98,8 @@ public final class SearchClient {
      * @return this object is returned from a successful Search Polygon call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<PolygonResult> getPolygonWithResponse(
-            JsonFormat format, List<String> geometryIds, Context context) {
-        return this.serviceClient.getPolygonWithResponse(format, geometryIds, context);
+    public Response<PolygonResult> getPolygonWithResponse(List<String> geometryIds, Context context) {
+        return this.serviceClient.getPolygonWithResponse(JsonFormat.JSON, geometryIds, context);
     }
 
     /**
@@ -255,7 +252,6 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public SearchAddressResult fuzzySearch(
-            ResponseFormat format,
             String query,
             Boolean isTypeAhead,
             Integer top,
@@ -278,7 +274,7 @@ public final class SearchClient {
             LocalizedMapView localizedMapView,
             OperatingHoursRange operatingHours) {
         return this.serviceClient.fuzzySearch(
-                format,
+                ResponseFormat.JSON,
                 query,
                 isTypeAhead,
                 top,
@@ -453,7 +449,6 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<SearchAddressResult> fuzzySearchWithResponse(
-            ResponseFormat format,
             String query,
             Boolean isTypeAhead,
             Integer top,
@@ -477,7 +472,7 @@ public final class SearchClient {
             OperatingHoursRange operatingHours,
             Context context) {
         return this.serviceClient.fuzzySearchWithResponse(
-                format,
+                ResponseFormat.JSON,
                 query,
                 isTypeAhead,
                 top,
@@ -609,7 +604,6 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public SearchAddressResult searchPointOfInterest(
-            ResponseFormat format,
             String query,
             Boolean isTypeAhead,
             Integer top,
@@ -628,7 +622,7 @@ public final class SearchClient {
             LocalizedMapView localizedMapView,
             OperatingHoursRange operatingHours) {
         return this.serviceClient.searchPointOfInterest(
-                format,
+                ResponseFormat.JSON,
                 query,
                 isTypeAhead,
                 top,
@@ -756,7 +750,6 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<SearchAddressResult> searchPointOfInterestWithResponse(
-            ResponseFormat format,
             String query,
             Boolean isTypeAhead,
             Integer top,
@@ -776,7 +769,7 @@ public final class SearchClient {
             OperatingHoursRange operatingHours,
             Context context) {
         return this.serviceClient.searchPointOfInterestWithResponse(
-                format,
+                ResponseFormat.JSON,
                 query,
                 isTypeAhead,
                 top,
@@ -903,7 +896,6 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public SearchAddressResult searchNearbyPointOfInterest(
-            ResponseFormat format,
             double lat,
             double lon,
             Integer top,
@@ -917,7 +909,7 @@ public final class SearchClient {
             List<ElectricVehicleConnector> electricVehicleConnectorFilter,
             LocalizedMapView localizedMapView) {
         return this.serviceClient.searchNearbyPointOfInterest(
-                format,
+                ResponseFormat.JSON,
                 lat,
                 lon,
                 top,
@@ -1039,7 +1031,6 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<SearchAddressResult> searchNearbyPointOfInterestWithResponse(
-            ResponseFormat format,
             double lat,
             double lon,
             Integer top,
@@ -1054,7 +1045,7 @@ public final class SearchClient {
             LocalizedMapView localizedMapView,
             Context context) {
         return this.serviceClient.searchNearbyPointOfInterestWithResponse(
-                format,
+                ResponseFormat.JSON,
                 lat,
                 lon,
                 top,
@@ -1187,7 +1178,6 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public SearchAddressResult searchPointOfInterestCategory(
-            ResponseFormat format,
             String query,
             Boolean isTypeAhead,
             Integer top,
@@ -1206,7 +1196,7 @@ public final class SearchClient {
             LocalizedMapView localizedMapView,
             OperatingHoursRange operatingHours) {
         return this.serviceClient.searchPointOfInterestCategory(
-                format,
+                ResponseFormat.JSON,
                 query,
                 isTypeAhead,
                 top,
@@ -1344,7 +1334,6 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<SearchAddressResult> searchPointOfInterestCategoryWithResponse(
-            ResponseFormat format,
             String query,
             Boolean isTypeAhead,
             Integer top,
@@ -1364,7 +1353,7 @@ public final class SearchClient {
             OperatingHoursRange operatingHours,
             Context context) {
         return this.serviceClient.searchPointOfInterestCategoryWithResponse(
-                format,
+                ResponseFormat.JSON,
                 query,
                 isTypeAhead,
                 top,
@@ -1407,8 +1396,8 @@ public final class SearchClient {
      * @return this object is returned from a successful POI Category Tree call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public PointOfInterestCategoryTreeResult getPointOfInterestCategoryTree(JsonFormat format, String language) {
-        return this.serviceClient.getPointOfInterestCategoryTree(format, language);
+    public PointOfInterestCategoryTreeResult getPointOfInterestCategoryTree(String language) {
+        return this.serviceClient.getPointOfInterestCategoryTree(JsonFormat.JSON, language);
     }
 
     /**
@@ -1435,8 +1424,8 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<PointOfInterestCategoryTreeResult> getPointOfInterestCategoryTreeWithResponse(
-            JsonFormat format, String language, Context context) {
-        return this.serviceClient.getPointOfInterestCategoryTreeWithResponse(format, language, context);
+            String language, Context context) {
+        return this.serviceClient.getPointOfInterestCategoryTreeWithResponse(JsonFormat.JSON, language, context);
     }
 
     /**
@@ -1513,7 +1502,6 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public SearchAddressResult searchAddress(
-            ResponseFormat format,
             String query,
             Boolean isTypeAhead,
             Integer top,
@@ -1529,7 +1517,7 @@ public final class SearchClient {
             GeographicEntityType entityType,
             LocalizedMapView localizedMapView) {
         return this.serviceClient.searchAddress(
-                format,
+                ResponseFormat.JSON,
                 query,
                 isTypeAhead,
                 top,
@@ -1621,7 +1609,6 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<SearchAddressResult> searchAddressWithResponse(
-            ResponseFormat format,
             String query,
             Boolean isTypeAhead,
             Integer top,
@@ -1638,7 +1625,7 @@ public final class SearchClient {
             LocalizedMapView localizedMapView,
             Context context) {
         return this.serviceClient.searchAddressWithResponse(
-                format,
+                ResponseFormat.JSON,
                 query,
                 isTypeAhead,
                 top,
@@ -1712,7 +1699,6 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public ReverseSearchAddressResult reverseSearchAddress(
-            ResponseFormat format,
             List<Double> query,
             String language,
             Boolean includeSpeedLimit,
@@ -1726,7 +1712,7 @@ public final class SearchClient {
             GeographicEntityType entityType,
             LocalizedMapView localizedMapView) {
         return this.serviceClient.reverseSearchAddress(
-                format,
+                ResponseFormat.JSON,
                 query,
                 language,
                 includeSpeedLimit,
@@ -1798,7 +1784,6 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<ReverseSearchAddressResult> reverseSearchAddressWithResponse(
-            ResponseFormat format,
             List<Double> query,
             String language,
             Boolean includeSpeedLimit,
@@ -1813,7 +1798,7 @@ public final class SearchClient {
             LocalizedMapView localizedMapView,
             Context context) {
         return this.serviceClient.reverseSearchAddressWithResponse(
-                format,
+                ResponseFormat.JSON,
                 query,
                 language,
                 includeSpeedLimit,
@@ -1870,7 +1855,6 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public ReverseSearchCrossStreetAddressResult reverseSearchCrossStreetAddress(
-            ResponseFormat format,
             List<Double> query,
             Integer top,
             Integer heading,
@@ -1878,7 +1862,7 @@ public final class SearchClient {
             String language,
             LocalizedMapView localizedMapView) {
         return this.serviceClient.reverseSearchCrossStreetAddress(
-                format, query, top, heading, radiusInMeters, language, localizedMapView);
+                ResponseFormat.JSON, query, top, heading, radiusInMeters, language, localizedMapView);
     }
 
     /**
@@ -1923,7 +1907,6 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<ReverseSearchCrossStreetAddressResult> reverseSearchCrossStreetAddressWithResponse(
-            ResponseFormat format,
             List<Double> query,
             Integer top,
             Integer heading,
@@ -1932,7 +1915,7 @@ public final class SearchClient {
             LocalizedMapView localizedMapView,
             Context context) {
         return this.serviceClient.reverseSearchCrossStreetAddressWithResponse(
-                format, query, top, heading, radiusInMeters, language, localizedMapView, context);
+                ResponseFormat.JSON, query, top, heading, radiusInMeters, language, localizedMapView, context);
     }
 
     /**
@@ -2009,7 +1992,6 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public SearchAddressResult searchStructuredAddress(
-            ResponseFormat format,
             String language,
             String countryCode,
             Integer top,
@@ -2027,7 +2009,7 @@ public final class SearchClient {
             GeographicEntityType entityType,
             LocalizedMapView localizedMapView) {
         return this.serviceClient.searchStructuredAddress(
-                format,
+                ResponseFormat.JSON,
                 language,
                 countryCode,
                 top,
@@ -2121,7 +2103,6 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<SearchAddressResult> searchStructuredAddressWithResponse(
-            ResponseFormat format,
             String language,
             String countryCode,
             Integer top,
@@ -2140,7 +2121,7 @@ public final class SearchClient {
             LocalizedMapView localizedMapView,
             Context context) {
         return this.serviceClient.searchStructuredAddressWithResponse(
-                format,
+                ResponseFormat.JSON,
                 language,
                 countryCode,
                 top,
@@ -2248,7 +2229,6 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public SearchAddressResult searchInsideGeometry(
-            ResponseFormat format,
             String query,
             SearchInsideGeometryRequest geometry,
             Integer top,
@@ -2259,7 +2239,7 @@ public final class SearchClient {
             LocalizedMapView localizedMapView,
             OperatingHoursRange operatingHours) {
         return this.serviceClient.searchInsideGeometry(
-                format,
+                ResponseFormat.JSON,
                 query,
                 geometry,
                 top,
@@ -2360,7 +2340,6 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<SearchAddressResult> searchInsideGeometryWithResponse(
-            ResponseFormat format,
             String query,
             SearchInsideGeometryRequest geometry,
             Integer top,
@@ -2372,7 +2351,7 @@ public final class SearchClient {
             OperatingHoursRange operatingHours,
             Context context) {
         return this.serviceClient.searchInsideGeometryWithResponse(
-                format,
+                ResponseFormat.JSON,
                 query,
                 geometry,
                 top,
@@ -2473,7 +2452,6 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public SearchAddressResult searchAlongRoute(
-            ResponseFormat format,
             String query,
             int maxDetourTime,
             SearchAlongRouteRequest route,
@@ -2484,7 +2462,7 @@ public final class SearchClient {
             LocalizedMapView localizedMapView,
             OperatingHoursRange operatingHours) {
         return this.serviceClient.searchAlongRoute(
-                format,
+                ResponseFormat.JSON,
                 query,
                 maxDetourTime,
                 route,
@@ -2585,7 +2563,6 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<SearchAddressResult> searchAlongRouteWithResponse(
-            ResponseFormat format,
             String query,
             int maxDetourTime,
             SearchAlongRouteRequest route,
@@ -2597,7 +2574,7 @@ public final class SearchClient {
             OperatingHoursRange operatingHours,
             Context context) {
         return this.serviceClient.searchAlongRouteWithResponse(
-                format,
+                ResponseFormat.JSON,
                 query,
                 maxDetourTime,
                 route,
@@ -2717,9 +2694,8 @@ public final class SearchClient {
      * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressBatchProcessResult fuzzySearchBatchSync(
-            JsonFormat format, BatchRequest searchFuzzyBatchRequestBody) {
-        return this.serviceClient.fuzzySearchBatchSync(format, searchFuzzyBatchRequestBody);
+    public SearchAddressBatchProcessResult fuzzySearchBatchSync(BatchRequest searchFuzzyBatchRequestBody) {
+        return this.serviceClient.fuzzySearchBatchSync(JsonFormat.JSON, searchFuzzyBatchRequestBody);
     }
 
     /**
@@ -2831,8 +2807,8 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<SearchAddressBatchProcessResult> fuzzySearchBatchSyncWithResponse(
-            JsonFormat format, BatchRequest searchFuzzyBatchRequestBody, Context context) {
-        return this.serviceClient.fuzzySearchBatchSyncWithResponse(format, searchFuzzyBatchRequestBody, context);
+            BatchRequest searchFuzzyBatchRequestBody, Context context) {
+        return this.serviceClient.fuzzySearchBatchSyncWithResponse(JsonFormat.JSON, searchFuzzyBatchRequestBody, context);
     }
 
     /**
@@ -2943,8 +2919,8 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<SearchAddressBatchProcessResult, SearchAddressBatchProcessResult> beginFuzzySearchBatch(
-            JsonFormat format, BatchRequest searchFuzzyBatchRequestBody) {
-        return this.serviceClient.beginFuzzySearchBatch(format, searchFuzzyBatchRequestBody);
+            BatchRequest searchFuzzyBatchRequestBody) {
+        return this.serviceClient.beginFuzzySearchBatch(JsonFormat.JSON, searchFuzzyBatchRequestBody);
     }
 
     /**
@@ -3056,8 +3032,8 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<SearchAddressBatchProcessResult, SearchAddressBatchProcessResult> beginFuzzySearchBatch(
-            JsonFormat format, BatchRequest searchFuzzyBatchRequestBody, Context context) {
-        return this.serviceClient.beginFuzzySearchBatch(format, searchFuzzyBatchRequestBody, context);
+            BatchRequest searchFuzzyBatchRequestBody, Context context) {
+        return this.serviceClient.beginFuzzySearchBatch(JsonFormat.JSON, searchFuzzyBatchRequestBody, context);
     }
 
     /**
@@ -3387,9 +3363,8 @@ public final class SearchClient {
      * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressBatchProcessResult searchAddressBatchSync(
-            JsonFormat format, BatchRequest searchAddressBatchRequestBody) {
-        return this.serviceClient.searchAddressBatchSync(format, searchAddressBatchRequestBody);
+    public SearchAddressBatchProcessResult searchAddressBatchSync(BatchRequest searchAddressBatchRequestBody) {
+        return this.serviceClient.searchAddressBatchSync(JsonFormat.JSON, searchAddressBatchRequestBody);
     }
 
     /**
@@ -3500,8 +3475,8 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<SearchAddressBatchProcessResult> searchAddressBatchSyncWithResponse(
-            JsonFormat format, BatchRequest searchAddressBatchRequestBody, Context context) {
-        return this.serviceClient.searchAddressBatchSyncWithResponse(format, searchAddressBatchRequestBody, context);
+            BatchRequest searchAddressBatchRequestBody, Context context) {
+        return this.serviceClient.searchAddressBatchSyncWithResponse(JsonFormat.JSON, searchAddressBatchRequestBody, context);
     }
 
     /**
@@ -3611,8 +3586,8 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<SearchAddressBatchProcessResult, SearchAddressBatchProcessResult> beginSearchAddressBatch(
-            JsonFormat format, BatchRequest searchAddressBatchRequestBody) {
-        return this.serviceClient.beginSearchAddressBatch(format, searchAddressBatchRequestBody);
+            BatchRequest searchAddressBatchRequestBody) {
+        return this.serviceClient.beginSearchAddressBatch(JsonFormat.JSON, searchAddressBatchRequestBody);
     }
 
     /**
@@ -3723,8 +3698,8 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<SearchAddressBatchProcessResult, SearchAddressBatchProcessResult> beginSearchAddressBatch(
-            JsonFormat format, BatchRequest searchAddressBatchRequestBody, Context context) {
-        return this.serviceClient.beginSearchAddressBatch(format, searchAddressBatchRequestBody, context);
+            BatchRequest searchAddressBatchRequestBody, Context context) {
+        return this.serviceClient.beginSearchAddressBatch(JsonFormat.JSON, searchAddressBatchRequestBody, context);
     }
 
     /**
@@ -4052,8 +4027,8 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public ReverseSearchAddressBatchProcessResult reverseSearchAddressBatchSync(
-            JsonFormat format, BatchRequest searchAddressReverseBatchRequestBody) {
-        return this.serviceClient.reverseSearchAddressBatchSync(format, searchAddressReverseBatchRequestBody);
+            BatchRequest searchAddressReverseBatchRequestBody) {
+        return this.serviceClient.reverseSearchAddressBatchSync(JsonFormat.JSON, searchAddressReverseBatchRequestBody);
     }
 
     /**
@@ -4163,9 +4138,9 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<ReverseSearchAddressBatchProcessResult> reverseSearchAddressBatchSyncWithResponse(
-            JsonFormat format, BatchRequest searchAddressReverseBatchRequestBody, Context context) {
+            BatchRequest searchAddressReverseBatchRequestBody, Context context) {
         return this.serviceClient.reverseSearchAddressBatchSyncWithResponse(
-                format, searchAddressReverseBatchRequestBody, context);
+                JsonFormat.JSON, searchAddressReverseBatchRequestBody, context);
     }
 
     /**
@@ -4274,8 +4249,8 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<ReverseSearchAddressBatchProcessResult, ReverseSearchAddressBatchProcessResult>
-            beginReverseSearchAddressBatch(JsonFormat format, BatchRequest searchAddressReverseBatchRequestBody) {
-        return this.serviceClient.beginReverseSearchAddressBatch(format, searchAddressReverseBatchRequestBody);
+            beginReverseSearchAddressBatch(BatchRequest searchAddressReverseBatchRequestBody) {
+        return this.serviceClient.beginReverseSearchAddressBatch(JsonFormat.JSON, searchAddressReverseBatchRequestBody);
     }
 
     /**
@@ -4385,9 +4360,8 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<ReverseSearchAddressBatchProcessResult, ReverseSearchAddressBatchProcessResult>
-            beginReverseSearchAddressBatch(
-                    JsonFormat format, BatchRequest searchAddressReverseBatchRequestBody, Context context) {
-        return this.serviceClient.beginReverseSearchAddressBatch(format, searchAddressReverseBatchRequestBody, context);
+            beginReverseSearchAddressBatch(BatchRequest searchAddressReverseBatchRequestBody, Context context) {
+        return this.serviceClient.beginReverseSearchAddressBatch(JsonFormat.JSON, searchAddressReverseBatchRequestBody, context);
     }
 
     /**
