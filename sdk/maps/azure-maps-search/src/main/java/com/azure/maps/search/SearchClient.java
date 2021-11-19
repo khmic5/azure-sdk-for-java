@@ -40,6 +40,7 @@ import com.azure.maps.search.models.SearchInsideGeometryRequest;
 import com.azure.maps.search.models.SearchNearbyPointsOfInterestOptions;
 import com.azure.maps.search.models.SearchPointOfInterestCategoryOptions;
 import com.azure.maps.search.models.SearchPointOfInterestOptions;
+import com.azure.maps.search.models.SearchStructuredAddressOptions;
 
 /** Initializes a new instance of the synchronous SearchClient type. */
 @ServiceClient(builder = SearchClientBuilder.class)
@@ -623,41 +624,25 @@ public final class SearchClient {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressResult searchStructuredAddress(
-            String language,
-            String countryCode,
-            Integer top,
-            Integer skip,
-            String streetNumber,
-            String streetName,
-            String crossStreet,
-            String municipality,
-            String municipalitySubdivision,
-            String countryTertiarySubdivision,
-            String countrySecondarySubdivision,
-            String countrySubdivision,
-            String postalCode,
-            List<SearchIndexes> extendedPostalCodesFor,
-            GeographicEntityType entityType,
-            LocalizedMapView localizedMapView) {
+    public SearchAddressResult searchStructuredAddress(SearchStructuredAddressOptions options) {
         return this.serviceClient.searchStructuredAddress(
                 ResponseFormat.JSON,
-                language,
-                countryCode,
-                top,
-                skip,
-                streetNumber,
-                streetName,
-                crossStreet,
-                municipality,
-                municipalitySubdivision,
-                countryTertiarySubdivision,
-                countrySecondarySubdivision,
-                countrySubdivision,
-                postalCode,
-                extendedPostalCodesFor,
-                entityType,
-                localizedMapView);
+                options.getLanguage(),
+                options.getCountryCode(),
+                options.getTop(),
+                options.getSkip(),
+                options.getStreetNumber(),
+                options.getStreetName(),
+                options.getCrossStreet(),
+                options.getMunicipality(),
+                options.getMunicipalitySubdivision(),
+                options.getCountryTertiarySubdivision(),
+                options.getCountrySecondarySubdivision(),
+                options.getCountrySubdivision(),
+                options.getPostalCode(),
+                options.getExtendedPostalCodesFor(),
+                options.getEntityType(),
+                options.getLocalizedMapView());
     }
 
     /**
@@ -672,41 +657,25 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<SearchAddressResult> searchStructuredAddressWithResponse(
-            String language,
-            String countryCode,
-            Integer top,
-            Integer skip,
-            String streetNumber,
-            String streetName,
-            String crossStreet,
-            String municipality,
-            String municipalitySubdivision,
-            String countryTertiarySubdivision,
-            String countrySecondarySubdivision,
-            String countrySubdivision,
-            String postalCode,
-            List<SearchIndexes> extendedPostalCodesFor,
-            GeographicEntityType entityType,
-            LocalizedMapView localizedMapView,
-            Context context) {
+            SearchStructuredAddressOptions options, Context context) {
         return this.serviceClient.searchStructuredAddressWithResponse(
                 ResponseFormat.JSON,
-                language,
-                countryCode,
-                top,
-                skip,
-                streetNumber,
-                streetName,
-                crossStreet,
-                municipality,
-                municipalitySubdivision,
-                countryTertiarySubdivision,
-                countrySecondarySubdivision,
-                countrySubdivision,
-                postalCode,
-                extendedPostalCodesFor,
-                entityType,
-                localizedMapView,
+                options.getLanguage(),
+                options.getCountryCode(),
+                options.getTop(),
+                options.getSkip(),
+                options.getStreetNumber(),
+                options.getStreetName(),
+                options.getCrossStreet(),
+                options.getMunicipality(),
+                options.getMunicipalitySubdivision(),
+                options.getCountryTertiarySubdivision(),
+                options.getCountrySecondarySubdivision(),
+                options.getCountrySubdivision(),
+                options.getPostalCode(),
+                options.getExtendedPostalCodesFor(),
+                options.getEntityType(),
+                options.getLocalizedMapView(),
                 context);
     }
 
