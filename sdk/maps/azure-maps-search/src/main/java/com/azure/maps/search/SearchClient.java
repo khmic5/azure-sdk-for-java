@@ -4,6 +4,9 @@
 
 package com.azure.maps.search;
 
+import java.util.Arrays;
+import java.util.List;
+
 import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceClient;
 import com.azure.core.annotation.ServiceMethod;
@@ -11,27 +14,32 @@ import com.azure.core.http.rest.Response;
 import com.azure.core.util.Context;
 import com.azure.core.util.polling.SyncPoller;
 import com.azure.maps.search.implementation.SearchesImpl;
+import com.azure.maps.search.implementation.models.LatLongPairAbbreviated;
 import com.azure.maps.search.models.BatchRequest;
 import com.azure.maps.search.models.ElectricVehicleConnector;
 import com.azure.maps.search.models.ErrorResponseException;
+import com.azure.maps.search.models.FuzzySearchOptions;
 import com.azure.maps.search.models.GeographicEntityType;
 import com.azure.maps.search.models.JsonFormat;
 import com.azure.maps.search.models.LocalizedMapView;
 import com.azure.maps.search.models.OperatingHoursRange;
 import com.azure.maps.search.models.PointOfInterestCategoryTreeResult;
-import com.azure.maps.search.models.PointOfInterestExtendedPostalCodes;
 import com.azure.maps.search.models.PolygonResult;
 import com.azure.maps.search.models.ResponseFormat;
 import com.azure.maps.search.models.ReverseSearchAddressBatchProcessResult;
+import com.azure.maps.search.models.ReverseSearchAddressOptions;
 import com.azure.maps.search.models.ReverseSearchAddressResult;
 import com.azure.maps.search.models.ReverseSearchCrossStreetAddressResult;
 import com.azure.maps.search.models.RoadUseType;
 import com.azure.maps.search.models.SearchAddressBatchProcessResult;
+import com.azure.maps.search.models.SearchAddressOptions;
 import com.azure.maps.search.models.SearchAddressResult;
 import com.azure.maps.search.models.SearchAlongRouteRequest;
 import com.azure.maps.search.models.SearchIndexes;
 import com.azure.maps.search.models.SearchInsideGeometryRequest;
-import java.util.List;
+import com.azure.maps.search.models.SearchNearbyPointsOfInterestOptions;
+import com.azure.maps.search.models.SearchPointOfInterestCategoryOptions;
+import com.azure.maps.search.models.SearchPointOfInterestOptions;
 
 /** Initializes a new instance of the synchronous SearchClient type. */
 @ServiceClient(builder = SearchClientBuilder.class)
@@ -50,17 +58,6 @@ public final class SearchClient {
     /**
      * **Get Polygon**
      *
-     * <p>**Applies to**: S1 pricing tier.
-     *
-     * <p>The Get Polygon service allows you to request the geometry data such as a city or country outline for a set of
-     * entities, previously retrieved from an Online Search request in GeoJSON format. The geometry ID is returned in
-     * the sourceGeometry object under "geometry" and "id" in either a Search Address or Search Fuzzy call.
-     *
-     * <p>Please note that any geometry ID retrieved from an Online Search endpoint has a limited lifetime. The client
-     * should not store geometry IDs in persistent storage for later referral, as the stability of these identifiers is
-     * not guaranteed for a long period of time. It is expected that a request to the Polygon method is made within a
-     * few minutes of the request to the Online Search method that provided the ID. The service allows for batch
-     * requests up to 20 identifiers.
      *
      * @param format Desired format of the response. Only `json` format is supported.
      * @param geometryIds Comma separated list of geometry UUIDs, previously retrieved from an Online Search request.
@@ -77,18 +74,6 @@ public final class SearchClient {
     /**
      * **Get Polygon**
      *
-     * <p>**Applies to**: S1 pricing tier.
-     *
-     * <p>The Get Polygon service allows you to request the geometry data such as a city or country outline for a set of
-     * entities, previously retrieved from an Online Search request in GeoJSON format. The geometry ID is returned in
-     * the sourceGeometry object under "geometry" and "id" in either a Search Address or Search Fuzzy call.
-     *
-     * <p>Please note that any geometry ID retrieved from an Online Search endpoint has a limited lifetime. The client
-     * should not store geometry IDs in persistent storage for later referral, as the stability of these identifiers is
-     * not guaranteed for a long period of time. It is expected that a request to the Polygon method is made within a
-     * few minutes of the request to the Online Search method that provided the ID. The service allows for batch
-     * requests up to 20 identifiers.
-     *
      * @param format Desired format of the response. Only `json` format is supported.
      * @param geometryIds Comma separated list of geometry UUIDs, previously retrieved from an Online Search request.
      * @param context The context to associate with this operation.
@@ -104,644 +89,119 @@ public final class SearchClient {
 
     /**
      * **Free Form Search**
-     *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
-     *
-     * <p>The basic default API is Free Form Search which handles the most fuzzy of inputs handling any combination of
-     * address or POI tokens. This search API is the canonical 'single line search'. The Free Form Search API is a
-     * seamless combination of POI search and geocoding. The API can also be weighted with a contextual position
-     * (lat./lon. pair), or fully constrained by a coordinate and radius, or it can be executed more generally without
-     * any geo biasing anchor point.&lt;br&gt;&lt;br&gt;We strongly advise you to use the 'countrySet' parameter to
-     * specify only the countries for which your application needs coverage, as the default behavior will be to search
-     * the entire world, potentially returning unnecessary results.&lt;br&gt;&lt;br&gt; E.g.: `countrySet`=US,FR
-     * &lt;br&gt;&lt;br&gt;Please see [Search
-     * Coverage](https://docs.microsoft.com/azure/location-based-services/geocoding-coverage) for a complete list of all
-     * the supported countries.&lt;br&gt;&lt;br&gt;Most Search queries default to `maxFuzzyLevel`=2 to gain performance
-     * and also reduce unusual results. This new default can be overridden as needed per request by passing in the query
-     * param `maxFuzzyLevel`=3 or 4.
-     *
-     * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param query The applicable query string (e.g., "seattle", "pizza"). Can _also_ be specified as a comma separated
-     *     string composed by latitude followed by longitude (e.g., "47.641268, -122.125679"). Must be properly URL
-     *     encoded.
-     * @param isTypeAhead Boolean. If the typeahead flag is set, the query will be interpreted as a partial input and
-     *     the search will enter predictive mode.
-     * @param top Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
-     * @param skip Starting offset of the returned results within the full result set. Default: 0, minimum: 0 and
-     *     maximum: 1900.
-     * @param categoryFilter A comma-separated list of category set IDs which could be used to restrict the result to
-     *     specific Points of Interest categories. ID order does not matter. When multiple category identifiers are
-     *     provided, only POIs that belong to (at least) one of the categories from the provided list will be returned.
-     *     The list of supported categories can be discovered using  [POI Categories
-     *     API](https://aka.ms/AzureMapsPOICategoryTree). Usage examples:
-     *     <p>* **categorySet=7315** (Search Points of Interest from category Restaurant)
-     *     <p>* **categorySet=7315025,7315017** (Search Points of Interest of category either Italian or French
-     *     Restaurant).
-     * @param countryFilter Comma separated string of country codes, e.g. FR,ES. This will limit the search to the
-     *     specified countries.
-     * @param lat Latitude where results should be biased. E.g. 37.337.
-     * @param lon Longitude where results should be biased. E.g. -121.89.
-     * @param radiusInMeters The radius in meters to for the results to be constrained to the defined area.
-     * @param topLeft Top left position of the bounding box. E.g. 37.553,-122.453.
-     * @param btmRight Bottom right position of the bounding box. E.g. 37.553,-122.453.
-     * @param language Language in which search results should be returned. Should be one of supported IETF language
-     *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used.
-     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
-     *     details.
-     * @param extendedPostalCodesFor Indexes for which extended postal codes should be included in the results.
-     *     <p>Available indexes are:
-     *     <p>**Addr** = Address ranges
-     *     <p>**Geo** = Geographies
-     *     <p>**PAD** = Point Addresses
-     *     <p>**POI** = Points of Interest
-     *     <p>**Str** = Streets
-     *     <p>**XStr** = Cross Streets (intersections)
-     *     <p>Value should be a comma separated list of index types (in any order) or **None** for no indexes.
-     *     <p>By default extended postal codes are included for all indexes except Geo. Extended postal code lists for
-     *     geographies can be quite long so they have to be explicitly requested when needed.
-     *     <p>Usage examples:
-     *     <p>extendedPostalCodesFor=POI
-     *     <p>extendedPostalCodesFor=PAD,Addr,POI
-     *     <p>extendedPostalCodesFor=None
-     *     <p>Extended postal code is returned as an **extendedPostalCode** property of an address. Availability is
-     *     region-dependent.
-     * @param minFuzzyLevel Minimum fuzziness level to be used. Default: 1, minimum: 1 and maximum: 4
-     *     <p>* Level 1 has no spell checking.
-     *     <p>* Level 2 uses normal n-gram spell checking. For example, query "restrant" can be matched to "restaurant."
-     *     <p>* Level 3 uses sound-like spell checking, and shingle spell checking. Sound-like spell checking is for
-     *     "rstrnt" to "restaurant" matching. Shingle spell checking is for "mountainview" to "mountain view" matching.
-     *     <p>* Level 4 doesn’t add any more spell checking functions.
-     *     <p>The search engine will start looking for a match on the level defined by minFuzzyLevel, and will stop
-     *     searching at the level specified by maxFuzzyLevel.
-     * @param maxFuzzyLevel Maximum fuzziness level to be used. Default: 2, minimum: 1 and maximum: 4
-     *     <p>* Level 1 has no spell checking.
-     *     <p>* Level 2 uses normal n-gram spell checking. For example, query "restrant" can be matched to "restaurant."
-     *     <p>* Level 3 uses sound-like spell checking, and shingle spell checking. Sound-like spell checking is for
-     *     "rstrnt" to "restaurant" matching. Shingle spell checking is for "mountainview" to "mountain view" matching.
-     *     <p>* Level 4 doesn’t add any more spell checking functions.
-     *     <p>The search engine will start looking for a match on the level defined by minFuzzyLevel, and will stop
-     *     searching at the level specified by maxFuzzyLevel.
-     * @param idxSet A comma separated list of indexes which should be utilized for the search. Item order does not
-     *     matter. Available indexes are: Addr = Address range interpolation, Geo = Geographies, PAD = Point Addresses,
-     *     POI = Points of interest, Str = Streets, Xstr = Cross Streets (intersections).
-     * @param brandFilter A comma-separated list of brand names which could be used to restrict the result to specific
-     *     brands. Item order does not matter. When multiple brands are provided, only results that belong to (at least)
-     *     one of the provided list will be returned. Brands that contain a "," in their name should be put into quotes.
-     *     <p>Usage examples:
-     *     <p>brandSet=Foo
-     *     <p>brandSet=Foo,Bar
-     *     <p>brandSet="A,B,C Comma",Bar.
-     * @param electricVehicleConnectorFilter A comma-separated list of connector types which could be used to restrict
-     *     the result to Electric Vehicle Station supporting specific connector types. Item order does not matter. When
-     *     multiple connector types are provided, only results that belong to (at least) one of the provided list will
-     *     be returned.
-     *     <p>Available connector types are: * `StandardHouseholdCountrySpecific` - These are the standard household
-     *     connectors for a certain region. They are all AC single phase and the standard Voltage and standard Amperage.
-     *     See also: [Plug &amp; socket types - World
-     *     Standards](https://www.worldstandards.eu/electricity/plugs-and-sockets). * `IEC62196Type1` - Type 1 connector
-     *     as defined in the IEC 62196-2 standard. Also called Yazaki after the original manufacturer or SAE J1772 after
-     *     the standard that first published it. Mostly used in combination with 120V single phase or up to 240V single
-     *     phase infrastructure. * `IEC62196Type1CCS` - Type 1 based combo connector as defined in the IEC 62196-3
-     *     standard. The connector is based on the Type 1 connector – as defined in the IEC 62196-2 standard – with two
-     *     additional direct current (DC) contacts to allow DC fast charging. * `IEC62196Type2CableAttached` - Type 2
-     *     connector as defined in the IEC 62196-2 standard. Provided as a cable and plug attached to the charging
-     *     point. * `IEC62196Type2Outlet` - Type 2 connector as defined in the IEC 62196-2 standard. Provided as a
-     *     socket set into the charging point. * `IEC62196Type2CCS` - Type 2 based combo connector as defined in the IEC
-     *     62196-3 standard. The connector is based on the Type 2 connector – as defined in the IEC 62196-2 standard –
-     *     with two additional direct current (DC) contacts to allow DC fast charging. * `IEC62196Type3` - Type 3
-     *     connector as defined in the IEC 62196-2 standard. Also called Scame after the original manufacturer. Mostly
-     *     used in combination with up to 240V single phase or up to 420V three phase infrastructure. * `Chademo` -
-     *     CHAdeMO connector named after an association formed by the Tokyo Electric Power Company and industrial
-     *     partners. Because of this is is also known as the TEPCO's connector. It supports fast DC charging. *
-     *     `IEC60309AC1PhaseBlue` - Industrial Blue connector is a connector defined in the IEC 60309 standard. It is
-     *     sometime referred to as by some combination of the standard, the color and the fact that is a single phase
-     *     connector. The connector usually has the "P+N+E, 6h" configuration. * `IEC60309DCWhite` - Industrial White
-     *     connector is a DC connector defined in the IEC 60309 standard. * `Tesla` - The Tesla connector is the
-     *     regionally specific Tesla Supercharger connector. I.e. it refers to either Tesla's proprietary connector,
-     *     sometimes referred to as Tesla Port mostly limited to North America or the modified Type 2 (DC over Type 2)
-     *     in Europe.
-     *     <p>Usage examples:
-     *     <p>connectorSet=IEC62196Type2CableAttached connectorSet=IEC62196Type2Outlet,IEC62196Type2CableAttached.
-     * @param entityType Specifies the level of filtering performed on geographies. Narrows the search for specified
-     *     geography entity types, e.g. return only municipality. The resulting response will contain the geography ID
-     *     as well as the entity type matched. If you provide more than one entity as a comma separated list, endpoint
-     *     will return the 'smallest entity available'. Returned Geometry ID can be used to get the geometry of that
-     *     geography via [Get Search Polygon](https://docs.microsoft.com/rest/api/maps/search/getsearchpolygon) API. The
-     *     following parameters are ignored when entityType is set:
-     *     <p>* heading * number * returnRoadUse * returnSpeedLimit * roadUse * returnMatchType.
-     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
-     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
-     *     different views of such regions, and the View parameter allows your application to comply with the view
-     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
-     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
-     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
-     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
-     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
-     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
-     *     made available. Example: view=IN.
-     *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
-     *     available Views.
-     * @param operatingHours Hours of operation for a POI (Points of Interest). The availability of hours of operation
-     *     will vary based on the data available. If not passed, then no opening hours information will be returned.
-     *     Supported value: nextSevenDays.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressResult fuzzySearch(
-            String query,
-            Boolean isTypeAhead,
-            Integer top,
-            Integer skip,
-            List<Integer> categoryFilter,
-            List<String> countryFilter,
-            Double lat,
-            Double lon,
-            Integer radiusInMeters,
-            String topLeft,
-            String btmRight,
-            String language,
-            List<SearchIndexes> extendedPostalCodesFor,
-            Integer minFuzzyLevel,
-            Integer maxFuzzyLevel,
-            List<SearchIndexes> idxSet,
-            List<String> brandFilter,
-            List<ElectricVehicleConnector> electricVehicleConnectorFilter,
-            GeographicEntityType entityType,
-            LocalizedMapView localizedMapView,
-            OperatingHoursRange operatingHours) {
+    public SearchAddressResult fuzzySearch(String query){
+        final FuzzySearchOptions options = new FuzzySearchOptions(query);
+        return this.fuzzySearch(options);
+    }
+
+    /**
+     *
+     * @param options
+     * @return
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public SearchAddressResult fuzzySearch(FuzzySearchOptions options){
         return this.serviceClient.fuzzySearch(
                 ResponseFormat.JSON,
-                query,
-                isTypeAhead,
-                top,
-                skip,
-                categoryFilter,
-                countryFilter,
-                lat,
-                lon,
-                radiusInMeters,
-                topLeft,
-                btmRight,
-                language,
-                extendedPostalCodesFor,
-                minFuzzyLevel,
-                maxFuzzyLevel,
-                idxSet,
-                brandFilter,
-                electricVehicleConnectorFilter,
-                entityType,
-                localizedMapView,
-                operatingHours);
+                options.getQuery(),
+                options.isTypeAhead(),
+                options.getTop(),
+                options.getSkip(),
+                options.getCategoryFilter(),
+                options.getCountryFilter(),
+                options.getCoordinates().map(LatLongPairAbbreviated::getLat).orElse(null),
+                options.getCoordinates().map(LatLongPairAbbreviated::getLon).orElse(null),
+                options.getRadiusInMeters(),
+                options.getTopLeft(),
+                options.getBtmRight(),
+                options.getLanguage(),
+                options.getExtendedPostalCodesFor(),
+                options.getMinFuzzyLevel(),
+                options.getMaxFuzzyLevel(),
+                options.getIdxSet(),
+                options.getBrandFilter(),
+                options.getElectricVehicleConnectorFilter(),
+                options.getEntityType(),
+                options.getLocalizedMapView(),
+                options.getOperatingHours());
     }
 
     /**
      * **Free Form Search**
      *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
-     *
-     * <p>The basic default API is Free Form Search which handles the most fuzzy of inputs handling any combination of
-     * address or POI tokens. This search API is the canonical 'single line search'. The Free Form Search API is a
-     * seamless combination of POI search and geocoding. The API can also be weighted with a contextual position
-     * (lat./lon. pair), or fully constrained by a coordinate and radius, or it can be executed more generally without
-     * any geo biasing anchor point.&lt;br&gt;&lt;br&gt;We strongly advise you to use the 'countrySet' parameter to
-     * specify only the countries for which your application needs coverage, as the default behavior will be to search
-     * the entire world, potentially returning unnecessary results.&lt;br&gt;&lt;br&gt; E.g.: `countrySet`=US,FR
-     * &lt;br&gt;&lt;br&gt;Please see [Search
-     * Coverage](https://docs.microsoft.com/azure/location-based-services/geocoding-coverage) for a complete list of all
-     * the supported countries.&lt;br&gt;&lt;br&gt;Most Search queries default to `maxFuzzyLevel`=2 to gain performance
-     * and also reduce unusual results. This new default can be overridden as needed per request by passing in the query
-     * param `maxFuzzyLevel`=3 or 4.
-     *
-     * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param query The applicable query string (e.g., "seattle", "pizza"). Can _also_ be specified as a comma separated
-     *     string composed by latitude followed by longitude (e.g., "47.641268, -122.125679"). Must be properly URL
-     *     encoded.
-     * @param isTypeAhead Boolean. If the typeahead flag is set, the query will be interpreted as a partial input and
-     *     the search will enter predictive mode.
-     * @param top Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
-     * @param skip Starting offset of the returned results within the full result set. Default: 0, minimum: 0 and
-     *     maximum: 1900.
-     * @param categoryFilter A comma-separated list of category set IDs which could be used to restrict the result to
-     *     specific Points of Interest categories. ID order does not matter. When multiple category identifiers are
-     *     provided, only POIs that belong to (at least) one of the categories from the provided list will be returned.
-     *     The list of supported categories can be discovered using  [POI Categories
-     *     API](https://aka.ms/AzureMapsPOICategoryTree). Usage examples:
-     *     <p>* **categorySet=7315** (Search Points of Interest from category Restaurant)
-     *     <p>* **categorySet=7315025,7315017** (Search Points of Interest of category either Italian or French
-     *     Restaurant).
-     * @param countryFilter Comma separated string of country codes, e.g. FR,ES. This will limit the search to the
-     *     specified countries.
-     * @param lat Latitude where results should be biased. E.g. 37.337.
-     * @param lon Longitude where results should be biased. E.g. -121.89.
-     * @param radiusInMeters The radius in meters to for the results to be constrained to the defined area.
-     * @param topLeft Top left position of the bounding box. E.g. 37.553,-122.453.
-     * @param btmRight Bottom right position of the bounding box. E.g. 37.553,-122.453.
-     * @param language Language in which search results should be returned. Should be one of supported IETF language
-     *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used.
-     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
-     *     details.
-     * @param extendedPostalCodesFor Indexes for which extended postal codes should be included in the results.
-     *     <p>Available indexes are:
-     *     <p>**Addr** = Address ranges
-     *     <p>**Geo** = Geographies
-     *     <p>**PAD** = Point Addresses
-     *     <p>**POI** = Points of Interest
-     *     <p>**Str** = Streets
-     *     <p>**XStr** = Cross Streets (intersections)
-     *     <p>Value should be a comma separated list of index types (in any order) or **None** for no indexes.
-     *     <p>By default extended postal codes are included for all indexes except Geo. Extended postal code lists for
-     *     geographies can be quite long so they have to be explicitly requested when needed.
-     *     <p>Usage examples:
-     *     <p>extendedPostalCodesFor=POI
-     *     <p>extendedPostalCodesFor=PAD,Addr,POI
-     *     <p>extendedPostalCodesFor=None
-     *     <p>Extended postal code is returned as an **extendedPostalCode** property of an address. Availability is
-     *     region-dependent.
-     * @param minFuzzyLevel Minimum fuzziness level to be used. Default: 1, minimum: 1 and maximum: 4
-     *     <p>* Level 1 has no spell checking.
-     *     <p>* Level 2 uses normal n-gram spell checking. For example, query "restrant" can be matched to "restaurant."
-     *     <p>* Level 3 uses sound-like spell checking, and shingle spell checking. Sound-like spell checking is for
-     *     "rstrnt" to "restaurant" matching. Shingle spell checking is for "mountainview" to "mountain view" matching.
-     *     <p>* Level 4 doesn’t add any more spell checking functions.
-     *     <p>The search engine will start looking for a match on the level defined by minFuzzyLevel, and will stop
-     *     searching at the level specified by maxFuzzyLevel.
-     * @param maxFuzzyLevel Maximum fuzziness level to be used. Default: 2, minimum: 1 and maximum: 4
-     *     <p>* Level 1 has no spell checking.
-     *     <p>* Level 2 uses normal n-gram spell checking. For example, query "restrant" can be matched to "restaurant."
-     *     <p>* Level 3 uses sound-like spell checking, and shingle spell checking. Sound-like spell checking is for
-     *     "rstrnt" to "restaurant" matching. Shingle spell checking is for "mountainview" to "mountain view" matching.
-     *     <p>* Level 4 doesn’t add any more spell checking functions.
-     *     <p>The search engine will start looking for a match on the level defined by minFuzzyLevel, and will stop
-     *     searching at the level specified by maxFuzzyLevel.
-     * @param idxSet A comma separated list of indexes which should be utilized for the search. Item order does not
-     *     matter. Available indexes are: Addr = Address range interpolation, Geo = Geographies, PAD = Point Addresses,
-     *     POI = Points of interest, Str = Streets, Xstr = Cross Streets (intersections).
-     * @param brandFilter A comma-separated list of brand names which could be used to restrict the result to specific
-     *     brands. Item order does not matter. When multiple brands are provided, only results that belong to (at least)
-     *     one of the provided list will be returned. Brands that contain a "," in their name should be put into quotes.
-     *     <p>Usage examples:
-     *     <p>brandSet=Foo
-     *     <p>brandSet=Foo,Bar
-     *     <p>brandSet="A,B,C Comma",Bar.
-     * @param electricVehicleConnectorFilter A comma-separated list of connector types which could be used to restrict
-     *     the result to Electric Vehicle Station supporting specific connector types. Item order does not matter. When
-     *     multiple connector types are provided, only results that belong to (at least) one of the provided list will
-     *     be returned.
-     *     <p>Available connector types are: * `StandardHouseholdCountrySpecific` - These are the standard household
-     *     connectors for a certain region. They are all AC single phase and the standard Voltage and standard Amperage.
-     *     See also: [Plug &amp; socket types - World
-     *     Standards](https://www.worldstandards.eu/electricity/plugs-and-sockets). * `IEC62196Type1` - Type 1 connector
-     *     as defined in the IEC 62196-2 standard. Also called Yazaki after the original manufacturer or SAE J1772 after
-     *     the standard that first published it. Mostly used in combination with 120V single phase or up to 240V single
-     *     phase infrastructure. * `IEC62196Type1CCS` - Type 1 based combo connector as defined in the IEC 62196-3
-     *     standard. The connector is based on the Type 1 connector – as defined in the IEC 62196-2 standard – with two
-     *     additional direct current (DC) contacts to allow DC fast charging. * `IEC62196Type2CableAttached` - Type 2
-     *     connector as defined in the IEC 62196-2 standard. Provided as a cable and plug attached to the charging
-     *     point. * `IEC62196Type2Outlet` - Type 2 connector as defined in the IEC 62196-2 standard. Provided as a
-     *     socket set into the charging point. * `IEC62196Type2CCS` - Type 2 based combo connector as defined in the IEC
-     *     62196-3 standard. The connector is based on the Type 2 connector – as defined in the IEC 62196-2 standard –
-     *     with two additional direct current (DC) contacts to allow DC fast charging. * `IEC62196Type3` - Type 3
-     *     connector as defined in the IEC 62196-2 standard. Also called Scame after the original manufacturer. Mostly
-     *     used in combination with up to 240V single phase or up to 420V three phase infrastructure. * `Chademo` -
-     *     CHAdeMO connector named after an association formed by the Tokyo Electric Power Company and industrial
-     *     partners. Because of this is is also known as the TEPCO's connector. It supports fast DC charging. *
-     *     `IEC60309AC1PhaseBlue` - Industrial Blue connector is a connector defined in the IEC 60309 standard. It is
-     *     sometime referred to as by some combination of the standard, the color and the fact that is a single phase
-     *     connector. The connector usually has the "P+N+E, 6h" configuration. * `IEC60309DCWhite` - Industrial White
-     *     connector is a DC connector defined in the IEC 60309 standard. * `Tesla` - The Tesla connector is the
-     *     regionally specific Tesla Supercharger connector. I.e. it refers to either Tesla's proprietary connector,
-     *     sometimes referred to as Tesla Port mostly limited to North America or the modified Type 2 (DC over Type 2)
-     *     in Europe.
-     *     <p>Usage examples:
-     *     <p>connectorSet=IEC62196Type2CableAttached connectorSet=IEC62196Type2Outlet,IEC62196Type2CableAttached.
-     * @param entityType Specifies the level of filtering performed on geographies. Narrows the search for specified
-     *     geography entity types, e.g. return only municipality. The resulting response will contain the geography ID
-     *     as well as the entity type matched. If you provide more than one entity as a comma separated list, endpoint
-     *     will return the 'smallest entity available'. Returned Geometry ID can be used to get the geometry of that
-     *     geography via [Get Search Polygon](https://docs.microsoft.com/rest/api/maps/search/getsearchpolygon) API. The
-     *     following parameters are ignored when entityType is set:
-     *     <p>* heading * number * returnRoadUse * returnSpeedLimit * roadUse * returnMatchType.
-     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
-     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
-     *     different views of such regions, and the View parameter allows your application to comply with the view
-     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
-     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
-     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
-     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
-     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
-     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
-     *     made available. Example: view=IN.
-     *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
-     *     available Views.
-     * @param operatingHours Hours of operation for a POI (Points of Interest). The availability of hours of operation
-     *     will vary based on the data available. If not passed, then no opening hours information will be returned.
-     *     Supported value: nextSevenDays.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<SearchAddressResult> fuzzySearchWithResponse(
-            String query,
-            Boolean isTypeAhead,
-            Integer top,
-            Integer skip,
-            List<Integer> categoryFilter,
-            List<String> countryFilter,
-            Double lat,
-            Double lon,
-            Integer radiusInMeters,
-            String topLeft,
-            String btmRight,
-            String language,
-            List<SearchIndexes> extendedPostalCodesFor,
-            Integer minFuzzyLevel,
-            Integer maxFuzzyLevel,
-            List<SearchIndexes> idxSet,
-            List<String> brandFilter,
-            List<ElectricVehicleConnector> electricVehicleConnectorFilter,
-            GeographicEntityType entityType,
-            LocalizedMapView localizedMapView,
-            OperatingHoursRange operatingHours,
+            FuzzySearchOptions options,
             Context context) {
         return this.serviceClient.fuzzySearchWithResponse(
                 ResponseFormat.JSON,
-                query,
-                isTypeAhead,
-                top,
-                skip,
-                categoryFilter,
-                countryFilter,
-                lat,
-                lon,
-                radiusInMeters,
-                topLeft,
-                btmRight,
-                language,
-                extendedPostalCodesFor,
-                minFuzzyLevel,
-                maxFuzzyLevel,
-                idxSet,
-                brandFilter,
-                electricVehicleConnectorFilter,
-                entityType,
-                localizedMapView,
-                operatingHours,
+                options.getQuery(),
+                options.isTypeAhead(),
+                options.getTop(),
+                options.getSkip(),
+                options.getCategoryFilter(),
+                options.getCountryFilter(),
+                options.getCoordinates().map(LatLongPairAbbreviated::getLat).orElse(null),
+                options.getCoordinates().map(LatLongPairAbbreviated::getLon).orElse(null),
+                options.getRadiusInMeters(),
+                options.getTopLeft(),
+                options.getBtmRight(),
+                options.getLanguage(),
+                options.getExtendedPostalCodesFor(),
+                options.getMinFuzzyLevel(),
+                options.getMaxFuzzyLevel(),
+                options.getIdxSet(),
+                options.getBrandFilter(),
+                options.getElectricVehicleConnectorFilter(),
+                options.getEntityType(),
+                options.getLocalizedMapView(),
+                options.getOperatingHours(),
                 context);
     }
 
     /**
      * **Get POI by Name**
-     *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
-     *
-     * <p>Points of Interest (POI) Search allows you to request POI results by name. Search supports additional query
-     * parameters such as language and filtering results by area of interest driven by country or bounding box. Endpoint
-     * will return only POI results matching the query string. Response includes POI details such as address, coordinate
-     * location and category.
-     *
-     * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param query The POI name to search for (e.g., "statue of liberty", "starbucks"), must be properly URL encoded.
-     * @param isTypeAhead Boolean. If the typeahead flag is set, the query will be interpreted as a partial input and
-     *     the search will enter predictive mode.
-     * @param top Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
-     * @param skip Starting offset of the returned results within the full result set. Default: 0, minimum: 0 and
-     *     maximum: 1900.
-     * @param categoryFilter A comma-separated list of category set IDs which could be used to restrict the result to
-     *     specific Points of Interest categories. ID order does not matter. When multiple category identifiers are
-     *     provided, only POIs that belong to (at least) one of the categories from the provided list will be returned.
-     *     The list of supported categories can be discovered using  [POI Categories
-     *     API](https://aka.ms/AzureMapsPOICategoryTree). Usage examples:
-     *     <p>* **categorySet=7315** (Search Points of Interest from category Restaurant)
-     *     <p>* **categorySet=7315025,7315017** (Search Points of Interest of category either Italian or French
-     *     Restaurant).
-     * @param countryFilter Comma separated string of country codes, e.g. FR,ES. This will limit the search to the
-     *     specified countries.
-     * @param lat Latitude where results should be biased. E.g. 37.337.
-     * @param lon Longitude where results should be biased. E.g. -121.89.
-     * @param radiusInMeters The radius in meters to for the results to be constrained to the defined area.
-     * @param topLeft Top left position of the bounding box. E.g. 37.553,-122.453.
-     * @param btmRight Bottom right position of the bounding box. E.g. 37.553,-122.453.
-     * @param language Language in which search results should be returned. Should be one of supported IETF language
-     *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used.
-     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
-     *     details.
-     * @param extendedPostalCodesFor Indexes for which extended postal codes should be included in the results.
-     *     <p>Available indexes are:
-     *     <p>**POI** = Points of Interest
-     *     <p>Value should be **POI** or **None** to disable extended postal codes.
-     *     <p>By default extended postal codes are included.
-     *     <p>Usage examples:
-     *     <p>extendedPostalCodesFor=POI
-     *     <p>extendedPostalCodesFor=None
-     *     <p>Extended postal code is returned as an **extendedPostalCode** property of an address. Availability is
-     *     region-dependent.
-     * @param brandFilter A comma-separated list of brand names which could be used to restrict the result to specific
-     *     brands. Item order does not matter. When multiple brands are provided, only results that belong to (at least)
-     *     one of the provided list will be returned. Brands that contain a "," in their name should be put into quotes.
-     *     <p>Usage examples:
-     *     <p>brandSet=Foo
-     *     <p>brandSet=Foo,Bar
-     *     <p>brandSet="A,B,C Comma",Bar.
-     * @param electricVehicleConnectorFilter A comma-separated list of connector types which could be used to restrict
-     *     the result to Electric Vehicle Station supporting specific connector types. Item order does not matter. When
-     *     multiple connector types are provided, only results that belong to (at least) one of the provided list will
-     *     be returned.
-     *     <p>Available connector types are: * `StandardHouseholdCountrySpecific` - These are the standard household
-     *     connectors for a certain region. They are all AC single phase and the standard Voltage and standard Amperage.
-     *     See also: [Plug &amp; socket types - World
-     *     Standards](https://www.worldstandards.eu/electricity/plugs-and-sockets). * `IEC62196Type1` - Type 1 connector
-     *     as defined in the IEC 62196-2 standard. Also called Yazaki after the original manufacturer or SAE J1772 after
-     *     the standard that first published it. Mostly used in combination with 120V single phase or up to 240V single
-     *     phase infrastructure. * `IEC62196Type1CCS` - Type 1 based combo connector as defined in the IEC 62196-3
-     *     standard. The connector is based on the Type 1 connector – as defined in the IEC 62196-2 standard – with two
-     *     additional direct current (DC) contacts to allow DC fast charging. * `IEC62196Type2CableAttached` - Type 2
-     *     connector as defined in the IEC 62196-2 standard. Provided as a cable and plug attached to the charging
-     *     point. * `IEC62196Type2Outlet` - Type 2 connector as defined in the IEC 62196-2 standard. Provided as a
-     *     socket set into the charging point. * `IEC62196Type2CCS` - Type 2 based combo connector as defined in the IEC
-     *     62196-3 standard. The connector is based on the Type 2 connector – as defined in the IEC 62196-2 standard –
-     *     with two additional direct current (DC) contacts to allow DC fast charging. * `IEC62196Type3` - Type 3
-     *     connector as defined in the IEC 62196-2 standard. Also called Scame after the original manufacturer. Mostly
-     *     used in combination with up to 240V single phase or up to 420V three phase infrastructure. * `Chademo` -
-     *     CHAdeMO connector named after an association formed by the Tokyo Electric Power Company and industrial
-     *     partners. Because of this is is also known as the TEPCO's connector. It supports fast DC charging. *
-     *     `IEC60309AC1PhaseBlue` - Industrial Blue connector is a connector defined in the IEC 60309 standard. It is
-     *     sometime referred to as by some combination of the standard, the color and the fact that is a single phase
-     *     connector. The connector usually has the "P+N+E, 6h" configuration. * `IEC60309DCWhite` - Industrial White
-     *     connector is a DC connector defined in the IEC 60309 standard. * `Tesla` - The Tesla connector is the
-     *     regionally specific Tesla Supercharger connector. I.e. it refers to either Tesla's proprietary connector,
-     *     sometimes referred to as Tesla Port mostly limited to North America or the modified Type 2 (DC over Type 2)
-     *     in Europe.
-     *     <p>Usage examples:
-     *     <p>connectorSet=IEC62196Type2CableAttached connectorSet=IEC62196Type2Outlet,IEC62196Type2CableAttached.
-     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
-     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
-     *     different views of such regions, and the View parameter allows your application to comply with the view
-     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
-     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
-     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
-     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
-     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
-     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
-     *     made available. Example: view=IN.
-     *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
-     *     available Views.
-     * @param operatingHours Hours of operation for a POI (Points of Interest). The availability of hours of operation
-     *     will vary based on the data available. If not passed, then no opening hours information will be returned.
-     *     Supported value: nextSevenDays.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressResult searchPointOfInterest(
-            String query,
-            Boolean isTypeAhead,
-            Integer top,
-            Integer skip,
-            List<Integer> categoryFilter,
-            List<String> countryFilter,
-            Double lat,
-            Double lon,
-            Integer radiusInMeters,
-            String topLeft,
-            String btmRight,
-            String language,
-            List<PointOfInterestExtendedPostalCodes> extendedPostalCodesFor,
-            List<String> brandFilter,
-            List<ElectricVehicleConnector> electricVehicleConnectorFilter,
-            LocalizedMapView localizedMapView,
-            OperatingHoursRange operatingHours) {
+    public SearchAddressResult searchPointOfInterest(String query) {
+        final SearchPointOfInterestOptions options = new SearchPointOfInterestOptions(query);
+
+        return this.searchPointOfInterest(options);
+    }
+
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public SearchAddressResult searchPointOfInterest(SearchPointOfInterestOptions options) {
         return this.serviceClient.searchPointOfInterest(
                 ResponseFormat.JSON,
-                query,
-                isTypeAhead,
-                top,
-                skip,
-                categoryFilter,
-                countryFilter,
-                lat,
-                lon,
-                radiusInMeters,
-                topLeft,
-                btmRight,
-                language,
-                extendedPostalCodesFor,
-                brandFilter,
-                electricVehicleConnectorFilter,
-                localizedMapView,
-                operatingHours);
+                options.getQuery(),
+                options.isTypeAhead(),
+                options.getTop(),
+                options.getSkip(),
+                options.getCategoryFilter(),
+                options.getCountryFilter(),
+                options.getCoordinates().map(LatLongPairAbbreviated::getLat).orElse(null),
+                options.getCoordinates().map(LatLongPairAbbreviated::getLon).orElse(null),
+                options.getRadiusInMeters(),
+                options.getTopLeft(),
+                options.getBtmRight(),
+                options.getLanguage(),
+                options.getExtendedPostalCodesFor(),
+                options.getBrandFilter(),
+                options.getElectricVehicleConnectorFilter(),
+                options.getLocalizedMapView(),
+                options.getOperatingHours());
     }
 
     /**
      * **Get POI by Name**
      *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
-     *
-     * <p>Points of Interest (POI) Search allows you to request POI results by name. Search supports additional query
-     * parameters such as language and filtering results by area of interest driven by country or bounding box. Endpoint
-     * will return only POI results matching the query string. Response includes POI details such as address, coordinate
-     * location and category.
-     *
-     * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param query The POI name to search for (e.g., "statue of liberty", "starbucks"), must be properly URL encoded.
-     * @param isTypeAhead Boolean. If the typeahead flag is set, the query will be interpreted as a partial input and
-     *     the search will enter predictive mode.
-     * @param top Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
-     * @param skip Starting offset of the returned results within the full result set. Default: 0, minimum: 0 and
-     *     maximum: 1900.
-     * @param categoryFilter A comma-separated list of category set IDs which could be used to restrict the result to
-     *     specific Points of Interest categories. ID order does not matter. When multiple category identifiers are
-     *     provided, only POIs that belong to (at least) one of the categories from the provided list will be returned.
-     *     The list of supported categories can be discovered using  [POI Categories
-     *     API](https://aka.ms/AzureMapsPOICategoryTree). Usage examples:
-     *     <p>* **categorySet=7315** (Search Points of Interest from category Restaurant)
-     *     <p>* **categorySet=7315025,7315017** (Search Points of Interest of category either Italian or French
-     *     Restaurant).
-     * @param countryFilter Comma separated string of country codes, e.g. FR,ES. This will limit the search to the
-     *     specified countries.
-     * @param lat Latitude where results should be biased. E.g. 37.337.
-     * @param lon Longitude where results should be biased. E.g. -121.89.
-     * @param radiusInMeters The radius in meters to for the results to be constrained to the defined area.
-     * @param topLeft Top left position of the bounding box. E.g. 37.553,-122.453.
-     * @param btmRight Bottom right position of the bounding box. E.g. 37.553,-122.453.
-     * @param language Language in which search results should be returned. Should be one of supported IETF language
-     *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used.
-     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
-     *     details.
-     * @param extendedPostalCodesFor Indexes for which extended postal codes should be included in the results.
-     *     <p>Available indexes are:
-     *     <p>**POI** = Points of Interest
-     *     <p>Value should be **POI** or **None** to disable extended postal codes.
-     *     <p>By default extended postal codes are included.
-     *     <p>Usage examples:
-     *     <p>extendedPostalCodesFor=POI
-     *     <p>extendedPostalCodesFor=None
-     *     <p>Extended postal code is returned as an **extendedPostalCode** property of an address. Availability is
-     *     region-dependent.
-     * @param brandFilter A comma-separated list of brand names which could be used to restrict the result to specific
-     *     brands. Item order does not matter. When multiple brands are provided, only results that belong to (at least)
-     *     one of the provided list will be returned. Brands that contain a "," in their name should be put into quotes.
-     *     <p>Usage examples:
-     *     <p>brandSet=Foo
-     *     <p>brandSet=Foo,Bar
-     *     <p>brandSet="A,B,C Comma",Bar.
-     * @param electricVehicleConnectorFilter A comma-separated list of connector types which could be used to restrict
-     *     the result to Electric Vehicle Station supporting specific connector types. Item order does not matter. When
-     *     multiple connector types are provided, only results that belong to (at least) one of the provided list will
-     *     be returned.
-     *     <p>Available connector types are: * `StandardHouseholdCountrySpecific` - These are the standard household
-     *     connectors for a certain region. They are all AC single phase and the standard Voltage and standard Amperage.
-     *     See also: [Plug &amp; socket types - World
-     *     Standards](https://www.worldstandards.eu/electricity/plugs-and-sockets). * `IEC62196Type1` - Type 1 connector
-     *     as defined in the IEC 62196-2 standard. Also called Yazaki after the original manufacturer or SAE J1772 after
-     *     the standard that first published it. Mostly used in combination with 120V single phase or up to 240V single
-     *     phase infrastructure. * `IEC62196Type1CCS` - Type 1 based combo connector as defined in the IEC 62196-3
-     *     standard. The connector is based on the Type 1 connector – as defined in the IEC 62196-2 standard – with two
-     *     additional direct current (DC) contacts to allow DC fast charging. * `IEC62196Type2CableAttached` - Type 2
-     *     connector as defined in the IEC 62196-2 standard. Provided as a cable and plug attached to the charging
-     *     point. * `IEC62196Type2Outlet` - Type 2 connector as defined in the IEC 62196-2 standard. Provided as a
-     *     socket set into the charging point. * `IEC62196Type2CCS` - Type 2 based combo connector as defined in the IEC
-     *     62196-3 standard. The connector is based on the Type 2 connector – as defined in the IEC 62196-2 standard –
-     *     with two additional direct current (DC) contacts to allow DC fast charging. * `IEC62196Type3` - Type 3
-     *     connector as defined in the IEC 62196-2 standard. Also called Scame after the original manufacturer. Mostly
-     *     used in combination with up to 240V single phase or up to 420V three phase infrastructure. * `Chademo` -
-     *     CHAdeMO connector named after an association formed by the Tokyo Electric Power Company and industrial
-     *     partners. Because of this is is also known as the TEPCO's connector. It supports fast DC charging. *
-     *     `IEC60309AC1PhaseBlue` - Industrial Blue connector is a connector defined in the IEC 60309 standard. It is
-     *     sometime referred to as by some combination of the standard, the color and the fact that is a single phase
-     *     connector. The connector usually has the "P+N+E, 6h" configuration. * `IEC60309DCWhite` - Industrial White
-     *     connector is a DC connector defined in the IEC 60309 standard. * `Tesla` - The Tesla connector is the
-     *     regionally specific Tesla Supercharger connector. I.e. it refers to either Tesla's proprietary connector,
-     *     sometimes referred to as Tesla Port mostly limited to North America or the modified Type 2 (DC over Type 2)
-     *     in Europe.
-     *     <p>Usage examples:
-     *     <p>connectorSet=IEC62196Type2CableAttached connectorSet=IEC62196Type2Outlet,IEC62196Type2CableAttached.
-     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
-     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
-     *     different views of such regions, and the View parameter allows your application to comply with the view
-     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
-     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
-     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
-     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
-     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
-     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
-     *     made available. Example: view=IN.
-     *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
-     *     available Views.
-     * @param operatingHours Hours of operation for a POI (Points of Interest). The availability of hours of operation
-     *     will vary based on the data available. If not passed, then no opening hours information will be returned.
-     *     Supported value: nextSevenDays.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -750,279 +210,68 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<SearchAddressResult> searchPointOfInterestWithResponse(
-            String query,
-            Boolean isTypeAhead,
-            Integer top,
-            Integer skip,
-            List<Integer> categoryFilter,
-            List<String> countryFilter,
-            Double lat,
-            Double lon,
-            Integer radiusInMeters,
-            String topLeft,
-            String btmRight,
-            String language,
-            List<PointOfInterestExtendedPostalCodes> extendedPostalCodesFor,
-            List<String> brandFilter,
-            List<ElectricVehicleConnector> electricVehicleConnectorFilter,
-            LocalizedMapView localizedMapView,
-            OperatingHoursRange operatingHours,
+            SearchPointOfInterestOptions options,
             Context context) {
         return this.serviceClient.searchPointOfInterestWithResponse(
                 ResponseFormat.JSON,
-                query,
-                isTypeAhead,
-                top,
-                skip,
-                categoryFilter,
-                countryFilter,
-                lat,
-                lon,
-                radiusInMeters,
-                topLeft,
-                btmRight,
-                language,
-                extendedPostalCodesFor,
-                brandFilter,
-                electricVehicleConnectorFilter,
-                localizedMapView,
-                operatingHours,
+                options.getQuery(),
+                options.isTypeAhead(),
+                options.getTop(),
+                options.getSkip(),
+                options.getCategoryFilter(),
+                options.getCountryFilter(),
+                options.getCoordinates().map(LatLongPairAbbreviated::getLat).orElse(null),
+                options.getCoordinates().map(LatLongPairAbbreviated::getLon).orElse(null),
+                options.getRadiusInMeters(),
+                options.getTopLeft(),
+                options.getBtmRight(),
+                options.getLanguage(),
+                options.getExtendedPostalCodesFor(),
+                options.getBrandFilter(),
+                options.getElectricVehicleConnectorFilter(),
+                options.getLocalizedMapView(),
+                options.getOperatingHours(),
                 context);
     }
 
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public SearchAddressResult searchNearbyPointOfInterest(LatLongPairAbbreviated coordinates) {
+        final SearchNearbyPointsOfInterestOptions options = new SearchNearbyPointsOfInterestOptions(coordinates);
+
+        return this.searchNearbyPointOfInterest(options);
+    }
     /**
      * **Nearby Search**
      *
      * <p>**Applies to**: S0 and S1 pricing tiers.
      *
-     * <p>If you have a use case for only retrieving POI results around a specific location, the nearby search method
-     * may be the right choice. This endpoint will only return POI results, and does not take in a search query
-     * parameter.
-     *
-     * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param lat Latitude where results should be biased. E.g. 37.337.
-     * @param lon Longitude where results should be biased. E.g. -121.89.
-     * @param top Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
-     * @param skip Starting offset of the returned results within the full result set. Default: 0, minimum: 0 and
-     *     maximum: 1900.
-     * @param categoryFilter A comma-separated list of category set IDs which could be used to restrict the result to
-     *     specific Points of Interest categories. ID order does not matter. When multiple category identifiers are
-     *     provided, only POIs that belong to (at least) one of the categories from the provided list will be returned.
-     *     The list of supported categories can be discovered using  [POI Categories
-     *     API](https://aka.ms/AzureMapsPOICategoryTree). Usage examples:
-     *     <p>* **categorySet=7315** (Search Points of Interest from category Restaurant)
-     *     <p>* **categorySet=7315025,7315017** (Search Points of Interest of category either Italian or French
-     *     Restaurant).
-     * @param countryFilter Comma separated string of country codes, e.g. FR,ES. This will limit the search to the
-     *     specified countries.
-     * @param radiusInMeters The radius in meters to for the results to be constrained to the defined area, Min value is
-     *     1, Max Value is 50000.
-     * @param language Language in which search results should be returned. Should be one of supported IETF language
-     *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used.
-     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
-     *     details.
-     * @param extendedPostalCodesFor Indexes for which extended postal codes should be included in the results.
-     *     <p>Available indexes are:
-     *     <p>**Addr** = Address ranges
-     *     <p>**Geo** = Geographies
-     *     <p>**PAD** = Point Addresses
-     *     <p>**POI** = Points of Interest
-     *     <p>**Str** = Streets
-     *     <p>**XStr** = Cross Streets (intersections)
-     *     <p>Value should be a comma separated list of index types (in any order) or **None** for no indexes.
-     *     <p>By default extended postal codes are included for all indexes except Geo. Extended postal code lists for
-     *     geographies can be quite long so they have to be explicitly requested when needed.
-     *     <p>Usage examples:
-     *     <p>extendedPostalCodesFor=POI
-     *     <p>extendedPostalCodesFor=PAD,Addr,POI
-     *     <p>extendedPostalCodesFor=None
-     *     <p>Extended postal code is returned as an **extendedPostalCode** property of an address. Availability is
-     *     region-dependent.
-     * @param brandFilter A comma-separated list of brand names which could be used to restrict the result to specific
-     *     brands. Item order does not matter. When multiple brands are provided, only results that belong to (at least)
-     *     one of the provided list will be returned. Brands that contain a "," in their name should be put into quotes.
-     *     <p>Usage examples:
-     *     <p>brandSet=Foo
-     *     <p>brandSet=Foo,Bar
-     *     <p>brandSet="A,B,C Comma",Bar.
-     * @param electricVehicleConnectorFilter A comma-separated list of connector types which could be used to restrict
-     *     the result to Electric Vehicle Station supporting specific connector types. Item order does not matter. When
-     *     multiple connector types are provided, only results that belong to (at least) one of the provided list will
-     *     be returned.
-     *     <p>Available connector types are: * `StandardHouseholdCountrySpecific` - These are the standard household
-     *     connectors for a certain region. They are all AC single phase and the standard Voltage and standard Amperage.
-     *     See also: [Plug &amp; socket types - World
-     *     Standards](https://www.worldstandards.eu/electricity/plugs-and-sockets). * `IEC62196Type1` - Type 1 connector
-     *     as defined in the IEC 62196-2 standard. Also called Yazaki after the original manufacturer or SAE J1772 after
-     *     the standard that first published it. Mostly used in combination with 120V single phase or up to 240V single
-     *     phase infrastructure. * `IEC62196Type1CCS` - Type 1 based combo connector as defined in the IEC 62196-3
-     *     standard. The connector is based on the Type 1 connector – as defined in the IEC 62196-2 standard – with two
-     *     additional direct current (DC) contacts to allow DC fast charging. * `IEC62196Type2CableAttached` - Type 2
-     *     connector as defined in the IEC 62196-2 standard. Provided as a cable and plug attached to the charging
-     *     point. * `IEC62196Type2Outlet` - Type 2 connector as defined in the IEC 62196-2 standard. Provided as a
-     *     socket set into the charging point. * `IEC62196Type2CCS` - Type 2 based combo connector as defined in the IEC
-     *     62196-3 standard. The connector is based on the Type 2 connector – as defined in the IEC 62196-2 standard –
-     *     with two additional direct current (DC) contacts to allow DC fast charging. * `IEC62196Type3` - Type 3
-     *     connector as defined in the IEC 62196-2 standard. Also called Scame after the original manufacturer. Mostly
-     *     used in combination with up to 240V single phase or up to 420V three phase infrastructure. * `Chademo` -
-     *     CHAdeMO connector named after an association formed by the Tokyo Electric Power Company and industrial
-     *     partners. Because of this is is also known as the TEPCO's connector. It supports fast DC charging. *
-     *     `IEC60309AC1PhaseBlue` - Industrial Blue connector is a connector defined in the IEC 60309 standard. It is
-     *     sometime referred to as by some combination of the standard, the color and the fact that is a single phase
-     *     connector. The connector usually has the "P+N+E, 6h" configuration. * `IEC60309DCWhite` - Industrial White
-     *     connector is a DC connector defined in the IEC 60309 standard. * `Tesla` - The Tesla connector is the
-     *     regionally specific Tesla Supercharger connector. I.e. it refers to either Tesla's proprietary connector,
-     *     sometimes referred to as Tesla Port mostly limited to North America or the modified Type 2 (DC over Type 2)
-     *     in Europe.
-     *     <p>Usage examples:
-     *     <p>connectorSet=IEC62196Type2CableAttached connectorSet=IEC62196Type2Outlet,IEC62196Type2CableAttached.
-     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
-     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
-     *     different views of such regions, and the View parameter allows your application to comply with the view
-     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
-     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
-     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
-     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
-     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
-     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
-     *     made available. Example: view=IN.
-     *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
-     *     available Views.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressResult searchNearbyPointOfInterest(
-            double lat,
-            double lon,
-            Integer top,
-            Integer skip,
-            List<Integer> categoryFilter,
-            List<String> countryFilter,
-            Integer radiusInMeters,
-            String language,
-            List<SearchIndexes> extendedPostalCodesFor,
-            List<String> brandFilter,
-            List<ElectricVehicleConnector> electricVehicleConnectorFilter,
-            LocalizedMapView localizedMapView) {
+    public SearchAddressResult searchNearbyPointOfInterest(SearchNearbyPointsOfInterestOptions options) {
         return this.serviceClient.searchNearbyPointOfInterest(
                 ResponseFormat.JSON,
-                lat,
-                lon,
-                top,
-                skip,
-                categoryFilter,
-                countryFilter,
-                radiusInMeters,
-                language,
-                extendedPostalCodesFor,
-                brandFilter,
-                electricVehicleConnectorFilter,
-                localizedMapView);
+                options.getCoordinates().map(LatLongPairAbbreviated::getLat).orElse(null),
+                options.getCoordinates().map(LatLongPairAbbreviated::getLon).orElse(null),
+                options.getTop(),
+                options.getSkip(),
+                options.getCategoryFilter(),
+                options.getCountryFilter(),
+                options.getRadiusInMeters(),
+                options.getLanguage(),
+                options.getExtendedPostalCodesFor(),
+                options.getBrandFilter(),
+                options.getElectricVehicleConnectorFilter(),
+                options.getLocalizedMapView());
     }
 
     /**
      * **Nearby Search**
      *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
      *
-     * <p>If you have a use case for only retrieving POI results around a specific location, the nearby search method
-     * may be the right choice. This endpoint will only return POI results, and does not take in a search query
-     * parameter.
-     *
-     * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param lat Latitude where results should be biased. E.g. 37.337.
-     * @param lon Longitude where results should be biased. E.g. -121.89.
-     * @param top Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
-     * @param skip Starting offset of the returned results within the full result set. Default: 0, minimum: 0 and
-     *     maximum: 1900.
-     * @param categoryFilter A comma-separated list of category set IDs which could be used to restrict the result to
-     *     specific Points of Interest categories. ID order does not matter. When multiple category identifiers are
-     *     provided, only POIs that belong to (at least) one of the categories from the provided list will be returned.
-     *     The list of supported categories can be discovered using  [POI Categories
-     *     API](https://aka.ms/AzureMapsPOICategoryTree). Usage examples:
-     *     <p>* **categorySet=7315** (Search Points of Interest from category Restaurant)
-     *     <p>* **categorySet=7315025,7315017** (Search Points of Interest of category either Italian or French
-     *     Restaurant).
-     * @param countryFilter Comma separated string of country codes, e.g. FR,ES. This will limit the search to the
-     *     specified countries.
-     * @param radiusInMeters The radius in meters to for the results to be constrained to the defined area, Min value is
-     *     1, Max Value is 50000.
-     * @param language Language in which search results should be returned. Should be one of supported IETF language
-     *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used.
-     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
-     *     details.
-     * @param extendedPostalCodesFor Indexes for which extended postal codes should be included in the results.
-     *     <p>Available indexes are:
-     *     <p>**Addr** = Address ranges
-     *     <p>**Geo** = Geographies
-     *     <p>**PAD** = Point Addresses
-     *     <p>**POI** = Points of Interest
-     *     <p>**Str** = Streets
-     *     <p>**XStr** = Cross Streets (intersections)
-     *     <p>Value should be a comma separated list of index types (in any order) or **None** for no indexes.
-     *     <p>By default extended postal codes are included for all indexes except Geo. Extended postal code lists for
-     *     geographies can be quite long so they have to be explicitly requested when needed.
-     *     <p>Usage examples:
-     *     <p>extendedPostalCodesFor=POI
-     *     <p>extendedPostalCodesFor=PAD,Addr,POI
-     *     <p>extendedPostalCodesFor=None
-     *     <p>Extended postal code is returned as an **extendedPostalCode** property of an address. Availability is
-     *     region-dependent.
-     * @param brandFilter A comma-separated list of brand names which could be used to restrict the result to specific
-     *     brands. Item order does not matter. When multiple brands are provided, only results that belong to (at least)
-     *     one of the provided list will be returned. Brands that contain a "," in their name should be put into quotes.
-     *     <p>Usage examples:
-     *     <p>brandSet=Foo
-     *     <p>brandSet=Foo,Bar
-     *     <p>brandSet="A,B,C Comma",Bar.
-     * @param electricVehicleConnectorFilter A comma-separated list of connector types which could be used to restrict
-     *     the result to Electric Vehicle Station supporting specific connector types. Item order does not matter. When
-     *     multiple connector types are provided, only results that belong to (at least) one of the provided list will
-     *     be returned.
-     *     <p>Available connector types are: * `StandardHouseholdCountrySpecific` - These are the standard household
-     *     connectors for a certain region. They are all AC single phase and the standard Voltage and standard Amperage.
-     *     See also: [Plug &amp; socket types - World
-     *     Standards](https://www.worldstandards.eu/electricity/plugs-and-sockets). * `IEC62196Type1` - Type 1 connector
-     *     as defined in the IEC 62196-2 standard. Also called Yazaki after the original manufacturer or SAE J1772 after
-     *     the standard that first published it. Mostly used in combination with 120V single phase or up to 240V single
-     *     phase infrastructure. * `IEC62196Type1CCS` - Type 1 based combo connector as defined in the IEC 62196-3
-     *     standard. The connector is based on the Type 1 connector – as defined in the IEC 62196-2 standard – with two
-     *     additional direct current (DC) contacts to allow DC fast charging. * `IEC62196Type2CableAttached` - Type 2
-     *     connector as defined in the IEC 62196-2 standard. Provided as a cable and plug attached to the charging
-     *     point. * `IEC62196Type2Outlet` - Type 2 connector as defined in the IEC 62196-2 standard. Provided as a
-     *     socket set into the charging point. * `IEC62196Type2CCS` - Type 2 based combo connector as defined in the IEC
-     *     62196-3 standard. The connector is based on the Type 2 connector – as defined in the IEC 62196-2 standard –
-     *     with two additional direct current (DC) contacts to allow DC fast charging. * `IEC62196Type3` - Type 3
-     *     connector as defined in the IEC 62196-2 standard. Also called Scame after the original manufacturer. Mostly
-     *     used in combination with up to 240V single phase or up to 420V three phase infrastructure. * `Chademo` -
-     *     CHAdeMO connector named after an association formed by the Tokyo Electric Power Company and industrial
-     *     partners. Because of this is is also known as the TEPCO's connector. It supports fast DC charging. *
-     *     `IEC60309AC1PhaseBlue` - Industrial Blue connector is a connector defined in the IEC 60309 standard. It is
-     *     sometime referred to as by some combination of the standard, the color and the fact that is a single phase
-     *     connector. The connector usually has the "P+N+E, 6h" configuration. * `IEC60309DCWhite` - Industrial White
-     *     connector is a DC connector defined in the IEC 60309 standard. * `Tesla` - The Tesla connector is the
-     *     regionally specific Tesla Supercharger connector. I.e. it refers to either Tesla's proprietary connector,
-     *     sometimes referred to as Tesla Port mostly limited to North America or the modified Type 2 (DC over Type 2)
-     *     in Europe.
-     *     <p>Usage examples:
-     *     <p>connectorSet=IEC62196Type2CableAttached connectorSet=IEC62196Type2Outlet,IEC62196Type2CableAttached.
-     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
-     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
-     *     different views of such regions, and the View parameter allows your application to comply with the view
-     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
-     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
-     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
-     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
-     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
-     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
-     *     made available. Example: view=IN.
-     *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
-     *     available Views.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -1031,143 +280,36 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<SearchAddressResult> searchNearbyPointOfInterestWithResponse(
-            double lat,
-            double lon,
-            Integer top,
-            Integer skip,
-            List<Integer> categoryFilter,
-            List<String> countryFilter,
-            Integer radiusInMeters,
-            String language,
-            List<SearchIndexes> extendedPostalCodesFor,
-            List<String> brandFilter,
-            List<ElectricVehicleConnector> electricVehicleConnectorFilter,
-            LocalizedMapView localizedMapView,
+            SearchNearbyPointsOfInterestOptions options,
             Context context) {
         return this.serviceClient.searchNearbyPointOfInterestWithResponse(
                 ResponseFormat.JSON,
-                lat,
-                lon,
-                top,
-                skip,
-                categoryFilter,
-                countryFilter,
-                radiusInMeters,
-                language,
-                extendedPostalCodesFor,
-                brandFilter,
-                electricVehicleConnectorFilter,
-                localizedMapView,
+                options.getCoordinates().map(LatLongPairAbbreviated::getLat).orElse(null),
+                options.getCoordinates().map(LatLongPairAbbreviated::getLon).orElse(null),
+                options.getTop(),
+                options.getSkip(),
+                options.getCategoryFilter(),
+                options.getCountryFilter(),
+                options.getRadiusInMeters(),
+                options.getLanguage(),
+                options.getExtendedPostalCodesFor(),
+                options.getBrandFilter(),
+                options.getElectricVehicleConnectorFilter(),
+                options.getLocalizedMapView(),
                 context);
+    }
+
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public SearchAddressResult searchPointOfInterestCategory(String query, List<Integer> categoryFilter) {
+        final SearchPointOfInterestCategoryOptions options = new SearchPointOfInterestCategoryOptions(query);
+        options.categoryFilter(categoryFilter);
+
+        return this.searchPointOfInterestCategory(options);
     }
 
     /**
      * **Get POI by Category**
      *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
-     *
-     * <p>Points of Interest (POI) Category Search allows you to request POI results from given category. Search allows
-     * to query POIs from one category at a time. Endpoint will only return POI results which are categorized as
-     * specified. Response includes POI details such as address, coordinate location and classification.
-     *
-     * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param query The POI category to search for (e.g., "AIRPORT", "RESTAURANT"), must be properly URL encoded.
-     *     Supported main categories can be requested by calling [Get Search POI Category Tree
-     *     API](https://aka.ms/AzureMapsPOICategoryTree). List of available categories can also be found
-     *     [here](https://docs.microsoft.com/azure/azure-maps/supported-search-categories). We recommend to use POI
-     *     Search Category Tree API to request the supported categories.
-     * @param isTypeAhead Boolean. If the typeahead flag is set, the query will be interpreted as a partial input and
-     *     the search will enter predictive mode.
-     * @param top Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
-     * @param skip Starting offset of the returned results within the full result set. Default: 0, minimum: 0 and
-     *     maximum: 1900.
-     * @param categoryFilter A comma-separated list of category set IDs which could be used to restrict the result to
-     *     specific Points of Interest categories. ID order does not matter. When multiple category identifiers are
-     *     provided, only POIs that belong to (at least) one of the categories from the provided list will be returned.
-     *     The list of supported categories can be discovered using  [POI Categories
-     *     API](https://aka.ms/AzureMapsPOICategoryTree). Usage examples:
-     *     <p>* **categorySet=7315** (Search Points of Interest from category Restaurant)
-     *     <p>* **categorySet=7315025,7315017** (Search Points of Interest of category either Italian or French
-     *     Restaurant).
-     * @param countryFilter Comma separated string of country codes, e.g. FR,ES. This will limit the search to the
-     *     specified countries.
-     * @param lat Latitude where results should be biased. E.g. 37.337.
-     * @param lon Longitude where results should be biased. E.g. -121.89.
-     * @param radiusInMeters The radius in meters to for the results to be constrained to the defined area.
-     * @param topLeft Top left position of the bounding box. E.g. 37.553,-122.453.
-     * @param btmRight Bottom right position of the bounding box. E.g. 37.553,-122.453.
-     * @param language Language in which search results should be returned. Should be one of supported IETF language
-     *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used.
-     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
-     *     details.
-     * @param extendedPostalCodesFor Indexes for which extended postal codes should be included in the results.
-     *     <p>Available indexes are:
-     *     <p>**Addr** = Address ranges
-     *     <p>**Geo** = Geographies
-     *     <p>**PAD** = Point Addresses
-     *     <p>**POI** = Points of Interest
-     *     <p>**Str** = Streets
-     *     <p>**XStr** = Cross Streets (intersections)
-     *     <p>Value should be a comma separated list of index types (in any order) or **None** for no indexes.
-     *     <p>By default extended postal codes are included for all indexes except Geo. Extended postal code lists for
-     *     geographies can be quite long so they have to be explicitly requested when needed.
-     *     <p>Usage examples:
-     *     <p>extendedPostalCodesFor=POI
-     *     <p>extendedPostalCodesFor=PAD,Addr,POI
-     *     <p>extendedPostalCodesFor=None
-     *     <p>Extended postal code is returned as an **extendedPostalCode** property of an address. Availability is
-     *     region-dependent.
-     * @param brandFilter A comma-separated list of brand names which could be used to restrict the result to specific
-     *     brands. Item order does not matter. When multiple brands are provided, only results that belong to (at least)
-     *     one of the provided list will be returned. Brands that contain a "," in their name should be put into quotes.
-     *     <p>Usage examples:
-     *     <p>brandSet=Foo
-     *     <p>brandSet=Foo,Bar
-     *     <p>brandSet="A,B,C Comma",Bar.
-     * @param electricVehicleConnectorFilter A comma-separated list of connector types which could be used to restrict
-     *     the result to Electric Vehicle Station supporting specific connector types. Item order does not matter. When
-     *     multiple connector types are provided, only results that belong to (at least) one of the provided list will
-     *     be returned.
-     *     <p>Available connector types are: * `StandardHouseholdCountrySpecific` - These are the standard household
-     *     connectors for a certain region. They are all AC single phase and the standard Voltage and standard Amperage.
-     *     See also: [Plug &amp; socket types - World
-     *     Standards](https://www.worldstandards.eu/electricity/plugs-and-sockets). * `IEC62196Type1` - Type 1 connector
-     *     as defined in the IEC 62196-2 standard. Also called Yazaki after the original manufacturer or SAE J1772 after
-     *     the standard that first published it. Mostly used in combination with 120V single phase or up to 240V single
-     *     phase infrastructure. * `IEC62196Type1CCS` - Type 1 based combo connector as defined in the IEC 62196-3
-     *     standard. The connector is based on the Type 1 connector – as defined in the IEC 62196-2 standard – with two
-     *     additional direct current (DC) contacts to allow DC fast charging. * `IEC62196Type2CableAttached` - Type 2
-     *     connector as defined in the IEC 62196-2 standard. Provided as a cable and plug attached to the charging
-     *     point. * `IEC62196Type2Outlet` - Type 2 connector as defined in the IEC 62196-2 standard. Provided as a
-     *     socket set into the charging point. * `IEC62196Type2CCS` - Type 2 based combo connector as defined in the IEC
-     *     62196-3 standard. The connector is based on the Type 2 connector – as defined in the IEC 62196-2 standard –
-     *     with two additional direct current (DC) contacts to allow DC fast charging. * `IEC62196Type3` - Type 3
-     *     connector as defined in the IEC 62196-2 standard. Also called Scame after the original manufacturer. Mostly
-     *     used in combination with up to 240V single phase or up to 420V three phase infrastructure. * `Chademo` -
-     *     CHAdeMO connector named after an association formed by the Tokyo Electric Power Company and industrial
-     *     partners. Because of this is is also known as the TEPCO's connector. It supports fast DC charging. *
-     *     `IEC60309AC1PhaseBlue` - Industrial Blue connector is a connector defined in the IEC 60309 standard. It is
-     *     sometime referred to as by some combination of the standard, the color and the fact that is a single phase
-     *     connector. The connector usually has the "P+N+E, 6h" configuration. * `IEC60309DCWhite` - Industrial White
-     *     connector is a DC connector defined in the IEC 60309 standard. * `Tesla` - The Tesla connector is the
-     *     regionally specific Tesla Supercharger connector. I.e. it refers to either Tesla's proprietary connector,
-     *     sometimes referred to as Tesla Port mostly limited to North America or the modified Type 2 (DC over Type 2)
-     *     in Europe.
-     *     <p>Usage examples:
-     *     <p>connectorSet=IEC62196Type2CableAttached connectorSet=IEC62196Type2Outlet,IEC62196Type2CableAttached.
-     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
-     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
-     *     different views of such regions, and the View parameter allows your application to comply with the view
-     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
-     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
-     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
-     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
-     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
-     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
-     *     made available. Example: view=IN.
-     *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
-     *     available Views.
      * @param operatingHours Hours of operation for a POI (Points of Interest). The availability of hours of operation
      *     will vary based on the data available. If not passed, then no opening hours information will be returned.
      *     Supported value: nextSevenDays.
@@ -1177,155 +319,30 @@ public final class SearchClient {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressResult searchPointOfInterestCategory(
-            String query,
-            Boolean isTypeAhead,
-            Integer top,
-            Integer skip,
-            List<Integer> categoryFilter,
-            List<String> countryFilter,
-            Double lat,
-            Double lon,
-            Integer radiusInMeters,
-            String topLeft,
-            String btmRight,
-            String language,
-            List<SearchIndexes> extendedPostalCodesFor,
-            List<String> brandFilter,
-            List<ElectricVehicleConnector> electricVehicleConnectorFilter,
-            LocalizedMapView localizedMapView,
-            OperatingHoursRange operatingHours) {
+    public SearchAddressResult searchPointOfInterestCategory(SearchPointOfInterestCategoryOptions options) {
         return this.serviceClient.searchPointOfInterestCategory(
                 ResponseFormat.JSON,
-                query,
-                isTypeAhead,
-                top,
-                skip,
-                categoryFilter,
-                countryFilter,
-                lat,
-                lon,
-                radiusInMeters,
-                topLeft,
-                btmRight,
-                language,
-                extendedPostalCodesFor,
-                brandFilter,
-                electricVehicleConnectorFilter,
-                localizedMapView,
-                operatingHours);
+                options.getQuery(),
+                options.isTypeAhead(),
+                options.getTop(),
+                options.getSkip(),
+                options.getCategoryFilter(),
+                options.getCountryFilter(),
+                options.getCoordinates().map(LatLongPairAbbreviated::getLat).orElse(null),
+                options.getCoordinates().map(LatLongPairAbbreviated::getLon).orElse(null),
+                options.getRadiusInMeters(),
+                options.getTopLeft(),
+                options.getBtmRight(),
+                options.getLanguage(),
+                options.getExtendedPostalCodesFor(),
+                options.getBrandFilter(),
+                options.getElectricVehicleConnectorFilter(),
+                options.getLocalizedMapView(),
+                options.getOperatingHours());
     }
 
     /**
      * **Get POI by Category**
-     *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
-     *
-     * <p>Points of Interest (POI) Category Search allows you to request POI results from given category. Search allows
-     * to query POIs from one category at a time. Endpoint will only return POI results which are categorized as
-     * specified. Response includes POI details such as address, coordinate location and classification.
-     *
-     * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param query The POI category to search for (e.g., "AIRPORT", "RESTAURANT"), must be properly URL encoded.
-     *     Supported main categories can be requested by calling [Get Search POI Category Tree
-     *     API](https://aka.ms/AzureMapsPOICategoryTree). List of available categories can also be found
-     *     [here](https://docs.microsoft.com/azure/azure-maps/supported-search-categories). We recommend to use POI
-     *     Search Category Tree API to request the supported categories.
-     * @param isTypeAhead Boolean. If the typeahead flag is set, the query will be interpreted as a partial input and
-     *     the search will enter predictive mode.
-     * @param top Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
-     * @param skip Starting offset of the returned results within the full result set. Default: 0, minimum: 0 and
-     *     maximum: 1900.
-     * @param categoryFilter A comma-separated list of category set IDs which could be used to restrict the result to
-     *     specific Points of Interest categories. ID order does not matter. When multiple category identifiers are
-     *     provided, only POIs that belong to (at least) one of the categories from the provided list will be returned.
-     *     The list of supported categories can be discovered using  [POI Categories
-     *     API](https://aka.ms/AzureMapsPOICategoryTree). Usage examples:
-     *     <p>* **categorySet=7315** (Search Points of Interest from category Restaurant)
-     *     <p>* **categorySet=7315025,7315017** (Search Points of Interest of category either Italian or French
-     *     Restaurant).
-     * @param countryFilter Comma separated string of country codes, e.g. FR,ES. This will limit the search to the
-     *     specified countries.
-     * @param lat Latitude where results should be biased. E.g. 37.337.
-     * @param lon Longitude where results should be biased. E.g. -121.89.
-     * @param radiusInMeters The radius in meters to for the results to be constrained to the defined area.
-     * @param topLeft Top left position of the bounding box. E.g. 37.553,-122.453.
-     * @param btmRight Bottom right position of the bounding box. E.g. 37.553,-122.453.
-     * @param language Language in which search results should be returned. Should be one of supported IETF language
-     *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used.
-     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
-     *     details.
-     * @param extendedPostalCodesFor Indexes for which extended postal codes should be included in the results.
-     *     <p>Available indexes are:
-     *     <p>**Addr** = Address ranges
-     *     <p>**Geo** = Geographies
-     *     <p>**PAD** = Point Addresses
-     *     <p>**POI** = Points of Interest
-     *     <p>**Str** = Streets
-     *     <p>**XStr** = Cross Streets (intersections)
-     *     <p>Value should be a comma separated list of index types (in any order) or **None** for no indexes.
-     *     <p>By default extended postal codes are included for all indexes except Geo. Extended postal code lists for
-     *     geographies can be quite long so they have to be explicitly requested when needed.
-     *     <p>Usage examples:
-     *     <p>extendedPostalCodesFor=POI
-     *     <p>extendedPostalCodesFor=PAD,Addr,POI
-     *     <p>extendedPostalCodesFor=None
-     *     <p>Extended postal code is returned as an **extendedPostalCode** property of an address. Availability is
-     *     region-dependent.
-     * @param brandFilter A comma-separated list of brand names which could be used to restrict the result to specific
-     *     brands. Item order does not matter. When multiple brands are provided, only results that belong to (at least)
-     *     one of the provided list will be returned. Brands that contain a "," in their name should be put into quotes.
-     *     <p>Usage examples:
-     *     <p>brandSet=Foo
-     *     <p>brandSet=Foo,Bar
-     *     <p>brandSet="A,B,C Comma",Bar.
-     * @param electricVehicleConnectorFilter A comma-separated list of connector types which could be used to restrict
-     *     the result to Electric Vehicle Station supporting specific connector types. Item order does not matter. When
-     *     multiple connector types are provided, only results that belong to (at least) one of the provided list will
-     *     be returned.
-     *     <p>Available connector types are: * `StandardHouseholdCountrySpecific` - These are the standard household
-     *     connectors for a certain region. They are all AC single phase and the standard Voltage and standard Amperage.
-     *     See also: [Plug &amp; socket types - World
-     *     Standards](https://www.worldstandards.eu/electricity/plugs-and-sockets). * `IEC62196Type1` - Type 1 connector
-     *     as defined in the IEC 62196-2 standard. Also called Yazaki after the original manufacturer or SAE J1772 after
-     *     the standard that first published it. Mostly used in combination with 120V single phase or up to 240V single
-     *     phase infrastructure. * `IEC62196Type1CCS` - Type 1 based combo connector as defined in the IEC 62196-3
-     *     standard. The connector is based on the Type 1 connector – as defined in the IEC 62196-2 standard – with two
-     *     additional direct current (DC) contacts to allow DC fast charging. * `IEC62196Type2CableAttached` - Type 2
-     *     connector as defined in the IEC 62196-2 standard. Provided as a cable and plug attached to the charging
-     *     point. * `IEC62196Type2Outlet` - Type 2 connector as defined in the IEC 62196-2 standard. Provided as a
-     *     socket set into the charging point. * `IEC62196Type2CCS` - Type 2 based combo connector as defined in the IEC
-     *     62196-3 standard. The connector is based on the Type 2 connector – as defined in the IEC 62196-2 standard –
-     *     with two additional direct current (DC) contacts to allow DC fast charging. * `IEC62196Type3` - Type 3
-     *     connector as defined in the IEC 62196-2 standard. Also called Scame after the original manufacturer. Mostly
-     *     used in combination with up to 240V single phase or up to 420V three phase infrastructure. * `Chademo` -
-     *     CHAdeMO connector named after an association formed by the Tokyo Electric Power Company and industrial
-     *     partners. Because of this is is also known as the TEPCO's connector. It supports fast DC charging. *
-     *     `IEC60309AC1PhaseBlue` - Industrial Blue connector is a connector defined in the IEC 60309 standard. It is
-     *     sometime referred to as by some combination of the standard, the color and the fact that is a single phase
-     *     connector. The connector usually has the "P+N+E, 6h" configuration. * `IEC60309DCWhite` - Industrial White
-     *     connector is a DC connector defined in the IEC 60309 standard. * `Tesla` - The Tesla connector is the
-     *     regionally specific Tesla Supercharger connector. I.e. it refers to either Tesla's proprietary connector,
-     *     sometimes referred to as Tesla Port mostly limited to North America or the modified Type 2 (DC over Type 2)
-     *     in Europe.
-     *     <p>Usage examples:
-     *     <p>connectorSet=IEC62196Type2CableAttached connectorSet=IEC62196Type2Outlet,IEC62196Type2CableAttached.
-     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
-     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
-     *     different views of such regions, and the View parameter allows your application to comply with the view
-     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
-     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
-     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
-     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
-     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
-     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
-     *     made available. Example: view=IN.
-     *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
-     *     available Views.
-     * @param operatingHours Hours of operation for a POI (Points of Interest). The availability of hours of operation
-     *     will vary based on the data available. If not passed, then no opening hours information will be returned.
-     *     Supported value: nextSevenDays.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -1334,43 +351,26 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<SearchAddressResult> searchPointOfInterestCategoryWithResponse(
-            String query,
-            Boolean isTypeAhead,
-            Integer top,
-            Integer skip,
-            List<Integer> categoryFilter,
-            List<String> countryFilter,
-            Double lat,
-            Double lon,
-            Integer radiusInMeters,
-            String topLeft,
-            String btmRight,
-            String language,
-            List<SearchIndexes> extendedPostalCodesFor,
-            List<String> brandFilter,
-            List<ElectricVehicleConnector> electricVehicleConnectorFilter,
-            LocalizedMapView localizedMapView,
-            OperatingHoursRange operatingHours,
-            Context context) {
+        SearchPointOfInterestCategoryOptions options, Context context) {
         return this.serviceClient.searchPointOfInterestCategoryWithResponse(
                 ResponseFormat.JSON,
-                query,
-                isTypeAhead,
-                top,
-                skip,
-                categoryFilter,
-                countryFilter,
-                lat,
-                lon,
-                radiusInMeters,
-                topLeft,
-                btmRight,
-                language,
-                extendedPostalCodesFor,
-                brandFilter,
-                electricVehicleConnectorFilter,
-                localizedMapView,
-                operatingHours,
+                options.getQuery(),
+                options.isTypeAhead(),
+                options.getTop(),
+                options.getSkip(),
+                options.getCategoryFilter(),
+                options.getCountryFilter(),
+                options.getCoordinates().map(LatLongPairAbbreviated::getLat).orElse(null),
+                options.getCoordinates().map(LatLongPairAbbreviated::getLon).orElse(null),
+                options.getRadiusInMeters(),
+                options.getTopLeft(),
+                options.getBtmRight(),
+                options.getLanguage(),
+                options.getExtendedPostalCodesFor(),
+                options.getBrandFilter(),
+                options.getElectricVehicleConnectorFilter(),
+                options.getLocalizedMapView(),
+                options.getOperatingHours(),
                 context);
     }
 
@@ -1428,179 +428,46 @@ public final class SearchClient {
         return this.serviceClient.getPointOfInterestCategoryTreeWithResponse(JsonFormat.JSON, language, context);
     }
 
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public SearchAddressResult searchAddress(String query) {
+        final SearchAddressOptions options = new SearchAddressOptions(query);
+
+        return this.searchAddress(options);
+    }
+
     /**
      * **Address Geocoding**
      *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
-     *
-     * <p>In many cases, the complete search service might be too much, for instance if you are only interested in
-     * traditional geocoding. Search can also be accessed for address look up exclusively. The geocoding is performed by
-     * hitting the geocode endpoint with just the address or partial address in question. The geocoding search index
-     * will be queried for everything above the street level data. No POIs will be returned. Note that the geocoder is
-     * very tolerant of typos and incomplete addresses. It will also handle everything from exact street addresses or
-     * street or intersections as well as higher level geographies such as city centers, counties, states etc.
-     *
-     * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param query The address to search for (e.g., "1 Microsoft way, Redmond, WA"), must be properly URL encoded.
-     * @param isTypeAhead Boolean. If the typeahead flag is set, the query will be interpreted as a partial input and
-     *     the search will enter predictive mode.
-     * @param top Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
-     * @param skip Starting offset of the returned results within the full result set. Default: 0, minimum: 0 and
-     *     maximum: 1900.
-     * @param countryFilter Comma separated string of country codes, e.g. FR,ES. This will limit the search to the
-     *     specified countries.
-     * @param lat Latitude where results should be biased. E.g. 37.337.
-     * @param lon Longitude where results should be biased. E.g. -121.89.
-     * @param radiusInMeters The radius in meters to for the results to be constrained to the defined area.
-     * @param topLeft Top left position of the bounding box. E.g. 37.553,-122.453.
-     * @param btmRight Bottom right position of the bounding box. E.g. 37.553,-122.453.
-     * @param language Language in which search results should be returned. Should be one of supported IETF language
-     *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used.
-     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
-     *     details.
-     * @param extendedPostalCodesFor Indexes for which extended postal codes should be included in the results.
-     *     <p>Available indexes are:
-     *     <p>**Addr** = Address ranges
-     *     <p>**Geo** = Geographies
-     *     <p>**PAD** = Point Addresses
-     *     <p>**POI** = Points of Interest
-     *     <p>**Str** = Streets
-     *     <p>**XStr** = Cross Streets (intersections)
-     *     <p>Value should be a comma separated list of index types (in any order) or **None** for no indexes.
-     *     <p>By default extended postal codes are included for all indexes except Geo. Extended postal code lists for
-     *     geographies can be quite long so they have to be explicitly requested when needed.
-     *     <p>Usage examples:
-     *     <p>extendedPostalCodesFor=POI
-     *     <p>extendedPostalCodesFor=PAD,Addr,POI
-     *     <p>extendedPostalCodesFor=None
-     *     <p>Extended postal code is returned as an **extendedPostalCode** property of an address. Availability is
-     *     region-dependent.
-     * @param entityType Specifies the level of filtering performed on geographies. Narrows the search for specified
-     *     geography entity types, e.g. return only municipality. The resulting response will contain the geography ID
-     *     as well as the entity type matched. If you provide more than one entity as a comma separated list, endpoint
-     *     will return the 'smallest entity available'. Returned Geometry ID can be used to get the geometry of that
-     *     geography via [Get Search Polygon](https://docs.microsoft.com/rest/api/maps/search/getsearchpolygon) API. The
-     *     following parameters are ignored when entityType is set:
-     *     <p>* heading * number * returnRoadUse * returnSpeedLimit * roadUse * returnMatchType.
-     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
-     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
-     *     different views of such regions, and the View parameter allows your application to comply with the view
-     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
-     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
-     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
-     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
-     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
-     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
-     *     made available. Example: view=IN.
-     *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
-     *     available Views.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressResult searchAddress(
-            String query,
-            Boolean isTypeAhead,
-            Integer top,
-            Integer skip,
-            List<String> countryFilter,
-            Double lat,
-            Double lon,
-            Integer radiusInMeters,
-            String topLeft,
-            String btmRight,
-            String language,
-            List<SearchIndexes> extendedPostalCodesFor,
-            GeographicEntityType entityType,
-            LocalizedMapView localizedMapView) {
+    public SearchAddressResult searchAddress(SearchAddressOptions options) {
         return this.serviceClient.searchAddress(
                 ResponseFormat.JSON,
-                query,
-                isTypeAhead,
-                top,
-                skip,
-                countryFilter,
-                lat,
-                lon,
-                radiusInMeters,
-                topLeft,
-                btmRight,
-                language,
-                extendedPostalCodesFor,
-                entityType,
-                localizedMapView);
+                options.getQuery(),
+                options.isTypeAhead(),
+                options.getTop(),
+                options.getSkip(),
+                options.getCountryFilter(),
+                options.getCoordinates().map(LatLongPairAbbreviated::getLat).orElse(null),
+                options.getCoordinates().map(LatLongPairAbbreviated::getLon).orElse(null),
+                options.getRadiusInMeters(),
+                options.getTopLeft(),
+                options.getBtmRight(),
+                options.getLanguage(),
+                options.getExtendedPostalCodesFor(),
+                options.getEntityType(),
+                options.getLocalizedMapView());
     }
 
     /**
      * **Address Geocoding**
      *
      * <p>**Applies to**: S0 and S1 pricing tiers.
-     *
-     * <p>In many cases, the complete search service might be too much, for instance if you are only interested in
-     * traditional geocoding. Search can also be accessed for address look up exclusively. The geocoding is performed by
-     * hitting the geocode endpoint with just the address or partial address in question. The geocoding search index
-     * will be queried for everything above the street level data. No POIs will be returned. Note that the geocoder is
-     * very tolerant of typos and incomplete addresses. It will also handle everything from exact street addresses or
-     * street or intersections as well as higher level geographies such as city centers, counties, states etc.
-     *
-     * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param query The address to search for (e.g., "1 Microsoft way, Redmond, WA"), must be properly URL encoded.
-     * @param isTypeAhead Boolean. If the typeahead flag is set, the query will be interpreted as a partial input and
-     *     the search will enter predictive mode.
-     * @param top Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
-     * @param skip Starting offset of the returned results within the full result set. Default: 0, minimum: 0 and
-     *     maximum: 1900.
-     * @param countryFilter Comma separated string of country codes, e.g. FR,ES. This will limit the search to the
-     *     specified countries.
-     * @param lat Latitude where results should be biased. E.g. 37.337.
-     * @param lon Longitude where results should be biased. E.g. -121.89.
-     * @param radiusInMeters The radius in meters to for the results to be constrained to the defined area.
-     * @param topLeft Top left position of the bounding box. E.g. 37.553,-122.453.
-     * @param btmRight Bottom right position of the bounding box. E.g. 37.553,-122.453.
-     * @param language Language in which search results should be returned. Should be one of supported IETF language
-     *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used.
-     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
-     *     details.
-     * @param extendedPostalCodesFor Indexes for which extended postal codes should be included in the results.
-     *     <p>Available indexes are:
-     *     <p>**Addr** = Address ranges
-     *     <p>**Geo** = Geographies
-     *     <p>**PAD** = Point Addresses
-     *     <p>**POI** = Points of Interest
-     *     <p>**Str** = Streets
-     *     <p>**XStr** = Cross Streets (intersections)
-     *     <p>Value should be a comma separated list of index types (in any order) or **None** for no indexes.
-     *     <p>By default extended postal codes are included for all indexes except Geo. Extended postal code lists for
-     *     geographies can be quite long so they have to be explicitly requested when needed.
-     *     <p>Usage examples:
-     *     <p>extendedPostalCodesFor=POI
-     *     <p>extendedPostalCodesFor=PAD,Addr,POI
-     *     <p>extendedPostalCodesFor=None
-     *     <p>Extended postal code is returned as an **extendedPostalCode** property of an address. Availability is
-     *     region-dependent.
-     * @param entityType Specifies the level of filtering performed on geographies. Narrows the search for specified
-     *     geography entity types, e.g. return only municipality. The resulting response will contain the geography ID
-     *     as well as the entity type matched. If you provide more than one entity as a comma separated list, endpoint
-     *     will return the 'smallest entity available'. Returned Geometry ID can be used to get the geometry of that
-     *     geography via [Get Search Polygon](https://docs.microsoft.com/rest/api/maps/search/getsearchpolygon) API. The
-     *     following parameters are ignored when entityType is set:
-     *     <p>* heading * number * returnRoadUse * returnSpeedLimit * roadUse * returnMatchType.
-     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
-     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
-     *     different views of such regions, and the View parameter allows your application to comply with the view
-     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
-     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
-     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
-     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
-     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
-     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
-     *     made available. Example: view=IN.
-     *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
-     *     available Views.
+
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -1609,173 +476,61 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<SearchAddressResult> searchAddressWithResponse(
-            String query,
-            Boolean isTypeAhead,
-            Integer top,
-            Integer skip,
-            List<String> countryFilter,
-            Double lat,
-            Double lon,
-            Integer radiusInMeters,
-            String topLeft,
-            String btmRight,
-            String language,
-            List<SearchIndexes> extendedPostalCodesFor,
-            GeographicEntityType entityType,
-            LocalizedMapView localizedMapView,
-            Context context) {
+            SearchAddressOptions options, Context context) {
         return this.serviceClient.searchAddressWithResponse(
                 ResponseFormat.JSON,
-                query,
-                isTypeAhead,
-                top,
-                skip,
-                countryFilter,
-                lat,
-                lon,
-                radiusInMeters,
-                topLeft,
-                btmRight,
-                language,
-                extendedPostalCodesFor,
-                entityType,
-                localizedMapView,
+                options.getQuery(),
+                options.isTypeAhead(),
+                options.getTop(),
+                options.getSkip(),
+                options.getCountryFilter(),
+                options.getCoordinates().map(LatLongPairAbbreviated::getLat).orElse(null),
+                options.getCoordinates().map(LatLongPairAbbreviated::getLon).orElse(null),
+                options.getRadiusInMeters(),
+                options.getTopLeft(),
+                options.getBtmRight(),
+                options.getLanguage(),
+                options.getExtendedPostalCodesFor(),
+                options.getEntityType(),
+                options.getLocalizedMapView(),
                 context);
+    }
+
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public ReverseSearchAddressResult reverseSearchAddress(LatLongPairAbbreviated coordinates) {
+        final ReverseSearchAddressOptions options = new ReverseSearchAddressOptions(coordinates);
+
+        return this.reverseSearchAddress(options);
     }
 
     /**
      * **Reverse Geocode to an Address**
-     *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
-     *
-     * <p>There may be times when you need to translate a coordinate (example: 37.786505, -122.3862) into a human
-     * understandable street address. Most often this is needed in tracking applications where you receive a GPS feed
-     * from the device or asset and wish to know what address where the coordinate is located. This endpoint will return
-     * address information for a given coordinate.
-     *
-     * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param query The applicable query specified as a comma separated string composed by latitude followed by
-     *     longitude e.g. "47.641268,-122.125679".
-     * @param language Language in which search results should be returned. Should be one of supported IETF language
-     *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used.
-     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
-     *     details.
-     * @param includeSpeedLimit Boolean. To enable return of the posted speed limit.
-     * @param heading The directional heading of the vehicle in degrees, for travel along a segment of roadway. 0 is
-     *     North, 90 is East and so on, values range from -360 to 360. The precision can include upto one decimal place.
-     * @param radiusInMeters The radius in meters to for the results to be constrained to the defined area.
-     * @param number If a number is sent in along with the request, the response may include the side of the street
-     *     (Left/Right) and also an offset position for that number.
-     * @param includeRoadUse Boolean. To enable return of the road use array for reverse geocodes at street level.
-     * @param roadUse To restrict reverse geocodes to a certain type of road use. The road use array for reverse
-     *     geocodes can be one or more of LimitedAccess, Arterial, Terminal, Ramp, Rotary, LocalStreet.
-     * @param allowFreeformNewline Format of newlines in the formatted address.
-     *     <p>If true, the address will contain newlines. If false, newlines will be converted to commas.
-     * @param includeMatchType Include information on the type of match the geocoder achieved in the response.
-     * @param entityType Specifies the level of filtering performed on geographies. Narrows the search for specified
-     *     geography entity types, e.g. return only municipality. The resulting response will contain the geography ID
-     *     as well as the entity type matched. If you provide more than one entity as a comma separated list, endpoint
-     *     will return the 'smallest entity available'. Returned Geometry ID can be used to get the geometry of that
-     *     geography via [Get Search Polygon](https://docs.microsoft.com/rest/api/maps/search/getsearchpolygon) API. The
-     *     following parameters are ignored when entityType is set:
-     *     <p>* heading * number * returnRoadUse * returnSpeedLimit * roadUse * returnMatchType.
-     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
-     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
-     *     different views of such regions, and the View parameter allows your application to comply with the view
-     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
-     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
-     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
-     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
-     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
-     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
-     *     made available. Example: view=IN.
-     *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
-     *     available Views.
+
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search Address Reverse call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public ReverseSearchAddressResult reverseSearchAddress(
-            List<Double> query,
-            String language,
-            Boolean includeSpeedLimit,
-            Integer heading,
-            Integer radiusInMeters,
-            String number,
-            Boolean includeRoadUse,
-            List<RoadUseType> roadUse,
-            Boolean allowFreeformNewline,
-            Boolean includeMatchType,
-            GeographicEntityType entityType,
-            LocalizedMapView localizedMapView) {
+    public ReverseSearchAddressResult reverseSearchAddress(ReverseSearchAddressOptions options) {
         return this.serviceClient.reverseSearchAddress(
                 ResponseFormat.JSON,
-                query,
-                language,
-                includeSpeedLimit,
-                heading,
-                radiusInMeters,
-                number,
-                includeRoadUse,
-                roadUse,
-                allowFreeformNewline,
-                includeMatchType,
-                entityType,
-                localizedMapView);
+                Arrays.asList(options.getCoordinates().getLat(), options.getCoordinates().getLon()),
+                options.getLanguage(),
+                options.includeSpeedLimit(),
+                options.getHeading(),
+                options.getRadiusInMeters(),
+                options.getNumber(),
+                options.includeRoadUse(),
+                options.getRoadUse(),
+                options.allowFreeformNewline(),
+                options.includeMatchType(),
+                options.getEntityType(),
+                options.getLocalizedMapView());
     }
 
     /**
      * **Reverse Geocode to an Address**
-     *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
-     *
-     * <p>There may be times when you need to translate a coordinate (example: 37.786505, -122.3862) into a human
-     * understandable street address. Most often this is needed in tracking applications where you receive a GPS feed
-     * from the device or asset and wish to know what address where the coordinate is located. This endpoint will return
-     * address information for a given coordinate.
-     *
-     * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param query The applicable query specified as a comma separated string composed by latitude followed by
-     *     longitude e.g. "47.641268,-122.125679".
-     * @param language Language in which search results should be returned. Should be one of supported IETF language
-     *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used.
-     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
-     *     details.
-     * @param includeSpeedLimit Boolean. To enable return of the posted speed limit.
-     * @param heading The directional heading of the vehicle in degrees, for travel along a segment of roadway. 0 is
-     *     North, 90 is East and so on, values range from -360 to 360. The precision can include upto one decimal place.
-     * @param radiusInMeters The radius in meters to for the results to be constrained to the defined area.
-     * @param number If a number is sent in along with the request, the response may include the side of the street
-     *     (Left/Right) and also an offset position for that number.
-     * @param includeRoadUse Boolean. To enable return of the road use array for reverse geocodes at street level.
-     * @param roadUse To restrict reverse geocodes to a certain type of road use. The road use array for reverse
-     *     geocodes can be one or more of LimitedAccess, Arterial, Terminal, Ramp, Rotary, LocalStreet.
-     * @param allowFreeformNewline Format of newlines in the formatted address.
-     *     <p>If true, the address will contain newlines. If false, newlines will be converted to commas.
-     * @param includeMatchType Include information on the type of match the geocoder achieved in the response.
-     * @param entityType Specifies the level of filtering performed on geographies. Narrows the search for specified
-     *     geography entity types, e.g. return only municipality. The resulting response will contain the geography ID
-     *     as well as the entity type matched. If you provide more than one entity as a comma separated list, endpoint
-     *     will return the 'smallest entity available'. Returned Geometry ID can be used to get the geometry of that
-     *     geography via [Get Search Polygon](https://docs.microsoft.com/rest/api/maps/search/getsearchpolygon) API. The
-     *     following parameters are ignored when entityType is set:
-     *     <p>* heading * number * returnRoadUse * returnSpeedLimit * roadUse * returnMatchType.
-     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
-     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
-     *     different views of such regions, and the View parameter allows your application to comply with the view
-     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
-     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
-     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
-     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
-     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
-     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
-     *     made available. Example: view=IN.
-     *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
-     *     available Views.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -1784,70 +539,27 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<ReverseSearchAddressResult> reverseSearchAddressWithResponse(
-            List<Double> query,
-            String language,
-            Boolean includeSpeedLimit,
-            Integer heading,
-            Integer radiusInMeters,
-            String number,
-            Boolean includeRoadUse,
-            List<RoadUseType> roadUse,
-            Boolean allowFreeformNewline,
-            Boolean includeMatchType,
-            GeographicEntityType entityType,
-            LocalizedMapView localizedMapView,
-            Context context) {
+            ReverseSearchAddressOptions options, Context context) {
         return this.serviceClient.reverseSearchAddressWithResponse(
                 ResponseFormat.JSON,
-                query,
-                language,
-                includeSpeedLimit,
-                heading,
-                radiusInMeters,
-                number,
-                includeRoadUse,
-                roadUse,
-                allowFreeformNewline,
-                includeMatchType,
-                entityType,
-                localizedMapView,
+                Arrays.asList(options.getCoordinates().getLat(), options.getCoordinates().getLon()),
+                options.getLanguage(),
+                options.includeSpeedLimit(),
+                options.getHeading(),
+                options.getRadiusInMeters(),
+                options.getNumber(),
+                options.includeRoadUse(),
+                options.getRoadUse(),
+                options.allowFreeformNewline(),
+                options.includeMatchType(),
+                options.getEntityType(),
+                options.getLocalizedMapView(),
                 context);
     }
 
     /**
      * **Reverse Geocode to a Cross Street**
-     *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
-     *
-     * <p>There may be times when you need to translate a coordinate (example: 37.786505, -122.3862) into a human
-     * understandable cross street. Most often this is needed in tracking applications where you receive a GPS feed from
-     * the device or asset and wish to know what address where the coordinate is located. This endpoint will return
-     * cross street information for a given coordinate.
-     *
-     * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param query The applicable query specified as a comma separated string composed by latitude followed by
-     *     longitude e.g. "47.641268,-122.125679".
-     * @param top Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
-     * @param heading The directional heading of the vehicle in degrees, for travel along a segment of roadway. 0 is
-     *     North, 90 is East and so on, values range from -360 to 360. The precision can include upto one decimal place.
-     * @param radiusInMeters The radius in meters to for the results to be constrained to the defined area.
-     * @param language Language in which search results should be returned. Should be one of supported IETF language
-     *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used.
-     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
-     *     details.
-     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
-     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
-     *     different views of such regions, and the View parameter allows your application to comply with the view
-     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
-     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
-     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
-     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
-     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
-     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
-     *     made available. Example: view=IN.
-     *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
-     *     available Views.
+
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -1855,50 +567,26 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public ReverseSearchCrossStreetAddressResult reverseSearchCrossStreetAddress(
-            List<Double> query,
+            LatLongPairAbbreviated coordinates,
             Integer top,
             Integer heading,
             Integer radiusInMeters,
             String language,
             LocalizedMapView localizedMapView) {
         return this.serviceClient.reverseSearchCrossStreetAddress(
-                ResponseFormat.JSON, query, top, heading, radiusInMeters, language, localizedMapView);
+                ResponseFormat.JSON,
+                Arrays.asList(coordinates.getLat(), coordinates.getLon()),
+                top,
+                heading,
+                radiusInMeters,
+                language,
+                localizedMapView);
     }
 
     /**
      * **Reverse Geocode to a Cross Street**
      *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
-     *
-     * <p>There may be times when you need to translate a coordinate (example: 37.786505, -122.3862) into a human
-     * understandable cross street. Most often this is needed in tracking applications where you receive a GPS feed from
-     * the device or asset and wish to know what address where the coordinate is located. This endpoint will return
-     * cross street information for a given coordinate.
-     *
-     * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param query The applicable query specified as a comma separated string composed by latitude followed by
-     *     longitude e.g. "47.641268,-122.125679".
-     * @param top Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
-     * @param heading The directional heading of the vehicle in degrees, for travel along a segment of roadway. 0 is
-     *     North, 90 is East and so on, values range from -360 to 360. The precision can include upto one decimal place.
-     * @param radiusInMeters The radius in meters to for the results to be constrained to the defined area.
-     * @param language Language in which search results should be returned. Should be one of supported IETF language
-     *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used.
-     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
-     *     details.
-     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
-     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
-     *     different views of such regions, and the View parameter allows your application to comply with the view
-     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
-     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
-     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
-     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
-     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
-     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
-     *     made available. Example: view=IN.
-     *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
-     *     available Views.
+
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -1907,7 +595,7 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<ReverseSearchCrossStreetAddressResult> reverseSearchCrossStreetAddressWithResponse(
-            List<Double> query,
+            LatLongPairAbbreviated coordinates,
             Integer top,
             Integer heading,
             Integer radiusInMeters,
@@ -1915,76 +603,20 @@ public final class SearchClient {
             LocalizedMapView localizedMapView,
             Context context) {
         return this.serviceClient.reverseSearchCrossStreetAddressWithResponse(
-                ResponseFormat.JSON, query, top, heading, radiusInMeters, language, localizedMapView, context);
+                ResponseFormat.JSON,
+                Arrays.asList(coordinates.getLat(), coordinates.getLon()),
+                top,
+                heading,
+                radiusInMeters,
+                language,
+                localizedMapView,
+                context);
     }
 
     /**
      * **Structured Address Geocoding**
      *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
-     *
-     * <p>Azure Address Geocoding can also be accessed for structured address look up exclusively. The geocoding search
-     * index will be queried for everything above the street level data. No POIs will be returned. Note that the
-     * geocoder is very tolerant of typos and incomplete addresses. It will also handle everything from exact street
-     * addresses or street or intersections as well as higher level geographies such as city centers, counties, states
-     * etc.
-     *
-     * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param language Language in which search results should be returned. Should be one of supported IETF language
-     *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used.
-     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
-     *     details.
-     * @param countryCode The 2 or 3 letter [ISO3166-1](https://www.iso.org/iso-3166-country-codes.html) country code
-     *     portion of an address. E.g. US.
-     * @param top Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
-     * @param skip Starting offset of the returned results within the full result set. Default: 0, minimum: 0 and
-     *     maximum: 1900.
-     * @param streetNumber The street number portion of an address.
-     * @param streetName The street name portion of an address.
-     * @param crossStreet The cross street name for the structured address.
-     * @param municipality The municipality portion of an address.
-     * @param municipalitySubdivision The municipality subdivision (sub/super city) for the structured address.
-     * @param countryTertiarySubdivision The named area for the structured address.
-     * @param countrySecondarySubdivision The county for the structured address.
-     * @param countrySubdivision The country subdivision portion of an address.
-     * @param postalCode The postal code portion of an address.
-     * @param extendedPostalCodesFor Indexes for which extended postal codes should be included in the results.
-     *     <p>Available indexes are:
-     *     <p>**Addr** = Address ranges
-     *     <p>**Geo** = Geographies
-     *     <p>**PAD** = Point Addresses
-     *     <p>**POI** = Points of Interest
-     *     <p>**Str** = Streets
-     *     <p>**XStr** = Cross Streets (intersections)
-     *     <p>Value should be a comma separated list of index types (in any order) or **None** for no indexes.
-     *     <p>By default extended postal codes are included for all indexes except Geo. Extended postal code lists for
-     *     geographies can be quite long so they have to be explicitly requested when needed.
-     *     <p>Usage examples:
-     *     <p>extendedPostalCodesFor=POI
-     *     <p>extendedPostalCodesFor=PAD,Addr,POI
-     *     <p>extendedPostalCodesFor=None
-     *     <p>Extended postal code is returned as an **extendedPostalCode** property of an address. Availability is
-     *     region-dependent.
-     * @param entityType Specifies the level of filtering performed on geographies. Narrows the search for specified
-     *     geography entity types, e.g. return only municipality. The resulting response will contain the geography ID
-     *     as well as the entity type matched. If you provide more than one entity as a comma separated list, endpoint
-     *     will return the 'smallest entity available'. Returned Geometry ID can be used to get the geometry of that
-     *     geography via [Get Search Polygon](https://docs.microsoft.com/rest/api/maps/search/getsearchpolygon) API. The
-     *     following parameters are ignored when entityType is set:
-     *     <p>* heading * number * returnRoadUse * returnSpeedLimit * roadUse * returnMatchType.
-     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
-     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
-     *     different views of such regions, and the View parameter allows your application to comply with the view
-     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
-     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
-     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
-     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
-     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
-     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
-     *     made available. Example: view=IN.
-     *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
-     *     available Views.
+
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -2031,70 +663,7 @@ public final class SearchClient {
     /**
      * **Structured Address Geocoding**
      *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
-     *
-     * <p>Azure Address Geocoding can also be accessed for structured address look up exclusively. The geocoding search
-     * index will be queried for everything above the street level data. No POIs will be returned. Note that the
-     * geocoder is very tolerant of typos and incomplete addresses. It will also handle everything from exact street
-     * addresses or street or intersections as well as higher level geographies such as city centers, counties, states
-     * etc.
-     *
-     * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param language Language in which search results should be returned. Should be one of supported IETF language
-     *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used.
-     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
-     *     details.
-     * @param countryCode The 2 or 3 letter [ISO3166-1](https://www.iso.org/iso-3166-country-codes.html) country code
-     *     portion of an address. E.g. US.
-     * @param top Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
-     * @param skip Starting offset of the returned results within the full result set. Default: 0, minimum: 0 and
-     *     maximum: 1900.
-     * @param streetNumber The street number portion of an address.
-     * @param streetName The street name portion of an address.
-     * @param crossStreet The cross street name for the structured address.
-     * @param municipality The municipality portion of an address.
-     * @param municipalitySubdivision The municipality subdivision (sub/super city) for the structured address.
-     * @param countryTertiarySubdivision The named area for the structured address.
-     * @param countrySecondarySubdivision The county for the structured address.
-     * @param countrySubdivision The country subdivision portion of an address.
-     * @param postalCode The postal code portion of an address.
-     * @param extendedPostalCodesFor Indexes for which extended postal codes should be included in the results.
-     *     <p>Available indexes are:
-     *     <p>**Addr** = Address ranges
-     *     <p>**Geo** = Geographies
-     *     <p>**PAD** = Point Addresses
-     *     <p>**POI** = Points of Interest
-     *     <p>**Str** = Streets
-     *     <p>**XStr** = Cross Streets (intersections)
-     *     <p>Value should be a comma separated list of index types (in any order) or **None** for no indexes.
-     *     <p>By default extended postal codes are included for all indexes except Geo. Extended postal code lists for
-     *     geographies can be quite long so they have to be explicitly requested when needed.
-     *     <p>Usage examples:
-     *     <p>extendedPostalCodesFor=POI
-     *     <p>extendedPostalCodesFor=PAD,Addr,POI
-     *     <p>extendedPostalCodesFor=None
-     *     <p>Extended postal code is returned as an **extendedPostalCode** property of an address. Availability is
-     *     region-dependent.
-     * @param entityType Specifies the level of filtering performed on geographies. Narrows the search for specified
-     *     geography entity types, e.g. return only municipality. The resulting response will contain the geography ID
-     *     as well as the entity type matched. If you provide more than one entity as a comma separated list, endpoint
-     *     will return the 'smallest entity available'. Returned Geometry ID can be used to get the geometry of that
-     *     geography via [Get Search Polygon](https://docs.microsoft.com/rest/api/maps/search/getsearchpolygon) API. The
-     *     following parameters are ignored when entityType is set:
-     *     <p>* heading * number * returnRoadUse * returnSpeedLimit * roadUse * returnMatchType.
-     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
-     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
-     *     different views of such regions, and the View parameter allows your application to comply with the view
-     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
-     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
-     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
-     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
-     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
-     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
-     *     made available. Example: view=IN.
-     *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
-     *     available Views.
+
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -2143,85 +712,7 @@ public final class SearchClient {
 
     /**
      * **Applies to**: S0 and S1 pricing tiers.
-     *
-     * <p>The Search Geometry endpoint allows you to perform a free form search inside a single geometry or many of
-     * them. The search results that fall inside the geometry/geometries will be returned.&lt;br&gt;&lt;br&gt;To send
-     * the geometry you will use a `POST` request where the request body will contain the `geometry` object represented
-     * as a `GeoJSON` type and the `Content-Type` header will be set to `application/json`. The geographical features to
-     * be searched can be modeled as Polygon and/or Circle geometries represented using any one of the following
-     * `GeoJSON` types:&lt;ul&gt;&lt;li&gt;**GeoJSON FeatureCollection** &lt;br&gt;The `geometry` can be represented as
-     * a `GeoJSON FeatureCollection` object. This is the recommended option if the geometry contains both Polygons and
-     * Circles. The `FeatureCollection` can contain a max of 50 `GeoJSON Feature` objects. Each `Feature` object should
-     * represent either a Polygon or a Circle with the following conditions:&lt;ul
-     * style="list-style-type:none"&gt;&lt;li&gt;A `Feature` object for the Polygon geometry can have a max of 50
-     * coordinates and it's properties must be empty.&lt;/li&gt;&lt;li&gt;A `Feature` object for the Circle geometry is
-     * composed of a _center_ represented using a `GeoJSON Point` type and a _radius_ value (in meters) which must be
-     * specified in the object's properties along with the _subType_ property whose value should be
-     * 'Circle'.&lt;/li&gt;&lt;/ul&gt;&lt;br&gt; Please see the Examples section below for a sample `FeatureCollection`
-     * representation.&lt;br&gt;&lt;br&gt;&lt;/li&gt;&lt;li&gt;**GeoJSON GeometryCollection**&lt;br&gt;The `geometry`
-     * can be represented as a `GeoJSON GeometryCollection` object. This is the recommended option if the geometry
-     * contains a list of Polygons only. The `GeometryCollection` can contain a max of 50 `GeoJSON Polygon` objects.
-     * Each `Polygon` object can have a max of 50 coordinates. Please see the Examples section below for a sample
-     * `GeometryCollection` representation.&lt;br&gt;&lt;br&gt;&lt;/li&gt;&lt;li&gt;**GeoJSON Polygon**&lt;br&gt;The
-     * `geometry` can be represented as a `GeoJSON Polygon` object. This is the recommended option if the geometry
-     * contains a single Polygon. The `Polygon` object can have a max of 50 coordinates. Please see the Examples section
-     * below for a sample `Polygon` representation.&lt;br&gt;&lt;br&gt;&lt;/li&gt;&lt;/ul&gt;.&lt;br&gt;&lt;br&gt;.
-     *
-     * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param query The POI name to search for (e.g., "statue of liberty", "starbucks", "pizza"). Must be properly URL
-     *     encoded.
-     * @param geometry This represents the geometry for one or more geographical features (parks, state boundary etc.)
-     *     to search in and should be a GeoJSON compliant type. Please refer to [RFC
-     *     7946](https://tools.ietf.org/html/rfc7946) for details.
-     * @param top Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
-     * @param language Language in which search results should be returned. Should be one of supported IETF language
-     *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used.
-     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
-     *     details.
-     * @param categoryFilter A comma-separated list of category set IDs which could be used to restrict the result to
-     *     specific Points of Interest categories. ID order does not matter. When multiple category identifiers are
-     *     provided, only POIs that belong to (at least) one of the categories from the provided list will be returned.
-     *     The list of supported categories can be discovered using  [POI Categories
-     *     API](https://aka.ms/AzureMapsPOICategoryTree). Usage examples:
-     *     <p>* **categorySet=7315** (Search Points of Interest from category Restaurant)
-     *     <p>* **categorySet=7315025,7315017** (Search Points of Interest of category either Italian or French
-     *     Restaurant).
-     * @param extendedPostalCodesFor Indexes for which extended postal codes should be included in the results.
-     *     <p>Available indexes are:
-     *     <p>**Addr** = Address ranges
-     *     <p>**Geo** = Geographies
-     *     <p>**PAD** = Point Addresses
-     *     <p>**POI** = Points of Interest
-     *     <p>**Str** = Streets
-     *     <p>**XStr** = Cross Streets (intersections)
-     *     <p>Value should be a comma separated list of index types (in any order) or **None** for no indexes.
-     *     <p>By default extended postal codes are included for all indexes except Geo. Extended postal code lists for
-     *     geographies can be quite long so they have to be explicitly requested when needed.
-     *     <p>Usage examples:
-     *     <p>extendedPostalCodesFor=POI
-     *     <p>extendedPostalCodesFor=PAD,Addr,POI
-     *     <p>extendedPostalCodesFor=None
-     *     <p>Extended postal code is returned as an **extendedPostalCode** property of an address. Availability is
-     *     region-dependent.
-     * @param idxSet A comma separated list of indexes which should be utilized for the search. Item order does not
-     *     matter. Available indexes are: Addr = Address range interpolation, Geo = Geographies, PAD = Point Addresses,
-     *     POI = Points of interest, Str = Streets, Xstr = Cross Streets (intersections).
-     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
-     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
-     *     different views of such regions, and the View parameter allows your application to comply with the view
-     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
-     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
-     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
-     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
-     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
-     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
-     *     made available. Example: view=IN.
-     *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
-     *     available Views.
-     * @param operatingHours Hours of operation for a POI (Points of Interest). The availability of hours of operation
-     *     will vary based on the data available. If not passed, then no opening hours information will be returned.
-     *     Supported value: nextSevenDays.
+
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -2253,85 +744,7 @@ public final class SearchClient {
 
     /**
      * **Applies to**: S0 and S1 pricing tiers.
-     *
-     * <p>The Search Geometry endpoint allows you to perform a free form search inside a single geometry or many of
-     * them. The search results that fall inside the geometry/geometries will be returned.&lt;br&gt;&lt;br&gt;To send
-     * the geometry you will use a `POST` request where the request body will contain the `geometry` object represented
-     * as a `GeoJSON` type and the `Content-Type` header will be set to `application/json`. The geographical features to
-     * be searched can be modeled as Polygon and/or Circle geometries represented using any one of the following
-     * `GeoJSON` types:&lt;ul&gt;&lt;li&gt;**GeoJSON FeatureCollection** &lt;br&gt;The `geometry` can be represented as
-     * a `GeoJSON FeatureCollection` object. This is the recommended option if the geometry contains both Polygons and
-     * Circles. The `FeatureCollection` can contain a max of 50 `GeoJSON Feature` objects. Each `Feature` object should
-     * represent either a Polygon or a Circle with the following conditions:&lt;ul
-     * style="list-style-type:none"&gt;&lt;li&gt;A `Feature` object for the Polygon geometry can have a max of 50
-     * coordinates and it's properties must be empty.&lt;/li&gt;&lt;li&gt;A `Feature` object for the Circle geometry is
-     * composed of a _center_ represented using a `GeoJSON Point` type and a _radius_ value (in meters) which must be
-     * specified in the object's properties along with the _subType_ property whose value should be
-     * 'Circle'.&lt;/li&gt;&lt;/ul&gt;&lt;br&gt; Please see the Examples section below for a sample `FeatureCollection`
-     * representation.&lt;br&gt;&lt;br&gt;&lt;/li&gt;&lt;li&gt;**GeoJSON GeometryCollection**&lt;br&gt;The `geometry`
-     * can be represented as a `GeoJSON GeometryCollection` object. This is the recommended option if the geometry
-     * contains a list of Polygons only. The `GeometryCollection` can contain a max of 50 `GeoJSON Polygon` objects.
-     * Each `Polygon` object can have a max of 50 coordinates. Please see the Examples section below for a sample
-     * `GeometryCollection` representation.&lt;br&gt;&lt;br&gt;&lt;/li&gt;&lt;li&gt;**GeoJSON Polygon**&lt;br&gt;The
-     * `geometry` can be represented as a `GeoJSON Polygon` object. This is the recommended option if the geometry
-     * contains a single Polygon. The `Polygon` object can have a max of 50 coordinates. Please see the Examples section
-     * below for a sample `Polygon` representation.&lt;br&gt;&lt;br&gt;&lt;/li&gt;&lt;/ul&gt;.&lt;br&gt;&lt;br&gt;.
-     *
-     * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param query The POI name to search for (e.g., "statue of liberty", "starbucks", "pizza"). Must be properly URL
-     *     encoded.
-     * @param geometry This represents the geometry for one or more geographical features (parks, state boundary etc.)
-     *     to search in and should be a GeoJSON compliant type. Please refer to [RFC
-     *     7946](https://tools.ietf.org/html/rfc7946) for details.
-     * @param top Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
-     * @param language Language in which search results should be returned. Should be one of supported IETF language
-     *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used.
-     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
-     *     details.
-     * @param categoryFilter A comma-separated list of category set IDs which could be used to restrict the result to
-     *     specific Points of Interest categories. ID order does not matter. When multiple category identifiers are
-     *     provided, only POIs that belong to (at least) one of the categories from the provided list will be returned.
-     *     The list of supported categories can be discovered using  [POI Categories
-     *     API](https://aka.ms/AzureMapsPOICategoryTree). Usage examples:
-     *     <p>* **categorySet=7315** (Search Points of Interest from category Restaurant)
-     *     <p>* **categorySet=7315025,7315017** (Search Points of Interest of category either Italian or French
-     *     Restaurant).
-     * @param extendedPostalCodesFor Indexes for which extended postal codes should be included in the results.
-     *     <p>Available indexes are:
-     *     <p>**Addr** = Address ranges
-     *     <p>**Geo** = Geographies
-     *     <p>**PAD** = Point Addresses
-     *     <p>**POI** = Points of Interest
-     *     <p>**Str** = Streets
-     *     <p>**XStr** = Cross Streets (intersections)
-     *     <p>Value should be a comma separated list of index types (in any order) or **None** for no indexes.
-     *     <p>By default extended postal codes are included for all indexes except Geo. Extended postal code lists for
-     *     geographies can be quite long so they have to be explicitly requested when needed.
-     *     <p>Usage examples:
-     *     <p>extendedPostalCodesFor=POI
-     *     <p>extendedPostalCodesFor=PAD,Addr,POI
-     *     <p>extendedPostalCodesFor=None
-     *     <p>Extended postal code is returned as an **extendedPostalCode** property of an address. Availability is
-     *     region-dependent.
-     * @param idxSet A comma separated list of indexes which should be utilized for the search. Item order does not
-     *     matter. Available indexes are: Addr = Address range interpolation, Geo = Geographies, PAD = Point Addresses,
-     *     POI = Points of interest, Str = Streets, Xstr = Cross Streets (intersections).
-     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
-     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
-     *     different views of such regions, and the View parameter allows your application to comply with the view
-     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
-     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
-     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
-     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
-     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
-     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
-     *     made available. Example: view=IN.
-     *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
-     *     available Views.
-     * @param operatingHours Hours of operation for a POI (Points of Interest). The availability of hours of operation
-     *     will vary based on the data available. If not passed, then no opening hours information will be returned.
-     *     Supported value: nextSevenDays.
+
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -2367,84 +780,7 @@ public final class SearchClient {
     /**
      * **Applies to**: S0 and S1 pricing tiers.
      *
-     * <p>The Search Along Route endpoint allows you to perform a fuzzy search for POIs along a specified route. This
-     * search is constrained by specifying the `maxDetourTime` limiting measure.&lt;br&gt;&lt;br&gt;To send the
-     * route-points you will use a `POST` request where the request body will contain the `route` object represented as
-     * a `GeoJSON LineString` type and the `Content-Type` header will be set to `application/json`. Each route-point in
-     * `route` is represented as a `GeoJSON Position` type i.e. an array where the _longitude_ value is followed by the
-     * _latitude_ value and the _altitude_ value is ignored. The `route` should contain at least 2
-     * route-points.&lt;br&gt;&lt;br&gt;It is possible that original route will be altered, some of it's points may be
-     * skipped. If the route that passes through the found point is faster than the original one, the `detourTime` value
-     * in the response is negative.
-     *
-     * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param query The POI name to search for (e.g., "statue of liberty", "starbucks", "pizza"). Must be properly URL
-     *     encoded.
-     * @param maxDetourTime Maximum detour time of the point of interest in seconds. Max value is 3600 seconds.
-     * @param route This represents the route to search along and should be a valid `GeoJSON LineString` type. Please
-     *     refer to [RFC 7946](https://tools.ietf.org/html/rfc7946#section-3.1.4) for details.
-     * @param top Maximum number of responses that will be returned. Default value is 10. Max value is 20.
-     * @param brandFilter A comma-separated list of brand names which could be used to restrict the result to specific
-     *     brands. Item order does not matter. When multiple brands are provided, only results that belong to (at least)
-     *     one of the provided list will be returned. Brands that contain a "," in their name should be put into quotes.
-     *     <p>Usage examples:
-     *     <p>brandSet=Foo
-     *     <p>brandSet=Foo,Bar
-     *     <p>brandSet="A,B,C Comma",Bar.
-     * @param categoryFilter A comma-separated list of category set IDs which could be used to restrict the result to
-     *     specific Points of Interest categories. ID order does not matter. When multiple category identifiers are
-     *     provided, only POIs that belong to (at least) one of the categories from the provided list will be returned.
-     *     The list of supported categories can be discovered using  [POI Categories
-     *     API](https://aka.ms/AzureMapsPOICategoryTree). Usage examples:
-     *     <p>* **categorySet=7315** (Search Points of Interest from category Restaurant)
-     *     <p>* **categorySet=7315025,7315017** (Search Points of Interest of category either Italian or French
-     *     Restaurant).
-     * @param electricVehicleConnectorFilter A comma-separated list of connector types which could be used to restrict
-     *     the result to Electric Vehicle Station supporting specific connector types. Item order does not matter. When
-     *     multiple connector types are provided, only results that belong to (at least) one of the provided list will
-     *     be returned.
-     *     <p>Available connector types are: * `StandardHouseholdCountrySpecific` - These are the standard household
-     *     connectors for a certain region. They are all AC single phase and the standard Voltage and standard Amperage.
-     *     See also: [Plug &amp; socket types - World
-     *     Standards](https://www.worldstandards.eu/electricity/plugs-and-sockets). * `IEC62196Type1` - Type 1 connector
-     *     as defined in the IEC 62196-2 standard. Also called Yazaki after the original manufacturer or SAE J1772 after
-     *     the standard that first published it. Mostly used in combination with 120V single phase or up to 240V single
-     *     phase infrastructure. * `IEC62196Type1CCS` - Type 1 based combo connector as defined in the IEC 62196-3
-     *     standard. The connector is based on the Type 1 connector – as defined in the IEC 62196-2 standard – with two
-     *     additional direct current (DC) contacts to allow DC fast charging. * `IEC62196Type2CableAttached` - Type 2
-     *     connector as defined in the IEC 62196-2 standard. Provided as a cable and plug attached to the charging
-     *     point. * `IEC62196Type2Outlet` - Type 2 connector as defined in the IEC 62196-2 standard. Provided as a
-     *     socket set into the charging point. * `IEC62196Type2CCS` - Type 2 based combo connector as defined in the IEC
-     *     62196-3 standard. The connector is based on the Type 2 connector – as defined in the IEC 62196-2 standard –
-     *     with two additional direct current (DC) contacts to allow DC fast charging. * `IEC62196Type3` - Type 3
-     *     connector as defined in the IEC 62196-2 standard. Also called Scame after the original manufacturer. Mostly
-     *     used in combination with up to 240V single phase or up to 420V three phase infrastructure. * `Chademo` -
-     *     CHAdeMO connector named after an association formed by the Tokyo Electric Power Company and industrial
-     *     partners. Because of this is is also known as the TEPCO's connector. It supports fast DC charging. *
-     *     `IEC60309AC1PhaseBlue` - Industrial Blue connector is a connector defined in the IEC 60309 standard. It is
-     *     sometime referred to as by some combination of the standard, the color and the fact that is a single phase
-     *     connector. The connector usually has the "P+N+E, 6h" configuration. * `IEC60309DCWhite` - Industrial White
-     *     connector is a DC connector defined in the IEC 60309 standard. * `Tesla` - The Tesla connector is the
-     *     regionally specific Tesla Supercharger connector. I.e. it refers to either Tesla's proprietary connector,
-     *     sometimes referred to as Tesla Port mostly limited to North America or the modified Type 2 (DC over Type 2)
-     *     in Europe.
-     *     <p>Usage examples:
-     *     <p>connectorSet=IEC62196Type2CableAttached connectorSet=IEC62196Type2Outlet,IEC62196Type2CableAttached.
-     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
-     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
-     *     different views of such regions, and the View parameter allows your application to comply with the view
-     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
-     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
-     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
-     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
-     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
-     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
-     *     made available. Example: view=IN.
-     *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
-     *     available Views.
-     * @param operatingHours Hours of operation for a POI (Points of Interest). The availability of hours of operation
-     *     will vary based on the data available. If not passed, then no opening hours information will be returned.
-     *     Supported value: nextSevenDays.
+
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -2477,84 +813,6 @@ public final class SearchClient {
     /**
      * **Applies to**: S0 and S1 pricing tiers.
      *
-     * <p>The Search Along Route endpoint allows you to perform a fuzzy search for POIs along a specified route. This
-     * search is constrained by specifying the `maxDetourTime` limiting measure.&lt;br&gt;&lt;br&gt;To send the
-     * route-points you will use a `POST` request where the request body will contain the `route` object represented as
-     * a `GeoJSON LineString` type and the `Content-Type` header will be set to `application/json`. Each route-point in
-     * `route` is represented as a `GeoJSON Position` type i.e. an array where the _longitude_ value is followed by the
-     * _latitude_ value and the _altitude_ value is ignored. The `route` should contain at least 2
-     * route-points.&lt;br&gt;&lt;br&gt;It is possible that original route will be altered, some of it's points may be
-     * skipped. If the route that passes through the found point is faster than the original one, the `detourTime` value
-     * in the response is negative.
-     *
-     * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param query The POI name to search for (e.g., "statue of liberty", "starbucks", "pizza"). Must be properly URL
-     *     encoded.
-     * @param maxDetourTime Maximum detour time of the point of interest in seconds. Max value is 3600 seconds.
-     * @param route This represents the route to search along and should be a valid `GeoJSON LineString` type. Please
-     *     refer to [RFC 7946](https://tools.ietf.org/html/rfc7946#section-3.1.4) for details.
-     * @param top Maximum number of responses that will be returned. Default value is 10. Max value is 20.
-     * @param brandFilter A comma-separated list of brand names which could be used to restrict the result to specific
-     *     brands. Item order does not matter. When multiple brands are provided, only results that belong to (at least)
-     *     one of the provided list will be returned. Brands that contain a "," in their name should be put into quotes.
-     *     <p>Usage examples:
-     *     <p>brandSet=Foo
-     *     <p>brandSet=Foo,Bar
-     *     <p>brandSet="A,B,C Comma",Bar.
-     * @param categoryFilter A comma-separated list of category set IDs which could be used to restrict the result to
-     *     specific Points of Interest categories. ID order does not matter. When multiple category identifiers are
-     *     provided, only POIs that belong to (at least) one of the categories from the provided list will be returned.
-     *     The list of supported categories can be discovered using  [POI Categories
-     *     API](https://aka.ms/AzureMapsPOICategoryTree). Usage examples:
-     *     <p>* **categorySet=7315** (Search Points of Interest from category Restaurant)
-     *     <p>* **categorySet=7315025,7315017** (Search Points of Interest of category either Italian or French
-     *     Restaurant).
-     * @param electricVehicleConnectorFilter A comma-separated list of connector types which could be used to restrict
-     *     the result to Electric Vehicle Station supporting specific connector types. Item order does not matter. When
-     *     multiple connector types are provided, only results that belong to (at least) one of the provided list will
-     *     be returned.
-     *     <p>Available connector types are: * `StandardHouseholdCountrySpecific` - These are the standard household
-     *     connectors for a certain region. They are all AC single phase and the standard Voltage and standard Amperage.
-     *     See also: [Plug &amp; socket types - World
-     *     Standards](https://www.worldstandards.eu/electricity/plugs-and-sockets). * `IEC62196Type1` - Type 1 connector
-     *     as defined in the IEC 62196-2 standard. Also called Yazaki after the original manufacturer or SAE J1772 after
-     *     the standard that first published it. Mostly used in combination with 120V single phase or up to 240V single
-     *     phase infrastructure. * `IEC62196Type1CCS` - Type 1 based combo connector as defined in the IEC 62196-3
-     *     standard. The connector is based on the Type 1 connector – as defined in the IEC 62196-2 standard – with two
-     *     additional direct current (DC) contacts to allow DC fast charging. * `IEC62196Type2CableAttached` - Type 2
-     *     connector as defined in the IEC 62196-2 standard. Provided as a cable and plug attached to the charging
-     *     point. * `IEC62196Type2Outlet` - Type 2 connector as defined in the IEC 62196-2 standard. Provided as a
-     *     socket set into the charging point. * `IEC62196Type2CCS` - Type 2 based combo connector as defined in the IEC
-     *     62196-3 standard. The connector is based on the Type 2 connector – as defined in the IEC 62196-2 standard –
-     *     with two additional direct current (DC) contacts to allow DC fast charging. * `IEC62196Type3` - Type 3
-     *     connector as defined in the IEC 62196-2 standard. Also called Scame after the original manufacturer. Mostly
-     *     used in combination with up to 240V single phase or up to 420V three phase infrastructure. * `Chademo` -
-     *     CHAdeMO connector named after an association formed by the Tokyo Electric Power Company and industrial
-     *     partners. Because of this is is also known as the TEPCO's connector. It supports fast DC charging. *
-     *     `IEC60309AC1PhaseBlue` - Industrial Blue connector is a connector defined in the IEC 60309 standard. It is
-     *     sometime referred to as by some combination of the standard, the color and the fact that is a single phase
-     *     connector. The connector usually has the "P+N+E, 6h" configuration. * `IEC60309DCWhite` - Industrial White
-     *     connector is a DC connector defined in the IEC 60309 standard. * `Tesla` - The Tesla connector is the
-     *     regionally specific Tesla Supercharger connector. I.e. it refers to either Tesla's proprietary connector,
-     *     sometimes referred to as Tesla Port mostly limited to North America or the modified Type 2 (DC over Type 2)
-     *     in Europe.
-     *     <p>Usage examples:
-     *     <p>connectorSet=IEC62196Type2CableAttached connectorSet=IEC62196Type2Outlet,IEC62196Type2CableAttached.
-     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
-     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
-     *     different views of such regions, and the View parameter allows your application to comply with the view
-     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
-     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
-     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
-     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
-     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
-     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
-     *     made available. Example: view=IN.
-     *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
-     *     available Views.
-     * @param operatingHours Hours of operation for a POI (Points of Interest). The availability of hours of operation
-     *     will vary based on the data available. If not passed, then no opening hours information will be returned.
-     *     Supported value: nextSevenDays.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -2589,102 +847,6 @@ public final class SearchClient {
 
     /**
      * **Search Fuzzy Batch API**
-     *
-     * <p>**Applies to**: S1 pricing tier.
-     *
-     * <p>The Search Address Batch API sends batches of queries to [Search Fuzzy
-     * API](https://docs.microsoft.com/rest/api/maps/search/getsearchfuzzy) using just a single API call. You can call
-     * Search Address Fuzzy Batch API to run either asynchronously (async) or synchronously (sync). The async API allows
-     * caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous Batch Request
-     * The Synchronous API is recommended for lightweight batch requests. When the service receives a request, it will
-     * respond as soon as the batch items are calculated and there will be no possibility to retrieve the results later.
-     * The Synchronous API will return a timeout error (a 408 response) if the request takes longer than 60 seconds. The
-     * number of batch items is limited to **100** for this API. ``` POST
-     * https://atlas.microsoft.com/search/fuzzy/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` ### Submit Asynchronous Batch Request The Asynchronous API is appropriate for processing big volumes of
-     * relatively complex search requests - It allows the retrieval of results in a separate call (multiple downloads
-     * are possible). - The asynchronous API is optimized for reliability and is not expected to run into a timeout. -
-     * The number of batch items is limited to **10,000** for this API.
-     *
-     * <p>When you make a request by using async request, by default the service returns a 202 response code along a
-     * redirect URL in the Location field of the response header. This URL should be checked periodically until the
-     * response data or error information is available. The asynchronous responses are stored for **14** days. The
-     * redirect URL returns a 404 response if used after the expiration period.
-     *
-     * <p>Please note that asynchronous batch request is a long-running request. Here's a typical sequence of
-     * operations: 1. Client sends a Search Address Batch `POST` request to Azure Maps 2. The server will respond with
-     * one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request has been accepted.
-     *
-     * <p>&gt; HTTP `Error` - There was an error processing your Batch request. This could either be a `400 Bad Request`
-     * or any other `Error` status code.
-     *
-     * <p>3. If the batch request was accepted successfully, the `Location` header in the response contains the URL to
-     * download the results of the batch request. This status URI looks like following:
-     *
-     * <p>``` GET
-     * https://atlas.microsoft.com/search/fuzzy/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to download the batch results.
-     *
-     * <p>### POST Body for Batch Request To send the _search fuzzy_ queries you will use a `POST` request where the
-     * request body will contain the `batchItems` array in `json` format and the `Content-Type` header will be set to
-     * `application/json`. Here's a sample request body containing 5 _search fuzzy_ queries:
-     *
-     * <p>```json { "batchItems": [ {"query":
-     * "?query=atm&amp;lat=47.639769&amp;lon=-122.128362&amp;radius=5000&amp;limit=5"}, {"query": "?query=Statue Of
-     * Liberty&amp;limit=2"}, {"query": "?query=Starbucks&amp;lat=47.639769&amp;lon=-122.128362&amp;radius=5000"},
-     * {"query": "?query=Space Needle"}, {"query": "?query=pizza&amp;limit=10"} ] } ```
-     *
-     * <p>A _search fuzzy_ query in a batch is just a partial URL _without_ the protocol, base URL, path, api-version
-     * and subscription-key. It can accept any of the supported _search fuzzy_ [URI
-     * parameters](https://docs.microsoft.com/rest/api/maps/search/getsearchfuzzy#uri-parameters). The string values in
-     * the _search fuzzy_ query must be properly escaped (e.g. " character should be escaped with \\ ) and it should
-     * also be properly URL-encoded.
-     *
-     * <p>The async API allows caller to batch up to **10,000** queries and sync API up to **100** queries, and the
-     * batch should contain at least **1** query.
-     *
-     * <p>### Download Asynchronous Batch Results To download the async batch results you will issue a `GET` request to
-     * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
-     * `POST` batch request and looks like the following:
-     *
-     * <p>```
-     * https://atlas.microsoft.com/search/fuzzy/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
-     * using the _download URL_. 2. The server will respond with one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
-     * time.
-     *
-     * <p>&gt; HTTP `200 OK` - Batch request successfully processed. The response body contains all the batch results.
-     *
-     * <p>### Batch Response Model The returned data content is similar for async and sync requests. When downloading
-     * the results of an async batch request, if the batch has finished processing, the response body contains the batch
-     * response. This batch response contains a `summary` component that indicates the `totalRequests` that were part of
-     * the original batch request and `successfulRequests`i.e. queries which were executed successfully. The batch
-     * response also includes a `batchItems` array which contains a response for each and every query in the batch
-     * request. The `batchItems` will contain the results in the exact same order the original queries were sent in the
-     * batch request. Each item in `batchItems` contains `statusCode` and `response` fields. Each `response` in
-     * `batchItems` is of one of the following types:
-     *
-     * <p>-
-     * [`SearchAddressResponse`](https://docs.microsoft.com/rest/api/maps/search/getsearchfuzzy#SearchAddressResponse) -
-     * If the query completed successfully.
-     *
-     * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
-     *
-     * <p>Here's a sample Batch Response with 2 _successful_ and 1 _failed_ result:
-     *
-     * <p>```json { "summary": { "successfulRequests": 2, "totalRequests": 3 }, "batchItems": [ { "statusCode": 200,
-     * "response": { "summary": { "query": "atm" }, "results": [ { "type": "POI", "poi": { "name": "ATM at Wells Fargo"
-     * }, "address": { "country": "United States Of America", "freeformAddress": "3240 157th Ave NE, Redmond, WA 98052"
-     * } } ] } }, { "statusCode": 200, "response": { "summary": { "query": "statue of liberty" }, "results": [ { "type":
-     * "POI", "poi": { "name": "Statue of Liberty" }, "address": { "country": "United States Of America",
-     * "freeformAddress": "New York, NY 10004" } } ] } }, { "statusCode": 400, "response": { "error": { "code": "400
-     * BadRequest", "message": "Bad request: one or more parameters were incorrectly specified or are mutually
-     * exclusive." } } } ] } ```.
-     *
      * @param format Desired format of the response. Only `json` format is supported.
      * @param searchFuzzyBatchRequestBody The list of search fuzzy queries/requests to process. The list can contain a
      *     max of 10,000 queries and must contain at least 1 query.
@@ -2700,101 +862,6 @@ public final class SearchClient {
 
     /**
      * **Search Fuzzy Batch API**
-     *
-     * <p>**Applies to**: S1 pricing tier.
-     *
-     * <p>The Search Address Batch API sends batches of queries to [Search Fuzzy
-     * API](https://docs.microsoft.com/rest/api/maps/search/getsearchfuzzy) using just a single API call. You can call
-     * Search Address Fuzzy Batch API to run either asynchronously (async) or synchronously (sync). The async API allows
-     * caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous Batch Request
-     * The Synchronous API is recommended for lightweight batch requests. When the service receives a request, it will
-     * respond as soon as the batch items are calculated and there will be no possibility to retrieve the results later.
-     * The Synchronous API will return a timeout error (a 408 response) if the request takes longer than 60 seconds. The
-     * number of batch items is limited to **100** for this API. ``` POST
-     * https://atlas.microsoft.com/search/fuzzy/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` ### Submit Asynchronous Batch Request The Asynchronous API is appropriate for processing big volumes of
-     * relatively complex search requests - It allows the retrieval of results in a separate call (multiple downloads
-     * are possible). - The asynchronous API is optimized for reliability and is not expected to run into a timeout. -
-     * The number of batch items is limited to **10,000** for this API.
-     *
-     * <p>When you make a request by using async request, by default the service returns a 202 response code along a
-     * redirect URL in the Location field of the response header. This URL should be checked periodically until the
-     * response data or error information is available. The asynchronous responses are stored for **14** days. The
-     * redirect URL returns a 404 response if used after the expiration period.
-     *
-     * <p>Please note that asynchronous batch request is a long-running request. Here's a typical sequence of
-     * operations: 1. Client sends a Search Address Batch `POST` request to Azure Maps 2. The server will respond with
-     * one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request has been accepted.
-     *
-     * <p>&gt; HTTP `Error` - There was an error processing your Batch request. This could either be a `400 Bad Request`
-     * or any other `Error` status code.
-     *
-     * <p>3. If the batch request was accepted successfully, the `Location` header in the response contains the URL to
-     * download the results of the batch request. This status URI looks like following:
-     *
-     * <p>``` GET
-     * https://atlas.microsoft.com/search/fuzzy/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to download the batch results.
-     *
-     * <p>### POST Body for Batch Request To send the _search fuzzy_ queries you will use a `POST` request where the
-     * request body will contain the `batchItems` array in `json` format and the `Content-Type` header will be set to
-     * `application/json`. Here's a sample request body containing 5 _search fuzzy_ queries:
-     *
-     * <p>```json { "batchItems": [ {"query":
-     * "?query=atm&amp;lat=47.639769&amp;lon=-122.128362&amp;radius=5000&amp;limit=5"}, {"query": "?query=Statue Of
-     * Liberty&amp;limit=2"}, {"query": "?query=Starbucks&amp;lat=47.639769&amp;lon=-122.128362&amp;radius=5000"},
-     * {"query": "?query=Space Needle"}, {"query": "?query=pizza&amp;limit=10"} ] } ```
-     *
-     * <p>A _search fuzzy_ query in a batch is just a partial URL _without_ the protocol, base URL, path, api-version
-     * and subscription-key. It can accept any of the supported _search fuzzy_ [URI
-     * parameters](https://docs.microsoft.com/rest/api/maps/search/getsearchfuzzy#uri-parameters). The string values in
-     * the _search fuzzy_ query must be properly escaped (e.g. " character should be escaped with \\ ) and it should
-     * also be properly URL-encoded.
-     *
-     * <p>The async API allows caller to batch up to **10,000** queries and sync API up to **100** queries, and the
-     * batch should contain at least **1** query.
-     *
-     * <p>### Download Asynchronous Batch Results To download the async batch results you will issue a `GET` request to
-     * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
-     * `POST` batch request and looks like the following:
-     *
-     * <p>```
-     * https://atlas.microsoft.com/search/fuzzy/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
-     * using the _download URL_. 2. The server will respond with one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
-     * time.
-     *
-     * <p>&gt; HTTP `200 OK` - Batch request successfully processed. The response body contains all the batch results.
-     *
-     * <p>### Batch Response Model The returned data content is similar for async and sync requests. When downloading
-     * the results of an async batch request, if the batch has finished processing, the response body contains the batch
-     * response. This batch response contains a `summary` component that indicates the `totalRequests` that were part of
-     * the original batch request and `successfulRequests`i.e. queries which were executed successfully. The batch
-     * response also includes a `batchItems` array which contains a response for each and every query in the batch
-     * request. The `batchItems` will contain the results in the exact same order the original queries were sent in the
-     * batch request. Each item in `batchItems` contains `statusCode` and `response` fields. Each `response` in
-     * `batchItems` is of one of the following types:
-     *
-     * <p>-
-     * [`SearchAddressResponse`](https://docs.microsoft.com/rest/api/maps/search/getsearchfuzzy#SearchAddressResponse) -
-     * If the query completed successfully.
-     *
-     * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
-     *
-     * <p>Here's a sample Batch Response with 2 _successful_ and 1 _failed_ result:
-     *
-     * <p>```json { "summary": { "successfulRequests": 2, "totalRequests": 3 }, "batchItems": [ { "statusCode": 200,
-     * "response": { "summary": { "query": "atm" }, "results": [ { "type": "POI", "poi": { "name": "ATM at Wells Fargo"
-     * }, "address": { "country": "United States Of America", "freeformAddress": "3240 157th Ave NE, Redmond, WA 98052"
-     * } } ] } }, { "statusCode": 200, "response": { "summary": { "query": "statue of liberty" }, "results": [ { "type":
-     * "POI", "poi": { "name": "Statue of Liberty" }, "address": { "country": "United States Of America",
-     * "freeformAddress": "New York, NY 10004" } } ] } }, { "statusCode": 400, "response": { "error": { "code": "400
-     * BadRequest", "message": "Bad request: one or more parameters were incorrectly specified or are mutually
-     * exclusive." } } } ] } ```.
      *
      * @param format Desired format of the response. Only `json` format is supported.
      * @param searchFuzzyBatchRequestBody The list of search fuzzy queries/requests to process. The list can contain a
@@ -2814,101 +881,6 @@ public final class SearchClient {
     /**
      * **Search Fuzzy Batch API**
      *
-     * <p>**Applies to**: S1 pricing tier.
-     *
-     * <p>The Search Address Batch API sends batches of queries to [Search Fuzzy
-     * API](https://docs.microsoft.com/rest/api/maps/search/getsearchfuzzy) using just a single API call. You can call
-     * Search Address Fuzzy Batch API to run either asynchronously (async) or synchronously (sync). The async API allows
-     * caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous Batch Request
-     * The Synchronous API is recommended for lightweight batch requests. When the service receives a request, it will
-     * respond as soon as the batch items are calculated and there will be no possibility to retrieve the results later.
-     * The Synchronous API will return a timeout error (a 408 response) if the request takes longer than 60 seconds. The
-     * number of batch items is limited to **100** for this API. ``` POST
-     * https://atlas.microsoft.com/search/fuzzy/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` ### Submit Asynchronous Batch Request The Asynchronous API is appropriate for processing big volumes of
-     * relatively complex search requests - It allows the retrieval of results in a separate call (multiple downloads
-     * are possible). - The asynchronous API is optimized for reliability and is not expected to run into a timeout. -
-     * The number of batch items is limited to **10,000** for this API.
-     *
-     * <p>When you make a request by using async request, by default the service returns a 202 response code along a
-     * redirect URL in the Location field of the response header. This URL should be checked periodically until the
-     * response data or error information is available. The asynchronous responses are stored for **14** days. The
-     * redirect URL returns a 404 response if used after the expiration period.
-     *
-     * <p>Please note that asynchronous batch request is a long-running request. Here's a typical sequence of
-     * operations: 1. Client sends a Search Address Batch `POST` request to Azure Maps 2. The server will respond with
-     * one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request has been accepted.
-     *
-     * <p>&gt; HTTP `Error` - There was an error processing your Batch request. This could either be a `400 Bad Request`
-     * or any other `Error` status code.
-     *
-     * <p>3. If the batch request was accepted successfully, the `Location` header in the response contains the URL to
-     * download the results of the batch request. This status URI looks like following:
-     *
-     * <p>``` GET
-     * https://atlas.microsoft.com/search/fuzzy/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to download the batch results.
-     *
-     * <p>### POST Body for Batch Request To send the _search fuzzy_ queries you will use a `POST` request where the
-     * request body will contain the `batchItems` array in `json` format and the `Content-Type` header will be set to
-     * `application/json`. Here's a sample request body containing 5 _search fuzzy_ queries:
-     *
-     * <p>```json { "batchItems": [ {"query":
-     * "?query=atm&amp;lat=47.639769&amp;lon=-122.128362&amp;radius=5000&amp;limit=5"}, {"query": "?query=Statue Of
-     * Liberty&amp;limit=2"}, {"query": "?query=Starbucks&amp;lat=47.639769&amp;lon=-122.128362&amp;radius=5000"},
-     * {"query": "?query=Space Needle"}, {"query": "?query=pizza&amp;limit=10"} ] } ```
-     *
-     * <p>A _search fuzzy_ query in a batch is just a partial URL _without_ the protocol, base URL, path, api-version
-     * and subscription-key. It can accept any of the supported _search fuzzy_ [URI
-     * parameters](https://docs.microsoft.com/rest/api/maps/search/getsearchfuzzy#uri-parameters). The string values in
-     * the _search fuzzy_ query must be properly escaped (e.g. " character should be escaped with \\ ) and it should
-     * also be properly URL-encoded.
-     *
-     * <p>The async API allows caller to batch up to **10,000** queries and sync API up to **100** queries, and the
-     * batch should contain at least **1** query.
-     *
-     * <p>### Download Asynchronous Batch Results To download the async batch results you will issue a `GET` request to
-     * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
-     * `POST` batch request and looks like the following:
-     *
-     * <p>```
-     * https://atlas.microsoft.com/search/fuzzy/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
-     * using the _download URL_. 2. The server will respond with one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
-     * time.
-     *
-     * <p>&gt; HTTP `200 OK` - Batch request successfully processed. The response body contains all the batch results.
-     *
-     * <p>### Batch Response Model The returned data content is similar for async and sync requests. When downloading
-     * the results of an async batch request, if the batch has finished processing, the response body contains the batch
-     * response. This batch response contains a `summary` component that indicates the `totalRequests` that were part of
-     * the original batch request and `successfulRequests`i.e. queries which were executed successfully. The batch
-     * response also includes a `batchItems` array which contains a response for each and every query in the batch
-     * request. The `batchItems` will contain the results in the exact same order the original queries were sent in the
-     * batch request. Each item in `batchItems` contains `statusCode` and `response` fields. Each `response` in
-     * `batchItems` is of one of the following types:
-     *
-     * <p>-
-     * [`SearchAddressResponse`](https://docs.microsoft.com/rest/api/maps/search/getsearchfuzzy#SearchAddressResponse) -
-     * If the query completed successfully.
-     *
-     * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
-     *
-     * <p>Here's a sample Batch Response with 2 _successful_ and 1 _failed_ result:
-     *
-     * <p>```json { "summary": { "successfulRequests": 2, "totalRequests": 3 }, "batchItems": [ { "statusCode": 200,
-     * "response": { "summary": { "query": "atm" }, "results": [ { "type": "POI", "poi": { "name": "ATM at Wells Fargo"
-     * }, "address": { "country": "United States Of America", "freeformAddress": "3240 157th Ave NE, Redmond, WA 98052"
-     * } } ] } }, { "statusCode": 200, "response": { "summary": { "query": "statue of liberty" }, "results": [ { "type":
-     * "POI", "poi": { "name": "Statue of Liberty" }, "address": { "country": "United States Of America",
-     * "freeformAddress": "New York, NY 10004" } } ] } }, { "statusCode": 400, "response": { "error": { "code": "400
-     * BadRequest", "message": "Bad request: one or more parameters were incorrectly specified or are mutually
-     * exclusive." } } } ] } ```.
-     *
      * @param format Desired format of the response. Only `json` format is supported.
      * @param searchFuzzyBatchRequestBody The list of search fuzzy queries/requests to process. The list can contain a
      *     max of 10,000 queries and must contain at least 1 query.
@@ -2925,102 +897,6 @@ public final class SearchClient {
 
     /**
      * **Search Fuzzy Batch API**
-     *
-     * <p>**Applies to**: S1 pricing tier.
-     *
-     * <p>The Search Address Batch API sends batches of queries to [Search Fuzzy
-     * API](https://docs.microsoft.com/rest/api/maps/search/getsearchfuzzy) using just a single API call. You can call
-     * Search Address Fuzzy Batch API to run either asynchronously (async) or synchronously (sync). The async API allows
-     * caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous Batch Request
-     * The Synchronous API is recommended for lightweight batch requests. When the service receives a request, it will
-     * respond as soon as the batch items are calculated and there will be no possibility to retrieve the results later.
-     * The Synchronous API will return a timeout error (a 408 response) if the request takes longer than 60 seconds. The
-     * number of batch items is limited to **100** for this API. ``` POST
-     * https://atlas.microsoft.com/search/fuzzy/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` ### Submit Asynchronous Batch Request The Asynchronous API is appropriate for processing big volumes of
-     * relatively complex search requests - It allows the retrieval of results in a separate call (multiple downloads
-     * are possible). - The asynchronous API is optimized for reliability and is not expected to run into a timeout. -
-     * The number of batch items is limited to **10,000** for this API.
-     *
-     * <p>When you make a request by using async request, by default the service returns a 202 response code along a
-     * redirect URL in the Location field of the response header. This URL should be checked periodically until the
-     * response data or error information is available. The asynchronous responses are stored for **14** days. The
-     * redirect URL returns a 404 response if used after the expiration period.
-     *
-     * <p>Please note that asynchronous batch request is a long-running request. Here's a typical sequence of
-     * operations: 1. Client sends a Search Address Batch `POST` request to Azure Maps 2. The server will respond with
-     * one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request has been accepted.
-     *
-     * <p>&gt; HTTP `Error` - There was an error processing your Batch request. This could either be a `400 Bad Request`
-     * or any other `Error` status code.
-     *
-     * <p>3. If the batch request was accepted successfully, the `Location` header in the response contains the URL to
-     * download the results of the batch request. This status URI looks like following:
-     *
-     * <p>``` GET
-     * https://atlas.microsoft.com/search/fuzzy/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to download the batch results.
-     *
-     * <p>### POST Body for Batch Request To send the _search fuzzy_ queries you will use a `POST` request where the
-     * request body will contain the `batchItems` array in `json` format and the `Content-Type` header will be set to
-     * `application/json`. Here's a sample request body containing 5 _search fuzzy_ queries:
-     *
-     * <p>```json { "batchItems": [ {"query":
-     * "?query=atm&amp;lat=47.639769&amp;lon=-122.128362&amp;radius=5000&amp;limit=5"}, {"query": "?query=Statue Of
-     * Liberty&amp;limit=2"}, {"query": "?query=Starbucks&amp;lat=47.639769&amp;lon=-122.128362&amp;radius=5000"},
-     * {"query": "?query=Space Needle"}, {"query": "?query=pizza&amp;limit=10"} ] } ```
-     *
-     * <p>A _search fuzzy_ query in a batch is just a partial URL _without_ the protocol, base URL, path, api-version
-     * and subscription-key. It can accept any of the supported _search fuzzy_ [URI
-     * parameters](https://docs.microsoft.com/rest/api/maps/search/getsearchfuzzy#uri-parameters). The string values in
-     * the _search fuzzy_ query must be properly escaped (e.g. " character should be escaped with \\ ) and it should
-     * also be properly URL-encoded.
-     *
-     * <p>The async API allows caller to batch up to **10,000** queries and sync API up to **100** queries, and the
-     * batch should contain at least **1** query.
-     *
-     * <p>### Download Asynchronous Batch Results To download the async batch results you will issue a `GET` request to
-     * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
-     * `POST` batch request and looks like the following:
-     *
-     * <p>```
-     * https://atlas.microsoft.com/search/fuzzy/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
-     * using the _download URL_. 2. The server will respond with one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
-     * time.
-     *
-     * <p>&gt; HTTP `200 OK` - Batch request successfully processed. The response body contains all the batch results.
-     *
-     * <p>### Batch Response Model The returned data content is similar for async and sync requests. When downloading
-     * the results of an async batch request, if the batch has finished processing, the response body contains the batch
-     * response. This batch response contains a `summary` component that indicates the `totalRequests` that were part of
-     * the original batch request and `successfulRequests`i.e. queries which were executed successfully. The batch
-     * response also includes a `batchItems` array which contains a response for each and every query in the batch
-     * request. The `batchItems` will contain the results in the exact same order the original queries were sent in the
-     * batch request. Each item in `batchItems` contains `statusCode` and `response` fields. Each `response` in
-     * `batchItems` is of one of the following types:
-     *
-     * <p>-
-     * [`SearchAddressResponse`](https://docs.microsoft.com/rest/api/maps/search/getsearchfuzzy#SearchAddressResponse) -
-     * If the query completed successfully.
-     *
-     * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
-     *
-     * <p>Here's a sample Batch Response with 2 _successful_ and 1 _failed_ result:
-     *
-     * <p>```json { "summary": { "successfulRequests": 2, "totalRequests": 3 }, "batchItems": [ { "statusCode": 200,
-     * "response": { "summary": { "query": "atm" }, "results": [ { "type": "POI", "poi": { "name": "ATM at Wells Fargo"
-     * }, "address": { "country": "United States Of America", "freeformAddress": "3240 157th Ave NE, Redmond, WA 98052"
-     * } } ] } }, { "statusCode": 200, "response": { "summary": { "query": "statue of liberty" }, "results": [ { "type":
-     * "POI", "poi": { "name": "Statue of Liberty" }, "address": { "country": "United States Of America",
-     * "freeformAddress": "New York, NY 10004" } } ] } }, { "statusCode": 400, "response": { "error": { "code": "400
-     * BadRequest", "message": "Bad request: one or more parameters were incorrectly specified or are mutually
-     * exclusive." } } } ] } ```.
-     *
      * @param format Desired format of the response. Only `json` format is supported.
      * @param searchFuzzyBatchRequestBody The list of search fuzzy queries/requests to process. The list can contain a
      *     max of 10,000 queries and must contain at least 1 query.
@@ -3039,101 +915,6 @@ public final class SearchClient {
     /**
      * **Search Fuzzy Batch API**
      *
-     * <p>**Applies to**: S1 pricing tier.
-     *
-     * <p>The Search Address Batch API sends batches of queries to [Search Fuzzy
-     * API](https://docs.microsoft.com/rest/api/maps/search/getsearchfuzzy) using just a single API call. You can call
-     * Search Address Fuzzy Batch API to run either asynchronously (async) or synchronously (sync). The async API allows
-     * caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous Batch Request
-     * The Synchronous API is recommended for lightweight batch requests. When the service receives a request, it will
-     * respond as soon as the batch items are calculated and there will be no possibility to retrieve the results later.
-     * The Synchronous API will return a timeout error (a 408 response) if the request takes longer than 60 seconds. The
-     * number of batch items is limited to **100** for this API. ``` POST
-     * https://atlas.microsoft.com/search/fuzzy/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` ### Submit Asynchronous Batch Request The Asynchronous API is appropriate for processing big volumes of
-     * relatively complex search requests - It allows the retrieval of results in a separate call (multiple downloads
-     * are possible). - The asynchronous API is optimized for reliability and is not expected to run into a timeout. -
-     * The number of batch items is limited to **10,000** for this API.
-     *
-     * <p>When you make a request by using async request, by default the service returns a 202 response code along a
-     * redirect URL in the Location field of the response header. This URL should be checked periodically until the
-     * response data or error information is available. The asynchronous responses are stored for **14** days. The
-     * redirect URL returns a 404 response if used after the expiration period.
-     *
-     * <p>Please note that asynchronous batch request is a long-running request. Here's a typical sequence of
-     * operations: 1. Client sends a Search Address Batch `POST` request to Azure Maps 2. The server will respond with
-     * one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request has been accepted.
-     *
-     * <p>&gt; HTTP `Error` - There was an error processing your Batch request. This could either be a `400 Bad Request`
-     * or any other `Error` status code.
-     *
-     * <p>3. If the batch request was accepted successfully, the `Location` header in the response contains the URL to
-     * download the results of the batch request. This status URI looks like following:
-     *
-     * <p>``` GET
-     * https://atlas.microsoft.com/search/fuzzy/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to download the batch results.
-     *
-     * <p>### POST Body for Batch Request To send the _search fuzzy_ queries you will use a `POST` request where the
-     * request body will contain the `batchItems` array in `json` format and the `Content-Type` header will be set to
-     * `application/json`. Here's a sample request body containing 5 _search fuzzy_ queries:
-     *
-     * <p>```json { "batchItems": [ {"query":
-     * "?query=atm&amp;lat=47.639769&amp;lon=-122.128362&amp;radius=5000&amp;limit=5"}, {"query": "?query=Statue Of
-     * Liberty&amp;limit=2"}, {"query": "?query=Starbucks&amp;lat=47.639769&amp;lon=-122.128362&amp;radius=5000"},
-     * {"query": "?query=Space Needle"}, {"query": "?query=pizza&amp;limit=10"} ] } ```
-     *
-     * <p>A _search fuzzy_ query in a batch is just a partial URL _without_ the protocol, base URL, path, api-version
-     * and subscription-key. It can accept any of the supported _search fuzzy_ [URI
-     * parameters](https://docs.microsoft.com/rest/api/maps/search/getsearchfuzzy#uri-parameters). The string values in
-     * the _search fuzzy_ query must be properly escaped (e.g. " character should be escaped with \\ ) and it should
-     * also be properly URL-encoded.
-     *
-     * <p>The async API allows caller to batch up to **10,000** queries and sync API up to **100** queries, and the
-     * batch should contain at least **1** query.
-     *
-     * <p>### Download Asynchronous Batch Results To download the async batch results you will issue a `GET` request to
-     * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
-     * `POST` batch request and looks like the following:
-     *
-     * <p>```
-     * https://atlas.microsoft.com/search/fuzzy/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
-     * using the _download URL_. 2. The server will respond with one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
-     * time.
-     *
-     * <p>&gt; HTTP `200 OK` - Batch request successfully processed. The response body contains all the batch results.
-     *
-     * <p>### Batch Response Model The returned data content is similar for async and sync requests. When downloading
-     * the results of an async batch request, if the batch has finished processing, the response body contains the batch
-     * response. This batch response contains a `summary` component that indicates the `totalRequests` that were part of
-     * the original batch request and `successfulRequests`i.e. queries which were executed successfully. The batch
-     * response also includes a `batchItems` array which contains a response for each and every query in the batch
-     * request. The `batchItems` will contain the results in the exact same order the original queries were sent in the
-     * batch request. Each item in `batchItems` contains `statusCode` and `response` fields. Each `response` in
-     * `batchItems` is of one of the following types:
-     *
-     * <p>-
-     * [`SearchAddressResponse`](https://docs.microsoft.com/rest/api/maps/search/getsearchfuzzy#SearchAddressResponse) -
-     * If the query completed successfully.
-     *
-     * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
-     *
-     * <p>Here's a sample Batch Response with 2 _successful_ and 1 _failed_ result:
-     *
-     * <p>```json { "summary": { "successfulRequests": 2, "totalRequests": 3 }, "batchItems": [ { "statusCode": 200,
-     * "response": { "summary": { "query": "atm" }, "results": [ { "type": "POI", "poi": { "name": "ATM at Wells Fargo"
-     * }, "address": { "country": "United States Of America", "freeformAddress": "3240 157th Ave NE, Redmond, WA 98052"
-     * } } ] } }, { "statusCode": 200, "response": { "summary": { "query": "statue of liberty" }, "results": [ { "type":
-     * "POI", "poi": { "name": "Statue of Liberty" }, "address": { "country": "United States Of America",
-     * "freeformAddress": "New York, NY 10004" } } ] } }, { "statusCode": 400, "response": { "error": { "code": "400
-     * BadRequest", "message": "Bad request: one or more parameters were incorrectly specified or are mutually
-     * exclusive." } } } ] } ```.
-     *
      * @param batchId Batch id for querying the operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -3149,100 +930,6 @@ public final class SearchClient {
     /**
      * **Search Fuzzy Batch API**
      *
-     * <p>**Applies to**: S1 pricing tier.
-     *
-     * <p>The Search Address Batch API sends batches of queries to [Search Fuzzy
-     * API](https://docs.microsoft.com/rest/api/maps/search/getsearchfuzzy) using just a single API call. You can call
-     * Search Address Fuzzy Batch API to run either asynchronously (async) or synchronously (sync). The async API allows
-     * caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous Batch Request
-     * The Synchronous API is recommended for lightweight batch requests. When the service receives a request, it will
-     * respond as soon as the batch items are calculated and there will be no possibility to retrieve the results later.
-     * The Synchronous API will return a timeout error (a 408 response) if the request takes longer than 60 seconds. The
-     * number of batch items is limited to **100** for this API. ``` POST
-     * https://atlas.microsoft.com/search/fuzzy/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` ### Submit Asynchronous Batch Request The Asynchronous API is appropriate for processing big volumes of
-     * relatively complex search requests - It allows the retrieval of results in a separate call (multiple downloads
-     * are possible). - The asynchronous API is optimized for reliability and is not expected to run into a timeout. -
-     * The number of batch items is limited to **10,000** for this API.
-     *
-     * <p>When you make a request by using async request, by default the service returns a 202 response code along a
-     * redirect URL in the Location field of the response header. This URL should be checked periodically until the
-     * response data or error information is available. The asynchronous responses are stored for **14** days. The
-     * redirect URL returns a 404 response if used after the expiration period.
-     *
-     * <p>Please note that asynchronous batch request is a long-running request. Here's a typical sequence of
-     * operations: 1. Client sends a Search Address Batch `POST` request to Azure Maps 2. The server will respond with
-     * one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request has been accepted.
-     *
-     * <p>&gt; HTTP `Error` - There was an error processing your Batch request. This could either be a `400 Bad Request`
-     * or any other `Error` status code.
-     *
-     * <p>3. If the batch request was accepted successfully, the `Location` header in the response contains the URL to
-     * download the results of the batch request. This status URI looks like following:
-     *
-     * <p>``` GET
-     * https://atlas.microsoft.com/search/fuzzy/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to download the batch results.
-     *
-     * <p>### POST Body for Batch Request To send the _search fuzzy_ queries you will use a `POST` request where the
-     * request body will contain the `batchItems` array in `json` format and the `Content-Type` header will be set to
-     * `application/json`. Here's a sample request body containing 5 _search fuzzy_ queries:
-     *
-     * <p>```json { "batchItems": [ {"query":
-     * "?query=atm&amp;lat=47.639769&amp;lon=-122.128362&amp;radius=5000&amp;limit=5"}, {"query": "?query=Statue Of
-     * Liberty&amp;limit=2"}, {"query": "?query=Starbucks&amp;lat=47.639769&amp;lon=-122.128362&amp;radius=5000"},
-     * {"query": "?query=Space Needle"}, {"query": "?query=pizza&amp;limit=10"} ] } ```
-     *
-     * <p>A _search fuzzy_ query in a batch is just a partial URL _without_ the protocol, base URL, path, api-version
-     * and subscription-key. It can accept any of the supported _search fuzzy_ [URI
-     * parameters](https://docs.microsoft.com/rest/api/maps/search/getsearchfuzzy#uri-parameters). The string values in
-     * the _search fuzzy_ query must be properly escaped (e.g. " character should be escaped with \\ ) and it should
-     * also be properly URL-encoded.
-     *
-     * <p>The async API allows caller to batch up to **10,000** queries and sync API up to **100** queries, and the
-     * batch should contain at least **1** query.
-     *
-     * <p>### Download Asynchronous Batch Results To download the async batch results you will issue a `GET` request to
-     * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
-     * `POST` batch request and looks like the following:
-     *
-     * <p>```
-     * https://atlas.microsoft.com/search/fuzzy/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
-     * using the _download URL_. 2. The server will respond with one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
-     * time.
-     *
-     * <p>&gt; HTTP `200 OK` - Batch request successfully processed. The response body contains all the batch results.
-     *
-     * <p>### Batch Response Model The returned data content is similar for async and sync requests. When downloading
-     * the results of an async batch request, if the batch has finished processing, the response body contains the batch
-     * response. This batch response contains a `summary` component that indicates the `totalRequests` that were part of
-     * the original batch request and `successfulRequests`i.e. queries which were executed successfully. The batch
-     * response also includes a `batchItems` array which contains a response for each and every query in the batch
-     * request. The `batchItems` will contain the results in the exact same order the original queries were sent in the
-     * batch request. Each item in `batchItems` contains `statusCode` and `response` fields. Each `response` in
-     * `batchItems` is of one of the following types:
-     *
-     * <p>-
-     * [`SearchAddressResponse`](https://docs.microsoft.com/rest/api/maps/search/getsearchfuzzy#SearchAddressResponse) -
-     * If the query completed successfully.
-     *
-     * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
-     *
-     * <p>Here's a sample Batch Response with 2 _successful_ and 1 _failed_ result:
-     *
-     * <p>```json { "summary": { "successfulRequests": 2, "totalRequests": 3 }, "batchItems": [ { "statusCode": 200,
-     * "response": { "summary": { "query": "atm" }, "results": [ { "type": "POI", "poi": { "name": "ATM at Wells Fargo"
-     * }, "address": { "country": "United States Of America", "freeformAddress": "3240 157th Ave NE, Redmond, WA 98052"
-     * } } ] } }, { "statusCode": 200, "response": { "summary": { "query": "statue of liberty" }, "results": [ { "type":
-     * "POI", "poi": { "name": "Statue of Liberty" }, "address": { "country": "United States Of America",
-     * "freeformAddress": "New York, NY 10004" } } ] } }, { "statusCode": 400, "response": { "error": { "code": "400
-     * BadRequest", "message": "Bad request: one or more parameters were incorrectly specified or are mutually
-     * exclusive." } } } ] } ```.
      *
      * @param batchId Batch id for querying the operation.
      * @param context The context to associate with this operation.
@@ -3260,100 +947,6 @@ public final class SearchClient {
     /**
      * **Search Address Batch API**
      *
-     * <p>**Applies to**: S1 pricing tier.
-     *
-     * <p>The Search Address Batch API sends batches of queries to [Search Address
-     * API](https://docs.microsoft.com/rest/api/maps/search/getsearchaddress) using just a single API call. You can call
-     * Search Address Batch API to run either asynchronously (async) or synchronously (sync). The async API allows
-     * caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous Batch Request
-     * The Synchronous API is recommended for lightweight batch requests. When the service receives a request, it will
-     * respond as soon as the batch items are calculated and there will be no possibility to retrieve the results later.
-     * The Synchronous API will return a timeout error (a 408 response) if the request takes longer than 60 seconds. The
-     * number of batch items is limited to **100** for this API. ``` POST
-     * https://atlas.microsoft.com/search/address/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` ### Submit Asynchronous Batch Request The Asynchronous API is appropriate for processing big volumes of
-     * relatively complex search requests - It allows the retrieval of results in a separate call (multiple downloads
-     * are possible). - The asynchronous API is optimized for reliability and is not expected to run into a timeout. -
-     * The number of batch items is limited to **10,000** for this API.
-     *
-     * <p>When you make a request by using async request, by default the service returns a 202 response code along a
-     * redirect URL in the Location field of the response header. This URL should be checked periodically until the
-     * response data or error information is available. The asynchronous responses are stored for **14** days. The
-     * redirect URL returns a 404 response if used after the expiration period.
-     *
-     * <p>Please note that asynchronous batch request is a long-running request. Here's a typical sequence of
-     * operations: 1. Client sends a Search Address Batch `POST` request to Azure Maps 2. The server will respond with
-     * one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request has been accepted.
-     *
-     * <p>&gt; HTTP `Error` - There was an error processing your Batch request. This could either be a `400 Bad Request`
-     * or any other `Error` status code.
-     *
-     * <p>3. If the batch request was accepted successfully, the `Location` header in the response contains the URL to
-     * download the results of the batch request. This status URI looks like following:
-     *
-     * <p>``` GET
-     * https://atlas.microsoft.com/search/address/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to download the batch results.
-     *
-     * <p>### POST Body for Batch Request To send the _search address_ queries you will use a `POST` request where the
-     * request body will contain the `batchItems` array in `json` format and the `Content-Type` header will be set to
-     * `application/json`. Here's a sample request body containing 5 _search address_ queries:
-     *
-     * <p>```json { "batchItems": [ {"query": "?query=400 Broad St, Seattle, WA 98109&amp;limit=3"}, {"query":
-     * "?query=One, Microsoft Way, Redmond, WA 98052&amp;limit=3"}, {"query": "?query=350 5th Ave, New York, NY
-     * 10118&amp;limit=1"}, {"query": "?query=Pike Pl, Seattle, WA
-     * 98101&amp;lat=47.610970&amp;lon=-122.342469&amp;radius=1000"}, {"query": "?query=Champ de Mars, 5 Avenue Anatole
-     * France, 75007 Paris, France&amp;limit=1"} ] } ```
-     *
-     * <p>A _search address_ query in a batch is just a partial URL _without_ the protocol, base URL, path, api-version
-     * and subscription-key. It can accept any of the supported _search address_ [URI
-     * parameters](https://docs.microsoft.com/rest/api/maps/search/getsearchaddress#uri-parameters). The string values
-     * in the _search address_ query must be properly escaped (e.g. " character should be escaped with \\ ) and it
-     * should also be properly URL-encoded.
-     *
-     * <p>The async API allows caller to batch up to **10,000** queries and sync API up to **100** queries, and the
-     * batch should contain at least **1** query.
-     *
-     * <p>### Download Asynchronous Batch Results To download the async batch results you will issue a `GET` request to
-     * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
-     * `POST` batch request and looks like the following:
-     *
-     * <p>```
-     * https://atlas.microsoft.com/search/address/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
-     * using the _download URL_. 2. The server will respond with one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
-     * time.
-     *
-     * <p>&gt; HTTP `200 OK` - Batch request successfully processed. The response body contains all the batch results.
-     *
-     * <p>### Batch Response Model The returned data content is similar for async and sync requests. When downloading
-     * the results of an async batch request, if the batch has finished processing, the response body contains the batch
-     * response. This batch response contains a `summary` component that indicates the `totalRequests` that were part of
-     * the original batch request and `successfulRequests`i.e. queries which were executed successfully. The batch
-     * response also includes a `batchItems` array which contains a response for each and every query in the batch
-     * request. The `batchItems` will contain the results in the exact same order the original queries were sent in the
-     * batch request. Each item in `batchItems` contains `statusCode` and `response` fields. Each `response` in
-     * `batchItems` is of one of the following types:
-     *
-     * <p>-
-     * [`SearchAddressResponse`](https://docs.microsoft.com/rest/api/maps/search/getsearchaddress#SearchAddressResponse)
-     * - If the query completed successfully.
-     *
-     * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
-     *
-     * <p>Here's a sample Batch Response with 2 _successful_ and 1 _failed_ result:
-     *
-     * <p>```json { "summary": { "successfulRequests": 2, "totalRequests": 3 }, "batchItems": [ { "statusCode": 200,
-     * "response": { "summary": { "query": "one microsoft way redmond wa 98052" }, "results": [ { "position": { "lat":
-     * 47.63989, "lon": -122.12509 } } ] } }, { "statusCode": 200, "response": { "summary": { "query": "pike pl seattle
-     * wa 98101" }, "results": [ { "position": { "lat": 47.60963, "lon": -122.34215 } } ] } }, { "statusCode": 400,
-     * "response": { "error": { "code": "400 BadRequest", "message": "Bad request: one or more parameters were
-     * incorrectly specified or are mutually exclusive." } } } ] } ```.
-     *
      * @param format Desired format of the response. Only `json` format is supported.
      * @param searchAddressBatchRequestBody The list of address geocoding queries/requests to process. The list can
      *     contain a max of 10,000 queries and must contain at least 1 query.
@@ -3369,100 +962,6 @@ public final class SearchClient {
 
     /**
      * **Search Address Batch API**
-     *
-     * <p>**Applies to**: S1 pricing tier.
-     *
-     * <p>The Search Address Batch API sends batches of queries to [Search Address
-     * API](https://docs.microsoft.com/rest/api/maps/search/getsearchaddress) using just a single API call. You can call
-     * Search Address Batch API to run either asynchronously (async) or synchronously (sync). The async API allows
-     * caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous Batch Request
-     * The Synchronous API is recommended for lightweight batch requests. When the service receives a request, it will
-     * respond as soon as the batch items are calculated and there will be no possibility to retrieve the results later.
-     * The Synchronous API will return a timeout error (a 408 response) if the request takes longer than 60 seconds. The
-     * number of batch items is limited to **100** for this API. ``` POST
-     * https://atlas.microsoft.com/search/address/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` ### Submit Asynchronous Batch Request The Asynchronous API is appropriate for processing big volumes of
-     * relatively complex search requests - It allows the retrieval of results in a separate call (multiple downloads
-     * are possible). - The asynchronous API is optimized for reliability and is not expected to run into a timeout. -
-     * The number of batch items is limited to **10,000** for this API.
-     *
-     * <p>When you make a request by using async request, by default the service returns a 202 response code along a
-     * redirect URL in the Location field of the response header. This URL should be checked periodically until the
-     * response data or error information is available. The asynchronous responses are stored for **14** days. The
-     * redirect URL returns a 404 response if used after the expiration period.
-     *
-     * <p>Please note that asynchronous batch request is a long-running request. Here's a typical sequence of
-     * operations: 1. Client sends a Search Address Batch `POST` request to Azure Maps 2. The server will respond with
-     * one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request has been accepted.
-     *
-     * <p>&gt; HTTP `Error` - There was an error processing your Batch request. This could either be a `400 Bad Request`
-     * or any other `Error` status code.
-     *
-     * <p>3. If the batch request was accepted successfully, the `Location` header in the response contains the URL to
-     * download the results of the batch request. This status URI looks like following:
-     *
-     * <p>``` GET
-     * https://atlas.microsoft.com/search/address/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to download the batch results.
-     *
-     * <p>### POST Body for Batch Request To send the _search address_ queries you will use a `POST` request where the
-     * request body will contain the `batchItems` array in `json` format and the `Content-Type` header will be set to
-     * `application/json`. Here's a sample request body containing 5 _search address_ queries:
-     *
-     * <p>```json { "batchItems": [ {"query": "?query=400 Broad St, Seattle, WA 98109&amp;limit=3"}, {"query":
-     * "?query=One, Microsoft Way, Redmond, WA 98052&amp;limit=3"}, {"query": "?query=350 5th Ave, New York, NY
-     * 10118&amp;limit=1"}, {"query": "?query=Pike Pl, Seattle, WA
-     * 98101&amp;lat=47.610970&amp;lon=-122.342469&amp;radius=1000"}, {"query": "?query=Champ de Mars, 5 Avenue Anatole
-     * France, 75007 Paris, France&amp;limit=1"} ] } ```
-     *
-     * <p>A _search address_ query in a batch is just a partial URL _without_ the protocol, base URL, path, api-version
-     * and subscription-key. It can accept any of the supported _search address_ [URI
-     * parameters](https://docs.microsoft.com/rest/api/maps/search/getsearchaddress#uri-parameters). The string values
-     * in the _search address_ query must be properly escaped (e.g. " character should be escaped with \\ ) and it
-     * should also be properly URL-encoded.
-     *
-     * <p>The async API allows caller to batch up to **10,000** queries and sync API up to **100** queries, and the
-     * batch should contain at least **1** query.
-     *
-     * <p>### Download Asynchronous Batch Results To download the async batch results you will issue a `GET` request to
-     * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
-     * `POST` batch request and looks like the following:
-     *
-     * <p>```
-     * https://atlas.microsoft.com/search/address/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
-     * using the _download URL_. 2. The server will respond with one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
-     * time.
-     *
-     * <p>&gt; HTTP `200 OK` - Batch request successfully processed. The response body contains all the batch results.
-     *
-     * <p>### Batch Response Model The returned data content is similar for async and sync requests. When downloading
-     * the results of an async batch request, if the batch has finished processing, the response body contains the batch
-     * response. This batch response contains a `summary` component that indicates the `totalRequests` that were part of
-     * the original batch request and `successfulRequests`i.e. queries which were executed successfully. The batch
-     * response also includes a `batchItems` array which contains a response for each and every query in the batch
-     * request. The `batchItems` will contain the results in the exact same order the original queries were sent in the
-     * batch request. Each item in `batchItems` contains `statusCode` and `response` fields. Each `response` in
-     * `batchItems` is of one of the following types:
-     *
-     * <p>-
-     * [`SearchAddressResponse`](https://docs.microsoft.com/rest/api/maps/search/getsearchaddress#SearchAddressResponse)
-     * - If the query completed successfully.
-     *
-     * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
-     *
-     * <p>Here's a sample Batch Response with 2 _successful_ and 1 _failed_ result:
-     *
-     * <p>```json { "summary": { "successfulRequests": 2, "totalRequests": 3 }, "batchItems": [ { "statusCode": 200,
-     * "response": { "summary": { "query": "one microsoft way redmond wa 98052" }, "results": [ { "position": { "lat":
-     * 47.63989, "lon": -122.12509 } } ] } }, { "statusCode": 200, "response": { "summary": { "query": "pike pl seattle
-     * wa 98101" }, "results": [ { "position": { "lat": 47.60963, "lon": -122.34215 } } ] } }, { "statusCode": 400,
-     * "response": { "error": { "code": "400 BadRequest", "message": "Bad request: one or more parameters were
-     * incorrectly specified or are mutually exclusive." } } } ] } ```.
      *
      * @param format Desired format of the response. Only `json` format is supported.
      * @param searchAddressBatchRequestBody The list of address geocoding queries/requests to process. The list can
@@ -3482,100 +981,6 @@ public final class SearchClient {
     /**
      * **Search Address Batch API**
      *
-     * <p>**Applies to**: S1 pricing tier.
-     *
-     * <p>The Search Address Batch API sends batches of queries to [Search Address
-     * API](https://docs.microsoft.com/rest/api/maps/search/getsearchaddress) using just a single API call. You can call
-     * Search Address Batch API to run either asynchronously (async) or synchronously (sync). The async API allows
-     * caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous Batch Request
-     * The Synchronous API is recommended for lightweight batch requests. When the service receives a request, it will
-     * respond as soon as the batch items are calculated and there will be no possibility to retrieve the results later.
-     * The Synchronous API will return a timeout error (a 408 response) if the request takes longer than 60 seconds. The
-     * number of batch items is limited to **100** for this API. ``` POST
-     * https://atlas.microsoft.com/search/address/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` ### Submit Asynchronous Batch Request The Asynchronous API is appropriate for processing big volumes of
-     * relatively complex search requests - It allows the retrieval of results in a separate call (multiple downloads
-     * are possible). - The asynchronous API is optimized for reliability and is not expected to run into a timeout. -
-     * The number of batch items is limited to **10,000** for this API.
-     *
-     * <p>When you make a request by using async request, by default the service returns a 202 response code along a
-     * redirect URL in the Location field of the response header. This URL should be checked periodically until the
-     * response data or error information is available. The asynchronous responses are stored for **14** days. The
-     * redirect URL returns a 404 response if used after the expiration period.
-     *
-     * <p>Please note that asynchronous batch request is a long-running request. Here's a typical sequence of
-     * operations: 1. Client sends a Search Address Batch `POST` request to Azure Maps 2. The server will respond with
-     * one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request has been accepted.
-     *
-     * <p>&gt; HTTP `Error` - There was an error processing your Batch request. This could either be a `400 Bad Request`
-     * or any other `Error` status code.
-     *
-     * <p>3. If the batch request was accepted successfully, the `Location` header in the response contains the URL to
-     * download the results of the batch request. This status URI looks like following:
-     *
-     * <p>``` GET
-     * https://atlas.microsoft.com/search/address/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to download the batch results.
-     *
-     * <p>### POST Body for Batch Request To send the _search address_ queries you will use a `POST` request where the
-     * request body will contain the `batchItems` array in `json` format and the `Content-Type` header will be set to
-     * `application/json`. Here's a sample request body containing 5 _search address_ queries:
-     *
-     * <p>```json { "batchItems": [ {"query": "?query=400 Broad St, Seattle, WA 98109&amp;limit=3"}, {"query":
-     * "?query=One, Microsoft Way, Redmond, WA 98052&amp;limit=3"}, {"query": "?query=350 5th Ave, New York, NY
-     * 10118&amp;limit=1"}, {"query": "?query=Pike Pl, Seattle, WA
-     * 98101&amp;lat=47.610970&amp;lon=-122.342469&amp;radius=1000"}, {"query": "?query=Champ de Mars, 5 Avenue Anatole
-     * France, 75007 Paris, France&amp;limit=1"} ] } ```
-     *
-     * <p>A _search address_ query in a batch is just a partial URL _without_ the protocol, base URL, path, api-version
-     * and subscription-key. It can accept any of the supported _search address_ [URI
-     * parameters](https://docs.microsoft.com/rest/api/maps/search/getsearchaddress#uri-parameters). The string values
-     * in the _search address_ query must be properly escaped (e.g. " character should be escaped with \\ ) and it
-     * should also be properly URL-encoded.
-     *
-     * <p>The async API allows caller to batch up to **10,000** queries and sync API up to **100** queries, and the
-     * batch should contain at least **1** query.
-     *
-     * <p>### Download Asynchronous Batch Results To download the async batch results you will issue a `GET` request to
-     * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
-     * `POST` batch request and looks like the following:
-     *
-     * <p>```
-     * https://atlas.microsoft.com/search/address/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
-     * using the _download URL_. 2. The server will respond with one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
-     * time.
-     *
-     * <p>&gt; HTTP `200 OK` - Batch request successfully processed. The response body contains all the batch results.
-     *
-     * <p>### Batch Response Model The returned data content is similar for async and sync requests. When downloading
-     * the results of an async batch request, if the batch has finished processing, the response body contains the batch
-     * response. This batch response contains a `summary` component that indicates the `totalRequests` that were part of
-     * the original batch request and `successfulRequests`i.e. queries which were executed successfully. The batch
-     * response also includes a `batchItems` array which contains a response for each and every query in the batch
-     * request. The `batchItems` will contain the results in the exact same order the original queries were sent in the
-     * batch request. Each item in `batchItems` contains `statusCode` and `response` fields. Each `response` in
-     * `batchItems` is of one of the following types:
-     *
-     * <p>-
-     * [`SearchAddressResponse`](https://docs.microsoft.com/rest/api/maps/search/getsearchaddress#SearchAddressResponse)
-     * - If the query completed successfully.
-     *
-     * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
-     *
-     * <p>Here's a sample Batch Response with 2 _successful_ and 1 _failed_ result:
-     *
-     * <p>```json { "summary": { "successfulRequests": 2, "totalRequests": 3 }, "batchItems": [ { "statusCode": 200,
-     * "response": { "summary": { "query": "one microsoft way redmond wa 98052" }, "results": [ { "position": { "lat":
-     * 47.63989, "lon": -122.12509 } } ] } }, { "statusCode": 200, "response": { "summary": { "query": "pike pl seattle
-     * wa 98101" }, "results": [ { "position": { "lat": 47.60963, "lon": -122.34215 } } ] } }, { "statusCode": 400,
-     * "response": { "error": { "code": "400 BadRequest", "message": "Bad request: one or more parameters were
-     * incorrectly specified or are mutually exclusive." } } } ] } ```.
-     *
      * @param format Desired format of the response. Only `json` format is supported.
      * @param searchAddressBatchRequestBody The list of address geocoding queries/requests to process. The list can
      *     contain a max of 10,000 queries and must contain at least 1 query.
@@ -3592,100 +997,6 @@ public final class SearchClient {
 
     /**
      * **Search Address Batch API**
-     *
-     * <p>**Applies to**: S1 pricing tier.
-     *
-     * <p>The Search Address Batch API sends batches of queries to [Search Address
-     * API](https://docs.microsoft.com/rest/api/maps/search/getsearchaddress) using just a single API call. You can call
-     * Search Address Batch API to run either asynchronously (async) or synchronously (sync). The async API allows
-     * caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous Batch Request
-     * The Synchronous API is recommended for lightweight batch requests. When the service receives a request, it will
-     * respond as soon as the batch items are calculated and there will be no possibility to retrieve the results later.
-     * The Synchronous API will return a timeout error (a 408 response) if the request takes longer than 60 seconds. The
-     * number of batch items is limited to **100** for this API. ``` POST
-     * https://atlas.microsoft.com/search/address/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` ### Submit Asynchronous Batch Request The Asynchronous API is appropriate for processing big volumes of
-     * relatively complex search requests - It allows the retrieval of results in a separate call (multiple downloads
-     * are possible). - The asynchronous API is optimized for reliability and is not expected to run into a timeout. -
-     * The number of batch items is limited to **10,000** for this API.
-     *
-     * <p>When you make a request by using async request, by default the service returns a 202 response code along a
-     * redirect URL in the Location field of the response header. This URL should be checked periodically until the
-     * response data or error information is available. The asynchronous responses are stored for **14** days. The
-     * redirect URL returns a 404 response if used after the expiration period.
-     *
-     * <p>Please note that asynchronous batch request is a long-running request. Here's a typical sequence of
-     * operations: 1. Client sends a Search Address Batch `POST` request to Azure Maps 2. The server will respond with
-     * one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request has been accepted.
-     *
-     * <p>&gt; HTTP `Error` - There was an error processing your Batch request. This could either be a `400 Bad Request`
-     * or any other `Error` status code.
-     *
-     * <p>3. If the batch request was accepted successfully, the `Location` header in the response contains the URL to
-     * download the results of the batch request. This status URI looks like following:
-     *
-     * <p>``` GET
-     * https://atlas.microsoft.com/search/address/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to download the batch results.
-     *
-     * <p>### POST Body for Batch Request To send the _search address_ queries you will use a `POST` request where the
-     * request body will contain the `batchItems` array in `json` format and the `Content-Type` header will be set to
-     * `application/json`. Here's a sample request body containing 5 _search address_ queries:
-     *
-     * <p>```json { "batchItems": [ {"query": "?query=400 Broad St, Seattle, WA 98109&amp;limit=3"}, {"query":
-     * "?query=One, Microsoft Way, Redmond, WA 98052&amp;limit=3"}, {"query": "?query=350 5th Ave, New York, NY
-     * 10118&amp;limit=1"}, {"query": "?query=Pike Pl, Seattle, WA
-     * 98101&amp;lat=47.610970&amp;lon=-122.342469&amp;radius=1000"}, {"query": "?query=Champ de Mars, 5 Avenue Anatole
-     * France, 75007 Paris, France&amp;limit=1"} ] } ```
-     *
-     * <p>A _search address_ query in a batch is just a partial URL _without_ the protocol, base URL, path, api-version
-     * and subscription-key. It can accept any of the supported _search address_ [URI
-     * parameters](https://docs.microsoft.com/rest/api/maps/search/getsearchaddress#uri-parameters). The string values
-     * in the _search address_ query must be properly escaped (e.g. " character should be escaped with \\ ) and it
-     * should also be properly URL-encoded.
-     *
-     * <p>The async API allows caller to batch up to **10,000** queries and sync API up to **100** queries, and the
-     * batch should contain at least **1** query.
-     *
-     * <p>### Download Asynchronous Batch Results To download the async batch results you will issue a `GET` request to
-     * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
-     * `POST` batch request and looks like the following:
-     *
-     * <p>```
-     * https://atlas.microsoft.com/search/address/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
-     * using the _download URL_. 2. The server will respond with one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
-     * time.
-     *
-     * <p>&gt; HTTP `200 OK` - Batch request successfully processed. The response body contains all the batch results.
-     *
-     * <p>### Batch Response Model The returned data content is similar for async and sync requests. When downloading
-     * the results of an async batch request, if the batch has finished processing, the response body contains the batch
-     * response. This batch response contains a `summary` component that indicates the `totalRequests` that were part of
-     * the original batch request and `successfulRequests`i.e. queries which were executed successfully. The batch
-     * response also includes a `batchItems` array which contains a response for each and every query in the batch
-     * request. The `batchItems` will contain the results in the exact same order the original queries were sent in the
-     * batch request. Each item in `batchItems` contains `statusCode` and `response` fields. Each `response` in
-     * `batchItems` is of one of the following types:
-     *
-     * <p>-
-     * [`SearchAddressResponse`](https://docs.microsoft.com/rest/api/maps/search/getsearchaddress#SearchAddressResponse)
-     * - If the query completed successfully.
-     *
-     * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
-     *
-     * <p>Here's a sample Batch Response with 2 _successful_ and 1 _failed_ result:
-     *
-     * <p>```json { "summary": { "successfulRequests": 2, "totalRequests": 3 }, "batchItems": [ { "statusCode": 200,
-     * "response": { "summary": { "query": "one microsoft way redmond wa 98052" }, "results": [ { "position": { "lat":
-     * 47.63989, "lon": -122.12509 } } ] } }, { "statusCode": 200, "response": { "summary": { "query": "pike pl seattle
-     * wa 98101" }, "results": [ { "position": { "lat": 47.60963, "lon": -122.34215 } } ] } }, { "statusCode": 400,
-     * "response": { "error": { "code": "400 BadRequest", "message": "Bad request: one or more parameters were
-     * incorrectly specified or are mutually exclusive." } } } ] } ```.
      *
      * @param format Desired format of the response. Only `json` format is supported.
      * @param searchAddressBatchRequestBody The list of address geocoding queries/requests to process. The list can
@@ -3705,100 +1016,6 @@ public final class SearchClient {
     /**
      * **Search Address Batch API**
      *
-     * <p>**Applies to**: S1 pricing tier.
-     *
-     * <p>The Search Address Batch API sends batches of queries to [Search Address
-     * API](https://docs.microsoft.com/rest/api/maps/search/getsearchaddress) using just a single API call. You can call
-     * Search Address Batch API to run either asynchronously (async) or synchronously (sync). The async API allows
-     * caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous Batch Request
-     * The Synchronous API is recommended for lightweight batch requests. When the service receives a request, it will
-     * respond as soon as the batch items are calculated and there will be no possibility to retrieve the results later.
-     * The Synchronous API will return a timeout error (a 408 response) if the request takes longer than 60 seconds. The
-     * number of batch items is limited to **100** for this API. ``` POST
-     * https://atlas.microsoft.com/search/address/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` ### Submit Asynchronous Batch Request The Asynchronous API is appropriate for processing big volumes of
-     * relatively complex search requests - It allows the retrieval of results in a separate call (multiple downloads
-     * are possible). - The asynchronous API is optimized for reliability and is not expected to run into a timeout. -
-     * The number of batch items is limited to **10,000** for this API.
-     *
-     * <p>When you make a request by using async request, by default the service returns a 202 response code along a
-     * redirect URL in the Location field of the response header. This URL should be checked periodically until the
-     * response data or error information is available. The asynchronous responses are stored for **14** days. The
-     * redirect URL returns a 404 response if used after the expiration period.
-     *
-     * <p>Please note that asynchronous batch request is a long-running request. Here's a typical sequence of
-     * operations: 1. Client sends a Search Address Batch `POST` request to Azure Maps 2. The server will respond with
-     * one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request has been accepted.
-     *
-     * <p>&gt; HTTP `Error` - There was an error processing your Batch request. This could either be a `400 Bad Request`
-     * or any other `Error` status code.
-     *
-     * <p>3. If the batch request was accepted successfully, the `Location` header in the response contains the URL to
-     * download the results of the batch request. This status URI looks like following:
-     *
-     * <p>``` GET
-     * https://atlas.microsoft.com/search/address/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to download the batch results.
-     *
-     * <p>### POST Body for Batch Request To send the _search address_ queries you will use a `POST` request where the
-     * request body will contain the `batchItems` array in `json` format and the `Content-Type` header will be set to
-     * `application/json`. Here's a sample request body containing 5 _search address_ queries:
-     *
-     * <p>```json { "batchItems": [ {"query": "?query=400 Broad St, Seattle, WA 98109&amp;limit=3"}, {"query":
-     * "?query=One, Microsoft Way, Redmond, WA 98052&amp;limit=3"}, {"query": "?query=350 5th Ave, New York, NY
-     * 10118&amp;limit=1"}, {"query": "?query=Pike Pl, Seattle, WA
-     * 98101&amp;lat=47.610970&amp;lon=-122.342469&amp;radius=1000"}, {"query": "?query=Champ de Mars, 5 Avenue Anatole
-     * France, 75007 Paris, France&amp;limit=1"} ] } ```
-     *
-     * <p>A _search address_ query in a batch is just a partial URL _without_ the protocol, base URL, path, api-version
-     * and subscription-key. It can accept any of the supported _search address_ [URI
-     * parameters](https://docs.microsoft.com/rest/api/maps/search/getsearchaddress#uri-parameters). The string values
-     * in the _search address_ query must be properly escaped (e.g. " character should be escaped with \\ ) and it
-     * should also be properly URL-encoded.
-     *
-     * <p>The async API allows caller to batch up to **10,000** queries and sync API up to **100** queries, and the
-     * batch should contain at least **1** query.
-     *
-     * <p>### Download Asynchronous Batch Results To download the async batch results you will issue a `GET` request to
-     * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
-     * `POST` batch request and looks like the following:
-     *
-     * <p>```
-     * https://atlas.microsoft.com/search/address/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
-     * using the _download URL_. 2. The server will respond with one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
-     * time.
-     *
-     * <p>&gt; HTTP `200 OK` - Batch request successfully processed. The response body contains all the batch results.
-     *
-     * <p>### Batch Response Model The returned data content is similar for async and sync requests. When downloading
-     * the results of an async batch request, if the batch has finished processing, the response body contains the batch
-     * response. This batch response contains a `summary` component that indicates the `totalRequests` that were part of
-     * the original batch request and `successfulRequests`i.e. queries which were executed successfully. The batch
-     * response also includes a `batchItems` array which contains a response for each and every query in the batch
-     * request. The `batchItems` will contain the results in the exact same order the original queries were sent in the
-     * batch request. Each item in `batchItems` contains `statusCode` and `response` fields. Each `response` in
-     * `batchItems` is of one of the following types:
-     *
-     * <p>-
-     * [`SearchAddressResponse`](https://docs.microsoft.com/rest/api/maps/search/getsearchaddress#SearchAddressResponse)
-     * - If the query completed successfully.
-     *
-     * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
-     *
-     * <p>Here's a sample Batch Response with 2 _successful_ and 1 _failed_ result:
-     *
-     * <p>```json { "summary": { "successfulRequests": 2, "totalRequests": 3 }, "batchItems": [ { "statusCode": 200,
-     * "response": { "summary": { "query": "one microsoft way redmond wa 98052" }, "results": [ { "position": { "lat":
-     * 47.63989, "lon": -122.12509 } } ] } }, { "statusCode": 200, "response": { "summary": { "query": "pike pl seattle
-     * wa 98101" }, "results": [ { "position": { "lat": 47.60963, "lon": -122.34215 } } ] } }, { "statusCode": 400,
-     * "response": { "error": { "code": "400 BadRequest", "message": "Bad request: one or more parameters were
-     * incorrectly specified or are mutually exclusive." } } } ] } ```.
-     *
      * @param batchId Batch id for querying the operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -3813,101 +1030,6 @@ public final class SearchClient {
 
     /**
      * **Search Address Batch API**
-     *
-     * <p>**Applies to**: S1 pricing tier.
-     *
-     * <p>The Search Address Batch API sends batches of queries to [Search Address
-     * API](https://docs.microsoft.com/rest/api/maps/search/getsearchaddress) using just a single API call. You can call
-     * Search Address Batch API to run either asynchronously (async) or synchronously (sync). The async API allows
-     * caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous Batch Request
-     * The Synchronous API is recommended for lightweight batch requests. When the service receives a request, it will
-     * respond as soon as the batch items are calculated and there will be no possibility to retrieve the results later.
-     * The Synchronous API will return a timeout error (a 408 response) if the request takes longer than 60 seconds. The
-     * number of batch items is limited to **100** for this API. ``` POST
-     * https://atlas.microsoft.com/search/address/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` ### Submit Asynchronous Batch Request The Asynchronous API is appropriate for processing big volumes of
-     * relatively complex search requests - It allows the retrieval of results in a separate call (multiple downloads
-     * are possible). - The asynchronous API is optimized for reliability and is not expected to run into a timeout. -
-     * The number of batch items is limited to **10,000** for this API.
-     *
-     * <p>When you make a request by using async request, by default the service returns a 202 response code along a
-     * redirect URL in the Location field of the response header. This URL should be checked periodically until the
-     * response data or error information is available. The asynchronous responses are stored for **14** days. The
-     * redirect URL returns a 404 response if used after the expiration period.
-     *
-     * <p>Please note that asynchronous batch request is a long-running request. Here's a typical sequence of
-     * operations: 1. Client sends a Search Address Batch `POST` request to Azure Maps 2. The server will respond with
-     * one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request has been accepted.
-     *
-     * <p>&gt; HTTP `Error` - There was an error processing your Batch request. This could either be a `400 Bad Request`
-     * or any other `Error` status code.
-     *
-     * <p>3. If the batch request was accepted successfully, the `Location` header in the response contains the URL to
-     * download the results of the batch request. This status URI looks like following:
-     *
-     * <p>``` GET
-     * https://atlas.microsoft.com/search/address/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to download the batch results.
-     *
-     * <p>### POST Body for Batch Request To send the _search address_ queries you will use a `POST` request where the
-     * request body will contain the `batchItems` array in `json` format and the `Content-Type` header will be set to
-     * `application/json`. Here's a sample request body containing 5 _search address_ queries:
-     *
-     * <p>```json { "batchItems": [ {"query": "?query=400 Broad St, Seattle, WA 98109&amp;limit=3"}, {"query":
-     * "?query=One, Microsoft Way, Redmond, WA 98052&amp;limit=3"}, {"query": "?query=350 5th Ave, New York, NY
-     * 10118&amp;limit=1"}, {"query": "?query=Pike Pl, Seattle, WA
-     * 98101&amp;lat=47.610970&amp;lon=-122.342469&amp;radius=1000"}, {"query": "?query=Champ de Mars, 5 Avenue Anatole
-     * France, 75007 Paris, France&amp;limit=1"} ] } ```
-     *
-     * <p>A _search address_ query in a batch is just a partial URL _without_ the protocol, base URL, path, api-version
-     * and subscription-key. It can accept any of the supported _search address_ [URI
-     * parameters](https://docs.microsoft.com/rest/api/maps/search/getsearchaddress#uri-parameters). The string values
-     * in the _search address_ query must be properly escaped (e.g. " character should be escaped with \\ ) and it
-     * should also be properly URL-encoded.
-     *
-     * <p>The async API allows caller to batch up to **10,000** queries and sync API up to **100** queries, and the
-     * batch should contain at least **1** query.
-     *
-     * <p>### Download Asynchronous Batch Results To download the async batch results you will issue a `GET` request to
-     * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
-     * `POST` batch request and looks like the following:
-     *
-     * <p>```
-     * https://atlas.microsoft.com/search/address/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
-     * using the _download URL_. 2. The server will respond with one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
-     * time.
-     *
-     * <p>&gt; HTTP `200 OK` - Batch request successfully processed. The response body contains all the batch results.
-     *
-     * <p>### Batch Response Model The returned data content is similar for async and sync requests. When downloading
-     * the results of an async batch request, if the batch has finished processing, the response body contains the batch
-     * response. This batch response contains a `summary` component that indicates the `totalRequests` that were part of
-     * the original batch request and `successfulRequests`i.e. queries which were executed successfully. The batch
-     * response also includes a `batchItems` array which contains a response for each and every query in the batch
-     * request. The `batchItems` will contain the results in the exact same order the original queries were sent in the
-     * batch request. Each item in `batchItems` contains `statusCode` and `response` fields. Each `response` in
-     * `batchItems` is of one of the following types:
-     *
-     * <p>-
-     * [`SearchAddressResponse`](https://docs.microsoft.com/rest/api/maps/search/getsearchaddress#SearchAddressResponse)
-     * - If the query completed successfully.
-     *
-     * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
-     *
-     * <p>Here's a sample Batch Response with 2 _successful_ and 1 _failed_ result:
-     *
-     * <p>```json { "summary": { "successfulRequests": 2, "totalRequests": 3 }, "batchItems": [ { "statusCode": 200,
-     * "response": { "summary": { "query": "one microsoft way redmond wa 98052" }, "results": [ { "position": { "lat":
-     * 47.63989, "lon": -122.12509 } } ] } }, { "statusCode": 200, "response": { "summary": { "query": "pike pl seattle
-     * wa 98101" }, "results": [ { "position": { "lat": 47.60963, "lon": -122.34215 } } ] } }, { "statusCode": 400,
-     * "response": { "error": { "code": "400 BadRequest", "message": "Bad request: one or more parameters were
-     * incorrectly specified or are mutually exclusive." } } } ] } ```.
-     *
      * @param batchId Batch id for querying the operation.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -3923,99 +1045,6 @@ public final class SearchClient {
 
     /**
      * **Search Address Reverse Batch API**
-     *
-     * <p>**Applies to**: S1 pricing tier.
-     *
-     * <p>The Search Address Batch API sends batches of queries to [Search Address Reverse
-     * API](https://docs.microsoft.com/rest/api/maps/search/getsearchaddressreverse) using just a single API call. You
-     * can call Search Address Reverse Batch API to run either asynchronously (async) or synchronously (sync). The async
-     * API allows caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous
-     * Batch Request The Synchronous API is recommended for lightweight batch requests. When the service receives a
-     * request, it will respond as soon as the batch items are calculated and there will be no possibility to retrieve
-     * the results later. The Synchronous API will return a timeout error (a 408 response) if the request takes longer
-     * than 60 seconds. The number of batch items is limited to **100** for this API. ``` POST
-     * https://atlas.microsoft.com/search/address/reverse/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` ### Submit Asynchronous Batch Request The Asynchronous API is appropriate for processing big volumes of
-     * relatively complex search requests - It allows the retrieval of results in a separate call (multiple downloads
-     * are possible). - The asynchronous API is optimized for reliability and is not expected to run into a timeout. -
-     * The number of batch items is limited to **10,000** for this API.
-     *
-     * <p>When you make a request by using async request, by default the service returns a 202 response code along a
-     * redirect URL in the Location field of the response header. This URL should be checked periodically until the
-     * response data or error information is available. The asynchronous responses are stored for **14** days. The
-     * redirect URL returns a 404 response if used after the expiration period.
-     *
-     * <p>Please note that asynchronous batch request is a long-running request. Here's a typical sequence of
-     * operations: 1. Client sends a Search Address Batch `POST` request to Azure Maps 2. The server will respond with
-     * one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request has been accepted.
-     *
-     * <p>&gt; HTTP `Error` - There was an error processing your Batch request. This could either be a `400 Bad Request`
-     * or any other `Error` status code.
-     *
-     * <p>3. If the batch request was accepted successfully, the `Location` header in the response contains the URL to
-     * download the results of the batch request. This status URI looks like following:
-     *
-     * <p>``` GET
-     * https://atlas.microsoft.com/search/address/reverse/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to download the batch results.
-     *
-     * <p>### POST Body for Batch Request To send the _search address reverse_ queries you will use a `POST` request
-     * where the request body will contain the `batchItems` array in `json` format and the `Content-Type` header will be
-     * set to `application/json`. Here's a sample request body containing 5 _search address reverse_ queries:
-     *
-     * <p>```json { "batchItems": [ {"query": "?query=48.858561,2.294911"}, {"query":
-     * "?query=47.639765,-122.127896&amp;radius=5000&amp;limit=2"}, {"query": "?query=47.621028,-122.348170"}, {"query":
-     * "?query=43.722990,10.396695"}, {"query": "?query=40.750958,-73.982336"} ] } ```
-     *
-     * <p>A _search address reverse_ query in a batch is just a partial URL _without_ the protocol, base URL, path,
-     * api-version and subscription-key. It can accept any of the supported _search address reverse_ [URI
-     * parameters](https://docs.microsoft.com/rest/api/maps/search/getsearchaddressreverse#uri-parameters). The string
-     * values in the _search address reverse_ query must be properly escaped (e.g. " character should be escaped with \\
-     * ) and it should also be properly URL-encoded.
-     *
-     * <p>The async API allows caller to batch up to **10,000** queries and sync API up to **100** queries, and the
-     * batch should contain at least **1** query.
-     *
-     * <p>### Download Asynchronous Batch Results To download the async batch results you will issue a `GET` request to
-     * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
-     * `POST` batch request and looks like the following:
-     *
-     * <p>```
-     * https://atlas.microsoft.com/search/address/reverse/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
-     * using the _download URL_. 2. The server will respond with one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
-     * time.
-     *
-     * <p>&gt; HTTP `200 OK` - Batch request successfully processed. The response body contains all the batch results.
-     *
-     * <p>### Batch Response Model The returned data content is similar for async and sync requests. When downloading
-     * the results of an async batch request, if the batch has finished processing, the response body contains the batch
-     * response. This batch response contains a `summary` component that indicates the `totalRequests` that were part of
-     * the original batch request and `successfulRequests`i.e. queries which were executed successfully. The batch
-     * response also includes a `batchItems` array which contains a response for each and every query in the batch
-     * request. The `batchItems` will contain the results in the exact same order the original queries were sent in the
-     * batch request. Each item in `batchItems` contains `statusCode` and `response` fields. Each `response` in
-     * `batchItems` is of one of the following types:
-     *
-     * <p>-
-     * [`SearchAddressReverseResponse`](https://docs.microsoft.com/rest/api/maps/search/getsearchaddressreverse#searchaddressreverseresponse)
-     * - If the query completed successfully.
-     *
-     * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
-     *
-     * <p>Here's a sample Batch Response with 2 _successful_ and 1 _failed_ result:
-     *
-     * <p>```json { "summary": { "successfulRequests": 2, "totalRequests": 3 }, "batchItems": [ { "statusCode": 200,
-     * "response": { "summary": { "queryTime": 11 }, "addresses": [ { "address": { "country": "France",
-     * "freeformAddress": "Avenue Anatole France, 75007 Paris" }, "position": "48.858490,2.294820" } ] } }, {
-     * "statusCode": 200, "response": { "summary": { "queryTime": 1 }, "addresses": [ { "address": { "country": "United
-     * States of America", "freeformAddress": "157th Pl NE, Redmond WA 98052" }, "position": "47.640470,-122.129430" } ]
-     * } }, { "statusCode": 400, "response": { "error": { "code": "400 BadRequest", "message": "Bad request: one or more
-     * parameters were incorrectly specified or are mutually exclusive." } } } ] } ```.
      *
      * @param format Desired format of the response. Only `json` format is supported.
      * @param searchAddressReverseBatchRequestBody The list of reverse geocoding queries/requests to process. The list
@@ -4034,98 +1063,6 @@ public final class SearchClient {
     /**
      * **Search Address Reverse Batch API**
      *
-     * <p>**Applies to**: S1 pricing tier.
-     *
-     * <p>The Search Address Batch API sends batches of queries to [Search Address Reverse
-     * API](https://docs.microsoft.com/rest/api/maps/search/getsearchaddressreverse) using just a single API call. You
-     * can call Search Address Reverse Batch API to run either asynchronously (async) or synchronously (sync). The async
-     * API allows caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous
-     * Batch Request The Synchronous API is recommended for lightweight batch requests. When the service receives a
-     * request, it will respond as soon as the batch items are calculated and there will be no possibility to retrieve
-     * the results later. The Synchronous API will return a timeout error (a 408 response) if the request takes longer
-     * than 60 seconds. The number of batch items is limited to **100** for this API. ``` POST
-     * https://atlas.microsoft.com/search/address/reverse/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` ### Submit Asynchronous Batch Request The Asynchronous API is appropriate for processing big volumes of
-     * relatively complex search requests - It allows the retrieval of results in a separate call (multiple downloads
-     * are possible). - The asynchronous API is optimized for reliability and is not expected to run into a timeout. -
-     * The number of batch items is limited to **10,000** for this API.
-     *
-     * <p>When you make a request by using async request, by default the service returns a 202 response code along a
-     * redirect URL in the Location field of the response header. This URL should be checked periodically until the
-     * response data or error information is available. The asynchronous responses are stored for **14** days. The
-     * redirect URL returns a 404 response if used after the expiration period.
-     *
-     * <p>Please note that asynchronous batch request is a long-running request. Here's a typical sequence of
-     * operations: 1. Client sends a Search Address Batch `POST` request to Azure Maps 2. The server will respond with
-     * one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request has been accepted.
-     *
-     * <p>&gt; HTTP `Error` - There was an error processing your Batch request. This could either be a `400 Bad Request`
-     * or any other `Error` status code.
-     *
-     * <p>3. If the batch request was accepted successfully, the `Location` header in the response contains the URL to
-     * download the results of the batch request. This status URI looks like following:
-     *
-     * <p>``` GET
-     * https://atlas.microsoft.com/search/address/reverse/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to download the batch results.
-     *
-     * <p>### POST Body for Batch Request To send the _search address reverse_ queries you will use a `POST` request
-     * where the request body will contain the `batchItems` array in `json` format and the `Content-Type` header will be
-     * set to `application/json`. Here's a sample request body containing 5 _search address reverse_ queries:
-     *
-     * <p>```json { "batchItems": [ {"query": "?query=48.858561,2.294911"}, {"query":
-     * "?query=47.639765,-122.127896&amp;radius=5000&amp;limit=2"}, {"query": "?query=47.621028,-122.348170"}, {"query":
-     * "?query=43.722990,10.396695"}, {"query": "?query=40.750958,-73.982336"} ] } ```
-     *
-     * <p>A _search address reverse_ query in a batch is just a partial URL _without_ the protocol, base URL, path,
-     * api-version and subscription-key. It can accept any of the supported _search address reverse_ [URI
-     * parameters](https://docs.microsoft.com/rest/api/maps/search/getsearchaddressreverse#uri-parameters). The string
-     * values in the _search address reverse_ query must be properly escaped (e.g. " character should be escaped with \\
-     * ) and it should also be properly URL-encoded.
-     *
-     * <p>The async API allows caller to batch up to **10,000** queries and sync API up to **100** queries, and the
-     * batch should contain at least **1** query.
-     *
-     * <p>### Download Asynchronous Batch Results To download the async batch results you will issue a `GET` request to
-     * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
-     * `POST` batch request and looks like the following:
-     *
-     * <p>```
-     * https://atlas.microsoft.com/search/address/reverse/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
-     * using the _download URL_. 2. The server will respond with one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
-     * time.
-     *
-     * <p>&gt; HTTP `200 OK` - Batch request successfully processed. The response body contains all the batch results.
-     *
-     * <p>### Batch Response Model The returned data content is similar for async and sync requests. When downloading
-     * the results of an async batch request, if the batch has finished processing, the response body contains the batch
-     * response. This batch response contains a `summary` component that indicates the `totalRequests` that were part of
-     * the original batch request and `successfulRequests`i.e. queries which were executed successfully. The batch
-     * response also includes a `batchItems` array which contains a response for each and every query in the batch
-     * request. The `batchItems` will contain the results in the exact same order the original queries were sent in the
-     * batch request. Each item in `batchItems` contains `statusCode` and `response` fields. Each `response` in
-     * `batchItems` is of one of the following types:
-     *
-     * <p>-
-     * [`SearchAddressReverseResponse`](https://docs.microsoft.com/rest/api/maps/search/getsearchaddressreverse#searchaddressreverseresponse)
-     * - If the query completed successfully.
-     *
-     * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
-     *
-     * <p>Here's a sample Batch Response with 2 _successful_ and 1 _failed_ result:
-     *
-     * <p>```json { "summary": { "successfulRequests": 2, "totalRequests": 3 }, "batchItems": [ { "statusCode": 200,
-     * "response": { "summary": { "queryTime": 11 }, "addresses": [ { "address": { "country": "France",
-     * "freeformAddress": "Avenue Anatole France, 75007 Paris" }, "position": "48.858490,2.294820" } ] } }, {
-     * "statusCode": 200, "response": { "summary": { "queryTime": 1 }, "addresses": [ { "address": { "country": "United
-     * States of America", "freeformAddress": "157th Pl NE, Redmond WA 98052" }, "position": "47.640470,-122.129430" } ]
-     * } }, { "statusCode": 400, "response": { "error": { "code": "400 BadRequest", "message": "Bad request: one or more
-     * parameters were incorrectly specified or are mutually exclusive." } } } ] } ```.
      *
      * @param format Desired format of the response. Only `json` format is supported.
      * @param searchAddressReverseBatchRequestBody The list of reverse geocoding queries/requests to process. The list
@@ -4146,98 +1083,6 @@ public final class SearchClient {
     /**
      * **Search Address Reverse Batch API**
      *
-     * <p>**Applies to**: S1 pricing tier.
-     *
-     * <p>The Search Address Batch API sends batches of queries to [Search Address Reverse
-     * API](https://docs.microsoft.com/rest/api/maps/search/getsearchaddressreverse) using just a single API call. You
-     * can call Search Address Reverse Batch API to run either asynchronously (async) or synchronously (sync). The async
-     * API allows caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous
-     * Batch Request The Synchronous API is recommended for lightweight batch requests. When the service receives a
-     * request, it will respond as soon as the batch items are calculated and there will be no possibility to retrieve
-     * the results later. The Synchronous API will return a timeout error (a 408 response) if the request takes longer
-     * than 60 seconds. The number of batch items is limited to **100** for this API. ``` POST
-     * https://atlas.microsoft.com/search/address/reverse/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` ### Submit Asynchronous Batch Request The Asynchronous API is appropriate for processing big volumes of
-     * relatively complex search requests - It allows the retrieval of results in a separate call (multiple downloads
-     * are possible). - The asynchronous API is optimized for reliability and is not expected to run into a timeout. -
-     * The number of batch items is limited to **10,000** for this API.
-     *
-     * <p>When you make a request by using async request, by default the service returns a 202 response code along a
-     * redirect URL in the Location field of the response header. This URL should be checked periodically until the
-     * response data or error information is available. The asynchronous responses are stored for **14** days. The
-     * redirect URL returns a 404 response if used after the expiration period.
-     *
-     * <p>Please note that asynchronous batch request is a long-running request. Here's a typical sequence of
-     * operations: 1. Client sends a Search Address Batch `POST` request to Azure Maps 2. The server will respond with
-     * one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request has been accepted.
-     *
-     * <p>&gt; HTTP `Error` - There was an error processing your Batch request. This could either be a `400 Bad Request`
-     * or any other `Error` status code.
-     *
-     * <p>3. If the batch request was accepted successfully, the `Location` header in the response contains the URL to
-     * download the results of the batch request. This status URI looks like following:
-     *
-     * <p>``` GET
-     * https://atlas.microsoft.com/search/address/reverse/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to download the batch results.
-     *
-     * <p>### POST Body for Batch Request To send the _search address reverse_ queries you will use a `POST` request
-     * where the request body will contain the `batchItems` array in `json` format and the `Content-Type` header will be
-     * set to `application/json`. Here's a sample request body containing 5 _search address reverse_ queries:
-     *
-     * <p>```json { "batchItems": [ {"query": "?query=48.858561,2.294911"}, {"query":
-     * "?query=47.639765,-122.127896&amp;radius=5000&amp;limit=2"}, {"query": "?query=47.621028,-122.348170"}, {"query":
-     * "?query=43.722990,10.396695"}, {"query": "?query=40.750958,-73.982336"} ] } ```
-     *
-     * <p>A _search address reverse_ query in a batch is just a partial URL _without_ the protocol, base URL, path,
-     * api-version and subscription-key. It can accept any of the supported _search address reverse_ [URI
-     * parameters](https://docs.microsoft.com/rest/api/maps/search/getsearchaddressreverse#uri-parameters). The string
-     * values in the _search address reverse_ query must be properly escaped (e.g. " character should be escaped with \\
-     * ) and it should also be properly URL-encoded.
-     *
-     * <p>The async API allows caller to batch up to **10,000** queries and sync API up to **100** queries, and the
-     * batch should contain at least **1** query.
-     *
-     * <p>### Download Asynchronous Batch Results To download the async batch results you will issue a `GET` request to
-     * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
-     * `POST` batch request and looks like the following:
-     *
-     * <p>```
-     * https://atlas.microsoft.com/search/address/reverse/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
-     * using the _download URL_. 2. The server will respond with one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
-     * time.
-     *
-     * <p>&gt; HTTP `200 OK` - Batch request successfully processed. The response body contains all the batch results.
-     *
-     * <p>### Batch Response Model The returned data content is similar for async and sync requests. When downloading
-     * the results of an async batch request, if the batch has finished processing, the response body contains the batch
-     * response. This batch response contains a `summary` component that indicates the `totalRequests` that were part of
-     * the original batch request and `successfulRequests`i.e. queries which were executed successfully. The batch
-     * response also includes a `batchItems` array which contains a response for each and every query in the batch
-     * request. The `batchItems` will contain the results in the exact same order the original queries were sent in the
-     * batch request. Each item in `batchItems` contains `statusCode` and `response` fields. Each `response` in
-     * `batchItems` is of one of the following types:
-     *
-     * <p>-
-     * [`SearchAddressReverseResponse`](https://docs.microsoft.com/rest/api/maps/search/getsearchaddressreverse#searchaddressreverseresponse)
-     * - If the query completed successfully.
-     *
-     * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
-     *
-     * <p>Here's a sample Batch Response with 2 _successful_ and 1 _failed_ result:
-     *
-     * <p>```json { "summary": { "successfulRequests": 2, "totalRequests": 3 }, "batchItems": [ { "statusCode": 200,
-     * "response": { "summary": { "queryTime": 11 }, "addresses": [ { "address": { "country": "France",
-     * "freeformAddress": "Avenue Anatole France, 75007 Paris" }, "position": "48.858490,2.294820" } ] } }, {
-     * "statusCode": 200, "response": { "summary": { "queryTime": 1 }, "addresses": [ { "address": { "country": "United
-     * States of America", "freeformAddress": "157th Pl NE, Redmond WA 98052" }, "position": "47.640470,-122.129430" } ]
-     * } }, { "statusCode": 400, "response": { "error": { "code": "400 BadRequest", "message": "Bad request: one or more
-     * parameters were incorrectly specified or are mutually exclusive." } } } ] } ```.
      *
      * @param format Desired format of the response. Only `json` format is supported.
      * @param searchAddressReverseBatchRequestBody The list of reverse geocoding queries/requests to process. The list
@@ -4256,99 +1101,6 @@ public final class SearchClient {
     /**
      * **Search Address Reverse Batch API**
      *
-     * <p>**Applies to**: S1 pricing tier.
-     *
-     * <p>The Search Address Batch API sends batches of queries to [Search Address Reverse
-     * API](https://docs.microsoft.com/rest/api/maps/search/getsearchaddressreverse) using just a single API call. You
-     * can call Search Address Reverse Batch API to run either asynchronously (async) or synchronously (sync). The async
-     * API allows caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous
-     * Batch Request The Synchronous API is recommended for lightweight batch requests. When the service receives a
-     * request, it will respond as soon as the batch items are calculated and there will be no possibility to retrieve
-     * the results later. The Synchronous API will return a timeout error (a 408 response) if the request takes longer
-     * than 60 seconds. The number of batch items is limited to **100** for this API. ``` POST
-     * https://atlas.microsoft.com/search/address/reverse/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` ### Submit Asynchronous Batch Request The Asynchronous API is appropriate for processing big volumes of
-     * relatively complex search requests - It allows the retrieval of results in a separate call (multiple downloads
-     * are possible). - The asynchronous API is optimized for reliability and is not expected to run into a timeout. -
-     * The number of batch items is limited to **10,000** for this API.
-     *
-     * <p>When you make a request by using async request, by default the service returns a 202 response code along a
-     * redirect URL in the Location field of the response header. This URL should be checked periodically until the
-     * response data or error information is available. The asynchronous responses are stored for **14** days. The
-     * redirect URL returns a 404 response if used after the expiration period.
-     *
-     * <p>Please note that asynchronous batch request is a long-running request. Here's a typical sequence of
-     * operations: 1. Client sends a Search Address Batch `POST` request to Azure Maps 2. The server will respond with
-     * one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request has been accepted.
-     *
-     * <p>&gt; HTTP `Error` - There was an error processing your Batch request. This could either be a `400 Bad Request`
-     * or any other `Error` status code.
-     *
-     * <p>3. If the batch request was accepted successfully, the `Location` header in the response contains the URL to
-     * download the results of the batch request. This status URI looks like following:
-     *
-     * <p>``` GET
-     * https://atlas.microsoft.com/search/address/reverse/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to download the batch results.
-     *
-     * <p>### POST Body for Batch Request To send the _search address reverse_ queries you will use a `POST` request
-     * where the request body will contain the `batchItems` array in `json` format and the `Content-Type` header will be
-     * set to `application/json`. Here's a sample request body containing 5 _search address reverse_ queries:
-     *
-     * <p>```json { "batchItems": [ {"query": "?query=48.858561,2.294911"}, {"query":
-     * "?query=47.639765,-122.127896&amp;radius=5000&amp;limit=2"}, {"query": "?query=47.621028,-122.348170"}, {"query":
-     * "?query=43.722990,10.396695"}, {"query": "?query=40.750958,-73.982336"} ] } ```
-     *
-     * <p>A _search address reverse_ query in a batch is just a partial URL _without_ the protocol, base URL, path,
-     * api-version and subscription-key. It can accept any of the supported _search address reverse_ [URI
-     * parameters](https://docs.microsoft.com/rest/api/maps/search/getsearchaddressreverse#uri-parameters). The string
-     * values in the _search address reverse_ query must be properly escaped (e.g. " character should be escaped with \\
-     * ) and it should also be properly URL-encoded.
-     *
-     * <p>The async API allows caller to batch up to **10,000** queries and sync API up to **100** queries, and the
-     * batch should contain at least **1** query.
-     *
-     * <p>### Download Asynchronous Batch Results To download the async batch results you will issue a `GET` request to
-     * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
-     * `POST` batch request and looks like the following:
-     *
-     * <p>```
-     * https://atlas.microsoft.com/search/address/reverse/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
-     * using the _download URL_. 2. The server will respond with one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
-     * time.
-     *
-     * <p>&gt; HTTP `200 OK` - Batch request successfully processed. The response body contains all the batch results.
-     *
-     * <p>### Batch Response Model The returned data content is similar for async and sync requests. When downloading
-     * the results of an async batch request, if the batch has finished processing, the response body contains the batch
-     * response. This batch response contains a `summary` component that indicates the `totalRequests` that were part of
-     * the original batch request and `successfulRequests`i.e. queries which were executed successfully. The batch
-     * response also includes a `batchItems` array which contains a response for each and every query in the batch
-     * request. The `batchItems` will contain the results in the exact same order the original queries were sent in the
-     * batch request. Each item in `batchItems` contains `statusCode` and `response` fields. Each `response` in
-     * `batchItems` is of one of the following types:
-     *
-     * <p>-
-     * [`SearchAddressReverseResponse`](https://docs.microsoft.com/rest/api/maps/search/getsearchaddressreverse#searchaddressreverseresponse)
-     * - If the query completed successfully.
-     *
-     * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
-     *
-     * <p>Here's a sample Batch Response with 2 _successful_ and 1 _failed_ result:
-     *
-     * <p>```json { "summary": { "successfulRequests": 2, "totalRequests": 3 }, "batchItems": [ { "statusCode": 200,
-     * "response": { "summary": { "queryTime": 11 }, "addresses": [ { "address": { "country": "France",
-     * "freeformAddress": "Avenue Anatole France, 75007 Paris" }, "position": "48.858490,2.294820" } ] } }, {
-     * "statusCode": 200, "response": { "summary": { "queryTime": 1 }, "addresses": [ { "address": { "country": "United
-     * States of America", "freeformAddress": "157th Pl NE, Redmond WA 98052" }, "position": "47.640470,-122.129430" } ]
-     * } }, { "statusCode": 400, "response": { "error": { "code": "400 BadRequest", "message": "Bad request: one or more
-     * parameters were incorrectly specified or are mutually exclusive." } } } ] } ```.
-     *
      * @param format Desired format of the response. Only `json` format is supported.
      * @param searchAddressReverseBatchRequestBody The list of reverse geocoding queries/requests to process. The list
      *     can contain a max of 10,000 queries and must contain at least 1 query.
@@ -4366,100 +1118,6 @@ public final class SearchClient {
 
     /**
      * **Search Address Reverse Batch API**
-     *
-     * <p>**Applies to**: S1 pricing tier.
-     *
-     * <p>The Search Address Batch API sends batches of queries to [Search Address Reverse
-     * API](https://docs.microsoft.com/rest/api/maps/search/getsearchaddressreverse) using just a single API call. You
-     * can call Search Address Reverse Batch API to run either asynchronously (async) or synchronously (sync). The async
-     * API allows caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous
-     * Batch Request The Synchronous API is recommended for lightweight batch requests. When the service receives a
-     * request, it will respond as soon as the batch items are calculated and there will be no possibility to retrieve
-     * the results later. The Synchronous API will return a timeout error (a 408 response) if the request takes longer
-     * than 60 seconds. The number of batch items is limited to **100** for this API. ``` POST
-     * https://atlas.microsoft.com/search/address/reverse/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` ### Submit Asynchronous Batch Request The Asynchronous API is appropriate for processing big volumes of
-     * relatively complex search requests - It allows the retrieval of results in a separate call (multiple downloads
-     * are possible). - The asynchronous API is optimized for reliability and is not expected to run into a timeout. -
-     * The number of batch items is limited to **10,000** for this API.
-     *
-     * <p>When you make a request by using async request, by default the service returns a 202 response code along a
-     * redirect URL in the Location field of the response header. This URL should be checked periodically until the
-     * response data or error information is available. The asynchronous responses are stored for **14** days. The
-     * redirect URL returns a 404 response if used after the expiration period.
-     *
-     * <p>Please note that asynchronous batch request is a long-running request. Here's a typical sequence of
-     * operations: 1. Client sends a Search Address Batch `POST` request to Azure Maps 2. The server will respond with
-     * one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request has been accepted.
-     *
-     * <p>&gt; HTTP `Error` - There was an error processing your Batch request. This could either be a `400 Bad Request`
-     * or any other `Error` status code.
-     *
-     * <p>3. If the batch request was accepted successfully, the `Location` header in the response contains the URL to
-     * download the results of the batch request. This status URI looks like following:
-     *
-     * <p>``` GET
-     * https://atlas.microsoft.com/search/address/reverse/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to download the batch results.
-     *
-     * <p>### POST Body for Batch Request To send the _search address reverse_ queries you will use a `POST` request
-     * where the request body will contain the `batchItems` array in `json` format and the `Content-Type` header will be
-     * set to `application/json`. Here's a sample request body containing 5 _search address reverse_ queries:
-     *
-     * <p>```json { "batchItems": [ {"query": "?query=48.858561,2.294911"}, {"query":
-     * "?query=47.639765,-122.127896&amp;radius=5000&amp;limit=2"}, {"query": "?query=47.621028,-122.348170"}, {"query":
-     * "?query=43.722990,10.396695"}, {"query": "?query=40.750958,-73.982336"} ] } ```
-     *
-     * <p>A _search address reverse_ query in a batch is just a partial URL _without_ the protocol, base URL, path,
-     * api-version and subscription-key. It can accept any of the supported _search address reverse_ [URI
-     * parameters](https://docs.microsoft.com/rest/api/maps/search/getsearchaddressreverse#uri-parameters). The string
-     * values in the _search address reverse_ query must be properly escaped (e.g. " character should be escaped with \\
-     * ) and it should also be properly URL-encoded.
-     *
-     * <p>The async API allows caller to batch up to **10,000** queries and sync API up to **100** queries, and the
-     * batch should contain at least **1** query.
-     *
-     * <p>### Download Asynchronous Batch Results To download the async batch results you will issue a `GET` request to
-     * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
-     * `POST` batch request and looks like the following:
-     *
-     * <p>```
-     * https://atlas.microsoft.com/search/address/reverse/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
-     * using the _download URL_. 2. The server will respond with one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
-     * time.
-     *
-     * <p>&gt; HTTP `200 OK` - Batch request successfully processed. The response body contains all the batch results.
-     *
-     * <p>### Batch Response Model The returned data content is similar for async and sync requests. When downloading
-     * the results of an async batch request, if the batch has finished processing, the response body contains the batch
-     * response. This batch response contains a `summary` component that indicates the `totalRequests` that were part of
-     * the original batch request and `successfulRequests`i.e. queries which were executed successfully. The batch
-     * response also includes a `batchItems` array which contains a response for each and every query in the batch
-     * request. The `batchItems` will contain the results in the exact same order the original queries were sent in the
-     * batch request. Each item in `batchItems` contains `statusCode` and `response` fields. Each `response` in
-     * `batchItems` is of one of the following types:
-     *
-     * <p>-
-     * [`SearchAddressReverseResponse`](https://docs.microsoft.com/rest/api/maps/search/getsearchaddressreverse#searchaddressreverseresponse)
-     * - If the query completed successfully.
-     *
-     * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
-     *
-     * <p>Here's a sample Batch Response with 2 _successful_ and 1 _failed_ result:
-     *
-     * <p>```json { "summary": { "successfulRequests": 2, "totalRequests": 3 }, "batchItems": [ { "statusCode": 200,
-     * "response": { "summary": { "queryTime": 11 }, "addresses": [ { "address": { "country": "France",
-     * "freeformAddress": "Avenue Anatole France, 75007 Paris" }, "position": "48.858490,2.294820" } ] } }, {
-     * "statusCode": 200, "response": { "summary": { "queryTime": 1 }, "addresses": [ { "address": { "country": "United
-     * States of America", "freeformAddress": "157th Pl NE, Redmond WA 98052" }, "position": "47.640470,-122.129430" } ]
-     * } }, { "statusCode": 400, "response": { "error": { "code": "400 BadRequest", "message": "Bad request: one or more
-     * parameters were incorrectly specified or are mutually exclusive." } } } ] } ```.
-     *
      * @param batchId Batch id for querying the operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -4474,99 +1132,7 @@ public final class SearchClient {
 
     /**
      * **Search Address Reverse Batch API**
-     *
-     * <p>**Applies to**: S1 pricing tier.
-     *
-     * <p>The Search Address Batch API sends batches of queries to [Search Address Reverse
-     * API](https://docs.microsoft.com/rest/api/maps/search/getsearchaddressreverse) using just a single API call. You
-     * can call Search Address Reverse Batch API to run either asynchronously (async) or synchronously (sync). The async
-     * API allows caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous
-     * Batch Request The Synchronous API is recommended for lightweight batch requests. When the service receives a
-     * request, it will respond as soon as the batch items are calculated and there will be no possibility to retrieve
-     * the results later. The Synchronous API will return a timeout error (a 408 response) if the request takes longer
-     * than 60 seconds. The number of batch items is limited to **100** for this API. ``` POST
-     * https://atlas.microsoft.com/search/address/reverse/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` ### Submit Asynchronous Batch Request The Asynchronous API is appropriate for processing big volumes of
-     * relatively complex search requests - It allows the retrieval of results in a separate call (multiple downloads
-     * are possible). - The asynchronous API is optimized for reliability and is not expected to run into a timeout. -
-     * The number of batch items is limited to **10,000** for this API.
-     *
-     * <p>When you make a request by using async request, by default the service returns a 202 response code along a
-     * redirect URL in the Location field of the response header. This URL should be checked periodically until the
-     * response data or error information is available. The asynchronous responses are stored for **14** days. The
-     * redirect URL returns a 404 response if used after the expiration period.
-     *
-     * <p>Please note that asynchronous batch request is a long-running request. Here's a typical sequence of
-     * operations: 1. Client sends a Search Address Batch `POST` request to Azure Maps 2. The server will respond with
-     * one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request has been accepted.
-     *
-     * <p>&gt; HTTP `Error` - There was an error processing your Batch request. This could either be a `400 Bad Request`
-     * or any other `Error` status code.
-     *
-     * <p>3. If the batch request was accepted successfully, the `Location` header in the response contains the URL to
-     * download the results of the batch request. This status URI looks like following:
-     *
-     * <p>``` GET
-     * https://atlas.microsoft.com/search/address/reverse/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to download the batch results.
-     *
-     * <p>### POST Body for Batch Request To send the _search address reverse_ queries you will use a `POST` request
-     * where the request body will contain the `batchItems` array in `json` format and the `Content-Type` header will be
-     * set to `application/json`. Here's a sample request body containing 5 _search address reverse_ queries:
-     *
-     * <p>```json { "batchItems": [ {"query": "?query=48.858561,2.294911"}, {"query":
-     * "?query=47.639765,-122.127896&amp;radius=5000&amp;limit=2"}, {"query": "?query=47.621028,-122.348170"}, {"query":
-     * "?query=43.722990,10.396695"}, {"query": "?query=40.750958,-73.982336"} ] } ```
-     *
-     * <p>A _search address reverse_ query in a batch is just a partial URL _without_ the protocol, base URL, path,
-     * api-version and subscription-key. It can accept any of the supported _search address reverse_ [URI
-     * parameters](https://docs.microsoft.com/rest/api/maps/search/getsearchaddressreverse#uri-parameters). The string
-     * values in the _search address reverse_ query must be properly escaped (e.g. " character should be escaped with \\
-     * ) and it should also be properly URL-encoded.
-     *
-     * <p>The async API allows caller to batch up to **10,000** queries and sync API up to **100** queries, and the
-     * batch should contain at least **1** query.
-     *
-     * <p>### Download Asynchronous Batch Results To download the async batch results you will issue a `GET` request to
-     * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
-     * `POST` batch request and looks like the following:
-     *
-     * <p>```
-     * https://atlas.microsoft.com/search/address/reverse/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
-     * using the _download URL_. 2. The server will respond with one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
-     * time.
-     *
-     * <p>&gt; HTTP `200 OK` - Batch request successfully processed. The response body contains all the batch results.
-     *
-     * <p>### Batch Response Model The returned data content is similar for async and sync requests. When downloading
-     * the results of an async batch request, if the batch has finished processing, the response body contains the batch
-     * response. This batch response contains a `summary` component that indicates the `totalRequests` that were part of
-     * the original batch request and `successfulRequests`i.e. queries which were executed successfully. The batch
-     * response also includes a `batchItems` array which contains a response for each and every query in the batch
-     * request. The `batchItems` will contain the results in the exact same order the original queries were sent in the
-     * batch request. Each item in `batchItems` contains `statusCode` and `response` fields. Each `response` in
-     * `batchItems` is of one of the following types:
-     *
-     * <p>-
-     * [`SearchAddressReverseResponse`](https://docs.microsoft.com/rest/api/maps/search/getsearchaddressreverse#searchaddressreverseresponse)
-     * - If the query completed successfully.
-     *
-     * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
-     *
-     * <p>Here's a sample Batch Response with 2 _successful_ and 1 _failed_ result:
-     *
-     * <p>```json { "summary": { "successfulRequests": 2, "totalRequests": 3 }, "batchItems": [ { "statusCode": 200,
-     * "response": { "summary": { "queryTime": 11 }, "addresses": [ { "address": { "country": "France",
-     * "freeformAddress": "Avenue Anatole France, 75007 Paris" }, "position": "48.858490,2.294820" } ] } }, {
-     * "statusCode": 200, "response": { "summary": { "queryTime": 1 }, "addresses": [ { "address": { "country": "United
-     * States of America", "freeformAddress": "157th Pl NE, Redmond WA 98052" }, "position": "47.640470,-122.129430" } ]
-     * } }, { "statusCode": 400, "response": { "error": { "code": "400 BadRequest", "message": "Bad request: one or more
-     * parameters were incorrectly specified or are mutually exclusive." } } } ] } ```.
+
      *
      * @param batchId Batch id for querying the operation.
      * @param context The context to associate with this operation.
