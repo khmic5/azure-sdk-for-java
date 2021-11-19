@@ -109,9 +109,13 @@ public class SearchSample {
         // Search address reverse cross street - https://docs.microsoft.com/en-us/rest/api/maps/search/get-search-address-reverse-cross-street
         System.out.println("Revere Search Cross Street Address:");
 
-        // regular
+        // simple
         MapsCommon.print(client.reverseSearchCrossStreetAddress(
-                new LatLongPairAbbreviated().setLat(37.337).setLon(-121.89), null, null, null, null, null));
+                new LatLongPairAbbreviated().setLat(37.337).setLon(-121.89)));
+
+        // overload - only top 2 results
+        MapsCommon.print(client.reverseSearchCrossStreetAddress(
+            new LatLongPairAbbreviated().setLat(37.337).setLon(-121.89), 2, null, null, null, null));
 
         // complete
         MapsCommon.print(client.reverseSearchCrossStreetAddressWithResponse(
@@ -120,6 +124,8 @@ public class SearchSample {
 
         //  Search address structured - https://docs.microsoft.com/en-us/rest/api/maps/search/get-search-address-structured
         System.out.println("Search Address Structured:");
+
+        // simple
         MapsCommon.print(client.searchStructuredAddress(new SearchStructuredAddressOptions()
                 .countryCode("US")
                 .postalCode("98121")
@@ -127,6 +133,15 @@ public class SearchSample {
                 .streetName("NE 24th Street")
                 .municipality("Redmond")
                 .countrySubdivision("WA")));
+
+        // complete
+        MapsCommon.print(client.searchStructuredAddressWithResponse(new SearchStructuredAddressOptions()
+                .countryCode("US")
+                .postalCode("98121")
+                .streetNumber("15127")
+                .streetName("NE 24th Street")
+                .municipality("Redmond")
+                .countrySubdivision("WA"), null).getStatusCode());
 
         System.exit(0);
         // Search fuzzy - https://docs.microsoft.com/en-us/rest/api/maps/search/get-search-fuzzy

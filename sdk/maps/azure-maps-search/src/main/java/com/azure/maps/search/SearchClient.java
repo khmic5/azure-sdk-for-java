@@ -558,9 +558,16 @@ public final class SearchClient {
                 context);
     }
 
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public ReverseSearchCrossStreetAddressResult reverseSearchCrossStreetAddress(
+            LatLongPairAbbreviated coordinates) {
+
+        return this.reverseSearchCrossStreetAddress(coordinates,
+            null, null, null, null, null);
+    }
+
     /**
      * **Reverse Geocode to a Cross Street**
-
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -587,7 +594,6 @@ public final class SearchClient {
     /**
      * **Reverse Geocode to a Cross Street**
      *
-
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
