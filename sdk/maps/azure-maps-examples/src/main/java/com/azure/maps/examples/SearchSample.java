@@ -11,14 +11,23 @@ import com.azure.core.http.HttpResponse;
 import com.azure.core.http.policy.HttpLogDetailLevel;
 import com.azure.core.http.policy.HttpLogOptions;
 import com.azure.core.http.policy.HttpPipelinePolicy;
+import com.azure.core.http.rest.Response;
 import com.azure.maps.search.SearchClient;
 import com.azure.maps.search.SearchClientBuilder;
+import com.azure.maps.search.implementation.models.LatLongPairAbbreviated;
 import com.azure.maps.search.models.BatchRequest;
+import com.azure.maps.search.models.FuzzySearchOptions;
+import com.azure.maps.search.models.GeographicEntityType;
 import com.azure.maps.search.models.OperatingHoursRange;
 import com.azure.maps.search.models.ReverseSearchAddressBatchProcessResult;
+import com.azure.maps.search.models.ReverseSearchAddressOptions;
+import com.azure.maps.search.models.SearchAddressOptions;
 import com.azure.maps.search.models.SearchAddressResult;
 import com.azure.maps.search.models.SearchAlongRouteRequest;
 import com.azure.maps.search.models.SearchInsideGeometryRequest;
+import com.azure.maps.search.models.SearchNearbyPointsOfInterestOptions;
+import com.azure.maps.search.models.SearchPointOfInterestCategoryOptions;
+import com.azure.maps.search.models.SearchPointOfInterestOptions;
 
 import reactor.core.publisher.Mono;
 
@@ -54,22 +63,61 @@ public class SearchSample {
         SearchClient client = builder.buildClient();
 
         /* Stand-alone, one-shot operations */
-
         // Search address - https://docs.microsoft.com/en-us/rest/api/maps/search/get-search-address
         System.out.println("Search Address:");
-        MapsCommon.print(client.searchAddress("15127 NE 24th Street, Redmond, WA 98052",
-            null, null, null, null, null, null, null, null, null, null, null, null, null));
+
+        // simple
+        MapsCommon.print(client.searchAddress("15127 NE 24th Street, Redmond, WA 98052"));
+
+        // options
+        MapsCommon.print(client.searchAddress(new SearchAddressOptions("1 Main Street")
+                .coordinates(new LatLongPairAbbreviated()
+                    .setLat(40.706270)
+                    .setLon(-74.011454))
+                .radiusInMeters(40000)
+                .top(5)));
+
+        // complete
+        MapsCommon.print(client.searchAddressWithResponse(new SearchAddressOptions("1 Main Street")
+                .coordinates(new LatLongPairAbbreviated()
+                    .setLat(40.706270)
+                    .setLon(-74.011454))
+                .radiusInMeters(40000)
+                .top(5), null).getStatusCode());
 
         // Search address reverse - https://docs.microsoft.com/en-us/rest/api/maps/search/get-search-address-reverse
         System.out.println("Search Address Reverse:");
-        MapsCommon.print(client.reverseSearchAddress(
-            Arrays.asList(37.337,-121.89),
-            null, null, null, null, null, null, null, null, null, null, null));
+
+        // simple
+        MapsCommon.print(client.reverseSearchAddress(new LatLongPairAbbreviated().setLat(37.337).setLon(-121.89)));
+
+        // options
+        MapsCommon.print(client.reverseSearchAddress(new ReverseSearchAddressOptions(
+                new LatLongPairAbbreviated().setLat(37.337).setLon(-121.89))
+                .includeSpeedLimit(true)
+                .entityType(GeographicEntityType.COUNTRY_SECONDARY_SUBDIVISION) // returns only city
+                ));
+
+        // complete
+        MapsCommon.print(client.reverseSearchAddressWithResponse(new ReverseSearchAddressOptions(
+            new LatLongPairAbbreviated().setLat(37.337).setLon(-121.89))
+            .includeSpeedLimit(true)
+            .entityType(GeographicEntityType.COUNTRY_SECONDARY_SUBDIVISION) // returns only city
+            , null).getStatusCode());
 
         // Search address reverse cross street - https://docs.microsoft.com/en-us/rest/api/maps/search/get-search-address-reverse-cross-street
         System.out.println("Revere Search Cross Street Address:");
+
+        // regular
         MapsCommon.print(client.reverseSearchCrossStreetAddress(
-            Arrays.asList(37.337,-121.89), null, null, null, null, null));
+                new LatLongPairAbbreviated().setLat(37.337).setLon(-121.89), null, null, null, null, null));
+
+        // complete
+        MapsCommon.print(client.reverseSearchCrossStreetAddressWithResponse(
+                new LatLongPairAbbreviated().setLat(37.337).setLon(-121.89), null, null, null, null, null, null)
+                .getStatusCode());
+
+        System.exit(0);
 
         //  Search address structured - https://docs.microsoft.com/en-us/rest/api/maps/search/get-search-address-structured
         System.out.println("Search Address Structured:");
@@ -78,9 +126,20 @@ public class SearchSample {
 
         // Search fuzzy - https://docs.microsoft.com/en-us/rest/api/maps/search/get-search-fuzzy
         System.out.println("Search Fuzzy:");
-        SearchAddressResult results = client.fuzzySearch("starbucks", null, null, null, null,
-            null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+        MapsCommon.print(client.fuzzySearch("starbucks"));
+
+        // with options
+        SearchAddressResult results = client.fuzzySearch(new FuzzySearchOptions("1 Microsoft Way")
+                .coordinates(new LatLongPairAbbreviated()
+                    .setLat(40.706270)
+                    .setLon(-74.011454))
+                .top(5));
         MapsCommon.print(results);
+
+        // with response
+        Response<SearchAddressResult> response = client.fuzzySearchWithResponse(
+                new FuzzySearchOptions("starbucks"), null);
+        MapsCommon.print(response.getStatusCode());
 
         // Get polygon - https://docs.microsoft.com/en-us/rest/api/maps/search/get-search-polygon
         List<String> ids = results.getResults().stream()
@@ -93,20 +152,61 @@ public class SearchSample {
             MapsCommon.print(client.getPolygon(ids));
         }
 
-        // Search nearby - https://docs.microsoft.com/en-us/rest/api/maps/search/get-search-nearby
-        System.out.println("Search Nearby:");
-        MapsCommon.print(client.searchNearbyPointOfInterest(40.706270f, -74.011454f, null, null, null, null,
-            null, null, null, null, null, null));
-
         // Search POI - https://docs.microsoft.com/en-us/rest/api/maps/search/get-search-poi
         System.out.println("Search Points of Interest:");
-        MapsCommon.print(client.searchPointOfInterest("pizza", null, null, null, null, null, 36.98844,
-            -121.97483, null, null, null, null, null, null, null, null, OperatingHoursRange.NEXT_SEVEN_DAYS));
+
+        // short
+        MapsCommon.print(client.searchPointOfInterest("pizza"));
+
+        // options
+        MapsCommon.print(client.searchPointOfInterest(new SearchPointOfInterestOptions("pizza")
+                .coordinates(new LatLongPairAbbreviated().setLat(36.98844).setLon(-121.97483))
+                .operatingHours(OperatingHoursRange.NEXT_SEVEN_DAYS)));
+
+        // with response
+        MapsCommon.print(client.searchPointOfInterestWithResponse(new SearchPointOfInterestOptions("pizza")
+                .coordinates(new LatLongPairAbbreviated().setLat(36.98844).setLon(-121.97483))
+                .operatingHours(OperatingHoursRange.NEXT_SEVEN_DAYS), null).getStatusCode());
+
+        // Search nearby - https://docs.microsoft.com/en-us/rest/api/maps/search/get-search-nearby
+        System.out.println("Search Nearby:");
+
+        // simple
+        MapsCommon.print(client.searchNearbyPointOfInterest(new LatLongPairAbbreviated()
+                .setLat(40.706270)
+                .setLon(-74.011454)));
+
+        // options
+        MapsCommon.print(client.searchNearbyPointOfInterest(new SearchNearbyPointsOfInterestOptions(
+                new LatLongPairAbbreviated().setLat(40.706270).setLon(-74.011454))
+                .countryFilter(Arrays.asList("US"))
+                .top(10)));
+
+        // response
+        MapsCommon.print(client.searchNearbyPointOfInterestWithResponse(new SearchNearbyPointsOfInterestOptions(
+                new LatLongPairAbbreviated().setLat(40.706270).setLon(-74.011454))
+                .countryFilter(Arrays.asList("US"))
+                .top(10), null).getStatusCode());
 
         // Search POI Category - https://docs.microsoft.com/en-us/rest/api/maps/search/get-search-poi-category
         System.out.println("Get Point of Interest Category:");
-        MapsCommon.print(client.searchPointOfInterestCategory("atm", null, null, null, null, null, null,
-            null, null, null, null, null, null, null, null, null, null));
+
+        // simple - search for restaurant
+        MapsCommon.print(client.searchPointOfInterestCategory("pasta", Arrays.asList(7315)));
+
+        // complete - search for italian restaurant in NYC
+        MapsCommon.print(client.searchPointOfInterestCategory(new SearchPointOfInterestCategoryOptions("pizza")
+                .coordinates(new LatLongPairAbbreviated().setLat(40.706270).setLon(-74.011454))
+                .categoryFilter(Arrays.asList(7315))
+                .top(3)));
+
+        // with response
+        MapsCommon.print(client.searchPointOfInterestCategoryWithResponse(new SearchPointOfInterestCategoryOptions("pizza")
+                .coordinates(new LatLongPairAbbreviated().setLat(40.706270).setLon(-74.011454))
+                .categoryFilter(Arrays.asList(7315))
+                .top(3), null).getStatusCode());
+
+        System.exit(0);
 
         // Get POI Category Tree - https://docs.microsoft.com/en-us/rest/api/maps/search/get-search-poi-category-tree-preview
         // client.getSearchPoiCategoryTreePreviewWithResponse() offers a complete version including more parameters and
