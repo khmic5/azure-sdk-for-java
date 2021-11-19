@@ -28,6 +28,7 @@ import com.azure.maps.search.models.SearchInsideGeometryRequest;
 import com.azure.maps.search.models.SearchNearbyPointsOfInterestOptions;
 import com.azure.maps.search.models.SearchPointOfInterestCategoryOptions;
 import com.azure.maps.search.models.SearchPointOfInterestOptions;
+import com.azure.maps.search.models.SearchStructuredAddressOptions;
 
 import reactor.core.publisher.Mono;
 
@@ -117,13 +118,17 @@ public class SearchSample {
                 new LatLongPairAbbreviated().setLat(37.337).setLon(-121.89), null, null, null, null, null, null)
                 .getStatusCode());
 
-        System.exit(0);
-
         //  Search address structured - https://docs.microsoft.com/en-us/rest/api/maps/search/get-search-address-structured
         System.out.println("Search Address Structured:");
-        MapsCommon.print(client.searchStructuredAddress(null, "US", null, null,
-            "15127", "NE 24th Street", null, "Redmond", null, null, null, "WA", "98052", null, null, null));
+        MapsCommon.print(client.searchStructuredAddress(new SearchStructuredAddressOptions()
+                .countryCode("US")
+                .postalCode("98121")
+                .streetNumber("15127")
+                .streetName("NE 24th Street")
+                .municipality("Redmond")
+                .countrySubdivision("WA")));
 
+        System.exit(0);
         // Search fuzzy - https://docs.microsoft.com/en-us/rest/api/maps/search/get-search-fuzzy
         System.out.println("Search Fuzzy:");
         MapsCommon.print(client.fuzzySearch("starbucks"));
