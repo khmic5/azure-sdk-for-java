@@ -101,10 +101,10 @@ public class SearchSample {
 
         // complete
         MapsCommon.print(client.reverseSearchAddressWithResponse(new ReverseSearchAddressOptions(
-            new LatLongPairAbbreviated().setLat(37.337).setLon(-121.89))
-            .includeSpeedLimit(true)
-            .entityType(GeographicEntityType.COUNTRY_SECONDARY_SUBDIVISION) // returns only city
-            , null).getStatusCode());
+                new LatLongPairAbbreviated().setLat(37.337).setLon(-121.89))
+                .includeSpeedLimit(true)
+                .entityType(GeographicEntityType.COUNTRY_SECONDARY_SUBDIVISION) // returns only city
+                , null).getStatusCode());
 
         // Search address reverse cross street - https://docs.microsoft.com/en-us/rest/api/maps/search/get-search-address-reverse-cross-street
         System.out.println("Revere Search Cross Street Address:");
