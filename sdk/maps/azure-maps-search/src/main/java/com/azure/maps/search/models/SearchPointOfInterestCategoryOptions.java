@@ -7,15 +7,6 @@ public class SearchPointOfInterestCategoryOptions extends BaseSearchPointOfInter
     private Boolean isTypeAhead;
     private List<SearchIndexes> extendedPostalCodesFor;
 
-    /**
-     *
-     * @param query
-     */
-
-    public SearchPointOfInterestCategoryOptions(String query) {
-        this.query = query;
-    }
-
     public String getQuery() {
         return query;
     }
