@@ -3,13 +3,11 @@ package com.azure.maps.search.models;
 import java.util.List;
 import java.util.Optional;
 
-import com.azure.maps.search.implementation.models.LatLongPairAbbreviated;
-
 public class BaseSearchOptions<T extends BaseSearchOptions<T>> {
     private Integer top;
     private Integer skip;
     private List<String> countryFilter;
-    private LatLongPairAbbreviated coordinates;
+    private LatLong coordinates;
     private Integer radiusInMeters;
     private String topLeft;
     private String btmRight;
@@ -44,7 +42,7 @@ public class BaseSearchOptions<T extends BaseSearchOptions<T>> {
         return language;
     }
 
-    public Optional<LatLongPairAbbreviated> getCoordinates() {
+    public Optional<LatLong> getCoordinates() {
         return Optional.ofNullable(this.coordinates);
     }
 
@@ -101,7 +99,7 @@ public class BaseSearchOptions<T extends BaseSearchOptions<T>> {
     }
 
     @SuppressWarnings("unchecked")
-    public T coordinates(LatLongPairAbbreviated coordinates) {
+    public T coordinates(LatLong coordinates) {
         this.coordinates = coordinates;
         return (T) this;
     }
