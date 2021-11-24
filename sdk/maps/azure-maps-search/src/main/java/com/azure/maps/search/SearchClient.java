@@ -14,15 +14,11 @@ import com.azure.core.http.rest.Response;
 import com.azure.core.util.Context;
 import com.azure.core.util.polling.SyncPoller;
 import com.azure.maps.search.implementation.SearchesImpl;
-import com.azure.maps.search.implementation.models.LatLongPairAbbreviated;
 import com.azure.maps.search.models.BatchRequest;
-import com.azure.maps.search.models.ElectricVehicleConnector;
 import com.azure.maps.search.models.ErrorResponseException;
 import com.azure.maps.search.models.FuzzySearchOptions;
-import com.azure.maps.search.models.GeographicEntityType;
 import com.azure.maps.search.models.JsonFormat;
-import com.azure.maps.search.models.LocalizedMapView;
-import com.azure.maps.search.models.OperatingHoursRange;
+import com.azure.maps.search.models.LatLong;
 import com.azure.maps.search.models.PointOfInterestCategoryTreeResult;
 import com.azure.maps.search.models.PolygonResult;
 import com.azure.maps.search.models.ResponseFormat;
@@ -31,13 +27,11 @@ import com.azure.maps.search.models.ReverseSearchAddressOptions;
 import com.azure.maps.search.models.ReverseSearchAddressResult;
 import com.azure.maps.search.models.ReverseSearchCrossStreetAddressOptions;
 import com.azure.maps.search.models.ReverseSearchCrossStreetAddressResult;
-import com.azure.maps.search.models.RoadUseType;
 import com.azure.maps.search.models.SearchAddressBatchProcessResult;
 import com.azure.maps.search.models.SearchAddressOptions;
 import com.azure.maps.search.models.SearchAddressResult;
 import com.azure.maps.search.models.SearchAlongRouteOptions;
 import com.azure.maps.search.models.SearchAlongRouteRequest;
-import com.azure.maps.search.models.SearchIndexes;
 import com.azure.maps.search.models.SearchInsideGeometryOptions;
 import com.azure.maps.search.models.SearchInsideGeometryRequest;
 import com.azure.maps.search.models.SearchNearbyPointsOfInterestOptions;
@@ -95,7 +89,7 @@ public final class SearchClient {
      * **Free Form Search**
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressResult fuzzySearch(String query, LatLongPairAbbreviated coordinates) {
+    public SearchAddressResult fuzzySearch(String query, LatLong coordinates) {
         final FuzzySearchOptions options = new FuzzySearchOptions().query(query).coordinates(coordinates);
         return this.fuzzySearch(options);
     }
@@ -115,8 +109,8 @@ public final class SearchClient {
                 options.getSkip(),
                 options.getCategoryFilter(),
                 options.getCountryFilter(),
-                options.getCoordinates().map(LatLongPairAbbreviated::getLat).orElse(null),
-                options.getCoordinates().map(LatLongPairAbbreviated::getLon).orElse(null),
+                options.getCoordinates().map(LatLong::getLat).orElse(null),
+                options.getCoordinates().map(LatLong::getLon).orElse(null),
                 options.getRadiusInMeters(),
                 options.getTopLeft(),
                 options.getBtmRight(),
@@ -148,8 +142,8 @@ public final class SearchClient {
                 options.getSkip(),
                 options.getCategoryFilter(),
                 options.getCountryFilter(),
-                options.getCoordinates().map(LatLongPairAbbreviated::getLat).orElse(null),
-                options.getCoordinates().map(LatLongPairAbbreviated::getLon).orElse(null),
+                options.getCoordinates().map(LatLong::getLat).orElse(null),
+                options.getCoordinates().map(LatLong::getLon).orElse(null),
                 options.getRadiusInMeters(),
                 options.getTopLeft(),
                 options.getBtmRight(),
@@ -174,7 +168,7 @@ public final class SearchClient {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressResult searchPointOfInterest(String query, LatLongPairAbbreviated coordinates) {
+    public SearchAddressResult searchPointOfInterest(String query, LatLong coordinates) {
         final SearchPointOfInterestOptions options = new SearchPointOfInterestOptions()
             .query(query).coordinates(coordinates);
         return this.searchPointOfInterest(options);
@@ -190,8 +184,8 @@ public final class SearchClient {
                 options.getSkip(),
                 options.getCategoryFilter(),
                 options.getCountryFilter(),
-                options.getCoordinates().map(LatLongPairAbbreviated::getLat).orElse(null),
-                options.getCoordinates().map(LatLongPairAbbreviated::getLon).orElse(null),
+                options.getCoordinates().map(LatLong::getLat).orElse(null),
+                options.getCoordinates().map(LatLong::getLon).orElse(null),
                 options.getRadiusInMeters(),
                 options.getTopLeft(),
                 options.getBtmRight(),
@@ -224,8 +218,8 @@ public final class SearchClient {
                 options.getSkip(),
                 options.getCategoryFilter(),
                 options.getCountryFilter(),
-                options.getCoordinates().map(LatLongPairAbbreviated::getLat).orElse(null),
-                options.getCoordinates().map(LatLongPairAbbreviated::getLon).orElse(null),
+                options.getCoordinates().map(LatLong::getLat).orElse(null),
+                options.getCoordinates().map(LatLong::getLon).orElse(null),
                 options.getRadiusInMeters(),
                 options.getTopLeft(),
                 options.getBtmRight(),
@@ -239,7 +233,7 @@ public final class SearchClient {
     }
 
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressResult searchNearbyPointOfInterest(LatLongPairAbbreviated coordinates) {
+    public SearchAddressResult searchNearbyPointOfInterest(LatLong coordinates) {
         final SearchNearbyPointsOfInterestOptions options = new SearchNearbyPointsOfInterestOptions()
             .coordinates(coordinates);
         return this.searchNearbyPointOfInterest(options);
@@ -258,8 +252,8 @@ public final class SearchClient {
     public SearchAddressResult searchNearbyPointOfInterest(SearchNearbyPointsOfInterestOptions options) {
         return this.serviceClient.searchNearbyPointOfInterest(
                 ResponseFormat.JSON,
-                options.getCoordinates().map(LatLongPairAbbreviated::getLat).orElse(null),
-                options.getCoordinates().map(LatLongPairAbbreviated::getLon).orElse(null),
+                options.getCoordinates().map(LatLong::getLat).orElse(null),
+                options.getCoordinates().map(LatLong::getLon).orElse(null),
                 options.getTop(),
                 options.getSkip(),
                 options.getCategoryFilter(),
@@ -288,8 +282,8 @@ public final class SearchClient {
             Context context) {
         return this.serviceClient.searchNearbyPointOfInterestWithResponse(
                 ResponseFormat.JSON,
-                options.getCoordinates().map(LatLongPairAbbreviated::getLat).orElse(null),
-                options.getCoordinates().map(LatLongPairAbbreviated::getLon).orElse(null),
+                options.getCoordinates().map(LatLong::getLat).orElse(null),
+                options.getCoordinates().map(LatLong::getLon).orElse(null),
                 options.getTop(),
                 options.getSkip(),
                 options.getCategoryFilter(),
@@ -306,7 +300,7 @@ public final class SearchClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public SearchAddressResult searchPointOfInterestCategory(String query,
             List<Integer> categoryFilter,
-            LatLongPairAbbreviated coordinates) {
+            LatLong coordinates) {
         final SearchPointOfInterestCategoryOptions options = new SearchPointOfInterestCategoryOptions()
             .query(query).categoryFilter(categoryFilter).coordinates(coordinates);
         return this.searchPointOfInterestCategory(options);
@@ -333,8 +327,8 @@ public final class SearchClient {
                 options.getSkip(),
                 options.getCategoryFilter(),
                 options.getCountryFilter(),
-                options.getCoordinates().map(LatLongPairAbbreviated::getLat).orElse(null),
-                options.getCoordinates().map(LatLongPairAbbreviated::getLon).orElse(null),
+                options.getCoordinates().map(LatLong::getLat).orElse(null),
+                options.getCoordinates().map(LatLong::getLon).orElse(null),
                 options.getRadiusInMeters(),
                 options.getTopLeft(),
                 options.getBtmRight(),
@@ -365,8 +359,8 @@ public final class SearchClient {
                 options.getSkip(),
                 options.getCategoryFilter(),
                 options.getCountryFilter(),
-                options.getCoordinates().map(LatLongPairAbbreviated::getLat).orElse(null),
-                options.getCoordinates().map(LatLongPairAbbreviated::getLon).orElse(null),
+                options.getCoordinates().map(LatLong::getLat).orElse(null),
+                options.getCoordinates().map(LatLong::getLon).orElse(null),
                 options.getRadiusInMeters(),
                 options.getTopLeft(),
                 options.getBtmRight(),
@@ -456,8 +450,8 @@ public final class SearchClient {
                 options.getTop(),
                 options.getSkip(),
                 options.getCountryFilter(),
-                options.getCoordinates().map(LatLongPairAbbreviated::getLat).orElse(null),
-                options.getCoordinates().map(LatLongPairAbbreviated::getLon).orElse(null),
+                options.getCoordinates().map(LatLong::getLat).orElse(null),
+                options.getCoordinates().map(LatLong::getLon).orElse(null),
                 options.getRadiusInMeters(),
                 options.getTopLeft(),
                 options.getBtmRight(),
@@ -488,8 +482,8 @@ public final class SearchClient {
                 options.getTop(),
                 options.getSkip(),
                 options.getCountryFilter(),
-                options.getCoordinates().map(LatLongPairAbbreviated::getLat).orElse(null),
-                options.getCoordinates().map(LatLongPairAbbreviated::getLon).orElse(null),
+                options.getCoordinates().map(LatLong::getLat).orElse(null),
+                options.getCoordinates().map(LatLong::getLon).orElse(null),
                 options.getRadiusInMeters(),
                 options.getTopLeft(),
                 options.getBtmRight(),
@@ -501,7 +495,7 @@ public final class SearchClient {
     }
 
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public ReverseSearchAddressResult reverseSearchAddress(LatLongPairAbbreviated coordinates) {
+    public ReverseSearchAddressResult reverseSearchAddress(LatLong coordinates) {
         final ReverseSearchAddressOptions options = new ReverseSearchAddressOptions().coordinates(coordinates);
         return this.reverseSearchAddress(options);
     }
@@ -562,7 +556,7 @@ public final class SearchClient {
 
     @ServiceMethod(returns = ReturnType.SINGLE)
     public ReverseSearchCrossStreetAddressResult reverseSearchCrossStreetAddress(
-            LatLongPairAbbreviated coordinates) {
+            LatLong coordinates) {
         final ReverseSearchCrossStreetAddressOptions options = new ReverseSearchCrossStreetAddressOptions()
                 .coordinates(coordinates);
         return this.reverseSearchCrossStreetAddress(options);

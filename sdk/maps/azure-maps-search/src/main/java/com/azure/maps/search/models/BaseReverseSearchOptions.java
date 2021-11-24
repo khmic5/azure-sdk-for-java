@@ -1,9 +1,7 @@
 package com.azure.maps.search.models;
 
-import com.azure.maps.search.implementation.models.LatLongPairAbbreviated;
-
 public class BaseReverseSearchOptions<T extends BaseReverseSearchOptions<T>> {
-    private LatLongPairAbbreviated coordinates;
+    private LatLong coordinates;
     private String language;
     private Integer heading;
     private Integer radiusInMeters;
@@ -17,7 +15,7 @@ public class BaseReverseSearchOptions<T extends BaseReverseSearchOptions<T>> {
         return language;
     }
 
-    public LatLongPairAbbreviated getCoordinates() {
+    public LatLong getCoordinates() {
         return coordinates;
     }
 
@@ -54,7 +52,7 @@ public class BaseReverseSearchOptions<T extends BaseReverseSearchOptions<T>> {
     }
 
     @SuppressWarnings("unchecked")
-    public T coordinates(LatLongPairAbbreviated coordinates) {
+    public T coordinates(LatLong coordinates) {
         this.coordinates = coordinates;
         return (T) this;
     }

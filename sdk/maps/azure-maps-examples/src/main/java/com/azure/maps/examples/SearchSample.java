@@ -14,10 +14,10 @@ import com.azure.core.http.policy.HttpPipelinePolicy;
 import com.azure.core.http.rest.Response;
 import com.azure.maps.search.SearchClient;
 import com.azure.maps.search.SearchClientBuilder;
-import com.azure.maps.search.implementation.models.LatLongPairAbbreviated;
 import com.azure.maps.search.models.BatchRequest;
 import com.azure.maps.search.models.FuzzySearchOptions;
 import com.azure.maps.search.models.GeographicEntityType;
+import com.azure.maps.search.models.LatLong;
 import com.azure.maps.search.models.OperatingHoursRange;
 import com.azure.maps.search.models.ReverseSearchAddressBatchProcessResult;
 import com.azure.maps.search.models.ReverseSearchAddressOptions;
@@ -76,18 +76,14 @@ public class SearchSample {
         // options
         MapsCommon.print(client.searchAddress(new SearchAddressOptions()
                 .query("1 Main Street")
-                .coordinates(new LatLongPairAbbreviated()
-                    .setLat(40.706270)
-                    .setLon(-74.011454))
+                .coordinates(new LatLong(40.706270, -74.011454))
                 .radiusInMeters(40000)
                 .top(5)));
 
         // complete
         MapsCommon.print(client.searchAddressWithResponse(new SearchAddressOptions()
                 .query("1 Main Street")
-                .coordinates(new LatLongPairAbbreviated()
-                    .setLat(40.706270)
-                    .setLon(-74.011454))
+                .coordinates(new LatLong(40.706270, -74.011454))
                 .radiusInMeters(40000)
                 .top(5), null).getStatusCode());
 
@@ -95,18 +91,18 @@ public class SearchSample {
         System.out.println("Search Address Reverse:");
 
         // simple
-        MapsCommon.print(client.reverseSearchAddress(new LatLongPairAbbreviated().setLat(37.337).setLon(-121.89)));
+        MapsCommon.print(client.reverseSearchAddress(new LatLong(37.337, -121.89)));
 
         // options
         MapsCommon.print(client.reverseSearchAddress(new ReverseSearchAddressOptions()
-                .coordinates(new LatLongPairAbbreviated().setLat(37.337).setLon(-121.89))
+                .coordinates(new LatLong(37.337, -121.89))
                 .includeSpeedLimit(true)
                 .entityType(GeographicEntityType.COUNTRY_SECONDARY_SUBDIVISION) // returns only city
                 ));
 
         // complete
         MapsCommon.print(client.reverseSearchAddressWithResponse(new ReverseSearchAddressOptions()
-                .coordinates(new LatLongPairAbbreviated().setLat(37.337).setLon(-121.89))
+                .coordinates(new LatLong(37.337, -121.89))
                 .includeSpeedLimit(true)
                 .entityType(GeographicEntityType.COUNTRY_SECONDARY_SUBDIVISION) // returns only city
                 , null).getStatusCode());
@@ -116,18 +112,18 @@ public class SearchSample {
 
         // simple
         MapsCommon.print(client.reverseSearchCrossStreetAddress(
-                new LatLongPairAbbreviated().setLat(37.337).setLon(-121.89)));
+                new LatLong(37.337, -121.89)));
 
         // overload - only top 2 results
         MapsCommon.print(client.reverseSearchCrossStreetAddress(new ReverseSearchCrossStreetAddressOptions()
-                .coordinates(new LatLongPairAbbreviated().setLat(37.337).setLon(-121.89))
+                .coordinates(new LatLong(37.337, -121.89))
                 .top(2)
                 .heading(5)
                 ));
 
         // complete
         MapsCommon.print(client.reverseSearchCrossStreetAddressWithResponse(new ReverseSearchCrossStreetAddressOptions()
-                .coordinates(new LatLongPairAbbreviated().setLat(37.337).setLon(-121.89))
+                .coordinates(new LatLong(37.337, -121.89))
                 .top(2)
                 .heading(5)
                 , null).getStatusCode());
@@ -155,16 +151,12 @@ public class SearchSample {
 
         // Search fuzzy - https://docs.microsoft.com/en-us/rest/api/maps/search/get-search-fuzzy
         System.out.println("Search Fuzzy:");
-        MapsCommon.print(client.fuzzySearch("starbucks", new LatLongPairAbbreviated()
-                .setLat(40.706270)
-                .setLon(-74.011454)));
+        MapsCommon.print(client.fuzzySearch("starbucks", new LatLong(40.706270, -74.011454)));
 
         // with options
         SearchAddressResult results = client.fuzzySearch(new FuzzySearchOptions()
                 .query("1 Microsoft Way")
-                .coordinates(new LatLongPairAbbreviated()
-                    .setLat(40.706270)
-                    .setLon(-74.011454))
+                .coordinates(new LatLong(40.706270, -74.011454))
                 .top(5));
         MapsCommon.print(results);
 
@@ -188,38 +180,35 @@ public class SearchSample {
         System.out.println("Search Points of Interest:");
 
         // short
-        MapsCommon.print(client.searchPointOfInterest("pizza", new LatLongPairAbbreviated()
-                .setLat(36.98844).setLon(-121.97483)));
+        MapsCommon.print(client.searchPointOfInterest("pizza", new LatLong(36.98844, -121.97483)));
 
         // options
         MapsCommon.print(client.searchPointOfInterest(new SearchPointOfInterestOptions()
                 .query("pizza")
-                .coordinates(new LatLongPairAbbreviated().setLat(36.98844).setLon(-121.97483))
+                .coordinates(new LatLong(36.98844, -121.97483))
                 .operatingHours(OperatingHoursRange.NEXT_SEVEN_DAYS)));
 
         // with response
         MapsCommon.print(client.searchPointOfInterestWithResponse(new SearchPointOfInterestOptions()
                 .query("pizza")
-                .coordinates(new LatLongPairAbbreviated().setLat(36.98844).setLon(-121.97483))
+                .coordinates(new LatLong(36.98844, -121.97483))
                 .operatingHours(OperatingHoursRange.NEXT_SEVEN_DAYS), null).getStatusCode());
 
         // Search nearby - https://docs.microsoft.com/en-us/rest/api/maps/search/get-search-nearby
         System.out.println("Search Nearby:");
 
         // simple
-        MapsCommon.print(client.searchNearbyPointOfInterest(new LatLongPairAbbreviated()
-                .setLat(40.706270)
-                .setLon(-74.011454)));
+        MapsCommon.print(client.searchNearbyPointOfInterest(new LatLong(40.706270, -74.011454)));
 
         // options
         MapsCommon.print(client.searchNearbyPointOfInterest(new SearchNearbyPointsOfInterestOptions()
-                .coordinates(new LatLongPairAbbreviated().setLat(40.706270).setLon(-74.011454))
+                .coordinates(new LatLong(40.706270, -74.011454))
                 .countryFilter(Arrays.asList("US"))
                 .top(10)));
 
         // response
         MapsCommon.print(client.searchNearbyPointOfInterestWithResponse(new SearchNearbyPointsOfInterestOptions()
-                .coordinates(new LatLongPairAbbreviated().setLat(40.706270).setLon(-74.011454))
+                .coordinates(new LatLong(40.706270, -74.011454))
                 .countryFilter(Arrays.asList("US"))
                 .top(10), null).getStatusCode());
 
@@ -228,19 +217,19 @@ public class SearchSample {
 
         // simple - search for restaurant
         MapsCommon.print(client.searchPointOfInterestCategory("pasta", Arrays.asList(7315),
-                new LatLongPairAbbreviated().setLat(40.706270).setLon(-74.011454)));
+                new LatLong(40.706270, -74.011454)));
 
         // complete - search for italian restaurant in NYC
         MapsCommon.print(client.searchPointOfInterestCategory(new SearchPointOfInterestCategoryOptions()
                 .query("pizza")
-                .coordinates(new LatLongPairAbbreviated().setLat(40.706270).setLon(-74.011454))
+                .coordinates(new LatLong(40.706270, -74.011454))
                 .categoryFilter(Arrays.asList(7315))
                 .top(3)));
 
         // with response
         MapsCommon.print(client.searchPointOfInterestCategoryWithResponse(new SearchPointOfInterestCategoryOptions()
                 .query("pizza")
-                .coordinates(new LatLongPairAbbreviated().setLat(40.706270).setLon(-74.011454))
+                .coordinates(new LatLong(40.706270, -74.011454))
                 .categoryFilter(Arrays.asList(7315))
                 .top(3), null).getStatusCode());
 
