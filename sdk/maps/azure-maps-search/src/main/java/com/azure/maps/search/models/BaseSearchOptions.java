@@ -9,8 +9,7 @@ public class BaseSearchOptions<T extends BaseSearchOptions<T>> {
     private List<String> countryFilter;
     private LatLong coordinates;
     private Integer radiusInMeters;
-    private String topLeft;
-    private String btmRight;
+    private BoundingBox boundingBox;
     private String language;
     private LocalizedMapView localizedMapView;
 
@@ -30,12 +29,8 @@ public class BaseSearchOptions<T extends BaseSearchOptions<T>> {
         return radiusInMeters;
     }
 
-    public String getTopLeft() {
-        return topLeft;
-    }
-
-    public String getBtmRight() {
-        return btmRight;
+    public Optional<BoundingBox> getBoundingBox() {
+        return Optional.ofNullable(boundingBox);
     }
 
     public String getLanguage() {
@@ -75,14 +70,8 @@ public class BaseSearchOptions<T extends BaseSearchOptions<T>> {
     }
 
     @SuppressWarnings("unchecked")
-    public T topLeft(String topLeft) {
-        this.topLeft = topLeft;
-        return (T) this;
-    }
-
-    @SuppressWarnings("unchecked")
-    public T btmRight(String btmRight) {
-        this.btmRight = btmRight;
+    public T boundingBox(BoundingBox box) {
+        this.boundingBox = box;
         return (T) this;
     }
 
