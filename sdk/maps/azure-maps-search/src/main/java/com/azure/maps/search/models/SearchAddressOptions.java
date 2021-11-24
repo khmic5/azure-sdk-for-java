@@ -8,10 +8,6 @@ public class SearchAddressOptions extends BaseSearchOptions<SearchAddressOptions
     private List<SearchIndexes> extendedPostalCodesFor;
     private GeographicEntityType entityType;
 
-    public SearchAddressOptions(String query) {
-        this.query = query;
-    }
-
     public String getQuery() {
         return query;
     }

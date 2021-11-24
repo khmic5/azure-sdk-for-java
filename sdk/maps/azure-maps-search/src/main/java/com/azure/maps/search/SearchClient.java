@@ -29,13 +29,16 @@ import com.azure.maps.search.models.ResponseFormat;
 import com.azure.maps.search.models.ReverseSearchAddressBatchProcessResult;
 import com.azure.maps.search.models.ReverseSearchAddressOptions;
 import com.azure.maps.search.models.ReverseSearchAddressResult;
+import com.azure.maps.search.models.ReverseSearchCrossStreetAddressOptions;
 import com.azure.maps.search.models.ReverseSearchCrossStreetAddressResult;
 import com.azure.maps.search.models.RoadUseType;
 import com.azure.maps.search.models.SearchAddressBatchProcessResult;
 import com.azure.maps.search.models.SearchAddressOptions;
 import com.azure.maps.search.models.SearchAddressResult;
+import com.azure.maps.search.models.SearchAlongRouteOptions;
 import com.azure.maps.search.models.SearchAlongRouteRequest;
 import com.azure.maps.search.models.SearchIndexes;
+import com.azure.maps.search.models.SearchInsideGeometryOptions;
 import com.azure.maps.search.models.SearchInsideGeometryRequest;
 import com.azure.maps.search.models.SearchNearbyPointsOfInterestOptions;
 import com.azure.maps.search.models.SearchPointOfInterestCategoryOptions;
@@ -92,8 +95,8 @@ public final class SearchClient {
      * **Free Form Search**
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressResult fuzzySearch(String query){
-        final FuzzySearchOptions options = new FuzzySearchOptions(query);
+    public SearchAddressResult fuzzySearch(String query, LatLongPairAbbreviated coordinates) {
+        final FuzzySearchOptions options = new FuzzySearchOptions().query(query).coordinates(coordinates);
         return this.fuzzySearch(options);
     }
 
@@ -171,9 +174,9 @@ public final class SearchClient {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressResult searchPointOfInterest(String query) {
-        final SearchPointOfInterestOptions options = new SearchPointOfInterestOptions(query);
-
+    public SearchAddressResult searchPointOfInterest(String query, LatLongPairAbbreviated coordinates) {
+        final SearchPointOfInterestOptions options = new SearchPointOfInterestOptions()
+            .query(query).coordinates(coordinates);
         return this.searchPointOfInterest(options);
     }
 
@@ -237,8 +240,8 @@ public final class SearchClient {
 
     @ServiceMethod(returns = ReturnType.SINGLE)
     public SearchAddressResult searchNearbyPointOfInterest(LatLongPairAbbreviated coordinates) {
-        final SearchNearbyPointsOfInterestOptions options = new SearchNearbyPointsOfInterestOptions(coordinates);
-
+        final SearchNearbyPointsOfInterestOptions options = new SearchNearbyPointsOfInterestOptions()
+            .coordinates(coordinates);
         return this.searchNearbyPointOfInterest(options);
     }
     /**
@@ -301,10 +304,11 @@ public final class SearchClient {
     }
 
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressResult searchPointOfInterestCategory(String query, List<Integer> categoryFilter) {
-        final SearchPointOfInterestCategoryOptions options = new SearchPointOfInterestCategoryOptions(query);
-        options.categoryFilter(categoryFilter);
-
+    public SearchAddressResult searchPointOfInterestCategory(String query,
+            List<Integer> categoryFilter,
+            LatLongPairAbbreviated coordinates) {
+        final SearchPointOfInterestCategoryOptions options = new SearchPointOfInterestCategoryOptions()
+            .query(query).categoryFilter(categoryFilter).coordinates(coordinates);
         return this.searchPointOfInterestCategory(options);
     }
 
@@ -431,8 +435,7 @@ public final class SearchClient {
 
     @ServiceMethod(returns = ReturnType.SINGLE)
     public SearchAddressResult searchAddress(String query) {
-        final SearchAddressOptions options = new SearchAddressOptions(query);
-
+        final SearchAddressOptions options = new SearchAddressOptions().query(query);
         return this.searchAddress(options);
     }
 
@@ -499,8 +502,7 @@ public final class SearchClient {
 
     @ServiceMethod(returns = ReturnType.SINGLE)
     public ReverseSearchAddressResult reverseSearchAddress(LatLongPairAbbreviated coordinates) {
-        final ReverseSearchAddressOptions options = new ReverseSearchAddressOptions(coordinates);
-
+        final ReverseSearchAddressOptions options = new ReverseSearchAddressOptions().coordinates(coordinates);
         return this.reverseSearchAddress(options);
     }
 
@@ -561,9 +563,9 @@ public final class SearchClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public ReverseSearchCrossStreetAddressResult reverseSearchCrossStreetAddress(
             LatLongPairAbbreviated coordinates) {
-
-        return this.reverseSearchCrossStreetAddress(coordinates,
-            null, null, null, null, null);
+        final ReverseSearchCrossStreetAddressOptions options = new ReverseSearchCrossStreetAddressOptions()
+                .coordinates(coordinates);
+        return this.reverseSearchCrossStreetAddress(options);
     }
 
     /**
@@ -575,20 +577,15 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public ReverseSearchCrossStreetAddressResult reverseSearchCrossStreetAddress(
-            LatLongPairAbbreviated coordinates,
-            Integer top,
-            Integer heading,
-            Integer radiusInMeters,
-            String language,
-            LocalizedMapView localizedMapView) {
+            ReverseSearchCrossStreetAddressOptions options) {
         return this.serviceClient.reverseSearchCrossStreetAddress(
                 ResponseFormat.JSON,
-                Arrays.asList(coordinates.getLat(), coordinates.getLon()),
-                top,
-                heading,
-                radiusInMeters,
-                language,
-                localizedMapView);
+                Arrays.asList(options.getCoordinates().getLat(), options.getCoordinates().getLon()),
+                options.getTop(),
+                options.getHeading(),
+                options.getRadiusInMeters(),
+                options.getLanguage(),
+                options.getLocalizedMapView());
     }
 
     /**
@@ -602,21 +599,15 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<ReverseSearchCrossStreetAddressResult> reverseSearchCrossStreetAddressWithResponse(
-            LatLongPairAbbreviated coordinates,
-            Integer top,
-            Integer heading,
-            Integer radiusInMeters,
-            String language,
-            LocalizedMapView localizedMapView,
-            Context context) {
+            ReverseSearchCrossStreetAddressOptions options, Context context) {
         return this.serviceClient.reverseSearchCrossStreetAddressWithResponse(
                 ResponseFormat.JSON,
-                Arrays.asList(coordinates.getLat(), coordinates.getLon()),
-                top,
-                heading,
-                radiusInMeters,
-                language,
-                localizedMapView,
+                Arrays.asList(options.getCoordinates().getLat(), options.getCoordinates().getLon()),
+                options.getTop(),
+                options.getHeading(),
+                options.getRadiusInMeters(),
+                options.getLanguage(),
+                options.getLocalizedMapView(),
                 context);
     }
 
@@ -685,6 +676,13 @@ public final class SearchClient {
                 context);
     }
 
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public SearchAddressResult searchInsideGeometry(String query, SearchInsideGeometryRequest request) {
+        final SearchInsideGeometryOptions options = new SearchInsideGeometryOptions()
+                .query(query).request(request);
+        return this.searchInsideGeometry(options);
+    }
+
     /**
      * **Applies to**: S0 and S1 pricing tiers.
 
@@ -694,27 +692,18 @@ public final class SearchClient {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressResult searchInsideGeometry(
-            String query,
-            SearchInsideGeometryRequest geometry,
-            Integer top,
-            String language,
-            List<Integer> categoryFilter,
-            List<SearchIndexes> extendedPostalCodesFor,
-            List<SearchIndexes> idxSet,
-            LocalizedMapView localizedMapView,
-            OperatingHoursRange operatingHours) {
+    public SearchAddressResult searchInsideGeometry(SearchInsideGeometryOptions options) {
         return this.serviceClient.searchInsideGeometry(
                 ResponseFormat.JSON,
-                query,
-                geometry,
-                top,
-                language,
-                categoryFilter,
-                extendedPostalCodesFor,
-                idxSet,
-                localizedMapView,
-                operatingHours);
+                options.getQuery(),
+                options.getRequest(),
+                options.getTop(),
+                options.getLanguage(),
+                options.getCategoryFilter(),
+                options.getExtendedPostalCodesFor(),
+                options.getIdxSet(),
+                options.getLocalizedMapView(),
+                options.getOperatingHours());
     }
 
     /**
@@ -728,30 +717,29 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<SearchAddressResult> searchInsideGeometryWithResponse(
-            String query,
-            SearchInsideGeometryRequest geometry,
-            Integer top,
-            String language,
-            List<Integer> categoryFilter,
-            List<SearchIndexes> extendedPostalCodesFor,
-            List<SearchIndexes> idxSet,
-            LocalizedMapView localizedMapView,
-            OperatingHoursRange operatingHours,
-            Context context) {
+            SearchInsideGeometryOptions options, Context context) {
         return this.serviceClient.searchInsideGeometryWithResponse(
                 ResponseFormat.JSON,
-                query,
-                geometry,
-                top,
-                language,
-                categoryFilter,
-                extendedPostalCodesFor,
-                idxSet,
-                localizedMapView,
-                operatingHours,
+                options.getQuery(),
+                options.getRequest(),
+                options.getTop(),
+                options.getLanguage(),
+                options.getCategoryFilter(),
+                options.getExtendedPostalCodesFor(),
+                options.getIdxSet(),
+                options.getLocalizedMapView(),
+                options.getOperatingHours(),
                 context);
     }
 
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public SearchAddressResult searchAlongRoute(String query,
+            Integer maxDetourTime, SearchAlongRouteRequest route) {
+
+        final SearchAlongRouteOptions options = new SearchAlongRouteOptions()
+                .query(query).maxDetourTime(maxDetourTime).route(route);
+        return this.searchAlongRoute(options);
+    }
     /**
      * **Applies to**: S0 and S1 pricing tiers.
      *
@@ -762,27 +750,18 @@ public final class SearchClient {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressResult searchAlongRoute(
-            String query,
-            int maxDetourTime,
-            SearchAlongRouteRequest route,
-            Integer top,
-            List<String> brandFilter,
-            List<Integer> categoryFilter,
-            List<ElectricVehicleConnector> electricVehicleConnectorFilter,
-            LocalizedMapView localizedMapView,
-            OperatingHoursRange operatingHours) {
+    public SearchAddressResult searchAlongRoute(SearchAlongRouteOptions options) {
         return this.serviceClient.searchAlongRoute(
                 ResponseFormat.JSON,
-                query,
-                maxDetourTime,
-                route,
-                top,
-                brandFilter,
-                categoryFilter,
-                electricVehicleConnectorFilter,
-                localizedMapView,
-                operatingHours);
+                options.getQuery(),
+                options.getMaxDetourTime(),
+                options.getRoute(),
+                options.getTop(),
+                options.getBrandFilter(),
+                options.getCategoryFilter(),
+                options.getElectricVehicleConnectorFilter(),
+                options.getLocalizedMapView(),
+                options.getOperatingHours());
     }
 
     /**
@@ -796,27 +775,18 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<SearchAddressResult> searchAlongRouteWithResponse(
-            String query,
-            int maxDetourTime,
-            SearchAlongRouteRequest route,
-            Integer top,
-            List<String> brandFilter,
-            List<Integer> categoryFilter,
-            List<ElectricVehicleConnector> electricVehicleConnectorFilter,
-            LocalizedMapView localizedMapView,
-            OperatingHoursRange operatingHours,
-            Context context) {
+            SearchAlongRouteOptions options, Context context) {
         return this.serviceClient.searchAlongRouteWithResponse(
                 ResponseFormat.JSON,
-                query,
-                maxDetourTime,
-                route,
-                top,
-                brandFilter,
-                categoryFilter,
-                electricVehicleConnectorFilter,
-                localizedMapView,
-                operatingHours,
+                options.getQuery(),
+                options.getMaxDetourTime(),
+                options.getRoute(),
+                options.getTop(),
+                options.getBrandFilter(),
+                options.getCategoryFilter(),
+                options.getElectricVehicleConnectorFilter(),
+                options.getLocalizedMapView(),
+                options.getOperatingHours(),
                 context);
     }
 

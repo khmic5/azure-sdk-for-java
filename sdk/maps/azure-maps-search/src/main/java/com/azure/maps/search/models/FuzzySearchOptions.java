@@ -11,15 +11,6 @@ public class FuzzySearchOptions extends BaseSearchPointOfInterestOptions<FuzzySe
     private List<SearchIndexes> idxSet;
     private GeographicEntityType entityType;
 
-    /**
-     *
-     * @param query
-     */
-
-    public FuzzySearchOptions(String query) {
-        this.query = query;
-    }
-
     public String getQuery() {
         return query;
     }
