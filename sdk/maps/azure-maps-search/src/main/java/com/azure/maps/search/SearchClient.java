@@ -6,6 +6,7 @@ package com.azure.maps.search;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceClient;
@@ -14,8 +15,8 @@ import com.azure.core.http.rest.Response;
 import com.azure.core.util.Context;
 import com.azure.core.util.polling.SyncPoller;
 import com.azure.maps.search.implementation.SearchesImpl;
-import com.azure.maps.search.models.BoundingBox;
 import com.azure.maps.search.models.BatchRequest;
+import com.azure.maps.search.models.BoundingBox;
 import com.azure.maps.search.models.ErrorResponseException;
 import com.azure.maps.search.models.FuzzySearchOptions;
 import com.azure.maps.search.models.JsonFormat;
@@ -39,6 +40,7 @@ import com.azure.maps.search.models.SearchNearbyPointsOfInterestOptions;
 import com.azure.maps.search.models.SearchPointOfInterestCategoryOptions;
 import com.azure.maps.search.models.SearchPointOfInterestOptions;
 import com.azure.maps.search.models.SearchStructuredAddressOptions;
+import com.azure.maps.search.models.StructuredAddress;
 
 /** Initializes a new instance of the synchronous SearchClient type. */
 @ServiceClient(builder = SearchClientBuilder.class)
@@ -55,18 +57,13 @@ public final class SearchClient {
     }
 
     /**
-     * **Get Polygon**
+     * List Polygons
      *
-     *
-     * @param format Desired format of the response. Only `json` format is supported.
-     * @param geometryIds Comma separated list of geometry UUIDs, previously retrieved from an Online Search request.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Search Polygon call.
+     * @param geometryIds
+     * @return
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public PolygonResult getPolygon(List<String> geometryIds) {
+    public PolygonResult listPolygons(List<String> geometryIds) {
         return this.serviceClient.getPolygon(JsonFormat.JSON, geometryIds);
     }
 
@@ -82,17 +79,8 @@ public final class SearchClient {
      * @return this object is returned from a successful Search Polygon call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<PolygonResult> getPolygonWithResponse(List<String> geometryIds, Context context) {
+    public Response<PolygonResult> listPolygonsWithResponse(List<String> geometryIds, Context context) {
         return this.serviceClient.getPolygonWithResponse(JsonFormat.JSON, geometryIds, context);
-    }
-
-    /**
-     * **Free Form Search**
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressResult fuzzySearch(String query, LatLong coordinates) {
-        final FuzzySearchOptions options = new FuzzySearchOptions().query(query).coordinates(coordinates);
-        return this.fuzzySearch(options);
     }
 
     /**
@@ -101,30 +89,18 @@ public final class SearchClient {
      * @return
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressResult fuzzySearch(FuzzySearchOptions options){
-        return this.serviceClient.fuzzySearch(
-                ResponseFormat.JSON,
-                options.getQuery(),
-                options.isTypeAhead(),
-                options.getTop(),
-                options.getSkip(),
-                options.getCategoryFilter(),
-                options.getCountryFilter(),
-                options.getCoordinates().map(LatLong::getLat).orElse(null),
-                options.getCoordinates().map(LatLong::getLon).orElse(null),
-                options.getRadiusInMeters(),
-                options.getBoundingBox().map(BoundingBox::getTopLeft).map(LatLong::toString).orElse(null),
-                options.getBoundingBox().map(BoundingBox::getBottomRight).map(LatLong::toString).orElse(null),
-                options.getLanguage(),
-                options.getExtendedPostalCodesFor(),
-                options.getMinFuzzyLevel(),
-                options.getMaxFuzzyLevel(),
-                options.getIdxSet(),
-                options.getBrandFilter(),
-                options.getElectricVehicleConnectorFilter(),
-                options.getEntityType(),
-                options.getLocalizedMapView(),
-                options.getOperatingHours());
+    public SearchAddressResult fuzzySearch(String query, LatLong coordinates, FuzzySearchOptions options){
+        return this.fuzzySearchWithResponse(query, coordinates, null, options, null).getValue();
+    }
+
+    /**
+     *
+     * @param options
+     * @return
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public SearchAddressResult fuzzySearch(String query, List<String> countryFilter, FuzzySearchOptions options){
+        return this.fuzzySearchWithResponse(query, null, countryFilter, options, null).getValue();
     }
 
     /**
@@ -133,69 +109,57 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<SearchAddressResult> fuzzySearchWithResponse(
-            FuzzySearchOptions options,
+            String query, LatLong coordinates, List<String> countryFilter, FuzzySearchOptions options,
             Context context) {
+
+        final FuzzySearchOptions param = Optional.ofNullable(options).orElse(new FuzzySearchOptions());
+
         return this.serviceClient.fuzzySearchWithResponse(
                 ResponseFormat.JSON,
-                options.getQuery(),
-                options.isTypeAhead(),
-                options.getTop(),
-                options.getSkip(),
-                options.getCategoryFilter(),
-                options.getCountryFilter(),
-                options.getCoordinates().map(LatLong::getLat).orElse(null),
-                options.getCoordinates().map(LatLong::getLon).orElse(null),
-                options.getRadiusInMeters(),
-                options.getBoundingBox().map(BoundingBox::getTopLeft).map(LatLong::toString).orElse(null),
-                options.getBoundingBox().map(BoundingBox::getBottomRight).map(LatLong::toString).orElse(null),
-                options.getLanguage(),
-                options.getExtendedPostalCodesFor(),
-                options.getMinFuzzyLevel(),
-                options.getMaxFuzzyLevel(),
-                options.getIdxSet(),
-                options.getBrandFilter(),
-                options.getElectricVehicleConnectorFilter(),
-                options.getEntityType(),
-                options.getLocalizedMapView(),
-                options.getOperatingHours(),
+                query,
+                param.isTypeAhead(),
+                param.getTop(),
+                param.getSkip(),
+                param.getCategoryFilter(),
+                countryFilter,
+                coordinates.getLat(),
+                coordinates.getLon(),
+                param.getRadiusInMeters(),
+                param.getBoundingBox().map(BoundingBox::getTopLeft).map(LatLong::toString).orElse(null),
+                param.getBoundingBox().map(BoundingBox::getBottomRight).map(LatLong::toString).orElse(null),
+                param.getLanguage(),
+                param.getExtendedPostalCodesFor(),
+                param.getMinFuzzyLevel(),
+                param.getMaxFuzzyLevel(),
+                param.getIdxSet(),
+                param.getBrandFilter(),
+                param.getElectricVehicleConnectorFilter(),
+                param.getEntityType(),
+                param.getLocalizedMapView(),
+                param.getOperatingHours(),
                 context);
     }
 
     /**
-     * **Get POI by Name**
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Search calls.
+     *
+     * @param options
+     * @return
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressResult searchPointOfInterest(String query, LatLong coordinates) {
-        final SearchPointOfInterestOptions options = new SearchPointOfInterestOptions()
-            .query(query).coordinates(coordinates);
-        return this.searchPointOfInterest(options);
+    public SearchAddressResult searchPointOfInterest(String query, LatLong coordinates,
+            SearchPointOfInterestOptions options) {
+        return this.searchPointOfInterestWithResponse(query, coordinates, null, options, null).getValue();
     }
 
+        /**
+     *
+     * @param options
+     * @return
+     */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressResult searchPointOfInterest(SearchPointOfInterestOptions options) {
-        return this.serviceClient.searchPointOfInterest(
-                ResponseFormat.JSON,
-                options.getQuery(),
-                options.isTypeAhead(),
-                options.getTop(),
-                options.getSkip(),
-                options.getCategoryFilter(),
-                options.getCountryFilter(),
-                options.getCoordinates().map(LatLong::getLat).orElse(null),
-                options.getCoordinates().map(LatLong::getLon).orElse(null),
-                options.getRadiusInMeters(),
-                options.getBoundingBox().map(BoundingBox::getTopLeft).map(LatLong::toString).orElse(null),
-                options.getBoundingBox().map(BoundingBox::getBottomRight).map(LatLong::toString).orElse(null),
-                options.getLanguage(),
-                options.getExtendedPostalCodesFor(),
-                options.getBrandFilter(),
-                options.getElectricVehicleConnectorFilter(),
-                options.getLocalizedMapView(),
-                options.getOperatingHours());
+    public SearchAddressResult searchPointOfInterest(String query, List<String> countryFilter,
+            SearchPointOfInterestOptions options) {
+        return this.searchPointOfInterestWithResponse(query, null, countryFilter, options, null).getValue();
     }
 
     /**
@@ -208,37 +172,33 @@ public final class SearchClient {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<SearchAddressResult> searchPointOfInterestWithResponse(
-            SearchPointOfInterestOptions options,
-            Context context) {
+    public Response<SearchAddressResult> searchPointOfInterestWithResponse(String query, LatLong coordinates,
+            List<String> countryFilter, SearchPointOfInterestOptions options, Context context) {
+
+        final SearchPointOfInterestOptions param = Optional.ofNullable(options).orElse(new SearchPointOfInterestOptions());
+
         return this.serviceClient.searchPointOfInterestWithResponse(
                 ResponseFormat.JSON,
-                options.getQuery(),
-                options.isTypeAhead(),
-                options.getTop(),
-                options.getSkip(),
-                options.getCategoryFilter(),
-                options.getCountryFilter(),
-                options.getCoordinates().map(LatLong::getLat).orElse(null),
-                options.getCoordinates().map(LatLong::getLon).orElse(null),
-                options.getRadiusInMeters(),
-                options.getBoundingBox().map(BoundingBox::getTopLeft).map(LatLong::toString).orElse(null),
-                options.getBoundingBox().map(BoundingBox::getBottomRight).map(LatLong::toString).orElse(null),
-                options.getLanguage(),
-                options.getExtendedPostalCodesFor(),
-                options.getBrandFilter(),
-                options.getElectricVehicleConnectorFilter(),
-                options.getLocalizedMapView(),
-                options.getOperatingHours(),
+                query,
+                param.isTypeAhead(),
+                param.getTop(),
+                param.getSkip(),
+                param.getCategoryFilter(),
+                countryFilter,
+                coordinates.getLat(),
+                coordinates.getLon(),
+                param.getRadiusInMeters(),
+                param.getBoundingBox().map(BoundingBox::getTopLeft).map(LatLong::toString).orElse(null),
+                param.getBoundingBox().map(BoundingBox::getBottomRight).map(LatLong::toString).orElse(null),
+                param.getLanguage(),
+                param.getExtendedPostalCodesFor(),
+                param.getBrandFilter(),
+                param.getElectricVehicleConnectorFilter(),
+                param.getLocalizedMapView(),
+                param.getOperatingHours(),
                 context);
     }
 
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressResult searchNearbyPointOfInterest(LatLong coordinates) {
-        final SearchNearbyPointsOfInterestOptions options = new SearchNearbyPointsOfInterestOptions()
-            .coordinates(coordinates);
-        return this.searchNearbyPointOfInterest(options);
-    }
     /**
      * **Nearby Search**
      *
@@ -250,21 +210,9 @@ public final class SearchClient {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressResult searchNearbyPointOfInterest(SearchNearbyPointsOfInterestOptions options) {
-        return this.serviceClient.searchNearbyPointOfInterest(
-                ResponseFormat.JSON,
-                options.getCoordinates().map(LatLong::getLat).orElse(null),
-                options.getCoordinates().map(LatLong::getLon).orElse(null),
-                options.getTop(),
-                options.getSkip(),
-                options.getCategoryFilter(),
-                options.getCountryFilter(),
-                options.getRadiusInMeters(),
-                options.getLanguage(),
-                options.getExtendedPostalCodesFor(),
-                options.getBrandFilter(),
-                options.getElectricVehicleConnectorFilter(),
-                options.getLocalizedMapView());
+    public SearchAddressResult searchNearbyPointOfInterest(LatLong coordinates,
+            SearchNearbyPointsOfInterestOptions options) {
+        return this.searchNearbyPointOfInterestWithResponse(coordinates, options, null).getValue();
     }
 
     /**
@@ -279,32 +227,28 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<SearchAddressResult> searchNearbyPointOfInterestWithResponse(
+            LatLong coordinates,
             SearchNearbyPointsOfInterestOptions options,
             Context context) {
+
+        final SearchNearbyPointsOfInterestOptions param = Optional.ofNullable(options)
+                .orElse(new SearchNearbyPointsOfInterestOptions());
+
         return this.serviceClient.searchNearbyPointOfInterestWithResponse(
                 ResponseFormat.JSON,
-                options.getCoordinates().map(LatLong::getLat).orElse(null),
-                options.getCoordinates().map(LatLong::getLon).orElse(null),
-                options.getTop(),
-                options.getSkip(),
-                options.getCategoryFilter(),
-                options.getCountryFilter(),
-                options.getRadiusInMeters(),
-                options.getLanguage(),
-                options.getExtendedPostalCodesFor(),
-                options.getBrandFilter(),
-                options.getElectricVehicleConnectorFilter(),
-                options.getLocalizedMapView(),
+                coordinates.getLat(),
+                coordinates.getLon(),
+                param.getTop(),
+                param.getSkip(),
+                param.getCategoryFilter(),
+                param.getCountryFilter(),
+                param.getRadiusInMeters(),
+                param.getLanguage(),
+                param.getExtendedPostalCodesFor(),
+                param.getBrandFilter(),
+                param.getElectricVehicleConnectorFilter(),
+                param.getLocalizedMapView(),
                 context);
-    }
-
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressResult searchPointOfInterestCategory(String query,
-            List<Integer> categoryFilter,
-            LatLong coordinates) {
-        final SearchPointOfInterestCategoryOptions options = new SearchPointOfInterestCategoryOptions()
-            .query(query).categoryFilter(categoryFilter).coordinates(coordinates);
-        return this.searchPointOfInterestCategory(options);
     }
 
     /**
@@ -319,26 +263,28 @@ public final class SearchClient {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressResult searchPointOfInterestCategory(SearchPointOfInterestCategoryOptions options) {
-        return this.serviceClient.searchPointOfInterestCategory(
-                ResponseFormat.JSON,
-                options.getQuery(),
-                options.isTypeAhead(),
-                options.getTop(),
-                options.getSkip(),
-                options.getCategoryFilter(),
-                options.getCountryFilter(),
-                options.getCoordinates().map(LatLong::getLat).orElse(null),
-                options.getCoordinates().map(LatLong::getLon).orElse(null),
-                options.getRadiusInMeters(),
-                options.getBoundingBox().map(BoundingBox::getTopLeft).map(LatLong::toString).orElse(null),
-                options.getBoundingBox().map(BoundingBox::getBottomRight).map(LatLong::toString).orElse(null),
-                options.getLanguage(),
-                options.getExtendedPostalCodesFor(),
-                options.getBrandFilter(),
-                options.getElectricVehicleConnectorFilter(),
-                options.getLocalizedMapView(),
-                options.getOperatingHours());
+    public SearchAddressResult searchPointOfInterestCategory(String query, LatLong coordinates,
+            SearchPointOfInterestCategoryOptions options) {
+        return this.searchPointOfInterestCategoryWithResponse(query, coordinates, null,
+                options, null).getValue();
+    }
+
+     /**
+     * **Get POI by Category**
+     *
+     * @param operatingHours Hours of operation for a POI (Points of Interest). The availability of hours of operation
+     *     will vary based on the data available. If not passed, then no opening hours information will be returned.
+     *     Supported value: nextSevenDays.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful Search calls.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public SearchAddressResult searchPointOfInterestCategory(String query, List<String> countryFilter,
+            SearchPointOfInterestCategoryOptions options) {
+        return this.searchPointOfInterestCategoryWithResponse(query, null, countryFilter,
+                options, null).getValue();
     }
 
     /**
@@ -350,27 +296,32 @@ public final class SearchClient {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<SearchAddressResult> searchPointOfInterestCategoryWithResponse(
-        SearchPointOfInterestCategoryOptions options, Context context) {
+    public Response<SearchAddressResult> searchPointOfInterestCategoryWithResponse(String query,
+            LatLong coordinates, List<String> countryFilter, SearchPointOfInterestCategoryOptions options,
+            Context context) {
+
+        final SearchPointOfInterestCategoryOptions param = Optional.ofNullable(options)
+                .orElse(new SearchPointOfInterestCategoryOptions());
+
         return this.serviceClient.searchPointOfInterestCategoryWithResponse(
                 ResponseFormat.JSON,
-                options.getQuery(),
-                options.isTypeAhead(),
-                options.getTop(),
-                options.getSkip(),
-                options.getCategoryFilter(),
-                options.getCountryFilter(),
-                options.getCoordinates().map(LatLong::getLat).orElse(null),
-                options.getCoordinates().map(LatLong::getLon).orElse(null),
-                options.getRadiusInMeters(),
-                options.getBoundingBox().map(BoundingBox::getTopLeft).map(LatLong::toString).orElse(null),
-                options.getBoundingBox().map(BoundingBox::getBottomRight).map(LatLong::toString).orElse(null),
-                options.getLanguage(),
-                options.getExtendedPostalCodesFor(),
-                options.getBrandFilter(),
-                options.getElectricVehicleConnectorFilter(),
-                options.getLocalizedMapView(),
-                options.getOperatingHours(),
+                query,
+                param.isTypeAhead(),
+                param.getTop(),
+                param.getSkip(),
+                param.getCategoryFilter(),
+                countryFilter,
+                coordinates.getLat(),
+                coordinates.getLon(),
+                param.getRadiusInMeters(),
+                param.getBoundingBox().map(BoundingBox::getTopLeft).map(LatLong::toString).orElse(null),
+                param.getBoundingBox().map(BoundingBox::getBottomRight).map(LatLong::toString).orElse(null),
+                param.getLanguage(),
+                param.getExtendedPostalCodesFor(),
+                param.getBrandFilter(),
+                param.getElectricVehicleConnectorFilter(),
+                param.getLocalizedMapView(),
+                param.getOperatingHours(),
                 context);
     }
 
@@ -428,12 +379,6 @@ public final class SearchClient {
         return this.serviceClient.getPointOfInterestCategoryTreeWithResponse(JsonFormat.JSON, language, context);
     }
 
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressResult searchAddress(String query) {
-        final SearchAddressOptions options = new SearchAddressOptions().query(query);
-        return this.searchAddress(options);
-    }
-
     /**
      * **Address Geocoding**
      *
@@ -443,23 +388,8 @@ public final class SearchClient {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressResult searchAddress(SearchAddressOptions options) {
-        return this.serviceClient.searchAddress(
-                ResponseFormat.JSON,
-                options.getQuery(),
-                options.isTypeAhead(),
-                options.getTop(),
-                options.getSkip(),
-                options.getCountryFilter(),
-                options.getCoordinates().map(LatLong::getLat).orElse(null),
-                options.getCoordinates().map(LatLong::getLon).orElse(null),
-                options.getRadiusInMeters(),
-                options.getBoundingBox().map(BoundingBox::getTopLeft).map(LatLong::toString).orElse(null),
-                options.getBoundingBox().map(BoundingBox::getBottomRight).map(LatLong::toString).orElse(null),
-                options.getLanguage(),
-                options.getExtendedPostalCodesFor(),
-                options.getEntityType(),
-                options.getLocalizedMapView());
+    public SearchAddressResult searchAddress(String query, SearchAddressOptions options) {
+        return this.searchAddressWithResponse(query, options, null).getValue();
     }
 
     /**
@@ -475,30 +405,27 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<SearchAddressResult> searchAddressWithResponse(
-            SearchAddressOptions options, Context context) {
+            String query, SearchAddressOptions options, Context context) {
+
+        final SearchAddressOptions param = Optional.ofNullable(options).orElse(new SearchAddressOptions());
+
         return this.serviceClient.searchAddressWithResponse(
                 ResponseFormat.JSON,
-                options.getQuery(),
-                options.isTypeAhead(),
-                options.getTop(),
-                options.getSkip(),
-                options.getCountryFilter(),
-                options.getCoordinates().map(LatLong::getLat).orElse(null),
-                options.getCoordinates().map(LatLong::getLon).orElse(null),
-                options.getRadiusInMeters(),
-                options.getBoundingBox().map(BoundingBox::getTopLeft).map(LatLong::toString).orElse(null),
-                options.getBoundingBox().map(BoundingBox::getBottomRight).map(LatLong::toString).orElse(null),
-                options.getLanguage(),
-                options.getExtendedPostalCodesFor(),
-                options.getEntityType(),
-                options.getLocalizedMapView(),
+                query,
+                param.isTypeAhead(),
+                param.getTop(),
+                param.getSkip(),
+                param.getCountryFilter(),
+                param.getCoordinates().map(LatLong::getLat).orElse(null),
+                param.getCoordinates().map(LatLong::getLon).orElse(null),
+                param.getRadiusInMeters(),
+                param.getBoundingBox().map(BoundingBox::getTopLeft).map(LatLong::toString).orElse(null),
+                param.getBoundingBox().map(BoundingBox::getBottomRight).map(LatLong::toString).orElse(null),
+                param.getLanguage(),
+                param.getExtendedPostalCodesFor(),
+                param.getEntityType(),
+                param.getLocalizedMapView(),
                 context);
-    }
-
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public ReverseSearchAddressResult reverseSearchAddress(LatLong coordinates) {
-        final ReverseSearchAddressOptions options = new ReverseSearchAddressOptions().coordinates(coordinates);
-        return this.reverseSearchAddress(options);
     }
 
     /**
@@ -510,21 +437,9 @@ public final class SearchClient {
      * @return this object is returned from a successful Search Address Reverse call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public ReverseSearchAddressResult reverseSearchAddress(ReverseSearchAddressOptions options) {
-        return this.serviceClient.reverseSearchAddress(
-                ResponseFormat.JSON,
-                Arrays.asList(options.getCoordinates().getLat(), options.getCoordinates().getLon()),
-                options.getLanguage(),
-                options.includeSpeedLimit(),
-                options.getHeading(),
-                options.getRadiusInMeters(),
-                options.getNumber(),
-                options.includeRoadUse(),
-                options.getRoadUse(),
-                options.allowFreeformNewline(),
-                options.includeMatchType(),
-                options.getEntityType(),
-                options.getLocalizedMapView());
+    public ReverseSearchAddressResult reverseSearchAddress(LatLong coordinates,
+            ReverseSearchAddressOptions options) {
+        return this.reverseSearchAddressWithResponse(coordinates, options, null).getValue();
     }
 
     /**
@@ -537,30 +452,26 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<ReverseSearchAddressResult> reverseSearchAddressWithResponse(
-            ReverseSearchAddressOptions options, Context context) {
+            LatLong coordinates, ReverseSearchAddressOptions options, Context context) {
+
+        final ReverseSearchAddressOptions param = Optional.ofNullable(options)
+                .orElse(new ReverseSearchAddressOptions());
+
         return this.serviceClient.reverseSearchAddressWithResponse(
                 ResponseFormat.JSON,
-                Arrays.asList(options.getCoordinates().getLat(), options.getCoordinates().getLon()),
-                options.getLanguage(),
-                options.includeSpeedLimit(),
-                options.getHeading(),
-                options.getRadiusInMeters(),
-                options.getNumber(),
-                options.includeRoadUse(),
-                options.getRoadUse(),
-                options.allowFreeformNewline(),
-                options.includeMatchType(),
-                options.getEntityType(),
-                options.getLocalizedMapView(),
+                Arrays.asList(coordinates.getLat(), coordinates.getLon()),
+                param.getLanguage(),
+                param.includeSpeedLimit(),
+                param.getHeading(),
+                param.getRadiusInMeters(),
+                param.getNumber(),
+                param.includeRoadUse(),
+                param.getRoadUse(),
+                param.allowFreeformNewline(),
+                param.includeMatchType(),
+                param.getEntityType(),
+                param.getLocalizedMapView(),
                 context);
-    }
-
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public ReverseSearchCrossStreetAddressResult reverseSearchCrossStreetAddress(
-            LatLong coordinates) {
-        final ReverseSearchCrossStreetAddressOptions options = new ReverseSearchCrossStreetAddressOptions()
-                .coordinates(coordinates);
-        return this.reverseSearchCrossStreetAddress(options);
     }
 
     /**
@@ -572,15 +483,8 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public ReverseSearchCrossStreetAddressResult reverseSearchCrossStreetAddress(
-            ReverseSearchCrossStreetAddressOptions options) {
-        return this.serviceClient.reverseSearchCrossStreetAddress(
-                ResponseFormat.JSON,
-                Arrays.asList(options.getCoordinates().getLat(), options.getCoordinates().getLon()),
-                options.getTop(),
-                options.getHeading(),
-                options.getRadiusInMeters(),
-                options.getLanguage(),
-                options.getLocalizedMapView());
+            LatLong coordinates, ReverseSearchCrossStreetAddressOptions options) {
+        return this.reverseSearchCrossStreetAddressWithResponse(coordinates, options, null).getValue();
     }
 
     /**
@@ -594,15 +498,19 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<ReverseSearchCrossStreetAddressResult> reverseSearchCrossStreetAddressWithResponse(
-            ReverseSearchCrossStreetAddressOptions options, Context context) {
+            LatLong coordinates, ReverseSearchCrossStreetAddressOptions options, Context context) {
+
+        final ReverseSearchCrossStreetAddressOptions param = Optional.ofNullable(options)
+                .orElse(new ReverseSearchCrossStreetAddressOptions());
+
         return this.serviceClient.reverseSearchCrossStreetAddressWithResponse(
                 ResponseFormat.JSON,
-                Arrays.asList(options.getCoordinates().getLat(), options.getCoordinates().getLon()),
-                options.getTop(),
-                options.getHeading(),
-                options.getRadiusInMeters(),
-                options.getLanguage(),
-                options.getLocalizedMapView(),
+                Arrays.asList(coordinates.getLat(), coordinates.getLon()),
+                param.getTop(),
+                param.getHeading(),
+                param.getRadiusInMeters(),
+                param.getLanguage(),
+                param.getLocalizedMapView(),
                 context);
     }
 
@@ -616,25 +524,9 @@ public final class SearchClient {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressResult searchStructuredAddress(SearchStructuredAddressOptions options) {
-        return this.serviceClient.searchStructuredAddress(
-                ResponseFormat.JSON,
-                options.getLanguage(),
-                options.getCountryCode(),
-                options.getTop(),
-                options.getSkip(),
-                options.getStreetNumber(),
-                options.getStreetName(),
-                options.getCrossStreet(),
-                options.getMunicipality(),
-                options.getMunicipalitySubdivision(),
-                options.getCountryTertiarySubdivision(),
-                options.getCountrySecondarySubdivision(),
-                options.getCountrySubdivision(),
-                options.getPostalCode(),
-                options.getExtendedPostalCodesFor(),
-                options.getEntityType(),
-                options.getLocalizedMapView());
+    public SearchAddressResult searchStructuredAddress(StructuredAddress address,
+            SearchStructuredAddressOptions options) {
+        return this.searchStructuredAddressWithResponse(address, options, null).getValue();
     }
 
     /**
@@ -649,33 +541,30 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<SearchAddressResult> searchStructuredAddressWithResponse(
-            SearchStructuredAddressOptions options, Context context) {
+            StructuredAddress address, SearchStructuredAddressOptions options, Context context) {
+
+        final SearchStructuredAddressOptions param = Optional.ofNullable(options)
+                .orElse(new SearchStructuredAddressOptions());
+
         return this.serviceClient.searchStructuredAddressWithResponse(
                 ResponseFormat.JSON,
-                options.getLanguage(),
-                options.getCountryCode(),
-                options.getTop(),
-                options.getSkip(),
-                options.getStreetNumber(),
-                options.getStreetName(),
-                options.getCrossStreet(),
-                options.getMunicipality(),
-                options.getMunicipalitySubdivision(),
-                options.getCountryTertiarySubdivision(),
-                options.getCountrySecondarySubdivision(),
-                options.getCountrySubdivision(),
-                options.getPostalCode(),
-                options.getExtendedPostalCodesFor(),
-                options.getEntityType(),
-                options.getLocalizedMapView(),
+                param.getLanguage(),
+                address.getCountryCode(),
+                param.getTop(),
+                param.getSkip(),
+                address.getStreetNumber(),
+                address.getStreetName(),
+                address.getCrossStreet(),
+                address.getMunicipality(),
+                address.getMunicipalitySubdivision(),
+                address.getCountryTertiarySubdivision(),
+                address.getCountrySecondarySubdivision(),
+                address.getCountrySubdivision(),
+                address.getPostalCode(),
+                param.getExtendedPostalCodesFor(),
+                param.getEntityType(),
+                param.getLocalizedMapView(),
                 context);
-    }
-
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressResult searchInsideGeometry(String query, SearchInsideGeometryRequest request) {
-        final SearchInsideGeometryOptions options = new SearchInsideGeometryOptions()
-                .query(query).request(request);
-        return this.searchInsideGeometry(options);
     }
 
     /**
@@ -687,18 +576,9 @@ public final class SearchClient {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressResult searchInsideGeometry(SearchInsideGeometryOptions options) {
-        return this.serviceClient.searchInsideGeometry(
-                ResponseFormat.JSON,
-                options.getQuery(),
-                options.getRequest(),
-                options.getTop(),
-                options.getLanguage(),
-                options.getCategoryFilter(),
-                options.getExtendedPostalCodesFor(),
-                options.getIdxSet(),
-                options.getLocalizedMapView(),
-                options.getOperatingHours());
+    public SearchAddressResult searchInsideGeometry(String query, SearchInsideGeometryRequest request,
+        SearchInsideGeometryOptions options) {
+        return this.searchInsideGeometryWithResponse(query, request, options, null).getValue();
     }
 
     /**
@@ -712,29 +592,26 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<SearchAddressResult> searchInsideGeometryWithResponse(
-            SearchInsideGeometryOptions options, Context context) {
+            String query, SearchInsideGeometryRequest request, SearchInsideGeometryOptions options,
+            Context context) {
+
+        final SearchInsideGeometryOptions param = Optional.ofNullable(options)
+                .orElse(new SearchInsideGeometryOptions());
+
         return this.serviceClient.searchInsideGeometryWithResponse(
                 ResponseFormat.JSON,
-                options.getQuery(),
-                options.getRequest(),
-                options.getTop(),
-                options.getLanguage(),
-                options.getCategoryFilter(),
-                options.getExtendedPostalCodesFor(),
-                options.getIdxSet(),
-                options.getLocalizedMapView(),
-                options.getOperatingHours(),
+                query,
+                request,
+                param.getTop(),
+                param.getLanguage(),
+                param.getCategoryFilter(),
+                param.getExtendedPostalCodesFor(),
+                param.getIdxSet(),
+                param.getLocalizedMapView(),
+                param.getOperatingHours(),
                 context);
     }
 
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressResult searchAlongRoute(String query,
-            Integer maxDetourTime, SearchAlongRouteRequest route) {
-
-        final SearchAlongRouteOptions options = new SearchAlongRouteOptions()
-                .query(query).maxDetourTime(maxDetourTime).route(route);
-        return this.searchAlongRoute(options);
-    }
     /**
      * **Applies to**: S0 and S1 pricing tiers.
      *
@@ -745,18 +622,9 @@ public final class SearchClient {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressResult searchAlongRoute(SearchAlongRouteOptions options) {
-        return this.serviceClient.searchAlongRoute(
-                ResponseFormat.JSON,
-                options.getQuery(),
-                options.getMaxDetourTime(),
-                options.getRoute(),
-                options.getTop(),
-                options.getBrandFilter(),
-                options.getCategoryFilter(),
-                options.getElectricVehicleConnectorFilter(),
-                options.getLocalizedMapView(),
-                options.getOperatingHours());
+    public SearchAddressResult searchAlongRoute(String query, int maxDetourTime,
+            SearchAlongRouteRequest route, SearchAlongRouteOptions options) {
+        return this.searchAlongRouteWithResponse(query, maxDetourTime, route, options, null).getValue();
     }
 
     /**
@@ -770,18 +638,23 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<SearchAddressResult> searchAlongRouteWithResponse(
+            String query, int maxDetourTime, SearchAlongRouteRequest route,
             SearchAlongRouteOptions options, Context context) {
+
+        final SearchAlongRouteOptions param = Optional.ofNullable(options)
+                .orElse(new SearchAlongRouteOptions());
+
         return this.serviceClient.searchAlongRouteWithResponse(
                 ResponseFormat.JSON,
-                options.getQuery(),
-                options.getMaxDetourTime(),
-                options.getRoute(),
-                options.getTop(),
-                options.getBrandFilter(),
-                options.getCategoryFilter(),
-                options.getElectricVehicleConnectorFilter(),
-                options.getLocalizedMapView(),
-                options.getOperatingHours(),
+                query,
+                maxDetourTime,
+                route,
+                param.getTop(),
+                param.getBrandFilter(),
+                param.getCategoryFilter(),
+                param.getElectricVehicleConnectorFilter(),
+                param.getLocalizedMapView(),
+                param.getOperatingHours(),
                 context);
     }
 

@@ -1,15 +1,16 @@
 package com.azure.maps.search.models;
 
 import java.util.List;
+import java.util.Optional;
 
 public class SearchAddressOptions extends BaseSearchOptions<SearchAddressOptions> {
-    private String query;
+    private LatLong coordinates;
     private Boolean isTypeAhead;
     private List<SearchIndexes> extendedPostalCodesFor;
     private GeographicEntityType entityType;
 
-    public String getQuery() {
-        return query;
+    public Optional<LatLong> getCoordinates() {
+        return Optional.ofNullable(coordinates);
     }
 
     public Boolean isTypeAhead() {
@@ -21,11 +22,6 @@ public class SearchAddressOptions extends BaseSearchOptions<SearchAddressOptions
 
     public GeographicEntityType getEntityType() {
         return entityType;
-    }
-
-    public SearchAddressOptions query(String query) {
-        this.query = query;
-        return this;
     }
 
     public SearchAddressOptions isTypeAhead(Boolean isTypeAhead) {
@@ -40,6 +36,11 @@ public class SearchAddressOptions extends BaseSearchOptions<SearchAddressOptions
 
     public SearchAddressOptions entityType(GeographicEntityType entityType) {
         this.entityType = entityType;
+        return this;
+    }
+
+    public SearchAddressOptions coordinates(LatLong coordinates) {
+        this.coordinates = coordinates;
         return this;
     }
 }

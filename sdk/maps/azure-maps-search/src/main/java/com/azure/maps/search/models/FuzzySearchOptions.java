@@ -3,17 +3,12 @@ package com.azure.maps.search.models;
 import java.util.List;
 
 public class FuzzySearchOptions extends BaseSearchPointOfInterestOptions<FuzzySearchOptions> {
-    private String query;
     private Boolean isTypeAhead;
     private List<SearchIndexes> extendedPostalCodesFor;
     private Integer minFuzzyLevel;
     private Integer maxFuzzyLevel;
     private List<SearchIndexes> idxSet;
     private GeographicEntityType entityType;
-
-    public String getQuery() {
-        return query;
-    }
 
     public Boolean isTypeAhead() {
         return isTypeAhead;
@@ -37,11 +32,6 @@ public class FuzzySearchOptions extends BaseSearchPointOfInterestOptions<FuzzySe
 
     public GeographicEntityType getEntityType() {
         return entityType;
-    }
-
-    public FuzzySearchOptions query(String query) {
-        this.query = query;
-        return this;
     }
 
     public FuzzySearchOptions isTypeAhead(Boolean isTypeAhead) {

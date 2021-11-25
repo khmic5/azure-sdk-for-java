@@ -7,7 +7,6 @@ public class BaseSearchOptions<T extends BaseSearchOptions<T>> {
     private Integer top;
     private Integer skip;
     private List<String> countryFilter;
-    private LatLong coordinates;
     private Integer radiusInMeters;
     private BoundingBox boundingBox;
     private String language;
@@ -35,10 +34,6 @@ public class BaseSearchOptions<T extends BaseSearchOptions<T>> {
 
     public String getLanguage() {
         return language;
-    }
-
-    public Optional<LatLong> getCoordinates() {
-        return Optional.ofNullable(this.coordinates);
     }
 
     public LocalizedMapView getLocalizedMapView() {
@@ -84,12 +79,6 @@ public class BaseSearchOptions<T extends BaseSearchOptions<T>> {
     @SuppressWarnings("unchecked")
     public T localizedMapView(LocalizedMapView localizedMapView) {
         this.localizedMapView = localizedMapView;
-        return (T) this;
-    }
-
-    @SuppressWarnings("unchecked")
-    public T coordinates(LatLong coordinates) {
-        this.coordinates = coordinates;
         return (T) this;
     }
 }

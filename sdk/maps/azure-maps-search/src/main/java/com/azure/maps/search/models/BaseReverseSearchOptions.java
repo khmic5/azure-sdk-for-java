@@ -1,7 +1,6 @@
 package com.azure.maps.search.models;
 
 public class BaseReverseSearchOptions<T extends BaseReverseSearchOptions<T>> {
-    private LatLong coordinates;
     private String language;
     private Integer heading;
     private Integer radiusInMeters;
@@ -13,10 +12,6 @@ public class BaseReverseSearchOptions<T extends BaseReverseSearchOptions<T>> {
 
     public String getLanguage() {
         return language;
-    }
-
-    public LatLong getCoordinates() {
-        return coordinates;
     }
 
     public LocalizedMapView getLocalizedMapView() {
@@ -48,12 +43,6 @@ public class BaseReverseSearchOptions<T extends BaseReverseSearchOptions<T>> {
     @SuppressWarnings("unchecked")
     public T localizedMapView(LocalizedMapView localizedMapView) {
         this.localizedMapView = localizedMapView;
-        return (T) this;
-    }
-
-    @SuppressWarnings("unchecked")
-    public T coordinates(LatLong coordinates) {
-        this.coordinates = coordinates;
         return (T) this;
     }
 }
