@@ -3,15 +3,10 @@ package com.azure.maps.search.models;
 import java.util.List;
 
 public class BaseSearchGeometryOptions<T extends BaseSearchGeometryOptions<T>> {
-    private String query;
     private Integer top;
     private List<Integer> categoryFilter;
     private OperatingHoursRange operatingHours;
     private LocalizedMapView localizedMapView;
-
-    public String getQuery() {
-        return query;
-    }
 
     public LocalizedMapView getLocalizedMapView() {
         return localizedMapView;
@@ -27,12 +22,6 @@ public class BaseSearchGeometryOptions<T extends BaseSearchGeometryOptions<T>> {
 
     public OperatingHoursRange getOperatingHours() {
         return operatingHours;
-    }
-
-    @SuppressWarnings("unchecked")
-    public T query(String query) {
-        this.query = query;
-        return (T) this;
     }
 
     @SuppressWarnings("unchecked")

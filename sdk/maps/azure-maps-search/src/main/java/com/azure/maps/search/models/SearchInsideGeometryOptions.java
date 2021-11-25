@@ -6,7 +6,6 @@ public class SearchInsideGeometryOptions extends BaseSearchGeometryOptions<Searc
     private String language;
     private List<SearchIndexes> extendedPostalCodesFor;
     private List<SearchIndexes> idxSet;
-    private SearchInsideGeometryRequest request;
 
     public String getLanguage() {
         return this.language;
@@ -24,10 +23,6 @@ public class SearchInsideGeometryOptions extends BaseSearchGeometryOptions<Searc
         return this.idxSet;
     }
 
-    public SearchInsideGeometryRequest getRequest() {
-        return request;
-    }
-
     public SearchInsideGeometryOptions language(String language) {
         this.language = language;
         return this;
@@ -40,11 +35,6 @@ public class SearchInsideGeometryOptions extends BaseSearchGeometryOptions<Searc
 
     public SearchInsideGeometryOptions idxSet(List<SearchIndexes> idxSet) {
         this.idxSet = idxSet;
-        return this;
-    }
-
-    public SearchInsideGeometryOptions request(SearchInsideGeometryRequest request) {
-        this.request = request;
         return this;
     }
 }
