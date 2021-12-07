@@ -4,12 +4,17 @@
 
 package com.azure.maps.search;
 
+import java.util.List;
+
 import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceClient;
 import com.azure.core.annotation.ServiceMethod;
 import com.azure.core.http.rest.Response;
 import com.azure.core.util.polling.PollerFlux;
 import com.azure.maps.search.implementation.SearchesImpl;
+import com.azure.maps.search.implementation.models.PolygonResult;
+import com.azure.maps.search.implementation.models.SearchAlongRouteRequest;
+import com.azure.maps.search.implementation.models.SearchInsideGeometryRequest;
 import com.azure.maps.search.models.BatchRequest;
 import com.azure.maps.search.models.ElectricVehicleConnector;
 import com.azure.maps.search.models.ErrorResponseException;
@@ -19,7 +24,6 @@ import com.azure.maps.search.models.LocalizedMapView;
 import com.azure.maps.search.models.OperatingHoursRange;
 import com.azure.maps.search.models.PointOfInterestCategoryTreeResult;
 import com.azure.maps.search.models.PointOfInterestExtendedPostalCodes;
-import com.azure.maps.search.models.PolygonResult;
 import com.azure.maps.search.models.ResponseFormat;
 import com.azure.maps.search.models.ReverseSearchAddressBatchProcessResult;
 import com.azure.maps.search.models.ReverseSearchAddressResult;
@@ -27,16 +31,14 @@ import com.azure.maps.search.models.ReverseSearchCrossStreetAddressResult;
 import com.azure.maps.search.models.RoadUseType;
 import com.azure.maps.search.models.SearchAddressBatchProcessResult;
 import com.azure.maps.search.models.SearchAddressResult;
-import com.azure.maps.search.models.SearchAlongRouteRequest;
 import com.azure.maps.search.models.SearchIndexes;
-import com.azure.maps.search.models.SearchInsideGeometryRequest;
 import com.azure.maps.search.models.SearchesFuzzySearchBatchResponse;
 import com.azure.maps.search.models.SearchesGetFuzzySearchBatchResponse;
 import com.azure.maps.search.models.SearchesGetReverseSearchAddressBatchResponse;
 import com.azure.maps.search.models.SearchesGetSearchAddressBatchResponse;
 import com.azure.maps.search.models.SearchesReverseSearchAddressBatchResponse;
 import com.azure.maps.search.models.SearchesSearchAddressBatchResponse;
-import java.util.List;
+
 import reactor.core.publisher.Mono;
 
 /** Initializes a new instance of the asynchronous SearchClient type. */
