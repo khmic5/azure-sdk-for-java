@@ -12,9 +12,15 @@ import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceClient;
 import com.azure.core.annotation.ServiceMethod;
 import com.azure.core.http.rest.Response;
+import com.azure.core.http.rest.SimpleResponse;
 import com.azure.core.util.Context;
 import com.azure.core.util.polling.SyncPoller;
 import com.azure.maps.search.implementation.SearchesImpl;
+import com.azure.maps.search.models.GeoJsonLineString;
+import com.azure.maps.search.models.GeoJsonObject;
+import com.azure.maps.search.implementation.models.PolygonResult;
+import com.azure.maps.search.implementation.models.SearchAlongRouteRequest;
+import com.azure.maps.search.implementation.models.SearchInsideGeometryRequest;
 import com.azure.maps.search.models.BatchRequest;
 import com.azure.maps.search.models.BoundingBox;
 import com.azure.maps.search.models.ErrorResponseException;
@@ -22,7 +28,7 @@ import com.azure.maps.search.models.FuzzySearchOptions;
 import com.azure.maps.search.models.JsonFormat;
 import com.azure.maps.search.models.LatLong;
 import com.azure.maps.search.models.PointOfInterestCategoryTreeResult;
-import com.azure.maps.search.models.PolygonResult;
+import com.azure.maps.search.models.Polygon;
 import com.azure.maps.search.models.ResponseFormat;
 import com.azure.maps.search.models.ReverseSearchAddressBatchProcessResult;
 import com.azure.maps.search.models.ReverseSearchAddressOptions;
@@ -33,9 +39,7 @@ import com.azure.maps.search.models.SearchAddressBatchProcessResult;
 import com.azure.maps.search.models.SearchAddressOptions;
 import com.azure.maps.search.models.SearchAddressResult;
 import com.azure.maps.search.models.SearchAlongRouteOptions;
-import com.azure.maps.search.models.SearchAlongRouteRequest;
 import com.azure.maps.search.models.SearchInsideGeometryOptions;
-import com.azure.maps.search.models.SearchInsideGeometryRequest;
 import com.azure.maps.search.models.SearchNearbyPointsOfInterestOptions;
 import com.azure.maps.search.models.SearchPointOfInterestCategoryOptions;
 import com.azure.maps.search.models.SearchPointOfInterestOptions;
@@ -63,8 +67,8 @@ public final class SearchClient {
      * @return
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public PolygonResult listPolygons(List<String> geometryIds) {
-        return this.serviceClient.getPolygon(JsonFormat.JSON, geometryIds);
+    public List<Polygon> listPolygons(List<String> geometryIds) {
+        return this.serviceClient.getPolygon(JsonFormat.JSON, geometryIds).getPolygons();
     }
 
     /**
@@ -79,8 +83,12 @@ public final class SearchClient {
      * @return this object is returned from a successful Search Polygon call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<PolygonResult> listPolygonsWithResponse(List<String> geometryIds, Context context) {
-        return this.serviceClient.getPolygonWithResponse(JsonFormat.JSON, geometryIds, context);
+    public Response<List<Polygon>> listPolygonsWithResponse(List<String> geometryIds, Context context) {
+        Response<PolygonResult> response = this.serviceClient.getPolygonWithResponse(
+            JsonFormat.JSON, geometryIds, context);
+
+        SimpleResponse<List<Polygon>> simpleResponse = new SimpleResponse<>(response, response.getValue().getPolygons());
+        return simpleResponse;
     }
 
     /**
@@ -113,6 +121,7 @@ public final class SearchClient {
             Context context) {
 
         final FuzzySearchOptions param = Optional.ofNullable(options).orElse(new FuzzySearchOptions());
+        final Optional<LatLong> optCoordinates = Optional.ofNullable(coordinates);
 
         return this.serviceClient.fuzzySearchWithResponse(
                 ResponseFormat.JSON,
@@ -122,8 +131,8 @@ public final class SearchClient {
                 param.getSkip(),
                 param.getCategoryFilter(),
                 countryFilter,
-                coordinates.getLat(),
-                coordinates.getLon(),
+                optCoordinates.map(LatLong::getLat).orElse(null),
+                optCoordinates.map(LatLong::getLon).orElse(null),
                 param.getRadiusInMeters(),
                 param.getBoundingBox().map(BoundingBox::getTopLeft).map(LatLong::toString).orElse(null),
                 param.getBoundingBox().map(BoundingBox::getBottomRight).map(LatLong::toString).orElse(null),
@@ -176,6 +185,7 @@ public final class SearchClient {
             List<String> countryFilter, SearchPointOfInterestOptions options, Context context) {
 
         final SearchPointOfInterestOptions param = Optional.ofNullable(options).orElse(new SearchPointOfInterestOptions());
+        final Optional<LatLong> optCoordinates = Optional.ofNullable(coordinates);
 
         return this.serviceClient.searchPointOfInterestWithResponse(
                 ResponseFormat.JSON,
@@ -185,8 +195,8 @@ public final class SearchClient {
                 param.getSkip(),
                 param.getCategoryFilter(),
                 countryFilter,
-                coordinates.getLat(),
-                coordinates.getLon(),
+                optCoordinates.map(LatLong::getLat).orElse(null),
+                optCoordinates.map(LatLong::getLon).orElse(null),
                 param.getRadiusInMeters(),
                 param.getBoundingBox().map(BoundingBox::getTopLeft).map(LatLong::toString).orElse(null),
                 param.getBoundingBox().map(BoundingBox::getBottomRight).map(LatLong::toString).orElse(null),
@@ -302,6 +312,7 @@ public final class SearchClient {
 
         final SearchPointOfInterestCategoryOptions param = Optional.ofNullable(options)
                 .orElse(new SearchPointOfInterestCategoryOptions());
+        final Optional<LatLong> optCoordinates = Optional.ofNullable(coordinates);
 
         return this.serviceClient.searchPointOfInterestCategoryWithResponse(
                 ResponseFormat.JSON,
@@ -311,8 +322,8 @@ public final class SearchClient {
                 param.getSkip(),
                 param.getCategoryFilter(),
                 countryFilter,
-                coordinates.getLat(),
-                coordinates.getLon(),
+                optCoordinates.map(LatLong::getLat).orElse(null),
+                optCoordinates.map(LatLong::getLon).orElse(null),
                 param.getRadiusInMeters(),
                 param.getBoundingBox().map(BoundingBox::getTopLeft).map(LatLong::toString).orElse(null),
                 param.getBoundingBox().map(BoundingBox::getBottomRight).map(LatLong::toString).orElse(null),
@@ -576,9 +587,9 @@ public final class SearchClient {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressResult searchInsideGeometry(String query, SearchInsideGeometryRequest request,
+    public SearchAddressResult searchInsideGeometry(String query, GeoJsonObject geometry,
         SearchInsideGeometryOptions options) {
-        return this.searchInsideGeometryWithResponse(query, request, options, null).getValue();
+        return this.searchInsideGeometryWithResponse(query, geometry, options, null).getValue();
     }
 
     /**
@@ -592,7 +603,7 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<SearchAddressResult> searchInsideGeometryWithResponse(
-            String query, SearchInsideGeometryRequest request, SearchInsideGeometryOptions options,
+            String query, GeoJsonObject geometry, SearchInsideGeometryOptions options,
             Context context) {
 
         final SearchInsideGeometryOptions param = Optional.ofNullable(options)
@@ -601,7 +612,7 @@ public final class SearchClient {
         return this.serviceClient.searchInsideGeometryWithResponse(
                 ResponseFormat.JSON,
                 query,
-                request,
+                new SearchInsideGeometryRequest().setGeometry(geometry),
                 param.getTop(),
                 param.getLanguage(),
                 param.getCategoryFilter(),
@@ -623,7 +634,7 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public SearchAddressResult searchAlongRoute(String query, int maxDetourTime,
-            SearchAlongRouteRequest route, SearchAlongRouteOptions options) {
+            GeoJsonLineString route, SearchAlongRouteOptions options) {
         return this.searchAlongRouteWithResponse(query, maxDetourTime, route, options, null).getValue();
     }
 
@@ -638,7 +649,7 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<SearchAddressResult> searchAlongRouteWithResponse(
-            String query, int maxDetourTime, SearchAlongRouteRequest route,
+            String query, int maxDetourTime, GeoJsonLineString route,
             SearchAlongRouteOptions options, Context context) {
 
         final SearchAlongRouteOptions param = Optional.ofNullable(options)
@@ -648,7 +659,7 @@ public final class SearchClient {
                 ResponseFormat.JSON,
                 query,
                 maxDetourTime,
-                route,
+                new SearchAlongRouteRequest().setRoute(route),
                 param.getTop(),
                 param.getBrandFilter(),
                 param.getCategoryFilter(),

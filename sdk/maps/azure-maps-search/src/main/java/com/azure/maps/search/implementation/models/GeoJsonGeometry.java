@@ -7,6 +7,8 @@
 package com.azure.maps.search.implementation.models;
 
 import com.azure.core.annotation.Immutable;
+import com.azure.maps.search.models.GeoJsonLineString;
+import com.azure.maps.search.models.GeoJsonObject;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
