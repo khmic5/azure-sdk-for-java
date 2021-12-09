@@ -78,7 +78,7 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<List<Polygon>> listPolygonsWithResponse(List<String> geometryIds, Context context) {
-        return this.asyncClient.listPolygonsWithResponse(JsonFormat.JSON, geometryIds, context).block();
+        return this.asyncClient.listPolygonsWithResponse(geometryIds, context).block();
     }
 
     /**
