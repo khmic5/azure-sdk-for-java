@@ -7,25 +7,36 @@
 package com.azure.maps.search.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.maps.search.implementation.models.ReverseSearchAddressResultItem;
-import com.azure.maps.search.implementation.models.SearchSummary;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /** This object is returned from a successful Search Address Reverse call. */
 @Immutable
 public class ReverseSearchAddressResult {
-    /*
-     * Summary object for a Search Address Reverse response
-     */
-    @JsonProperty(value = "summary", access = JsonProperty.Access.WRITE_ONLY)
-    private SearchSummary summary;
 
     /*
-     * Addresses array
+     * Internal model
      */
-    @JsonProperty(value = "addresses", access = JsonProperty.Access.WRITE_ONLY)
-    private List<ReverseSearchAddressResultItem> addresses;
+    private com.azure.maps.search.implementation.models.ReverseSearchAddressResult internalModel = null;
+
+    /*
+     * A list of Search API results.
+     */
+    private List<ReverseSearchAddressResultItem> addresses = null;
+
+    /**
+     * Constructor
+     */
+    public ReverseSearchAddressResult(com.azure.maps.search.implementation.models.ReverseSearchAddressResult internalModel) {
+        this.internalModel = internalModel;
+
+        // configure results to replace ReverseSearchAddressResultItem with the proper model
+        // this is a heavy operation so it will be done here and cached.
+        if (this.internalModel != null && this.internalModel.getAddresses() != null) {
+            this.addresses = this.internalModel.getAddresses().stream().map(item ->
+                new ReverseSearchAddressResultItem(item)).collect(Collectors.toList());
+        }
+    }
 
     /**
      * Get the summary property: Summary object for a Search Address Reverse response.
@@ -33,7 +44,7 @@ public class ReverseSearchAddressResult {
      * @return the summary value.
      */
     public SearchSummary getSummary() {
-        return this.summary;
+        return this.internalModel.getSummary();
     }
 
     /**

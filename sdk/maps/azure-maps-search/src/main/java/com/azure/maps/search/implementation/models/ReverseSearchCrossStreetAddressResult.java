@@ -11,23 +11,23 @@ import com.azure.maps.search.models.SearchSummary;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/** This object is returned from a successful Search calls. */
+/** This object is returned from a successful Search Address Reverse CrossStreet call. */
 @Immutable
-public class SearchAddressResult {
+public final class ReverseSearchCrossStreetAddressResult {
     /*
-     * Summary object for a Search API response
+     * Summary object for a Search Address Reverse Cross Street response
      */
     @JsonProperty(value = "summary", access = JsonProperty.Access.WRITE_ONLY)
     private SearchSummary summary;
 
     /*
-     * A list of Search API results.
+     * Addresses array
      */
-    @JsonProperty(value = "results", access = JsonProperty.Access.WRITE_ONLY)
-    private List<SearchAddressResultItem> results;
+    @JsonProperty(value = "addresses", access = JsonProperty.Access.WRITE_ONLY)
+    private List<ReverseSearchCrossStreetAddressResultItem> addresses;
 
     /**
-     * Get the summary property: Summary object for a Search API response.
+     * Get the summary property: Summary object for a Search Address Reverse Cross Street response.
      *
      * @return the summary value.
      */
@@ -36,11 +36,11 @@ public class SearchAddressResult {
     }
 
     /**
-     * Get the results property: A list of Search API results.
+     * Get the addresses property: Addresses array.
      *
-     * @return the results value.
+     * @return the addresses value.
      */
-    public List<SearchAddressResultItem> getResults() {
-        return this.results;
+    public List<ReverseSearchCrossStreetAddressResultItem> getAddresses() {
+        return this.addresses;
     }
 }

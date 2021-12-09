@@ -5,12 +5,11 @@
 package com.azure.maps.search.models;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.azure.core.annotation.Immutable;
 import com.azure.maps.search.implementation.models.Address;
 import com.azure.maps.search.implementation.models.DataSources;
-import com.azure.maps.search.implementation.models.EntryPoint;
-import com.azure.maps.search.implementation.models.MatchType;
 import com.azure.maps.search.implementation.models.PointOfInterest;
 import com.azure.maps.search.implementation.models.SearchAddressResultType;
 import com.azure.maps.search.implementation.models.Viewport;
@@ -20,15 +19,21 @@ import com.azure.maps.search.implementation.models.Viewport;
 public final class SearchAddressResultItem {
 
     /*
-     * Internal model
+     * Internal models
      */
     private com.azure.maps.search.implementation.models.SearchAddressResultItem internalModel = null;
+    private List<EntryPoint> entryPoints = null;
 
     /**
      * Constructor
      */
     SearchAddressResultItem(com.azure.maps.search.implementation.models.SearchAddressResultItem internalModel) {
         this.internalModel = internalModel;
+
+        if (this.internalModel != null && this.internalModel.getEntryPoints() != null) {
+            this.entryPoints = this.internalModel.getEntryPoints().stream().map(item ->
+                new EntryPoint(item)).collect(Collectors.toList());
+        }
     }
 
     /**
@@ -135,7 +140,7 @@ public final class SearchAddressResultItem {
      * @return the entryPoints value.
      */
     public List<EntryPoint> getEntryPoints() {
-        return this.internalModel.getEntryPoints();
+        return this.entryPoints;
     }
 
     /**
