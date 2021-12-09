@@ -7,6 +7,7 @@
 package com.azure.maps.search.implementation.models;
 
 import com.azure.core.annotation.Fluent;
+import com.azure.maps.search.models.EntryPointType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** The entry point for the POI being returned. */

@@ -1,5 +1,7 @@
 package com.azure.maps.search.models;
 
+import com.azure.maps.search.implementation.models.LatLongPairAbbreviated;
+
 public class LatLong {
     private double latitude;
     private double longitude;
@@ -7,6 +9,11 @@ public class LatLong {
     public LatLong(double latitude, double longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
+    }
+
+    LatLong(LatLongPairAbbreviated pair) {
+        this.latitude = pair.getLat();
+        this.longitude = pair.getLon();
     }
 
     public double getLat() {

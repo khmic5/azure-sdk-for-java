@@ -14,6 +14,7 @@ import com.azure.core.http.policy.HttpPipelinePolicy;
 import com.azure.core.http.rest.Response;
 import com.azure.maps.search.models.GeoJsonObject;
 import com.azure.maps.search.models.GeoJsonLineString;
+import com.azure.maps.search.SearchAsyncClient;
 import com.azure.maps.search.SearchClient;
 import com.azure.maps.search.SearchClientBuilder;
 import com.azure.maps.search.models.BatchRequest;
@@ -37,7 +38,7 @@ import com.azure.maps.search.models.StructuredAddress;
 
 import reactor.core.publisher.Mono;
 
-public class SearchSample {
+public class SearchSampleAsync {
 
     public static void main(String[] args) throws IOException {
         // build Client ID policy for use with Azure AD authentication
@@ -67,9 +68,9 @@ public class SearchSample {
         SearchClientBuilder builder = new SearchClientBuilder();
         builder.addPolicy(subscriptionKeyPolicy);
         builder.httpLogOptions(new HttpLogOptions().setLogLevel(HttpLogDetailLevel.BODY_AND_HEADERS));
-        SearchClient client = builder.buildClient();
+        SearchAsyncClient client = builder.buildAsyncClient();
 
-        /* Stand-alone, one-shot operations */
+        /* Stand-alone, one-shot operations
         // Search address -
         // https://docs.microsoft.com/en-us/rest/api/maps/search/get-search-address
         System.out.println("Search Address:");
@@ -149,12 +150,16 @@ public class SearchSample {
                         .top(2)
                         .radiusInMeters(1000),
                 null).getStatusCode());
+        */
 
         // Search fuzzy -
         // https://docs.microsoft.com/en-us/rest/api/maps/search/get-search-fuzzy
         System.out.println("Search Fuzzy:");
-        MapsCommon.print(client.fuzzySearch("starbucks", new LatLong(40.706270, -74.011454), null));
+        Mono<SearchAddressResult> result = client.fuzzySearch("starbucks", new LatLong(40.706270, -74.011454), null);
+        SearchAddressResult searchResult = result.block();
+        MapsCommon.print(searchResult.getResults().get(0).getBoundingBox());
 
+        /*
         // with options
         SearchAddressResult results = client.fuzzySearch("1 Microsoft Way", new LatLong(40.706270, -74.011454),
                 new FuzzySearchOptions().top(5));
@@ -288,7 +293,7 @@ public class SearchSample {
                         .top(5),
                 null).getStatusCode());
 
-        /* Batch operations. */
+        /* Batch operations.
 
         // Search address batch sync -
         // https://docs.microsoft.com/en-us/rest/api/maps/search/post-search-address-batch
@@ -335,5 +340,6 @@ public class SearchSample {
 
         System.out.println("Post Search Fuzzy Batch Async");
         MapsCommon.print(client.beginFuzzySearchBatch(contentJson).getFinalResult());
+        */
     }
 }
