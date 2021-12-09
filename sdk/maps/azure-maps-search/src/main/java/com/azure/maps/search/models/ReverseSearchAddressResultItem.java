@@ -22,7 +22,6 @@ public final class ReverseSearchAddressResultItem {
      * Constructor
      * @param internalModel
      */
-
     public ReverseSearchAddressResultItem(com.azure.maps.search.implementation.models.ReverseSearchAddressResultItem
         internalModel) {
         this.internalModel = internalModel;

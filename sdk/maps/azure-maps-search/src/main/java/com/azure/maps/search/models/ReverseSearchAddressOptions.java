@@ -2,7 +2,10 @@ package com.azure.maps.search.models;
 
 import java.util.List;
 
-public class ReverseSearchAddressOptions extends BaseReverseSearchOptions<ReverseSearchAddressOptions> {
+/**
+ * Class holding optional parameters for Reverse Search.
+ */
+public final class ReverseSearchAddressOptions extends BaseReverseSearchOptions<ReverseSearchAddressOptions> {
     private Boolean includeSpeedLimit;
     private String number;
     private Boolean includeRoadUse;
@@ -11,64 +14,127 @@ public class ReverseSearchAddressOptions extends BaseReverseSearchOptions<Revers
     private Boolean includeMatchType;
     private GeographicEntityType entityType;
 
+    /**
+     * Returns whether we should include the speed limit.
+     * @return
+     */
     public Boolean includeSpeedLimit() {
         return includeSpeedLimit;
     }
 
+    /**
+     * Returns the building number.
+     * @return
+     */
     public String getNumber() {
         return number;
     }
 
+    /**
+     * Returns whether we should include the road use.
+     * @return
+     */
     public Boolean includeRoadUse() {
         return includeRoadUse;
     }
 
+    /**
+     * Returns a list of road uses.
+     * @return
+     */
     public List<RoadUseType> getRoadUse() {
         return roadUse;
     }
 
+    /**
+     * Returns whether to allow free form newline.
+     * @return
+     */
     public Boolean allowFreeformNewline() {
         return allowFreeformNewline;
     }
 
+    /**
+     * Returns whether to include match type.
+     * @return
+     */
     public Boolean includeMatchType() {
         return includeMatchType;
     }
 
+    /**
+     * Returns the entity type.
+     * @return
+     */
     public GeographicEntityType getEntityType() {
         return entityType;
     }
 
+    /**
+     * Sets whether to include the speed limit.
+     * @param includeSpeedLimit
+     * @return
+     */
     public ReverseSearchAddressOptions includeSpeedLimit(Boolean includeSpeedLimit) {
         this.includeSpeedLimit = true;
         return this;
     }
 
+    /**
+     * Sets whether to include the street number.
+     * @param number
+     * @return
+     */
     public ReverseSearchAddressOptions number(String number) {
         this.number = number;
         return this;
     }
 
+    /**
+     * Sets whether to include road use.
+     * @param includeRoadUse
+     * @return
+     */
     public ReverseSearchAddressOptions includeRoadUse(Boolean includeRoadUse) {
         this.includeRoadUse = includeRoadUse;
         return this;
     }
 
+    /**
+     * Sets a list of road use types.
+     * @param roadUse
+     * @return
+     */
     public ReverseSearchAddressOptions roadUse(List<RoadUseType> roadUse) {
         this.roadUse = roadUse;
         return this;
     }
 
+    /**
+     * Sets whether to allow free form newline.
+     * @param allowFreeformNewline
+     * @return
+     */
     public ReverseSearchAddressOptions allowFreeformNewline(Boolean allowFreeformNewline) {
         this.allowFreeformNewline = allowFreeformNewline;
         return this;
     }
 
+    /**
+     * Sets whether to include the match type.
+     * @param includeMatchType
+     * @return
+     */
     public ReverseSearchAddressOptions includeMatchType(Boolean includeMatchType) {
         this.includeMatchType = includeMatchType;
         return this;
     }
 
+    /**
+     * Sets the entity type.
+     * @param entityType
+     * @return
+     */
     public ReverseSearchAddressOptions entityType(GeographicEntityType entityType) {
         this.entityType = entityType;
         return this;

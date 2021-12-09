@@ -3,6 +3,9 @@ package com.azure.maps.search.models;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Class holding optional parameters for Search.
+ */
 public class BaseSearchOptions<T extends BaseSearchOptions<T>> {
     private Integer top;
     private Integer skip;
@@ -12,70 +15,133 @@ public class BaseSearchOptions<T extends BaseSearchOptions<T>> {
     private String language;
     private LocalizedMapView localizedMapView;
 
+    /**
+     * Returns the top value.
+     * @return
+     */
     public Integer getTop() {
         return top;
     }
 
+    /**
+     * Returns the skip value.
+     * @return
+     */
     public Integer getSkip() {
         return skip;
     }
 
+    /**
+     * Returns the country filter.
+     * @return
+     */
     public List<String> getCountryFilter() {
         return countryFilter;
     }
 
+    /**
+     * Returns the radius in meters.
+     * @return
+     */
     public Integer getRadiusInMeters() {
         return radiusInMeters;
     }
 
+    /**
+     * Returns the bounding box.
+     * @return
+     */
     public Optional<BoundingBox> getBoundingBox() {
         return Optional.ofNullable(boundingBox);
     }
 
+    /**
+     * Returns the language.
+     * @return
+     */
     public String getLanguage() {
         return language;
     }
 
+    /**
+     * Returns the localized map view.
+     * @return
+     */
     public LocalizedMapView getLocalizedMapView() {
         return localizedMapView;
     }
 
+    /**
+     * Sets the top value.
+     * @param top
+     * @return
+     */
     @SuppressWarnings("unchecked")
     public T top(Integer top) {
         this.top = top;
         return (T) this;
     }
 
+    /**
+     * Sets the skip value.
+     * @param skip
+     * @return
+     */
     @SuppressWarnings("unchecked")
     public T skip(Integer skip) {
         this.skip = skip;
         return (T) this;
     }
 
+    /**
+     * Sets the country filter.
+     * @param countryFilter
+     * @return
+     */
     @SuppressWarnings("unchecked")
     public T countryFilter(List<String> countryFilter) {
         this.countryFilter = countryFilter;
         return (T) this;
     }
 
+    /**
+     * Sets the radius in meters.
+     * @param radiusInMeters
+     * @return
+     */
     @SuppressWarnings("unchecked")
     public T radiusInMeters(Integer radiusInMeters) {
         this.radiusInMeters = radiusInMeters;
         return (T) this;
     }
 
+    /**
+     * Sets the bounding box.
+     * @param box
+     * @return
+     */
     @SuppressWarnings("unchecked")
     public T boundingBox(BoundingBox box) {
         this.boundingBox = box;
         return (T) this;
     }
 
+    /**
+     * Sets the language.
+     * @param language
+     * @return
+     */
     @SuppressWarnings("unchecked")
     public T language(String language) {
         this.language = language;
         return (T) this;
     }
 
+    /**
+     * Sets the localized map view.
+     * @param localizedMapView
+     * @return
+     */
     @SuppressWarnings("unchecked")
     public T localizedMapView(LocalizedMapView localizedMapView) {
         this.localizedMapView = localizedMapView;

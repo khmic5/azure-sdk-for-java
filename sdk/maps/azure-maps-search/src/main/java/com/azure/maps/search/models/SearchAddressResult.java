@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 /** This object is returned from a successful Search calls. */
 @Immutable
-public class SearchAddressResult {
+public final class SearchAddressResult {
 
     /*
      * Internal model
