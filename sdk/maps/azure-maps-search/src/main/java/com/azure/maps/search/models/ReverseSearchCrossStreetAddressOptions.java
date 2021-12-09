@@ -1,12 +1,24 @@
 package com.azure.maps.search.models;
 
-public class ReverseSearchCrossStreetAddressOptions extends BaseReverseSearchOptions<ReverseSearchCrossStreetAddressOptions> {
+/**
+ * Class holding optional parameters for Search.
+ */
+public final class ReverseSearchCrossStreetAddressOptions extends BaseReverseSearchOptions<ReverseSearchCrossStreetAddressOptions> {
     private Integer top;
 
+    /**
+     * Returns the top value.
+     * @return
+     */
     public Integer getTop() {
         return top;
     }
 
+    /**
+     * Sets the top value.
+     * @param top
+     * @return
+     */
     public ReverseSearchCrossStreetAddressOptions top(Integer top) {
         this.top = top;
         return this;

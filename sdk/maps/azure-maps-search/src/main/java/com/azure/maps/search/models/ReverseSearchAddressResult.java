@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 /** This object is returned from a successful Search Address Reverse call. */
 @Immutable
-public class ReverseSearchAddressResult {
+public final class ReverseSearchAddressResult {
 
     /*
      * Internal model
