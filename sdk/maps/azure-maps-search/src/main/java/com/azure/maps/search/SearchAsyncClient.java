@@ -560,7 +560,9 @@ public final class SearchAsyncClient {
         final ReverseSearchAddressOptions param = Optional.ofNullable(options)
             .orElse(new ReverseSearchAddressOptions());
 
-        return this.serviceClient.reverseSearchAddressWithResponseAsync(
+        // call method and convert
+        Mono<Response<com.azure.maps.search.implementation.models.ReverseSearchAddressResult>> responseMono =
+            this.serviceClient.reverseSearchAddressWithResponseAsync(
                 ResponseFormat.JSON,
                 Arrays.asList(coordinates.getLat(), coordinates.getLon()),
                 param.getLanguage(),
@@ -575,6 +577,12 @@ public final class SearchAsyncClient {
                 param.getEntityType(),
                 param.getLocalizedMapView(),
                 context);
+
+        // convert to the right (public) SearchAddressResult
+        return responseMono.flatMap(response -> {
+            Response<ReverseSearchAddressResult> simpleResponse = TypeMapper.createReverseSearchResponse(response);
+            return Mono.just(simpleResponse);
+        });
     }
 
     /**
@@ -611,7 +619,9 @@ public final class SearchAsyncClient {
         final ReverseSearchCrossStreetAddressOptions param = Optional.ofNullable(options)
             .orElse(new ReverseSearchCrossStreetAddressOptions());
 
-        return this.serviceClient.reverseSearchCrossStreetAddressWithResponseAsync(
+        // call method and convert
+        Mono<Response<com.azure.maps.search.implementation.models.ReverseSearchCrossStreetAddressResult>> responseMono =
+            this.serviceClient.reverseSearchCrossStreetAddressWithResponseAsync(
                 ResponseFormat.JSON,
                 Arrays.asList(coordinates.getLat(), coordinates.getLon()),
                 param.getTop(),
@@ -620,12 +630,18 @@ public final class SearchAsyncClient {
                 param.getLanguage(),
                 param.getLocalizedMapView(),
                 context);
+
+        // convert to the right (public) SearchAddressResult
+        return responseMono.flatMap(response -> {
+            Response<ReverseSearchCrossStreetAddressResult> simpleResponse = TypeMapper
+                .createReverseSearchCrossStreetResponse(response);
+            return Mono.just(simpleResponse);
+        });
     }
 
     /**
      * **Structured Address Geocoding**
      *
-
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.

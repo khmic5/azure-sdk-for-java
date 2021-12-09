@@ -8,6 +8,7 @@ package com.azure.maps.search.implementation.models;
 
 import com.azure.core.annotation.Fluent;
 import com.azure.maps.search.models.GeographicEntityType;
+import com.azure.maps.search.models.MatchType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 

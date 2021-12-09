@@ -5,10 +5,10 @@
 package com.azure.maps.search.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.maps.search.implementation.models.SearchSummary;
+import com.azure.maps.search.models.SearchSummary;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /** This object is returned from a successful Search calls. */
 @Immutable
@@ -22,7 +22,7 @@ public class SearchAddressResult {
     /*
      * A list of Search API results.
      */
-    private List<SearchAddressResultItem> results;
+    private List<SearchAddressResultItem> results = null;
 
     /**
      * Constructor
@@ -32,11 +32,9 @@ public class SearchAddressResult {
 
         // configure results to replace SearchAddressResultItem with the proper model
         // this is a heavy operation so it will be done here and cached.
-        this.results = new ArrayList<>(this.internalModel.getResults().size());
-
-        for (com.azure.maps.search.implementation.models.SearchAddressResultItem item :
-            this.internalModel.getResults()) {
-            this.results.add(new SearchAddressResultItem(item));
+        if (this.internalModel != null && this.internalModel.getResults() != null) {
+            this.results = this.internalModel.getResults().stream().map(item -> new SearchAddressResultItem(item))
+                .collect(Collectors.toList());
         }
     }
 
