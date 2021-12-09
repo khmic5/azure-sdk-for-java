@@ -4,40 +4,57 @@
 
 package com.azure.maps.search;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceClient;
 import com.azure.core.annotation.ServiceMethod;
 import com.azure.core.http.rest.Response;
+import com.azure.core.http.rest.SimpleResponse;
+import com.azure.core.util.Context;
 import com.azure.core.util.polling.PollerFlux;
 import com.azure.maps.search.implementation.SearchesImpl;
 import com.azure.maps.search.implementation.models.PolygonResult;
 import com.azure.maps.search.implementation.models.SearchAlongRouteRequest;
 import com.azure.maps.search.implementation.models.SearchInsideGeometryRequest;
 import com.azure.maps.search.models.BatchRequest;
+import com.azure.maps.search.models.BoundingBox;
 import com.azure.maps.search.models.ElectricVehicleConnector;
 import com.azure.maps.search.models.ErrorResponseException;
-import com.azure.maps.search.models.GeographicEntityType;
+import com.azure.maps.search.models.FuzzySearchOptions;
+import com.azure.maps.search.models.GeoJsonLineString;
+import com.azure.maps.search.models.GeoJsonObject;
 import com.azure.maps.search.models.JsonFormat;
+import com.azure.maps.search.models.LatLong;
 import com.azure.maps.search.models.LocalizedMapView;
 import com.azure.maps.search.models.OperatingHoursRange;
 import com.azure.maps.search.models.PointOfInterestCategoryTreeResult;
-import com.azure.maps.search.models.PointOfInterestExtendedPostalCodes;
+import com.azure.maps.search.models.Polygon;
 import com.azure.maps.search.models.ResponseFormat;
 import com.azure.maps.search.models.ReverseSearchAddressBatchProcessResult;
+import com.azure.maps.search.models.ReverseSearchAddressOptions;
 import com.azure.maps.search.models.ReverseSearchAddressResult;
+import com.azure.maps.search.models.ReverseSearchCrossStreetAddressOptions;
 import com.azure.maps.search.models.ReverseSearchCrossStreetAddressResult;
-import com.azure.maps.search.models.RoadUseType;
 import com.azure.maps.search.models.SearchAddressBatchProcessResult;
+import com.azure.maps.search.models.SearchAddressOptions;
 import com.azure.maps.search.models.SearchAddressResult;
-import com.azure.maps.search.models.SearchIndexes;
+import com.azure.maps.search.models.SearchAlongRouteOptions;
+import com.azure.maps.search.models.SearchInsideGeometryOptions;
+import com.azure.maps.search.models.SearchNearbyPointsOfInterestOptions;
+import com.azure.maps.search.models.SearchPointOfInterestCategoryOptions;
+import com.azure.maps.search.models.SearchPointOfInterestOptions;
+import com.azure.maps.search.models.SearchStructuredAddressOptions;
 import com.azure.maps.search.models.SearchesFuzzySearchBatchResponse;
 import com.azure.maps.search.models.SearchesGetFuzzySearchBatchResponse;
 import com.azure.maps.search.models.SearchesGetReverseSearchAddressBatchResponse;
 import com.azure.maps.search.models.SearchesGetSearchAddressBatchResponse;
 import com.azure.maps.search.models.SearchesReverseSearchAddressBatchResponse;
 import com.azure.maps.search.models.SearchesSearchAddressBatchResponse;
+import com.azure.maps.search.models.StructuredAddress;
+import com.azure.maps.search.util.TypeMapper;
 
 import reactor.core.publisher.Mono;
 
@@ -56,19 +73,7 @@ public final class SearchAsyncClient {
     }
 
     /**
-     * **Get Polygon**
-     *
-     * <p>**Applies to**: S1 pricing tier.
-     *
-     * <p>The Get Polygon service allows you to request the geometry data such as a city or country outline for a set of
-     * entities, previously retrieved from an Online Search request in GeoJSON format. The geometry ID is returned in
-     * the sourceGeometry object under "geometry" and "id" in either a Search Address or Search Fuzzy call.
-     *
-     * <p>Please note that any geometry ID retrieved from an Online Search endpoint has a limited lifetime. The client
-     * should not store geometry IDs in persistent storage for later referral, as the stability of these identifiers is
-     * not guaranteed for a long period of time. It is expected that a request to the Polygon method is made within a
-     * few minutes of the request to the Online Search method that provided the ID. The service allows for batch
-     * requests up to 20 identifiers.
+     * **List Polygons**
      *
      * @param format Desired format of the response. Only `json` format is supported.
      * @param geometryIds Comma separated list of geometry UUIDs, previously retrieved from an Online Search request.
@@ -78,24 +83,15 @@ public final class SearchAsyncClient {
      * @return this object is returned from a successful Search Polygon call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<PolygonResult>> getPolygonWithResponse(JsonFormat format, List<String> geometryIds) {
-        return this.serviceClient.getPolygonWithResponseAsync(format, geometryIds);
+    public Mono<List<Polygon>> listPolygons(List<String> geometryIds) {
+        Mono<Response<List<Polygon>>> result = this.listPolygonsWithResponse(JsonFormat.JSON, geometryIds, null);
+        return result.flatMap(response -> {
+            return Mono.just(response.getValue());
+        });
     }
 
     /**
-     * **Get Polygon**
-     *
-     * <p>**Applies to**: S1 pricing tier.
-     *
-     * <p>The Get Polygon service allows you to request the geometry data such as a city or country outline for a set of
-     * entities, previously retrieved from an Online Search request in GeoJSON format. The geometry ID is returned in
-     * the sourceGeometry object under "geometry" and "id" in either a Search Address or Search Fuzzy call.
-     *
-     * <p>Please note that any geometry ID retrieved from an Online Search endpoint has a limited lifetime. The client
-     * should not store geometry IDs in persistent storage for later referral, as the stability of these identifiers is
-     * not guaranteed for a long period of time. It is expected that a request to the Polygon method is made within a
-     * few minutes of the request to the Online Search method that provided the ID. The service allows for batch
-     * requests up to 20 identifiers.
+     * **List Polygons**
      *
      * @param format Desired format of the response. Only `json` format is supported.
      * @param geometryIds Comma separated list of geometry UUIDs, previously retrieved from an Online Search request.
@@ -105,793 +101,189 @@ public final class SearchAsyncClient {
      * @return this object is returned from a successful Search Polygon call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<PolygonResult> getPolygon(JsonFormat format, List<String> geometryIds) {
-        return this.serviceClient.getPolygonAsync(format, geometryIds);
+    public Mono<Response<List<Polygon>>> listPolygonsWithResponse(JsonFormat format, List<String> geometryIds,
+            Context context) {
+        Mono<Response<PolygonResult>> result = this.serviceClient.getPolygonWithResponseAsync(format,
+            geometryIds, context);
+        return result.flatMap(response -> {
+            Response<List<Polygon>> simpleResponse = new SimpleResponse<List<Polygon>>(response,
+                response.getValue().getPolygons());
+            return Mono.just(simpleResponse);
+        });
+    }
+
+    /**
+     *
+     * @param options
+     * @return
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<SearchAddressResult> fuzzySearch(String query, LatLong coordinates, FuzzySearchOptions options) {
+        Mono<Response<SearchAddressResult>> result = this.fuzzySearchWithResponse(query, coordinates,
+            null, options, null);
+        return result.flatMap(response -> {
+            return Mono.just(response.getValue());
+        });
+    }
+
+    /**
+     *
+     * @param options
+     * @return
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<SearchAddressResult> fuzzySearch(String query, List<String> countryFilter, FuzzySearchOptions options){
+        Mono<Response<SearchAddressResult>> result = this.fuzzySearchWithResponse(query, null, countryFilter,
+            options, null);
+        return result.flatMap(response -> {
+            return Mono.just(response.getValue());
+        });
     }
 
     /**
      * **Free Form Search**
-     *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
-     *
-     * <p>The basic default API is Free Form Search which handles the most fuzzy of inputs handling any combination of
-     * address or POI tokens. This search API is the canonical 'single line search'. The Free Form Search API is a
-     * seamless combination of POI search and geocoding. The API can also be weighted with a contextual position
-     * (lat./lon. pair), or fully constrained by a coordinate and radius, or it can be executed more generally without
-     * any geo biasing anchor point.&lt;br&gt;&lt;br&gt;We strongly advise you to use the 'countrySet' parameter to
-     * specify only the countries for which your application needs coverage, as the default behavior will be to search
-     * the entire world, potentially returning unnecessary results.&lt;br&gt;&lt;br&gt; E.g.: `countrySet`=US,FR
-     * &lt;br&gt;&lt;br&gt;Please see [Search
-     * Coverage](https://docs.microsoft.com/azure/location-based-services/geocoding-coverage) for a complete list of all
-     * the supported countries.&lt;br&gt;&lt;br&gt;Most Search queries default to `maxFuzzyLevel`=2 to gain performance
-     * and also reduce unusual results. This new default can be overridden as needed per request by passing in the query
-     * param `maxFuzzyLevel`=3 or 4.
-     *
-     * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param query The applicable query string (e.g., "seattle", "pizza"). Can _also_ be specified as a comma separated
-     *     string composed by latitude followed by longitude (e.g., "47.641268, -122.125679"). Must be properly URL
-     *     encoded.
-     * @param isTypeAhead Boolean. If the typeahead flag is set, the query will be interpreted as a partial input and
-     *     the search will enter predictive mode.
-     * @param top Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
-     * @param skip Starting offset of the returned results within the full result set. Default: 0, minimum: 0 and
-     *     maximum: 1900.
-     * @param categoryFilter A comma-separated list of category set IDs which could be used to restrict the result to
-     *     specific Points of Interest categories. ID order does not matter. When multiple category identifiers are
-     *     provided, only POIs that belong to (at least) one of the categories from the provided list will be returned.
-     *     The list of supported categories can be discovered using  [POI Categories
-     *     API](https://aka.ms/AzureMapsPOICategoryTree). Usage examples:
-     *     <p>* **categorySet=7315** (Search Points of Interest from category Restaurant)
-     *     <p>* **categorySet=7315025,7315017** (Search Points of Interest of category either Italian or French
-     *     Restaurant).
-     * @param countryFilter Comma separated string of country codes, e.g. FR,ES. This will limit the search to the
-     *     specified countries.
-     * @param lat Latitude where results should be biased. E.g. 37.337.
-     * @param lon Longitude where results should be biased. E.g. -121.89.
-     * @param radiusInMeters The radius in meters to for the results to be constrained to the defined area.
-     * @param topLeft Top left position of the bounding box. E.g. 37.553,-122.453.
-     * @param btmRight Bottom right position of the bounding box. E.g. 37.553,-122.453.
-     * @param language Language in which search results should be returned. Should be one of supported IETF language
-     *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used.
-     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
-     *     details.
-     * @param extendedPostalCodesFor Indexes for which extended postal codes should be included in the results.
-     *     <p>Available indexes are:
-     *     <p>**Addr** = Address ranges
-     *     <p>**Geo** = Geographies
-     *     <p>**PAD** = Point Addresses
-     *     <p>**POI** = Points of Interest
-     *     <p>**Str** = Streets
-     *     <p>**XStr** = Cross Streets (intersections)
-     *     <p>Value should be a comma separated list of index types (in any order) or **None** for no indexes.
-     *     <p>By default extended postal codes are included for all indexes except Geo. Extended postal code lists for
-     *     geographies can be quite long so they have to be explicitly requested when needed.
-     *     <p>Usage examples:
-     *     <p>extendedPostalCodesFor=POI
-     *     <p>extendedPostalCodesFor=PAD,Addr,POI
-     *     <p>extendedPostalCodesFor=None
-     *     <p>Extended postal code is returned as an **extendedPostalCode** property of an address. Availability is
-     *     region-dependent.
-     * @param minFuzzyLevel Minimum fuzziness level to be used. Default: 1, minimum: 1 and maximum: 4
-     *     <p>* Level 1 has no spell checking.
-     *     <p>* Level 2 uses normal n-gram spell checking. For example, query "restrant" can be matched to "restaurant."
-     *     <p>* Level 3 uses sound-like spell checking, and shingle spell checking. Sound-like spell checking is for
-     *     "rstrnt" to "restaurant" matching. Shingle spell checking is for "mountainview" to "mountain view" matching.
-     *     <p>* Level 4 doesn’t add any more spell checking functions.
-     *     <p>The search engine will start looking for a match on the level defined by minFuzzyLevel, and will stop
-     *     searching at the level specified by maxFuzzyLevel.
-     * @param maxFuzzyLevel Maximum fuzziness level to be used. Default: 2, minimum: 1 and maximum: 4
-     *     <p>* Level 1 has no spell checking.
-     *     <p>* Level 2 uses normal n-gram spell checking. For example, query "restrant" can be matched to "restaurant."
-     *     <p>* Level 3 uses sound-like spell checking, and shingle spell checking. Sound-like spell checking is for
-     *     "rstrnt" to "restaurant" matching. Shingle spell checking is for "mountainview" to "mountain view" matching.
-     *     <p>* Level 4 doesn’t add any more spell checking functions.
-     *     <p>The search engine will start looking for a match on the level defined by minFuzzyLevel, and will stop
-     *     searching at the level specified by maxFuzzyLevel.
-     * @param idxSet A comma separated list of indexes which should be utilized for the search. Item order does not
-     *     matter. Available indexes are: Addr = Address range interpolation, Geo = Geographies, PAD = Point Addresses,
-     *     POI = Points of interest, Str = Streets, Xstr = Cross Streets (intersections).
-     * @param brandFilter A comma-separated list of brand names which could be used to restrict the result to specific
-     *     brands. Item order does not matter. When multiple brands are provided, only results that belong to (at least)
-     *     one of the provided list will be returned. Brands that contain a "," in their name should be put into quotes.
-     *     <p>Usage examples:
-     *     <p>brandSet=Foo
-     *     <p>brandSet=Foo,Bar
-     *     <p>brandSet="A,B,C Comma",Bar.
-     * @param electricVehicleConnectorFilter A comma-separated list of connector types which could be used to restrict
-     *     the result to Electric Vehicle Station supporting specific connector types. Item order does not matter. When
-     *     multiple connector types are provided, only results that belong to (at least) one of the provided list will
-     *     be returned.
-     *     <p>Available connector types are: * `StandardHouseholdCountrySpecific` - These are the standard household
-     *     connectors for a certain region. They are all AC single phase and the standard Voltage and standard Amperage.
-     *     See also: [Plug &amp; socket types - World
-     *     Standards](https://www.worldstandards.eu/electricity/plugs-and-sockets). * `IEC62196Type1` - Type 1 connector
-     *     as defined in the IEC 62196-2 standard. Also called Yazaki after the original manufacturer or SAE J1772 after
-     *     the standard that first published it. Mostly used in combination with 120V single phase or up to 240V single
-     *     phase infrastructure. * `IEC62196Type1CCS` - Type 1 based combo connector as defined in the IEC 62196-3
-     *     standard. The connector is based on the Type 1 connector – as defined in the IEC 62196-2 standard – with two
-     *     additional direct current (DC) contacts to allow DC fast charging. * `IEC62196Type2CableAttached` - Type 2
-     *     connector as defined in the IEC 62196-2 standard. Provided as a cable and plug attached to the charging
-     *     point. * `IEC62196Type2Outlet` - Type 2 connector as defined in the IEC 62196-2 standard. Provided as a
-     *     socket set into the charging point. * `IEC62196Type2CCS` - Type 2 based combo connector as defined in the IEC
-     *     62196-3 standard. The connector is based on the Type 2 connector – as defined in the IEC 62196-2 standard –
-     *     with two additional direct current (DC) contacts to allow DC fast charging. * `IEC62196Type3` - Type 3
-     *     connector as defined in the IEC 62196-2 standard. Also called Scame after the original manufacturer. Mostly
-     *     used in combination with up to 240V single phase or up to 420V three phase infrastructure. * `Chademo` -
-     *     CHAdeMO connector named after an association formed by the Tokyo Electric Power Company and industrial
-     *     partners. Because of this is is also known as the TEPCO's connector. It supports fast DC charging. *
-     *     `IEC60309AC1PhaseBlue` - Industrial Blue connector is a connector defined in the IEC 60309 standard. It is
-     *     sometime referred to as by some combination of the standard, the color and the fact that is a single phase
-     *     connector. The connector usually has the "P+N+E, 6h" configuration. * `IEC60309DCWhite` - Industrial White
-     *     connector is a DC connector defined in the IEC 60309 standard. * `Tesla` - The Tesla connector is the
-     *     regionally specific Tesla Supercharger connector. I.e. it refers to either Tesla's proprietary connector,
-     *     sometimes referred to as Tesla Port mostly limited to North America or the modified Type 2 (DC over Type 2)
-     *     in Europe.
-     *     <p>Usage examples:
-     *     <p>connectorSet=IEC62196Type2CableAttached connectorSet=IEC62196Type2Outlet,IEC62196Type2CableAttached.
-     * @param entityType Specifies the level of filtering performed on geographies. Narrows the search for specified
-     *     geography entity types, e.g. return only municipality. The resulting response will contain the geography ID
-     *     as well as the entity type matched. If you provide more than one entity as a comma separated list, endpoint
-     *     will return the 'smallest entity available'. Returned Geometry ID can be used to get the geometry of that
-     *     geography via [Get Search Polygon](https://docs.microsoft.com/rest/api/maps/search/getsearchpolygon) API. The
-     *     following parameters are ignored when entityType is set:
-     *     <p>* heading * number * returnRoadUse * returnSpeedLimit * roadUse * returnMatchType.
-     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
-     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
-     *     different views of such regions, and the View parameter allows your application to comply with the view
-     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
-     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
-     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
-     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
-     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
-     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
-     *     made available. Example: view=IN.
-     *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
-     *     available Views.
-     * @param operatingHours Hours of operation for a POI (Points of Interest). The availability of hours of operation
-     *     will vary based on the data available. If not passed, then no opening hours information will be returned.
-     *     Supported value: nextSevenDays.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<SearchAddressResult>> fuzzySearchWithResponse(
-            ResponseFormat format,
-            String query,
-            Boolean isTypeAhead,
-            Integer top,
-            Integer skip,
-            List<Integer> categoryFilter,
-            List<String> countryFilter,
-            Double lat,
-            Double lon,
-            Integer radiusInMeters,
-            String topLeft,
-            String btmRight,
-            String language,
-            List<SearchIndexes> extendedPostalCodesFor,
-            Integer minFuzzyLevel,
-            Integer maxFuzzyLevel,
-            List<SearchIndexes> idxSet,
-            List<String> brandFilter,
-            List<ElectricVehicleConnector> electricVehicleConnectorFilter,
-            GeographicEntityType entityType,
-            LocalizedMapView localizedMapView,
-            OperatingHoursRange operatingHours) {
-        return this.serviceClient.fuzzySearchWithResponseAsync(
-                format,
+    public Mono<Response<SearchAddressResult>> fuzzySearchWithResponse(String query, LatLong coordinates,
+            List<String> countryFilter, FuzzySearchOptions options, Context context) {
+
+        final FuzzySearchOptions param = Optional.ofNullable(options).orElse(new FuzzySearchOptions());
+        final Optional<LatLong> optCoordinates = Optional.ofNullable(coordinates);
+
+        Mono<Response<com.azure.maps.search.implementation.models.SearchAddressResult>> responseMono =
+            this.serviceClient.fuzzySearchWithResponseAsync(
+                ResponseFormat.JSON,
                 query,
-                isTypeAhead,
-                top,
-                skip,
-                categoryFilter,
+                param.isTypeAhead(),
+                param.getTop(),
+                param.getSkip(),
+                param.getCategoryFilter(),
                 countryFilter,
-                lat,
-                lon,
-                radiusInMeters,
-                topLeft,
-                btmRight,
-                language,
-                extendedPostalCodesFor,
-                minFuzzyLevel,
-                maxFuzzyLevel,
-                idxSet,
-                brandFilter,
-                electricVehicleConnectorFilter,
-                entityType,
-                localizedMapView,
-                operatingHours);
+                optCoordinates.map(LatLong::getLat).orElse(null),
+                optCoordinates.map(LatLong::getLon).orElse(null),
+                param.getRadiusInMeters(),
+                param.getBoundingBox().map(BoundingBox::getTopLeft).map(LatLong::toString).orElse(null),
+                param.getBoundingBox().map(BoundingBox::getBottomRight).map(LatLong::toString).orElse(null),
+                param.getLanguage(),
+                param.getExtendedPostalCodesFor(),
+                param.getMinFuzzyLevel(),
+                param.getMaxFuzzyLevel(),
+                param.getIdxSet(),
+                param.getBrandFilter(),
+                param.getElectricVehicleConnectorFilter(),
+                param.getEntityType(),
+                param.getLocalizedMapView(),
+                param.getOperatingHours(),
+                context);
+
+        // convert to the right (public) SearchAddressResult
+        return responseMono.flatMap(response -> {
+            Response<SearchAddressResult> simpleResponse = TypeMapper.createSearchResponse(response);
+            return Mono.just(simpleResponse);
+        });
     }
 
     /**
-     * **Free Form Search**
      *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
-     *
-     * <p>The basic default API is Free Form Search which handles the most fuzzy of inputs handling any combination of
-     * address or POI tokens. This search API is the canonical 'single line search'. The Free Form Search API is a
-     * seamless combination of POI search and geocoding. The API can also be weighted with a contextual position
-     * (lat./lon. pair), or fully constrained by a coordinate and radius, or it can be executed more generally without
-     * any geo biasing anchor point.&lt;br&gt;&lt;br&gt;We strongly advise you to use the 'countrySet' parameter to
-     * specify only the countries for which your application needs coverage, as the default behavior will be to search
-     * the entire world, potentially returning unnecessary results.&lt;br&gt;&lt;br&gt; E.g.: `countrySet`=US,FR
-     * &lt;br&gt;&lt;br&gt;Please see [Search
-     * Coverage](https://docs.microsoft.com/azure/location-based-services/geocoding-coverage) for a complete list of all
-     * the supported countries.&lt;br&gt;&lt;br&gt;Most Search queries default to `maxFuzzyLevel`=2 to gain performance
-     * and also reduce unusual results. This new default can be overridden as needed per request by passing in the query
-     * param `maxFuzzyLevel`=3 or 4.
-     *
-     * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param query The applicable query string (e.g., "seattle", "pizza"). Can _also_ be specified as a comma separated
-     *     string composed by latitude followed by longitude (e.g., "47.641268, -122.125679"). Must be properly URL
-     *     encoded.
-     * @param isTypeAhead Boolean. If the typeahead flag is set, the query will be interpreted as a partial input and
-     *     the search will enter predictive mode.
-     * @param top Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
-     * @param skip Starting offset of the returned results within the full result set. Default: 0, minimum: 0 and
-     *     maximum: 1900.
-     * @param categoryFilter A comma-separated list of category set IDs which could be used to restrict the result to
-     *     specific Points of Interest categories. ID order does not matter. When multiple category identifiers are
-     *     provided, only POIs that belong to (at least) one of the categories from the provided list will be returned.
-     *     The list of supported categories can be discovered using  [POI Categories
-     *     API](https://aka.ms/AzureMapsPOICategoryTree). Usage examples:
-     *     <p>* **categorySet=7315** (Search Points of Interest from category Restaurant)
-     *     <p>* **categorySet=7315025,7315017** (Search Points of Interest of category either Italian or French
-     *     Restaurant).
-     * @param countryFilter Comma separated string of country codes, e.g. FR,ES. This will limit the search to the
-     *     specified countries.
-     * @param lat Latitude where results should be biased. E.g. 37.337.
-     * @param lon Longitude where results should be biased. E.g. -121.89.
-     * @param radiusInMeters The radius in meters to for the results to be constrained to the defined area.
-     * @param topLeft Top left position of the bounding box. E.g. 37.553,-122.453.
-     * @param btmRight Bottom right position of the bounding box. E.g. 37.553,-122.453.
-     * @param language Language in which search results should be returned. Should be one of supported IETF language
-     *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used.
-     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
-     *     details.
-     * @param extendedPostalCodesFor Indexes for which extended postal codes should be included in the results.
-     *     <p>Available indexes are:
-     *     <p>**Addr** = Address ranges
-     *     <p>**Geo** = Geographies
-     *     <p>**PAD** = Point Addresses
-     *     <p>**POI** = Points of Interest
-     *     <p>**Str** = Streets
-     *     <p>**XStr** = Cross Streets (intersections)
-     *     <p>Value should be a comma separated list of index types (in any order) or **None** for no indexes.
-     *     <p>By default extended postal codes are included for all indexes except Geo. Extended postal code lists for
-     *     geographies can be quite long so they have to be explicitly requested when needed.
-     *     <p>Usage examples:
-     *     <p>extendedPostalCodesFor=POI
-     *     <p>extendedPostalCodesFor=PAD,Addr,POI
-     *     <p>extendedPostalCodesFor=None
-     *     <p>Extended postal code is returned as an **extendedPostalCode** property of an address. Availability is
-     *     region-dependent.
-     * @param minFuzzyLevel Minimum fuzziness level to be used. Default: 1, minimum: 1 and maximum: 4
-     *     <p>* Level 1 has no spell checking.
-     *     <p>* Level 2 uses normal n-gram spell checking. For example, query "restrant" can be matched to "restaurant."
-     *     <p>* Level 3 uses sound-like spell checking, and shingle spell checking. Sound-like spell checking is for
-     *     "rstrnt" to "restaurant" matching. Shingle spell checking is for "mountainview" to "mountain view" matching.
-     *     <p>* Level 4 doesn’t add any more spell checking functions.
-     *     <p>The search engine will start looking for a match on the level defined by minFuzzyLevel, and will stop
-     *     searching at the level specified by maxFuzzyLevel.
-     * @param maxFuzzyLevel Maximum fuzziness level to be used. Default: 2, minimum: 1 and maximum: 4
-     *     <p>* Level 1 has no spell checking.
-     *     <p>* Level 2 uses normal n-gram spell checking. For example, query "restrant" can be matched to "restaurant."
-     *     <p>* Level 3 uses sound-like spell checking, and shingle spell checking. Sound-like spell checking is for
-     *     "rstrnt" to "restaurant" matching. Shingle spell checking is for "mountainview" to "mountain view" matching.
-     *     <p>* Level 4 doesn’t add any more spell checking functions.
-     *     <p>The search engine will start looking for a match on the level defined by minFuzzyLevel, and will stop
-     *     searching at the level specified by maxFuzzyLevel.
-     * @param idxSet A comma separated list of indexes which should be utilized for the search. Item order does not
-     *     matter. Available indexes are: Addr = Address range interpolation, Geo = Geographies, PAD = Point Addresses,
-     *     POI = Points of interest, Str = Streets, Xstr = Cross Streets (intersections).
-     * @param brandFilter A comma-separated list of brand names which could be used to restrict the result to specific
-     *     brands. Item order does not matter. When multiple brands are provided, only results that belong to (at least)
-     *     one of the provided list will be returned. Brands that contain a "," in their name should be put into quotes.
-     *     <p>Usage examples:
-     *     <p>brandSet=Foo
-     *     <p>brandSet=Foo,Bar
-     *     <p>brandSet="A,B,C Comma",Bar.
-     * @param electricVehicleConnectorFilter A comma-separated list of connector types which could be used to restrict
-     *     the result to Electric Vehicle Station supporting specific connector types. Item order does not matter. When
-     *     multiple connector types are provided, only results that belong to (at least) one of the provided list will
-     *     be returned.
-     *     <p>Available connector types are: * `StandardHouseholdCountrySpecific` - These are the standard household
-     *     connectors for a certain region. They are all AC single phase and the standard Voltage and standard Amperage.
-     *     See also: [Plug &amp; socket types - World
-     *     Standards](https://www.worldstandards.eu/electricity/plugs-and-sockets). * `IEC62196Type1` - Type 1 connector
-     *     as defined in the IEC 62196-2 standard. Also called Yazaki after the original manufacturer or SAE J1772 after
-     *     the standard that first published it. Mostly used in combination with 120V single phase or up to 240V single
-     *     phase infrastructure. * `IEC62196Type1CCS` - Type 1 based combo connector as defined in the IEC 62196-3
-     *     standard. The connector is based on the Type 1 connector – as defined in the IEC 62196-2 standard – with two
-     *     additional direct current (DC) contacts to allow DC fast charging. * `IEC62196Type2CableAttached` - Type 2
-     *     connector as defined in the IEC 62196-2 standard. Provided as a cable and plug attached to the charging
-     *     point. * `IEC62196Type2Outlet` - Type 2 connector as defined in the IEC 62196-2 standard. Provided as a
-     *     socket set into the charging point. * `IEC62196Type2CCS` - Type 2 based combo connector as defined in the IEC
-     *     62196-3 standard. The connector is based on the Type 2 connector – as defined in the IEC 62196-2 standard –
-     *     with two additional direct current (DC) contacts to allow DC fast charging. * `IEC62196Type3` - Type 3
-     *     connector as defined in the IEC 62196-2 standard. Also called Scame after the original manufacturer. Mostly
-     *     used in combination with up to 240V single phase or up to 420V three phase infrastructure. * `Chademo` -
-     *     CHAdeMO connector named after an association formed by the Tokyo Electric Power Company and industrial
-     *     partners. Because of this is is also known as the TEPCO's connector. It supports fast DC charging. *
-     *     `IEC60309AC1PhaseBlue` - Industrial Blue connector is a connector defined in the IEC 60309 standard. It is
-     *     sometime referred to as by some combination of the standard, the color and the fact that is a single phase
-     *     connector. The connector usually has the "P+N+E, 6h" configuration. * `IEC60309DCWhite` - Industrial White
-     *     connector is a DC connector defined in the IEC 60309 standard. * `Tesla` - The Tesla connector is the
-     *     regionally specific Tesla Supercharger connector. I.e. it refers to either Tesla's proprietary connector,
-     *     sometimes referred to as Tesla Port mostly limited to North America or the modified Type 2 (DC over Type 2)
-     *     in Europe.
-     *     <p>Usage examples:
-     *     <p>connectorSet=IEC62196Type2CableAttached connectorSet=IEC62196Type2Outlet,IEC62196Type2CableAttached.
-     * @param entityType Specifies the level of filtering performed on geographies. Narrows the search for specified
-     *     geography entity types, e.g. return only municipality. The resulting response will contain the geography ID
-     *     as well as the entity type matched. If you provide more than one entity as a comma separated list, endpoint
-     *     will return the 'smallest entity available'. Returned Geometry ID can be used to get the geometry of that
-     *     geography via [Get Search Polygon](https://docs.microsoft.com/rest/api/maps/search/getsearchpolygon) API. The
-     *     following parameters are ignored when entityType is set:
-     *     <p>* heading * number * returnRoadUse * returnSpeedLimit * roadUse * returnMatchType.
-     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
-     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
-     *     different views of such regions, and the View parameter allows your application to comply with the view
-     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
-     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
-     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
-     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
-     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
-     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
-     *     made available. Example: view=IN.
-     *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
-     *     available Views.
-     * @param operatingHours Hours of operation for a POI (Points of Interest). The availability of hours of operation
-     *     will vary based on the data available. If not passed, then no opening hours information will be returned.
-     *     Supported value: nextSevenDays.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Search calls.
+     * @param options
+     * @return
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchAddressResult> fuzzySearch(
-            ResponseFormat format,
-            String query,
-            Boolean isTypeAhead,
-            Integer top,
-            Integer skip,
-            List<Integer> categoryFilter,
-            List<String> countryFilter,
-            Double lat,
-            Double lon,
-            Integer radiusInMeters,
-            String topLeft,
-            String btmRight,
-            String language,
-            List<SearchIndexes> extendedPostalCodesFor,
-            Integer minFuzzyLevel,
-            Integer maxFuzzyLevel,
-            List<SearchIndexes> idxSet,
-            List<String> brandFilter,
-            List<ElectricVehicleConnector> electricVehicleConnectorFilter,
-            GeographicEntityType entityType,
-            LocalizedMapView localizedMapView,
-            OperatingHoursRange operatingHours) {
-        return this.serviceClient.fuzzySearchAsync(
-                format,
-                query,
-                isTypeAhead,
-                top,
-                skip,
-                categoryFilter,
-                countryFilter,
-                lat,
-                lon,
-                radiusInMeters,
-                topLeft,
-                btmRight,
-                language,
-                extendedPostalCodesFor,
-                minFuzzyLevel,
-                maxFuzzyLevel,
-                idxSet,
-                brandFilter,
-                electricVehicleConnectorFilter,
-                entityType,
-                localizedMapView,
-                operatingHours);
+    public Mono<SearchAddressResult> searchPointOfInterest(String query, LatLong coordinates,
+            SearchPointOfInterestOptions options) {
+        Mono<Response<SearchAddressResult>> result = this.searchPointOfInterestWithResponse(query, coordinates,
+            null, options, null);
+        return result.flatMap(response -> {
+            return Mono.just(response.getValue());
+        });
+    }
+
+        /**
+     *
+     * @param options
+     * @return
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<SearchAddressResult> searchPointOfInterest(String query, List<String> countryFilter,
+            SearchPointOfInterestOptions options) {
+        Mono<Response<SearchAddressResult>> result = this.searchPointOfInterestWithResponse(query, null,
+            countryFilter, options, null);
+        return result.flatMap(response -> {
+            return Mono.just(response.getValue());
+        });
     }
 
     /**
      * **Get POI by Name**
-     *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
-     *
-     * <p>Points of Interest (POI) Search allows you to request POI results by name. Search supports additional query
-     * parameters such as language and filtering results by area of interest driven by country or bounding box. Endpoint
-     * will return only POI results matching the query string. Response includes POI details such as address, coordinate
-     * location and category.
-     *
-     * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param query The POI name to search for (e.g., "statue of liberty", "starbucks"), must be properly URL encoded.
-     * @param isTypeAhead Boolean. If the typeahead flag is set, the query will be interpreted as a partial input and
-     *     the search will enter predictive mode.
-     * @param top Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
-     * @param skip Starting offset of the returned results within the full result set. Default: 0, minimum: 0 and
-     *     maximum: 1900.
-     * @param categoryFilter A comma-separated list of category set IDs which could be used to restrict the result to
-     *     specific Points of Interest categories. ID order does not matter. When multiple category identifiers are
-     *     provided, only POIs that belong to (at least) one of the categories from the provided list will be returned.
-     *     The list of supported categories can be discovered using  [POI Categories
-     *     API](https://aka.ms/AzureMapsPOICategoryTree). Usage examples:
-     *     <p>* **categorySet=7315** (Search Points of Interest from category Restaurant)
-     *     <p>* **categorySet=7315025,7315017** (Search Points of Interest of category either Italian or French
-     *     Restaurant).
-     * @param countryFilter Comma separated string of country codes, e.g. FR,ES. This will limit the search to the
-     *     specified countries.
-     * @param lat Latitude where results should be biased. E.g. 37.337.
-     * @param lon Longitude where results should be biased. E.g. -121.89.
-     * @param radiusInMeters The radius in meters to for the results to be constrained to the defined area.
-     * @param topLeft Top left position of the bounding box. E.g. 37.553,-122.453.
-     * @param btmRight Bottom right position of the bounding box. E.g. 37.553,-122.453.
-     * @param language Language in which search results should be returned. Should be one of supported IETF language
-     *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used.
-     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
-     *     details.
-     * @param extendedPostalCodesFor Indexes for which extended postal codes should be included in the results.
-     *     <p>Available indexes are:
-     *     <p>**POI** = Points of Interest
-     *     <p>Value should be **POI** or **None** to disable extended postal codes.
-     *     <p>By default extended postal codes are included.
-     *     <p>Usage examples:
-     *     <p>extendedPostalCodesFor=POI
-     *     <p>extendedPostalCodesFor=None
-     *     <p>Extended postal code is returned as an **extendedPostalCode** property of an address. Availability is
-     *     region-dependent.
-     * @param brandFilter A comma-separated list of brand names which could be used to restrict the result to specific
-     *     brands. Item order does not matter. When multiple brands are provided, only results that belong to (at least)
-     *     one of the provided list will be returned. Brands that contain a "," in their name should be put into quotes.
-     *     <p>Usage examples:
-     *     <p>brandSet=Foo
-     *     <p>brandSet=Foo,Bar
-     *     <p>brandSet="A,B,C Comma",Bar.
-     * @param electricVehicleConnectorFilter A comma-separated list of connector types which could be used to restrict
-     *     the result to Electric Vehicle Station supporting specific connector types. Item order does not matter. When
-     *     multiple connector types are provided, only results that belong to (at least) one of the provided list will
-     *     be returned.
-     *     <p>Available connector types are: * `StandardHouseholdCountrySpecific` - These are the standard household
-     *     connectors for a certain region. They are all AC single phase and the standard Voltage and standard Amperage.
-     *     See also: [Plug &amp; socket types - World
-     *     Standards](https://www.worldstandards.eu/electricity/plugs-and-sockets). * `IEC62196Type1` - Type 1 connector
-     *     as defined in the IEC 62196-2 standard. Also called Yazaki after the original manufacturer or SAE J1772 after
-     *     the standard that first published it. Mostly used in combination with 120V single phase or up to 240V single
-     *     phase infrastructure. * `IEC62196Type1CCS` - Type 1 based combo connector as defined in the IEC 62196-3
-     *     standard. The connector is based on the Type 1 connector – as defined in the IEC 62196-2 standard – with two
-     *     additional direct current (DC) contacts to allow DC fast charging. * `IEC62196Type2CableAttached` - Type 2
-     *     connector as defined in the IEC 62196-2 standard. Provided as a cable and plug attached to the charging
-     *     point. * `IEC62196Type2Outlet` - Type 2 connector as defined in the IEC 62196-2 standard. Provided as a
-     *     socket set into the charging point. * `IEC62196Type2CCS` - Type 2 based combo connector as defined in the IEC
-     *     62196-3 standard. The connector is based on the Type 2 connector – as defined in the IEC 62196-2 standard –
-     *     with two additional direct current (DC) contacts to allow DC fast charging. * `IEC62196Type3` - Type 3
-     *     connector as defined in the IEC 62196-2 standard. Also called Scame after the original manufacturer. Mostly
-     *     used in combination with up to 240V single phase or up to 420V three phase infrastructure. * `Chademo` -
-     *     CHAdeMO connector named after an association formed by the Tokyo Electric Power Company and industrial
-     *     partners. Because of this is is also known as the TEPCO's connector. It supports fast DC charging. *
-     *     `IEC60309AC1PhaseBlue` - Industrial Blue connector is a connector defined in the IEC 60309 standard. It is
-     *     sometime referred to as by some combination of the standard, the color and the fact that is a single phase
-     *     connector. The connector usually has the "P+N+E, 6h" configuration. * `IEC60309DCWhite` - Industrial White
-     *     connector is a DC connector defined in the IEC 60309 standard. * `Tesla` - The Tesla connector is the
-     *     regionally specific Tesla Supercharger connector. I.e. it refers to either Tesla's proprietary connector,
-     *     sometimes referred to as Tesla Port mostly limited to North America or the modified Type 2 (DC over Type 2)
-     *     in Europe.
-     *     <p>Usage examples:
-     *     <p>connectorSet=IEC62196Type2CableAttached connectorSet=IEC62196Type2Outlet,IEC62196Type2CableAttached.
-     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
-     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
-     *     different views of such regions, and the View parameter allows your application to comply with the view
-     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
-     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
-     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
-     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
-     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
-     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
-     *     made available. Example: view=IN.
-     *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
-     *     available Views.
-     * @param operatingHours Hours of operation for a POI (Points of Interest). The availability of hours of operation
-     *     will vary based on the data available. If not passed, then no opening hours information will be returned.
-     *     Supported value: nextSevenDays.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<SearchAddressResult>> searchPointOfInterestWithResponse(
-            ResponseFormat format,
-            String query,
-            Boolean isTypeAhead,
-            Integer top,
-            Integer skip,
-            List<Integer> categoryFilter,
-            List<String> countryFilter,
-            Double lat,
-            Double lon,
-            Integer radiusInMeters,
-            String topLeft,
-            String btmRight,
-            String language,
-            List<PointOfInterestExtendedPostalCodes> extendedPostalCodesFor,
-            List<String> brandFilter,
-            List<ElectricVehicleConnector> electricVehicleConnectorFilter,
-            LocalizedMapView localizedMapView,
-            OperatingHoursRange operatingHours) {
-        return this.serviceClient.searchPointOfInterestWithResponseAsync(
-                format,
+    public Mono<Response<SearchAddressResult>> searchPointOfInterestWithResponse(String query, LatLong coordinates,
+            List<String> countryFilter, SearchPointOfInterestOptions options, Context context) {
+
+        final SearchPointOfInterestOptions param = Optional.ofNullable(options).orElse(new SearchPointOfInterestOptions());
+        final Optional<LatLong> optCoordinates = Optional.ofNullable(coordinates);
+
+        // call method and convert
+        Mono<Response<com.azure.maps.search.implementation.models.SearchAddressResult>> responseMono =
+            this.serviceClient.searchPointOfInterestWithResponseAsync(
+                ResponseFormat.JSON,
                 query,
-                isTypeAhead,
-                top,
-                skip,
-                categoryFilter,
+                param.isTypeAhead(),
+                param.getTop(),
+                param.getSkip(),
+                param.getCategoryFilter(),
                 countryFilter,
-                lat,
-                lon,
-                radiusInMeters,
-                topLeft,
-                btmRight,
-                language,
-                extendedPostalCodesFor,
-                brandFilter,
-                electricVehicleConnectorFilter,
-                localizedMapView,
-                operatingHours);
+                optCoordinates.map(LatLong::getLat).orElse(null),
+                optCoordinates.map(LatLong::getLon).orElse(null),
+                param.getRadiusInMeters(),
+                param.getBoundingBox().map(BoundingBox::getTopLeft).map(LatLong::toString).orElse(null),
+                param.getBoundingBox().map(BoundingBox::getBottomRight).map(LatLong::toString).orElse(null),
+                param.getLanguage(),
+                param.getExtendedPostalCodesFor(),
+                param.getBrandFilter(),
+                param.getElectricVehicleConnectorFilter(),
+                param.getLocalizedMapView(),
+                param.getOperatingHours(),
+                context);
+
+        // convert to the right (public) SearchAddressResult
+        return responseMono.flatMap(response -> {
+            Response<SearchAddressResult> simpleResponse = TypeMapper.createSearchResponse(response);
+            return Mono.just(simpleResponse);
+        });
     }
 
-    /**
-     * **Get POI by Name**
+/**
+     * **Nearby Search**
      *
      * <p>**Applies to**: S0 and S1 pricing tiers.
      *
-     * <p>Points of Interest (POI) Search allows you to request POI results by name. Search supports additional query
-     * parameters such as language and filtering results by area of interest driven by country or bounding box. Endpoint
-     * will return only POI results matching the query string. Response includes POI details such as address, coordinate
-     * location and category.
-     *
-     * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param query The POI name to search for (e.g., "statue of liberty", "starbucks"), must be properly URL encoded.
-     * @param isTypeAhead Boolean. If the typeahead flag is set, the query will be interpreted as a partial input and
-     *     the search will enter predictive mode.
-     * @param top Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
-     * @param skip Starting offset of the returned results within the full result set. Default: 0, minimum: 0 and
-     *     maximum: 1900.
-     * @param categoryFilter A comma-separated list of category set IDs which could be used to restrict the result to
-     *     specific Points of Interest categories. ID order does not matter. When multiple category identifiers are
-     *     provided, only POIs that belong to (at least) one of the categories from the provided list will be returned.
-     *     The list of supported categories can be discovered using  [POI Categories
-     *     API](https://aka.ms/AzureMapsPOICategoryTree). Usage examples:
-     *     <p>* **categorySet=7315** (Search Points of Interest from category Restaurant)
-     *     <p>* **categorySet=7315025,7315017** (Search Points of Interest of category either Italian or French
-     *     Restaurant).
-     * @param countryFilter Comma separated string of country codes, e.g. FR,ES. This will limit the search to the
-     *     specified countries.
-     * @param lat Latitude where results should be biased. E.g. 37.337.
-     * @param lon Longitude where results should be biased. E.g. -121.89.
-     * @param radiusInMeters The radius in meters to for the results to be constrained to the defined area.
-     * @param topLeft Top left position of the bounding box. E.g. 37.553,-122.453.
-     * @param btmRight Bottom right position of the bounding box. E.g. 37.553,-122.453.
-     * @param language Language in which search results should be returned. Should be one of supported IETF language
-     *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used.
-     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
-     *     details.
-     * @param extendedPostalCodesFor Indexes for which extended postal codes should be included in the results.
-     *     <p>Available indexes are:
-     *     <p>**POI** = Points of Interest
-     *     <p>Value should be **POI** or **None** to disable extended postal codes.
-     *     <p>By default extended postal codes are included.
-     *     <p>Usage examples:
-     *     <p>extendedPostalCodesFor=POI
-     *     <p>extendedPostalCodesFor=None
-     *     <p>Extended postal code is returned as an **extendedPostalCode** property of an address. Availability is
-     *     region-dependent.
-     * @param brandFilter A comma-separated list of brand names which could be used to restrict the result to specific
-     *     brands. Item order does not matter. When multiple brands are provided, only results that belong to (at least)
-     *     one of the provided list will be returned. Brands that contain a "," in their name should be put into quotes.
-     *     <p>Usage examples:
-     *     <p>brandSet=Foo
-     *     <p>brandSet=Foo,Bar
-     *     <p>brandSet="A,B,C Comma",Bar.
-     * @param electricVehicleConnectorFilter A comma-separated list of connector types which could be used to restrict
-     *     the result to Electric Vehicle Station supporting specific connector types. Item order does not matter. When
-     *     multiple connector types are provided, only results that belong to (at least) one of the provided list will
-     *     be returned.
-     *     <p>Available connector types are: * `StandardHouseholdCountrySpecific` - These are the standard household
-     *     connectors for a certain region. They are all AC single phase and the standard Voltage and standard Amperage.
-     *     See also: [Plug &amp; socket types - World
-     *     Standards](https://www.worldstandards.eu/electricity/plugs-and-sockets). * `IEC62196Type1` - Type 1 connector
-     *     as defined in the IEC 62196-2 standard. Also called Yazaki after the original manufacturer or SAE J1772 after
-     *     the standard that first published it. Mostly used in combination with 120V single phase or up to 240V single
-     *     phase infrastructure. * `IEC62196Type1CCS` - Type 1 based combo connector as defined in the IEC 62196-3
-     *     standard. The connector is based on the Type 1 connector – as defined in the IEC 62196-2 standard – with two
-     *     additional direct current (DC) contacts to allow DC fast charging. * `IEC62196Type2CableAttached` - Type 2
-     *     connector as defined in the IEC 62196-2 standard. Provided as a cable and plug attached to the charging
-     *     point. * `IEC62196Type2Outlet` - Type 2 connector as defined in the IEC 62196-2 standard. Provided as a
-     *     socket set into the charging point. * `IEC62196Type2CCS` - Type 2 based combo connector as defined in the IEC
-     *     62196-3 standard. The connector is based on the Type 2 connector – as defined in the IEC 62196-2 standard –
-     *     with two additional direct current (DC) contacts to allow DC fast charging. * `IEC62196Type3` - Type 3
-     *     connector as defined in the IEC 62196-2 standard. Also called Scame after the original manufacturer. Mostly
-     *     used in combination with up to 240V single phase or up to 420V three phase infrastructure. * `Chademo` -
-     *     CHAdeMO connector named after an association formed by the Tokyo Electric Power Company and industrial
-     *     partners. Because of this is is also known as the TEPCO's connector. It supports fast DC charging. *
-     *     `IEC60309AC1PhaseBlue` - Industrial Blue connector is a connector defined in the IEC 60309 standard. It is
-     *     sometime referred to as by some combination of the standard, the color and the fact that is a single phase
-     *     connector. The connector usually has the "P+N+E, 6h" configuration. * `IEC60309DCWhite` - Industrial White
-     *     connector is a DC connector defined in the IEC 60309 standard. * `Tesla` - The Tesla connector is the
-     *     regionally specific Tesla Supercharger connector. I.e. it refers to either Tesla's proprietary connector,
-     *     sometimes referred to as Tesla Port mostly limited to North America or the modified Type 2 (DC over Type 2)
-     *     in Europe.
-     *     <p>Usage examples:
-     *     <p>connectorSet=IEC62196Type2CableAttached connectorSet=IEC62196Type2Outlet,IEC62196Type2CableAttached.
-     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
-     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
-     *     different views of such regions, and the View parameter allows your application to comply with the view
-     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
-     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
-     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
-     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
-     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
-     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
-     *     made available. Example: view=IN.
-     *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
-     *     available Views.
-     * @param operatingHours Hours of operation for a POI (Points of Interest). The availability of hours of operation
-     *     will vary based on the data available. If not passed, then no opening hours information will be returned.
-     *     Supported value: nextSevenDays.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchAddressResult> searchPointOfInterest(
-            ResponseFormat format,
-            String query,
-            Boolean isTypeAhead,
-            Integer top,
-            Integer skip,
-            List<Integer> categoryFilter,
-            List<String> countryFilter,
-            Double lat,
-            Double lon,
-            Integer radiusInMeters,
-            String topLeft,
-            String btmRight,
-            String language,
-            List<PointOfInterestExtendedPostalCodes> extendedPostalCodesFor,
-            List<String> brandFilter,
-            List<ElectricVehicleConnector> electricVehicleConnectorFilter,
-            LocalizedMapView localizedMapView,
-            OperatingHoursRange operatingHours) {
-        return this.serviceClient.searchPointOfInterestAsync(
-                format,
-                query,
-                isTypeAhead,
-                top,
-                skip,
-                categoryFilter,
-                countryFilter,
-                lat,
-                lon,
-                radiusInMeters,
-                topLeft,
-                btmRight,
-                language,
-                extendedPostalCodesFor,
-                brandFilter,
-                electricVehicleConnectorFilter,
-                localizedMapView,
-                operatingHours);
+    public Mono<SearchAddressResult> searchNearbyPointOfInterest(LatLong coordinates,
+            SearchNearbyPointsOfInterestOptions options) {
+        Mono<Response<SearchAddressResult>> result = this.searchNearbyPointOfInterestWithResponse(coordinates,
+            options, null);
+        return result.flatMap(response -> {
+            return Mono.just(response.getValue());
+        });
     }
 
     /**
      * **Nearby Search**
      *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
-     *
-     * <p>If you have a use case for only retrieving POI results around a specific location, the nearby search method
-     * may be the right choice. This endpoint will only return POI results, and does not take in a search query
-     * parameter.
-     *
-     * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param lat Latitude where results should be biased. E.g. 37.337.
-     * @param lon Longitude where results should be biased. E.g. -121.89.
-     * @param top Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
-     * @param skip Starting offset of the returned results within the full result set. Default: 0, minimum: 0 and
-     *     maximum: 1900.
-     * @param categoryFilter A comma-separated list of category set IDs which could be used to restrict the result to
-     *     specific Points of Interest categories. ID order does not matter. When multiple category identifiers are
-     *     provided, only POIs that belong to (at least) one of the categories from the provided list will be returned.
-     *     The list of supported categories can be discovered using  [POI Categories
-     *     API](https://aka.ms/AzureMapsPOICategoryTree). Usage examples:
-     *     <p>* **categorySet=7315** (Search Points of Interest from category Restaurant)
-     *     <p>* **categorySet=7315025,7315017** (Search Points of Interest of category either Italian or French
-     *     Restaurant).
-     * @param countryFilter Comma separated string of country codes, e.g. FR,ES. This will limit the search to the
-     *     specified countries.
-     * @param radiusInMeters The radius in meters to for the results to be constrained to the defined area, Min value is
-     *     1, Max Value is 50000.
-     * @param language Language in which search results should be returned. Should be one of supported IETF language
-     *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used.
-     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
-     *     details.
-     * @param extendedPostalCodesFor Indexes for which extended postal codes should be included in the results.
-     *     <p>Available indexes are:
-     *     <p>**Addr** = Address ranges
-     *     <p>**Geo** = Geographies
-     *     <p>**PAD** = Point Addresses
-     *     <p>**POI** = Points of Interest
-     *     <p>**Str** = Streets
-     *     <p>**XStr** = Cross Streets (intersections)
-     *     <p>Value should be a comma separated list of index types (in any order) or **None** for no indexes.
-     *     <p>By default extended postal codes are included for all indexes except Geo. Extended postal code lists for
-     *     geographies can be quite long so they have to be explicitly requested when needed.
-     *     <p>Usage examples:
-     *     <p>extendedPostalCodesFor=POI
-     *     <p>extendedPostalCodesFor=PAD,Addr,POI
-     *     <p>extendedPostalCodesFor=None
-     *     <p>Extended postal code is returned as an **extendedPostalCode** property of an address. Availability is
-     *     region-dependent.
-     * @param brandFilter A comma-separated list of brand names which could be used to restrict the result to specific
-     *     brands. Item order does not matter. When multiple brands are provided, only results that belong to (at least)
-     *     one of the provided list will be returned. Brands that contain a "," in their name should be put into quotes.
-     *     <p>Usage examples:
-     *     <p>brandSet=Foo
-     *     <p>brandSet=Foo,Bar
-     *     <p>brandSet="A,B,C Comma",Bar.
-     * @param electricVehicleConnectorFilter A comma-separated list of connector types which could be used to restrict
-     *     the result to Electric Vehicle Station supporting specific connector types. Item order does not matter. When
-     *     multiple connector types are provided, only results that belong to (at least) one of the provided list will
-     *     be returned.
-     *     <p>Available connector types are: * `StandardHouseholdCountrySpecific` - These are the standard household
-     *     connectors for a certain region. They are all AC single phase and the standard Voltage and standard Amperage.
-     *     See also: [Plug &amp; socket types - World
-     *     Standards](https://www.worldstandards.eu/electricity/plugs-and-sockets). * `IEC62196Type1` - Type 1 connector
-     *     as defined in the IEC 62196-2 standard. Also called Yazaki after the original manufacturer or SAE J1772 after
-     *     the standard that first published it. Mostly used in combination with 120V single phase or up to 240V single
-     *     phase infrastructure. * `IEC62196Type1CCS` - Type 1 based combo connector as defined in the IEC 62196-3
-     *     standard. The connector is based on the Type 1 connector – as defined in the IEC 62196-2 standard – with two
-     *     additional direct current (DC) contacts to allow DC fast charging. * `IEC62196Type2CableAttached` - Type 2
-     *     connector as defined in the IEC 62196-2 standard. Provided as a cable and plug attached to the charging
-     *     point. * `IEC62196Type2Outlet` - Type 2 connector as defined in the IEC 62196-2 standard. Provided as a
-     *     socket set into the charging point. * `IEC62196Type2CCS` - Type 2 based combo connector as defined in the IEC
-     *     62196-3 standard. The connector is based on the Type 2 connector – as defined in the IEC 62196-2 standard –
-     *     with two additional direct current (DC) contacts to allow DC fast charging. * `IEC62196Type3` - Type 3
-     *     connector as defined in the IEC 62196-2 standard. Also called Scame after the original manufacturer. Mostly
-     *     used in combination with up to 240V single phase or up to 420V three phase infrastructure. * `Chademo` -
-     *     CHAdeMO connector named after an association formed by the Tokyo Electric Power Company and industrial
-     *     partners. Because of this is is also known as the TEPCO's connector. It supports fast DC charging. *
-     *     `IEC60309AC1PhaseBlue` - Industrial Blue connector is a connector defined in the IEC 60309 standard. It is
-     *     sometime referred to as by some combination of the standard, the color and the fact that is a single phase
-     *     connector. The connector usually has the "P+N+E, 6h" configuration. * `IEC60309DCWhite` - Industrial White
-     *     connector is a DC connector defined in the IEC 60309 standard. * `Tesla` - The Tesla connector is the
-     *     regionally specific Tesla Supercharger connector. I.e. it refers to either Tesla's proprietary connector,
-     *     sometimes referred to as Tesla Port mostly limited to North America or the modified Type 2 (DC over Type 2)
-     *     in Europe.
-     *     <p>Usage examples:
-     *     <p>connectorSet=IEC62196Type2CableAttached connectorSet=IEC62196Type2Outlet,IEC62196Type2CableAttached.
-     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
-     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
-     *     different views of such regions, and the View parameter allows your application to comply with the view
-     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
-     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
-     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
-     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
-     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
-     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
-     *     made available. Example: view=IN.
      *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
      *     available Views.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -900,278 +292,40 @@ public final class SearchAsyncClient {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<SearchAddressResult>> searchNearbyPointOfInterestWithResponse(
-            ResponseFormat format,
-            double lat,
-            double lon,
-            Integer top,
-            Integer skip,
-            List<Integer> categoryFilter,
-            List<String> countryFilter,
-            Integer radiusInMeters,
-            String language,
-            List<SearchIndexes> extendedPostalCodesFor,
-            List<String> brandFilter,
-            List<ElectricVehicleConnector> electricVehicleConnectorFilter,
-            LocalizedMapView localizedMapView) {
-        return this.serviceClient.searchNearbyPointOfInterestWithResponseAsync(
-                format,
-                lat,
-                lon,
-                top,
-                skip,
-                categoryFilter,
-                countryFilter,
-                radiusInMeters,
-                language,
-                extendedPostalCodesFor,
-                brandFilter,
-                electricVehicleConnectorFilter,
-                localizedMapView);
-    }
+    public Mono<Response<SearchAddressResult>> searchNearbyPointOfInterestWithResponse(LatLong coordinates,
+            SearchNearbyPointsOfInterestOptions options, Context context) {
 
-    /**
-     * **Nearby Search**
-     *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
-     *
-     * <p>If you have a use case for only retrieving POI results around a specific location, the nearby search method
-     * may be the right choice. This endpoint will only return POI results, and does not take in a search query
-     * parameter.
-     *
-     * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param lat Latitude where results should be biased. E.g. 37.337.
-     * @param lon Longitude where results should be biased. E.g. -121.89.
-     * @param top Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
-     * @param skip Starting offset of the returned results within the full result set. Default: 0, minimum: 0 and
-     *     maximum: 1900.
-     * @param categoryFilter A comma-separated list of category set IDs which could be used to restrict the result to
-     *     specific Points of Interest categories. ID order does not matter. When multiple category identifiers are
-     *     provided, only POIs that belong to (at least) one of the categories from the provided list will be returned.
-     *     The list of supported categories can be discovered using  [POI Categories
-     *     API](https://aka.ms/AzureMapsPOICategoryTree). Usage examples:
-     *     <p>* **categorySet=7315** (Search Points of Interest from category Restaurant)
-     *     <p>* **categorySet=7315025,7315017** (Search Points of Interest of category either Italian or French
-     *     Restaurant).
-     * @param countryFilter Comma separated string of country codes, e.g. FR,ES. This will limit the search to the
-     *     specified countries.
-     * @param radiusInMeters The radius in meters to for the results to be constrained to the defined area, Min value is
-     *     1, Max Value is 50000.
-     * @param language Language in which search results should be returned. Should be one of supported IETF language
-     *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used.
-     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
-     *     details.
-     * @param extendedPostalCodesFor Indexes for which extended postal codes should be included in the results.
-     *     <p>Available indexes are:
-     *     <p>**Addr** = Address ranges
-     *     <p>**Geo** = Geographies
-     *     <p>**PAD** = Point Addresses
-     *     <p>**POI** = Points of Interest
-     *     <p>**Str** = Streets
-     *     <p>**XStr** = Cross Streets (intersections)
-     *     <p>Value should be a comma separated list of index types (in any order) or **None** for no indexes.
-     *     <p>By default extended postal codes are included for all indexes except Geo. Extended postal code lists for
-     *     geographies can be quite long so they have to be explicitly requested when needed.
-     *     <p>Usage examples:
-     *     <p>extendedPostalCodesFor=POI
-     *     <p>extendedPostalCodesFor=PAD,Addr,POI
-     *     <p>extendedPostalCodesFor=None
-     *     <p>Extended postal code is returned as an **extendedPostalCode** property of an address. Availability is
-     *     region-dependent.
-     * @param brandFilter A comma-separated list of brand names which could be used to restrict the result to specific
-     *     brands. Item order does not matter. When multiple brands are provided, only results that belong to (at least)
-     *     one of the provided list will be returned. Brands that contain a "," in their name should be put into quotes.
-     *     <p>Usage examples:
-     *     <p>brandSet=Foo
-     *     <p>brandSet=Foo,Bar
-     *     <p>brandSet="A,B,C Comma",Bar.
-     * @param electricVehicleConnectorFilter A comma-separated list of connector types which could be used to restrict
-     *     the result to Electric Vehicle Station supporting specific connector types. Item order does not matter. When
-     *     multiple connector types are provided, only results that belong to (at least) one of the provided list will
-     *     be returned.
-     *     <p>Available connector types are: * `StandardHouseholdCountrySpecific` - These are the standard household
-     *     connectors for a certain region. They are all AC single phase and the standard Voltage and standard Amperage.
-     *     See also: [Plug &amp; socket types - World
-     *     Standards](https://www.worldstandards.eu/electricity/plugs-and-sockets). * `IEC62196Type1` - Type 1 connector
-     *     as defined in the IEC 62196-2 standard. Also called Yazaki after the original manufacturer or SAE J1772 after
-     *     the standard that first published it. Mostly used in combination with 120V single phase or up to 240V single
-     *     phase infrastructure. * `IEC62196Type1CCS` - Type 1 based combo connector as defined in the IEC 62196-3
-     *     standard. The connector is based on the Type 1 connector – as defined in the IEC 62196-2 standard – with two
-     *     additional direct current (DC) contacts to allow DC fast charging. * `IEC62196Type2CableAttached` - Type 2
-     *     connector as defined in the IEC 62196-2 standard. Provided as a cable and plug attached to the charging
-     *     point. * `IEC62196Type2Outlet` - Type 2 connector as defined in the IEC 62196-2 standard. Provided as a
-     *     socket set into the charging point. * `IEC62196Type2CCS` - Type 2 based combo connector as defined in the IEC
-     *     62196-3 standard. The connector is based on the Type 2 connector – as defined in the IEC 62196-2 standard –
-     *     with two additional direct current (DC) contacts to allow DC fast charging. * `IEC62196Type3` - Type 3
-     *     connector as defined in the IEC 62196-2 standard. Also called Scame after the original manufacturer. Mostly
-     *     used in combination with up to 240V single phase or up to 420V three phase infrastructure. * `Chademo` -
-     *     CHAdeMO connector named after an association formed by the Tokyo Electric Power Company and industrial
-     *     partners. Because of this is is also known as the TEPCO's connector. It supports fast DC charging. *
-     *     `IEC60309AC1PhaseBlue` - Industrial Blue connector is a connector defined in the IEC 60309 standard. It is
-     *     sometime referred to as by some combination of the standard, the color and the fact that is a single phase
-     *     connector. The connector usually has the "P+N+E, 6h" configuration. * `IEC60309DCWhite` - Industrial White
-     *     connector is a DC connector defined in the IEC 60309 standard. * `Tesla` - The Tesla connector is the
-     *     regionally specific Tesla Supercharger connector. I.e. it refers to either Tesla's proprietary connector,
-     *     sometimes referred to as Tesla Port mostly limited to North America or the modified Type 2 (DC over Type 2)
-     *     in Europe.
-     *     <p>Usage examples:
-     *     <p>connectorSet=IEC62196Type2CableAttached connectorSet=IEC62196Type2Outlet,IEC62196Type2CableAttached.
-     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
-     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
-     *     different views of such regions, and the View parameter allows your application to comply with the view
-     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
-     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
-     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
-     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
-     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
-     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
-     *     made available. Example: view=IN.
-     *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
-     *     available Views.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Search calls.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchAddressResult> searchNearbyPointOfInterest(
-            ResponseFormat format,
-            double lat,
-            double lon,
-            Integer top,
-            Integer skip,
-            List<Integer> categoryFilter,
-            List<String> countryFilter,
-            Integer radiusInMeters,
-            String language,
-            List<SearchIndexes> extendedPostalCodesFor,
-            List<String> brandFilter,
-            List<ElectricVehicleConnector> electricVehicleConnectorFilter,
-            LocalizedMapView localizedMapView) {
-        return this.serviceClient.searchNearbyPointOfInterestAsync(
-                format,
-                lat,
-                lon,
-                top,
-                skip,
-                categoryFilter,
-                countryFilter,
-                radiusInMeters,
-                language,
-                extendedPostalCodesFor,
-                brandFilter,
-                electricVehicleConnectorFilter,
-                localizedMapView);
+        final SearchNearbyPointsOfInterestOptions param = Optional.ofNullable(options)
+                .orElse(new SearchNearbyPointsOfInterestOptions());
+
+        // call method and convert
+        Mono<Response<com.azure.maps.search.implementation.models.SearchAddressResult>> responseMono =
+            this.serviceClient.searchNearbyPointOfInterestWithResponseAsync(
+                ResponseFormat.JSON,
+                coordinates.getLat(),
+                coordinates.getLon(),
+                param.getTop(),
+                param.getSkip(),
+                param.getCategoryFilter(),
+                param.getCountryFilter(),
+                param.getRadiusInMeters(),
+                param.getLanguage(),
+                param.getExtendedPostalCodesFor(),
+                param.getBrandFilter(),
+                param.getElectricVehicleConnectorFilter(),
+                param.getLocalizedMapView(),
+                context);
+
+        // convert to the right (public) SearchAddressResult
+        return responseMono.flatMap(response -> {
+            Response<SearchAddressResult> simpleResponse = TypeMapper.createSearchResponse(response);
+            return Mono.just(simpleResponse);
+        });
     }
 
     /**
      * **Get POI by Category**
      *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
-     *
-     * <p>Points of Interest (POI) Category Search allows you to request POI results from given category. Search allows
-     * to query POIs from one category at a time. Endpoint will only return POI results which are categorized as
-     * specified. Response includes POI details such as address, coordinate location and classification.
-     *
-     * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param query The POI category to search for (e.g., "AIRPORT", "RESTAURANT"), must be properly URL encoded.
-     *     Supported main categories can be requested by calling [Get Search POI Category Tree
-     *     API](https://aka.ms/AzureMapsPOICategoryTree). List of available categories can also be found
-     *     [here](https://docs.microsoft.com/azure/azure-maps/supported-search-categories). We recommend to use POI
-     *     Search Category Tree API to request the supported categories.
-     * @param isTypeAhead Boolean. If the typeahead flag is set, the query will be interpreted as a partial input and
-     *     the search will enter predictive mode.
-     * @param top Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
-     * @param skip Starting offset of the returned results within the full result set. Default: 0, minimum: 0 and
-     *     maximum: 1900.
-     * @param categoryFilter A comma-separated list of category set IDs which could be used to restrict the result to
-     *     specific Points of Interest categories. ID order does not matter. When multiple category identifiers are
-     *     provided, only POIs that belong to (at least) one of the categories from the provided list will be returned.
-     *     The list of supported categories can be discovered using  [POI Categories
-     *     API](https://aka.ms/AzureMapsPOICategoryTree). Usage examples:
-     *     <p>* **categorySet=7315** (Search Points of Interest from category Restaurant)
-     *     <p>* **categorySet=7315025,7315017** (Search Points of Interest of category either Italian or French
-     *     Restaurant).
-     * @param countryFilter Comma separated string of country codes, e.g. FR,ES. This will limit the search to the
-     *     specified countries.
-     * @param lat Latitude where results should be biased. E.g. 37.337.
-     * @param lon Longitude where results should be biased. E.g. -121.89.
-     * @param radiusInMeters The radius in meters to for the results to be constrained to the defined area.
-     * @param topLeft Top left position of the bounding box. E.g. 37.553,-122.453.
-     * @param btmRight Bottom right position of the bounding box. E.g. 37.553,-122.453.
-     * @param language Language in which search results should be returned. Should be one of supported IETF language
-     *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used.
-     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
-     *     details.
-     * @param extendedPostalCodesFor Indexes for which extended postal codes should be included in the results.
-     *     <p>Available indexes are:
-     *     <p>**Addr** = Address ranges
-     *     <p>**Geo** = Geographies
-     *     <p>**PAD** = Point Addresses
-     *     <p>**POI** = Points of Interest
-     *     <p>**Str** = Streets
-     *     <p>**XStr** = Cross Streets (intersections)
-     *     <p>Value should be a comma separated list of index types (in any order) or **None** for no indexes.
-     *     <p>By default extended postal codes are included for all indexes except Geo. Extended postal code lists for
-     *     geographies can be quite long so they have to be explicitly requested when needed.
-     *     <p>Usage examples:
-     *     <p>extendedPostalCodesFor=POI
-     *     <p>extendedPostalCodesFor=PAD,Addr,POI
-     *     <p>extendedPostalCodesFor=None
-     *     <p>Extended postal code is returned as an **extendedPostalCode** property of an address. Availability is
-     *     region-dependent.
-     * @param brandFilter A comma-separated list of brand names which could be used to restrict the result to specific
-     *     brands. Item order does not matter. When multiple brands are provided, only results that belong to (at least)
-     *     one of the provided list will be returned. Brands that contain a "," in their name should be put into quotes.
-     *     <p>Usage examples:
-     *     <p>brandSet=Foo
-     *     <p>brandSet=Foo,Bar
-     *     <p>brandSet="A,B,C Comma",Bar.
-     * @param electricVehicleConnectorFilter A comma-separated list of connector types which could be used to restrict
-     *     the result to Electric Vehicle Station supporting specific connector types. Item order does not matter. When
-     *     multiple connector types are provided, only results that belong to (at least) one of the provided list will
-     *     be returned.
-     *     <p>Available connector types are: * `StandardHouseholdCountrySpecific` - These are the standard household
-     *     connectors for a certain region. They are all AC single phase and the standard Voltage and standard Amperage.
-     *     See also: [Plug &amp; socket types - World
-     *     Standards](https://www.worldstandards.eu/electricity/plugs-and-sockets). * `IEC62196Type1` - Type 1 connector
-     *     as defined in the IEC 62196-2 standard. Also called Yazaki after the original manufacturer or SAE J1772 after
-     *     the standard that first published it. Mostly used in combination with 120V single phase or up to 240V single
-     *     phase infrastructure. * `IEC62196Type1CCS` - Type 1 based combo connector as defined in the IEC 62196-3
-     *     standard. The connector is based on the Type 1 connector – as defined in the IEC 62196-2 standard – with two
-     *     additional direct current (DC) contacts to allow DC fast charging. * `IEC62196Type2CableAttached` - Type 2
-     *     connector as defined in the IEC 62196-2 standard. Provided as a cable and plug attached to the charging
-     *     point. * `IEC62196Type2Outlet` - Type 2 connector as defined in the IEC 62196-2 standard. Provided as a
-     *     socket set into the charging point. * `IEC62196Type2CCS` - Type 2 based combo connector as defined in the IEC
-     *     62196-3 standard. The connector is based on the Type 2 connector – as defined in the IEC 62196-2 standard –
-     *     with two additional direct current (DC) contacts to allow DC fast charging. * `IEC62196Type3` - Type 3
-     *     connector as defined in the IEC 62196-2 standard. Also called Scame after the original manufacturer. Mostly
-     *     used in combination with up to 240V single phase or up to 420V three phase infrastructure. * `Chademo` -
-     *     CHAdeMO connector named after an association formed by the Tokyo Electric Power Company and industrial
-     *     partners. Because of this is is also known as the TEPCO's connector. It supports fast DC charging. *
-     *     `IEC60309AC1PhaseBlue` - Industrial Blue connector is a connector defined in the IEC 60309 standard. It is
-     *     sometime referred to as by some combination of the standard, the color and the fact that is a single phase
-     *     connector. The connector usually has the "P+N+E, 6h" configuration. * `IEC60309DCWhite` - Industrial White
-     *     connector is a DC connector defined in the IEC 60309 standard. * `Tesla` - The Tesla connector is the
-     *     regionally specific Tesla Supercharger connector. I.e. it refers to either Tesla's proprietary connector,
-     *     sometimes referred to as Tesla Port mostly limited to North America or the modified Type 2 (DC over Type 2)
-     *     in Europe.
-     *     <p>Usage examples:
-     *     <p>connectorSet=IEC62196Type2CableAttached connectorSet=IEC62196Type2Outlet,IEC62196Type2CableAttached.
-     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
-     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
-     *     different views of such regions, and the View parameter allows your application to comply with the view
-     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
-     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
-     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
-     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
-     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
-     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
-     *     made available. Example: view=IN.
-     *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
-     *     available Views.
      * @param operatingHours Hours of operation for a POI (Points of Interest). The availability of hours of operation
      *     will vary based on the data available. If not passed, then no opening hours information will be returned.
      *     Supported value: nextSevenDays.
@@ -1181,153 +335,18 @@ public final class SearchAsyncClient {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<SearchAddressResult>> searchPointOfInterestCategoryWithResponse(
-            ResponseFormat format,
-            String query,
-            Boolean isTypeAhead,
-            Integer top,
-            Integer skip,
-            List<Integer> categoryFilter,
-            List<String> countryFilter,
-            Double lat,
-            Double lon,
-            Integer radiusInMeters,
-            String topLeft,
-            String btmRight,
-            String language,
-            List<SearchIndexes> extendedPostalCodesFor,
-            List<String> brandFilter,
-            List<ElectricVehicleConnector> electricVehicleConnectorFilter,
-            LocalizedMapView localizedMapView,
-            OperatingHoursRange operatingHours) {
-        return this.serviceClient.searchPointOfInterestCategoryWithResponseAsync(
-                format,
-                query,
-                isTypeAhead,
-                top,
-                skip,
-                categoryFilter,
-                countryFilter,
-                lat,
-                lon,
-                radiusInMeters,
-                topLeft,
-                btmRight,
-                language,
-                extendedPostalCodesFor,
-                brandFilter,
-                electricVehicleConnectorFilter,
-                localizedMapView,
-                operatingHours);
+    public Mono<SearchAddressResult> searchPointOfInterestCategory(String query, LatLong coordinates,
+    SearchPointOfInterestCategoryOptions options) {
+        Mono<Response<SearchAddressResult>> result = this.searchPointOfInterestCategoryWithResponse(query,
+                coordinates, null, options, null);
+        return result.flatMap(response -> {
+            return Mono.just(response.getValue());
+        });
     }
 
     /**
      * **Get POI by Category**
      *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
-     *
-     * <p>Points of Interest (POI) Category Search allows you to request POI results from given category. Search allows
-     * to query POIs from one category at a time. Endpoint will only return POI results which are categorized as
-     * specified. Response includes POI details such as address, coordinate location and classification.
-     *
-     * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param query The POI category to search for (e.g., "AIRPORT", "RESTAURANT"), must be properly URL encoded.
-     *     Supported main categories can be requested by calling [Get Search POI Category Tree
-     *     API](https://aka.ms/AzureMapsPOICategoryTree). List of available categories can also be found
-     *     [here](https://docs.microsoft.com/azure/azure-maps/supported-search-categories). We recommend to use POI
-     *     Search Category Tree API to request the supported categories.
-     * @param isTypeAhead Boolean. If the typeahead flag is set, the query will be interpreted as a partial input and
-     *     the search will enter predictive mode.
-     * @param top Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
-     * @param skip Starting offset of the returned results within the full result set. Default: 0, minimum: 0 and
-     *     maximum: 1900.
-     * @param categoryFilter A comma-separated list of category set IDs which could be used to restrict the result to
-     *     specific Points of Interest categories. ID order does not matter. When multiple category identifiers are
-     *     provided, only POIs that belong to (at least) one of the categories from the provided list will be returned.
-     *     The list of supported categories can be discovered using  [POI Categories
-     *     API](https://aka.ms/AzureMapsPOICategoryTree). Usage examples:
-     *     <p>* **categorySet=7315** (Search Points of Interest from category Restaurant)
-     *     <p>* **categorySet=7315025,7315017** (Search Points of Interest of category either Italian or French
-     *     Restaurant).
-     * @param countryFilter Comma separated string of country codes, e.g. FR,ES. This will limit the search to the
-     *     specified countries.
-     * @param lat Latitude where results should be biased. E.g. 37.337.
-     * @param lon Longitude where results should be biased. E.g. -121.89.
-     * @param radiusInMeters The radius in meters to for the results to be constrained to the defined area.
-     * @param topLeft Top left position of the bounding box. E.g. 37.553,-122.453.
-     * @param btmRight Bottom right position of the bounding box. E.g. 37.553,-122.453.
-     * @param language Language in which search results should be returned. Should be one of supported IETF language
-     *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used.
-     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
-     *     details.
-     * @param extendedPostalCodesFor Indexes for which extended postal codes should be included in the results.
-     *     <p>Available indexes are:
-     *     <p>**Addr** = Address ranges
-     *     <p>**Geo** = Geographies
-     *     <p>**PAD** = Point Addresses
-     *     <p>**POI** = Points of Interest
-     *     <p>**Str** = Streets
-     *     <p>**XStr** = Cross Streets (intersections)
-     *     <p>Value should be a comma separated list of index types (in any order) or **None** for no indexes.
-     *     <p>By default extended postal codes are included for all indexes except Geo. Extended postal code lists for
-     *     geographies can be quite long so they have to be explicitly requested when needed.
-     *     <p>Usage examples:
-     *     <p>extendedPostalCodesFor=POI
-     *     <p>extendedPostalCodesFor=PAD,Addr,POI
-     *     <p>extendedPostalCodesFor=None
-     *     <p>Extended postal code is returned as an **extendedPostalCode** property of an address. Availability is
-     *     region-dependent.
-     * @param brandFilter A comma-separated list of brand names which could be used to restrict the result to specific
-     *     brands. Item order does not matter. When multiple brands are provided, only results that belong to (at least)
-     *     one of the provided list will be returned. Brands that contain a "," in their name should be put into quotes.
-     *     <p>Usage examples:
-     *     <p>brandSet=Foo
-     *     <p>brandSet=Foo,Bar
-     *     <p>brandSet="A,B,C Comma",Bar.
-     * @param electricVehicleConnectorFilter A comma-separated list of connector types which could be used to restrict
-     *     the result to Electric Vehicle Station supporting specific connector types. Item order does not matter. When
-     *     multiple connector types are provided, only results that belong to (at least) one of the provided list will
-     *     be returned.
-     *     <p>Available connector types are: * `StandardHouseholdCountrySpecific` - These are the standard household
-     *     connectors for a certain region. They are all AC single phase and the standard Voltage and standard Amperage.
-     *     See also: [Plug &amp; socket types - World
-     *     Standards](https://www.worldstandards.eu/electricity/plugs-and-sockets). * `IEC62196Type1` - Type 1 connector
-     *     as defined in the IEC 62196-2 standard. Also called Yazaki after the original manufacturer or SAE J1772 after
-     *     the standard that first published it. Mostly used in combination with 120V single phase or up to 240V single
-     *     phase infrastructure. * `IEC62196Type1CCS` - Type 1 based combo connector as defined in the IEC 62196-3
-     *     standard. The connector is based on the Type 1 connector – as defined in the IEC 62196-2 standard – with two
-     *     additional direct current (DC) contacts to allow DC fast charging. * `IEC62196Type2CableAttached` - Type 2
-     *     connector as defined in the IEC 62196-2 standard. Provided as a cable and plug attached to the charging
-     *     point. * `IEC62196Type2Outlet` - Type 2 connector as defined in the IEC 62196-2 standard. Provided as a
-     *     socket set into the charging point. * `IEC62196Type2CCS` - Type 2 based combo connector as defined in the IEC
-     *     62196-3 standard. The connector is based on the Type 2 connector – as defined in the IEC 62196-2 standard –
-     *     with two additional direct current (DC) contacts to allow DC fast charging. * `IEC62196Type3` - Type 3
-     *     connector as defined in the IEC 62196-2 standard. Also called Scame after the original manufacturer. Mostly
-     *     used in combination with up to 240V single phase or up to 420V three phase infrastructure. * `Chademo` -
-     *     CHAdeMO connector named after an association formed by the Tokyo Electric Power Company and industrial
-     *     partners. Because of this is is also known as the TEPCO's connector. It supports fast DC charging. *
-     *     `IEC60309AC1PhaseBlue` - Industrial Blue connector is a connector defined in the IEC 60309 standard. It is
-     *     sometime referred to as by some combination of the standard, the color and the fact that is a single phase
-     *     connector. The connector usually has the "P+N+E, 6h" configuration. * `IEC60309DCWhite` - Industrial White
-     *     connector is a DC connector defined in the IEC 60309 standard. * `Tesla` - The Tesla connector is the
-     *     regionally specific Tesla Supercharger connector. I.e. it refers to either Tesla's proprietary connector,
-     *     sometimes referred to as Tesla Port mostly limited to North America or the modified Type 2 (DC over Type 2)
-     *     in Europe.
-     *     <p>Usage examples:
-     *     <p>connectorSet=IEC62196Type2CableAttached connectorSet=IEC62196Type2Outlet,IEC62196Type2CableAttached.
-     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
-     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
-     *     different views of such regions, and the View parameter allows your application to comply with the view
-     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
-     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
-     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
-     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
-     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
-     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
-     *     made available. Example: view=IN.
-     *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
-     *     available Views.
      * @param operatingHours Hours of operation for a POI (Points of Interest). The availability of hours of operation
      *     will vary based on the data available. If not passed, then no opening hours information will be returned.
      *     Supported value: nextSevenDays.
@@ -1337,45 +356,88 @@ public final class SearchAsyncClient {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchAddressResult> searchPointOfInterestCategory(
-            ResponseFormat format,
-            String query,
-            Boolean isTypeAhead,
-            Integer top,
-            Integer skip,
-            List<Integer> categoryFilter,
-            List<String> countryFilter,
-            Double lat,
-            Double lon,
-            Integer radiusInMeters,
-            String topLeft,
-            String btmRight,
-            String language,
-            List<SearchIndexes> extendedPostalCodesFor,
-            List<String> brandFilter,
-            List<ElectricVehicleConnector> electricVehicleConnectorFilter,
-            LocalizedMapView localizedMapView,
-            OperatingHoursRange operatingHours) {
-        return this.serviceClient.searchPointOfInterestCategoryAsync(
-                format,
-                query,
-                isTypeAhead,
-                top,
-                skip,
-                categoryFilter,
-                countryFilter,
-                lat,
-                lon,
-                radiusInMeters,
-                topLeft,
-                btmRight,
-                language,
-                extendedPostalCodesFor,
-                brandFilter,
-                electricVehicleConnectorFilter,
-                localizedMapView,
-                operatingHours);
+    public Mono<SearchAddressResult> searchPointOfInterestCategory(String query, List<String> countryFilter,
+            SearchPointOfInterestCategoryOptions options) {
+        Mono<Response<SearchAddressResult>> result = this.searchPointOfInterestCategoryWithResponse(query,
+                null, countryFilter, options, null);
+        return result.flatMap(response -> {
+            return Mono.just(response.getValue());
+        });
     }
+
+    /**
+     * **Get POI by Category**
+     *
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful Search calls.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Response<SearchAddressResult>> searchPointOfInterestCategoryWithResponse(String query,
+            LatLong coordinates, List<String> countryFilter, SearchPointOfInterestCategoryOptions options,
+            Context context) {
+
+        final SearchPointOfInterestCategoryOptions param = Optional.ofNullable(options)
+                .orElse(new SearchPointOfInterestCategoryOptions());
+        final Optional<LatLong> optCoordinates = Optional.ofNullable(coordinates);
+
+        // call method and convert
+        Mono<Response<com.azure.maps.search.implementation.models.SearchAddressResult>> responseMono =
+            this.serviceClient.searchPointOfInterestCategoryWithResponseAsync(
+                ResponseFormat.JSON,
+                query,
+                param.isTypeAhead(),
+                param.getTop(),
+                param.getSkip(),
+                param.getCategoryFilter(),
+                countryFilter,
+                optCoordinates.map(LatLong::getLat).orElse(null),
+                optCoordinates.map(LatLong::getLon).orElse(null),
+                param.getRadiusInMeters(),
+                param.getBoundingBox().map(BoundingBox::getTopLeft).map(LatLong::toString).orElse(null),
+                param.getBoundingBox().map(BoundingBox::getBottomRight).map(LatLong::toString).orElse(null),
+                param.getLanguage(),
+                param.getExtendedPostalCodesFor(),
+                param.getBrandFilter(),
+                param.getElectricVehicleConnectorFilter(),
+                param.getLocalizedMapView(),
+                param.getOperatingHours(),
+                context);
+
+        // convert to the right (public) SearchAddressResult
+        return responseMono.flatMap(response -> {
+            Response<SearchAddressResult> simpleResponse = TypeMapper.createSearchResponse(response);
+            return Mono.just(simpleResponse);
+        });
+    }
+
+    /**
+     * **Get POI Category Tree**
+     *
+     * <p>**Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>POI Category API provides a full list of supported Points of Interest (POI) categories and subcategories
+     * together with their translations and synonyms. The returned content can be used to provide more meaningful
+     * results through other Search Service APIs, like [Get Search
+     * POI](https://docs.microsoft.com/rest/api/maps/search/getsearchpoi).
+     *
+     * @param format Desired format of the response. Only `json` format is supported.
+     * @param language Language in which search results should be returned. Should be one of supported IETF language
+     *     tags, except NGT and NGT-Latn. Language tag is case insensitive. When data in specified language is not
+     *     available for a specific field, default language is used (English).
+     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
+     *     details.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful POI Category Tree call.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<PointOfInterestCategoryTreeResult> getPointOfInterestCategoryTree(String language) {
+        return this.serviceClient.getPointOfInterestCategoryTreeAsync(JsonFormat.JSON, language);
+    }
+
 
     /**
      * **Get POI Category Tree**
@@ -1400,103 +462,33 @@ public final class SearchAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<PointOfInterestCategoryTreeResult>> getPointOfInterestCategoryTreeWithResponse(
-            JsonFormat format, String language) {
-        return this.serviceClient.getPointOfInterestCategoryTreeWithResponseAsync(format, language);
-    }
-
-    /**
-     * **Get POI Category Tree**
-     *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
-     *
-     * <p>POI Category API provides a full list of supported Points of Interest (POI) categories and subcategories
-     * together with their translations and synonyms. The returned content can be used to provide more meaningful
-     * results through other Search Service APIs, like [Get Search
-     * POI](https://docs.microsoft.com/rest/api/maps/search/getsearchpoi).
-     *
-     * @param format Desired format of the response. Only `json` format is supported.
-     * @param language Language in which search results should be returned. Should be one of supported IETF language
-     *     tags, except NGT and NGT-Latn. Language tag is case insensitive. When data in specified language is not
-     *     available for a specific field, default language is used (English).
-     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
-     *     details.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful POI Category Tree call.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<PointOfInterestCategoryTreeResult> getPointOfInterestCategoryTree(JsonFormat format, String language) {
-        return this.serviceClient.getPointOfInterestCategoryTreeAsync(format, language);
+            String language, Context context) {
+        return this.serviceClient.getPointOfInterestCategoryTreeWithResponseAsync(JsonFormat.JSON, language,
+            context);
     }
 
     /**
      * **Address Geocoding**
      *
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful Search calls.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<SearchAddressResult> searchAddress(String query, SearchAddressOptions options) {
+        Mono<Response<SearchAddressResult>> result = this.searchAddressWithResponse(query,
+                options, null);
+        return result.flatMap(response -> {
+            return Mono.just(response.getValue());
+        });
+    }
+
+
+    /**
+     * **Address Geocoding**
+     *
      * <p>**Applies to**: S0 and S1 pricing tiers.
-     *
-     * <p>In many cases, the complete search service might be too much, for instance if you are only interested in
-     * traditional geocoding. Search can also be accessed for address look up exclusively. The geocoding is performed by
-     * hitting the geocode endpoint with just the address or partial address in question. The geocoding search index
-     * will be queried for everything above the street level data. No POIs will be returned. Note that the geocoder is
-     * very tolerant of typos and incomplete addresses. It will also handle everything from exact street addresses or
-     * street or intersections as well as higher level geographies such as city centers, counties, states etc.
-     *
-     * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param query The address to search for (e.g., "1 Microsoft way, Redmond, WA"), must be properly URL encoded.
-     * @param isTypeAhead Boolean. If the typeahead flag is set, the query will be interpreted as a partial input and
-     *     the search will enter predictive mode.
-     * @param top Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
-     * @param skip Starting offset of the returned results within the full result set. Default: 0, minimum: 0 and
-     *     maximum: 1900.
-     * @param countryFilter Comma separated string of country codes, e.g. FR,ES. This will limit the search to the
-     *     specified countries.
-     * @param lat Latitude where results should be biased. E.g. 37.337.
-     * @param lon Longitude where results should be biased. E.g. -121.89.
-     * @param radiusInMeters The radius in meters to for the results to be constrained to the defined area.
-     * @param topLeft Top left position of the bounding box. E.g. 37.553,-122.453.
-     * @param btmRight Bottom right position of the bounding box. E.g. 37.553,-122.453.
-     * @param language Language in which search results should be returned. Should be one of supported IETF language
-     *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used.
-     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
-     *     details.
-     * @param extendedPostalCodesFor Indexes for which extended postal codes should be included in the results.
-     *     <p>Available indexes are:
-     *     <p>**Addr** = Address ranges
-     *     <p>**Geo** = Geographies
-     *     <p>**PAD** = Point Addresses
-     *     <p>**POI** = Points of Interest
-     *     <p>**Str** = Streets
-     *     <p>**XStr** = Cross Streets (intersections)
-     *     <p>Value should be a comma separated list of index types (in any order) or **None** for no indexes.
-     *     <p>By default extended postal codes are included for all indexes except Geo. Extended postal code lists for
-     *     geographies can be quite long so they have to be explicitly requested when needed.
-     *     <p>Usage examples:
-     *     <p>extendedPostalCodesFor=POI
-     *     <p>extendedPostalCodesFor=PAD,Addr,POI
-     *     <p>extendedPostalCodesFor=None
-     *     <p>Extended postal code is returned as an **extendedPostalCode** property of an address. Availability is
-     *     region-dependent.
-     * @param entityType Specifies the level of filtering performed on geographies. Narrows the search for specified
-     *     geography entity types, e.g. return only municipality. The resulting response will contain the geography ID
-     *     as well as the entity type matched. If you provide more than one entity as a comma separated list, endpoint
-     *     will return the 'smallest entity available'. Returned Geometry ID can be used to get the geometry of that
-     *     geography via [Get Search Polygon](https://docs.microsoft.com/rest/api/maps/search/getsearchpolygon) API. The
-     *     following parameters are ignored when entityType is set:
-     *     <p>* heading * number * returnRoadUse * returnSpeedLimit * roadUse * returnMatchType.
-     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
-     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
-     *     different views of such regions, and the View parameter allows your application to comply with the view
-     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
-     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
-     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
-     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
-     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
-     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
-     *     made available. Example: view=IN.
-     *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
-     *     available Views.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -1504,195 +496,58 @@ public final class SearchAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<SearchAddressResult>> searchAddressWithResponse(
-            ResponseFormat format,
-            String query,
-            Boolean isTypeAhead,
-            Integer top,
-            Integer skip,
-            List<String> countryFilter,
-            Double lat,
-            Double lon,
-            Integer radiusInMeters,
-            String topLeft,
-            String btmRight,
-            String language,
-            List<SearchIndexes> extendedPostalCodesFor,
-            GeographicEntityType entityType,
-            LocalizedMapView localizedMapView) {
-        return this.serviceClient.searchAddressWithResponseAsync(
-                format,
+            String query, SearchAddressOptions options, Context context) {
+
+        final SearchAddressOptions param = Optional.ofNullable(options).orElse(new SearchAddressOptions());
+
+        // call method and convert
+        Mono<Response<com.azure.maps.search.implementation.models.SearchAddressResult>> responseMono =
+            this.serviceClient.searchAddressWithResponseAsync(
+                ResponseFormat.JSON,
                 query,
-                isTypeAhead,
-                top,
-                skip,
-                countryFilter,
-                lat,
-                lon,
-                radiusInMeters,
-                topLeft,
-                btmRight,
-                language,
-                extendedPostalCodesFor,
-                entityType,
-                localizedMapView);
+                param.isTypeAhead(),
+                param.getTop(),
+                param.getSkip(),
+                param.getCountryFilter(),
+                param.getCoordinates().map(LatLong::getLat).orElse(null),
+                param.getCoordinates().map(LatLong::getLon).orElse(null),
+                param.getRadiusInMeters(),
+                param.getBoundingBox().map(BoundingBox::getTopLeft).map(LatLong::toString).orElse(null),
+                param.getBoundingBox().map(BoundingBox::getBottomRight).map(LatLong::toString).orElse(null),
+                param.getLanguage(),
+                param.getExtendedPostalCodesFor(),
+                param.getEntityType(),
+                param.getLocalizedMapView(),
+                context);
+
+        // convert to the right (public) SearchAddressResult
+        return responseMono.flatMap(response -> {
+            Response<SearchAddressResult> simpleResponse = TypeMapper.createSearchResponse(response);
+            return Mono.just(simpleResponse);
+        });
     }
 
     /**
-     * **Address Geocoding**
-     *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
-     *
-     * <p>In many cases, the complete search service might be too much, for instance if you are only interested in
-     * traditional geocoding. Search can also be accessed for address look up exclusively. The geocoding is performed by
-     * hitting the geocode endpoint with just the address or partial address in question. The geocoding search index
-     * will be queried for everything above the street level data. No POIs will be returned. Note that the geocoder is
-     * very tolerant of typos and incomplete addresses. It will also handle everything from exact street addresses or
-     * street or intersections as well as higher level geographies such as city centers, counties, states etc.
-     *
-     * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param query The address to search for (e.g., "1 Microsoft way, Redmond, WA"), must be properly URL encoded.
-     * @param isTypeAhead Boolean. If the typeahead flag is set, the query will be interpreted as a partial input and
-     *     the search will enter predictive mode.
-     * @param top Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
-     * @param skip Starting offset of the returned results within the full result set. Default: 0, minimum: 0 and
-     *     maximum: 1900.
-     * @param countryFilter Comma separated string of country codes, e.g. FR,ES. This will limit the search to the
-     *     specified countries.
-     * @param lat Latitude where results should be biased. E.g. 37.337.
-     * @param lon Longitude where results should be biased. E.g. -121.89.
-     * @param radiusInMeters The radius in meters to for the results to be constrained to the defined area.
-     * @param topLeft Top left position of the bounding box. E.g. 37.553,-122.453.
-     * @param btmRight Bottom right position of the bounding box. E.g. 37.553,-122.453.
-     * @param language Language in which search results should be returned. Should be one of supported IETF language
-     *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used.
-     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
-     *     details.
-     * @param extendedPostalCodesFor Indexes for which extended postal codes should be included in the results.
-     *     <p>Available indexes are:
-     *     <p>**Addr** = Address ranges
-     *     <p>**Geo** = Geographies
-     *     <p>**PAD** = Point Addresses
-     *     <p>**POI** = Points of Interest
-     *     <p>**Str** = Streets
-     *     <p>**XStr** = Cross Streets (intersections)
-     *     <p>Value should be a comma separated list of index types (in any order) or **None** for no indexes.
-     *     <p>By default extended postal codes are included for all indexes except Geo. Extended postal code lists for
-     *     geographies can be quite long so they have to be explicitly requested when needed.
-     *     <p>Usage examples:
-     *     <p>extendedPostalCodesFor=POI
-     *     <p>extendedPostalCodesFor=PAD,Addr,POI
-     *     <p>extendedPostalCodesFor=None
-     *     <p>Extended postal code is returned as an **extendedPostalCode** property of an address. Availability is
-     *     region-dependent.
-     * @param entityType Specifies the level of filtering performed on geographies. Narrows the search for specified
-     *     geography entity types, e.g. return only municipality. The resulting response will contain the geography ID
-     *     as well as the entity type matched. If you provide more than one entity as a comma separated list, endpoint
-     *     will return the 'smallest entity available'. Returned Geometry ID can be used to get the geometry of that
-     *     geography via [Get Search Polygon](https://docs.microsoft.com/rest/api/maps/search/getsearchpolygon) API. The
-     *     following parameters are ignored when entityType is set:
-     *     <p>* heading * number * returnRoadUse * returnSpeedLimit * roadUse * returnMatchType.
-     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
-     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
-     *     different views of such regions, and the View parameter allows your application to comply with the view
-     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
-     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
-     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
-     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
-     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
-     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
-     *     made available. Example: view=IN.
-     *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
-     *     available Views.
+     * **Reverse Geocode to an Address**
+
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Search calls.
+     * @return this object is returned from a successful Search Address Reverse call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchAddressResult> searchAddress(
-            ResponseFormat format,
-            String query,
-            Boolean isTypeAhead,
-            Integer top,
-            Integer skip,
-            List<String> countryFilter,
-            Double lat,
-            Double lon,
-            Integer radiusInMeters,
-            String topLeft,
-            String btmRight,
-            String language,
-            List<SearchIndexes> extendedPostalCodesFor,
-            GeographicEntityType entityType,
-            LocalizedMapView localizedMapView) {
-        return this.serviceClient.searchAddressAsync(
-                format,
-                query,
-                isTypeAhead,
-                top,
-                skip,
-                countryFilter,
-                lat,
-                lon,
-                radiusInMeters,
-                topLeft,
-                btmRight,
-                language,
-                extendedPostalCodesFor,
-                entityType,
-                localizedMapView);
+    public Mono<ReverseSearchAddressResult> reverseSearchAddress(LatLong coordinates,
+            ReverseSearchAddressOptions options) {
+        Mono<Response<ReverseSearchAddressResult>> result = this.reverseSearchAddressWithResponse(coordinates,
+            options, null);
+        return result.flatMap(response -> {
+            return Mono.just(response.getValue());
+        });
     }
 
     /**
      * **Reverse Geocode to an Address**
      *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
-     *
-     * <p>There may be times when you need to translate a coordinate (example: 37.786505, -122.3862) into a human
-     * understandable street address. Most often this is needed in tracking applications where you receive a GPS feed
-     * from the device or asset and wish to know what address where the coordinate is located. This endpoint will return
-     * address information for a given coordinate.
-     *
-     * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param query The applicable query specified as a comma separated string composed by latitude followed by
-     *     longitude e.g. "47.641268,-122.125679".
-     * @param language Language in which search results should be returned. Should be one of supported IETF language
-     *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used.
-     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
-     *     details.
-     * @param includeSpeedLimit Boolean. To enable return of the posted speed limit.
-     * @param heading The directional heading of the vehicle in degrees, for travel along a segment of roadway. 0 is
-     *     North, 90 is East and so on, values range from -360 to 360. The precision can include upto one decimal place.
-     * @param radiusInMeters The radius in meters to for the results to be constrained to the defined area.
-     * @param number If a number is sent in along with the request, the response may include the side of the street
-     *     (Left/Right) and also an offset position for that number.
-     * @param includeRoadUse Boolean. To enable return of the road use array for reverse geocodes at street level.
-     * @param roadUse To restrict reverse geocodes to a certain type of road use. The road use array for reverse
-     *     geocodes can be one or more of LimitedAccess, Arterial, Terminal, Ramp, Rotary, LocalStreet.
-     * @param allowFreeformNewline Format of newlines in the formatted address.
-     *     <p>If true, the address will contain newlines. If false, newlines will be converted to commas.
-     * @param includeMatchType Include information on the type of match the geocoder achieved in the response.
-     * @param entityType Specifies the level of filtering performed on geographies. Narrows the search for specified
-     *     geography entity types, e.g. return only municipality. The resulting response will contain the geography ID
-     *     as well as the entity type matched. If you provide more than one entity as a comma separated list, endpoint
-     *     will return the 'smallest entity available'. Returned Geometry ID can be used to get the geometry of that
-     *     geography via [Get Search Polygon](https://docs.microsoft.com/rest/api/maps/search/getsearchpolygon) API. The
-     *     following parameters are ignored when entityType is set:
-     *     <p>* heading * number * returnRoadUse * returnSpeedLimit * roadUse * returnMatchType.
-     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
-     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
-     *     different views of such regions, and the View parameter allows your application to comply with the view
-     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
-     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
-     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
-     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
-     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
-     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
-     *     made available. Example: view=IN.
-     *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
-     *     available Views.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -1700,206 +555,30 @@ public final class SearchAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<ReverseSearchAddressResult>> reverseSearchAddressWithResponse(
-            ResponseFormat format,
-            List<Double> query,
-            String language,
-            Boolean includeSpeedLimit,
-            Integer heading,
-            Integer radiusInMeters,
-            String number,
-            Boolean includeRoadUse,
-            List<RoadUseType> roadUse,
-            Boolean allowFreeformNewline,
-            Boolean includeMatchType,
-            GeographicEntityType entityType,
-            LocalizedMapView localizedMapView) {
+            LatLong coordinates, ReverseSearchAddressOptions options, Context context) {
+
+        final ReverseSearchAddressOptions param = Optional.ofNullable(options)
+            .orElse(new ReverseSearchAddressOptions());
+
         return this.serviceClient.reverseSearchAddressWithResponseAsync(
-                format,
-                query,
-                language,
-                includeSpeedLimit,
-                heading,
-                radiusInMeters,
-                number,
-                includeRoadUse,
-                roadUse,
-                allowFreeformNewline,
-                includeMatchType,
-                entityType,
-                localizedMapView);
-    }
-
-    /**
-     * **Reverse Geocode to an Address**
-     *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
-     *
-     * <p>There may be times when you need to translate a coordinate (example: 37.786505, -122.3862) into a human
-     * understandable street address. Most often this is needed in tracking applications where you receive a GPS feed
-     * from the device or asset and wish to know what address where the coordinate is located. This endpoint will return
-     * address information for a given coordinate.
-     *
-     * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param query The applicable query specified as a comma separated string composed by latitude followed by
-     *     longitude e.g. "47.641268,-122.125679".
-     * @param language Language in which search results should be returned. Should be one of supported IETF language
-     *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used.
-     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
-     *     details.
-     * @param includeSpeedLimit Boolean. To enable return of the posted speed limit.
-     * @param heading The directional heading of the vehicle in degrees, for travel along a segment of roadway. 0 is
-     *     North, 90 is East and so on, values range from -360 to 360. The precision can include upto one decimal place.
-     * @param radiusInMeters The radius in meters to for the results to be constrained to the defined area.
-     * @param number If a number is sent in along with the request, the response may include the side of the street
-     *     (Left/Right) and also an offset position for that number.
-     * @param includeRoadUse Boolean. To enable return of the road use array for reverse geocodes at street level.
-     * @param roadUse To restrict reverse geocodes to a certain type of road use. The road use array for reverse
-     *     geocodes can be one or more of LimitedAccess, Arterial, Terminal, Ramp, Rotary, LocalStreet.
-     * @param allowFreeformNewline Format of newlines in the formatted address.
-     *     <p>If true, the address will contain newlines. If false, newlines will be converted to commas.
-     * @param includeMatchType Include information on the type of match the geocoder achieved in the response.
-     * @param entityType Specifies the level of filtering performed on geographies. Narrows the search for specified
-     *     geography entity types, e.g. return only municipality. The resulting response will contain the geography ID
-     *     as well as the entity type matched. If you provide more than one entity as a comma separated list, endpoint
-     *     will return the 'smallest entity available'. Returned Geometry ID can be used to get the geometry of that
-     *     geography via [Get Search Polygon](https://docs.microsoft.com/rest/api/maps/search/getsearchpolygon) API. The
-     *     following parameters are ignored when entityType is set:
-     *     <p>* heading * number * returnRoadUse * returnSpeedLimit * roadUse * returnMatchType.
-     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
-     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
-     *     different views of such regions, and the View parameter allows your application to comply with the view
-     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
-     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
-     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
-     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
-     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
-     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
-     *     made available. Example: view=IN.
-     *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
-     *     available Views.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Search Address Reverse call.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<ReverseSearchAddressResult> reverseSearchAddress(
-            ResponseFormat format,
-            List<Double> query,
-            String language,
-            Boolean includeSpeedLimit,
-            Integer heading,
-            Integer radiusInMeters,
-            String number,
-            Boolean includeRoadUse,
-            List<RoadUseType> roadUse,
-            Boolean allowFreeformNewline,
-            Boolean includeMatchType,
-            GeographicEntityType entityType,
-            LocalizedMapView localizedMapView) {
-        return this.serviceClient.reverseSearchAddressAsync(
-                format,
-                query,
-                language,
-                includeSpeedLimit,
-                heading,
-                radiusInMeters,
-                number,
-                includeRoadUse,
-                roadUse,
-                allowFreeformNewline,
-                includeMatchType,
-                entityType,
-                localizedMapView);
+                ResponseFormat.JSON,
+                Arrays.asList(coordinates.getLat(), coordinates.getLon()),
+                param.getLanguage(),
+                param.includeSpeedLimit(),
+                param.getHeading(),
+                param.getRadiusInMeters(),
+                param.getNumber(),
+                param.includeRoadUse(),
+                param.getRoadUse(),
+                param.allowFreeformNewline(),
+                param.includeMatchType(),
+                param.getEntityType(),
+                param.getLocalizedMapView(),
+                context);
     }
 
     /**
      * **Reverse Geocode to a Cross Street**
-     *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
-     *
-     * <p>There may be times when you need to translate a coordinate (example: 37.786505, -122.3862) into a human
-     * understandable cross street. Most often this is needed in tracking applications where you receive a GPS feed from
-     * the device or asset and wish to know what address where the coordinate is located. This endpoint will return
-     * cross street information for a given coordinate.
-     *
-     * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param query The applicable query specified as a comma separated string composed by latitude followed by
-     *     longitude e.g. "47.641268,-122.125679".
-     * @param top Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
-     * @param heading The directional heading of the vehicle in degrees, for travel along a segment of roadway. 0 is
-     *     North, 90 is East and so on, values range from -360 to 360. The precision can include upto one decimal place.
-     * @param radiusInMeters The radius in meters to for the results to be constrained to the defined area.
-     * @param language Language in which search results should be returned. Should be one of supported IETF language
-     *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used.
-     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
-     *     details.
-     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
-     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
-     *     different views of such regions, and the View parameter allows your application to comply with the view
-     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
-     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
-     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
-     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
-     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
-     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
-     *     made available. Example: view=IN.
-     *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
-     *     available Views.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Search Address Reverse CrossStreet call.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<ReverseSearchCrossStreetAddressResult>> reverseSearchCrossStreetAddressWithResponse(
-            ResponseFormat format,
-            List<Double> query,
-            Integer top,
-            Integer heading,
-            Integer radiusInMeters,
-            String language,
-            LocalizedMapView localizedMapView) {
-        return this.serviceClient.reverseSearchCrossStreetAddressWithResponseAsync(
-                format, query, top, heading, radiusInMeters, language, localizedMapView);
-    }
-
-    /**
-     * **Reverse Geocode to a Cross Street**
-     *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
-     *
-     * <p>There may be times when you need to translate a coordinate (example: 37.786505, -122.3862) into a human
-     * understandable cross street. Most often this is needed in tracking applications where you receive a GPS feed from
-     * the device or asset and wish to know what address where the coordinate is located. This endpoint will return
-     * cross street information for a given coordinate.
-     *
-     * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param query The applicable query specified as a comma separated string composed by latitude followed by
-     *     longitude e.g. "47.641268,-122.125679".
-     * @param top Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
-     * @param heading The directional heading of the vehicle in degrees, for travel along a segment of roadway. 0 is
-     *     North, 90 is East and so on, values range from -360 to 360. The precision can include upto one decimal place.
-     * @param radiusInMeters The radius in meters to for the results to be constrained to the defined area.
-     * @param language Language in which search results should be returned. Should be one of supported IETF language
-     *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used.
-     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
-     *     details.
-     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
-     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
-     *     different views of such regions, and the View parameter allows your application to comply with the view
-     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
-     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
-     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
-     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
-     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
-     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
-     *     made available. Example: view=IN.
-     *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
-     *     available Views.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -1907,84 +586,64 @@ public final class SearchAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<ReverseSearchCrossStreetAddressResult> reverseSearchCrossStreetAddress(
-            ResponseFormat format,
-            List<Double> query,
-            Integer top,
-            Integer heading,
-            Integer radiusInMeters,
-            String language,
-            LocalizedMapView localizedMapView) {
-        return this.serviceClient.reverseSearchCrossStreetAddressAsync(
-                format, query, top, heading, radiusInMeters, language, localizedMapView);
+            LatLong coordinates, ReverseSearchCrossStreetAddressOptions options) {
+        Mono<Response<ReverseSearchCrossStreetAddressResult>> result = this.reverseSearchCrossStreetAddressWithResponse(
+            coordinates, options, null);
+        return result.flatMap(response -> {
+            return Mono.just(response.getValue());
+        });
+    }
+
+    /**
+     * **Reverse Geocode to a Cross Street**
+     *
+     * <p>**Applies to**: S0 and S1 pricing tiers.
+     *
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful Search Address Reverse CrossStreet call.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Response<ReverseSearchCrossStreetAddressResult>> reverseSearchCrossStreetAddressWithResponse(
+            LatLong coordinates, ReverseSearchCrossStreetAddressOptions options, Context context) {
+
+        final ReverseSearchCrossStreetAddressOptions param = Optional.ofNullable(options)
+            .orElse(new ReverseSearchCrossStreetAddressOptions());
+
+        return this.serviceClient.reverseSearchCrossStreetAddressWithResponseAsync(
+                ResponseFormat.JSON,
+                Arrays.asList(coordinates.getLat(), coordinates.getLon()),
+                param.getTop(),
+                param.getHeading(),
+                param.getRadiusInMeters(),
+                param.getLanguage(),
+                param.getLocalizedMapView(),
+                context);
     }
 
     /**
      * **Structured Address Geocoding**
      *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
+
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful Search calls.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<SearchAddressResult> searchStructuredAddress(StructuredAddress address,
+            SearchStructuredAddressOptions options) {
+        Mono<Response<SearchAddressResult>> result = this.searchStructuredAddressWithResponse(address,
+            options, null);
+        return result.flatMap(response -> {
+            return Mono.just(response.getValue());
+        });
+    }
+
+    /**
+     * **Structured Address Geocoding**
      *
-     * <p>Azure Address Geocoding can also be accessed for structured address look up exclusively. The geocoding search
-     * index will be queried for everything above the street level data. No POIs will be returned. Note that the
-     * geocoder is very tolerant of typos and incomplete addresses. It will also handle everything from exact street
-     * addresses or street or intersections as well as higher level geographies such as city centers, counties, states
-     * etc.
-     *
-     * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param language Language in which search results should be returned. Should be one of supported IETF language
-     *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used.
-     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
-     *     details.
-     * @param countryCode The 2 or 3 letter [ISO3166-1](https://www.iso.org/iso-3166-country-codes.html) country code
-     *     portion of an address. E.g. US.
-     * @param top Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
-     * @param skip Starting offset of the returned results within the full result set. Default: 0, minimum: 0 and
-     *     maximum: 1900.
-     * @param streetNumber The street number portion of an address.
-     * @param streetName The street name portion of an address.
-     * @param crossStreet The cross street name for the structured address.
-     * @param municipality The municipality portion of an address.
-     * @param municipalitySubdivision The municipality subdivision (sub/super city) for the structured address.
-     * @param countryTertiarySubdivision The named area for the structured address.
-     * @param countrySecondarySubdivision The county for the structured address.
-     * @param countrySubdivision The country subdivision portion of an address.
-     * @param postalCode The postal code portion of an address.
-     * @param extendedPostalCodesFor Indexes for which extended postal codes should be included in the results.
-     *     <p>Available indexes are:
-     *     <p>**Addr** = Address ranges
-     *     <p>**Geo** = Geographies
-     *     <p>**PAD** = Point Addresses
-     *     <p>**POI** = Points of Interest
-     *     <p>**Str** = Streets
-     *     <p>**XStr** = Cross Streets (intersections)
-     *     <p>Value should be a comma separated list of index types (in any order) or **None** for no indexes.
-     *     <p>By default extended postal codes are included for all indexes except Geo. Extended postal code lists for
-     *     geographies can be quite long so they have to be explicitly requested when needed.
-     *     <p>Usage examples:
-     *     <p>extendedPostalCodesFor=POI
-     *     <p>extendedPostalCodesFor=PAD,Addr,POI
-     *     <p>extendedPostalCodesFor=None
-     *     <p>Extended postal code is returned as an **extendedPostalCode** property of an address. Availability is
-     *     region-dependent.
-     * @param entityType Specifies the level of filtering performed on geographies. Narrows the search for specified
-     *     geography entity types, e.g. return only municipality. The resulting response will contain the geography ID
-     *     as well as the entity type matched. If you provide more than one entity as a comma separated list, endpoint
-     *     will return the 'smallest entity available'. Returned Geometry ID can be used to get the geometry of that
-     *     geography via [Get Search Polygon](https://docs.microsoft.com/rest/api/maps/search/getsearchpolygon) API. The
-     *     following parameters are ignored when entityType is set:
-     *     <p>* heading * number * returnRoadUse * returnSpeedLimit * roadUse * returnMatchType.
-     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
-     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
-     *     different views of such regions, and the View parameter allows your application to comply with the view
-     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
-     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
-     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
-     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
-     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
-     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
-     *     made available. Example: view=IN.
-     *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
-     *     available Views.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -1992,596 +651,149 @@ public final class SearchAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<SearchAddressResult>> searchStructuredAddressWithResponse(
-            ResponseFormat format,
-            String language,
-            String countryCode,
-            Integer top,
-            Integer skip,
-            String streetNumber,
-            String streetName,
-            String crossStreet,
-            String municipality,
-            String municipalitySubdivision,
-            String countryTertiarySubdivision,
-            String countrySecondarySubdivision,
-            String countrySubdivision,
-            String postalCode,
-            List<SearchIndexes> extendedPostalCodesFor,
-            GeographicEntityType entityType,
-            LocalizedMapView localizedMapView) {
-        return this.serviceClient.searchStructuredAddressWithResponseAsync(
-                format,
-                language,
-                countryCode,
-                top,
-                skip,
-                streetNumber,
-                streetName,
-                crossStreet,
-                municipality,
-                municipalitySubdivision,
-                countryTertiarySubdivision,
-                countrySecondarySubdivision,
-                countrySubdivision,
-                postalCode,
-                extendedPostalCodesFor,
-                entityType,
-                localizedMapView);
+            StructuredAddress address, SearchStructuredAddressOptions options, Context context) {
+
+        final SearchStructuredAddressOptions param = Optional.ofNullable(options)
+            .orElse(new SearchStructuredAddressOptions());
+
+        // call method and convert
+        Mono<Response<com.azure.maps.search.implementation.models.SearchAddressResult>> responseMono =
+            this.serviceClient.searchStructuredAddressWithResponseAsync(
+                ResponseFormat.JSON,
+                param.getLanguage(),
+                address.getCountryCode(),
+                param.getTop(),
+                param.getSkip(),
+                address.getStreetNumber(),
+                address.getStreetName(),
+                address.getCrossStreet(),
+                address.getMunicipality(),
+                address.getMunicipalitySubdivision(),
+                address.getCountryTertiarySubdivision(),
+                address.getCountrySecondarySubdivision(),
+                address.getCountrySubdivision(),
+                address.getPostalCode(),
+                param.getExtendedPostalCodesFor(),
+                param.getEntityType(),
+                param.getLocalizedMapView(),
+                context);
+
+        // convert to the right (public) SearchAddressResult
+        return responseMono.flatMap(response -> {
+            Response<SearchAddressResult> simpleResponse = TypeMapper.createSearchResponse(response);
+            return Mono.just(simpleResponse);
+        });
     }
 
     /**
-     * **Structured Address Geocoding**
-     *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
-     *
-     * <p>Azure Address Geocoding can also be accessed for structured address look up exclusively. The geocoding search
-     * index will be queried for everything above the street level data. No POIs will be returned. Note that the
-     * geocoder is very tolerant of typos and incomplete addresses. It will also handle everything from exact street
-     * addresses or street or intersections as well as higher level geographies such as city centers, counties, states
-     * etc.
-     *
-     * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param language Language in which search results should be returned. Should be one of supported IETF language
-     *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used.
-     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
-     *     details.
-     * @param countryCode The 2 or 3 letter [ISO3166-1](https://www.iso.org/iso-3166-country-codes.html) country code
-     *     portion of an address. E.g. US.
-     * @param top Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
-     * @param skip Starting offset of the returned results within the full result set. Default: 0, minimum: 0 and
-     *     maximum: 1900.
-     * @param streetNumber The street number portion of an address.
-     * @param streetName The street name portion of an address.
-     * @param crossStreet The cross street name for the structured address.
-     * @param municipality The municipality portion of an address.
-     * @param municipalitySubdivision The municipality subdivision (sub/super city) for the structured address.
-     * @param countryTertiarySubdivision The named area for the structured address.
-     * @param countrySecondarySubdivision The county for the structured address.
-     * @param countrySubdivision The country subdivision portion of an address.
-     * @param postalCode The postal code portion of an address.
-     * @param extendedPostalCodesFor Indexes for which extended postal codes should be included in the results.
-     *     <p>Available indexes are:
-     *     <p>**Addr** = Address ranges
-     *     <p>**Geo** = Geographies
-     *     <p>**PAD** = Point Addresses
-     *     <p>**POI** = Points of Interest
-     *     <p>**Str** = Streets
-     *     <p>**XStr** = Cross Streets (intersections)
-     *     <p>Value should be a comma separated list of index types (in any order) or **None** for no indexes.
-     *     <p>By default extended postal codes are included for all indexes except Geo. Extended postal code lists for
-     *     geographies can be quite long so they have to be explicitly requested when needed.
-     *     <p>Usage examples:
-     *     <p>extendedPostalCodesFor=POI
-     *     <p>extendedPostalCodesFor=PAD,Addr,POI
-     *     <p>extendedPostalCodesFor=None
-     *     <p>Extended postal code is returned as an **extendedPostalCode** property of an address. Availability is
-     *     region-dependent.
-     * @param entityType Specifies the level of filtering performed on geographies. Narrows the search for specified
-     *     geography entity types, e.g. return only municipality. The resulting response will contain the geography ID
-     *     as well as the entity type matched. If you provide more than one entity as a comma separated list, endpoint
-     *     will return the 'smallest entity available'. Returned Geometry ID can be used to get the geometry of that
-     *     geography via [Get Search Polygon](https://docs.microsoft.com/rest/api/maps/search/getsearchpolygon) API. The
-     *     following parameters are ignored when entityType is set:
-     *     <p>* heading * number * returnRoadUse * returnSpeedLimit * roadUse * returnMatchType.
-     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
-     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
-     *     different views of such regions, and the View parameter allows your application to comply with the view
-     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
-     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
-     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
-     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
-     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
-     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
-     *     made available. Example: view=IN.
-     *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
-     *     available Views.
+     * **Applies to**: S0 and S1 pricing tiers.
+
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchAddressResult> searchStructuredAddress(
-            ResponseFormat format,
-            String language,
-            String countryCode,
-            Integer top,
-            Integer skip,
-            String streetNumber,
-            String streetName,
-            String crossStreet,
-            String municipality,
-            String municipalitySubdivision,
-            String countryTertiarySubdivision,
-            String countrySecondarySubdivision,
-            String countrySubdivision,
-            String postalCode,
-            List<SearchIndexes> extendedPostalCodesFor,
-            GeographicEntityType entityType,
-            LocalizedMapView localizedMapView) {
-        return this.serviceClient.searchStructuredAddressAsync(
-                format,
-                language,
-                countryCode,
-                top,
-                skip,
-                streetNumber,
-                streetName,
-                crossStreet,
-                municipality,
-                municipalitySubdivision,
-                countryTertiarySubdivision,
-                countrySecondarySubdivision,
-                countrySubdivision,
-                postalCode,
-                extendedPostalCodesFor,
-                entityType,
-                localizedMapView);
+    public Mono<SearchAddressResult> searchInsideGeometry(String query, GeoJsonObject geometry,
+            SearchInsideGeometryOptions options) {
+        Mono<Response<SearchAddressResult>> result = this.searchInsideGeometryWithResponse(query,
+            geometry, options, null);
+        return result.flatMap(response -> {
+            return Mono.just(response.getValue());
+        });
     }
 
     /**
      * **Applies to**: S0 and S1 pricing tiers.
      *
-     * <p>The Search Geometry endpoint allows you to perform a free form search inside a single geometry or many of
-     * them. The search results that fall inside the geometry/geometries will be returned.&lt;br&gt;&lt;br&gt;To send
-     * the geometry you will use a `POST` request where the request body will contain the `geometry` object represented
-     * as a `GeoJSON` type and the `Content-Type` header will be set to `application/json`. The geographical features to
-     * be searched can be modeled as Polygon and/or Circle geometries represented using any one of the following
-     * `GeoJSON` types:&lt;ul&gt;&lt;li&gt;**GeoJSON FeatureCollection** &lt;br&gt;The `geometry` can be represented as
-     * a `GeoJSON FeatureCollection` object. This is the recommended option if the geometry contains both Polygons and
-     * Circles. The `FeatureCollection` can contain a max of 50 `GeoJSON Feature` objects. Each `Feature` object should
-     * represent either a Polygon or a Circle with the following conditions:&lt;ul
-     * style="list-style-type:none"&gt;&lt;li&gt;A `Feature` object for the Polygon geometry can have a max of 50
-     * coordinates and it's properties must be empty.&lt;/li&gt;&lt;li&gt;A `Feature` object for the Circle geometry is
-     * composed of a _center_ represented using a `GeoJSON Point` type and a _radius_ value (in meters) which must be
-     * specified in the object's properties along with the _subType_ property whose value should be
-     * 'Circle'.&lt;/li&gt;&lt;/ul&gt;&lt;br&gt; Please see the Examples section below for a sample `FeatureCollection`
-     * representation.&lt;br&gt;&lt;br&gt;&lt;/li&gt;&lt;li&gt;**GeoJSON GeometryCollection**&lt;br&gt;The `geometry`
-     * can be represented as a `GeoJSON GeometryCollection` object. This is the recommended option if the geometry
-     * contains a list of Polygons only. The `GeometryCollection` can contain a max of 50 `GeoJSON Polygon` objects.
-     * Each `Polygon` object can have a max of 50 coordinates. Please see the Examples section below for a sample
-     * `GeometryCollection` representation.&lt;br&gt;&lt;br&gt;&lt;/li&gt;&lt;li&gt;**GeoJSON Polygon**&lt;br&gt;The
-     * `geometry` can be represented as a `GeoJSON Polygon` object. This is the recommended option if the geometry
-     * contains a single Polygon. The `Polygon` object can have a max of 50 coordinates. Please see the Examples section
-     * below for a sample `Polygon` representation.&lt;br&gt;&lt;br&gt;&lt;/li&gt;&lt;/ul&gt;.&lt;br&gt;&lt;br&gt;.
-     *
-     * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param query The POI name to search for (e.g., "statue of liberty", "starbucks", "pizza"). Must be properly URL
-     *     encoded.
-     * @param geometry This represents the geometry for one or more geographical features (parks, state boundary etc.)
-     *     to search in and should be a GeoJSON compliant type. Please refer to [RFC
-     *     7946](https://tools.ietf.org/html/rfc7946) for details.
-     * @param top Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
-     * @param language Language in which search results should be returned. Should be one of supported IETF language
-     *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used.
-     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
-     *     details.
-     * @param categoryFilter A comma-separated list of category set IDs which could be used to restrict the result to
-     *     specific Points of Interest categories. ID order does not matter. When multiple category identifiers are
-     *     provided, only POIs that belong to (at least) one of the categories from the provided list will be returned.
-     *     The list of supported categories can be discovered using  [POI Categories
-     *     API](https://aka.ms/AzureMapsPOICategoryTree). Usage examples:
-     *     <p>* **categorySet=7315** (Search Points of Interest from category Restaurant)
-     *     <p>* **categorySet=7315025,7315017** (Search Points of Interest of category either Italian or French
-     *     Restaurant).
-     * @param extendedPostalCodesFor Indexes for which extended postal codes should be included in the results.
-     *     <p>Available indexes are:
-     *     <p>**Addr** = Address ranges
-     *     <p>**Geo** = Geographies
-     *     <p>**PAD** = Point Addresses
-     *     <p>**POI** = Points of Interest
-     *     <p>**Str** = Streets
-     *     <p>**XStr** = Cross Streets (intersections)
-     *     <p>Value should be a comma separated list of index types (in any order) or **None** for no indexes.
-     *     <p>By default extended postal codes are included for all indexes except Geo. Extended postal code lists for
-     *     geographies can be quite long so they have to be explicitly requested when needed.
-     *     <p>Usage examples:
-     *     <p>extendedPostalCodesFor=POI
-     *     <p>extendedPostalCodesFor=PAD,Addr,POI
-     *     <p>extendedPostalCodesFor=None
-     *     <p>Extended postal code is returned as an **extendedPostalCode** property of an address. Availability is
-     *     region-dependent.
-     * @param idxSet A comma separated list of indexes which should be utilized for the search. Item order does not
-     *     matter. Available indexes are: Addr = Address range interpolation, Geo = Geographies, PAD = Point Addresses,
-     *     POI = Points of interest, Str = Streets, Xstr = Cross Streets (intersections).
-     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
-     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
-     *     different views of such regions, and the View parameter allows your application to comply with the view
-     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
-     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
-     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
-     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
-     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
-     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
-     *     made available. Example: view=IN.
-     *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
-     *     available Views.
-     * @param operatingHours Hours of operation for a POI (Points of Interest). The availability of hours of operation
-     *     will vary based on the data available. If not passed, then no opening hours information will be returned.
-     *     Supported value: nextSevenDays.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<SearchAddressResult>> searchInsideGeometryWithResponse(
-            ResponseFormat format,
-            String query,
-            SearchInsideGeometryRequest geometry,
-            Integer top,
-            String language,
-            List<Integer> categoryFilter,
-            List<SearchIndexes> extendedPostalCodesFor,
-            List<SearchIndexes> idxSet,
-            LocalizedMapView localizedMapView,
-            OperatingHoursRange operatingHours) {
-        return this.serviceClient.searchInsideGeometryWithResponseAsync(
-                format,
+    public Mono<Response<SearchAddressResult>> searchInsideGeometryWithResponse(String query,
+            GeoJsonObject geometry, SearchInsideGeometryOptions options, Context context) {
+
+        final SearchInsideGeometryOptions param = Optional.ofNullable(options)
+                .orElse(new SearchInsideGeometryOptions());
+
+        // call method and convert
+        Mono<Response<com.azure.maps.search.implementation.models.SearchAddressResult>> responseMono =
+            this.serviceClient.searchInsideGeometryWithResponseAsync(
+                ResponseFormat.JSON,
                 query,
-                geometry,
-                top,
-                language,
-                categoryFilter,
-                extendedPostalCodesFor,
-                idxSet,
-                localizedMapView,
-                operatingHours);
+                new SearchInsideGeometryRequest().setGeometry(geometry),
+                param.getTop(),
+                param.getLanguage(),
+                param.getCategoryFilter(),
+                param.getExtendedPostalCodesFor(),
+                param.getIdxSet(),
+                param.getLocalizedMapView(),
+                param.getOperatingHours(),
+                context);
+
+        // convert to the right (public) SearchAddressResult
+        return responseMono.flatMap(response -> {
+            Response<SearchAddressResult> simpleResponse = TypeMapper.createSearchResponse(response);
+            return Mono.just(simpleResponse);
+        });
     }
 
     /**
      * **Applies to**: S0 and S1 pricing tiers.
      *
-     * <p>The Search Geometry endpoint allows you to perform a free form search inside a single geometry or many of
-     * them. The search results that fall inside the geometry/geometries will be returned.&lt;br&gt;&lt;br&gt;To send
-     * the geometry you will use a `POST` request where the request body will contain the `geometry` object represented
-     * as a `GeoJSON` type and the `Content-Type` header will be set to `application/json`. The geographical features to
-     * be searched can be modeled as Polygon and/or Circle geometries represented using any one of the following
-     * `GeoJSON` types:&lt;ul&gt;&lt;li&gt;**GeoJSON FeatureCollection** &lt;br&gt;The `geometry` can be represented as
-     * a `GeoJSON FeatureCollection` object. This is the recommended option if the geometry contains both Polygons and
-     * Circles. The `FeatureCollection` can contain a max of 50 `GeoJSON Feature` objects. Each `Feature` object should
-     * represent either a Polygon or a Circle with the following conditions:&lt;ul
-     * style="list-style-type:none"&gt;&lt;li&gt;A `Feature` object for the Polygon geometry can have a max of 50
-     * coordinates and it's properties must be empty.&lt;/li&gt;&lt;li&gt;A `Feature` object for the Circle geometry is
-     * composed of a _center_ represented using a `GeoJSON Point` type and a _radius_ value (in meters) which must be
-     * specified in the object's properties along with the _subType_ property whose value should be
-     * 'Circle'.&lt;/li&gt;&lt;/ul&gt;&lt;br&gt; Please see the Examples section below for a sample `FeatureCollection`
-     * representation.&lt;br&gt;&lt;br&gt;&lt;/li&gt;&lt;li&gt;**GeoJSON GeometryCollection**&lt;br&gt;The `geometry`
-     * can be represented as a `GeoJSON GeometryCollection` object. This is the recommended option if the geometry
-     * contains a list of Polygons only. The `GeometryCollection` can contain a max of 50 `GeoJSON Polygon` objects.
-     * Each `Polygon` object can have a max of 50 coordinates. Please see the Examples section below for a sample
-     * `GeometryCollection` representation.&lt;br&gt;&lt;br&gt;&lt;/li&gt;&lt;li&gt;**GeoJSON Polygon**&lt;br&gt;The
-     * `geometry` can be represented as a `GeoJSON Polygon` object. This is the recommended option if the geometry
-     * contains a single Polygon. The `Polygon` object can have a max of 50 coordinates. Please see the Examples section
-     * below for a sample `Polygon` representation.&lt;br&gt;&lt;br&gt;&lt;/li&gt;&lt;/ul&gt;.&lt;br&gt;&lt;br&gt;.
-     *
-     * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param query The POI name to search for (e.g., "statue of liberty", "starbucks", "pizza"). Must be properly URL
-     *     encoded.
-     * @param geometry This represents the geometry for one or more geographical features (parks, state boundary etc.)
-     *     to search in and should be a GeoJSON compliant type. Please refer to [RFC
-     *     7946](https://tools.ietf.org/html/rfc7946) for details.
-     * @param top Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
-     * @param language Language in which search results should be returned. Should be one of supported IETF language
-     *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used.
-     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
-     *     details.
-     * @param categoryFilter A comma-separated list of category set IDs which could be used to restrict the result to
-     *     specific Points of Interest categories. ID order does not matter. When multiple category identifiers are
-     *     provided, only POIs that belong to (at least) one of the categories from the provided list will be returned.
-     *     The list of supported categories can be discovered using  [POI Categories
-     *     API](https://aka.ms/AzureMapsPOICategoryTree). Usage examples:
-     *     <p>* **categorySet=7315** (Search Points of Interest from category Restaurant)
-     *     <p>* **categorySet=7315025,7315017** (Search Points of Interest of category either Italian or French
-     *     Restaurant).
-     * @param extendedPostalCodesFor Indexes for which extended postal codes should be included in the results.
-     *     <p>Available indexes are:
-     *     <p>**Addr** = Address ranges
-     *     <p>**Geo** = Geographies
-     *     <p>**PAD** = Point Addresses
-     *     <p>**POI** = Points of Interest
-     *     <p>**Str** = Streets
-     *     <p>**XStr** = Cross Streets (intersections)
-     *     <p>Value should be a comma separated list of index types (in any order) or **None** for no indexes.
-     *     <p>By default extended postal codes are included for all indexes except Geo. Extended postal code lists for
-     *     geographies can be quite long so they have to be explicitly requested when needed.
-     *     <p>Usage examples:
-     *     <p>extendedPostalCodesFor=POI
-     *     <p>extendedPostalCodesFor=PAD,Addr,POI
-     *     <p>extendedPostalCodesFor=None
-     *     <p>Extended postal code is returned as an **extendedPostalCode** property of an address. Availability is
-     *     region-dependent.
-     * @param idxSet A comma separated list of indexes which should be utilized for the search. Item order does not
-     *     matter. Available indexes are: Addr = Address range interpolation, Geo = Geographies, PAD = Point Addresses,
-     *     POI = Points of interest, Str = Streets, Xstr = Cross Streets (intersections).
-     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
-     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
-     *     different views of such regions, and the View parameter allows your application to comply with the view
-     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
-     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
-     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
-     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
-     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
-     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
-     *     made available. Example: view=IN.
-     *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
-     *     available Views.
-     * @param operatingHours Hours of operation for a POI (Points of Interest). The availability of hours of operation
-     *     will vary based on the data available. If not passed, then no opening hours information will be returned.
-     *     Supported value: nextSevenDays.
+
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchAddressResult> searchInsideGeometry(
-            ResponseFormat format,
-            String query,
-            SearchInsideGeometryRequest geometry,
-            Integer top,
-            String language,
-            List<Integer> categoryFilter,
-            List<SearchIndexes> extendedPostalCodesFor,
-            List<SearchIndexes> idxSet,
-            LocalizedMapView localizedMapView,
-            OperatingHoursRange operatingHours) {
-        return this.serviceClient.searchInsideGeometryAsync(
-                format,
-                query,
-                geometry,
-                top,
-                language,
-                categoryFilter,
-                extendedPostalCodesFor,
-                idxSet,
-                localizedMapView,
-                operatingHours);
+    public Mono<SearchAddressResult> searchAlongRoute(String query, int maxDetourTime,
+            GeoJsonLineString route, SearchAlongRouteOptions options) {
+        Mono<Response<SearchAddressResult>> result = this.searchAlongRouteWithResponse(query, maxDetourTime,
+            route, options, null);
+        return result.flatMap(response -> {
+            return Mono.just(response.getValue());
+        });
     }
 
     /**
      * **Applies to**: S0 and S1 pricing tiers.
      *
-     * <p>The Search Along Route endpoint allows you to perform a fuzzy search for POIs along a specified route. This
-     * search is constrained by specifying the `maxDetourTime` limiting measure.&lt;br&gt;&lt;br&gt;To send the
-     * route-points you will use a `POST` request where the request body will contain the `route` object represented as
-     * a `GeoJSON LineString` type and the `Content-Type` header will be set to `application/json`. Each route-point in
-     * `route` is represented as a `GeoJSON Position` type i.e. an array where the _longitude_ value is followed by the
-     * _latitude_ value and the _altitude_ value is ignored. The `route` should contain at least 2
-     * route-points.&lt;br&gt;&lt;br&gt;It is possible that original route will be altered, some of it's points may be
-     * skipped. If the route that passes through the found point is faster than the original one, the `detourTime` value
-     * in the response is negative.
-     *
-     * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param query The POI name to search for (e.g., "statue of liberty", "starbucks", "pizza"). Must be properly URL
-     *     encoded.
-     * @param maxDetourTime Maximum detour time of the point of interest in seconds. Max value is 3600 seconds.
-     * @param route This represents the route to search along and should be a valid `GeoJSON LineString` type. Please
-     *     refer to [RFC 7946](https://tools.ietf.org/html/rfc7946#section-3.1.4) for details.
-     * @param top Maximum number of responses that will be returned. Default value is 10. Max value is 20.
-     * @param brandFilter A comma-separated list of brand names which could be used to restrict the result to specific
-     *     brands. Item order does not matter. When multiple brands are provided, only results that belong to (at least)
-     *     one of the provided list will be returned. Brands that contain a "," in their name should be put into quotes.
-     *     <p>Usage examples:
-     *     <p>brandSet=Foo
-     *     <p>brandSet=Foo,Bar
-     *     <p>brandSet="A,B,C Comma",Bar.
-     * @param categoryFilter A comma-separated list of category set IDs which could be used to restrict the result to
-     *     specific Points of Interest categories. ID order does not matter. When multiple category identifiers are
-     *     provided, only POIs that belong to (at least) one of the categories from the provided list will be returned.
-     *     The list of supported categories can be discovered using  [POI Categories
-     *     API](https://aka.ms/AzureMapsPOICategoryTree). Usage examples:
-     *     <p>* **categorySet=7315** (Search Points of Interest from category Restaurant)
-     *     <p>* **categorySet=7315025,7315017** (Search Points of Interest of category either Italian or French
-     *     Restaurant).
-     * @param electricVehicleConnectorFilter A comma-separated list of connector types which could be used to restrict
-     *     the result to Electric Vehicle Station supporting specific connector types. Item order does not matter. When
-     *     multiple connector types are provided, only results that belong to (at least) one of the provided list will
-     *     be returned.
-     *     <p>Available connector types are: * `StandardHouseholdCountrySpecific` - These are the standard household
-     *     connectors for a certain region. They are all AC single phase and the standard Voltage and standard Amperage.
-     *     See also: [Plug &amp; socket types - World
-     *     Standards](https://www.worldstandards.eu/electricity/plugs-and-sockets). * `IEC62196Type1` - Type 1 connector
-     *     as defined in the IEC 62196-2 standard. Also called Yazaki after the original manufacturer or SAE J1772 after
-     *     the standard that first published it. Mostly used in combination with 120V single phase or up to 240V single
-     *     phase infrastructure. * `IEC62196Type1CCS` - Type 1 based combo connector as defined in the IEC 62196-3
-     *     standard. The connector is based on the Type 1 connector – as defined in the IEC 62196-2 standard – with two
-     *     additional direct current (DC) contacts to allow DC fast charging. * `IEC62196Type2CableAttached` - Type 2
-     *     connector as defined in the IEC 62196-2 standard. Provided as a cable and plug attached to the charging
-     *     point. * `IEC62196Type2Outlet` - Type 2 connector as defined in the IEC 62196-2 standard. Provided as a
-     *     socket set into the charging point. * `IEC62196Type2CCS` - Type 2 based combo connector as defined in the IEC
-     *     62196-3 standard. The connector is based on the Type 2 connector – as defined in the IEC 62196-2 standard –
-     *     with two additional direct current (DC) contacts to allow DC fast charging. * `IEC62196Type3` - Type 3
-     *     connector as defined in the IEC 62196-2 standard. Also called Scame after the original manufacturer. Mostly
-     *     used in combination with up to 240V single phase or up to 420V three phase infrastructure. * `Chademo` -
-     *     CHAdeMO connector named after an association formed by the Tokyo Electric Power Company and industrial
-     *     partners. Because of this is is also known as the TEPCO's connector. It supports fast DC charging. *
-     *     `IEC60309AC1PhaseBlue` - Industrial Blue connector is a connector defined in the IEC 60309 standard. It is
-     *     sometime referred to as by some combination of the standard, the color and the fact that is a single phase
-     *     connector. The connector usually has the "P+N+E, 6h" configuration. * `IEC60309DCWhite` - Industrial White
-     *     connector is a DC connector defined in the IEC 60309 standard. * `Tesla` - The Tesla connector is the
-     *     regionally specific Tesla Supercharger connector. I.e. it refers to either Tesla's proprietary connector,
-     *     sometimes referred to as Tesla Port mostly limited to North America or the modified Type 2 (DC over Type 2)
-     *     in Europe.
-     *     <p>Usage examples:
-     *     <p>connectorSet=IEC62196Type2CableAttached connectorSet=IEC62196Type2Outlet,IEC62196Type2CableAttached.
-     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
-     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
-     *     different views of such regions, and the View parameter allows your application to comply with the view
-     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
-     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
-     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
-     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
-     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
-     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
-     *     made available. Example: view=IN.
-     *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
-     *     available Views.
-     * @param operatingHours Hours of operation for a POI (Points of Interest). The availability of hours of operation
-     *     will vary based on the data available. If not passed, then no opening hours information will be returned.
-     *     Supported value: nextSevenDays.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<SearchAddressResult>> searchAlongRouteWithResponse(
-            ResponseFormat format,
-            String query,
-            int maxDetourTime,
-            SearchAlongRouteRequest route,
-            Integer top,
-            List<String> brandFilter,
-            List<Integer> categoryFilter,
-            List<ElectricVehicleConnector> electricVehicleConnectorFilter,
-            LocalizedMapView localizedMapView,
-            OperatingHoursRange operatingHours) {
-        return this.serviceClient.searchAlongRouteWithResponseAsync(
-                format,
+    public Mono<Response<SearchAddressResult>> searchAlongRouteWithResponse(String query, int maxDetourTime,
+            GeoJsonLineString route, SearchAlongRouteOptions options, Context context) {
+
+        final SearchAlongRouteOptions param = Optional.ofNullable(options)
+                .orElse(new SearchAlongRouteOptions());
+
+        // call method and convert
+        Mono<Response<com.azure.maps.search.implementation.models.SearchAddressResult>> responseMono =
+            this.serviceClient.searchAlongRouteWithResponseAsync(
+                ResponseFormat.JSON,
                 query,
                 maxDetourTime,
-                route,
-                top,
-                brandFilter,
-                categoryFilter,
-                electricVehicleConnectorFilter,
-                localizedMapView,
-                operatingHours);
-    }
+                new SearchAlongRouteRequest().setRoute(route),
+                param.getTop(),
+                param.getBrandFilter(),
+                param.getCategoryFilter(),
+                param.getElectricVehicleConnectorFilter(),
+                param.getLocalizedMapView(),
+                param.getOperatingHours(),
+                context);
 
-    /**
-     * **Applies to**: S0 and S1 pricing tiers.
-     *
-     * <p>The Search Along Route endpoint allows you to perform a fuzzy search for POIs along a specified route. This
-     * search is constrained by specifying the `maxDetourTime` limiting measure.&lt;br&gt;&lt;br&gt;To send the
-     * route-points you will use a `POST` request where the request body will contain the `route` object represented as
-     * a `GeoJSON LineString` type and the `Content-Type` header will be set to `application/json`. Each route-point in
-     * `route` is represented as a `GeoJSON Position` type i.e. an array where the _longitude_ value is followed by the
-     * _latitude_ value and the _altitude_ value is ignored. The `route` should contain at least 2
-     * route-points.&lt;br&gt;&lt;br&gt;It is possible that original route will be altered, some of it's points may be
-     * skipped. If the route that passes through the found point is faster than the original one, the `detourTime` value
-     * in the response is negative.
-     *
-     * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param query The POI name to search for (e.g., "statue of liberty", "starbucks", "pizza"). Must be properly URL
-     *     encoded.
-     * @param maxDetourTime Maximum detour time of the point of interest in seconds. Max value is 3600 seconds.
-     * @param route This represents the route to search along and should be a valid `GeoJSON LineString` type. Please
-     *     refer to [RFC 7946](https://tools.ietf.org/html/rfc7946#section-3.1.4) for details.
-     * @param top Maximum number of responses that will be returned. Default value is 10. Max value is 20.
-     * @param brandFilter A comma-separated list of brand names which could be used to restrict the result to specific
-     *     brands. Item order does not matter. When multiple brands are provided, only results that belong to (at least)
-     *     one of the provided list will be returned. Brands that contain a "," in their name should be put into quotes.
-     *     <p>Usage examples:
-     *     <p>brandSet=Foo
-     *     <p>brandSet=Foo,Bar
-     *     <p>brandSet="A,B,C Comma",Bar.
-     * @param categoryFilter A comma-separated list of category set IDs which could be used to restrict the result to
-     *     specific Points of Interest categories. ID order does not matter. When multiple category identifiers are
-     *     provided, only POIs that belong to (at least) one of the categories from the provided list will be returned.
-     *     The list of supported categories can be discovered using  [POI Categories
-     *     API](https://aka.ms/AzureMapsPOICategoryTree). Usage examples:
-     *     <p>* **categorySet=7315** (Search Points of Interest from category Restaurant)
-     *     <p>* **categorySet=7315025,7315017** (Search Points of Interest of category either Italian or French
-     *     Restaurant).
-     * @param electricVehicleConnectorFilter A comma-separated list of connector types which could be used to restrict
-     *     the result to Electric Vehicle Station supporting specific connector types. Item order does not matter. When
-     *     multiple connector types are provided, only results that belong to (at least) one of the provided list will
-     *     be returned.
-     *     <p>Available connector types are: * `StandardHouseholdCountrySpecific` - These are the standard household
-     *     connectors for a certain region. They are all AC single phase and the standard Voltage and standard Amperage.
-     *     See also: [Plug &amp; socket types - World
-     *     Standards](https://www.worldstandards.eu/electricity/plugs-and-sockets). * `IEC62196Type1` - Type 1 connector
-     *     as defined in the IEC 62196-2 standard. Also called Yazaki after the original manufacturer or SAE J1772 after
-     *     the standard that first published it. Mostly used in combination with 120V single phase or up to 240V single
-     *     phase infrastructure. * `IEC62196Type1CCS` - Type 1 based combo connector as defined in the IEC 62196-3
-     *     standard. The connector is based on the Type 1 connector – as defined in the IEC 62196-2 standard – with two
-     *     additional direct current (DC) contacts to allow DC fast charging. * `IEC62196Type2CableAttached` - Type 2
-     *     connector as defined in the IEC 62196-2 standard. Provided as a cable and plug attached to the charging
-     *     point. * `IEC62196Type2Outlet` - Type 2 connector as defined in the IEC 62196-2 standard. Provided as a
-     *     socket set into the charging point. * `IEC62196Type2CCS` - Type 2 based combo connector as defined in the IEC
-     *     62196-3 standard. The connector is based on the Type 2 connector – as defined in the IEC 62196-2 standard –
-     *     with two additional direct current (DC) contacts to allow DC fast charging. * `IEC62196Type3` - Type 3
-     *     connector as defined in the IEC 62196-2 standard. Also called Scame after the original manufacturer. Mostly
-     *     used in combination with up to 240V single phase or up to 420V three phase infrastructure. * `Chademo` -
-     *     CHAdeMO connector named after an association formed by the Tokyo Electric Power Company and industrial
-     *     partners. Because of this is is also known as the TEPCO's connector. It supports fast DC charging. *
-     *     `IEC60309AC1PhaseBlue` - Industrial Blue connector is a connector defined in the IEC 60309 standard. It is
-     *     sometime referred to as by some combination of the standard, the color and the fact that is a single phase
-     *     connector. The connector usually has the "P+N+E, 6h" configuration. * `IEC60309DCWhite` - Industrial White
-     *     connector is a DC connector defined in the IEC 60309 standard. * `Tesla` - The Tesla connector is the
-     *     regionally specific Tesla Supercharger connector. I.e. it refers to either Tesla's proprietary connector,
-     *     sometimes referred to as Tesla Port mostly limited to North America or the modified Type 2 (DC over Type 2)
-     *     in Europe.
-     *     <p>Usage examples:
-     *     <p>connectorSet=IEC62196Type2CableAttached connectorSet=IEC62196Type2Outlet,IEC62196Type2CableAttached.
-     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
-     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
-     *     different views of such regions, and the View parameter allows your application to comply with the view
-     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
-     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
-     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
-     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
-     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
-     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
-     *     made available. Example: view=IN.
-     *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
-     *     available Views.
-     * @param operatingHours Hours of operation for a POI (Points of Interest). The availability of hours of operation
-     *     will vary based on the data available. If not passed, then no opening hours information will be returned.
-     *     Supported value: nextSevenDays.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Search calls.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchAddressResult> searchAlongRoute(
-            ResponseFormat format,
-            String query,
-            int maxDetourTime,
-            SearchAlongRouteRequest route,
-            Integer top,
-            List<String> brandFilter,
-            List<Integer> categoryFilter,
-            List<ElectricVehicleConnector> electricVehicleConnectorFilter,
-            LocalizedMapView localizedMapView,
-            OperatingHoursRange operatingHours) {
-        return this.serviceClient.searchAlongRouteAsync(
-                format,
-                query,
-                maxDetourTime,
-                route,
-                top,
-                brandFilter,
-                categoryFilter,
-                electricVehicleConnectorFilter,
-                localizedMapView,
-                operatingHours);
+        // convert to the right (public) SearchAddressResult
+        return responseMono.flatMap(response -> {
+            Response<SearchAddressResult> simpleResponse = TypeMapper.createSearchResponse(response);
+            return Mono.just(simpleResponse);
+        });
     }
 
     /**
