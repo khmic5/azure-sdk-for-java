@@ -84,7 +84,7 @@ public final class SearchAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<List<Polygon>> listPolygons(List<String> geometryIds) {
-        Mono<Response<List<Polygon>>> result = this.listPolygonsWithResponse(JsonFormat.JSON, geometryIds, null);
+        Mono<Response<List<Polygon>>> result = this.listPolygonsWithResponse(geometryIds, null);
         return result.flatMap(response -> {
             return Mono.just(response.getValue());
         });
@@ -101,9 +101,9 @@ public final class SearchAsyncClient {
      * @return this object is returned from a successful Search Polygon call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<List<Polygon>>> listPolygonsWithResponse(JsonFormat format, List<String> geometryIds,
+    public Mono<Response<List<Polygon>>> listPolygonsWithResponse(List<String> geometryIds,
             Context context) {
-        Mono<Response<PolygonResult>> result = this.serviceClient.getPolygonWithResponseAsync(format,
+        Mono<Response<PolygonResult>> result = this.serviceClient.getPolygonWithResponseAsync(JsonFormat.JSON,
             geometryIds, context);
         return result.flatMap(response -> {
             Response<List<Polygon>> simpleResponse = new SimpleResponse<List<Polygon>>(response,
@@ -904,8 +904,8 @@ public final class SearchAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<SearchAddressBatchProcessResult>> fuzzySearchBatchSyncWithResponse(
-            JsonFormat format, BatchRequest searchFuzzyBatchRequestBody) {
-        return this.serviceClient.fuzzySearchBatchSyncWithResponseAsync(format, searchFuzzyBatchRequestBody);
+            BatchRequest searchFuzzyBatchRequestBody) {
+        return this.serviceClient.fuzzySearchBatchSyncWithResponseAsync(JsonFormat.JSON, searchFuzzyBatchRequestBody);
     }
 
     /**
@@ -1016,8 +1016,8 @@ public final class SearchAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<SearchAddressBatchProcessResult> fuzzySearchBatchSync(
-            JsonFormat format, BatchRequest searchFuzzyBatchRequestBody) {
-        return this.serviceClient.fuzzySearchBatchSyncAsync(format, searchFuzzyBatchRequestBody);
+            BatchRequest searchFuzzyBatchRequestBody) {
+        return this.serviceClient.fuzzySearchBatchSyncAsync(JsonFormat.JSON, searchFuzzyBatchRequestBody);
     }
 
     /**
@@ -1128,8 +1128,8 @@ public final class SearchAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<SearchesFuzzySearchBatchResponse> fuzzySearchBatchWithResponse(
-            JsonFormat format, BatchRequest searchFuzzyBatchRequestBody) {
-        return this.serviceClient.fuzzySearchBatchWithResponseAsync(format, searchFuzzyBatchRequestBody);
+            BatchRequest searchFuzzyBatchRequestBody) {
+        return this.serviceClient.fuzzySearchBatchWithResponseAsync(JsonFormat.JSON, searchFuzzyBatchRequestBody);
     }
 
     /**
@@ -1240,10 +1240,8 @@ public final class SearchAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public PollerFlux<SearchAddressBatchProcessResult, SearchAddressBatchProcessResult> beginFuzzySearchBatch(
-            JsonFormat format, BatchRequest searchFuzzyBatchRequestBody) {
-
-                // hello
-        return this.serviceClient.beginFuzzySearchBatchAsync(format, searchFuzzyBatchRequestBody);
+            BatchRequest searchFuzzyBatchRequestBody) {
+        return this.serviceClient.beginFuzzySearchBatchAsync(JsonFormat.JSON, searchFuzzyBatchRequestBody);
     }
 
     /**
@@ -1572,8 +1570,8 @@ public final class SearchAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<SearchAddressBatchProcessResult>> searchAddressBatchSyncWithResponse(
-            JsonFormat format, BatchRequest searchAddressBatchRequestBody) {
-        return this.serviceClient.searchAddressBatchSyncWithResponseAsync(format, searchAddressBatchRequestBody);
+            BatchRequest searchAddressBatchRequestBody) {
+        return this.serviceClient.searchAddressBatchSyncWithResponseAsync(JsonFormat.JSON, searchAddressBatchRequestBody);
     }
 
     /**
@@ -1683,8 +1681,8 @@ public final class SearchAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<SearchAddressBatchProcessResult> searchAddressBatchSync(
-            JsonFormat format, BatchRequest searchAddressBatchRequestBody) {
-        return this.serviceClient.searchAddressBatchSyncAsync(format, searchAddressBatchRequestBody);
+            BatchRequest searchAddressBatchRequestBody) {
+        return this.serviceClient.searchAddressBatchSyncAsync(JsonFormat.JSON, searchAddressBatchRequestBody);
     }
 
     /**
@@ -1794,8 +1792,8 @@ public final class SearchAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<SearchesSearchAddressBatchResponse> searchAddressBatchWithResponse(
-            JsonFormat format, BatchRequest searchAddressBatchRequestBody) {
-        return this.serviceClient.searchAddressBatchWithResponseAsync(format, searchAddressBatchRequestBody);
+            BatchRequest searchAddressBatchRequestBody) {
+        return this.serviceClient.searchAddressBatchWithResponseAsync(JsonFormat.JSON, searchAddressBatchRequestBody);
     }
 
     /**
@@ -1905,8 +1903,8 @@ public final class SearchAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public PollerFlux<SearchAddressBatchProcessResult, SearchAddressBatchProcessResult> beginSearchAddressBatch(
-            JsonFormat format, BatchRequest searchAddressBatchRequestBody) {
-        return this.serviceClient.beginSearchAddressBatchAsync(format, searchAddressBatchRequestBody);
+            BatchRequest searchAddressBatchRequestBody) {
+        return this.serviceClient.beginSearchAddressBatchAsync(JsonFormat.JSON, searchAddressBatchRequestBody);
     }
 
     /**
@@ -2232,9 +2230,9 @@ public final class SearchAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<ReverseSearchAddressBatchProcessResult>> reverseSearchAddressBatchSyncWithResponse(
-            JsonFormat format, BatchRequest searchAddressReverseBatchRequestBody) {
+            BatchRequest searchAddressReverseBatchRequestBody) {
         return this.serviceClient.reverseSearchAddressBatchSyncWithResponseAsync(
-                format, searchAddressReverseBatchRequestBody);
+                JsonFormat.JSON, searchAddressReverseBatchRequestBody);
     }
 
     /**
@@ -2343,8 +2341,9 @@ public final class SearchAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<ReverseSearchAddressBatchProcessResult> reverseSearchAddressBatchSync(
-            JsonFormat format, BatchRequest searchAddressReverseBatchRequestBody) {
-        return this.serviceClient.reverseSearchAddressBatchSyncAsync(format, searchAddressReverseBatchRequestBody);
+            BatchRequest searchAddressReverseBatchRequestBody) {
+        return this.serviceClient.reverseSearchAddressBatchSyncAsync(JsonFormat.JSON,
+            searchAddressReverseBatchRequestBody);
     }
 
     /**
@@ -2453,9 +2452,9 @@ public final class SearchAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<SearchesReverseSearchAddressBatchResponse> reverseSearchAddressBatchWithResponse(
-            JsonFormat format, BatchRequest searchAddressReverseBatchRequestBody) {
+            BatchRequest searchAddressReverseBatchRequestBody) {
         return this.serviceClient.reverseSearchAddressBatchWithResponseAsync(
-                format, searchAddressReverseBatchRequestBody);
+                JsonFormat.JSON, searchAddressReverseBatchRequestBody);
     }
 
     /**
@@ -2564,8 +2563,9 @@ public final class SearchAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public PollerFlux<ReverseSearchAddressBatchProcessResult, ReverseSearchAddressBatchProcessResult>
-            beginReverseSearchAddressBatch(JsonFormat format, BatchRequest searchAddressReverseBatchRequestBody) {
-        return this.serviceClient.beginReverseSearchAddressBatchAsync(format, searchAddressReverseBatchRequestBody);
+            beginReverseSearchAddressBatch(BatchRequest searchAddressReverseBatchRequestBody) {
+        return this.serviceClient.beginReverseSearchAddressBatchAsync(JsonFormat.JSON,
+            searchAddressReverseBatchRequestBody);
     }
 
     /**
@@ -2671,7 +2671,8 @@ public final class SearchAsyncClient {
      * @return this object is returned from a successful Search Address Reverse Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchesGetReverseSearchAddressBatchResponse> getReverseSearchAddressBatchWithResponse(String batchId) {
+    public Mono<SearchesGetReverseSearchAddressBatchResponse> getReverseSearchAddressBatchWithResponse(
+                String batchId) {
         return this.serviceClient.getReverseSearchAddressBatchWithResponseAsync(batchId);
     }
 
