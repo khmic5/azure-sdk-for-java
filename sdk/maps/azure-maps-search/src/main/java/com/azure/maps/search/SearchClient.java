@@ -61,8 +61,8 @@ public final class SearchClient {
      * @return
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public List<Polygon> listPolygons(List<String> geometryIds) {
-        return this.asyncClient.listPolygons(geometryIds).block();
+    public List<Polygon> getPolygons(List<String> geometryIds) {
+        return this.asyncClient.getPolygons(geometryIds).block();
     }
 
     /**
@@ -77,8 +77,8 @@ public final class SearchClient {
      * @return this object is returned from a successful Search Polygon call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<List<Polygon>> listPolygonsWithResponse(List<String> geometryIds, Context context) {
-        return this.asyncClient.listPolygonsWithResponse(geometryIds, context).block();
+    public Response<List<Polygon>> getPolygonsWithResponse(List<String> geometryIds, Context context) {
+        return this.asyncClient.getPolygonsWithResponse(geometryIds, context).block();
     }
 
     /**
@@ -87,18 +87,8 @@ public final class SearchClient {
      * @return
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressResult fuzzySearch(String query, LatLong coordinates, FuzzySearchOptions options){
-        return this.asyncClient.fuzzySearch(query, coordinates, options).block();
-    }
-
-    /**
-     *
-     * @param options
-     * @return
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressResult fuzzySearch(String query, List<String> countryFilter, FuzzySearchOptions options){
-        return this.asyncClient.fuzzySearch(query, countryFilter, options).block();
+    public SearchAddressResult fuzzySearch(FuzzySearchOptions options){
+        return this.asyncClient.fuzzySearch(options).block();
     }
 
     /**
@@ -106,10 +96,8 @@ public final class SearchClient {
      *
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<SearchAddressResult> fuzzySearchWithResponse(String query, LatLong coordinates,
-            List<String> countryFilter, FuzzySearchOptions options, Context context) {
-        return this.asyncClient.fuzzySearchWithResponse(query, coordinates, countryFilter,
-            options, context).block();
+    public Response<SearchAddressResult> fuzzySearchWithResponse(FuzzySearchOptions options, Context context) {
+        return this.asyncClient.fuzzySearchWithResponse(options, context).block();
     }
 
     /**
@@ -118,20 +106,8 @@ public final class SearchClient {
      * @return
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressResult searchPointOfInterest(String query, LatLong coordinates,
-            SearchPointOfInterestOptions options) {
-        return this.asyncClient.searchPointOfInterest(query, coordinates, options).block();
-    }
-
-        /**
-     *
-     * @param options
-     * @return
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressResult searchPointOfInterest(String query, List<String> countryFilter,
-            SearchPointOfInterestOptions options) {
-        return this.asyncClient.searchPointOfInterest(query, countryFilter, options).block();
+    public SearchAddressResult searchPointOfInterest(SearchPointOfInterestOptions options) {
+        return this.asyncClient.searchPointOfInterest(options).block();
     }
 
     /**
@@ -144,10 +120,9 @@ public final class SearchClient {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<SearchAddressResult> searchPointOfInterestWithResponse(String query, LatLong coordinates,
-            List<String> countryFilter, SearchPointOfInterestOptions options, Context context) {
-        return this.asyncClient.searchPointOfInterestWithResponse(query, coordinates, countryFilter,
-            options, context).block();
+    public Response<SearchAddressResult> searchPointOfInterestWithResponse(SearchPointOfInterestOptions options,
+            Context context) {
+        return this.asyncClient.searchPointOfInterestWithResponse(options, context).block();
     }
 
     /**
@@ -161,9 +136,8 @@ public final class SearchClient {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressResult searchNearbyPointOfInterest(LatLong coordinates,
-            SearchNearbyPointsOfInterestOptions options) {
-        return this.asyncClient.searchNearbyPointOfInterest(coordinates, options).block();
+    public SearchAddressResult searchNearbyPointOfInterest(SearchNearbyPointsOfInterestOptions options) {
+        return this.asyncClient.searchNearbyPointOfInterest(options).block();
     }
 
     /**
@@ -176,9 +150,9 @@ public final class SearchClient {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<SearchAddressResult> searchNearbyPointOfInterestWithResponse(LatLong coordinates,
+    public Response<SearchAddressResult> searchNearbyPointOfInterestWithResponse(
             SearchNearbyPointsOfInterestOptions options, Context context) {
-        return this.asyncClient.searchNearbyPointOfInterestWithResponse(coordinates, options, context).block();
+        return this.asyncClient.searchNearbyPointOfInterestWithResponse(options, context).block();
     }
 
     /**
@@ -193,26 +167,8 @@ public final class SearchClient {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressResult searchPointOfInterestCategory(String query, LatLong coordinates,
-            SearchPointOfInterestCategoryOptions options) {
-        return this.asyncClient.searchPointOfInterestCategory(query, coordinates, options).block();
-    }
-
-     /**
-     * **Get POI by Category**
-     *
-     * @param operatingHours Hours of operation for a POI (Points of Interest). The availability of hours of operation
-     *     will vary based on the data available. If not passed, then no opening hours information will be returned.
-     *     Supported value: nextSevenDays.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Search calls.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressResult searchPointOfInterestCategory(String query, List<String> countryFilter,
-            SearchPointOfInterestCategoryOptions options) {
-        return this.asyncClient.searchPointOfInterestCategory(query, countryFilter, options).block();
+    public SearchAddressResult searchPointOfInterestCategory(SearchPointOfInterestCategoryOptions options) {
+        return this.asyncClient.searchPointOfInterestCategory(options).block();
     }
 
     /**
@@ -224,11 +180,9 @@ public final class SearchClient {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<SearchAddressResult> searchPointOfInterestCategoryWithResponse(String query,
-            LatLong coordinates, List<String> countryFilter, SearchPointOfInterestCategoryOptions options,
-            Context context) {
-        return this.asyncClient.searchPointOfInterestCategoryWithResponse(query, coordinates, countryFilter,
-            options, context).block();
+    public Response<SearchAddressResult> searchPointOfInterestCategoryWithResponse(
+            SearchPointOfInterestCategoryOptions options, Context context) {
+        return this.asyncClient.searchPointOfInterestCategoryWithResponse(options, context).block();
     }
 
     /**
@@ -294,8 +248,8 @@ public final class SearchClient {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressResult searchAddress(String query, SearchAddressOptions options) {
-        return this.asyncClient.searchAddress(query, options).block();
+    public SearchAddressResult searchAddress(SearchAddressOptions options) {
+        return this.asyncClient.searchAddress(options).block();
     }
 
     /**
@@ -310,9 +264,9 @@ public final class SearchClient {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<SearchAddressResult> searchAddressWithResponse(
-            String query, SearchAddressOptions options, Context context) {
-        return this.asyncClient.searchAddressWithResponse(query, options, context).block();
+    public Response<SearchAddressResult> searchAddressWithResponse(SearchAddressOptions options,
+            Context context) {
+        return this.asyncClient.searchAddressWithResponse(options, context).block();
     }
 
     /**
@@ -324,9 +278,8 @@ public final class SearchClient {
      * @return this object is returned from a successful Search Address Reverse call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public ReverseSearchAddressResult reverseSearchAddress(LatLong coordinates,
-            ReverseSearchAddressOptions options) {
-        return this.asyncClient.reverseSearchAddress(coordinates, options).block();
+    public ReverseSearchAddressResult reverseSearchAddress(ReverseSearchAddressOptions options) {
+        return this.asyncClient.reverseSearchAddress(options).block();
     }
 
     /**
@@ -339,8 +292,8 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<ReverseSearchAddressResult> reverseSearchAddressWithResponse(
-            LatLong coordinates, ReverseSearchAddressOptions options, Context context) {
-        return this.asyncClient.reverseSearchAddressWithResponse(coordinates, options, context).block();
+            ReverseSearchAddressOptions options, Context context) {
+        return this.asyncClient.reverseSearchAddressWithResponse(options, context).block();
     }
 
     /**
@@ -352,8 +305,8 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public ReverseSearchCrossStreetAddressResult reverseSearchCrossStreetAddress(
-            LatLong coordinates, ReverseSearchCrossStreetAddressOptions options) {
-        return this.asyncClient.reverseSearchCrossStreetAddress(coordinates, options).block();
+            ReverseSearchCrossStreetAddressOptions options) {
+        return this.asyncClient.reverseSearchCrossStreetAddress(options).block();
     }
 
     /**
@@ -367,8 +320,8 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<ReverseSearchCrossStreetAddressResult> reverseSearchCrossStreetAddressWithResponse(
-            LatLong coordinates, ReverseSearchCrossStreetAddressOptions options, Context context) {
-        return this.asyncClient.reverseSearchCrossStreetAddressWithResponse(coordinates, options, context).block();
+            ReverseSearchCrossStreetAddressOptions options, Context context) {
+        return this.asyncClient.reverseSearchCrossStreetAddressWithResponse(options, context).block();
     }
 
     /**
@@ -409,9 +362,8 @@ public final class SearchClient {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressResult searchInsideGeometry(String query, GeoJsonObject geometry,
-            SearchInsideGeometryOptions options) {
-        return this.asyncClient.searchInsideGeometry(query, geometry, options).block();
+    public SearchAddressResult searchInsideGeometry(SearchInsideGeometryOptions options) {
+        return this.asyncClient.searchInsideGeometry(options).block();
     }
 
     /**
@@ -424,9 +376,9 @@ public final class SearchClient {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<SearchAddressResult> searchInsideGeometryWithResponse(String query, GeoJsonObject geometry,
-            SearchInsideGeometryOptions options, Context context) {
-        return this.asyncClient.searchInsideGeometryWithResponse(query, geometry, options, null).block();
+    public Response<SearchAddressResult> searchInsideGeometryWithResponse(SearchInsideGeometryOptions options,
+            Context context) {
+        return this.asyncClient.searchInsideGeometryWithResponse(options, null).block();
     }
 
     /**
@@ -439,9 +391,8 @@ public final class SearchClient {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressResult searchAlongRoute(String query, int maxDetourTime,
-            GeoJsonLineString route, SearchAlongRouteOptions options) {
-        return this.asyncClient.searchAlongRoute(query, maxDetourTime, route, options).block();
+    public SearchAddressResult searchAlongRoute(SearchAlongRouteOptions options) {
+        return this.asyncClient.searchAlongRoute(options).block();
     }
 
     /**
@@ -454,10 +405,9 @@ public final class SearchClient {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<SearchAddressResult> searchAlongRouteWithResponse(
-            String query, int maxDetourTime, GeoJsonLineString route,
-            SearchAlongRouteOptions options, Context context) {
-        return this.asyncClient.searchAlongRouteWithResponse(query, maxDetourTime, route, options, context).block();
+    public Response<SearchAddressResult> searchAlongRouteWithResponse(SearchAlongRouteOptions options,
+            Context context) {
+        return this.asyncClient.searchAlongRouteWithResponse(options, context).block();
     }
 
     /**

@@ -21,7 +21,7 @@ public final class SearchNearbyPointsOfInterestOptions extends BaseSearchPointOf
      * @param extendedPostalCodesFor
      * @return
      */
-    public SearchNearbyPointsOfInterestOptions extendedPostalCodesFor(List<SearchIndexes> extendedPostalCodesFor) {
+    public SearchNearbyPointsOfInterestOptions setExtendedPostalCodesFor(List<SearchIndexes> extendedPostalCodesFor) {
         this.extendedPostalCodesFor = extendedPostalCodesFor;
         return this;
     }

@@ -8,6 +8,16 @@ import java.util.List;
 public final class SearchAlongRouteOptions extends BaseSearchGeometryOptions<SearchAlongRouteOptions> {
     private List<String> brandFilter;
     private List<ElectricVehicleConnector> electricVehicleConnectorFilter;
+    private int maxDetourTime;
+    private GeoJsonLineString route;
+
+    /**
+     * Create search along route options.
+     */
+    public SearchAlongRouteOptions(String query, int maxDetourTime) {
+        this.maxDetourTime = maxDetourTime;
+        this.setQuery(query);
+    }
 
     /**
      * Returns the brand filter.
@@ -15,6 +25,20 @@ public final class SearchAlongRouteOptions extends BaseSearchGeometryOptions<Sea
      */
     public List<String> getBrandFilter() {
         return brandFilter;
+    }
+
+    /**
+     * Returns the max detour time.
+     */
+    public int getMaxDetourTime() {
+        return this.maxDetourTime;
+    }
+
+    /**
+     * @return GeoJsonLineString return the route
+     */
+    public GeoJsonLineString getRoute() {
+        return route;
     }
 
     /**
@@ -30,8 +54,18 @@ public final class SearchAlongRouteOptions extends BaseSearchGeometryOptions<Sea
      * @param brandFilter
      * @return
      */
-    public SearchAlongRouteOptions brandFilter(List<String> brandFilter) {
+    public SearchAlongRouteOptions setBrandFilter(List<String> brandFilter) {
         this.brandFilter = brandFilter;
+        return this;
+    }
+
+    /**
+     * Sets the route.
+     * @param route
+     * @return
+     */
+    public SearchAlongRouteOptions setRoute(GeoJsonLineString route) {
+        this.route = route;
         return this;
     }
 
@@ -40,8 +74,18 @@ public final class SearchAlongRouteOptions extends BaseSearchGeometryOptions<Sea
      * @param electricVehicleConnectorFilter
      * @return
      */
-    public SearchAlongRouteOptions electricVehicleConnectorFilter(List<ElectricVehicleConnector> electricVehicleConnectorFilter) {
+    public SearchAlongRouteOptions setElectricVehicleConnectorFilter(List<ElectricVehicleConnector> electricVehicleConnectorFilter) {
         this.electricVehicleConnectorFilter = electricVehicleConnectorFilter;
+        return this;
+    }
+
+    /**
+     * Sets the max detour time.
+     * @param maxDetourTime
+     * @return
+     */
+    public SearchAlongRouteOptions setMaxDetourTime(int maxDetourTime) {
+        this.maxDetourTime = maxDetourTime;
         return this;
     }
 }

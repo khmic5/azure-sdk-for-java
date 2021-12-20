@@ -12,6 +12,37 @@ public class FuzzySearchOptions extends BaseSearchPointOfInterestOptions<FuzzySe
     private Integer maxFuzzyLevel;
     private List<SearchIndexes> idxSet;
     private GeographicEntityType entityType;
+    private String query;
+
+
+    /**
+     * Builds fuzzy search options with only the query string.
+     *
+     * @param query
+     */
+    public FuzzySearchOptions(String query) {
+        this.query = query;
+    }
+
+    /**
+     * Builds fuzzy search options with query string and coordinates.
+     * @param query
+     * @param countryFilter
+     */
+    public FuzzySearchOptions(String query, LatLong coordinates) {
+        this.query = query;
+        this.setCoordinates(coordinates);
+    }
+
+    /**
+     * Builds fuzzy search options with query string and country filter.
+     * @param query
+     * @param countryFilter
+     */
+    public FuzzySearchOptions(String query, List<String> countryFilter) {
+        this.query = query;
+        this.setCountryFilter(countryFilter);
+    }
 
     /**
      * Returns whether this is a typeahead search.
@@ -62,11 +93,19 @@ public class FuzzySearchOptions extends BaseSearchPointOfInterestOptions<FuzzySe
     }
 
     /**
+     * Returns the query string.
+     * @return
+     */
+    public String getQuery() {
+        return query;
+    }
+
+    /**
      * Sets whether this is a typeahead search.
      * @param isTypeAhead
      * @return
      */
-    public FuzzySearchOptions isTypeAhead(Boolean isTypeAhead) {
+    public FuzzySearchOptions setIsTypeAhead(Boolean isTypeAhead) {
         this.isTypeAhead = isTypeAhead;
         return this;
     }
@@ -76,7 +115,7 @@ public class FuzzySearchOptions extends BaseSearchPointOfInterestOptions<FuzzySe
      * @param extendedPostalCodesFor
      * @return
      */
-    public FuzzySearchOptions extendedPostalCodesFor(List<SearchIndexes> extendedPostalCodesFor) {
+    public FuzzySearchOptions setExtendedPostalCodesFor(List<SearchIndexes> extendedPostalCodesFor) {
         this.extendedPostalCodesFor = extendedPostalCodesFor;
         return this;
     }
@@ -86,7 +125,7 @@ public class FuzzySearchOptions extends BaseSearchPointOfInterestOptions<FuzzySe
      * @param minFuzzyLevel
      * @return
      */
-    public FuzzySearchOptions minFuzzyLevel(Integer minFuzzyLevel) {
+    public FuzzySearchOptions setMinFuzzyLevel(Integer minFuzzyLevel) {
         this.minFuzzyLevel = minFuzzyLevel;
         return this;
     }
@@ -96,7 +135,7 @@ public class FuzzySearchOptions extends BaseSearchPointOfInterestOptions<FuzzySe
      * @param maxFuzzyLevel
      * @return
      */
-    public FuzzySearchOptions maxFuzzyLevel(Integer maxFuzzyLevel) {
+    public FuzzySearchOptions setMaxFuzzyLevel(Integer maxFuzzyLevel) {
         this.maxFuzzyLevel = maxFuzzyLevel;
         return this;
     }
@@ -106,7 +145,7 @@ public class FuzzySearchOptions extends BaseSearchPointOfInterestOptions<FuzzySe
      * @param idxSet
      * @return
      */
-    public FuzzySearchOptions idxSet(List<SearchIndexes> idxSet) {
+    public FuzzySearchOptions setIdxSet(List<SearchIndexes> idxSet) {
         this.idxSet = idxSet;
         return this;
     }
@@ -116,8 +155,18 @@ public class FuzzySearchOptions extends BaseSearchPointOfInterestOptions<FuzzySe
      * @param entityType
      * @return
      */
-    public FuzzySearchOptions entityType(GeographicEntityType entityType) {
+    public FuzzySearchOptions setEntityType(GeographicEntityType entityType) {
         this.entityType = entityType;
+        return this;
+    }
+
+    /**
+     * Sets the query string.
+     * @param query
+     * @return
+     */
+    public FuzzySearchOptions setQuery(String query) {
+        this.query = query;
         return this;
     }
 }

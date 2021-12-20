@@ -19,7 +19,7 @@ public final class ReverseSearchCrossStreetAddressOptions extends BaseReverseSea
      * @param top
      * @return
      */
-    public ReverseSearchCrossStreetAddressOptions top(Integer top) {
+    public ReverseSearchCrossStreetAddressOptions setTop(Integer top) {
         this.top = top;
         return this;
     }

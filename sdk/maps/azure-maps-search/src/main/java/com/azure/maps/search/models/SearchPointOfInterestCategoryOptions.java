@@ -8,6 +8,27 @@ import java.util.List;
 public final class SearchPointOfInterestCategoryOptions extends BaseSearchPointOfInterestOptions<SearchPointOfInterestCategoryOptions> {
     private Boolean isTypeAhead;
     private List<SearchIndexes> extendedPostalCodesFor;
+    private String query;
+
+    /**
+     * Builds fuzzy search options with query string and coordinates.
+     * @param query
+     * @param countryFilter
+     */
+    public SearchPointOfInterestCategoryOptions(String query, LatLong coordinates) {
+        this.query = query;
+        this.setCoordinates(coordinates);
+    }
+
+    /**
+     * Builds fuzzy search options with query string and country filter.
+     * @param query
+     * @param countryFilter
+     */
+    public SearchPointOfInterestCategoryOptions(String query, List<String> countryFilter) {
+        this.query = query;
+        this.setCountryFilter(countryFilter);
+    }
 
     /**
      * Returns whether this is a typeahead search.
@@ -26,11 +47,18 @@ public final class SearchPointOfInterestCategoryOptions extends BaseSearchPointO
     }
 
     /**
+     * Returns the query string.
+     */
+    public String getQuery() {
+        return query;
+    }
+
+    /**
      * Sets whether this is a typeahead search.
      * @param isTypeAhead
      * @return
      */
-    public SearchPointOfInterestCategoryOptions isTypeAhead(Boolean isTypeAhead) {
+    public SearchPointOfInterestCategoryOptions setIsTypeAhead(Boolean isTypeAhead) {
         this.isTypeAhead = isTypeAhead;
         return this;
     }
@@ -40,8 +68,16 @@ public final class SearchPointOfInterestCategoryOptions extends BaseSearchPointO
      * @param extendedPostalCodesFor
      * @return
      */
-    public SearchPointOfInterestCategoryOptions extendedPostalCodesFor(List<SearchIndexes> extendedPostalCodesFor) {
+    public SearchPointOfInterestCategoryOptions setExtendedPostalCodesFor(List<SearchIndexes> extendedPostalCodesFor) {
         this.extendedPostalCodesFor = extendedPostalCodesFor;
+        return this;
+    }
+
+    /**
+     * Sets the query string.
+     */
+    public SearchPointOfInterestCategoryOptions setQuery(String query) {
+        this.query = query;
         return this;
     }
 }

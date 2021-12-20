@@ -6,6 +6,7 @@ import java.util.List;
  * Class holding optional parameters for Geometry Search.
  */
 public class BaseSearchGeometryOptions<T extends BaseSearchGeometryOptions<T>> {
+    private String query;
     private Integer top;
     private List<Integer> categoryFilter;
     private OperatingHoursRange operatingHours;
@@ -44,12 +45,19 @@ public class BaseSearchGeometryOptions<T extends BaseSearchGeometryOptions<T>> {
     }
 
     /**
+     * Returns the query string.
+     */
+    public String getQuery() {
+        return query;
+    }
+
+    /**
      * Sets the category filter.
      * @param categoryFilter
      * @return
      */
     @SuppressWarnings("unchecked")
-    public T categoryFilter(List<Integer> categoryFilter) {
+    public T setCategoryFilter(List<Integer> categoryFilter) {
         this.categoryFilter = categoryFilter;
         return (T) this;
     }
@@ -60,7 +68,7 @@ public class BaseSearchGeometryOptions<T extends BaseSearchGeometryOptions<T>> {
      * @return
      */
     @SuppressWarnings("unchecked")
-    public T top(Integer top) {
+    public T setTop(Integer top) {
         this.top = top;
         return (T) this;
     }
@@ -71,7 +79,7 @@ public class BaseSearchGeometryOptions<T extends BaseSearchGeometryOptions<T>> {
      * @return
      */
     @SuppressWarnings("unchecked")
-    public T localizedMapView(LocalizedMapView localizedMapView) {
+    public T setLocalizedMapView(LocalizedMapView localizedMapView) {
         this.localizedMapView = localizedMapView;
         return (T) this;
     }
@@ -82,8 +90,19 @@ public class BaseSearchGeometryOptions<T extends BaseSearchGeometryOptions<T>> {
      * @return
      */
     @SuppressWarnings("unchecked")
-    public T operatingHours(OperatingHoursRange operatingHours) {
+    public T setOperatingHours(OperatingHoursRange operatingHours) {
         this.operatingHours = operatingHours;
+        return (T) this;
+    }
+
+    /**
+     * Sets the query string.
+     * @param query
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public T setQuery(String query) {
+        this.query = query;
         return (T) this;
     }
 }
