@@ -11,6 +11,16 @@ public final class SearchAddressOptions extends BaseSearchOptions<SearchAddressO
     private Boolean isTypeAhead;
     private List<SearchIndexes> extendedPostalCodesFor;
     private GeographicEntityType entityType;
+    private String query;
+
+    /**
+     * Builds fuzzy search options with only the query string.
+     *
+     * @param query
+     */
+    public SearchAddressOptions(String query) {
+        this.query = query;
+    }
 
     /**
      * Returns the coordinates.
@@ -18,6 +28,14 @@ public final class SearchAddressOptions extends BaseSearchOptions<SearchAddressO
      */
     public Optional<LatLong> getCoordinates() {
         return Optional.ofNullable(coordinates);
+    }
+
+    /**
+     * Returns the query string.
+     * @return
+     */
+    public String getQuery() {
+        return query;
     }
 
     /**
@@ -49,7 +67,7 @@ public final class SearchAddressOptions extends BaseSearchOptions<SearchAddressO
      * @param isTypeAhead
      * @return
      */
-    public SearchAddressOptions isTypeAhead(Boolean isTypeAhead) {
+    public SearchAddressOptions setIsTypeAhead(Boolean isTypeAhead) {
         this.isTypeAhead = isTypeAhead;
         return this;
     }
@@ -59,7 +77,7 @@ public final class SearchAddressOptions extends BaseSearchOptions<SearchAddressO
      * @param extendedPostalCodesFor
      * @return
      */
-    public SearchAddressOptions extendedPostalCodesFor(List<SearchIndexes> extendedPostalCodesFor) {
+    public SearchAddressOptions setExtendedPostalCodesFor(List<SearchIndexes> extendedPostalCodesFor) {
         this.extendedPostalCodesFor = extendedPostalCodesFor;
         return this;
     }
@@ -69,7 +87,7 @@ public final class SearchAddressOptions extends BaseSearchOptions<SearchAddressO
      * @param entityType
      * @return
      */
-    public SearchAddressOptions entityType(GeographicEntityType entityType) {
+    public SearchAddressOptions setEntityType(GeographicEntityType entityType) {
         this.entityType = entityType;
         return this;
     }
@@ -79,8 +97,18 @@ public final class SearchAddressOptions extends BaseSearchOptions<SearchAddressO
      * @param coordinates
      * @return
      */
-    public SearchAddressOptions coordinates(LatLong coordinates) {
+    public SearchAddressOptions setCoordinates(LatLong coordinates) {
         this.coordinates = coordinates;
+        return this;
+    }
+
+    /**
+     * Sets the query string.
+     * @param query
+     * @return
+     */
+    public SearchAddressOptions setQuery(String query) {
+        this.query = query;
         return this;
     }
 }

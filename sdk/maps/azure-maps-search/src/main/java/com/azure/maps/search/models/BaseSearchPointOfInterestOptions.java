@@ -10,6 +10,7 @@ public class BaseSearchPointOfInterestOptions<T extends BaseSearchPointOfInteres
     private List<String> brandFilter;
     private List<ElectricVehicleConnector> electricVehicleConnectorFilter;
     private OperatingHoursRange operatingHours;
+    private LatLong coordinates;
 
     /**
      * Returns the category filter.
@@ -44,12 +45,20 @@ public class BaseSearchPointOfInterestOptions<T extends BaseSearchPointOfInteres
     }
 
     /**
+     * Returns the coordinates.
+     * @return
+     */
+    public LatLong getCoordinates() {
+        return coordinates;
+    }
+
+    /**
      * Sets the category filter.
      * @param categoryFilter
      * @return
      */
     @SuppressWarnings("unchecked")
-    public T categoryFilter(List<Integer> categoryFilter) {
+    public T setCategoryFilter(List<Integer> categoryFilter) {
         this.categoryFilter = categoryFilter;
         return (T) this;
     }
@@ -60,7 +69,7 @@ public class BaseSearchPointOfInterestOptions<T extends BaseSearchPointOfInteres
      * @return
      */
     @SuppressWarnings("unchecked")
-    public T brandFilter(List<String> brandFilter) {
+    public T setBrandFilter(List<String> brandFilter) {
         this.brandFilter = brandFilter;
         return (T) this;
     }
@@ -71,7 +80,7 @@ public class BaseSearchPointOfInterestOptions<T extends BaseSearchPointOfInteres
      * @return
      */
     @SuppressWarnings("unchecked")
-    public T electricVehicleConnectorFilter(List<ElectricVehicleConnector> electricVehicleConnectorFilter) {
+    public T setElectricVehicleConnectorFilter(List<ElectricVehicleConnector> electricVehicleConnectorFilter) {
         this.electricVehicleConnectorFilter = electricVehicleConnectorFilter;
         return (T) this;
     }
@@ -82,8 +91,19 @@ public class BaseSearchPointOfInterestOptions<T extends BaseSearchPointOfInteres
      * @return
      */
     @SuppressWarnings("unchecked")
-    public T operatingHours(OperatingHoursRange operatingHours) {
+    public T setOperatingHours(OperatingHoursRange operatingHours) {
         this.operatingHours = operatingHours;
+        return (T) this;
+    }
+
+    /**
+     * Sets the coordinates.
+     * @param coordinates
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public T setCoordinates(LatLong coordinates) {
+        this.coordinates = coordinates;
         return (T) this;
     }
 }

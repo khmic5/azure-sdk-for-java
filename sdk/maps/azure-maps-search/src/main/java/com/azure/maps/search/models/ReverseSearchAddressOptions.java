@@ -15,6 +15,15 @@ public final class ReverseSearchAddressOptions extends BaseReverseSearchOptions<
     private GeographicEntityType entityType;
 
     /**
+     * Builds fuzzy search options with query string and coordinates.
+     * @param query
+     * @param countryFilter
+     */
+    public ReverseSearchAddressOptions(LatLong coordinates) {
+        this.setCoordinates(coordinates);
+    }
+
+    /**
      * Returns whether we should include the speed limit.
      * @return
      */
@@ -75,7 +84,7 @@ public final class ReverseSearchAddressOptions extends BaseReverseSearchOptions<
      * @param includeSpeedLimit
      * @return
      */
-    public ReverseSearchAddressOptions includeSpeedLimit(Boolean includeSpeedLimit) {
+    public ReverseSearchAddressOptions setIncludeSpeedLimit(Boolean includeSpeedLimit) {
         this.includeSpeedLimit = true;
         return this;
     }
@@ -85,7 +94,7 @@ public final class ReverseSearchAddressOptions extends BaseReverseSearchOptions<
      * @param number
      * @return
      */
-    public ReverseSearchAddressOptions number(String number) {
+    public ReverseSearchAddressOptions setNumber(String number) {
         this.number = number;
         return this;
     }
@@ -95,7 +104,7 @@ public final class ReverseSearchAddressOptions extends BaseReverseSearchOptions<
      * @param includeRoadUse
      * @return
      */
-    public ReverseSearchAddressOptions includeRoadUse(Boolean includeRoadUse) {
+    public ReverseSearchAddressOptions setIncludeRoadUse(Boolean includeRoadUse) {
         this.includeRoadUse = includeRoadUse;
         return this;
     }
@@ -105,7 +114,7 @@ public final class ReverseSearchAddressOptions extends BaseReverseSearchOptions<
      * @param roadUse
      * @return
      */
-    public ReverseSearchAddressOptions roadUse(List<RoadUseType> roadUse) {
+    public ReverseSearchAddressOptions setRoadUse(List<RoadUseType> roadUse) {
         this.roadUse = roadUse;
         return this;
     }
@@ -115,7 +124,7 @@ public final class ReverseSearchAddressOptions extends BaseReverseSearchOptions<
      * @param allowFreeformNewline
      * @return
      */
-    public ReverseSearchAddressOptions allowFreeformNewline(Boolean allowFreeformNewline) {
+    public ReverseSearchAddressOptions setAllowFreeformNewline(Boolean allowFreeformNewline) {
         this.allowFreeformNewline = allowFreeformNewline;
         return this;
     }
@@ -125,7 +134,7 @@ public final class ReverseSearchAddressOptions extends BaseReverseSearchOptions<
      * @param includeMatchType
      * @return
      */
-    public ReverseSearchAddressOptions includeMatchType(Boolean includeMatchType) {
+    public ReverseSearchAddressOptions setIncludeMatchType(Boolean includeMatchType) {
         this.includeMatchType = includeMatchType;
         return this;
     }
@@ -135,7 +144,7 @@ public final class ReverseSearchAddressOptions extends BaseReverseSearchOptions<
      * @param entityType
      * @return
      */
-    public ReverseSearchAddressOptions entityType(GeographicEntityType entityType) {
+    public ReverseSearchAddressOptions setEntityType(GeographicEntityType entityType) {
         this.entityType = entityType;
         return this;
     }

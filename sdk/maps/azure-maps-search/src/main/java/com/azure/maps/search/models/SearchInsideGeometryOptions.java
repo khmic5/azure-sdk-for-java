@@ -7,8 +7,17 @@ import java.util.List;
  */
 public final class SearchInsideGeometryOptions extends BaseSearchGeometryOptions<SearchInsideGeometryOptions> {
     private String language;
+    private GeoJsonObject geometry;
     private List<SearchIndexes> extendedPostalCodesFor;
     private List<SearchIndexes> idxSet;
+
+    /**
+     * Create a new options object with query and Geometry.
+     */
+    public SearchInsideGeometryOptions(String query, GeoJsonObject geometry) {
+        this.geometry = geometry;
+        this.setQuery(query);
+    }
 
     /**
      * Returns the language.
@@ -35,11 +44,19 @@ public final class SearchInsideGeometryOptions extends BaseSearchGeometryOptions
     }
 
     /**
+     * Returns the geometry used for search.
+     * @return
+     */
+    public GeoJsonObject getGeometry() {
+        return this.geometry;
+    }
+
+    /**
      * Sets the language.
      * @param language
      * @return
      */
-    public SearchInsideGeometryOptions language(String language) {
+    public SearchInsideGeometryOptions setLanguage(String language) {
         this.language = language;
         return this;
     }
@@ -49,7 +66,7 @@ public final class SearchInsideGeometryOptions extends BaseSearchGeometryOptions
      * @param extendedPostalCodesFor
      * @return
      */
-    public SearchInsideGeometryOptions extendedPostalCodesFor(List<SearchIndexes> extendedPostalCodesFor) {
+    public SearchInsideGeometryOptions setExtendedPostalCodesFor(List<SearchIndexes> extendedPostalCodesFor) {
         this.extendedPostalCodesFor = extendedPostalCodesFor;
         return this;
     }
@@ -59,8 +76,18 @@ public final class SearchInsideGeometryOptions extends BaseSearchGeometryOptions
      * @param idxSet
      * @return
      */
-    public SearchInsideGeometryOptions idxSet(List<SearchIndexes> idxSet) {
+    public SearchInsideGeometryOptions setIdxSet(List<SearchIndexes> idxSet) {
         this.idxSet = idxSet;
+        return this;
+    }
+
+    /**
+     * Sets the geometry
+     * @param geometry
+     * @return
+     */
+    public SearchInsideGeometryOptions setGeometry(GeoJsonObject geometry) {
+        this.geometry = geometry;
         return this;
     }
 }

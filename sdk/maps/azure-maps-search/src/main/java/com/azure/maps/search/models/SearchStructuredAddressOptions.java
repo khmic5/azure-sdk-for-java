@@ -30,7 +30,7 @@ public final class SearchStructuredAddressOptions extends BaseSearchOptions<Sear
      * @param entityType
      * @return
      */
-    public SearchStructuredAddressOptions entityType(GeographicEntityType entityType) {
+    public SearchStructuredAddressOptions setEntityType(GeographicEntityType entityType) {
         this.entityType = entityType;
         return this;
     }
@@ -40,7 +40,7 @@ public final class SearchStructuredAddressOptions extends BaseSearchOptions<Sear
      * @param extendedPostalCodesFor
      * @return
      */
-    public SearchStructuredAddressOptions extendedPostalCodesFor(List<SearchIndexes> extendedPostalCodesFor) {
+    public SearchStructuredAddressOptions setExtendedPostalCodesFor(List<SearchIndexes> extendedPostalCodesFor) {
         this.extendedPostalCodesFor = extendedPostalCodesFor;
         return this;
     }

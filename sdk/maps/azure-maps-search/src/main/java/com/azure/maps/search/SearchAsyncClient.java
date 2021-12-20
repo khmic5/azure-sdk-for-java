@@ -73,7 +73,7 @@ public final class SearchAsyncClient {
     }
 
     /**
-     * **List Polygons**
+     * **Get Polygons**
      *
      * @param format Desired format of the response. Only `json` format is supported.
      * @param geometryIds Comma separated list of geometry UUIDs, previously retrieved from an Online Search request.
@@ -83,15 +83,15 @@ public final class SearchAsyncClient {
      * @return this object is returned from a successful Search Polygon call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<List<Polygon>> listPolygons(List<String> geometryIds) {
-        Mono<Response<List<Polygon>>> result = this.listPolygonsWithResponse(geometryIds, null);
+    public Mono<List<Polygon>> getPolygons(List<String> geometryIds) {
+        Mono<Response<List<Polygon>>> result = this.getPolygonsWithResponse(geometryIds);
         return result.flatMap(response -> {
             return Mono.just(response.getValue());
         });
     }
 
     /**
-     * **List Polygons**
+     * **Get Polygons**
      *
      * @param format Desired format of the response. Only `json` format is supported.
      * @param geometryIds Comma separated list of geometry UUIDs, previously retrieved from an Online Search request.
@@ -101,7 +101,22 @@ public final class SearchAsyncClient {
      * @return this object is returned from a successful Search Polygon call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<List<Polygon>>> listPolygonsWithResponse(List<String> geometryIds,
+    public Mono<Response<List<Polygon>>> getPolygonsWithResponse(List<String> geometryIds) {
+        return this.getPolygonsWithResponse(geometryIds, null);
+    }
+
+    /**
+     * **Get Polygons**
+     *
+     * @param format Desired format of the response. Only `json` format is supported.
+     * @param geometryIds Comma separated list of geometry UUIDs, previously retrieved from an Online Search request.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful Search Polygon call.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    Mono<Response<List<Polygon>>> getPolygonsWithResponse(List<String> geometryIds,
             Context context) {
         Mono<Response<PolygonResult>> result = this.serviceClient.getPolygonWithResponseAsync(JsonFormat.JSON,
             geometryIds, context);
@@ -118,23 +133,8 @@ public final class SearchAsyncClient {
      * @return
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchAddressResult> fuzzySearch(String query, LatLong coordinates, FuzzySearchOptions options) {
-        Mono<Response<SearchAddressResult>> result = this.fuzzySearchWithResponse(query, coordinates,
-            null, options, null);
-        return result.flatMap(response -> {
-            return Mono.just(response.getValue());
-        });
-    }
-
-    /**
-     *
-     * @param options
-     * @return
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchAddressResult> fuzzySearch(String query, List<String> countryFilter, FuzzySearchOptions options){
-        Mono<Response<SearchAddressResult>> result = this.fuzzySearchWithResponse(query, null, countryFilter,
-            options, null);
+    public Mono<SearchAddressResult> fuzzySearch(FuzzySearchOptions options) {
+        Mono<Response<SearchAddressResult>> result = this.fuzzySearchWithResponse(options, null);
         return result.flatMap(response -> {
             return Mono.just(response.getValue());
         });
@@ -148,36 +148,44 @@ public final class SearchAsyncClient {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<SearchAddressResult>> fuzzySearchWithResponse(String query, LatLong coordinates,
-            List<String> countryFilter, FuzzySearchOptions options, Context context) {
+    Mono<Response<SearchAddressResult>> fuzzySearchWithResponse(FuzzySearchOptions options) {
+        return this.fuzzySearchWithResponse(options, null);
+    }
 
-        final FuzzySearchOptions param = Optional.ofNullable(options).orElse(new FuzzySearchOptions());
-        final Optional<LatLong> optCoordinates = Optional.ofNullable(coordinates);
-
+    /**
+     * **Free Form Search**
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful Search calls.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    Mono<Response<SearchAddressResult>> fuzzySearchWithResponse(FuzzySearchOptions options, Context context) {
+        final Optional<LatLong> optCoordinates = Optional.ofNullable(options.getCoordinates());
         Mono<Response<com.azure.maps.search.implementation.models.SearchAddressResult>> responseMono =
             this.serviceClient.fuzzySearchWithResponseAsync(
                 ResponseFormat.JSON,
-                query,
-                param.isTypeAhead(),
-                param.getTop(),
-                param.getSkip(),
-                param.getCategoryFilter(),
-                countryFilter,
+                options.getQuery(),
+                options.isTypeAhead(),
+                options.getTop(),
+                options.getSkip(),
+                options.getCategoryFilter(),
+                options.getCountryFilter(),
                 optCoordinates.map(LatLong::getLat).orElse(null),
                 optCoordinates.map(LatLong::getLon).orElse(null),
-                param.getRadiusInMeters(),
-                param.getBoundingBox().map(BoundingBox::getTopLeft).map(LatLong::toString).orElse(null),
-                param.getBoundingBox().map(BoundingBox::getBottomRight).map(LatLong::toString).orElse(null),
-                param.getLanguage(),
-                param.getExtendedPostalCodesFor(),
-                param.getMinFuzzyLevel(),
-                param.getMaxFuzzyLevel(),
-                param.getIdxSet(),
-                param.getBrandFilter(),
-                param.getElectricVehicleConnectorFilter(),
-                param.getEntityType(),
-                param.getLocalizedMapView(),
-                param.getOperatingHours(),
+                options.getRadiusInMeters(),
+                options.getBoundingBox().map(BoundingBox::getTopLeft).map(LatLong::toString).orElse(null),
+                options.getBoundingBox().map(BoundingBox::getBottomRight).map(LatLong::toString).orElse(null),
+                options.getLanguage(),
+                options.getExtendedPostalCodesFor(),
+                options.getMinFuzzyLevel(),
+                options.getMaxFuzzyLevel(),
+                options.getIdxSet(),
+                options.getBrandFilter(),
+                options.getElectricVehicleConnectorFilter(),
+                options.getEntityType(),
+                options.getLocalizedMapView(),
+                options.getOperatingHours(),
                 context);
 
         // convert to the right (public) SearchAddressResult
@@ -193,25 +201,8 @@ public final class SearchAsyncClient {
      * @return
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchAddressResult> searchPointOfInterest(String query, LatLong coordinates,
-            SearchPointOfInterestOptions options) {
-        Mono<Response<SearchAddressResult>> result = this.searchPointOfInterestWithResponse(query, coordinates,
-            null, options, null);
-        return result.flatMap(response -> {
-            return Mono.just(response.getValue());
-        });
-    }
-
-        /**
-     *
-     * @param options
-     * @return
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchAddressResult> searchPointOfInterest(String query, List<String> countryFilter,
-            SearchPointOfInterestOptions options) {
-        Mono<Response<SearchAddressResult>> result = this.searchPointOfInterestWithResponse(query, null,
-            countryFilter, options, null);
+    public Mono<SearchAddressResult> searchPointOfInterest(SearchPointOfInterestOptions options) {
+        Mono<Response<SearchAddressResult>> result = this.searchPointOfInterestWithResponse(options, null);
         return result.flatMap(response -> {
             return Mono.just(response.getValue());
         });
@@ -225,33 +216,41 @@ public final class SearchAsyncClient {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<SearchAddressResult>> searchPointOfInterestWithResponse(String query, LatLong coordinates,
-            List<String> countryFilter, SearchPointOfInterestOptions options, Context context) {
+    Mono<Response<SearchAddressResult>> searchPointOfInterestWithResponse(SearchPointOfInterestOptions options) {
+        return this.searchPointOfInterestWithResponse(options, null);
+    }
 
-        final SearchPointOfInterestOptions param = Optional.ofNullable(options).orElse(new SearchPointOfInterestOptions());
-        final Optional<LatLong> optCoordinates = Optional.ofNullable(coordinates);
-
-        // call method and convert
+    /**
+     * **Get POI by Name**
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful Search calls.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    Mono<Response<SearchAddressResult>> searchPointOfInterestWithResponse(SearchPointOfInterestOptions options,
+            Context context) {
+        final Optional<LatLong> optCoordinates = Optional.ofNullable(options.getCoordinates());
         Mono<Response<com.azure.maps.search.implementation.models.SearchAddressResult>> responseMono =
             this.serviceClient.searchPointOfInterestWithResponseAsync(
                 ResponseFormat.JSON,
-                query,
-                param.isTypeAhead(),
-                param.getTop(),
-                param.getSkip(),
-                param.getCategoryFilter(),
-                countryFilter,
+                options.getQuery(),
+                options.isTypeAhead(),
+                options.getTop(),
+                options.getSkip(),
+                options.getCategoryFilter(),
+                options.getCountryFilter(),
                 optCoordinates.map(LatLong::getLat).orElse(null),
                 optCoordinates.map(LatLong::getLon).orElse(null),
-                param.getRadiusInMeters(),
-                param.getBoundingBox().map(BoundingBox::getTopLeft).map(LatLong::toString).orElse(null),
-                param.getBoundingBox().map(BoundingBox::getBottomRight).map(LatLong::toString).orElse(null),
-                param.getLanguage(),
-                param.getExtendedPostalCodesFor(),
-                param.getBrandFilter(),
-                param.getElectricVehicleConnectorFilter(),
-                param.getLocalizedMapView(),
-                param.getOperatingHours(),
+                options.getRadiusInMeters(),
+                options.getBoundingBox().map(BoundingBox::getTopLeft).map(LatLong::toString).orElse(null),
+                options.getBoundingBox().map(BoundingBox::getBottomRight).map(LatLong::toString).orElse(null),
+                options.getLanguage(),
+                options.getExtendedPostalCodesFor(),
+                options.getBrandFilter(),
+                options.getElectricVehicleConnectorFilter(),
+                options.getLocalizedMapView(),
+                options.getOperatingHours(),
                 context);
 
         // convert to the right (public) SearchAddressResult
@@ -261,7 +260,7 @@ public final class SearchAsyncClient {
         });
     }
 
-/**
+    /**
      * **Nearby Search**
      *
      * <p>**Applies to**: S0 and S1 pricing tiers.
@@ -272,10 +271,9 @@ public final class SearchAsyncClient {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchAddressResult> searchNearbyPointOfInterest(LatLong coordinates,
+    public Mono<SearchAddressResult> searchNearbyPointOfInterest(
             SearchNearbyPointsOfInterestOptions options) {
-        Mono<Response<SearchAddressResult>> result = this.searchNearbyPointOfInterestWithResponse(coordinates,
-            options, null);
+        Mono<Response<SearchAddressResult>> result = this.searchNearbyPointOfInterestWithResponse(options, null);
         return result.flatMap(response -> {
             return Mono.just(response.getValue());
         });
@@ -284,36 +282,43 @@ public final class SearchAsyncClient {
     /**
      * **Nearby Search**
      *
-     *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
-     *     available Views.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<SearchAddressResult>> searchNearbyPointOfInterestWithResponse(LatLong coordinates,
+    public Mono<Response<SearchAddressResult>> searchNearbyPointOfInterestWithResponse(
+            SearchNearbyPointsOfInterestOptions options) {
+        return this.searchNearbyPointOfInterestWithResponse(options, null);
+    }
+
+    /**
+     * **Nearby Search**
+     *
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful Search calls.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    Mono<Response<SearchAddressResult>> searchNearbyPointOfInterestWithResponse(
             SearchNearbyPointsOfInterestOptions options, Context context) {
-
-        final SearchNearbyPointsOfInterestOptions param = Optional.ofNullable(options)
-                .orElse(new SearchNearbyPointsOfInterestOptions());
-
-        // call method and convert
         Mono<Response<com.azure.maps.search.implementation.models.SearchAddressResult>> responseMono =
             this.serviceClient.searchNearbyPointOfInterestWithResponseAsync(
                 ResponseFormat.JSON,
-                coordinates.getLat(),
-                coordinates.getLon(),
-                param.getTop(),
-                param.getSkip(),
-                param.getCategoryFilter(),
-                param.getCountryFilter(),
-                param.getRadiusInMeters(),
-                param.getLanguage(),
-                param.getExtendedPostalCodesFor(),
-                param.getBrandFilter(),
-                param.getElectricVehicleConnectorFilter(),
-                param.getLocalizedMapView(),
+                options.getCoordinates().getLat(),
+                options.getCoordinates().getLon(),
+                options.getTop(),
+                options.getSkip(),
+                options.getCategoryFilter(),
+                options.getCountryFilter(),
+                options.getRadiusInMeters(),
+                options.getLanguage(),
+                options.getExtendedPostalCodesFor(),
+                options.getBrandFilter(),
+                options.getElectricVehicleConnectorFilter(),
+                options.getLocalizedMapView(),
                 context);
 
         // convert to the right (public) SearchAddressResult
@@ -335,31 +340,8 @@ public final class SearchAsyncClient {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchAddressResult> searchPointOfInterestCategory(String query, LatLong coordinates,
-    SearchPointOfInterestCategoryOptions options) {
-        Mono<Response<SearchAddressResult>> result = this.searchPointOfInterestCategoryWithResponse(query,
-                coordinates, null, options, null);
-        return result.flatMap(response -> {
-            return Mono.just(response.getValue());
-        });
-    }
-
-    /**
-     * **Get POI by Category**
-     *
-     * @param operatingHours Hours of operation for a POI (Points of Interest). The availability of hours of operation
-     *     will vary based on the data available. If not passed, then no opening hours information will be returned.
-     *     Supported value: nextSevenDays.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Search calls.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchAddressResult> searchPointOfInterestCategory(String query, List<String> countryFilter,
-            SearchPointOfInterestCategoryOptions options) {
-        Mono<Response<SearchAddressResult>> result = this.searchPointOfInterestCategoryWithResponse(query,
-                null, countryFilter, options, null);
+    public Mono<SearchAddressResult> searchPointOfInterestCategory(SearchPointOfInterestCategoryOptions options) {
+        Mono<Response<SearchAddressResult>> result = this.searchPointOfInterestCategoryWithResponse(options, null);
         return result.flatMap(response -> {
             return Mono.just(response.getValue());
         });
@@ -374,35 +356,42 @@ public final class SearchAsyncClient {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<SearchAddressResult>> searchPointOfInterestCategoryWithResponse(String query,
-            LatLong coordinates, List<String> countryFilter, SearchPointOfInterestCategoryOptions options,
-            Context context) {
-
-        final SearchPointOfInterestCategoryOptions param = Optional.ofNullable(options)
-                .orElse(new SearchPointOfInterestCategoryOptions());
-        final Optional<LatLong> optCoordinates = Optional.ofNullable(coordinates);
-
-        // call method and convert
+    public Mono<Response<SearchAddressResult>> searchPointOfInterestCategoryWithResponse(
+                SearchPointOfInterestCategoryOptions options) {
+        return this.searchPointOfInterestCategoryWithResponse(options, null);
+    }
+    /**
+     * **Get POI by Category**
+     *
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful Search calls.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    Mono<Response<SearchAddressResult>> searchPointOfInterestCategoryWithResponse(
+                SearchPointOfInterestCategoryOptions options, Context context) {
+        final Optional<LatLong> optCoordinates = Optional.ofNullable(options.getCoordinates());
         Mono<Response<com.azure.maps.search.implementation.models.SearchAddressResult>> responseMono =
             this.serviceClient.searchPointOfInterestCategoryWithResponseAsync(
                 ResponseFormat.JSON,
-                query,
-                param.isTypeAhead(),
-                param.getTop(),
-                param.getSkip(),
-                param.getCategoryFilter(),
-                countryFilter,
+                options.getQuery(),
+                options.isTypeAhead(),
+                options.getTop(),
+                options.getSkip(),
+                options.getCategoryFilter(),
+                options.getCountryFilter(),
                 optCoordinates.map(LatLong::getLat).orElse(null),
                 optCoordinates.map(LatLong::getLon).orElse(null),
-                param.getRadiusInMeters(),
-                param.getBoundingBox().map(BoundingBox::getTopLeft).map(LatLong::toString).orElse(null),
-                param.getBoundingBox().map(BoundingBox::getBottomRight).map(LatLong::toString).orElse(null),
-                param.getLanguage(),
-                param.getExtendedPostalCodesFor(),
-                param.getBrandFilter(),
-                param.getElectricVehicleConnectorFilter(),
-                param.getLocalizedMapView(),
-                param.getOperatingHours(),
+                options.getRadiusInMeters(),
+                options.getBoundingBox().map(BoundingBox::getTopLeft).map(LatLong::toString).orElse(null),
+                options.getBoundingBox().map(BoundingBox::getBottomRight).map(LatLong::toString).orElse(null),
+                options.getLanguage(),
+                options.getExtendedPostalCodesFor(),
+                options.getBrandFilter(),
+                options.getElectricVehicleConnectorFilter(),
+                options.getLocalizedMapView(),
+                options.getOperatingHours(),
                 context);
 
         // convert to the right (public) SearchAddressResult
@@ -438,23 +427,9 @@ public final class SearchAsyncClient {
         return this.serviceClient.getPointOfInterestCategoryTreeAsync(JsonFormat.JSON, language);
     }
 
-
     /**
      * **Get POI Category Tree**
      *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
-     *
-     * <p>POI Category API provides a full list of supported Points of Interest (POI) categories and subcategories
-     * together with their translations and synonyms. The returned content can be used to provide more meaningful
-     * results through other Search Service APIs, like [Get Search
-     * POI](https://docs.microsoft.com/rest/api/maps/search/getsearchpoi).
-     *
-     * @param format Desired format of the response. Only `json` format is supported.
-     * @param language Language in which search results should be returned. Should be one of supported IETF language
-     *     tags, except NGT and NGT-Latn. Language tag is case insensitive. When data in specified language is not
-     *     available for a specific field, default language is used (English).
-     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
-     *     details.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -462,6 +437,20 @@ public final class SearchAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<PointOfInterestCategoryTreeResult>> getPointOfInterestCategoryTreeWithResponse(
+            String language) {
+        return this.getPointOfInterestCategoryTreeWithResponse(language, null);
+    }
+
+    /**
+     * **Get POI Category Tree**
+     *
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful POI Category Tree call.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    Mono<Response<PointOfInterestCategoryTreeResult>> getPointOfInterestCategoryTreeWithResponse(
             String language, Context context) {
         return this.serviceClient.getPointOfInterestCategoryTreeWithResponseAsync(JsonFormat.JSON, language,
             context);
@@ -476,14 +465,12 @@ public final class SearchAsyncClient {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchAddressResult> searchAddress(String query, SearchAddressOptions options) {
-        Mono<Response<SearchAddressResult>> result = this.searchAddressWithResponse(query,
-                options, null);
+    public Mono<SearchAddressResult> searchAddress(SearchAddressOptions options) {
+        Mono<Response<SearchAddressResult>> result = this.searchAddressWithResponse(options, null);
         return result.flatMap(response -> {
             return Mono.just(response.getValue());
         });
     }
-
 
     /**
      * **Address Geocoding**
@@ -495,29 +482,38 @@ public final class SearchAsyncClient {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<SearchAddressResult>> searchAddressWithResponse(
-            String query, SearchAddressOptions options, Context context) {
+    public Mono<Response<SearchAddressResult>> searchAddressWithResponse(SearchAddressOptions options) {
+        return this.searchAddressWithResponse(options, null);
+    }
 
-        final SearchAddressOptions param = Optional.ofNullable(options).orElse(new SearchAddressOptions());
-
-        // call method and convert
+    /**
+     * **Address Geocoding**
+     *
+     * <p>**Applies to**: S0 and S1 pricing tiers.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful Search calls.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    Mono<Response<SearchAddressResult>> searchAddressWithResponse(SearchAddressOptions options, Context context) {
         Mono<Response<com.azure.maps.search.implementation.models.SearchAddressResult>> responseMono =
             this.serviceClient.searchAddressWithResponseAsync(
                 ResponseFormat.JSON,
-                query,
-                param.isTypeAhead(),
-                param.getTop(),
-                param.getSkip(),
-                param.getCountryFilter(),
-                param.getCoordinates().map(LatLong::getLat).orElse(null),
-                param.getCoordinates().map(LatLong::getLon).orElse(null),
-                param.getRadiusInMeters(),
-                param.getBoundingBox().map(BoundingBox::getTopLeft).map(LatLong::toString).orElse(null),
-                param.getBoundingBox().map(BoundingBox::getBottomRight).map(LatLong::toString).orElse(null),
-                param.getLanguage(),
-                param.getExtendedPostalCodesFor(),
-                param.getEntityType(),
-                param.getLocalizedMapView(),
+                options.getQuery(),
+                options.isTypeAhead(),
+                options.getTop(),
+                options.getSkip(),
+                options.getCountryFilter(),
+                options.getCoordinates().map(LatLong::getLat).orElse(null),
+                options.getCoordinates().map(LatLong::getLon).orElse(null),
+                options.getRadiusInMeters(),
+                options.getBoundingBox().map(BoundingBox::getTopLeft).map(LatLong::toString).orElse(null),
+                options.getBoundingBox().map(BoundingBox::getBottomRight).map(LatLong::toString).orElse(null),
+                options.getLanguage(),
+                options.getExtendedPostalCodesFor(),
+                options.getEntityType(),
+                options.getLocalizedMapView(),
                 context);
 
         // convert to the right (public) SearchAddressResult
@@ -536,13 +532,25 @@ public final class SearchAsyncClient {
      * @return this object is returned from a successful Search Address Reverse call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<ReverseSearchAddressResult> reverseSearchAddress(LatLong coordinates,
-            ReverseSearchAddressOptions options) {
-        Mono<Response<ReverseSearchAddressResult>> result = this.reverseSearchAddressWithResponse(coordinates,
-            options, null);
+    public Mono<ReverseSearchAddressResult> reverseSearchAddress(ReverseSearchAddressOptions options) {
+        Mono<Response<ReverseSearchAddressResult>> result = this.reverseSearchAddressWithResponse(options, null);
         return result.flatMap(response -> {
             return Mono.just(response.getValue());
         });
+    }
+
+        /**
+     * **Reverse Geocode to an Address**
+     *
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful Search Address Reverse call.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Response<ReverseSearchAddressResult>> reverseSearchAddressWithResponse(
+                ReverseSearchAddressOptions options) {
+        return this.reverseSearchAddressWithResponse(options, null);
     }
 
     /**
@@ -554,28 +562,23 @@ public final class SearchAsyncClient {
      * @return this object is returned from a successful Search Address Reverse call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<ReverseSearchAddressResult>> reverseSearchAddressWithResponse(
-            LatLong coordinates, ReverseSearchAddressOptions options, Context context) {
-
-        final ReverseSearchAddressOptions param = Optional.ofNullable(options)
-            .orElse(new ReverseSearchAddressOptions());
-
-        // call method and convert
+    Mono<Response<ReverseSearchAddressResult>> reverseSearchAddressWithResponse(
+                ReverseSearchAddressOptions options, Context context) {
         Mono<Response<com.azure.maps.search.implementation.models.ReverseSearchAddressResult>> responseMono =
             this.serviceClient.reverseSearchAddressWithResponseAsync(
                 ResponseFormat.JSON,
-                Arrays.asList(coordinates.getLat(), coordinates.getLon()),
-                param.getLanguage(),
-                param.includeSpeedLimit(),
-                param.getHeading(),
-                param.getRadiusInMeters(),
-                param.getNumber(),
-                param.includeRoadUse(),
-                param.getRoadUse(),
-                param.allowFreeformNewline(),
-                param.includeMatchType(),
-                param.getEntityType(),
-                param.getLocalizedMapView(),
+                Arrays.asList(options.getCoordinates().getLat(), options.getCoordinates().getLon()),
+                options.getLanguage(),
+                options.includeSpeedLimit(),
+                options.getHeading(),
+                options.getRadiusInMeters(),
+                options.getNumber(),
+                options.includeRoadUse(),
+                options.getRoadUse(),
+                options.allowFreeformNewline(),
+                options.includeMatchType(),
+                options.getEntityType(),
+                options.getLocalizedMapView(),
                 context);
 
         // convert to the right (public) SearchAddressResult
@@ -594,9 +597,9 @@ public final class SearchAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<ReverseSearchCrossStreetAddressResult> reverseSearchCrossStreetAddress(
-            LatLong coordinates, ReverseSearchCrossStreetAddressOptions options) {
-        Mono<Response<ReverseSearchCrossStreetAddressResult>> result = this.reverseSearchCrossStreetAddressWithResponse(
-            coordinates, options, null);
+            ReverseSearchCrossStreetAddressOptions options) {
+        Mono<Response<ReverseSearchCrossStreetAddressResult>> result =
+            this.reverseSearchCrossStreetAddressWithResponse(options, null);
         return result.flatMap(response -> {
             return Mono.just(response.getValue());
         });
@@ -614,21 +617,32 @@ public final class SearchAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<ReverseSearchCrossStreetAddressResult>> reverseSearchCrossStreetAddressWithResponse(
-            LatLong coordinates, ReverseSearchCrossStreetAddressOptions options, Context context) {
+            ReverseSearchCrossStreetAddressOptions options) {
+        return this.reverseSearchCrossStreetAddressWithResponse(options, null);
+    }
 
-        final ReverseSearchCrossStreetAddressOptions param = Optional.ofNullable(options)
-            .orElse(new ReverseSearchCrossStreetAddressOptions());
-
-        // call method and convert
+    /**
+     * **Reverse Geocode to a Cross Street**
+     *
+     * <p>**Applies to**: S0 and S1 pricing tiers.
+     *
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful Search Address Reverse CrossStreet call.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    Mono<Response<ReverseSearchCrossStreetAddressResult>> reverseSearchCrossStreetAddressWithResponse(
+            ReverseSearchCrossStreetAddressOptions options, Context context) {
         Mono<Response<com.azure.maps.search.implementation.models.ReverseSearchCrossStreetAddressResult>> responseMono =
             this.serviceClient.reverseSearchCrossStreetAddressWithResponseAsync(
                 ResponseFormat.JSON,
-                Arrays.asList(coordinates.getLat(), coordinates.getLon()),
-                param.getTop(),
-                param.getHeading(),
-                param.getRadiusInMeters(),
-                param.getLanguage(),
-                param.getLocalizedMapView(),
+                Arrays.asList(options.getCoordinates().getLat(), options.getCoordinates().getLon()),
+                options.getTop(),
+                options.getHeading(),
+                options.getRadiusInMeters(),
+                options.getLanguage(),
+                options.getLocalizedMapView(),
                 context);
 
         // convert to the right (public) SearchAddressResult
@@ -667,12 +681,23 @@ public final class SearchAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<SearchAddressResult>> searchStructuredAddressWithResponse(
-            StructuredAddress address, SearchStructuredAddressOptions options, Context context) {
+            StructuredAddress address, SearchStructuredAddressOptions options) {
+        return this.searchStructuredAddressWithResponse(address, options, null);
+    }
 
+    /**
+     * **Structured Address Geocoding**
+     *
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful Search calls.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    Mono<Response<SearchAddressResult>> searchStructuredAddressWithResponse(
+            StructuredAddress address, SearchStructuredAddressOptions options, Context context) {
         final SearchStructuredAddressOptions param = Optional.ofNullable(options)
             .orElse(new SearchStructuredAddressOptions());
-
-        // call method and convert
         Mono<Response<com.azure.maps.search.implementation.models.SearchAddressResult>> responseMono =
             this.serviceClient.searchStructuredAddressWithResponseAsync(
                 ResponseFormat.JSON,
@@ -710,10 +735,8 @@ public final class SearchAsyncClient {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchAddressResult> searchInsideGeometry(String query, GeoJsonObject geometry,
-            SearchInsideGeometryOptions options) {
-        Mono<Response<SearchAddressResult>> result = this.searchInsideGeometryWithResponse(query,
-            geometry, options, null);
+    public Mono<SearchAddressResult> searchInsideGeometry(SearchInsideGeometryOptions options) {
+        Mono<Response<SearchAddressResult>> result = this.searchInsideGeometryWithResponse(options, null);
         return result.flatMap(response -> {
             return Mono.just(response.getValue());
         });
@@ -728,25 +751,34 @@ public final class SearchAsyncClient {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<SearchAddressResult>> searchInsideGeometryWithResponse(String query,
-            GeoJsonObject geometry, SearchInsideGeometryOptions options, Context context) {
+    public Mono<Response<SearchAddressResult>> searchInsideGeometryWithResponse(
+            SearchInsideGeometryOptions options) {
+        return this.searchInsideGeometryWithResponse(options, null);
+    }
 
-        final SearchInsideGeometryOptions param = Optional.ofNullable(options)
-                .orElse(new SearchInsideGeometryOptions());
-
-        // call method and convert
+    /**
+     * **Applies to**: S0 and S1 pricing tiers.
+     *
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful Search calls.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    Mono<Response<SearchAddressResult>> searchInsideGeometryWithResponse(SearchInsideGeometryOptions options,
+            Context context) {
         Mono<Response<com.azure.maps.search.implementation.models.SearchAddressResult>> responseMono =
             this.serviceClient.searchInsideGeometryWithResponseAsync(
                 ResponseFormat.JSON,
-                query,
-                new SearchInsideGeometryRequest().setGeometry(geometry),
-                param.getTop(),
-                param.getLanguage(),
-                param.getCategoryFilter(),
-                param.getExtendedPostalCodesFor(),
-                param.getIdxSet(),
-                param.getLocalizedMapView(),
-                param.getOperatingHours(),
+                options.getQuery(),
+                new SearchInsideGeometryRequest().setGeometry(options.getGeometry()),
+                options.getTop(),
+                options.getLanguage(),
+                options.getCategoryFilter(),
+                options.getExtendedPostalCodesFor(),
+                options.getIdxSet(),
+                options.getLocalizedMapView(),
+                options.getOperatingHours(),
                 context);
 
         // convert to the right (public) SearchAddressResult
@@ -766,10 +798,8 @@ public final class SearchAsyncClient {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchAddressResult> searchAlongRoute(String query, int maxDetourTime,
-            GeoJsonLineString route, SearchAlongRouteOptions options) {
-        Mono<Response<SearchAddressResult>> result = this.searchAlongRouteWithResponse(query, maxDetourTime,
-            route, options, null);
+    public Mono<SearchAddressResult> searchAlongRoute(SearchAlongRouteOptions options) {
+        Mono<Response<SearchAddressResult>> result = this.searchAlongRouteWithResponse(options, null);
         return result.flatMap(response -> {
             return Mono.just(response.getValue());
         });
@@ -784,25 +814,33 @@ public final class SearchAsyncClient {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<SearchAddressResult>> searchAlongRouteWithResponse(String query, int maxDetourTime,
-            GeoJsonLineString route, SearchAlongRouteOptions options, Context context) {
+    public Mono<Response<SearchAddressResult>> searchAlongRouteWithResponse(SearchAlongRouteOptions options) {
+        return this.searchAlongRouteWithResponse(options, null);
+    }
 
-        final SearchAlongRouteOptions param = Optional.ofNullable(options)
-                .orElse(new SearchAlongRouteOptions());
-
-        // call method and convert
+    /**
+     * **Applies to**: S0 and S1 pricing tiers.
+     *
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful Search calls.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    Mono<Response<SearchAddressResult>> searchAlongRouteWithResponse(SearchAlongRouteOptions options,
+            Context context) {
         Mono<Response<com.azure.maps.search.implementation.models.SearchAddressResult>> responseMono =
             this.serviceClient.searchAlongRouteWithResponseAsync(
                 ResponseFormat.JSON,
-                query,
-                maxDetourTime,
-                new SearchAlongRouteRequest().setRoute(route),
-                param.getTop(),
-                param.getBrandFilter(),
-                param.getCategoryFilter(),
-                param.getElectricVehicleConnectorFilter(),
-                param.getLocalizedMapView(),
-                param.getOperatingHours(),
+                options.getQuery(),
+                options.getMaxDetourTime(),
+                new SearchAlongRouteRequest().setRoute(options.getRoute()),
+                options.getTop(),
+                options.getBrandFilter(),
+                options.getCategoryFilter(),
+                options.getElectricVehicleConnectorFilter(),
+                options.getLocalizedMapView(),
+                options.getOperatingHours(),
                 context);
 
         // convert to the right (public) SearchAddressResult

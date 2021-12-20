@@ -8,6 +8,7 @@ public class BaseReverseSearchOptions<T extends BaseReverseSearchOptions<T>> {
     private Integer heading;
     private Integer radiusInMeters;
     private LocalizedMapView localizedMapView;
+    private LatLong coordinates;
 
     /**
      * Returns the radius in meters.
@@ -42,12 +43,20 @@ public class BaseReverseSearchOptions<T extends BaseReverseSearchOptions<T>> {
     }
 
     /**
+     * Returns the coordinates.
+     * @return
+     */
+    public LatLong getCoordinates() {
+        return this.coordinates;
+    }
+
+    /**
      * Sets the radius in meters.
      * @param radiusInMeters
      * @return
      */
     @SuppressWarnings("unchecked")
-    public T radiusInMeters(Integer radiusInMeters) {
+    public T setRadiusInMeters(Integer radiusInMeters) {
         this.radiusInMeters = radiusInMeters;
         return (T) this;
     }
@@ -58,7 +67,7 @@ public class BaseReverseSearchOptions<T extends BaseReverseSearchOptions<T>> {
      * @return
      */
     @SuppressWarnings("unchecked")
-    public T heading(Integer heading) {
+    public T setReading(Integer heading) {
         this.heading = heading;
         return (T) this;
     }
@@ -69,7 +78,7 @@ public class BaseReverseSearchOptions<T extends BaseReverseSearchOptions<T>> {
      * @return
      */
     @SuppressWarnings("unchecked")
-    public T language(String language) {
+    public T setLanguage(String language) {
         this.language = language;
         return (T) this;
     }
@@ -80,8 +89,19 @@ public class BaseReverseSearchOptions<T extends BaseReverseSearchOptions<T>> {
      * @return
      */
     @SuppressWarnings("unchecked")
-    public T localizedMapView(LocalizedMapView localizedMapView) {
+    public T setLocalizedMapView(LocalizedMapView localizedMapView) {
         this.localizedMapView = localizedMapView;
+        return (T) this;
+    }
+
+    /**
+     * Sets the coordinates.
+     * @param coordinates
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public T setCoordinates(LatLong coordinates) {
+        this.coordinates = coordinates;
         return (T) this;
     }
 }

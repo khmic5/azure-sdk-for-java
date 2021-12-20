@@ -77,7 +77,7 @@ public class BaseSearchOptions<T extends BaseSearchOptions<T>> {
      * @return
      */
     @SuppressWarnings("unchecked")
-    public T top(Integer top) {
+    public T setTop(Integer top) {
         this.top = top;
         return (T) this;
     }
@@ -88,7 +88,7 @@ public class BaseSearchOptions<T extends BaseSearchOptions<T>> {
      * @return
      */
     @SuppressWarnings("unchecked")
-    public T skip(Integer skip) {
+    public T setSkip(Integer skip) {
         this.skip = skip;
         return (T) this;
     }
@@ -99,7 +99,7 @@ public class BaseSearchOptions<T extends BaseSearchOptions<T>> {
      * @return
      */
     @SuppressWarnings("unchecked")
-    public T countryFilter(List<String> countryFilter) {
+    public T setCountryFilter(List<String> countryFilter) {
         this.countryFilter = countryFilter;
         return (T) this;
     }
@@ -110,7 +110,7 @@ public class BaseSearchOptions<T extends BaseSearchOptions<T>> {
      * @return
      */
     @SuppressWarnings("unchecked")
-    public T radiusInMeters(Integer radiusInMeters) {
+    public T setRadiusInMeters(Integer radiusInMeters) {
         this.radiusInMeters = radiusInMeters;
         return (T) this;
     }
@@ -121,7 +121,7 @@ public class BaseSearchOptions<T extends BaseSearchOptions<T>> {
      * @return
      */
     @SuppressWarnings("unchecked")
-    public T boundingBox(BoundingBox box) {
+    public T setBoundingBox(BoundingBox box) {
         this.boundingBox = box;
         return (T) this;
     }
@@ -132,7 +132,7 @@ public class BaseSearchOptions<T extends BaseSearchOptions<T>> {
      * @return
      */
     @SuppressWarnings("unchecked")
-    public T language(String language) {
+    public T setLanguage(String language) {
         this.language = language;
         return (T) this;
     }
@@ -143,7 +143,7 @@ public class BaseSearchOptions<T extends BaseSearchOptions<T>> {
      * @return
      */
     @SuppressWarnings("unchecked")
-    public T localizedMapView(LocalizedMapView localizedMapView) {
+    public T setLocalizedMapView(LocalizedMapView localizedMapView) {
         this.localizedMapView = localizedMapView;
         return (T) this;
     }
