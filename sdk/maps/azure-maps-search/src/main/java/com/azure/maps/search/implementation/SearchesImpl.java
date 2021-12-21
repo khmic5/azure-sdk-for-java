@@ -48,7 +48,7 @@ import com.azure.maps.search.models.PointOfInterestExtendedPostalCodes;
 import com.azure.maps.search.models.ResponseFormat;
 import com.azure.maps.search.models.ReverseSearchAddressBatchProcessResult;
 import com.azure.maps.search.models.RoadUseType;
-import com.azure.maps.search.models.SearchAddressBatchProcessResult;
+import com.azure.maps.search.models.SearchAddressBatchResult;
 import com.azure.maps.search.models.SearchIndexes;
 import com.azure.maps.search.models.SearchesFuzzySearchBatchResponse;
 import com.azure.maps.search.models.SearchesGetFuzzySearchBatchResponse;
@@ -90,7 +90,7 @@ public final class SearchesImpl {
         @Get("/search/polygon/{format}")
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
-        Mono<Response<PolygonResult>> getPolygon(
+        Mono<Response<PolygonResult>> listPolygons(
                 @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String clientId,
                 @QueryParam("api-version") String apiVersion,
@@ -122,7 +122,7 @@ public final class SearchesImpl {
                 @QueryParam("extendedPostalCodesFor") String extendedPostalCodesFor,
                 @QueryParam("minFuzzyLevel") Integer minFuzzyLevel,
                 @QueryParam("maxFuzzyLevel") Integer maxFuzzyLevel,
-                @QueryParam("idxSet") String idxSet,
+                @QueryParam("idxSet") String indexFilter,
                 @QueryParam("brandSet") String brandFilter,
                 @QueryParam("connectorSet") String electricVehicleConnectorFilter,
                 @QueryParam("entityType") GeographicEntityType entityType,
@@ -327,7 +327,7 @@ public final class SearchesImpl {
                 @QueryParam("language") String language,
                 @QueryParam("categorySet") String categoryFilter,
                 @QueryParam("extendedPostalCodesFor") String extendedPostalCodesFor,
-                @QueryParam("idxSet") String idxSet,
+                @QueryParam("idxSet") String indexFilter,
                 @QueryParam("view") LocalizedMapView localizedMapView,
                 @QueryParam("openingHours") OperatingHoursRange operatingHours,
                 @BodyParam("application/json") SearchInsideGeometryRequest geometry,
@@ -360,12 +360,12 @@ public final class SearchesImpl {
                 value = ErrorResponseException.class,
                 code = {408})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
-        Mono<Response<SearchAddressBatchProcessResult>> fuzzySearchBatchSync(
+        Mono<Response<SearchAddressBatchResult>> fuzzySearchBatchSync(
                 @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String clientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") JsonFormat format,
-                @BodyParam("application/json") BatchRequest searchFuzzyBatchRequestBody,
+                @BodyParam("application/json") BatchRequest batchRequest,
                 @HeaderParam("Accept") String accept,
                 Context context);
 
@@ -377,7 +377,7 @@ public final class SearchesImpl {
                 @HeaderParam("x-ms-client-id") String clientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") JsonFormat format,
-                @BodyParam("application/json") BatchRequest searchFuzzyBatchRequestBody,
+                @BodyParam("application/json") BatchRequest batchRequest,
                 @HeaderParam("Accept") String accept,
                 Context context);
 
@@ -398,12 +398,12 @@ public final class SearchesImpl {
                 value = ErrorResponseException.class,
                 code = {408})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
-        Mono<Response<SearchAddressBatchProcessResult>> searchAddressBatchSync(
+        Mono<Response<SearchAddressBatchResult>> searchAddressBatchSync(
                 @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String clientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") JsonFormat format,
-                @BodyParam("application/json") BatchRequest searchAddressBatchRequestBody,
+                @BodyParam("application/json") BatchRequest batchRequest,
                 @HeaderParam("Accept") String accept,
                 Context context);
 
@@ -415,7 +415,7 @@ public final class SearchesImpl {
                 @HeaderParam("x-ms-client-id") String clientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") JsonFormat format,
-                @BodyParam("application/json") BatchRequest searchAddressBatchRequestBody,
+                @BodyParam("application/json") BatchRequest batchRequest,
                 @HeaderParam("Accept") String accept,
                 Context context);
 
@@ -441,7 +441,7 @@ public final class SearchesImpl {
                 @HeaderParam("x-ms-client-id") String clientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") JsonFormat format,
-                @BodyParam("application/json") BatchRequest searchAddressReverseBatchRequestBody,
+                @BodyParam("application/json") BatchRequest batchRequest,
                 @HeaderParam("Accept") String accept,
                 Context context);
 
@@ -453,7 +453,7 @@ public final class SearchesImpl {
                 @HeaderParam("x-ms-client-id") String clientId,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("format") JsonFormat format,
-                @BodyParam("application/json") BatchRequest searchAddressReverseBatchRequestBody,
+                @BodyParam("application/json") BatchRequest batchRequest,
                 @HeaderParam("Accept") String accept,
                 Context context);
 
@@ -492,13 +492,13 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search Polygon call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<PolygonResult>> getPolygonWithResponseAsync(JsonFormat format, List<String> geometryIds) {
+    public Mono<Response<PolygonResult>> listPolygonsWithResponseAsync(JsonFormat format, List<String> geometryIds) {
         final String accept = "application/json";
         String geometryIdsConverted =
                 JacksonAdapter.createDefaultSerializerAdapter().serializeList(geometryIds, CollectionFormat.CSV);
         return FluxUtil.withContext(
                 context ->
-                        service.getPolygon(
+                        service.listPolygons(
                                 this.client.getHost(),
                                 this.client.getClientId(),
                                 this.client.getApiVersion(),
@@ -532,12 +532,12 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search Polygon call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<PolygonResult>> getPolygonWithResponseAsync(
+    public Mono<Response<PolygonResult>> listPolygonsWithResponseAsync(
             JsonFormat format, List<String> geometryIds, Context context) {
         final String accept = "application/json";
         String geometryIdsConverted =
                 JacksonAdapter.createDefaultSerializerAdapter().serializeList(geometryIds, CollectionFormat.CSV);
-        return service.getPolygon(
+        return service.listPolygons(
                 this.client.getHost(),
                 this.client.getClientId(),
                 this.client.getApiVersion(),
@@ -570,8 +570,8 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search Polygon call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<PolygonResult> getPolygonAsync(JsonFormat format, List<String> geometryIds) {
-        return getPolygonWithResponseAsync(format, geometryIds)
+    public Mono<PolygonResult> listPolygonsAsync(JsonFormat format, List<String> geometryIds) {
+        return listPolygonsWithResponseAsync(format, geometryIds)
                 .flatMap(
                         (Response<PolygonResult> res) -> {
                             if (res.getValue() != null) {
@@ -606,8 +606,8 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search Polygon call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<PolygonResult> getPolygonAsync(JsonFormat format, List<String> geometryIds, Context context) {
-        return getPolygonWithResponseAsync(format, geometryIds, context)
+    public Mono<PolygonResult> listPolygonsAsync(JsonFormat format, List<String> geometryIds, Context context) {
+        return listPolygonsWithResponseAsync(format, geometryIds, context)
                 .flatMap(
                         (Response<PolygonResult> res) -> {
                             if (res.getValue() != null) {
@@ -641,8 +641,8 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search Polygon call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public PolygonResult getPolygon(JsonFormat format, List<String> geometryIds) {
-        return getPolygonAsync(format, geometryIds).block();
+    public PolygonResult listPolygons(JsonFormat format, List<String> geometryIds) {
+        return listPolygonsAsync(format, geometryIds).block();
     }
 
     /**
@@ -669,9 +669,9 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search Polygon call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<PolygonResult> getPolygonWithResponse(
+    public Response<PolygonResult> listPolygonsWithResponse(
             JsonFormat format, List<String> geometryIds, Context context) {
-        return getPolygonWithResponseAsync(format, geometryIds, context).block();
+        return listPolygonsWithResponseAsync(format, geometryIds, context).block();
     }
 
     /**
@@ -754,7 +754,7 @@ public final class SearchesImpl {
      *     <p>* Level 4 doesn’t add any more spell checking functions.
      *     <p>The search engine will start looking for a match on the level defined by minFuzzyLevel, and will stop
      *     searching at the level specified by maxFuzzyLevel.
-     * @param idxSet A comma separated list of indexes which should be utilized for the search. Item order does not
+     * @param indexFilter A comma separated list of indexes which should be utilized for the search. Item order does not
      *     matter. Available indexes are: Addr = Address range interpolation, Geo = Geographies, PAD = Point Addresses,
      *     POI = Points of interest, Str = Streets, Xstr = Cross Streets (intersections).
      * @param brandFilter A comma-separated list of brand names which could be used to restrict the result to specific
@@ -840,7 +840,7 @@ public final class SearchesImpl {
             List<SearchIndexes> extendedPostalCodesFor,
             Integer minFuzzyLevel,
             Integer maxFuzzyLevel,
-            List<SearchIndexes> idxSet,
+            List<SearchIndexes> indexFilter,
             List<String> brandFilter,
             List<ElectricVehicleConnector> electricVehicleConnectorFilter,
             GeographicEntityType entityType,
@@ -854,8 +854,8 @@ public final class SearchesImpl {
         String extendedPostalCodesForConverted =
                 JacksonAdapter.createDefaultSerializerAdapter()
                         .serializeList(extendedPostalCodesFor, CollectionFormat.CSV);
-        String idxSetConverted =
-                JacksonAdapter.createDefaultSerializerAdapter().serializeList(idxSet, CollectionFormat.CSV);
+        String indexFilterConverted =
+                JacksonAdapter.createDefaultSerializerAdapter().serializeList(indexFilter, CollectionFormat.CSV);
         String brandFilterConverted =
                 JacksonAdapter.createDefaultSerializerAdapter().serializeList(brandFilter, CollectionFormat.CSV);
         String electricVehicleConnectorFilterConverted =
@@ -883,7 +883,7 @@ public final class SearchesImpl {
                                 extendedPostalCodesForConverted,
                                 minFuzzyLevel,
                                 maxFuzzyLevel,
-                                idxSetConverted,
+                                indexFilterConverted,
                                 brandFilterConverted,
                                 electricVehicleConnectorFilterConverted,
                                 entityType,
@@ -973,7 +973,7 @@ public final class SearchesImpl {
      *     <p>* Level 4 doesn’t add any more spell checking functions.
      *     <p>The search engine will start looking for a match on the level defined by minFuzzyLevel, and will stop
      *     searching at the level specified by maxFuzzyLevel.
-     * @param idxSet A comma separated list of indexes which should be utilized for the search. Item order does not
+     * @param indexFilter A comma separated list of indexes which should be utilized for the search. Item order does not
      *     matter. Available indexes are: Addr = Address range interpolation, Geo = Geographies, PAD = Point Addresses,
      *     POI = Points of interest, Str = Streets, Xstr = Cross Streets (intersections).
      * @param brandFilter A comma-separated list of brand names which could be used to restrict the result to specific
@@ -1060,7 +1060,7 @@ public final class SearchesImpl {
             List<SearchIndexes> extendedPostalCodesFor,
             Integer minFuzzyLevel,
             Integer maxFuzzyLevel,
-            List<SearchIndexes> idxSet,
+            List<SearchIndexes> indexFilter,
             List<String> brandFilter,
             List<ElectricVehicleConnector> electricVehicleConnectorFilter,
             GeographicEntityType entityType,
@@ -1075,8 +1075,8 @@ public final class SearchesImpl {
         String extendedPostalCodesForConverted =
                 JacksonAdapter.createDefaultSerializerAdapter()
                         .serializeList(extendedPostalCodesFor, CollectionFormat.CSV);
-        String idxSetConverted =
-                JacksonAdapter.createDefaultSerializerAdapter().serializeList(idxSet, CollectionFormat.CSV);
+        String indexFilterConverted =
+                JacksonAdapter.createDefaultSerializerAdapter().serializeList(indexFilter, CollectionFormat.CSV);
         String brandFilterConverted =
                 JacksonAdapter.createDefaultSerializerAdapter().serializeList(brandFilter, CollectionFormat.CSV);
         String electricVehicleConnectorFilterConverted =
@@ -1102,7 +1102,7 @@ public final class SearchesImpl {
                 extendedPostalCodesForConverted,
                 minFuzzyLevel,
                 maxFuzzyLevel,
-                idxSetConverted,
+                indexFilterConverted,
                 brandFilterConverted,
                 electricVehicleConnectorFilterConverted,
                 entityType,
@@ -1192,7 +1192,7 @@ public final class SearchesImpl {
      *     <p>* Level 4 doesn’t add any more spell checking functions.
      *     <p>The search engine will start looking for a match on the level defined by minFuzzyLevel, and will stop
      *     searching at the level specified by maxFuzzyLevel.
-     * @param idxSet A comma separated list of indexes which should be utilized for the search. Item order does not
+     * @param indexFilter A comma separated list of indexes which should be utilized for the search. Item order does not
      *     matter. Available indexes are: Addr = Address range interpolation, Geo = Geographies, PAD = Point Addresses,
      *     POI = Points of interest, Str = Streets, Xstr = Cross Streets (intersections).
      * @param brandFilter A comma-separated list of brand names which could be used to restrict the result to specific
@@ -1278,7 +1278,7 @@ public final class SearchesImpl {
             List<SearchIndexes> extendedPostalCodesFor,
             Integer minFuzzyLevel,
             Integer maxFuzzyLevel,
-            List<SearchIndexes> idxSet,
+            List<SearchIndexes> indexFilter,
             List<String> brandFilter,
             List<ElectricVehicleConnector> electricVehicleConnectorFilter,
             GeographicEntityType entityType,
@@ -1301,7 +1301,7 @@ public final class SearchesImpl {
                         extendedPostalCodesFor,
                         minFuzzyLevel,
                         maxFuzzyLevel,
-                        idxSet,
+                        indexFilter,
                         brandFilter,
                         electricVehicleConnectorFilter,
                         entityType,
@@ -1397,7 +1397,7 @@ public final class SearchesImpl {
      *     <p>* Level 4 doesn’t add any more spell checking functions.
      *     <p>The search engine will start looking for a match on the level defined by minFuzzyLevel, and will stop
      *     searching at the level specified by maxFuzzyLevel.
-     * @param idxSet A comma separated list of indexes which should be utilized for the search. Item order does not
+     * @param indexFilter A comma separated list of indexes which should be utilized for the search. Item order does not
      *     matter. Available indexes are: Addr = Address range interpolation, Geo = Geographies, PAD = Point Addresses,
      *     POI = Points of interest, Str = Streets, Xstr = Cross Streets (intersections).
      * @param brandFilter A comma-separated list of brand names which could be used to restrict the result to specific
@@ -1484,7 +1484,7 @@ public final class SearchesImpl {
             List<SearchIndexes> extendedPostalCodesFor,
             Integer minFuzzyLevel,
             Integer maxFuzzyLevel,
-            List<SearchIndexes> idxSet,
+            List<SearchIndexes> indexFilter,
             List<String> brandFilter,
             List<ElectricVehicleConnector> electricVehicleConnectorFilter,
             GeographicEntityType entityType,
@@ -1508,7 +1508,7 @@ public final class SearchesImpl {
                         extendedPostalCodesFor,
                         minFuzzyLevel,
                         maxFuzzyLevel,
-                        idxSet,
+                        indexFilter,
                         brandFilter,
                         electricVehicleConnectorFilter,
                         entityType,
@@ -1605,7 +1605,7 @@ public final class SearchesImpl {
      *     <p>* Level 4 doesn’t add any more spell checking functions.
      *     <p>The search engine will start looking for a match on the level defined by minFuzzyLevel, and will stop
      *     searching at the level specified by maxFuzzyLevel.
-     * @param idxSet A comma separated list of indexes which should be utilized for the search. Item order does not
+     * @param indexFilter A comma separated list of indexes which should be utilized for the search. Item order does not
      *     matter. Available indexes are: Addr = Address range interpolation, Geo = Geographies, PAD = Point Addresses,
      *     POI = Points of interest, Str = Streets, Xstr = Cross Streets (intersections).
      * @param brandFilter A comma-separated list of brand names which could be used to restrict the result to specific
@@ -1691,7 +1691,7 @@ public final class SearchesImpl {
             List<SearchIndexes> extendedPostalCodesFor,
             Integer minFuzzyLevel,
             Integer maxFuzzyLevel,
-            List<SearchIndexes> idxSet,
+            List<SearchIndexes> indexFilter,
             List<String> brandFilter,
             List<ElectricVehicleConnector> electricVehicleConnectorFilter,
             GeographicEntityType entityType,
@@ -1714,7 +1714,7 @@ public final class SearchesImpl {
                         extendedPostalCodesFor,
                         minFuzzyLevel,
                         maxFuzzyLevel,
-                        idxSet,
+                        indexFilter,
                         brandFilter,
                         electricVehicleConnectorFilter,
                         entityType,
@@ -1803,7 +1803,7 @@ public final class SearchesImpl {
      *     <p>* Level 4 doesn’t add any more spell checking functions.
      *     <p>The search engine will start looking for a match on the level defined by minFuzzyLevel, and will stop
      *     searching at the level specified by maxFuzzyLevel.
-     * @param idxSet A comma separated list of indexes which should be utilized for the search. Item order does not
+     * @param indexFilter A comma separated list of indexes which should be utilized for the search. Item order does not
      *     matter. Available indexes are: Addr = Address range interpolation, Geo = Geographies, PAD = Point Addresses,
      *     POI = Points of interest, Str = Streets, Xstr = Cross Streets (intersections).
      * @param brandFilter A comma-separated list of brand names which could be used to restrict the result to specific
@@ -1890,7 +1890,7 @@ public final class SearchesImpl {
             List<SearchIndexes> extendedPostalCodesFor,
             Integer minFuzzyLevel,
             Integer maxFuzzyLevel,
-            List<SearchIndexes> idxSet,
+            List<SearchIndexes> indexFilter,
             List<String> brandFilter,
             List<ElectricVehicleConnector> electricVehicleConnectorFilter,
             GeographicEntityType entityType,
@@ -1914,7 +1914,7 @@ public final class SearchesImpl {
                         extendedPostalCodesFor,
                         minFuzzyLevel,
                         maxFuzzyLevel,
-                        idxSet,
+                        indexFilter,
                         brandFilter,
                         electricVehicleConnectorFilter,
                         entityType,
@@ -6564,13 +6564,13 @@ public final class SearchesImpl {
      * etc.
      *
      * @param format Desired format of the response. Value can be either _json_ or _xml_.
+     * @param countryCode The 2 or 3 letter [ISO3166-1](https://www.iso.org/iso-3166-country-codes.html) country code
+     *     portion of an address. E.g. US.
      * @param language Language in which search results should be returned. Should be one of supported IETF language
      *     tags, case insensitive. When data in specified language is not available for a specific field, default
      *     language is used.
      *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
      *     details.
-     * @param countryCode The 2 or 3 letter [ISO3166-1](https://www.iso.org/iso-3166-country-codes.html) country code
-     *     portion of an address. E.g. US.
      * @param top Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
      * @param skip Starting offset of the returned results within the full result set. Default: 0, minimum: 0 and
      *     maximum: 1900.
@@ -6627,8 +6627,8 @@ public final class SearchesImpl {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<SearchAddressResult>> searchStructuredAddressWithResponseAsync(
             ResponseFormat format,
-            String language,
             String countryCode,
+            String language,
             Integer top,
             Integer skip,
             String streetNumber,
@@ -6686,13 +6686,13 @@ public final class SearchesImpl {
      * etc.
      *
      * @param format Desired format of the response. Value can be either _json_ or _xml_.
+     * @param countryCode The 2 or 3 letter [ISO3166-1](https://www.iso.org/iso-3166-country-codes.html) country code
+     *     portion of an address. E.g. US.
      * @param language Language in which search results should be returned. Should be one of supported IETF language
      *     tags, case insensitive. When data in specified language is not available for a specific field, default
      *     language is used.
      *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
      *     details.
-     * @param countryCode The 2 or 3 letter [ISO3166-1](https://www.iso.org/iso-3166-country-codes.html) country code
-     *     portion of an address. E.g. US.
      * @param top Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
      * @param skip Starting offset of the returned results within the full result set. Default: 0, minimum: 0 and
      *     maximum: 1900.
@@ -6750,8 +6750,8 @@ public final class SearchesImpl {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<SearchAddressResult>> searchStructuredAddressWithResponseAsync(
             ResponseFormat format,
-            String language,
             String countryCode,
+            String language,
             Integer top,
             Integer skip,
             String streetNumber,
@@ -6808,13 +6808,13 @@ public final class SearchesImpl {
      * etc.
      *
      * @param format Desired format of the response. Value can be either _json_ or _xml_.
+     * @param countryCode The 2 or 3 letter [ISO3166-1](https://www.iso.org/iso-3166-country-codes.html) country code
+     *     portion of an address. E.g. US.
      * @param language Language in which search results should be returned. Should be one of supported IETF language
      *     tags, case insensitive. When data in specified language is not available for a specific field, default
      *     language is used.
      *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
      *     details.
-     * @param countryCode The 2 or 3 letter [ISO3166-1](https://www.iso.org/iso-3166-country-codes.html) country code
-     *     portion of an address. E.g. US.
      * @param top Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
      * @param skip Starting offset of the returned results within the full result set. Default: 0, minimum: 0 and
      *     maximum: 1900.
@@ -6871,8 +6871,8 @@ public final class SearchesImpl {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<SearchAddressResult> searchStructuredAddressAsync(
             ResponseFormat format,
-            String language,
             String countryCode,
+            String language,
             Integer top,
             Integer skip,
             String streetNumber,
@@ -6889,8 +6889,8 @@ public final class SearchesImpl {
             LocalizedMapView localizedMapView) {
         return searchStructuredAddressWithResponseAsync(
                         format,
-                        language,
                         countryCode,
+                        language,
                         top,
                         skip,
                         streetNumber,
@@ -6927,13 +6927,13 @@ public final class SearchesImpl {
      * etc.
      *
      * @param format Desired format of the response. Value can be either _json_ or _xml_.
+     * @param countryCode The 2 or 3 letter [ISO3166-1](https://www.iso.org/iso-3166-country-codes.html) country code
+     *     portion of an address. E.g. US.
      * @param language Language in which search results should be returned. Should be one of supported IETF language
      *     tags, case insensitive. When data in specified language is not available for a specific field, default
      *     language is used.
      *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
      *     details.
-     * @param countryCode The 2 or 3 letter [ISO3166-1](https://www.iso.org/iso-3166-country-codes.html) country code
-     *     portion of an address. E.g. US.
      * @param top Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
      * @param skip Starting offset of the returned results within the full result set. Default: 0, minimum: 0 and
      *     maximum: 1900.
@@ -6991,8 +6991,8 @@ public final class SearchesImpl {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<SearchAddressResult> searchStructuredAddressAsync(
             ResponseFormat format,
-            String language,
             String countryCode,
+            String language,
             Integer top,
             Integer skip,
             String streetNumber,
@@ -7010,8 +7010,8 @@ public final class SearchesImpl {
             Context context) {
         return searchStructuredAddressWithResponseAsync(
                         format,
-                        language,
                         countryCode,
+                        language,
                         top,
                         skip,
                         streetNumber,
@@ -7049,13 +7049,13 @@ public final class SearchesImpl {
      * etc.
      *
      * @param format Desired format of the response. Value can be either _json_ or _xml_.
+     * @param countryCode The 2 or 3 letter [ISO3166-1](https://www.iso.org/iso-3166-country-codes.html) country code
+     *     portion of an address. E.g. US.
      * @param language Language in which search results should be returned. Should be one of supported IETF language
      *     tags, case insensitive. When data in specified language is not available for a specific field, default
      *     language is used.
      *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
      *     details.
-     * @param countryCode The 2 or 3 letter [ISO3166-1](https://www.iso.org/iso-3166-country-codes.html) country code
-     *     portion of an address. E.g. US.
      * @param top Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
      * @param skip Starting offset of the returned results within the full result set. Default: 0, minimum: 0 and
      *     maximum: 1900.
@@ -7112,8 +7112,8 @@ public final class SearchesImpl {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public SearchAddressResult searchStructuredAddress(
             ResponseFormat format,
-            String language,
             String countryCode,
+            String language,
             Integer top,
             Integer skip,
             String streetNumber,
@@ -7130,8 +7130,8 @@ public final class SearchesImpl {
             LocalizedMapView localizedMapView) {
         return searchStructuredAddressAsync(
                         format,
-                        language,
                         countryCode,
+                        language,
                         top,
                         skip,
                         streetNumber,
@@ -7161,13 +7161,13 @@ public final class SearchesImpl {
      * etc.
      *
      * @param format Desired format of the response. Value can be either _json_ or _xml_.
+     * @param countryCode The 2 or 3 letter [ISO3166-1](https://www.iso.org/iso-3166-country-codes.html) country code
+     *     portion of an address. E.g. US.
      * @param language Language in which search results should be returned. Should be one of supported IETF language
      *     tags, case insensitive. When data in specified language is not available for a specific field, default
      *     language is used.
      *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
      *     details.
-     * @param countryCode The 2 or 3 letter [ISO3166-1](https://www.iso.org/iso-3166-country-codes.html) country code
-     *     portion of an address. E.g. US.
      * @param top Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100.
      * @param skip Starting offset of the returned results within the full result set. Default: 0, minimum: 0 and
      *     maximum: 1900.
@@ -7225,8 +7225,8 @@ public final class SearchesImpl {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<SearchAddressResult> searchStructuredAddressWithResponse(
             ResponseFormat format,
-            String language,
             String countryCode,
+            String language,
             Integer top,
             Integer skip,
             String streetNumber,
@@ -7244,8 +7244,8 @@ public final class SearchesImpl {
             Context context) {
         return searchStructuredAddressWithResponseAsync(
                         format,
-                        language,
                         countryCode,
+                        language,
                         top,
                         skip,
                         streetNumber,
@@ -7327,7 +7327,7 @@ public final class SearchesImpl {
      *     <p>extendedPostalCodesFor=None
      *     <p>Extended postal code is returned as an **extendedPostalCode** property of an address. Availability is
      *     region-dependent.
-     * @param idxSet A comma separated list of indexes which should be utilized for the search. Item order does not
+     * @param indexFilter A comma separated list of indexes which should be utilized for the search. Item order does not
      *     matter. Available indexes are: Addr = Address range interpolation, Geo = Geographies, PAD = Point Addresses,
      *     POI = Points of interest, Str = Streets, Xstr = Cross Streets (intersections).
      * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
@@ -7359,7 +7359,7 @@ public final class SearchesImpl {
             String language,
             List<Integer> categoryFilter,
             List<SearchIndexes> extendedPostalCodesFor,
-            List<SearchIndexes> idxSet,
+            List<SearchIndexes> indexFilter,
             LocalizedMapView localizedMapView,
             OperatingHoursRange operatingHours) {
         final String accept = "application/json";
@@ -7368,8 +7368,8 @@ public final class SearchesImpl {
         String extendedPostalCodesForConverted =
                 JacksonAdapter.createDefaultSerializerAdapter()
                         .serializeList(extendedPostalCodesFor, CollectionFormat.CSV);
-        String idxSetConverted =
-                JacksonAdapter.createDefaultSerializerAdapter().serializeList(idxSet, CollectionFormat.CSV);
+        String indexFilterConverted =
+                JacksonAdapter.createDefaultSerializerAdapter().serializeList(indexFilter, CollectionFormat.CSV);
         return FluxUtil.withContext(
                 context ->
                         service.searchInsideGeometry(
@@ -7382,7 +7382,7 @@ public final class SearchesImpl {
                                 language,
                                 categoryFilterConverted,
                                 extendedPostalCodesForConverted,
-                                idxSetConverted,
+                                indexFilterConverted,
                                 localizedMapView,
                                 operatingHours,
                                 geometry,
@@ -7453,7 +7453,7 @@ public final class SearchesImpl {
      *     <p>extendedPostalCodesFor=None
      *     <p>Extended postal code is returned as an **extendedPostalCode** property of an address. Availability is
      *     region-dependent.
-     * @param idxSet A comma separated list of indexes which should be utilized for the search. Item order does not
+     * @param indexFilter A comma separated list of indexes which should be utilized for the search. Item order does not
      *     matter. Available indexes are: Addr = Address range interpolation, Geo = Geographies, PAD = Point Addresses,
      *     POI = Points of interest, Str = Streets, Xstr = Cross Streets (intersections).
      * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
@@ -7486,7 +7486,7 @@ public final class SearchesImpl {
             String language,
             List<Integer> categoryFilter,
             List<SearchIndexes> extendedPostalCodesFor,
-            List<SearchIndexes> idxSet,
+            List<SearchIndexes> indexFilter,
             LocalizedMapView localizedMapView,
             OperatingHoursRange operatingHours,
             Context context) {
@@ -7496,8 +7496,8 @@ public final class SearchesImpl {
         String extendedPostalCodesForConverted =
                 JacksonAdapter.createDefaultSerializerAdapter()
                         .serializeList(extendedPostalCodesFor, CollectionFormat.CSV);
-        String idxSetConverted =
-                JacksonAdapter.createDefaultSerializerAdapter().serializeList(idxSet, CollectionFormat.CSV);
+        String indexFilterConverted =
+                JacksonAdapter.createDefaultSerializerAdapter().serializeList(indexFilter, CollectionFormat.CSV);
         return service.searchInsideGeometry(
                 this.client.getHost(),
                 this.client.getClientId(),
@@ -7508,7 +7508,7 @@ public final class SearchesImpl {
                 language,
                 categoryFilterConverted,
                 extendedPostalCodesForConverted,
-                idxSetConverted,
+                indexFilterConverted,
                 localizedMapView,
                 operatingHours,
                 geometry,
@@ -7579,7 +7579,7 @@ public final class SearchesImpl {
      *     <p>extendedPostalCodesFor=None
      *     <p>Extended postal code is returned as an **extendedPostalCode** property of an address. Availability is
      *     region-dependent.
-     * @param idxSet A comma separated list of indexes which should be utilized for the search. Item order does not
+     * @param indexFilter A comma separated list of indexes which should be utilized for the search. Item order does not
      *     matter. Available indexes are: Addr = Address range interpolation, Geo = Geographies, PAD = Point Addresses,
      *     POI = Points of interest, Str = Streets, Xstr = Cross Streets (intersections).
      * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
@@ -7611,7 +7611,7 @@ public final class SearchesImpl {
             String language,
             List<Integer> categoryFilter,
             List<SearchIndexes> extendedPostalCodesFor,
-            List<SearchIndexes> idxSet,
+            List<SearchIndexes> indexFilter,
             LocalizedMapView localizedMapView,
             OperatingHoursRange operatingHours) {
         return searchInsideGeometryWithResponseAsync(
@@ -7622,7 +7622,7 @@ public final class SearchesImpl {
                         language,
                         categoryFilter,
                         extendedPostalCodesFor,
-                        idxSet,
+                        indexFilter,
                         localizedMapView,
                         operatingHours)
                 .flatMap(
@@ -7698,7 +7698,7 @@ public final class SearchesImpl {
      *     <p>extendedPostalCodesFor=None
      *     <p>Extended postal code is returned as an **extendedPostalCode** property of an address. Availability is
      *     region-dependent.
-     * @param idxSet A comma separated list of indexes which should be utilized for the search. Item order does not
+     * @param indexFilter A comma separated list of indexes which should be utilized for the search. Item order does not
      *     matter. Available indexes are: Addr = Address range interpolation, Geo = Geographies, PAD = Point Addresses,
      *     POI = Points of interest, Str = Streets, Xstr = Cross Streets (intersections).
      * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
@@ -7731,7 +7731,7 @@ public final class SearchesImpl {
             String language,
             List<Integer> categoryFilter,
             List<SearchIndexes> extendedPostalCodesFor,
-            List<SearchIndexes> idxSet,
+            List<SearchIndexes> indexFilter,
             LocalizedMapView localizedMapView,
             OperatingHoursRange operatingHours,
             Context context) {
@@ -7743,7 +7743,7 @@ public final class SearchesImpl {
                         language,
                         categoryFilter,
                         extendedPostalCodesFor,
-                        idxSet,
+                        indexFilter,
                         localizedMapView,
                         operatingHours,
                         context)
@@ -7820,7 +7820,7 @@ public final class SearchesImpl {
      *     <p>extendedPostalCodesFor=None
      *     <p>Extended postal code is returned as an **extendedPostalCode** property of an address. Availability is
      *     region-dependent.
-     * @param idxSet A comma separated list of indexes which should be utilized for the search. Item order does not
+     * @param indexFilter A comma separated list of indexes which should be utilized for the search. Item order does not
      *     matter. Available indexes are: Addr = Address range interpolation, Geo = Geographies, PAD = Point Addresses,
      *     POI = Points of interest, Str = Streets, Xstr = Cross Streets (intersections).
      * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
@@ -7852,7 +7852,7 @@ public final class SearchesImpl {
             String language,
             List<Integer> categoryFilter,
             List<SearchIndexes> extendedPostalCodesFor,
-            List<SearchIndexes> idxSet,
+            List<SearchIndexes> indexFilter,
             LocalizedMapView localizedMapView,
             OperatingHoursRange operatingHours) {
         return searchInsideGeometryAsync(
@@ -7863,7 +7863,7 @@ public final class SearchesImpl {
                         language,
                         categoryFilter,
                         extendedPostalCodesFor,
-                        idxSet,
+                        indexFilter,
                         localizedMapView,
                         operatingHours)
                 .block();
@@ -7932,7 +7932,7 @@ public final class SearchesImpl {
      *     <p>extendedPostalCodesFor=None
      *     <p>Extended postal code is returned as an **extendedPostalCode** property of an address. Availability is
      *     region-dependent.
-     * @param idxSet A comma separated list of indexes which should be utilized for the search. Item order does not
+     * @param indexFilter A comma separated list of indexes which should be utilized for the search. Item order does not
      *     matter. Available indexes are: Addr = Address range interpolation, Geo = Geographies, PAD = Point Addresses,
      *     POI = Points of interest, Str = Streets, Xstr = Cross Streets (intersections).
      * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
@@ -7965,7 +7965,7 @@ public final class SearchesImpl {
             String language,
             List<Integer> categoryFilter,
             List<SearchIndexes> extendedPostalCodesFor,
-            List<SearchIndexes> idxSet,
+            List<SearchIndexes> indexFilter,
             LocalizedMapView localizedMapView,
             OperatingHoursRange operatingHours,
             Context context) {
@@ -7977,7 +7977,7 @@ public final class SearchesImpl {
                         language,
                         categoryFilter,
                         extendedPostalCodesFor,
-                        idxSet,
+                        indexFilter,
                         localizedMapView,
                         operatingHours,
                         context)
@@ -8803,8 +8803,8 @@ public final class SearchesImpl {
      * exclusive." } } } ] } ```.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchFuzzyBatchRequestBody The list of search fuzzy queries/requests to process. The list can contain a
-     *     max of 10,000 queries and must contain at least 1 query.
+     * @param batchRequest The list of search fuzzy queries/requests to process. The list can contain a max of 10,000
+     *     queries and must contain at least 1 query.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws ErrorResponseException thrown if the request is rejected by server on status code 408.
@@ -8812,8 +8812,8 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<SearchAddressBatchProcessResult>> fuzzySearchBatchSyncWithResponseAsync(
-            JsonFormat format, BatchRequest searchFuzzyBatchRequestBody) {
+    public Mono<Response<SearchAddressBatchResult>> fuzzySearchBatchSyncWithResponseAsync(
+            JsonFormat format, BatchRequest batchRequest) {
         final String accept = "application/json";
         return FluxUtil.withContext(
                 context ->
@@ -8822,7 +8822,7 @@ public final class SearchesImpl {
                                 this.client.getClientId(),
                                 this.client.getApiVersion(),
                                 format,
-                                searchFuzzyBatchRequestBody,
+                                batchRequest,
                                 accept,
                                 context));
     }
@@ -8926,8 +8926,8 @@ public final class SearchesImpl {
      * exclusive." } } } ] } ```.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchFuzzyBatchRequestBody The list of search fuzzy queries/requests to process. The list can contain a
-     *     max of 10,000 queries and must contain at least 1 query.
+     * @param batchRequest The list of search fuzzy queries/requests to process. The list can contain a max of 10,000
+     *     queries and must contain at least 1 query.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -8936,15 +8936,15 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<SearchAddressBatchProcessResult>> fuzzySearchBatchSyncWithResponseAsync(
-            JsonFormat format, BatchRequest searchFuzzyBatchRequestBody, Context context) {
+    public Mono<Response<SearchAddressBatchResult>> fuzzySearchBatchSyncWithResponseAsync(
+            JsonFormat format, BatchRequest batchRequest, Context context) {
         final String accept = "application/json";
         return service.fuzzySearchBatchSync(
                 this.client.getHost(),
                 this.client.getClientId(),
                 this.client.getApiVersion(),
                 format,
-                searchFuzzyBatchRequestBody,
+                batchRequest,
                 accept,
                 context);
     }
@@ -9048,8 +9048,8 @@ public final class SearchesImpl {
      * exclusive." } } } ] } ```.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchFuzzyBatchRequestBody The list of search fuzzy queries/requests to process. The list can contain a
-     *     max of 10,000 queries and must contain at least 1 query.
+     * @param batchRequest The list of search fuzzy queries/requests to process. The list can contain a max of 10,000
+     *     queries and must contain at least 1 query.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws ErrorResponseException thrown if the request is rejected by server on status code 408.
@@ -9057,11 +9057,10 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchAddressBatchProcessResult> fuzzySearchBatchSyncAsync(
-            JsonFormat format, BatchRequest searchFuzzyBatchRequestBody) {
-        return fuzzySearchBatchSyncWithResponseAsync(format, searchFuzzyBatchRequestBody)
+    public Mono<SearchAddressBatchResult> fuzzySearchBatchSyncAsync(JsonFormat format, BatchRequest batchRequest) {
+        return fuzzySearchBatchSyncWithResponseAsync(format, batchRequest)
                 .flatMap(
-                        (Response<SearchAddressBatchProcessResult> res) -> {
+                        (Response<SearchAddressBatchResult> res) -> {
                             if (res.getValue() != null) {
                                 return Mono.just(res.getValue());
                             } else {
@@ -9169,8 +9168,8 @@ public final class SearchesImpl {
      * exclusive." } } } ] } ```.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchFuzzyBatchRequestBody The list of search fuzzy queries/requests to process. The list can contain a
-     *     max of 10,000 queries and must contain at least 1 query.
+     * @param batchRequest The list of search fuzzy queries/requests to process. The list can contain a max of 10,000
+     *     queries and must contain at least 1 query.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -9179,11 +9178,11 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchAddressBatchProcessResult> fuzzySearchBatchSyncAsync(
-            JsonFormat format, BatchRequest searchFuzzyBatchRequestBody, Context context) {
-        return fuzzySearchBatchSyncWithResponseAsync(format, searchFuzzyBatchRequestBody, context)
+    public Mono<SearchAddressBatchResult> fuzzySearchBatchSyncAsync(
+            JsonFormat format, BatchRequest batchRequest, Context context) {
+        return fuzzySearchBatchSyncWithResponseAsync(format, batchRequest, context)
                 .flatMap(
-                        (Response<SearchAddressBatchProcessResult> res) -> {
+                        (Response<SearchAddressBatchResult> res) -> {
                             if (res.getValue() != null) {
                                 return Mono.just(res.getValue());
                             } else {
@@ -9291,8 +9290,8 @@ public final class SearchesImpl {
      * exclusive." } } } ] } ```.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchFuzzyBatchRequestBody The list of search fuzzy queries/requests to process. The list can contain a
-     *     max of 10,000 queries and must contain at least 1 query.
+     * @param batchRequest The list of search fuzzy queries/requests to process. The list can contain a max of 10,000
+     *     queries and must contain at least 1 query.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws ErrorResponseException thrown if the request is rejected by server on status code 408.
@@ -9300,9 +9299,8 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressBatchProcessResult fuzzySearchBatchSync(
-            JsonFormat format, BatchRequest searchFuzzyBatchRequestBody) {
-        return fuzzySearchBatchSyncAsync(format, searchFuzzyBatchRequestBody).block();
+    public SearchAddressBatchResult fuzzySearchBatchSync(JsonFormat format, BatchRequest batchRequest) {
+        return fuzzySearchBatchSyncAsync(format, batchRequest).block();
     }
 
     /**
@@ -9404,8 +9402,8 @@ public final class SearchesImpl {
      * exclusive." } } } ] } ```.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchFuzzyBatchRequestBody The list of search fuzzy queries/requests to process. The list can contain a
-     *     max of 10,000 queries and must contain at least 1 query.
+     * @param batchRequest The list of search fuzzy queries/requests to process. The list can contain a max of 10,000
+     *     queries and must contain at least 1 query.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -9414,9 +9412,9 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<SearchAddressBatchProcessResult> fuzzySearchBatchSyncWithResponse(
-            JsonFormat format, BatchRequest searchFuzzyBatchRequestBody, Context context) {
-        return fuzzySearchBatchSyncWithResponseAsync(format, searchFuzzyBatchRequestBody, context).block();
+    public Response<SearchAddressBatchResult> fuzzySearchBatchSyncWithResponse(
+            JsonFormat format, BatchRequest batchRequest, Context context) {
+        return fuzzySearchBatchSyncWithResponseAsync(format, batchRequest, context).block();
     }
 
     /**
@@ -9518,8 +9516,8 @@ public final class SearchesImpl {
      * exclusive." } } } ] } ```.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchFuzzyBatchRequestBody The list of search fuzzy queries/requests to process. The list can contain a
-     *     max of 10,000 queries and must contain at least 1 query.
+     * @param batchRequest The list of search fuzzy queries/requests to process. The list can contain a max of 10,000
+     *     queries and must contain at least 1 query.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -9527,7 +9525,7 @@ public final class SearchesImpl {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<SearchesFuzzySearchBatchResponse> fuzzySearchBatchWithResponseAsync(
-            JsonFormat format, BatchRequest searchFuzzyBatchRequestBody) {
+            JsonFormat format, BatchRequest batchRequest) {
         final String accept = "application/json";
         return FluxUtil.withContext(
                 context ->
@@ -9536,7 +9534,7 @@ public final class SearchesImpl {
                                 this.client.getClientId(),
                                 this.client.getApiVersion(),
                                 format,
-                                searchFuzzyBatchRequestBody,
+                                batchRequest,
                                 accept,
                                 context));
     }
@@ -9640,8 +9638,8 @@ public final class SearchesImpl {
      * exclusive." } } } ] } ```.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchFuzzyBatchRequestBody The list of search fuzzy queries/requests to process. The list can contain a
-     *     max of 10,000 queries and must contain at least 1 query.
+     * @param batchRequest The list of search fuzzy queries/requests to process. The list can contain a max of 10,000
+     *     queries and must contain at least 1 query.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -9650,14 +9648,14 @@ public final class SearchesImpl {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<SearchesFuzzySearchBatchResponse> fuzzySearchBatchWithResponseAsync(
-            JsonFormat format, BatchRequest searchFuzzyBatchRequestBody, Context context) {
+            JsonFormat format, BatchRequest batchRequest, Context context) {
         final String accept = "application/json";
         return service.fuzzySearchBatch(
                 this.client.getHost(),
                 this.client.getClientId(),
                 this.client.getApiVersion(),
                 format,
-                searchFuzzyBatchRequestBody,
+                batchRequest,
                 accept,
                 context);
     }
@@ -9761,22 +9759,22 @@ public final class SearchesImpl {
      * exclusive." } } } ] } ```.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchFuzzyBatchRequestBody The list of search fuzzy queries/requests to process. The list can contain a
-     *     max of 10,000 queries and must contain at least 1 query.
+     * @param batchRequest The list of search fuzzy queries/requests to process. The list can contain a max of 10,000
+     *     queries and must contain at least 1 query.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public PollerFlux<SearchAddressBatchProcessResult, SearchAddressBatchProcessResult> beginFuzzySearchBatchAsync(
-            JsonFormat format, BatchRequest searchFuzzyBatchRequestBody) {
+    public PollerFlux<SearchAddressBatchResult, SearchAddressBatchResult> beginFuzzySearchBatchAsync(
+            JsonFormat format, BatchRequest batchRequest) {
         return PollerFlux.create(
                 Duration.ofSeconds(1),
-                () -> this.fuzzySearchBatchWithResponseAsync(format, searchFuzzyBatchRequestBody),
+                () -> this.fuzzySearchBatchWithResponseAsync(format, batchRequest),
                 new DefaultPollingStrategy<>(this.client.getHttpPipeline()),
-                new TypeReference<SearchAddressBatchProcessResult>() {},
-                new TypeReference<SearchAddressBatchProcessResult>() {});
+                new TypeReference<SearchAddressBatchResult>() {},
+                new TypeReference<SearchAddressBatchResult>() {});
     }
 
     /**
@@ -9878,8 +9876,8 @@ public final class SearchesImpl {
      * exclusive." } } } ] } ```.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchFuzzyBatchRequestBody The list of search fuzzy queries/requests to process. The list can contain a
-     *     max of 10,000 queries and must contain at least 1 query.
+     * @param batchRequest The list of search fuzzy queries/requests to process. The list can contain a max of 10,000
+     *     queries and must contain at least 1 query.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -9887,14 +9885,14 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public PollerFlux<SearchAddressBatchProcessResult, SearchAddressBatchProcessResult> beginFuzzySearchBatchAsync(
-            JsonFormat format, BatchRequest searchFuzzyBatchRequestBody, Context context) {
+    public PollerFlux<SearchAddressBatchResult, SearchAddressBatchResult> beginFuzzySearchBatchAsync(
+            JsonFormat format, BatchRequest batchRequest, Context context) {
         return PollerFlux.create(
                 Duration.ofSeconds(1),
-                () -> this.fuzzySearchBatchWithResponseAsync(format, searchFuzzyBatchRequestBody, context),
+                () -> this.fuzzySearchBatchWithResponseAsync(format, batchRequest, context),
                 new DefaultPollingStrategy<>(this.client.getHttpPipeline()),
-                new TypeReference<SearchAddressBatchProcessResult>() {},
-                new TypeReference<SearchAddressBatchProcessResult>() {});
+                new TypeReference<SearchAddressBatchResult>() {},
+                new TypeReference<SearchAddressBatchResult>() {});
     }
 
     /**
@@ -9996,17 +9994,17 @@ public final class SearchesImpl {
      * exclusive." } } } ] } ```.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchFuzzyBatchRequestBody The list of search fuzzy queries/requests to process. The list can contain a
-     *     max of 10,000 queries and must contain at least 1 query.
+     * @param batchRequest The list of search fuzzy queries/requests to process. The list can contain a max of 10,000
+     *     queries and must contain at least 1 query.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<SearchAddressBatchProcessResult, SearchAddressBatchProcessResult> beginFuzzySearchBatch(
-            JsonFormat format, BatchRequest searchFuzzyBatchRequestBody) {
-        return this.beginFuzzySearchBatchAsync(format, searchFuzzyBatchRequestBody).getSyncPoller();
+    public SyncPoller<SearchAddressBatchResult, SearchAddressBatchResult> beginFuzzySearchBatch(
+            JsonFormat format, BatchRequest batchRequest) {
+        return this.beginFuzzySearchBatchAsync(format, batchRequest).getSyncPoller();
     }
 
     /**
@@ -10108,8 +10106,8 @@ public final class SearchesImpl {
      * exclusive." } } } ] } ```.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchFuzzyBatchRequestBody The list of search fuzzy queries/requests to process. The list can contain a
-     *     max of 10,000 queries and must contain at least 1 query.
+     * @param batchRequest The list of search fuzzy queries/requests to process. The list can contain a max of 10,000
+     *     queries and must contain at least 1 query.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -10117,9 +10115,9 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<SearchAddressBatchProcessResult, SearchAddressBatchProcessResult> beginFuzzySearchBatch(
-            JsonFormat format, BatchRequest searchFuzzyBatchRequestBody, Context context) {
-        return this.beginFuzzySearchBatchAsync(format, searchFuzzyBatchRequestBody, context).getSyncPoller();
+    public SyncPoller<SearchAddressBatchResult, SearchAddressBatchResult> beginFuzzySearchBatch(
+            JsonFormat format, BatchRequest batchRequest, Context context) {
+        return this.beginFuzzySearchBatchAsync(format, batchRequest, context).getSyncPoller();
     }
 
     /**
@@ -10463,14 +10461,14 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public PollerFlux<SearchAddressBatchProcessResult, SearchAddressBatchProcessResult> beginGetFuzzySearchBatchAsync(
+    public PollerFlux<SearchAddressBatchResult, SearchAddressBatchResult> beginGetFuzzySearchBatchAsync(
             String batchId) {
         return PollerFlux.create(
                 Duration.ofSeconds(1),
                 () -> this.getFuzzySearchBatchWithResponseAsync(batchId),
                 new DefaultPollingStrategy<>(this.client.getHttpPipeline()),
-                new TypeReference<SearchAddressBatchProcessResult>() {},
-                new TypeReference<SearchAddressBatchProcessResult>() {});
+                new TypeReference<SearchAddressBatchResult>() {},
+                new TypeReference<SearchAddressBatchResult>() {});
     }
 
     /**
@@ -10579,14 +10577,14 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public PollerFlux<SearchAddressBatchProcessResult, SearchAddressBatchProcessResult> beginGetFuzzySearchBatchAsync(
+    public PollerFlux<SearchAddressBatchResult, SearchAddressBatchResult> beginGetFuzzySearchBatchAsync(
             String batchId, Context context) {
         return PollerFlux.create(
                 Duration.ofSeconds(1),
                 () -> this.getFuzzySearchBatchWithResponseAsync(batchId, context),
                 new DefaultPollingStrategy<>(this.client.getHttpPipeline()),
-                new TypeReference<SearchAddressBatchProcessResult>() {},
-                new TypeReference<SearchAddressBatchProcessResult>() {});
+                new TypeReference<SearchAddressBatchResult>() {},
+                new TypeReference<SearchAddressBatchResult>() {});
     }
 
     /**
@@ -10694,8 +10692,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<SearchAddressBatchProcessResult, SearchAddressBatchProcessResult> beginGetFuzzySearchBatch(
-            String batchId) {
+    public SyncPoller<SearchAddressBatchResult, SearchAddressBatchResult> beginGetFuzzySearchBatch(String batchId) {
         return this.beginGetFuzzySearchBatchAsync(batchId).getSyncPoller();
     }
 
@@ -10805,7 +10802,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<SearchAddressBatchProcessResult, SearchAddressBatchProcessResult> beginGetFuzzySearchBatch(
+    public SyncPoller<SearchAddressBatchResult, SearchAddressBatchResult> beginGetFuzzySearchBatch(
             String batchId, Context context) {
         return this.beginGetFuzzySearchBatchAsync(batchId, context).getSyncPoller();
     }
@@ -10908,8 +10905,8 @@ public final class SearchesImpl {
      * incorrectly specified or are mutually exclusive." } } } ] } ```.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchAddressBatchRequestBody The list of address geocoding queries/requests to process. The list can
-     *     contain a max of 10,000 queries and must contain at least 1 query.
+     * @param batchRequest The list of address geocoding queries/requests to process. The list can contain a max of
+     *     10,000 queries and must contain at least 1 query.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws ErrorResponseException thrown if the request is rejected by server on status code 408.
@@ -10917,8 +10914,8 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<SearchAddressBatchProcessResult>> searchAddressBatchSyncWithResponseAsync(
-            JsonFormat format, BatchRequest searchAddressBatchRequestBody) {
+    public Mono<Response<SearchAddressBatchResult>> searchAddressBatchSyncWithResponseAsync(
+            JsonFormat format, BatchRequest batchRequest) {
         final String accept = "application/json";
         return FluxUtil.withContext(
                 context ->
@@ -10927,7 +10924,7 @@ public final class SearchesImpl {
                                 this.client.getClientId(),
                                 this.client.getApiVersion(),
                                 format,
-                                searchAddressBatchRequestBody,
+                                batchRequest,
                                 accept,
                                 context));
     }
@@ -11030,8 +11027,8 @@ public final class SearchesImpl {
      * incorrectly specified or are mutually exclusive." } } } ] } ```.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchAddressBatchRequestBody The list of address geocoding queries/requests to process. The list can
-     *     contain a max of 10,000 queries and must contain at least 1 query.
+     * @param batchRequest The list of address geocoding queries/requests to process. The list can contain a max of
+     *     10,000 queries and must contain at least 1 query.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -11040,15 +11037,15 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<SearchAddressBatchProcessResult>> searchAddressBatchSyncWithResponseAsync(
-            JsonFormat format, BatchRequest searchAddressBatchRequestBody, Context context) {
+    public Mono<Response<SearchAddressBatchResult>> searchAddressBatchSyncWithResponseAsync(
+            JsonFormat format, BatchRequest batchRequest, Context context) {
         final String accept = "application/json";
         return service.searchAddressBatchSync(
                 this.client.getHost(),
                 this.client.getClientId(),
                 this.client.getApiVersion(),
                 format,
-                searchAddressBatchRequestBody,
+                batchRequest,
                 accept,
                 context);
     }
@@ -11151,8 +11148,8 @@ public final class SearchesImpl {
      * incorrectly specified or are mutually exclusive." } } } ] } ```.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchAddressBatchRequestBody The list of address geocoding queries/requests to process. The list can
-     *     contain a max of 10,000 queries and must contain at least 1 query.
+     * @param batchRequest The list of address geocoding queries/requests to process. The list can contain a max of
+     *     10,000 queries and must contain at least 1 query.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws ErrorResponseException thrown if the request is rejected by server on status code 408.
@@ -11160,11 +11157,10 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchAddressBatchProcessResult> searchAddressBatchSyncAsync(
-            JsonFormat format, BatchRequest searchAddressBatchRequestBody) {
-        return searchAddressBatchSyncWithResponseAsync(format, searchAddressBatchRequestBody)
+    public Mono<SearchAddressBatchResult> searchAddressBatchSyncAsync(JsonFormat format, BatchRequest batchRequest) {
+        return searchAddressBatchSyncWithResponseAsync(format, batchRequest)
                 .flatMap(
-                        (Response<SearchAddressBatchProcessResult> res) -> {
+                        (Response<SearchAddressBatchResult> res) -> {
                             if (res.getValue() != null) {
                                 return Mono.just(res.getValue());
                             } else {
@@ -11271,8 +11267,8 @@ public final class SearchesImpl {
      * incorrectly specified or are mutually exclusive." } } } ] } ```.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchAddressBatchRequestBody The list of address geocoding queries/requests to process. The list can
-     *     contain a max of 10,000 queries and must contain at least 1 query.
+     * @param batchRequest The list of address geocoding queries/requests to process. The list can contain a max of
+     *     10,000 queries and must contain at least 1 query.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -11281,11 +11277,11 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchAddressBatchProcessResult> searchAddressBatchSyncAsync(
-            JsonFormat format, BatchRequest searchAddressBatchRequestBody, Context context) {
-        return searchAddressBatchSyncWithResponseAsync(format, searchAddressBatchRequestBody, context)
+    public Mono<SearchAddressBatchResult> searchAddressBatchSyncAsync(
+            JsonFormat format, BatchRequest batchRequest, Context context) {
+        return searchAddressBatchSyncWithResponseAsync(format, batchRequest, context)
                 .flatMap(
-                        (Response<SearchAddressBatchProcessResult> res) -> {
+                        (Response<SearchAddressBatchResult> res) -> {
                             if (res.getValue() != null) {
                                 return Mono.just(res.getValue());
                             } else {
@@ -11392,8 +11388,8 @@ public final class SearchesImpl {
      * incorrectly specified or are mutually exclusive." } } } ] } ```.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchAddressBatchRequestBody The list of address geocoding queries/requests to process. The list can
-     *     contain a max of 10,000 queries and must contain at least 1 query.
+     * @param batchRequest The list of address geocoding queries/requests to process. The list can contain a max of
+     *     10,000 queries and must contain at least 1 query.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws ErrorResponseException thrown if the request is rejected by server on status code 408.
@@ -11401,9 +11397,8 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressBatchProcessResult searchAddressBatchSync(
-            JsonFormat format, BatchRequest searchAddressBatchRequestBody) {
-        return searchAddressBatchSyncAsync(format, searchAddressBatchRequestBody).block();
+    public SearchAddressBatchResult searchAddressBatchSync(JsonFormat format, BatchRequest batchRequest) {
+        return searchAddressBatchSyncAsync(format, batchRequest).block();
     }
 
     /**
@@ -11504,8 +11499,8 @@ public final class SearchesImpl {
      * incorrectly specified or are mutually exclusive." } } } ] } ```.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchAddressBatchRequestBody The list of address geocoding queries/requests to process. The list can
-     *     contain a max of 10,000 queries and must contain at least 1 query.
+     * @param batchRequest The list of address geocoding queries/requests to process. The list can contain a max of
+     *     10,000 queries and must contain at least 1 query.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -11514,9 +11509,9 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<SearchAddressBatchProcessResult> searchAddressBatchSyncWithResponse(
-            JsonFormat format, BatchRequest searchAddressBatchRequestBody, Context context) {
-        return searchAddressBatchSyncWithResponseAsync(format, searchAddressBatchRequestBody, context).block();
+    public Response<SearchAddressBatchResult> searchAddressBatchSyncWithResponse(
+            JsonFormat format, BatchRequest batchRequest, Context context) {
+        return searchAddressBatchSyncWithResponseAsync(format, batchRequest, context).block();
     }
 
     /**
@@ -11617,8 +11612,8 @@ public final class SearchesImpl {
      * incorrectly specified or are mutually exclusive." } } } ] } ```.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchAddressBatchRequestBody The list of address geocoding queries/requests to process. The list can
-     *     contain a max of 10,000 queries and must contain at least 1 query.
+     * @param batchRequest The list of address geocoding queries/requests to process. The list can contain a max of
+     *     10,000 queries and must contain at least 1 query.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -11626,7 +11621,7 @@ public final class SearchesImpl {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<SearchesSearchAddressBatchResponse> searchAddressBatchWithResponseAsync(
-            JsonFormat format, BatchRequest searchAddressBatchRequestBody) {
+            JsonFormat format, BatchRequest batchRequest) {
         final String accept = "application/json";
         return FluxUtil.withContext(
                 context ->
@@ -11635,7 +11630,7 @@ public final class SearchesImpl {
                                 this.client.getClientId(),
                                 this.client.getApiVersion(),
                                 format,
-                                searchAddressBatchRequestBody,
+                                batchRequest,
                                 accept,
                                 context));
     }
@@ -11738,8 +11733,8 @@ public final class SearchesImpl {
      * incorrectly specified or are mutually exclusive." } } } ] } ```.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchAddressBatchRequestBody The list of address geocoding queries/requests to process. The list can
-     *     contain a max of 10,000 queries and must contain at least 1 query.
+     * @param batchRequest The list of address geocoding queries/requests to process. The list can contain a max of
+     *     10,000 queries and must contain at least 1 query.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -11748,14 +11743,14 @@ public final class SearchesImpl {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<SearchesSearchAddressBatchResponse> searchAddressBatchWithResponseAsync(
-            JsonFormat format, BatchRequest searchAddressBatchRequestBody, Context context) {
+            JsonFormat format, BatchRequest batchRequest, Context context) {
         final String accept = "application/json";
         return service.searchAddressBatch(
                 this.client.getHost(),
                 this.client.getClientId(),
                 this.client.getApiVersion(),
                 format,
-                searchAddressBatchRequestBody,
+                batchRequest,
                 accept,
                 context);
     }
@@ -11858,22 +11853,22 @@ public final class SearchesImpl {
      * incorrectly specified or are mutually exclusive." } } } ] } ```.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchAddressBatchRequestBody The list of address geocoding queries/requests to process. The list can
-     *     contain a max of 10,000 queries and must contain at least 1 query.
+     * @param batchRequest The list of address geocoding queries/requests to process. The list can contain a max of
+     *     10,000 queries and must contain at least 1 query.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public PollerFlux<SearchAddressBatchProcessResult, SearchAddressBatchProcessResult> beginSearchAddressBatchAsync(
-            JsonFormat format, BatchRequest searchAddressBatchRequestBody) {
+    public PollerFlux<SearchAddressBatchResult, SearchAddressBatchResult> beginSearchAddressBatchAsync(
+            JsonFormat format, BatchRequest batchRequest) {
         return PollerFlux.create(
                 Duration.ofSeconds(1),
-                () -> this.searchAddressBatchWithResponseAsync(format, searchAddressBatchRequestBody),
+                () -> this.searchAddressBatchWithResponseAsync(format, batchRequest),
                 new DefaultPollingStrategy<>(this.client.getHttpPipeline()),
-                new TypeReference<SearchAddressBatchProcessResult>() {},
-                new TypeReference<SearchAddressBatchProcessResult>() {});
+                new TypeReference<SearchAddressBatchResult>() {},
+                new TypeReference<SearchAddressBatchResult>() {});
     }
 
     /**
@@ -11974,8 +11969,8 @@ public final class SearchesImpl {
      * incorrectly specified or are mutually exclusive." } } } ] } ```.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchAddressBatchRequestBody The list of address geocoding queries/requests to process. The list can
-     *     contain a max of 10,000 queries and must contain at least 1 query.
+     * @param batchRequest The list of address geocoding queries/requests to process. The list can contain a max of
+     *     10,000 queries and must contain at least 1 query.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -11983,14 +11978,14 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public PollerFlux<SearchAddressBatchProcessResult, SearchAddressBatchProcessResult> beginSearchAddressBatchAsync(
-            JsonFormat format, BatchRequest searchAddressBatchRequestBody, Context context) {
+    public PollerFlux<SearchAddressBatchResult, SearchAddressBatchResult> beginSearchAddressBatchAsync(
+            JsonFormat format, BatchRequest batchRequest, Context context) {
         return PollerFlux.create(
                 Duration.ofSeconds(1),
-                () -> this.searchAddressBatchWithResponseAsync(format, searchAddressBatchRequestBody, context),
+                () -> this.searchAddressBatchWithResponseAsync(format, batchRequest, context),
                 new DefaultPollingStrategy<>(this.client.getHttpPipeline()),
-                new TypeReference<SearchAddressBatchProcessResult>() {},
-                new TypeReference<SearchAddressBatchProcessResult>() {});
+                new TypeReference<SearchAddressBatchResult>() {},
+                new TypeReference<SearchAddressBatchResult>() {});
     }
 
     /**
@@ -12091,17 +12086,17 @@ public final class SearchesImpl {
      * incorrectly specified or are mutually exclusive." } } } ] } ```.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchAddressBatchRequestBody The list of address geocoding queries/requests to process. The list can
-     *     contain a max of 10,000 queries and must contain at least 1 query.
+     * @param batchRequest The list of address geocoding queries/requests to process. The list can contain a max of
+     *     10,000 queries and must contain at least 1 query.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<SearchAddressBatchProcessResult, SearchAddressBatchProcessResult> beginSearchAddressBatch(
-            JsonFormat format, BatchRequest searchAddressBatchRequestBody) {
-        return this.beginSearchAddressBatchAsync(format, searchAddressBatchRequestBody).getSyncPoller();
+    public SyncPoller<SearchAddressBatchResult, SearchAddressBatchResult> beginSearchAddressBatch(
+            JsonFormat format, BatchRequest batchRequest) {
+        return this.beginSearchAddressBatchAsync(format, batchRequest).getSyncPoller();
     }
 
     /**
@@ -12202,8 +12197,8 @@ public final class SearchesImpl {
      * incorrectly specified or are mutually exclusive." } } } ] } ```.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchAddressBatchRequestBody The list of address geocoding queries/requests to process. The list can
-     *     contain a max of 10,000 queries and must contain at least 1 query.
+     * @param batchRequest The list of address geocoding queries/requests to process. The list can contain a max of
+     *     10,000 queries and must contain at least 1 query.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -12211,9 +12206,9 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<SearchAddressBatchProcessResult, SearchAddressBatchProcessResult> beginSearchAddressBatch(
-            JsonFormat format, BatchRequest searchAddressBatchRequestBody, Context context) {
-        return this.beginSearchAddressBatchAsync(format, searchAddressBatchRequestBody, context).getSyncPoller();
+    public SyncPoller<SearchAddressBatchResult, SearchAddressBatchResult> beginSearchAddressBatch(
+            JsonFormat format, BatchRequest batchRequest, Context context) {
+        return this.beginSearchAddressBatchAsync(format, batchRequest, context).getSyncPoller();
     }
 
     /**
@@ -12554,14 +12549,14 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public PollerFlux<SearchAddressBatchProcessResult, SearchAddressBatchProcessResult> beginGetSearchAddressBatchAsync(
+    public PollerFlux<SearchAddressBatchResult, SearchAddressBatchResult> beginGetSearchAddressBatchAsync(
             String batchId) {
         return PollerFlux.create(
                 Duration.ofSeconds(1),
                 () -> this.getSearchAddressBatchWithResponseAsync(batchId),
                 new DefaultPollingStrategy<>(this.client.getHttpPipeline()),
-                new TypeReference<SearchAddressBatchProcessResult>() {},
-                new TypeReference<SearchAddressBatchProcessResult>() {});
+                new TypeReference<SearchAddressBatchResult>() {},
+                new TypeReference<SearchAddressBatchResult>() {});
     }
 
     /**
@@ -12669,14 +12664,14 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public PollerFlux<SearchAddressBatchProcessResult, SearchAddressBatchProcessResult> beginGetSearchAddressBatchAsync(
+    public PollerFlux<SearchAddressBatchResult, SearchAddressBatchResult> beginGetSearchAddressBatchAsync(
             String batchId, Context context) {
         return PollerFlux.create(
                 Duration.ofSeconds(1),
                 () -> this.getSearchAddressBatchWithResponseAsync(batchId, context),
                 new DefaultPollingStrategy<>(this.client.getHttpPipeline()),
-                new TypeReference<SearchAddressBatchProcessResult>() {},
-                new TypeReference<SearchAddressBatchProcessResult>() {});
+                new TypeReference<SearchAddressBatchResult>() {},
+                new TypeReference<SearchAddressBatchResult>() {});
     }
 
     /**
@@ -12783,8 +12778,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<SearchAddressBatchProcessResult, SearchAddressBatchProcessResult> beginGetSearchAddressBatch(
-            String batchId) {
+    public SyncPoller<SearchAddressBatchResult, SearchAddressBatchResult> beginGetSearchAddressBatch(String batchId) {
         return this.beginGetSearchAddressBatchAsync(batchId).getSyncPoller();
     }
 
@@ -12893,7 +12887,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<SearchAddressBatchProcessResult, SearchAddressBatchProcessResult> beginGetSearchAddressBatch(
+    public SyncPoller<SearchAddressBatchResult, SearchAddressBatchResult> beginGetSearchAddressBatch(
             String batchId, Context context) {
         return this.beginGetSearchAddressBatchAsync(batchId, context).getSyncPoller();
     }
@@ -12995,8 +12989,8 @@ public final class SearchesImpl {
      * parameters were incorrectly specified or are mutually exclusive." } } } ] } ```.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchAddressReverseBatchRequestBody The list of reverse geocoding queries/requests to process. The list
-     *     can contain a max of 10,000 queries and must contain at least 1 query.
+     * @param batchRequest The list of reverse geocoding queries/requests to process. The list can contain a max of
+     *     10,000 queries and must contain at least 1 query.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws ErrorResponseException thrown if the request is rejected by server on status code 408.
@@ -13005,7 +12999,7 @@ public final class SearchesImpl {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<ReverseSearchAddressBatchProcessResult>> reverseSearchAddressBatchSyncWithResponseAsync(
-            JsonFormat format, BatchRequest searchAddressReverseBatchRequestBody) {
+            JsonFormat format, BatchRequest batchRequest) {
         final String accept = "application/json";
         return FluxUtil.withContext(
                 context ->
@@ -13014,7 +13008,7 @@ public final class SearchesImpl {
                                 this.client.getClientId(),
                                 this.client.getApiVersion(),
                                 format,
-                                searchAddressReverseBatchRequestBody,
+                                batchRequest,
                                 accept,
                                 context));
     }
@@ -13116,8 +13110,8 @@ public final class SearchesImpl {
      * parameters were incorrectly specified or are mutually exclusive." } } } ] } ```.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchAddressReverseBatchRequestBody The list of reverse geocoding queries/requests to process. The list
-     *     can contain a max of 10,000 queries and must contain at least 1 query.
+     * @param batchRequest The list of reverse geocoding queries/requests to process. The list can contain a max of
+     *     10,000 queries and must contain at least 1 query.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -13127,14 +13121,14 @@ public final class SearchesImpl {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<ReverseSearchAddressBatchProcessResult>> reverseSearchAddressBatchSyncWithResponseAsync(
-            JsonFormat format, BatchRequest searchAddressReverseBatchRequestBody, Context context) {
+            JsonFormat format, BatchRequest batchRequest, Context context) {
         final String accept = "application/json";
         return service.reverseSearchAddressBatchSync(
                 this.client.getHost(),
                 this.client.getClientId(),
                 this.client.getApiVersion(),
                 format,
-                searchAddressReverseBatchRequestBody,
+                batchRequest,
                 accept,
                 context);
     }
@@ -13236,8 +13230,8 @@ public final class SearchesImpl {
      * parameters were incorrectly specified or are mutually exclusive." } } } ] } ```.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchAddressReverseBatchRequestBody The list of reverse geocoding queries/requests to process. The list
-     *     can contain a max of 10,000 queries and must contain at least 1 query.
+     * @param batchRequest The list of reverse geocoding queries/requests to process. The list can contain a max of
+     *     10,000 queries and must contain at least 1 query.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws ErrorResponseException thrown if the request is rejected by server on status code 408.
@@ -13246,8 +13240,8 @@ public final class SearchesImpl {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<ReverseSearchAddressBatchProcessResult> reverseSearchAddressBatchSyncAsync(
-            JsonFormat format, BatchRequest searchAddressReverseBatchRequestBody) {
-        return reverseSearchAddressBatchSyncWithResponseAsync(format, searchAddressReverseBatchRequestBody)
+            JsonFormat format, BatchRequest batchRequest) {
+        return reverseSearchAddressBatchSyncWithResponseAsync(format, batchRequest)
                 .flatMap(
                         (Response<ReverseSearchAddressBatchProcessResult> res) -> {
                             if (res.getValue() != null) {
@@ -13355,8 +13349,8 @@ public final class SearchesImpl {
      * parameters were incorrectly specified or are mutually exclusive." } } } ] } ```.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchAddressReverseBatchRequestBody The list of reverse geocoding queries/requests to process. The list
-     *     can contain a max of 10,000 queries and must contain at least 1 query.
+     * @param batchRequest The list of reverse geocoding queries/requests to process. The list can contain a max of
+     *     10,000 queries and must contain at least 1 query.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -13366,8 +13360,8 @@ public final class SearchesImpl {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<ReverseSearchAddressBatchProcessResult> reverseSearchAddressBatchSyncAsync(
-            JsonFormat format, BatchRequest searchAddressReverseBatchRequestBody, Context context) {
-        return reverseSearchAddressBatchSyncWithResponseAsync(format, searchAddressReverseBatchRequestBody, context)
+            JsonFormat format, BatchRequest batchRequest, Context context) {
+        return reverseSearchAddressBatchSyncWithResponseAsync(format, batchRequest, context)
                 .flatMap(
                         (Response<ReverseSearchAddressBatchProcessResult> res) -> {
                             if (res.getValue() != null) {
@@ -13475,8 +13469,8 @@ public final class SearchesImpl {
      * parameters were incorrectly specified or are mutually exclusive." } } } ] } ```.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchAddressReverseBatchRequestBody The list of reverse geocoding queries/requests to process. The list
-     *     can contain a max of 10,000 queries and must contain at least 1 query.
+     * @param batchRequest The list of reverse geocoding queries/requests to process. The list can contain a max of
+     *     10,000 queries and must contain at least 1 query.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws ErrorResponseException thrown if the request is rejected by server on status code 408.
@@ -13485,8 +13479,8 @@ public final class SearchesImpl {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public ReverseSearchAddressBatchProcessResult reverseSearchAddressBatchSync(
-            JsonFormat format, BatchRequest searchAddressReverseBatchRequestBody) {
-        return reverseSearchAddressBatchSyncAsync(format, searchAddressReverseBatchRequestBody).block();
+            JsonFormat format, BatchRequest batchRequest) {
+        return reverseSearchAddressBatchSyncAsync(format, batchRequest).block();
     }
 
     /**
@@ -13586,8 +13580,8 @@ public final class SearchesImpl {
      * parameters were incorrectly specified or are mutually exclusive." } } } ] } ```.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchAddressReverseBatchRequestBody The list of reverse geocoding queries/requests to process. The list
-     *     can contain a max of 10,000 queries and must contain at least 1 query.
+     * @param batchRequest The list of reverse geocoding queries/requests to process. The list can contain a max of
+     *     10,000 queries and must contain at least 1 query.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -13597,9 +13591,8 @@ public final class SearchesImpl {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<ReverseSearchAddressBatchProcessResult> reverseSearchAddressBatchSyncWithResponse(
-            JsonFormat format, BatchRequest searchAddressReverseBatchRequestBody, Context context) {
-        return reverseSearchAddressBatchSyncWithResponseAsync(format, searchAddressReverseBatchRequestBody, context)
-                .block();
+            JsonFormat format, BatchRequest batchRequest, Context context) {
+        return reverseSearchAddressBatchSyncWithResponseAsync(format, batchRequest, context).block();
     }
 
     /**
@@ -13699,8 +13692,8 @@ public final class SearchesImpl {
      * parameters were incorrectly specified or are mutually exclusive." } } } ] } ```.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchAddressReverseBatchRequestBody The list of reverse geocoding queries/requests to process. The list
-     *     can contain a max of 10,000 queries and must contain at least 1 query.
+     * @param batchRequest The list of reverse geocoding queries/requests to process. The list can contain a max of
+     *     10,000 queries and must contain at least 1 query.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -13708,7 +13701,7 @@ public final class SearchesImpl {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<SearchesReverseSearchAddressBatchResponse> reverseSearchAddressBatchWithResponseAsync(
-            JsonFormat format, BatchRequest searchAddressReverseBatchRequestBody) {
+            JsonFormat format, BatchRequest batchRequest) {
         final String accept = "application/json";
         return FluxUtil.withContext(
                 context ->
@@ -13717,7 +13710,7 @@ public final class SearchesImpl {
                                 this.client.getClientId(),
                                 this.client.getApiVersion(),
                                 format,
-                                searchAddressReverseBatchRequestBody,
+                                batchRequest,
                                 accept,
                                 context));
     }
@@ -13819,8 +13812,8 @@ public final class SearchesImpl {
      * parameters were incorrectly specified or are mutually exclusive." } } } ] } ```.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchAddressReverseBatchRequestBody The list of reverse geocoding queries/requests to process. The list
-     *     can contain a max of 10,000 queries and must contain at least 1 query.
+     * @param batchRequest The list of reverse geocoding queries/requests to process. The list can contain a max of
+     *     10,000 queries and must contain at least 1 query.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -13829,14 +13822,14 @@ public final class SearchesImpl {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<SearchesReverseSearchAddressBatchResponse> reverseSearchAddressBatchWithResponseAsync(
-            JsonFormat format, BatchRequest searchAddressReverseBatchRequestBody, Context context) {
+            JsonFormat format, BatchRequest batchRequest, Context context) {
         final String accept = "application/json";
         return service.reverseSearchAddressBatch(
                 this.client.getHost(),
                 this.client.getClientId(),
                 this.client.getApiVersion(),
                 format,
-                searchAddressReverseBatchRequestBody,
+                batchRequest,
                 accept,
                 context);
     }
@@ -13938,8 +13931,8 @@ public final class SearchesImpl {
      * parameters were incorrectly specified or are mutually exclusive." } } } ] } ```.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchAddressReverseBatchRequestBody The list of reverse geocoding queries/requests to process. The list
-     *     can contain a max of 10,000 queries and must contain at least 1 query.
+     * @param batchRequest The list of reverse geocoding queries/requests to process. The list can contain a max of
+     *     10,000 queries and must contain at least 1 query.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -13947,10 +13940,10 @@ public final class SearchesImpl {
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public PollerFlux<ReverseSearchAddressBatchProcessResult, ReverseSearchAddressBatchProcessResult>
-            beginReverseSearchAddressBatchAsync(JsonFormat format, BatchRequest searchAddressReverseBatchRequestBody) {
+            beginReverseSearchAddressBatchAsync(JsonFormat format, BatchRequest batchRequest) {
         return PollerFlux.create(
                 Duration.ofSeconds(1),
-                () -> this.reverseSearchAddressBatchWithResponseAsync(format, searchAddressReverseBatchRequestBody),
+                () -> this.reverseSearchAddressBatchWithResponseAsync(format, batchRequest),
                 new DefaultPollingStrategy<>(this.client.getHttpPipeline()),
                 new TypeReference<ReverseSearchAddressBatchProcessResult>() {},
                 new TypeReference<ReverseSearchAddressBatchProcessResult>() {});
@@ -14053,8 +14046,8 @@ public final class SearchesImpl {
      * parameters were incorrectly specified or are mutually exclusive." } } } ] } ```.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchAddressReverseBatchRequestBody The list of reverse geocoding queries/requests to process. The list
-     *     can contain a max of 10,000 queries and must contain at least 1 query.
+     * @param batchRequest The list of reverse geocoding queries/requests to process. The list can contain a max of
+     *     10,000 queries and must contain at least 1 query.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -14063,13 +14056,10 @@ public final class SearchesImpl {
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public PollerFlux<ReverseSearchAddressBatchProcessResult, ReverseSearchAddressBatchProcessResult>
-            beginReverseSearchAddressBatchAsync(
-                    JsonFormat format, BatchRequest searchAddressReverseBatchRequestBody, Context context) {
+            beginReverseSearchAddressBatchAsync(JsonFormat format, BatchRequest batchRequest, Context context) {
         return PollerFlux.create(
                 Duration.ofSeconds(1),
-                () ->
-                        this.reverseSearchAddressBatchWithResponseAsync(
-                                format, searchAddressReverseBatchRequestBody, context),
+                () -> this.reverseSearchAddressBatchWithResponseAsync(format, batchRequest, context),
                 new DefaultPollingStrategy<>(this.client.getHttpPipeline()),
                 new TypeReference<ReverseSearchAddressBatchProcessResult>() {},
                 new TypeReference<ReverseSearchAddressBatchProcessResult>() {});
@@ -14172,8 +14162,8 @@ public final class SearchesImpl {
      * parameters were incorrectly specified or are mutually exclusive." } } } ] } ```.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchAddressReverseBatchRequestBody The list of reverse geocoding queries/requests to process. The list
-     *     can contain a max of 10,000 queries and must contain at least 1 query.
+     * @param batchRequest The list of reverse geocoding queries/requests to process. The list can contain a max of
+     *     10,000 queries and must contain at least 1 query.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -14181,8 +14171,8 @@ public final class SearchesImpl {
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<ReverseSearchAddressBatchProcessResult, ReverseSearchAddressBatchProcessResult>
-            beginReverseSearchAddressBatch(JsonFormat format, BatchRequest searchAddressReverseBatchRequestBody) {
-        return this.beginReverseSearchAddressBatchAsync(format, searchAddressReverseBatchRequestBody).getSyncPoller();
+            beginReverseSearchAddressBatch(JsonFormat format, BatchRequest batchRequest) {
+        return this.beginReverseSearchAddressBatchAsync(format, batchRequest).getSyncPoller();
     }
 
     /**
@@ -14282,8 +14272,8 @@ public final class SearchesImpl {
      * parameters were incorrectly specified or are mutually exclusive." } } } ] } ```.
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchAddressReverseBatchRequestBody The list of reverse geocoding queries/requests to process. The list
-     *     can contain a max of 10,000 queries and must contain at least 1 query.
+     * @param batchRequest The list of reverse geocoding queries/requests to process. The list can contain a max of
+     *     10,000 queries and must contain at least 1 query.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -14292,10 +14282,8 @@ public final class SearchesImpl {
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<ReverseSearchAddressBatchProcessResult, ReverseSearchAddressBatchProcessResult>
-            beginReverseSearchAddressBatch(
-                    JsonFormat format, BatchRequest searchAddressReverseBatchRequestBody, Context context) {
-        return this.beginReverseSearchAddressBatchAsync(format, searchAddressReverseBatchRequestBody, context)
-                .getSyncPoller();
+            beginReverseSearchAddressBatch(JsonFormat format, BatchRequest batchRequest, Context context) {
+        return this.beginReverseSearchAddressBatchAsync(format, batchRequest, context).getSyncPoller();
     }
 
     /**

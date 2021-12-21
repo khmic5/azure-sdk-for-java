@@ -19,12 +19,6 @@ public final class Polygon {
     private String providerID;
 
     /*
-     * Reason for the failure to obtain data for this provider.
-     */
-    @JsonProperty(value = "error", access = JsonProperty.Access.WRITE_ONLY)
-    private String error;
-
-    /*
      * Geometry data in GeoJSON format. Please refer to [RFC
      * 7946](https://tools.ietf.org/html/rfc7946) for details. Present only if
      * "error" is not present.
@@ -39,15 +33,6 @@ public final class Polygon {
      */
     public String getProviderID() {
         return this.providerID;
-    }
-
-    /**
-     * Get the error property: Reason for the failure to obtain data for this provider.
-     *
-     * @return the error value.
-     */
-    public String getError() {
-        return this.error;
     }
 
     /**

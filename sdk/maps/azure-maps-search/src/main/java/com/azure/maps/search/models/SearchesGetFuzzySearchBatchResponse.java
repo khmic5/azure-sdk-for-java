@@ -13,7 +13,7 @@ import com.azure.maps.search.implementation.models.SearchesGetFuzzySearchBatchHe
 
 /** Contains all response data for the getFuzzySearchBatch operation. */
 public final class SearchesGetFuzzySearchBatchResponse
-        extends ResponseBase<SearchesGetFuzzySearchBatchHeaders, SearchAddressBatchProcessResult> {
+        extends ResponseBase<SearchesGetFuzzySearchBatchHeaders, SearchAddressBatchResult> {
     /**
      * Creates an instance of SearchesGetFuzzySearchBatchResponse.
      *
@@ -27,14 +27,14 @@ public final class SearchesGetFuzzySearchBatchResponse
             HttpRequest request,
             int statusCode,
             HttpHeaders rawHeaders,
-            SearchAddressBatchProcessResult value,
+            SearchAddressBatchResult value,
             SearchesGetFuzzySearchBatchHeaders headers) {
         super(request, statusCode, rawHeaders, value, headers);
     }
 
     /** @return the deserialized response body. */
     @Override
-    public SearchAddressBatchProcessResult getValue() {
+    public SearchAddressBatchResult getValue() {
         return super.getValue();
     }
 }

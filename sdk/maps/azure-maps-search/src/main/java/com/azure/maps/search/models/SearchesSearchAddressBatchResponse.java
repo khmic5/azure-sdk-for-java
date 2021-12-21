@@ -13,7 +13,7 @@ import com.azure.maps.search.implementation.models.SearchesSearchAddressBatchHea
 
 /** Contains all response data for the searchAddressBatch operation. */
 public final class SearchesSearchAddressBatchResponse
-        extends ResponseBase<SearchesSearchAddressBatchHeaders, SearchAddressBatchProcessResult> {
+        extends ResponseBase<SearchesSearchAddressBatchHeaders, SearchAddressBatchResult> {
     /**
      * Creates an instance of SearchesSearchAddressBatchResponse.
      *
@@ -27,14 +27,14 @@ public final class SearchesSearchAddressBatchResponse
             HttpRequest request,
             int statusCode,
             HttpHeaders rawHeaders,
-            SearchAddressBatchProcessResult value,
+            SearchAddressBatchResult value,
             SearchesSearchAddressBatchHeaders headers) {
         super(request, statusCode, rawHeaders, value, headers);
     }
 
     /** @return the deserialized response body. */
     @Override
-    public SearchAddressBatchProcessResult getValue() {
+    public SearchAddressBatchResult getValue() {
         return super.getValue();
     }
 }

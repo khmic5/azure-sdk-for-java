@@ -9,10 +9,8 @@ import java.util.stream.Collectors;
 
 import com.azure.core.annotation.Immutable;
 import com.azure.maps.search.implementation.models.Address;
-import com.azure.maps.search.implementation.models.DataSources;
 import com.azure.maps.search.implementation.models.PointOfInterest;
 import com.azure.maps.search.implementation.models.SearchAddressResultType;
-import com.azure.maps.search.implementation.models.Viewport;
 
 /** Result object for a Search API response. */
 @Immutable
@@ -128,8 +126,8 @@ public final class SearchAddressResultItem {
      * @return the viewport value.
      */
     public BoundingBox getBoundingBox() {
-        Viewport v = this.internalModel.getViewport();
-        return new BoundingBox(new LatLong(v.getTopLeftPoint()), new LatLong(v.getBtmRightPoint()));
+        com.azure.maps.search.implementation.models.BoundingBox b = this.internalModel.getViewport();
+        return new BoundingBox(new LatLong(b.getTopLeft()), new LatLong(b.getBottomRight()));
     }
 
     /**
@@ -163,7 +161,7 @@ public final class SearchAddressResultItem {
      *
      * @return the dataSources value.
      */
-    public DataSources getDataSources() {
+    public DataSource getDataSource() {
         return this.internalModel.getDataSources();
     }
 

@@ -16,14 +16,14 @@ public class BatchResultItem {
      * HTTP request status code.
      */
     @JsonProperty(value = "statusCode", access = JsonProperty.Access.WRITE_ONLY)
-    private Float statusCode;
+    private Integer statusCode;
 
     /**
      * Get the statusCode property: HTTP request status code.
      *
      * @return the statusCode value.
      */
-    public Float getStatusCode() {
+    public Integer getStatusCode() {
         return this.statusCode;
     }
 }

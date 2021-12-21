@@ -27,7 +27,7 @@ import com.azure.maps.search.models.ReverseSearchAddressOptions;
 import com.azure.maps.search.models.ReverseSearchAddressResult;
 import com.azure.maps.search.models.ReverseSearchCrossStreetAddressOptions;
 import com.azure.maps.search.models.ReverseSearchCrossStreetAddressResult;
-import com.azure.maps.search.models.SearchAddressBatchProcessResult;
+import com.azure.maps.search.models.SearchAddressBatchResult;
 import com.azure.maps.search.models.SearchAddressOptions;
 import com.azure.maps.search.models.SearchAddressResult;
 import com.azure.maps.search.models.SearchAlongRouteOptions;
@@ -421,7 +421,7 @@ public final class SearchClient {
      * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressBatchProcessResult fuzzySearchBatchSync(BatchRequest searchFuzzyBatchRequestBody) {
+    public SearchAddressBatchResult fuzzySearchBatchSync(BatchRequest searchFuzzyBatchRequestBody) {
         return this.serviceClient.fuzzySearchBatchSync(JsonFormat.JSON, searchFuzzyBatchRequestBody);
     }
 
@@ -438,7 +438,7 @@ public final class SearchClient {
      * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<SearchAddressBatchProcessResult> fuzzySearchBatchSyncWithResponse(
+    public Response<SearchAddressBatchResult> fuzzySearchBatchSyncWithResponse(
             BatchRequest searchFuzzyBatchRequestBody, Context context) {
         return this.serviceClient.fuzzySearchBatchSyncWithResponse(JsonFormat.JSON, searchFuzzyBatchRequestBody, context);
     }
@@ -455,7 +455,7 @@ public final class SearchClient {
      * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<SearchAddressBatchProcessResult, SearchAddressBatchProcessResult> beginFuzzySearchBatch(
+    public SyncPoller<SearchAddressBatchResult, SearchAddressBatchResult> beginFuzzySearchBatch(
             BatchRequest searchFuzzyBatchRequestBody) {
         return this.serviceClient.beginFuzzySearchBatch(JsonFormat.JSON, searchFuzzyBatchRequestBody);
     }
@@ -472,7 +472,7 @@ public final class SearchClient {
      * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<SearchAddressBatchProcessResult, SearchAddressBatchProcessResult> beginFuzzySearchBatch(
+    public SyncPoller<SearchAddressBatchResult, SearchAddressBatchResult> beginFuzzySearchBatch(
             BatchRequest searchFuzzyBatchRequestBody, Context context) {
         return this.serviceClient.beginFuzzySearchBatch(JsonFormat.JSON, searchFuzzyBatchRequestBody, context);
     }
@@ -487,7 +487,7 @@ public final class SearchClient {
      * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<SearchAddressBatchProcessResult, SearchAddressBatchProcessResult> beginGetFuzzySearchBatch(
+    public SyncPoller<SearchAddressBatchResult, SearchAddressBatchResult> beginGetFuzzySearchBatch(
             String batchId) {
         return this.serviceClient.beginGetFuzzySearchBatch(batchId);
     }
@@ -504,7 +504,7 @@ public final class SearchClient {
      * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<SearchAddressBatchProcessResult, SearchAddressBatchProcessResult> beginGetFuzzySearchBatch(
+    public SyncPoller<SearchAddressBatchResult, SearchAddressBatchResult> beginGetFuzzySearchBatch(
             String batchId, Context context) {
         return this.serviceClient.beginGetFuzzySearchBatch(batchId, context);
     }
@@ -521,7 +521,7 @@ public final class SearchClient {
      * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressBatchProcessResult searchAddressBatchSync(BatchRequest searchAddressBatchRequestBody) {
+    public SearchAddressBatchResult searchAddressBatchSync(BatchRequest searchAddressBatchRequestBody) {
         return this.serviceClient.searchAddressBatchSync(JsonFormat.JSON, searchAddressBatchRequestBody);
     }
 
@@ -538,7 +538,7 @@ public final class SearchClient {
      * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<SearchAddressBatchProcessResult> searchAddressBatchSyncWithResponse(
+    public Response<SearchAddressBatchResult> searchAddressBatchSyncWithResponse(
             BatchRequest searchAddressBatchRequestBody, Context context) {
         return this.serviceClient.searchAddressBatchSyncWithResponse(JsonFormat.JSON, searchAddressBatchRequestBody, context);
     }
@@ -555,7 +555,7 @@ public final class SearchClient {
      * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<SearchAddressBatchProcessResult, SearchAddressBatchProcessResult> beginSearchAddressBatch(
+    public SyncPoller<SearchAddressBatchResult, SearchAddressBatchResult> beginSearchAddressBatch(
             BatchRequest searchAddressBatchRequestBody) {
         return this.serviceClient.beginSearchAddressBatch(JsonFormat.JSON, searchAddressBatchRequestBody);
     }
@@ -573,7 +573,7 @@ public final class SearchClient {
      * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<SearchAddressBatchProcessResult, SearchAddressBatchProcessResult> beginSearchAddressBatch(
+    public SyncPoller<SearchAddressBatchResult, SearchAddressBatchResult> beginSearchAddressBatch(
             BatchRequest searchAddressBatchRequestBody, Context context) {
         return this.serviceClient.beginSearchAddressBatch(JsonFormat.JSON, searchAddressBatchRequestBody, context);
     }
@@ -588,7 +588,7 @@ public final class SearchClient {
      * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<SearchAddressBatchProcessResult, SearchAddressBatchProcessResult> beginGetSearchAddressBatch(
+    public SyncPoller<SearchAddressBatchResult, SearchAddressBatchResult> beginGetSearchAddressBatch(
             String batchId) {
         return this.serviceClient.beginGetSearchAddressBatch(batchId);
     }
@@ -603,7 +603,7 @@ public final class SearchClient {
      * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<SearchAddressBatchProcessResult, SearchAddressBatchProcessResult> beginGetSearchAddressBatch(
+    public SyncPoller<SearchAddressBatchResult, SearchAddressBatchResult> beginGetSearchAddressBatch(
             String batchId, Context context) {
         return this.serviceClient.beginGetSearchAddressBatch(batchId, context);
     }
