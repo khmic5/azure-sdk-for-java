@@ -16,7 +16,7 @@ public final class AddressRanges {
     /*
      * Internal representation of AddressRanges
      */
-    private com.azure.maps.search.implementation.models.AddressRanges internalModel = null;
+    private com.azure.maps.search.implementation.models.AddressRanges internalModel;
 
     AddressRanges(com.azure.maps.search.implementation.models.AddressRanges internalModel) {
         this.internalModel = internalModel;

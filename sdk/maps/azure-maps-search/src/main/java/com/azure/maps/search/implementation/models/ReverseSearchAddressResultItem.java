@@ -19,7 +19,7 @@ public final class ReverseSearchAddressResultItem {
      * The address of the result
      */
     @JsonProperty(value = "address", access = JsonProperty.Access.WRITE_ONLY)
-    private Address address;
+    private AddressPrivate address;
 
     /*
      * Position property in the form of "{latitude},{longitude}"
@@ -49,7 +49,7 @@ public final class ReverseSearchAddressResultItem {
      *
      * @return the address value.
      */
-    public Address getAddress() {
+    public AddressPrivate getAddress() {
         return this.address;
     }
 
