@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * locations of the address range are included.
  */
 @Fluent
-public final class AddressRanges {
+public final class AddressRangesPrivate {
     /*
      * Address range on the left side of the street.
      */
@@ -54,9 +54,9 @@ public final class AddressRanges {
      * Set the rangeLeft property: Address range on the left side of the street.
      *
      * @param rangeLeft the rangeLeft value to set.
-     * @return the AddressRanges object itself.
+     * @return the AddressRangesPrivate object itself.
      */
-    public AddressRanges setRangeLeft(String rangeLeft) {
+    public AddressRangesPrivate setRangeLeft(String rangeLeft) {
         this.rangeLeft = rangeLeft;
         return this;
     }
@@ -74,9 +74,9 @@ public final class AddressRanges {
      * Set the rangeRight property: Address range on the right side of the street.
      *
      * @param rangeRight the rangeRight value to set.
-     * @return the AddressRanges object itself.
+     * @return the AddressRangesPrivate object itself.
      */
-    public AddressRanges setRangeRight(String rangeRight) {
+    public AddressRangesPrivate setRangeRight(String rangeRight) {
         this.rangeRight = rangeRight;
         return this;
     }
@@ -94,9 +94,9 @@ public final class AddressRanges {
      * Set the from property: A location represented as a latitude and longitude using short names 'lat' &amp; 'lon'.
      *
      * @param from the from value to set.
-     * @return the AddressRanges object itself.
+     * @return the AddressRangesPrivate object itself.
      */
-    public AddressRanges setFrom(LatLongPairAbbreviated from) {
+    public AddressRangesPrivate setFrom(LatLongPairAbbreviated from) {
         this.from = from;
         return this;
     }
@@ -114,9 +114,9 @@ public final class AddressRanges {
      * Set the to property: A location represented as a latitude and longitude using short names 'lat' &amp; 'lon'.
      *
      * @param to the to value to set.
-     * @return the AddressRanges object itself.
+     * @return the AddressRangesPrivate object itself.
      */
-    public AddressRanges setTo(LatLongPairAbbreviated to) {
+    public AddressRangesPrivate setTo(LatLongPairAbbreviated to) {
         this.to = to;
         return this;
     }

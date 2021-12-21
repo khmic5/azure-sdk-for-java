@@ -6,9 +6,11 @@
 
 package com.azure.maps.search.models;
 
-import com.azure.core.annotation.Immutable;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.azure.core.annotation.Immutable;
+import com.azure.maps.search.implementation.models.ReverseSearchAddressResultPrivate;
 
 /** This object is returned from a successful Search Address Reverse call. */
 @Immutable
@@ -17,7 +19,7 @@ public final class ReverseSearchAddressResult {
     /*
      * Internal model
      */
-    private com.azure.maps.search.implementation.models.ReverseSearchAddressResult internalModel = null;
+    private ReverseSearchAddressResultPrivate internalModel = null;
 
     /*
      * A list of Search API results.
@@ -27,7 +29,7 @@ public final class ReverseSearchAddressResult {
     /**
      * Constructor
      */
-    public ReverseSearchAddressResult(com.azure.maps.search.implementation.models.ReverseSearchAddressResult internalModel) {
+    public ReverseSearchAddressResult(ReverseSearchAddressResultPrivate internalModel) {
         this.internalModel = internalModel;
 
         // configure results to replace ReverseSearchAddressResultItem with the proper model

@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** The result of the query. SearchAddressResponse if the query completed successfully, ErrorResponse otherwise. */
 @Fluent
-public final class SearchAddressBatchItemResponse extends SearchAddressResult {
+public final class SearchAddressBatchItemResponse extends SearchAddressResultPrivate {
     /*
      * The error object.
      */

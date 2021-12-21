@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.maps.search.implementation.models.Address;
 import com.azure.maps.search.implementation.models.PointOfInterest;
+import com.azure.maps.search.implementation.models.SearchAddressResultItemPrivate;
 import com.azure.maps.search.implementation.models.SearchAddressResultType;
 
 /** Result object for a Search API response. */
@@ -19,13 +19,13 @@ public final class SearchAddressResultItem {
     /*
      * Internal models
      */
-    private com.azure.maps.search.implementation.models.SearchAddressResultItem internalModel = null;
+    private SearchAddressResultItemPrivate internalModel = null;
     private List<EntryPoint> entryPoints = null;
 
     /**
      * Constructor
      */
-    SearchAddressResultItem(com.azure.maps.search.implementation.models.SearchAddressResultItem internalModel) {
+    SearchAddressResultItem(SearchAddressResultItemPrivate internalModel) {
         this.internalModel = internalModel;
 
         if (this.internalModel != null && this.internalModel.getEntryPoints() != null) {
@@ -106,7 +106,7 @@ public final class SearchAddressResultItem {
      * @return the address value.
      */
     public Address getAddress() {
-        return this.internalModel.getAddress();
+        return new Address(this.internalModel.getAddress());
     }
 
     /**

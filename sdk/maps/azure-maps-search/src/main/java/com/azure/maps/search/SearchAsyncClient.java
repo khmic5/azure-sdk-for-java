@@ -17,19 +17,17 @@ import com.azure.core.util.Context;
 import com.azure.core.util.polling.PollerFlux;
 import com.azure.maps.search.implementation.SearchesImpl;
 import com.azure.maps.search.implementation.models.PolygonResult;
+import com.azure.maps.search.implementation.models.ReverseSearchAddressResultPrivate;
+import com.azure.maps.search.implementation.models.ReverseSearchCrossStreetAddressResultPrivate;
+import com.azure.maps.search.implementation.models.SearchAddressResultPrivate;
 import com.azure.maps.search.implementation.models.SearchAlongRouteRequest;
 import com.azure.maps.search.implementation.models.SearchInsideGeometryRequest;
 import com.azure.maps.search.models.BatchRequest;
 import com.azure.maps.search.models.BoundingBox;
-import com.azure.maps.search.models.ElectricVehicleConnector;
 import com.azure.maps.search.models.ErrorResponseException;
 import com.azure.maps.search.models.FuzzySearchOptions;
-import com.azure.maps.search.models.GeoJsonLineString;
-import com.azure.maps.search.models.GeoJsonObject;
 import com.azure.maps.search.models.JsonFormat;
 import com.azure.maps.search.models.LatLong;
-import com.azure.maps.search.models.LocalizedMapView;
-import com.azure.maps.search.models.OperatingHoursRange;
 import com.azure.maps.search.models.PointOfInterestCategoryTreeResult;
 import com.azure.maps.search.models.Polygon;
 import com.azure.maps.search.models.ResponseFormat;
@@ -162,7 +160,7 @@ public final class SearchAsyncClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     Mono<Response<SearchAddressResult>> fuzzySearchWithResponse(FuzzySearchOptions options, Context context) {
         final Optional<LatLong> optCoordinates = Optional.ofNullable(options.getCoordinates());
-        Mono<Response<com.azure.maps.search.implementation.models.SearchAddressResult>> responseMono =
+        Mono<Response<SearchAddressResultPrivate>> responseMono =
             this.serviceClient.fuzzySearchWithResponseAsync(
                 ResponseFormat.JSON,
                 options.getQuery(),
@@ -231,7 +229,7 @@ public final class SearchAsyncClient {
     Mono<Response<SearchAddressResult>> searchPointOfInterestWithResponse(SearchPointOfInterestOptions options,
             Context context) {
         final Optional<LatLong> optCoordinates = Optional.ofNullable(options.getCoordinates());
-        Mono<Response<com.azure.maps.search.implementation.models.SearchAddressResult>> responseMono =
+        Mono<Response<SearchAddressResultPrivate>> responseMono =
             this.serviceClient.searchPointOfInterestWithResponseAsync(
                 ResponseFormat.JSON,
                 options.getQuery(),
@@ -304,7 +302,7 @@ public final class SearchAsyncClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     Mono<Response<SearchAddressResult>> searchNearbyPointOfInterestWithResponse(
             SearchNearbyPointsOfInterestOptions options, Context context) {
-        Mono<Response<com.azure.maps.search.implementation.models.SearchAddressResult>> responseMono =
+        Mono<Response<SearchAddressResultPrivate>> responseMono =
             this.serviceClient.searchNearbyPointOfInterestWithResponseAsync(
                 ResponseFormat.JSON,
                 options.getCoordinates().getLat(),
@@ -372,7 +370,7 @@ public final class SearchAsyncClient {
     Mono<Response<SearchAddressResult>> searchPointOfInterestCategoryWithResponse(
                 SearchPointOfInterestCategoryOptions options, Context context) {
         final Optional<LatLong> optCoordinates = Optional.ofNullable(options.getCoordinates());
-        Mono<Response<com.azure.maps.search.implementation.models.SearchAddressResult>> responseMono =
+        Mono<Response<SearchAddressResultPrivate>> responseMono =
             this.serviceClient.searchPointOfInterestCategoryWithResponseAsync(
                 ResponseFormat.JSON,
                 options.getQuery(),
@@ -497,7 +495,7 @@ public final class SearchAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     Mono<Response<SearchAddressResult>> searchAddressWithResponse(SearchAddressOptions options, Context context) {
-        Mono<Response<com.azure.maps.search.implementation.models.SearchAddressResult>> responseMono =
+        Mono<Response<SearchAddressResultPrivate>> responseMono =
             this.serviceClient.searchAddressWithResponseAsync(
                 ResponseFormat.JSON,
                 options.getQuery(),
@@ -564,7 +562,7 @@ public final class SearchAsyncClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     Mono<Response<ReverseSearchAddressResult>> reverseSearchAddressWithResponse(
                 ReverseSearchAddressOptions options, Context context) {
-        Mono<Response<com.azure.maps.search.implementation.models.ReverseSearchAddressResult>> responseMono =
+        Mono<Response<ReverseSearchAddressResultPrivate>> responseMono =
             this.serviceClient.reverseSearchAddressWithResponseAsync(
                 ResponseFormat.JSON,
                 Arrays.asList(options.getCoordinates().getLat(), options.getCoordinates().getLon()),
@@ -634,7 +632,7 @@ public final class SearchAsyncClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     Mono<Response<ReverseSearchCrossStreetAddressResult>> reverseSearchCrossStreetAddressWithResponse(
             ReverseSearchCrossStreetAddressOptions options, Context context) {
-        Mono<Response<com.azure.maps.search.implementation.models.ReverseSearchCrossStreetAddressResult>> responseMono =
+        Mono<Response<ReverseSearchCrossStreetAddressResultPrivate>> responseMono =
             this.serviceClient.reverseSearchCrossStreetAddressWithResponseAsync(
                 ResponseFormat.JSON,
                 Arrays.asList(options.getCoordinates().getLat(), options.getCoordinates().getLon()),
@@ -698,7 +696,7 @@ public final class SearchAsyncClient {
             StructuredAddress address, SearchStructuredAddressOptions options, Context context) {
         final SearchStructuredAddressOptions param = Optional.ofNullable(options)
             .orElse(new SearchStructuredAddressOptions());
-        Mono<Response<com.azure.maps.search.implementation.models.SearchAddressResult>> responseMono =
+        Mono<Response<SearchAddressResultPrivate>> responseMono =
             this.serviceClient.searchStructuredAddressWithResponseAsync(
                 ResponseFormat.JSON,
                 param.getLanguage(),
@@ -767,7 +765,7 @@ public final class SearchAsyncClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     Mono<Response<SearchAddressResult>> searchInsideGeometryWithResponse(SearchInsideGeometryOptions options,
             Context context) {
-        Mono<Response<com.azure.maps.search.implementation.models.SearchAddressResult>> responseMono =
+        Mono<Response<SearchAddressResultPrivate>> responseMono =
             this.serviceClient.searchInsideGeometryWithResponseAsync(
                 ResponseFormat.JSON,
                 options.getQuery(),
@@ -829,7 +827,7 @@ public final class SearchAsyncClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     Mono<Response<SearchAddressResult>> searchAlongRouteWithResponse(SearchAlongRouteOptions options,
             Context context) {
-        Mono<Response<com.azure.maps.search.implementation.models.SearchAddressResult>> responseMono =
+        Mono<Response<SearchAddressResultPrivate>> responseMono =
             this.serviceClient.searchAlongRouteWithResponseAsync(
                 ResponseFormat.JSON,
                 options.getQuery(),

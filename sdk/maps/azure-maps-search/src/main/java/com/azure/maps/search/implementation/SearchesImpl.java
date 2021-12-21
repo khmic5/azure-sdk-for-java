@@ -31,9 +31,9 @@ import com.azure.core.util.serializer.CollectionFormat;
 import com.azure.core.util.serializer.JacksonAdapter;
 import com.azure.core.util.serializer.TypeReference;
 import com.azure.maps.search.implementation.models.PolygonResult;
-import com.azure.maps.search.implementation.models.ReverseSearchAddressResult;
-import com.azure.maps.search.implementation.models.ReverseSearchCrossStreetAddressResult;
-import com.azure.maps.search.implementation.models.SearchAddressResult;
+import com.azure.maps.search.implementation.models.ReverseSearchAddressResultPrivate;
+import com.azure.maps.search.implementation.models.ReverseSearchCrossStreetAddressResultPrivate;
+import com.azure.maps.search.implementation.models.SearchAddressResultPrivate;
 import com.azure.maps.search.implementation.models.SearchAlongRouteRequest;
 import com.azure.maps.search.implementation.models.SearchInsideGeometryRequest;
 import com.azure.maps.search.models.BatchRequest;
@@ -102,7 +102,7 @@ public final class SearchesImpl {
         @Get("/search/fuzzy/{format}")
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
-        Mono<Response<SearchAddressResult>> fuzzySearch(
+        Mono<Response<SearchAddressResultPrivate>> fuzzySearch(
                 @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String clientId,
                 @QueryParam("api-version") String apiVersion,
@@ -134,7 +134,7 @@ public final class SearchesImpl {
         @Get("/search/poi/{format}")
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
-        Mono<Response<SearchAddressResult>> searchPointOfInterest(
+        Mono<Response<SearchAddressResultPrivate>> searchPointOfInterest(
                 @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String clientId,
                 @QueryParam("api-version") String apiVersion,
@@ -162,7 +162,7 @@ public final class SearchesImpl {
         @Get("/search/nearby/{format}")
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
-        Mono<Response<SearchAddressResult>> searchNearbyPointOfInterest(
+        Mono<Response<SearchAddressResultPrivate>> searchNearbyPointOfInterest(
                 @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String clientId,
                 @QueryParam("api-version") String apiVersion,
@@ -185,7 +185,7 @@ public final class SearchesImpl {
         @Get("/search/poi/category/{format}")
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
-        Mono<Response<SearchAddressResult>> searchPointOfInterestCategory(
+        Mono<Response<SearchAddressResultPrivate>> searchPointOfInterestCategory(
                 @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String clientId,
                 @QueryParam("api-version") String apiVersion,
@@ -225,7 +225,7 @@ public final class SearchesImpl {
         @Get("/search/address/{format}")
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
-        Mono<Response<SearchAddressResult>> searchAddress(
+        Mono<Response<SearchAddressResultPrivate>> searchAddress(
                 @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String clientId,
                 @QueryParam("api-version") String apiVersion,
@@ -250,7 +250,7 @@ public final class SearchesImpl {
         @Get("/search/address/reverse/{format}")
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
-        Mono<Response<ReverseSearchAddressResult>> reverseSearchAddress(
+        Mono<Response<ReverseSearchAddressResultPrivate>> reverseSearchAddress(
                 @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String clientId,
                 @QueryParam("api-version") String apiVersion,
@@ -273,7 +273,7 @@ public final class SearchesImpl {
         @Get("/search/address/reverse/crossStreet/{format}")
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
-        Mono<Response<ReverseSearchCrossStreetAddressResult>> reverseSearchCrossStreetAddress(
+        Mono<Response<ReverseSearchCrossStreetAddressResultPrivate>> reverseSearchCrossStreetAddress(
                 @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String clientId,
                 @QueryParam("api-version") String apiVersion,
@@ -290,7 +290,7 @@ public final class SearchesImpl {
         @Get("/search/address/structured/{format}")
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
-        Mono<Response<SearchAddressResult>> searchStructuredAddress(
+        Mono<Response<SearchAddressResultPrivate>> searchStructuredAddress(
                 @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String clientId,
                 @QueryParam("api-version") String apiVersion,
@@ -317,7 +317,7 @@ public final class SearchesImpl {
         @Post("/search/geometry/{format}")
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
-        Mono<Response<SearchAddressResult>> searchInsideGeometry(
+        Mono<Response<SearchAddressResultPrivate>> searchInsideGeometry(
                 @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String clientId,
                 @QueryParam("api-version") String apiVersion,
@@ -337,7 +337,7 @@ public final class SearchesImpl {
         @Post("/search/alongRoute/{format}")
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
-        Mono<Response<SearchAddressResult>> searchAlongRoute(
+        Mono<Response<SearchAddressResultPrivate>> searchAlongRoute(
                 @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String clientId,
                 @QueryParam("api-version") String apiVersion,
@@ -823,7 +823,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<SearchAddressResult>> fuzzySearchWithResponseAsync(
+    public Mono<Response<SearchAddressResultPrivate>> fuzzySearchWithResponseAsync(
             ResponseFormat format,
             String query,
             Boolean isTypeAhead,
@@ -1043,7 +1043,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<SearchAddressResult>> fuzzySearchWithResponseAsync(
+    public Mono<Response<SearchAddressResultPrivate>> fuzzySearchWithResponseAsync(
             ResponseFormat format,
             String query,
             Boolean isTypeAhead,
@@ -1261,7 +1261,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchAddressResult> fuzzySearchAsync(
+    public Mono<SearchAddressResultPrivate> fuzzySearchAsync(
             ResponseFormat format,
             String query,
             Boolean isTypeAhead,
@@ -1308,7 +1308,7 @@ public final class SearchesImpl {
                         localizedMapView,
                         operatingHours)
                 .flatMap(
-                        (Response<SearchAddressResult> res) -> {
+                        (Response<SearchAddressResultPrivate> res) -> {
                             if (res.getValue() != null) {
                                 return Mono.just(res.getValue());
                             } else {
@@ -1467,7 +1467,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchAddressResult> fuzzySearchAsync(
+    public Mono<SearchAddressResultPrivate> fuzzySearchAsync(
             ResponseFormat format,
             String query,
             Boolean isTypeAhead,
@@ -1516,7 +1516,7 @@ public final class SearchesImpl {
                         operatingHours,
                         context)
                 .flatMap(
-                        (Response<SearchAddressResult> res) -> {
+                        (Response<SearchAddressResultPrivate> res) -> {
                             if (res.getValue() != null) {
                                 return Mono.just(res.getValue());
                             } else {
@@ -1674,7 +1674,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressResult fuzzySearch(
+    public SearchAddressResultPrivate fuzzySearch(
             ResponseFormat format,
             String query,
             Boolean isTypeAhead,
@@ -1873,7 +1873,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<SearchAddressResult> fuzzySearchWithResponse(
+    public Response<SearchAddressResultPrivate> fuzzySearchWithResponse(
             ResponseFormat format,
             String query,
             Boolean isTypeAhead,
@@ -2030,7 +2030,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<SearchAddressResult>> searchPointOfInterestWithResponseAsync(
+    public Mono<Response<SearchAddressResultPrivate>> searchPointOfInterestWithResponseAsync(
             ResponseFormat format,
             String query,
             Boolean isTypeAhead,
@@ -2197,7 +2197,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<SearchAddressResult>> searchPointOfInterestWithResponseAsync(
+    public Mono<Response<SearchAddressResultPrivate>> searchPointOfInterestWithResponseAsync(
             ResponseFormat format,
             String query,
             Boolean isTypeAhead,
@@ -2362,7 +2362,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchAddressResult> searchPointOfInterestAsync(
+    public Mono<SearchAddressResultPrivate> searchPointOfInterestAsync(
             ResponseFormat format,
             String query,
             Boolean isTypeAhead,
@@ -2401,7 +2401,7 @@ public final class SearchesImpl {
                         localizedMapView,
                         operatingHours)
                 .flatMap(
-                        (Response<SearchAddressResult> res) -> {
+                        (Response<SearchAddressResultPrivate> res) -> {
                             if (res.getValue() != null) {
                                 return Mono.just(res.getValue());
                             } else {
@@ -2517,7 +2517,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchAddressResult> searchPointOfInterestAsync(
+    public Mono<SearchAddressResultPrivate> searchPointOfInterestAsync(
             ResponseFormat format,
             String query,
             Boolean isTypeAhead,
@@ -2558,7 +2558,7 @@ public final class SearchesImpl {
                         operatingHours,
                         context)
                 .flatMap(
-                        (Response<SearchAddressResult> res) -> {
+                        (Response<SearchAddressResultPrivate> res) -> {
                             if (res.getValue() != null) {
                                 return Mono.just(res.getValue());
                             } else {
@@ -2673,7 +2673,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressResult searchPointOfInterest(
+    public SearchAddressResultPrivate searchPointOfInterest(
             ResponseFormat format,
             String query,
             Boolean isTypeAhead,
@@ -2821,7 +2821,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<SearchAddressResult> searchPointOfInterestWithResponse(
+    public Response<SearchAddressResultPrivate> searchPointOfInterestWithResponse(
             ResponseFormat format,
             String query,
             Boolean isTypeAhead,
@@ -2969,7 +2969,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<SearchAddressResult>> searchNearbyPointOfInterestWithResponseAsync(
+    public Mono<Response<SearchAddressResultPrivate>> searchNearbyPointOfInterestWithResponseAsync(
             ResponseFormat format,
             double lat,
             double lon,
@@ -3125,7 +3125,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<SearchAddressResult>> searchNearbyPointOfInterestWithResponseAsync(
+    public Mono<Response<SearchAddressResultPrivate>> searchNearbyPointOfInterestWithResponseAsync(
             ResponseFormat format,
             double lat,
             double lon,
@@ -3279,7 +3279,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchAddressResult> searchNearbyPointOfInterestAsync(
+    public Mono<SearchAddressResultPrivate> searchNearbyPointOfInterestAsync(
             ResponseFormat format,
             double lat,
             double lon,
@@ -3308,7 +3308,7 @@ public final class SearchesImpl {
                         electricVehicleConnectorFilter,
                         localizedMapView)
                 .flatMap(
-                        (Response<SearchAddressResult> res) -> {
+                        (Response<SearchAddressResultPrivate> res) -> {
                             if (res.getValue() != null) {
                                 return Mono.just(res.getValue());
                             } else {
@@ -3423,7 +3423,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchAddressResult> searchNearbyPointOfInterestAsync(
+    public Mono<SearchAddressResultPrivate> searchNearbyPointOfInterestAsync(
             ResponseFormat format,
             double lat,
             double lon,
@@ -3454,7 +3454,7 @@ public final class SearchesImpl {
                         localizedMapView,
                         context)
                 .flatMap(
-                        (Response<SearchAddressResult> res) -> {
+                        (Response<SearchAddressResultPrivate> res) -> {
                             if (res.getValue() != null) {
                                 return Mono.just(res.getValue());
                             } else {
@@ -3568,7 +3568,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressResult searchNearbyPointOfInterest(
+    public SearchAddressResultPrivate searchNearbyPointOfInterest(
             ResponseFormat format,
             double lat,
             double lon,
@@ -3705,7 +3705,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<SearchAddressResult> searchNearbyPointOfInterestWithResponse(
+    public Response<SearchAddressResultPrivate> searchNearbyPointOfInterestWithResponse(
             ResponseFormat format,
             double lat,
             double lon,
@@ -3854,7 +3854,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<SearchAddressResult>> searchPointOfInterestCategoryWithResponseAsync(
+    public Mono<Response<SearchAddressResultPrivate>> searchPointOfInterestCategoryWithResponseAsync(
             ResponseFormat format,
             String query,
             Boolean isTypeAhead,
@@ -4031,7 +4031,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<SearchAddressResult>> searchPointOfInterestCategoryWithResponseAsync(
+    public Mono<Response<SearchAddressResultPrivate>> searchPointOfInterestCategoryWithResponseAsync(
             ResponseFormat format,
             String query,
             Boolean isTypeAhead,
@@ -4206,7 +4206,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchAddressResult> searchPointOfInterestCategoryAsync(
+    public Mono<SearchAddressResultPrivate> searchPointOfInterestCategoryAsync(
             ResponseFormat format,
             String query,
             Boolean isTypeAhead,
@@ -4245,7 +4245,7 @@ public final class SearchesImpl {
                         localizedMapView,
                         operatingHours)
                 .flatMap(
-                        (Response<SearchAddressResult> res) -> {
+                        (Response<SearchAddressResultPrivate> res) -> {
                             if (res.getValue() != null) {
                                 return Mono.just(res.getValue());
                             } else {
@@ -4371,7 +4371,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchAddressResult> searchPointOfInterestCategoryAsync(
+    public Mono<SearchAddressResultPrivate> searchPointOfInterestCategoryAsync(
             ResponseFormat format,
             String query,
             Boolean isTypeAhead,
@@ -4412,7 +4412,7 @@ public final class SearchesImpl {
                         operatingHours,
                         context)
                 .flatMap(
-                        (Response<SearchAddressResult> res) -> {
+                        (Response<SearchAddressResultPrivate> res) -> {
                             if (res.getValue() != null) {
                                 return Mono.just(res.getValue());
                             } else {
@@ -4537,7 +4537,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressResult searchPointOfInterestCategory(
+    public SearchAddressResultPrivate searchPointOfInterestCategory(
             ResponseFormat format,
             String query,
             Boolean isTypeAhead,
@@ -4695,7 +4695,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<SearchAddressResult> searchPointOfInterestCategoryWithResponse(
+    public Response<SearchAddressResultPrivate> searchPointOfInterestCategoryWithResponse(
             ResponseFormat format,
             String query,
             Boolean isTypeAhead,
@@ -5009,7 +5009,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<SearchAddressResult>> searchAddressWithResponseAsync(
+    public Mono<Response<SearchAddressResultPrivate>> searchAddressWithResponseAsync(
             ResponseFormat format,
             String query,
             Boolean isTypeAhead,
@@ -5130,7 +5130,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<SearchAddressResult>> searchAddressWithResponseAsync(
+    public Mono<Response<SearchAddressResultPrivate>> searchAddressWithResponseAsync(
             ResponseFormat format,
             String query,
             Boolean isTypeAhead,
@@ -5249,7 +5249,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchAddressResult> searchAddressAsync(
+    public Mono<SearchAddressResultPrivate> searchAddressAsync(
             ResponseFormat format,
             String query,
             Boolean isTypeAhead,
@@ -5282,7 +5282,7 @@ public final class SearchesImpl {
                         entityType,
                         localizedMapView)
                 .flatMap(
-                        (Response<SearchAddressResult> res) -> {
+                        (Response<SearchAddressResultPrivate> res) -> {
                             if (res.getValue() != null) {
                                 return Mono.just(res.getValue());
                             } else {
@@ -5365,7 +5365,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchAddressResult> searchAddressAsync(
+    public Mono<SearchAddressResultPrivate> searchAddressAsync(
             ResponseFormat format,
             String query,
             Boolean isTypeAhead,
@@ -5400,7 +5400,7 @@ public final class SearchesImpl {
                         localizedMapView,
                         context)
                 .flatMap(
-                        (Response<SearchAddressResult> res) -> {
+                        (Response<SearchAddressResultPrivate> res) -> {
                             if (res.getValue() != null) {
                                 return Mono.just(res.getValue());
                             } else {
@@ -5482,7 +5482,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressResult searchAddress(
+    public SearchAddressResultPrivate searchAddress(
             ResponseFormat format,
             String query,
             Boolean isTypeAhead,
@@ -5591,7 +5591,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<SearchAddressResult> searchAddressWithResponse(
+    public Response<SearchAddressResultPrivate> searchAddressWithResponse(
             ResponseFormat format,
             String query,
             Boolean isTypeAhead,
@@ -5683,7 +5683,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search Address Reverse call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<ReverseSearchAddressResult>> reverseSearchAddressWithResponseAsync(
+    public Mono<Response<ReverseSearchAddressResultPrivate>> reverseSearchAddressWithResponseAsync(
             ResponseFormat format,
             List<Double> query,
             String language,
@@ -5781,7 +5781,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search Address Reverse call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<ReverseSearchAddressResult>> reverseSearchAddressWithResponseAsync(
+    public Mono<Response<ReverseSearchAddressResultPrivate>> reverseSearchAddressWithResponseAsync(
             ResponseFormat format,
             List<Double> query,
             String language,
@@ -5877,7 +5877,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search Address Reverse call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<ReverseSearchAddressResult> reverseSearchAddressAsync(
+    public Mono<ReverseSearchAddressResultPrivate> reverseSearchAddressAsync(
             ResponseFormat format,
             List<Double> query,
             String language,
@@ -5906,7 +5906,7 @@ public final class SearchesImpl {
                         entityType,
                         localizedMapView)
                 .flatMap(
-                        (Response<ReverseSearchAddressResult> res) -> {
+                        (Response<ReverseSearchAddressResultPrivate> res) -> {
                             if (res.getValue() != null) {
                                 return Mono.just(res.getValue());
                             } else {
@@ -5971,7 +5971,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search Address Reverse call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<ReverseSearchAddressResult> reverseSearchAddressAsync(
+    public Mono<ReverseSearchAddressResultPrivate> reverseSearchAddressAsync(
             ResponseFormat format,
             List<Double> query,
             String language,
@@ -6002,7 +6002,7 @@ public final class SearchesImpl {
                         localizedMapView,
                         context)
                 .flatMap(
-                        (Response<ReverseSearchAddressResult> res) -> {
+                        (Response<ReverseSearchAddressResultPrivate> res) -> {
                             if (res.getValue() != null) {
                                 return Mono.just(res.getValue());
                             } else {
@@ -6066,7 +6066,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search Address Reverse call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public ReverseSearchAddressResult reverseSearchAddress(
+    public ReverseSearchAddressResultPrivate reverseSearchAddress(
             ResponseFormat format,
             List<Double> query,
             String language,
@@ -6153,7 +6153,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search Address Reverse call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<ReverseSearchAddressResult> reverseSearchAddressWithResponse(
+    public Response<ReverseSearchAddressResultPrivate> reverseSearchAddressWithResponse(
             ResponseFormat format,
             List<Double> query,
             String language,
@@ -6226,14 +6226,15 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search Address Reverse CrossStreet call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<ReverseSearchCrossStreetAddressResult>> reverseSearchCrossStreetAddressWithResponseAsync(
-            ResponseFormat format,
-            List<Double> query,
-            Integer top,
-            Integer heading,
-            Integer radiusInMeters,
-            String language,
-            LocalizedMapView localizedMapView) {
+    public Mono<Response<ReverseSearchCrossStreetAddressResultPrivate>>
+            reverseSearchCrossStreetAddressWithResponseAsync(
+                    ResponseFormat format,
+                    List<Double> query,
+                    Integer top,
+                    Integer heading,
+                    Integer radiusInMeters,
+                    String language,
+                    LocalizedMapView localizedMapView) {
         final String accept = "application/json";
         String queryConverted =
                 JacksonAdapter.createDefaultSerializerAdapter().serializeList(query, CollectionFormat.CSV);
@@ -6295,15 +6296,16 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search Address Reverse CrossStreet call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<ReverseSearchCrossStreetAddressResult>> reverseSearchCrossStreetAddressWithResponseAsync(
-            ResponseFormat format,
-            List<Double> query,
-            Integer top,
-            Integer heading,
-            Integer radiusInMeters,
-            String language,
-            LocalizedMapView localizedMapView,
-            Context context) {
+    public Mono<Response<ReverseSearchCrossStreetAddressResultPrivate>>
+            reverseSearchCrossStreetAddressWithResponseAsync(
+                    ResponseFormat format,
+                    List<Double> query,
+                    Integer top,
+                    Integer heading,
+                    Integer radiusInMeters,
+                    String language,
+                    LocalizedMapView localizedMapView,
+                    Context context) {
         final String accept = "application/json";
         String queryConverted =
                 JacksonAdapter.createDefaultSerializerAdapter().serializeList(query, CollectionFormat.CSV);
@@ -6362,7 +6364,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search Address Reverse CrossStreet call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<ReverseSearchCrossStreetAddressResult> reverseSearchCrossStreetAddressAsync(
+    public Mono<ReverseSearchCrossStreetAddressResultPrivate> reverseSearchCrossStreetAddressAsync(
             ResponseFormat format,
             List<Double> query,
             Integer top,
@@ -6373,7 +6375,7 @@ public final class SearchesImpl {
         return reverseSearchCrossStreetAddressWithResponseAsync(
                         format, query, top, heading, radiusInMeters, language, localizedMapView)
                 .flatMap(
-                        (Response<ReverseSearchCrossStreetAddressResult> res) -> {
+                        (Response<ReverseSearchCrossStreetAddressResultPrivate> res) -> {
                             if (res.getValue() != null) {
                                 return Mono.just(res.getValue());
                             } else {
@@ -6423,7 +6425,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search Address Reverse CrossStreet call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<ReverseSearchCrossStreetAddressResult> reverseSearchCrossStreetAddressAsync(
+    public Mono<ReverseSearchCrossStreetAddressResultPrivate> reverseSearchCrossStreetAddressAsync(
             ResponseFormat format,
             List<Double> query,
             Integer top,
@@ -6435,7 +6437,7 @@ public final class SearchesImpl {
         return reverseSearchCrossStreetAddressWithResponseAsync(
                         format, query, top, heading, radiusInMeters, language, localizedMapView, context)
                 .flatMap(
-                        (Response<ReverseSearchCrossStreetAddressResult> res) -> {
+                        (Response<ReverseSearchCrossStreetAddressResultPrivate> res) -> {
                             if (res.getValue() != null) {
                                 return Mono.just(res.getValue());
                             } else {
@@ -6484,7 +6486,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search Address Reverse CrossStreet call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public ReverseSearchCrossStreetAddressResult reverseSearchCrossStreetAddress(
+    public ReverseSearchCrossStreetAddressResultPrivate reverseSearchCrossStreetAddress(
             ResponseFormat format,
             List<Double> query,
             Integer top,
@@ -6538,7 +6540,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search Address Reverse CrossStreet call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<ReverseSearchCrossStreetAddressResult> reverseSearchCrossStreetAddressWithResponse(
+    public Response<ReverseSearchCrossStreetAddressResultPrivate> reverseSearchCrossStreetAddressWithResponse(
             ResponseFormat format,
             List<Double> query,
             Integer top,
@@ -6625,7 +6627,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<SearchAddressResult>> searchStructuredAddressWithResponseAsync(
+    public Mono<Response<SearchAddressResultPrivate>> searchStructuredAddressWithResponseAsync(
             ResponseFormat format,
             String countryCode,
             String language,
@@ -6748,7 +6750,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<SearchAddressResult>> searchStructuredAddressWithResponseAsync(
+    public Mono<Response<SearchAddressResultPrivate>> searchStructuredAddressWithResponseAsync(
             ResponseFormat format,
             String countryCode,
             String language,
@@ -6869,7 +6871,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchAddressResult> searchStructuredAddressAsync(
+    public Mono<SearchAddressResultPrivate> searchStructuredAddressAsync(
             ResponseFormat format,
             String countryCode,
             String language,
@@ -6906,7 +6908,7 @@ public final class SearchesImpl {
                         entityType,
                         localizedMapView)
                 .flatMap(
-                        (Response<SearchAddressResult> res) -> {
+                        (Response<SearchAddressResultPrivate> res) -> {
                             if (res.getValue() != null) {
                                 return Mono.just(res.getValue());
                             } else {
@@ -6989,7 +6991,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchAddressResult> searchStructuredAddressAsync(
+    public Mono<SearchAddressResultPrivate> searchStructuredAddressAsync(
             ResponseFormat format,
             String countryCode,
             String language,
@@ -7028,7 +7030,7 @@ public final class SearchesImpl {
                         localizedMapView,
                         context)
                 .flatMap(
-                        (Response<SearchAddressResult> res) -> {
+                        (Response<SearchAddressResultPrivate> res) -> {
                             if (res.getValue() != null) {
                                 return Mono.just(res.getValue());
                             } else {
@@ -7110,7 +7112,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressResult searchStructuredAddress(
+    public SearchAddressResultPrivate searchStructuredAddress(
             ResponseFormat format,
             String countryCode,
             String language,
@@ -7223,7 +7225,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<SearchAddressResult> searchStructuredAddressWithResponse(
+    public Response<SearchAddressResultPrivate> searchStructuredAddressWithResponse(
             ResponseFormat format,
             String countryCode,
             String language,
@@ -7351,7 +7353,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<SearchAddressResult>> searchInsideGeometryWithResponseAsync(
+    public Mono<Response<SearchAddressResultPrivate>> searchInsideGeometryWithResponseAsync(
             ResponseFormat format,
             String query,
             SearchInsideGeometryRequest geometry,
@@ -7478,7 +7480,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<SearchAddressResult>> searchInsideGeometryWithResponseAsync(
+    public Mono<Response<SearchAddressResultPrivate>> searchInsideGeometryWithResponseAsync(
             ResponseFormat format,
             String query,
             SearchInsideGeometryRequest geometry,
@@ -7603,7 +7605,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchAddressResult> searchInsideGeometryAsync(
+    public Mono<SearchAddressResultPrivate> searchInsideGeometryAsync(
             ResponseFormat format,
             String query,
             SearchInsideGeometryRequest geometry,
@@ -7626,7 +7628,7 @@ public final class SearchesImpl {
                         localizedMapView,
                         operatingHours)
                 .flatMap(
-                        (Response<SearchAddressResult> res) -> {
+                        (Response<SearchAddressResultPrivate> res) -> {
                             if (res.getValue() != null) {
                                 return Mono.just(res.getValue());
                             } else {
@@ -7723,7 +7725,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchAddressResult> searchInsideGeometryAsync(
+    public Mono<SearchAddressResultPrivate> searchInsideGeometryAsync(
             ResponseFormat format,
             String query,
             SearchInsideGeometryRequest geometry,
@@ -7748,7 +7750,7 @@ public final class SearchesImpl {
                         operatingHours,
                         context)
                 .flatMap(
-                        (Response<SearchAddressResult> res) -> {
+                        (Response<SearchAddressResultPrivate> res) -> {
                             if (res.getValue() != null) {
                                 return Mono.just(res.getValue());
                             } else {
@@ -7844,7 +7846,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressResult searchInsideGeometry(
+    public SearchAddressResultPrivate searchInsideGeometry(
             ResponseFormat format,
             String query,
             SearchInsideGeometryRequest geometry,
@@ -7957,7 +7959,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<SearchAddressResult> searchInsideGeometryWithResponse(
+    public Response<SearchAddressResultPrivate> searchInsideGeometryWithResponse(
             ResponseFormat format,
             String query,
             SearchInsideGeometryRequest geometry,
@@ -8071,7 +8073,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<SearchAddressResult>> searchAlongRouteWithResponseAsync(
+    public Mono<Response<SearchAddressResultPrivate>> searchAlongRouteWithResponseAsync(
             ResponseFormat format,
             String query,
             int maxDetourTime,
@@ -8198,7 +8200,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<SearchAddressResult>> searchAlongRouteWithResponseAsync(
+    public Mono<Response<SearchAddressResultPrivate>> searchAlongRouteWithResponseAsync(
             ResponseFormat format,
             String query,
             int maxDetourTime,
@@ -8323,7 +8325,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchAddressResult> searchAlongRouteAsync(
+    public Mono<SearchAddressResultPrivate> searchAlongRouteAsync(
             ResponseFormat format,
             String query,
             int maxDetourTime,
@@ -8346,7 +8348,7 @@ public final class SearchesImpl {
                         localizedMapView,
                         operatingHours)
                 .flatMap(
-                        (Response<SearchAddressResult> res) -> {
+                        (Response<SearchAddressResultPrivate> res) -> {
                             if (res.getValue() != null) {
                                 return Mono.just(res.getValue());
                             } else {
@@ -8443,7 +8445,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<SearchAddressResult> searchAlongRouteAsync(
+    public Mono<SearchAddressResultPrivate> searchAlongRouteAsync(
             ResponseFormat format,
             String query,
             int maxDetourTime,
@@ -8468,7 +8470,7 @@ public final class SearchesImpl {
                         operatingHours,
                         context)
                 .flatMap(
-                        (Response<SearchAddressResult> res) -> {
+                        (Response<SearchAddressResultPrivate> res) -> {
                             if (res.getValue() != null) {
                                 return Mono.just(res.getValue());
                             } else {
@@ -8564,7 +8566,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressResult searchAlongRoute(
+    public SearchAddressResultPrivate searchAlongRoute(
             ResponseFormat format,
             String query,
             int maxDetourTime,
@@ -8677,7 +8679,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<SearchAddressResult> searchAlongRouteWithResponse(
+    public Response<SearchAddressResultPrivate> searchAlongRouteWithResponse(
             ResponseFormat format,
             String query,
             int maxDetourTime,

@@ -13,7 +13,7 @@ import java.util.List;
 
 /** This object is returned from a successful Search Address Reverse call. */
 @Immutable
-public class ReverseSearchAddressResult {
+public class ReverseSearchAddressResultPrivate {
     /*
      * Summary object for a Search Address Reverse response
      */
@@ -24,7 +24,7 @@ public class ReverseSearchAddressResult {
      * Addresses array
      */
     @JsonProperty(value = "addresses", access = JsonProperty.Access.WRITE_ONLY)
-    private List<ReverseSearchAddressResultItem> addresses;
+    private List<ReverseSearchAddressResultItemPrivate> addresses;
 
     /**
      * Get the summary property: Summary object for a Search Address Reverse response.
@@ -40,7 +40,7 @@ public class ReverseSearchAddressResult {
      *
      * @return the addresses value.
      */
-    public List<ReverseSearchAddressResultItem> getAddresses() {
+    public List<ReverseSearchAddressResultItemPrivate> getAddresses() {
         return this.addresses;
     }
 }

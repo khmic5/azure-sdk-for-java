@@ -4,9 +4,11 @@
 
 package com.azure.maps.search.models;
 
-import com.azure.core.annotation.Immutable;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.azure.core.annotation.Immutable;
+import com.azure.maps.search.implementation.models.ReverseSearchCrossStreetAddressResultPrivate;
 
 /** This object is returned from a successful Search Address Reverse CrossStreet call. */
 @Immutable
@@ -15,7 +17,7 @@ public final class ReverseSearchCrossStreetAddressResult {
     /*
      * Internal model
      */
-    private com.azure.maps.search.implementation.models.ReverseSearchCrossStreetAddressResult internalModel = null;
+    private ReverseSearchCrossStreetAddressResultPrivate internalModel = null;
 
     /*
      * A list of Search API results.
@@ -25,7 +27,7 @@ public final class ReverseSearchCrossStreetAddressResult {
     /**
      * Constructor
      */
-    public ReverseSearchCrossStreetAddressResult(com.azure.maps.search.implementation.models.ReverseSearchCrossStreetAddressResult internalModel) {
+    public ReverseSearchCrossStreetAddressResult(ReverseSearchCrossStreetAddressResultPrivate internalModel) {
         this.internalModel = internalModel;
 
         // configure results to replace ReverseSearchAddressResultItem with the proper model
