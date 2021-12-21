@@ -10,7 +10,7 @@ public class FuzzySearchOptions extends BaseSearchPointOfInterestOptions<FuzzySe
     private List<SearchIndexes> extendedPostalCodesFor;
     private Integer minFuzzyLevel;
     private Integer maxFuzzyLevel;
-    private List<SearchIndexes> idxSet;
+    private List<SearchIndexes> indexFilter;
     private GeographicEntityType entityType;
     private String query;
 
@@ -80,8 +80,8 @@ public class FuzzySearchOptions extends BaseSearchPointOfInterestOptions<FuzzySe
      * Returns the idx set.
      * @return
      */
-    public List<SearchIndexes> getIdxSet() {
-        return idxSet;
+    public List<SearchIndexes> getIndexFilter() {
+        return indexFilter;
     }
 
     /**
@@ -142,11 +142,11 @@ public class FuzzySearchOptions extends BaseSearchPointOfInterestOptions<FuzzySe
 
     /**
      * Sets the idx set.
-     * @param idxSet
+     * @param indexFilter
      * @return
      */
-    public FuzzySearchOptions setIdxSet(List<SearchIndexes> idxSet) {
-        this.idxSet = idxSet;
+    public FuzzySearchOptions setIndexFilter(List<SearchIndexes> indexFilter) {
+        this.indexFilter = indexFilter;
         return this;
     }
 

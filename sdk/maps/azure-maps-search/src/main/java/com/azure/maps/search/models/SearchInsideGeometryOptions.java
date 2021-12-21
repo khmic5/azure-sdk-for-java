@@ -9,7 +9,7 @@ public final class SearchInsideGeometryOptions extends BaseSearchGeometryOptions
     private String language;
     private GeoJsonObject geometry;
     private List<SearchIndexes> extendedPostalCodesFor;
-    private List<SearchIndexes> idxSet;
+    private List<SearchIndexes> indexFilter;
 
     /**
      * Create a new options object with query and Geometry.
@@ -39,8 +39,8 @@ public final class SearchInsideGeometryOptions extends BaseSearchGeometryOptions
      * Returns the index set.
      * @return
      */
-    public List<SearchIndexes> getIdxSet() {
-        return this.idxSet;
+    public List<SearchIndexes> getIndexFilter() {
+        return this.indexFilter;
     }
 
     /**
@@ -73,11 +73,11 @@ public final class SearchInsideGeometryOptions extends BaseSearchGeometryOptions
 
     /**
      * Sets the idx set.
-     * @param idxSet
+     * @param indexFilter
      * @return
      */
-    public SearchInsideGeometryOptions setIdxSet(List<SearchIndexes> idxSet) {
-        this.idxSet = idxSet;
+    public SearchInsideGeometryOptions setIndexFilter(List<SearchIndexes> indexFilter) {
+        this.indexFilter = indexFilter;
         return this;
     }
 
