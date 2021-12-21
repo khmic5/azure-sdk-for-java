@@ -699,8 +699,8 @@ public final class SearchAsyncClient {
         Mono<Response<SearchAddressResultPrivate>> responseMono =
             this.serviceClient.searchStructuredAddressWithResponseAsync(
                 ResponseFormat.JSON,
-                param.getLanguage(),
                 address.getCountryCode(),
+                param.getLanguage(),
                 param.getTop(),
                 param.getSkip(),
                 address.getStreetNumber(),

@@ -155,9 +155,11 @@ public class SearchSampleAsync {
         // Search fuzzy -
         // https://docs.microsoft.com/en-us/rest/api/maps/search/get-search-fuzzy
         System.out.println("Search Fuzzy:");
+        /*
         Mono<SearchAddressResult> result = client.fuzzySearch("starbucks", new LatLong(40.706270, -74.011454), null);
         SearchAddressResult searchResult = result.block();
         MapsCommon.print(searchResult.getResults().get(0).getBoundingBox());
+        */
 
         /*
         // with options

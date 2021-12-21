@@ -16,6 +16,14 @@ public final class StructuredAddress {
     private String postalCode;
 
     /**
+     * Create a Structure Address with country code.
+     * @param countryCode
+     */
+    public StructuredAddress(String countryCode) {
+        this.countryCode = countryCode;
+    }
+
+    /**
      * Returns the street number.
      * @return
      */
@@ -100,7 +108,7 @@ public final class StructuredAddress {
      * @param streetNumber
      * @return
      */
-    public StructuredAddress streetNumber(String streetNumber) {
+    public StructuredAddress setStreetNumber(String streetNumber) {
         this.streetNumber = streetNumber;
         return this;
     }
@@ -110,7 +118,7 @@ public final class StructuredAddress {
      * @param streetName
      * @return
      */
-    public StructuredAddress streetName(String streetName) {
+    public StructuredAddress setStreetName(String streetName) {
         this.streetName = streetName;
         return this;
     }
@@ -120,7 +128,7 @@ public final class StructuredAddress {
      * @param crossStreet
      * @return
      */
-    public StructuredAddress crossStreet(String crossStreet) {
+    public StructuredAddress setCrossStreet(String crossStreet) {
         this.crossStreet = crossStreet;
         return this;
     }
@@ -130,7 +138,7 @@ public final class StructuredAddress {
      * @param municipality
      * @return
      */
-    public StructuredAddress municipality(String municipality) {
+    public StructuredAddress setMunicipality(String municipality) {
         this.municipality = municipality;
         return this;
     }
@@ -140,7 +148,7 @@ public final class StructuredAddress {
      * @param municipalitySubdivision
      * @return
      */
-    public StructuredAddress municipalitySubdivision(String municipalitySubdivision) {
+    public StructuredAddress setMunicipalitySubdivision(String municipalitySubdivision) {
         this.municipalitySubdivision = municipalitySubdivision;
         return this;
     }
@@ -150,7 +158,7 @@ public final class StructuredAddress {
      * @param countryTertiarySubdivision
      * @return
      */
-    public StructuredAddress countryTertiarySubdivision(String countryTertiarySubdivision) {
+    public StructuredAddress setCountryTertiarySubdivision(String countryTertiarySubdivision) {
         this.countryTertiarySubdivision = countryTertiarySubdivision;
         return this;
     }
@@ -160,7 +168,7 @@ public final class StructuredAddress {
      * @param countrySecondarySubdivision
      * @return
      */
-    public StructuredAddress countrySecondarySubdivision(String countrySecondarySubdivision) {
+    public StructuredAddress setCountrySecondarySubdivision(String countrySecondarySubdivision) {
         this.countrySecondarySubdivision = countrySecondarySubdivision;
         return this;
     }
@@ -170,7 +178,7 @@ public final class StructuredAddress {
      * @param countrySubdivision
      * @return
      */
-    public StructuredAddress countrySubdivision(String countrySubdivision) {
+    public StructuredAddress setCountrySubdivision(String countrySubdivision) {
         this.countrySubdivision = countrySubdivision;
         return this;
     }
@@ -180,7 +188,7 @@ public final class StructuredAddress {
      * @param postalCode
      * @return
      */
-    public StructuredAddress postalCode(String postalCode) {
+    public StructuredAddress setPostalCode(String postalCode) {
         this.postalCode = postalCode;
         return this;
     }
@@ -190,7 +198,7 @@ public final class StructuredAddress {
      * @param countryCode
      * @return
      */
-    public StructuredAddress countryCode(String countryCode) {
+    public StructuredAddress setCountryCode(String countryCode) {
         this.countryCode = countryCode;
         return this;
     }
