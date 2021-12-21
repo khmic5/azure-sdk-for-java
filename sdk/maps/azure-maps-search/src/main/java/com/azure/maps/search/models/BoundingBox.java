@@ -2,6 +2,8 @@ package com.azure.maps.search.models;
 
 import java.util.Objects;
 
+import com.azure.maps.search.implementation.models.BoundingBoxCompassNotation;
+
 /**
  * Class representing a bounding box.
  */
@@ -31,6 +33,25 @@ public class BoundingBox {
     public BoundingBox(double north, double east, double south, double west) {
         this.topLeft = new LatLong(north, west);
         this.bottomRight = new LatLong(south, east);
+    }
+
+    /**
+     * Package-private constructor for internal bounding box representation.
+     * @param internalBoundingBox
+     */
+    BoundingBox(BoundingBoxCompassNotation internalBoundingBox) {
+        Objects.requireNonNull(internalBoundingBox, "Internal bounding box model is needed.");
+        Objects.requireNonNull(internalBoundingBox.getNorthEast(), "Top right of the bounding box is needed.");
+        Objects.requireNonNull(internalBoundingBox.getSouthWest(), "Bottom left of the bounding box is needed.");
+
+        final String northEastString = internalBoundingBox.getNorthEast();
+        final String southWestString = internalBoundingBox.getSouthWest();
+        final LatLong topRight = stringToCoordinate(northEastString);
+        final LatLong bottomLeft = stringToCoordinate(southWestString);
+
+        // derive top and bottom left
+        this.topLeft = new LatLong(topRight.getLatitude(), bottomLeft.getLongitude());
+        this.bottomRight = new LatLong(bottomLeft.getLatitude(), topRight.getLongitude());
     }
 
     /**
@@ -79,5 +100,17 @@ public class BoundingBox {
      */
     public LatLong getNorthEast() {
         return getTopRight();
+    }
+
+    // converts a comma-separated string into a latlong pair
+    private LatLong stringToCoordinate(String s) {
+        final String[] coordinateString = s.split(",");
+
+        if (coordinateString != null && coordinateString.length == 2) {
+            return new LatLong(Double.parseDouble(coordinateString[0]),
+                Double.parseDouble(coordinateString[1]));
+        }
+
+        return null;
     }
 }

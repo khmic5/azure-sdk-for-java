@@ -75,7 +75,7 @@ public final class SearchAddressResultItem {
      * The address of the result
      */
     @JsonProperty(value = "address", access = JsonProperty.Access.WRITE_ONLY)
-    private Address address;
+    private AddressPrivate address;
 
     /*
      * A location represented as a latitude and longitude using short names
@@ -215,7 +215,7 @@ public final class SearchAddressResultItem {
      *
      * @return the address value.
      */
-    public Address getAddress() {
+    public AddressPrivate getAddress() {
         return this.address;
     }
 

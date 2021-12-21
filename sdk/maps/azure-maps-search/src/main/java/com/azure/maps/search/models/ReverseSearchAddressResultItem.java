@@ -7,7 +7,6 @@ package com.azure.maps.search.models;
 import java.util.List;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.maps.search.implementation.models.Address;
 
 /** Result object for a Search Address Reverse response. */
 @Immutable
@@ -33,7 +32,7 @@ public final class ReverseSearchAddressResultItem {
      * @return the address value.
      */
     public Address getAddress() {
-        return this.internalModel.getAddress();
+        return new Address(this.internalModel.getAddress());
     }
 
     /**
