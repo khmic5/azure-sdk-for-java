@@ -178,7 +178,7 @@ public final class SearchAsyncClient {
                 options.getExtendedPostalCodesFor(),
                 options.getMinFuzzyLevel(),
                 options.getMaxFuzzyLevel(),
-                options.getIdxSet(),
+                options.getIndexFilter(),
                 options.getBrandFilter(),
                 options.getElectricVehicleConnectorFilter(),
                 options.getEntityType(),
@@ -774,7 +774,7 @@ public final class SearchAsyncClient {
                 options.getLanguage(),
                 options.getCategoryFilter(),
                 options.getExtendedPostalCodesFor(),
-                options.getIdxSet(),
+                options.getIndexFilter(),
                 options.getLocalizedMapView(),
                 options.getOperatingHours(),
                 context);
