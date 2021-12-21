@@ -82,7 +82,7 @@ public final class Address {
      * @return the streetNameAndNumber value.
      */
     public String getStreetNameAndNumber() {
-        return this.getStreetNameAndNumber();
+        return this.internalModel.getStreetNameAndNumber();
     }
 
     /**
@@ -109,7 +109,7 @@ public final class Address {
      * @return the countryTertiarySubdivision value.
      */
     public String getCountryTertiarySubdivision() {
-        return this.getCountryTertiarySubdivision();
+        return this.internalModel.getCountryTertiarySubdivision();
     }
 
     /**
@@ -118,7 +118,7 @@ public final class Address {
      * @return the countrySecondarySubdivision value.
      */
     public String getCountrySecondarySubdivision() {
-        return this.getCountrySecondarySubdivision();
+        return this.internalModel.getCountrySecondarySubdivision();
     }
 
     /**
@@ -127,7 +127,7 @@ public final class Address {
      * @return the countrySubdivision value.
      */
     public String getCountrySubdivision() {
-        return this.getCountrySubdivision();
+        return this.internalModel.getCountrySubdivision();
     }
 
     /**
@@ -136,7 +136,7 @@ public final class Address {
      * @return the postalCode value.
      */
     public String getPostalCode() {
-        return this.getPostalCode();
+        return this.internalModel.getPostalCode();
     }
 
     /**
@@ -145,7 +145,7 @@ public final class Address {
      * @return the extendedPostalCode value.
      */
     public String getExtendedPostalCode() {
-        return this.getExtendedPostalCode();
+        return this.internalModel.getExtendedPostalCode();
     }
 
     /**
@@ -154,7 +154,7 @@ public final class Address {
      * @return the countryCode value.
      */
     public String getCountryCode() {
-        return this.getCountryCode();
+        return this.internalModel.getCountryCode();
     }
 
     /**
@@ -163,7 +163,7 @@ public final class Address {
      * @return the country value.
      */
     public String getCountry() {
-        return this.getCountry();
+        return this.internalModel.getCountry();
     }
 
     /**
@@ -172,7 +172,7 @@ public final class Address {
      * @return the countryCodeISO3 value.
      */
     public String getCountryCodeISO3() {
-        return this.getCountryCodeISO3();
+        return this.internalModel.getCountryCodeISO3();
     }
 
     /**
@@ -182,7 +182,7 @@ public final class Address {
      * @return the freeformAddress value.
      */
     public String getFreeformAddress() {
-        return this.getFreeformAddress();
+        return this.internalModel.getFreeformAddress();
     }
 
     /**
@@ -193,7 +193,7 @@ public final class Address {
      * @return the countrySubdivisionName value.
      */
     public String getCountrySubdivisionName() {
-        return this.getCountrySubdivisionName();
+        return this.internalModel.getCountrySubdivisionName();
     }
 
     /**
@@ -204,7 +204,7 @@ public final class Address {
      * @return the localName value.
      */
     public String getLocalName() {
-        return this.getLocalName();
+        return this.internalModel.getLocalName();
     }
 
     /**
@@ -213,6 +213,10 @@ public final class Address {
      * @return the boundingBox value.
      */
     public BoundingBox getBoundingBox() {
-        return new BoundingBox(this.internalModel.getBoundingBox());
+        if (this.internalModel.getBoundingBox() != null) {
+            return new BoundingBox(this.internalModel.getBoundingBox());
+        }
+
+        return null;
     }
 }

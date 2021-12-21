@@ -14,9 +14,10 @@ public final class SearchAlongRouteOptions extends BaseSearchGeometryOptions<Sea
     /**
      * Create search along route options.
      */
-    public SearchAlongRouteOptions(String query, int maxDetourTime) {
+    public SearchAlongRouteOptions(String query, int maxDetourTime, GeoJsonLineString route) {
         this.maxDetourTime = maxDetourTime;
         this.setQuery(query);
+        this.setRoute(route);
     }
 
     /**

@@ -7,6 +7,15 @@ public final class ReverseSearchCrossStreetAddressOptions extends BaseReverseSea
     private Integer top;
 
     /**
+     * Builds reverse cross street search options with coordinates.
+     * @param query
+     * @param countryFilter
+     */
+    public ReverseSearchCrossStreetAddressOptions(LatLong coordinates) {
+        this.setCoordinates(coordinates);
+    }
+
+    /**
      * Returns the top value.
      * @return
      */

@@ -9,6 +9,15 @@ public final class SearchNearbyPointsOfInterestOptions extends BaseSearchPointOf
     private List<SearchIndexes> extendedPostalCodesFor;
 
     /**
+     * Builds search nearby options with coordinates.
+     * @param query
+     * @param countryFilter
+     */
+    public SearchNearbyPointsOfInterestOptions(LatLong coordinates) {
+        this.setCoordinates(coordinates);
+    }
+
+    /**
      * Returns the extended postal codes for.
      * @return
      */

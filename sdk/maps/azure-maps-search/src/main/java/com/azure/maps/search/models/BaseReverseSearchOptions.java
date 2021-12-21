@@ -67,7 +67,7 @@ public class BaseReverseSearchOptions<T extends BaseReverseSearchOptions<T>> {
      * @return
      */
     @SuppressWarnings("unchecked")
-    public T setReading(Integer heading) {
+    public T setHeading(Integer heading) {
         this.heading = heading;
         return (T) this;
     }
