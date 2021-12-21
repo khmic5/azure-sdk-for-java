@@ -141,10 +141,10 @@ public final class Address {
     private String localName;
 
     /*
-     * Bounding box coordinates.
+     * The bounding box of the location.
      */
     @JsonProperty(value = "boundingBox", access = JsonProperty.Access.WRITE_ONLY)
-    private Object boundingBox;
+    private BoundingBoxCompassNotation boundingBox;
 
     /**
      * Get the buildingNumber property: The building number on the street. DEPRECATED, use streetNumber instead.
@@ -332,11 +332,11 @@ public final class Address {
     }
 
     /**
-     * Get the boundingBox property: Bounding box coordinates.
+     * Get the boundingBox property: The bounding box of the location.
      *
      * @return the boundingBox value.
      */
-    public Object getBoundingBox() {
+    public BoundingBoxCompassNotation getBoundingBox() {
         return this.boundingBox;
     }
 }

@@ -7,6 +7,7 @@
 package com.azure.maps.search.implementation.models;
 
 import com.azure.core.annotation.Fluent;
+import com.azure.maps.search.models.DataSource;
 import com.azure.maps.search.models.GeographicEntityType;
 import com.azure.maps.search.models.MatchType;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -88,7 +89,7 @@ public final class SearchAddressResultItem {
      * bottom-right coordinates of the viewport.
      */
     @JsonProperty(value = "viewport", access = JsonProperty.Access.WRITE_ONLY)
-    private Viewport viewport;
+    private BoundingBox viewport;
 
     /*
      * Array of EntryPoints. Those describe the types of entrances available at
@@ -112,7 +113,7 @@ public final class SearchAddressResultItem {
      * API.
      */
     @JsonProperty(value = "dataSources", access = JsonProperty.Access.WRITE_ONLY)
-    private DataSources dataSources;
+    private DataSource dataSources;
 
     /*
      * Information on the type of match.
@@ -246,7 +247,7 @@ public final class SearchAddressResultItem {
      *
      * @return the viewport value.
      */
-    public Viewport getViewport() {
+    public BoundingBox getViewport() {
         return this.viewport;
     }
 
@@ -277,7 +278,7 @@ public final class SearchAddressResultItem {
      *
      * @return the dataSources value.
      */
-    public DataSources getDataSources() {
+    public DataSource getDataSources() {
         return this.dataSources;
     }
 

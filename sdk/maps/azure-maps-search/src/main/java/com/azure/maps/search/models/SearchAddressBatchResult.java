@@ -14,7 +14,7 @@ import java.util.List;
 
 /** This object is returned from a successful Search Address Batch service call. */
 @Immutable
-public final class SearchAddressBatchProcessResult extends BatchResult {
+public final class SearchAddressBatchResult extends BatchResult {
     /*
      * Array containing the batch results.
      */
