@@ -4,11 +4,11 @@
 
 package com.azure.maps.search.models;
 
-import com.azure.core.annotation.Immutable;
-import com.azure.maps.search.models.SearchSummary;
-
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.azure.core.annotation.Immutable;
+import com.azure.maps.search.implementation.models.SearchAddressResultPrivate;
 
 /** This object is returned from a successful Search calls. */
 @Immutable
@@ -17,7 +17,7 @@ public final class SearchAddressResult {
     /*
      * Internal model
      */
-    private com.azure.maps.search.implementation.models.SearchAddressResult internalModel = null;
+    private SearchAddressResultPrivate internalModel = null;
 
     /*
      * A list of Search API results.
@@ -27,7 +27,7 @@ public final class SearchAddressResult {
     /**
      * Constructor
      */
-    public SearchAddressResult(com.azure.maps.search.implementation.models.SearchAddressResult internalModel) {
+    public SearchAddressResult(SearchAddressResultPrivate internalModel) {
         this.internalModel = internalModel;
 
         // configure results to replace SearchAddressResultItem with the proper model

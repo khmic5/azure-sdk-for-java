@@ -7,11 +7,14 @@
 package com.azure.maps.search.implementation.models;
 
 import com.azure.core.annotation.Immutable;
+import com.azure.maps.search.models.MatchType;
+import com.azure.maps.search.models.RoadUseType;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
 
-/** Result object for a Search Address Reverse Cross Street response. */
+/** Result object for a Search Address Reverse response. */
 @Immutable
-public final class ReverseSearchCrossStreetAddressResultItem {
+public final class ReverseSearchAddressResultItemPrivate {
     /*
      * The address of the result
      */
@@ -23,6 +26,23 @@ public final class ReverseSearchCrossStreetAddressResultItem {
      */
     @JsonProperty(value = "position", access = JsonProperty.Access.WRITE_ONLY)
     private String position;
+
+    /*
+     * The roadUse property.
+     */
+    @JsonProperty(value = "roadUse", access = JsonProperty.Access.WRITE_ONLY)
+    private List<RoadUseType> roadUse;
+
+    /*
+     * Information on the type of match.
+     *
+     * One of:
+     * * AddressPoint
+     * * HouseNumberRange
+     * * Street
+     */
+    @JsonProperty(value = "matchType", access = JsonProperty.Access.WRITE_ONLY)
+    private MatchType matchType;
 
     /**
      * Get the address property: The address of the result.
@@ -40,5 +60,25 @@ public final class ReverseSearchCrossStreetAddressResultItem {
      */
     public String getPosition() {
         return this.position;
+    }
+
+    /**
+     * Get the roadUse property: The roadUse property.
+     *
+     * @return the roadUse value.
+     */
+    public List<RoadUseType> getRoadUse() {
+        return this.roadUse;
+    }
+
+    /**
+     * Get the matchType property: Information on the type of match.
+     *
+     * <p>One of: * AddressPoint * HouseNumberRange * Street.
+     *
+     * @return the matchType value.
+     */
+    public MatchType getMatchType() {
+        return this.matchType;
     }
 }

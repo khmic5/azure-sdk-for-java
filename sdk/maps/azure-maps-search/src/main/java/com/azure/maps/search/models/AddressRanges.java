@@ -5,6 +5,7 @@
 package com.azure.maps.search.models;
 
 import com.azure.core.annotation.Immutable;
+import com.azure.maps.search.implementation.models.AddressRangesPrivate;
 
 /**
  * Describes the address range on both sides of the street for a search result. Coordinates for the start and end
@@ -16,9 +17,9 @@ public final class AddressRanges {
     /*
      * Internal representation of AddressRanges
      */
-    private com.azure.maps.search.implementation.models.AddressRanges internalModel;
+    private AddressRangesPrivate internalModel;
 
-    AddressRanges(com.azure.maps.search.implementation.models.AddressRanges internalModel) {
+    AddressRanges(AddressRangesPrivate internalModel) {
         this.internalModel = internalModel;
     }
 

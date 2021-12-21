@@ -5,7 +5,7 @@
 package com.azure.maps.search.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.maps.search.implementation.models.Address;
+import com.azure.maps.search.implementation.models.ReverseSearchCrossStreetAddressResultItemPrivate;
 
 /** Result object for a Search Address Reverse Cross Street response. */
 @Immutable
@@ -14,15 +14,14 @@ public final class ReverseSearchCrossStreetAddressResultItem {
     /*
      * Internal model
      */
-    private com.azure.maps.search.implementation.models.ReverseSearchCrossStreetAddressResultItem internalModel = null;
+    private ReverseSearchCrossStreetAddressResultItemPrivate internalModel = null;
 
     /**
      * Constructor
      * @param internalModel
      */
 
-    public ReverseSearchCrossStreetAddressResultItem(com.azure.maps.search.implementation
-        .models.ReverseSearchCrossStreetAddressResultItem internalModel) {
+    public ReverseSearchCrossStreetAddressResultItem(ReverseSearchCrossStreetAddressResultItemPrivate internalModel) {
         this.internalModel = internalModel;
     }
 
@@ -32,7 +31,7 @@ public final class ReverseSearchCrossStreetAddressResultItem {
      * @return the address value.
      */
     public Address getAddress() {
-        return this.internalModel.getAddress();
+        return new Address(this.internalModel.getAddress());
     }
 
     /**

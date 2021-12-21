@@ -15,7 +15,7 @@ import java.util.List;
 
 /** Result object for a Search API response. */
 @Fluent
-public final class SearchAddressResultItem {
+public final class SearchAddressResultItemPrivate {
     /*
      * One of:
      * * POI
@@ -105,7 +105,7 @@ public final class SearchAddressResultItem {
      * are included.
      */
     @JsonProperty(value = "addressRanges", access = JsonProperty.Access.WRITE_ONLY)
-    private AddressRanges addressRanges;
+    private AddressRangesPrivate addressRanges;
 
     /*
      * Optional section. Reference geometry id for use with the [Get Search
@@ -193,9 +193,9 @@ public final class SearchAddressResultItem {
      * Set the entityType property: The entityType property.
      *
      * @param entityType the entityType value to set.
-     * @return the SearchAddressResultItem object itself.
+     * @return the SearchAddressResultItemPrivate object itself.
      */
-    public SearchAddressResultItem setEntityType(GeographicEntityType entityType) {
+    public SearchAddressResultItemPrivate setEntityType(GeographicEntityType entityType) {
         this.entityType = entityType;
         return this;
     }
@@ -234,9 +234,9 @@ public final class SearchAddressResultItem {
      * 'lon'.
      *
      * @param position the position value to set.
-     * @return the SearchAddressResultItem object itself.
+     * @return the SearchAddressResultItemPrivate object itself.
      */
-    public SearchAddressResultItem setPosition(LatLongPairAbbreviated position) {
+    public SearchAddressResultItemPrivate setPosition(LatLongPairAbbreviated position) {
         this.position = position;
         return this;
     }
@@ -268,7 +268,7 @@ public final class SearchAddressResultItem {
      *
      * @return the addressRanges value.
      */
-    public AddressRanges getAddressRanges() {
+    public AddressRangesPrivate getAddressRanges() {
         return this.addressRanges;
     }
 

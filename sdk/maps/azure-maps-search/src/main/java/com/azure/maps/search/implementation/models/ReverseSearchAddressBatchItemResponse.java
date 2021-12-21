@@ -13,7 +13,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * The result of the query. SearchAddressReverseResponse if the query completed successfully, ErrorResponse otherwise.
  */
 @Fluent
-public final class ReverseSearchAddressBatchItemResponse extends ReverseSearchAddressResult {
+public final class ReverseSearchAddressBatchItemResponse extends ReverseSearchAddressResultPrivate {
     /*
      * The error object.
      */
