@@ -16,6 +16,7 @@ import com.azure.core.http.rest.SimpleResponse;
 import com.azure.core.util.Context;
 import com.azure.core.util.polling.PollerFlux;
 import com.azure.maps.search.implementation.SearchesImpl;
+import com.azure.maps.search.implementation.helpers.TypeMapper;
 import com.azure.maps.search.implementation.models.PolygonResult;
 import com.azure.maps.search.implementation.models.ReverseSearchAddressResultPrivate;
 import com.azure.maps.search.implementation.models.ReverseSearchCrossStreetAddressResultPrivate;
@@ -52,7 +53,6 @@ import com.azure.maps.search.models.SearchesGetSearchAddressBatchResponse;
 import com.azure.maps.search.models.SearchesReverseSearchAddressBatchResponse;
 import com.azure.maps.search.models.SearchesSearchAddressBatchResponse;
 import com.azure.maps.search.models.StructuredAddress;
-import com.azure.maps.search.util.TypeMapper;
 
 import reactor.core.publisher.Mono;
 

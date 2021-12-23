@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.azure.core.annotation.Immutable;
+import com.azure.maps.search.implementation.helpers.SearchAddressResultItemPropertiesHelper;
+import com.azure.maps.search.implementation.helpers.Utility;
+import com.azure.maps.search.implementation.models.EntryPointPrivate;
 import com.azure.maps.search.implementation.models.PointOfInterest;
 import com.azure.maps.search.implementation.models.SearchAddressResultItemPrivate;
 import com.azure.maps.search.implementation.models.SearchAddressResultType;
@@ -15,23 +18,31 @@ import com.azure.maps.search.implementation.models.SearchAddressResultType;
 /** Result object for a Search API response. */
 @Immutable
 public final class SearchAddressResultItem {
+    private SearchAddressResultType type;
+    private String id;
+    private Double score;
+    private Double distanceInMeters;
+    private String info;
+    private GeographicEntityType entityType;
+    private PointOfInterest pointOfInterest;
+    private Address address;
+    private LatLong position;
+    private BoundingBox viewport;
+    private List<EntryPoint> entryPoints;
+    private AddressRanges addressRanges;
+    private DataSource dataSource;
+    private MatchType matchType;
+    private Integer detourTime;
 
-    /*
-     * Internal models
-     */
-    private SearchAddressResultItemPrivate internalModel = null;
-    private List<EntryPoint> entryPoints = null;
-
-    /**
-     * Constructor
-     */
-    SearchAddressResultItem(SearchAddressResultItemPrivate internalModel) {
-        this.internalModel = internalModel;
-
-        if (this.internalModel != null && this.internalModel.getEntryPoints() != null) {
-            this.entryPoints = this.internalModel.getEntryPoints().stream().map(item ->
-                new EntryPoint(item)).collect(Collectors.toList());
-        }
+    static {
+        SearchAddressResultItemPropertiesHelper.setAccessor(new SearchAddressResultItemPropertiesHelper
+            .SearchAddressResultItemAccessor() {
+            @Override
+            public void setFromSearchAddressResultItemPrivate(SearchAddressResultItem resultItem,
+                SearchAddressResultItemPrivate privateResultItem) {
+                resultItem.setFromPrivateResultItem(privateResultItem);
+            }
+        });
     }
 
     /**
@@ -40,7 +51,7 @@ public final class SearchAddressResultItem {
      * @return the type value.
      */
     public SearchAddressResultType getType() {
-        return this.internalModel.getType();
+        return this.type;
     }
 
     /**
@@ -49,7 +60,7 @@ public final class SearchAddressResultItem {
      * @return the id value.
      */
     public String getId() {
-        return this.internalModel.getId();
+        return this.id;
     }
 
     /**
@@ -60,7 +71,7 @@ public final class SearchAddressResultItem {
      * @return the score value.
      */
     public Double getScore() {
-        return this.internalModel.getScore();
+        return this.score;
     }
 
     /**
@@ -69,7 +80,7 @@ public final class SearchAddressResultItem {
      * @return the distanceInMeters value.
      */
     public Double getDistanceInMeters() {
-        return this.internalModel.getDistanceInMeters();
+        return this.distanceInMeters;
     }
 
     /**
@@ -78,7 +89,7 @@ public final class SearchAddressResultItem {
      * @return the info value.
      */
     public String getInfo() {
-        return this.internalModel.getInfo();
+        return this.info;
     }
 
     /**
@@ -87,7 +98,7 @@ public final class SearchAddressResultItem {
      * @return the entityType value.
      */
     public GeographicEntityType getEntityType() {
-        return this.internalModel.getEntityType();
+        return this.entityType;
     }
 
     /**
@@ -97,7 +108,7 @@ public final class SearchAddressResultItem {
      * @return the pointOfInterest value.
      */
     public PointOfInterest getPointOfInterest() {
-        return this.internalModel.getPointOfInterest();
+        return this.pointOfInterest;
     }
 
     /**
@@ -106,7 +117,7 @@ public final class SearchAddressResultItem {
      * @return the address value.
      */
     public Address getAddress() {
-        return new Address(this.internalModel.getAddress());
+        return this.address;
     }
 
     /**
@@ -116,7 +127,7 @@ public final class SearchAddressResultItem {
      * @return the position value.
      */
     public LatLong getPosition() {
-        return new LatLong(this.internalModel.getPosition());
+        return this.position;
     }
 
     /**
@@ -126,8 +137,7 @@ public final class SearchAddressResultItem {
      * @return the viewport value.
      */
     public BoundingBox getBoundingBox() {
-        com.azure.maps.search.implementation.models.BoundingBox b = this.internalModel.getViewport();
-        return new BoundingBox(new LatLong(b.getTopLeft()), new LatLong(b.getBottomRight()));
+        return this.viewport;
     }
 
     /**
@@ -148,11 +158,7 @@ public final class SearchAddressResultItem {
      * @return the addressRanges value.
      */
     public AddressRanges getAddressRanges() {
-        if (this.internalModel.getAddressRanges() != null) {
-            return new AddressRanges(this.internalModel.getAddressRanges());
-        }
-
-        return null;
+        return this.addressRanges;
     }
 
     /**
@@ -162,7 +168,7 @@ public final class SearchAddressResultItem {
      * @return the dataSources value.
      */
     public DataSource getDataSource() {
-        return this.internalModel.getDataSources();
+        return this.dataSource;
     }
 
     /**
@@ -173,7 +179,7 @@ public final class SearchAddressResultItem {
      * @return the matchType value.
      */
     public MatchType getMatchType() {
-        return this.internalModel.getMatchType();
+        return this.matchType;
     }
 
     /**
@@ -182,6 +188,39 @@ public final class SearchAddressResultItem {
      * @return the detourTime value.
      */
     public Integer getDetourTime() {
-        return this.internalModel.getDetourTime();
+        return this.detourTime;
+    }
+
+    // private setter
+    private void setFromPrivateResultItem(SearchAddressResultItemPrivate privateResultItem) {
+        this.type = privateResultItem.getType();
+        this.id = privateResultItem.getId();
+        this.score = privateResultItem.getScore();
+        this.distanceInMeters = privateResultItem.getDistanceInMeters();
+        this.info = privateResultItem.getInfo();
+        this.entityType = privateResultItem.getEntityType();
+        this.pointOfInterest = privateResultItem.getPointOfInterest();
+        this.address = Utility.toAddress(privateResultItem.getAddress());
+        this.position = new LatLong(privateResultItem.getPosition());
+        this.dataSource = privateResultItem.getDataSources();
+        this.matchType = privateResultItem.getMatchType();
+        this.detourTime = privateResultItem.getDetourTime();
+
+        // convert bounding box
+        this.viewport = new BoundingBox(new LatLong(privateResultItem.getViewport().getTopLeft()),
+            new LatLong(privateResultItem.getViewport().getBottomRight()));
+
+        // convert address ranges
+        if (privateResultItem.getAddressRanges() != null) {
+            this.addressRanges = Utility.toAddressRanges(privateResultItem.getAddressRanges());
+        }
+
+        // convert entry points
+        List<EntryPointPrivate> privateEntryPoints = privateResultItem.getEntryPoints();
+
+        if (privateEntryPoints != null) {
+            this.entryPoints = privateEntryPoints.stream()
+                .map(item -> Utility.toEntryPoint(item)).collect(Collectors.toList());
+        }
     }
 }

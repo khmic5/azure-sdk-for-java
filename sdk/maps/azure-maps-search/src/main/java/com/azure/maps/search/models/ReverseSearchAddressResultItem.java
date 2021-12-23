@@ -7,23 +7,27 @@ package com.azure.maps.search.models;
 import java.util.List;
 
 import com.azure.core.annotation.Immutable;
+import com.azure.maps.search.implementation.helpers.ReverseSearchAddressResultItemPropertiesHelper;
+import com.azure.maps.search.implementation.helpers.Utility;
 import com.azure.maps.search.implementation.models.ReverseSearchAddressResultItemPrivate;
 
 /** Result object for a Search Address Reverse response. */
 @Immutable
 public final class ReverseSearchAddressResultItem {
+    private Address address;
+    private LatLong position;
+    private List<RoadUseType> roadUse;
+    private MatchType matchType;
 
-    /*
-     * Internal model
-     */
-    private ReverseSearchAddressResultItemPrivate internalModel = null;
-
-    /**
-     * Constructor
-     * @param internalModel
-     */
-    public ReverseSearchAddressResultItem(ReverseSearchAddressResultItemPrivate internalModel) {
-        this.internalModel = internalModel;
+    static {
+        ReverseSearchAddressResultItemPropertiesHelper.setAccessor(new ReverseSearchAddressResultItemPropertiesHelper
+            .ReverseSearchAddressResultItemAccessor() {
+            @Override
+            public void setFromReverseSearchAddressResultItemPrivate(ReverseSearchAddressResultItem resultItem,
+                ReverseSearchAddressResultItemPrivate privateResultItem) {
+                resultItem.setFromReverseSearchAddressResultItemPrivate(privateResultItem);
+            }
+        });
     }
 
     /**
@@ -32,7 +36,7 @@ public final class ReverseSearchAddressResultItem {
      * @return the address value.
      */
     public Address getAddress() {
-        return new Address(this.internalModel.getAddress());
+        return this.address;
     }
 
     /**
@@ -41,17 +45,7 @@ public final class ReverseSearchAddressResultItem {
      * @return the position value.
      */
     public LatLong getPosition() {
-        // position in the internal model is a string separated by commas
-        final String position = this.internalModel.getPosition();
-
-        if (position != null) {
-            final String[] coords = position.split(",");
-
-            if (coords != null && coords.length == 2) {
-                return new LatLong(Double.parseDouble(coords[0]), Double.parseDouble(coords[1]));
-            }
-        }
-        return null;
+        return this.position;
     }
 
     /**
@@ -60,7 +54,7 @@ public final class ReverseSearchAddressResultItem {
      * @return the roadUse value.
      */
     public List<RoadUseType> getRoadUse() {
-        return this.internalModel.getRoadUse();
+        return this.roadUse;
     }
 
     /**
@@ -71,6 +65,17 @@ public final class ReverseSearchAddressResultItem {
      * @return the matchType value.
      */
     public MatchType getMatchType() {
-        return this.internalModel.getMatchType();
+        return this.matchType;
+    }
+
+    // private setter
+    private void setFromReverseSearchAddressResultItemPrivate(ReverseSearchAddressResultItemPrivate privateItem) {
+        this.address = Utility.toAddress(privateItem.getAddress());
+        this.roadUse = privateItem.getRoadUse();
+        this.matchType = privateItem.getMatchType();
+
+        // position in the internal model is a string separated by commas
+        final String position = privateItem.getPosition();
+        this.position = LatLong.fromCommaSeparatedString(position);
     }
 }

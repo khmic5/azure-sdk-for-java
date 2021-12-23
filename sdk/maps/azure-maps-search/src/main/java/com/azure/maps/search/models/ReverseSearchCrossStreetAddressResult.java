@@ -8,34 +8,31 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.maps.search.implementation.models.ReverseSearchCrossStreetAddressResultPrivate;
+import com.azure.maps.search.implementation.helpers.ReverseSearchCrossStreetAddressResultPropertiesHelper;
+import com.azure.maps.search.implementation.helpers.Utility;
+import com.azure.maps.search.implementation.models.ReverseSearchCrossStreetAddressResultItemPrivate;
+import com.azure.maps.search.implementation.models.SearchSummaryPrivate;
 
 /** This object is returned from a successful Search Address Reverse CrossStreet call. */
 @Immutable
 public final class ReverseSearchCrossStreetAddressResult {
+    private SearchSummary summary;
+    private List<ReverseSearchCrossStreetAddressResultItem> addresses;
 
-    /*
-     * Internal model
-     */
-    private ReverseSearchCrossStreetAddressResultPrivate internalModel = null;
+    static {
+        ReverseSearchCrossStreetAddressResultPropertiesHelper.setAccessor(
+            new ReverseSearchCrossStreetAddressResultPropertiesHelper
+                .ReverseSearchCrossStreetAddressResultAccessor() {
+            @Override
+            public void setSummary(ReverseSearchCrossStreetAddressResult result, SearchSummaryPrivate privateSearchSummary) {
+                result.setSummary(privateSearchSummary);
+            }
 
-    /*
-     * A list of Search API results.
-     */
-    private List<ReverseSearchCrossStreetAddressResultItem> addresses = null;
-
-    /**
-     * Constructor
-     */
-    public ReverseSearchCrossStreetAddressResult(ReverseSearchCrossStreetAddressResultPrivate internalModel) {
-        this.internalModel = internalModel;
-
-        // configure results to replace ReverseSearchAddressResultItem with the proper model
-        // this is a heavy operation so it will be done here and cached.
-        if (this.internalModel != null && this.internalModel.getAddresses() != null) {
-            this.addresses = this.internalModel.getAddresses().stream().map(item ->
-                new ReverseSearchCrossStreetAddressResultItem(item)).collect(Collectors.toList());
-        }
+            @Override
+            public void setAddresses(ReverseSearchCrossStreetAddressResult result, List<ReverseSearchCrossStreetAddressResultItemPrivate> privateResults) {
+                result.setAddresses(privateResults);
+            }
+        });
     }
 
     /**
@@ -44,7 +41,7 @@ public final class ReverseSearchCrossStreetAddressResult {
      * @return the summary value.
      */
     public SearchSummary getSummary() {
-        return this.internalModel.getSummary();
+        return this.summary;
     }
 
     /**
@@ -54,5 +51,18 @@ public final class ReverseSearchCrossStreetAddressResult {
      */
     public List<ReverseSearchCrossStreetAddressResultItem> getAddresses() {
         return this.addresses;
+    }
+
+    // private setters
+    private void setSummary(SearchSummaryPrivate privateSearchSummary) {
+        this.summary = Utility.toSearchSummary(privateSearchSummary);
+    }
+
+    private void setAddresses(List<ReverseSearchCrossStreetAddressResultItemPrivate> privateResults) {
+        if (privateResults != null) {
+            this.addresses = privateResults.stream()
+                .map(item -> Utility.toReverseSearchCrossStreetAddressResultItem(item))
+                .collect(Collectors.toList());
+        }
     }
 }

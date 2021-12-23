@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** The entry point for the POI being returned. */
 @Fluent
-public final class EntryPoint {
+public final class EntryPointPrivate {
     /*
      * The type of entry point. Value can be either _main_ or _minor_.
      */
@@ -50,9 +50,9 @@ public final class EntryPoint {
      * 'lon'.
      *
      * @param position the position value to set.
-     * @return the EntryPoint object itself.
+     * @return the EntryPointPrivate object itself.
      */
-    public EntryPoint setPosition(LatLongPairAbbreviated position) {
+    public EntryPointPrivate setPosition(LatLongPairAbbreviated position) {
         this.position = position;
         return this;
     }
