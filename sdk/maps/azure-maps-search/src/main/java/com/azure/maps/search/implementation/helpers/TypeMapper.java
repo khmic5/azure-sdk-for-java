@@ -1,4 +1,4 @@
-package com.azure.maps.search.util;
+package com.azure.maps.search.implementation.helpers;
 
 import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.SimpleResponse;
@@ -21,7 +21,7 @@ public final class TypeMapper {
      */
     public static SimpleResponse<SearchAddressResult> createSearchResponse(
         Response<SearchAddressResultPrivate> response) {
-        SearchAddressResult result = new SearchAddressResult(response.getValue());
+        SearchAddressResult result = Utility.toSearchAddressResult(response.getValue());
         SimpleResponse<SearchAddressResult> simpleResponse = new SimpleResponse<>(response.getRequest(),
             response.getStatusCode(),
             response.getHeaders(),
@@ -35,7 +35,7 @@ public final class TypeMapper {
      */
     public static SimpleResponse<ReverseSearchAddressResult> createReverseSearchResponse(
         Response<ReverseSearchAddressResultPrivate> response) {
-        ReverseSearchAddressResult result = new ReverseSearchAddressResult(response.getValue());
+        ReverseSearchAddressResult result = Utility.toReverseSearchAddressResult(response.getValue());
         SimpleResponse<ReverseSearchAddressResult> simpleResponse = new SimpleResponse<>(response.getRequest(),
             response.getStatusCode(),
             response.getHeaders(),
@@ -49,7 +49,7 @@ public final class TypeMapper {
      */
     public static SimpleResponse<ReverseSearchCrossStreetAddressResult> createReverseSearchCrossStreetResponse(
         Response<ReverseSearchCrossStreetAddressResultPrivate> response) {
-        ReverseSearchCrossStreetAddressResult result = new ReverseSearchCrossStreetAddressResult(response.getValue());
+        ReverseSearchCrossStreetAddressResult result = Utility.toReverseSearchCrossStreetAddressResult(response.getValue());
         SimpleResponse<ReverseSearchCrossStreetAddressResult> simpleResponse = new SimpleResponse<>(response.getRequest(),
             response.getStatusCode(),
             response.getHeaders(),

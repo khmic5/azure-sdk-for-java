@@ -5,6 +5,7 @@
 package com.azure.maps.search.models;
 
 import com.azure.core.annotation.Immutable;
+import com.azure.maps.search.implementation.helpers.AddressRangesPropertiesHelper;
 import com.azure.maps.search.implementation.models.AddressRangesPrivate;
 
 /**
@@ -13,14 +14,18 @@ import com.azure.maps.search.implementation.models.AddressRangesPrivate;
  */
 @Immutable
 public final class AddressRanges {
+    private String rangeLeft;
+    private String rangeRight;
+    private LatLong from;
+    private LatLong to;
 
-    /*
-     * Internal representation of AddressRanges
-     */
-    private AddressRangesPrivate internalModel;
-
-    AddressRanges(AddressRangesPrivate internalModel) {
-        this.internalModel = internalModel;
+    static {
+        AddressRangesPropertiesHelper.setAccessor(new AddressRangesPropertiesHelper.AddressRangesAccessor() {
+            @Override
+            public void setFromAddressRangesPrivate(AddressRanges addressRanges, AddressRangesPrivate addressRangesPrivate) {
+                addressRanges.setFromAddressRangesPrivate(addressRangesPrivate);
+            }
+        });
     }
 
     /**
@@ -29,7 +34,7 @@ public final class AddressRanges {
      * @return the rangeLeft value.
      */
     public String getRangeLeft() {
-        return this.internalModel.getRangeLeft();
+        return this.rangeLeft;
     }
 
     /**
@@ -38,7 +43,7 @@ public final class AddressRanges {
      * @return the rangeRight value.
      */
     public String getRangeRight() {
-        return this.internalModel.getRangeRight();
+        return this.rangeRight;
     }
 
     /**
@@ -47,7 +52,7 @@ public final class AddressRanges {
      * @return the from value.
      */
     public LatLong getFrom() {
-        return new LatLong(internalModel.getFrom());
+        return this.from;
     }
 
     /**
@@ -56,6 +61,14 @@ public final class AddressRanges {
      * @return the to value.
      */
     public LatLong getTo() {
-        return new LatLong(internalModel.getTo());
+        return this.to;
+    }
+
+    // private setter for properties that need transformation
+    private void setFromAddressRangesPrivate(AddressRangesPrivate addressRangesPrivate) {
+        this.rangeLeft = addressRangesPrivate.getRangeLeft();
+        this.rangeRight = addressRangesPrivate.getRangeRight();
+        this.from = new LatLong(addressRangesPrivate.getFrom());
+        this.to = new LatLong(addressRangesPrivate.getTo());
     }
 }

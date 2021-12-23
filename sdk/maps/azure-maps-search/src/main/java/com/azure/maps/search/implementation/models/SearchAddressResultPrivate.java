@@ -7,7 +7,6 @@
 package com.azure.maps.search.implementation.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.maps.search.models.SearchSummary;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
@@ -18,7 +17,7 @@ public class SearchAddressResultPrivate {
      * Summary object for a Search API response
      */
     @JsonProperty(value = "summary", access = JsonProperty.Access.WRITE_ONLY)
-    private SearchSummary summary;
+    private SearchSummaryPrivate summary;
 
     /*
      * A list of Search API results.
@@ -31,7 +30,7 @@ public class SearchAddressResultPrivate {
      *
      * @return the summary value.
      */
-    public SearchSummary getSummary() {
+    public SearchSummaryPrivate getSummary() {
         return this.summary;
     }
 

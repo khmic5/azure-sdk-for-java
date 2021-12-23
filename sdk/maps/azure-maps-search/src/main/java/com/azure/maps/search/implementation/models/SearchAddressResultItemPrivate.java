@@ -97,7 +97,7 @@ public final class SearchAddressResultItemPrivate {
      * door, or a lobby, and "minor", for side and back doors.
      */
     @JsonProperty(value = "entryPoints", access = JsonProperty.Access.WRITE_ONLY)
-    private List<EntryPoint> entryPoints;
+    private List<EntryPointPrivate> entryPoints;
 
     /*
      * Describes the address range on both sides of the street for a search
@@ -258,7 +258,7 @@ public final class SearchAddressResultItemPrivate {
      *
      * @return the entryPoints value.
      */
-    public List<EntryPoint> getEntryPoints() {
+    public List<EntryPointPrivate> getEntryPoints() {
         return this.entryPoints;
     }
 

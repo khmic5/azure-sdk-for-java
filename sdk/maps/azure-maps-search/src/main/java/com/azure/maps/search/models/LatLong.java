@@ -29,6 +29,23 @@ public final class LatLong {
     }
 
     /**
+     * Returns a LatLong from a comma-separated position string.
+     * @param position
+     * @return
+     */
+    public static LatLong fromCommaSeparatedString(String position) {
+        if (position != null) {
+            final String[] coords = position.split(",");
+
+            if (coords != null && coords.length == 2) {
+                return new LatLong(Double.parseDouble(coords[0]), Double.parseDouble(coords[1]));
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Returns the latitude.
      * @return
      */

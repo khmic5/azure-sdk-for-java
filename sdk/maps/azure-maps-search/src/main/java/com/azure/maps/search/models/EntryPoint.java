@@ -5,21 +5,27 @@
 package com.azure.maps.search.models;
 
 import com.azure.core.annotation.Immutable;
+import com.azure.maps.search.implementation.helpers.EntryPointPropertiesHelper;
+import com.azure.maps.search.implementation.models.LatLongPairAbbreviated;
 
 /** The entry point for the POI being returned. */
 @Immutable
 public final class EntryPoint {
+    private EntryPointType type;
+    private LatLong position;
 
-    /*
-     * Internal model
-     */
-    private com.azure.maps.search.implementation.models.EntryPoint internalModel = null;
+    static {
+        EntryPointPropertiesHelper.setAccessor(new EntryPointPropertiesHelper.EntryPointAccessor() {
+            @Override
+            public void setType(EntryPoint entryPoint, EntryPointType type) {
+                entryPoint.setType(type);
+            }
 
-    /**
-     * Constructor
-     */
-    public EntryPoint(com.azure.maps.search.implementation.models.EntryPoint internalModel) {
-        this.internalModel = internalModel;
+            @Override
+            public void setPosition(EntryPoint entryPoint, LatLongPairAbbreviated position) {
+                entryPoint.setPosition(position);
+            }
+        });
     }
 
     /**
@@ -28,7 +34,7 @@ public final class EntryPoint {
      * @return the type value.
      */
     public EntryPointType getType() {
-        return this.internalModel.getType();
+        return this.type;
     }
 
     /**
@@ -38,6 +44,15 @@ public final class EntryPoint {
      * @return the position value.
      */
     public LatLong getPosition() {
-        return new LatLong(this.internalModel.getPosition());
+        return position;
+    }
+
+    // private setters
+    private void setType(EntryPointType type) {
+        this.type = type;
+    }
+
+    private void setPosition(LatLongPairAbbreviated position) {
+        this.position = new LatLong(position);
     }
 }

@@ -10,35 +10,32 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.maps.search.implementation.models.ReverseSearchAddressResultPrivate;
+import com.azure.maps.search.implementation.helpers.ReverseSearchAddressResultPropertiesHelper;
+import com.azure.maps.search.implementation.helpers.Utility;
+import com.azure.maps.search.implementation.models.ReverseSearchAddressResultItemPrivate;
+import com.azure.maps.search.implementation.models.SearchSummaryPrivate;
 
 /** This object is returned from a successful Search Address Reverse call. */
 @Immutable
 public final class ReverseSearchAddressResult {
 
-    /*
-     * Internal model
-     */
-    private ReverseSearchAddressResultPrivate internalModel = null;
+    static {
+        ReverseSearchAddressResultPropertiesHelper.setAccessor(new ReverseSearchAddressResultPropertiesHelper
+            .ReverseSearchAddressResultAccessor() {
+            @Override
+            public void setSummary(ReverseSearchAddressResult result, SearchSummaryPrivate privateSearchSummary) {
+                result.setSummary(privateSearchSummary);
+            }
 
-    /*
-     * A list of Search API results.
-     */
-    private List<ReverseSearchAddressResultItem> addresses = null;
-
-    /**
-     * Constructor
-     */
-    public ReverseSearchAddressResult(ReverseSearchAddressResultPrivate internalModel) {
-        this.internalModel = internalModel;
-
-        // configure results to replace ReverseSearchAddressResultItem with the proper model
-        // this is a heavy operation so it will be done here and cached.
-        if (this.internalModel != null && this.internalModel.getAddresses() != null) {
-            this.addresses = this.internalModel.getAddresses().stream().map(item ->
-                new ReverseSearchAddressResultItem(item)).collect(Collectors.toList());
-        }
+            @Override
+            public void setAddresses(ReverseSearchAddressResult result, List<ReverseSearchAddressResultItemPrivate> privateResults) {
+                result.setAddresses(privateResults);
+            }
+        });
     }
+
+    private SearchSummary summary;
+    private List<ReverseSearchAddressResultItem> addresses;
 
     /**
      * Get the summary property: Summary object for a Search Address Reverse response.
@@ -46,7 +43,7 @@ public final class ReverseSearchAddressResult {
      * @return the summary value.
      */
     public SearchSummary getSummary() {
-        return this.internalModel.getSummary();
+        return this.summary;
     }
 
     /**
@@ -56,5 +53,18 @@ public final class ReverseSearchAddressResult {
      */
     public List<ReverseSearchAddressResultItem> getAddresses() {
         return this.addresses;
+    }
+
+    // private setters
+    private void setSummary(SearchSummaryPrivate privateSearchSummary) {
+        this.summary = Utility.toSearchSummary(privateSearchSummary);
+    }
+
+    private void setAddresses(List<ReverseSearchAddressResultItemPrivate> privateResults) {
+        if (privateResults != null) {
+            this.addresses = privateResults.stream()
+                .map(item -> Utility.toReverseSearchAddressResultItem(item))
+                .collect(Collectors.toList());
+        }
     }
 }

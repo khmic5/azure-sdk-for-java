@@ -7,19 +7,41 @@ package com.azure.maps.search.models;
 import java.util.List;
 
 import com.azure.core.annotation.Immutable;
+import com.azure.maps.search.implementation.helpers.AddressPropertiesHelper;
 import com.azure.maps.search.implementation.models.AddressPrivate;
 
 /** The address of the result. */
 @Immutable
 public final class Address {
-    private AddressPrivate internalModel;
+    private String buildingNumber;
+    private String street;
+    private String crossStreet;
+    private String streetNumber;
+    private List<Integer> routeNumbers;
+    private String streetName;
+    private String streetNameAndNumber;
+    private String municipality;
+    private String municipalitySubdivision;
+    private String countryTertiarySubdivision;
+    private String countrySecondarySubdivision;
+    private String countrySubdivision;
+    private String postalCode;
+    private String extendedPostalCode;
+    private String countryCode;
+    private String country;
+    private String countryCodeISO3;
+    private String freeformAddress;
+    private String countrySubdivisionName;
+    private String localName;
+    private BoundingBox boundingBox;
 
-    /**
-     * Internal model
-     * @param addressPrivate
-     */
-    Address(AddressPrivate addressPrivate) {
-        this.internalModel = addressPrivate;
+    static {
+        AddressPropertiesHelper.setAccessor(new AddressPropertiesHelper.AddressAccessor() {
+            @Override
+            public void setFromAddressPrivate(Address address, AddressPrivate addressPrivate) {
+                address.setFromAddressPrivate(addressPrivate);
+            }
+        });
     }
 
     /**
@@ -28,7 +50,7 @@ public final class Address {
      * @return the buildingNumber value.
      */
     public String getBuildingNumber() {
-        return this.internalModel.getBuildingNumber();
+        return this.buildingNumber;
     }
 
     /**
@@ -37,7 +59,7 @@ public final class Address {
      * @return the street value.
      */
     public String getStreet() {
-        return this.internalModel.getStreet();
+        return this.street;
     }
 
     /**
@@ -46,7 +68,7 @@ public final class Address {
      * @return the crossStreet value.
      */
     public String getCrossStreet() {
-        return this.internalModel.getCrossStreet();
+        return this.crossStreet;
     }
 
     /**
@@ -55,7 +77,7 @@ public final class Address {
      * @return the streetNumber value.
      */
     public String getStreetNumber() {
-        return this.internalModel.getStreetNumber();
+        return this.streetNumber;
     }
 
     /**
@@ -64,7 +86,7 @@ public final class Address {
      * @return the routeNumbers value.
      */
     public List<Integer> getRouteNumbers() {
-        return this.internalModel.getRouteNumbers();
+        return this.routeNumbers;
     }
 
     /**
@@ -73,7 +95,7 @@ public final class Address {
      * @return the streetName value.
      */
     public String getStreetName() {
-        return this.internalModel.getStreetName();
+        return this.streetName;
     }
 
     /**
@@ -82,7 +104,7 @@ public final class Address {
      * @return the streetNameAndNumber value.
      */
     public String getStreetNameAndNumber() {
-        return this.internalModel.getStreetNameAndNumber();
+        return this.streetNameAndNumber;
     }
 
     /**
@@ -91,7 +113,7 @@ public final class Address {
      * @return the municipality value.
      */
     public String getMunicipality() {
-        return this.internalModel.getMunicipality();
+        return this.municipality;
     }
 
     /**
@@ -100,7 +122,7 @@ public final class Address {
      * @return the municipalitySubdivision value.
      */
     public String getMunicipalitySubdivision() {
-        return this.internalModel.getMunicipalitySubdivision();
+        return this.municipalitySubdivision;
     }
 
     /**
@@ -109,7 +131,7 @@ public final class Address {
      * @return the countryTertiarySubdivision value.
      */
     public String getCountryTertiarySubdivision() {
-        return this.internalModel.getCountryTertiarySubdivision();
+        return this.countryTertiarySubdivision;
     }
 
     /**
@@ -118,7 +140,7 @@ public final class Address {
      * @return the countrySecondarySubdivision value.
      */
     public String getCountrySecondarySubdivision() {
-        return this.internalModel.getCountrySecondarySubdivision();
+        return this.countrySecondarySubdivision;
     }
 
     /**
@@ -127,7 +149,7 @@ public final class Address {
      * @return the countrySubdivision value.
      */
     public String getCountrySubdivision() {
-        return this.internalModel.getCountrySubdivision();
+        return this.countrySubdivision;
     }
 
     /**
@@ -136,7 +158,7 @@ public final class Address {
      * @return the postalCode value.
      */
     public String getPostalCode() {
-        return this.internalModel.getPostalCode();
+        return this.postalCode;
     }
 
     /**
@@ -145,7 +167,7 @@ public final class Address {
      * @return the extendedPostalCode value.
      */
     public String getExtendedPostalCode() {
-        return this.internalModel.getExtendedPostalCode();
+        return this.extendedPostalCode;
     }
 
     /**
@@ -154,7 +176,7 @@ public final class Address {
      * @return the countryCode value.
      */
     public String getCountryCode() {
-        return this.internalModel.getCountryCode();
+        return this.countryCode;
     }
 
     /**
@@ -163,7 +185,7 @@ public final class Address {
      * @return the country value.
      */
     public String getCountry() {
-        return this.internalModel.getCountry();
+        return this.country;
     }
 
     /**
@@ -172,7 +194,7 @@ public final class Address {
      * @return the countryCodeISO3 value.
      */
     public String getCountryCodeISO3() {
-        return this.internalModel.getCountryCodeISO3();
+        return this.countryCodeISO3;
     }
 
     /**
@@ -182,7 +204,7 @@ public final class Address {
      * @return the freeformAddress value.
      */
     public String getFreeformAddress() {
-        return this.internalModel.getFreeformAddress();
+        return this.freeformAddress;
     }
 
     /**
@@ -193,7 +215,7 @@ public final class Address {
      * @return the countrySubdivisionName value.
      */
     public String getCountrySubdivisionName() {
-        return this.internalModel.getCountrySubdivisionName();
+        return this.countrySubdivisionName;
     }
 
     /**
@@ -204,7 +226,7 @@ public final class Address {
      * @return the localName value.
      */
     public String getLocalName() {
-        return this.internalModel.getLocalName();
+        return this.localName;
     }
 
     /**
@@ -213,10 +235,34 @@ public final class Address {
      * @return the boundingBox value.
      */
     public BoundingBox getBoundingBox() {
-        if (this.internalModel.getBoundingBox() != null) {
-            return new BoundingBox(this.internalModel.getBoundingBox());
-        }
+        return this.boundingBox;
+    }
 
-        return null;
+    // private setter for properties that need transformation
+    private void setFromAddressPrivate(AddressPrivate addressPrivate) {
+        this.buildingNumber = addressPrivate.getBuildingNumber();
+        this.street = addressPrivate.getStreet();
+        this.crossStreet = addressPrivate.getCrossStreet();
+        this.streetNumber = addressPrivate.getStreetNumber();
+        this.routeNumbers = addressPrivate.getRouteNumbers();
+        this.streetName = addressPrivate.getStreetName();
+        this.streetNameAndNumber = addressPrivate.getStreetNameAndNumber();
+        this.municipality = addressPrivate.getMunicipality();
+        this.municipalitySubdivision = addressPrivate.getMunicipalitySubdivision();
+        this.countryTertiarySubdivision = addressPrivate.getCountryTertiarySubdivision();
+        this.countrySecondarySubdivision = addressPrivate.getCountrySecondarySubdivision();
+        this.countrySubdivision = addressPrivate.getCountrySubdivision();
+        this.postalCode = addressPrivate.getPostalCode();
+        this.extendedPostalCode = addressPrivate.getExtendedPostalCode();
+        this.countryCode = addressPrivate.getCountryCode();
+        this.country = addressPrivate.getCountry();
+        this.freeformAddress = addressPrivate.getFreeformAddress();
+        this.countrySubdivisionName = addressPrivate.getCountrySubdivisionName();
+        this.localName = addressPrivate.getLocalName();
+
+        // transform bounding box
+        if (addressPrivate.getBoundingBox() != null) {
+            this.boundingBox = new BoundingBox(addressPrivate.getBoundingBox());
+        }
     }
 }

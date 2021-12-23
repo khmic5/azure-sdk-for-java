@@ -23,6 +23,7 @@ import com.azure.maps.search.models.LatLong;
 import com.azure.maps.search.models.OperatingHoursRange;
 import com.azure.maps.search.models.ReverseSearchAddressBatchProcessResult;
 import com.azure.maps.search.models.ReverseSearchAddressOptions;
+import com.azure.maps.search.models.ReverseSearchAddressResult;
 import com.azure.maps.search.models.ReverseSearchCrossStreetAddressOptions;
 import com.azure.maps.search.models.SearchAddressOptions;
 import com.azure.maps.search.models.SearchAddressResult;
@@ -98,21 +99,24 @@ public class SearchSample {
 
         // simple
         MapsCommon.print(client.reverseSearchAddress(
-                new ReverseSearchAddressOptions(new LatLong(37.337, -121.89))));
+            new ReverseSearchAddressOptions(new LatLong(37.337, -121.89))));
+
+        MapsCommon.print(client.reverseSearchAddress(
+            new ReverseSearchAddressOptions(new LatLong(37.337, -121.89))));
 
         // options
         MapsCommon.print(client.reverseSearchAddress(
-                new ReverseSearchAddressOptions(new LatLong(37.337, -121.89))
-                    .setIncludeSpeedLimit(true)
-                    .setEntityType(GeographicEntityType.COUNTRY_SECONDARY_SUBDIVISION) // returns only city
+            new ReverseSearchAddressOptions(new LatLong(37.337, -121.89))
+                .setIncludeSpeedLimit(true)
+                .setEntityType(GeographicEntityType.COUNTRY_SECONDARY_SUBDIVISION) // returns only city
         ));
 
         // complete
         MapsCommon.print(client.reverseSearchAddressWithResponse(
-                new ReverseSearchAddressOptions(new LatLong(37.337, -121.89))
-                    .setIncludeSpeedLimit(true)
-                    .setEntityType(GeographicEntityType.COUNTRY_SECONDARY_SUBDIVISION) // returns only city
-                , null).getStatusCode());
+            new ReverseSearchAddressOptions(new LatLong(37.337, -121.89))
+                .setIncludeSpeedLimit(true)
+                .setEntityType(GeographicEntityType.COUNTRY_SECONDARY_SUBDIVISION) // returns only city
+            , null).getStatusCode());
 
         // Search address reverse cross street -
         // https://docs.microsoft.com/en-us/rest/api/maps/search/get-search-address-reverse-cross-street
@@ -124,16 +128,16 @@ public class SearchSample {
 
         // options
         MapsCommon.print(client.reverseSearchCrossStreetAddress(
-                new ReverseSearchCrossStreetAddressOptions(new LatLong(37.337, -121.89))
-                    .setTop(2)
-                    .setHeading(5)));
+            new ReverseSearchCrossStreetAddressOptions(new LatLong(37.337, -121.89))
+                .setTop(2)
+                .setHeading(5)));
 
         // complete
         MapsCommon.print(client.reverseSearchCrossStreetAddressWithResponse(
-                new ReverseSearchCrossStreetAddressOptions(new LatLong(37.337, -121.89))
-                    .setTop(2)
-                    .setHeading(5),
-                null).getStatusCode());
+            new ReverseSearchCrossStreetAddressOptions(new LatLong(37.337, -121.89))
+                .setTop(2)
+                .setHeading(5),
+            null).getStatusCode());
 
         // Search address structured -
         // https://docs.microsoft.com/en-us/rest/api/maps/search/get-search-address-structured
@@ -181,9 +185,9 @@ public class SearchSample {
         // Get polygon -
         // https://docs.microsoft.com/en-us/rest/api/maps/search/get-search-polygon
         List<String> ids = results.getResults().stream()
-                .filter(item -> item.getDataSource() != null && item.getDataSource().getGeometry() != null)
-                .map(item -> item.getDataSource().getGeometry().getId())
-                .collect(Collectors.toList());
+            .filter(item -> item.getDataSource() != null && item.getDataSource().getGeometry() != null)
+            .map(item -> item.getDataSource().getGeometry().getId())
+            .collect(Collectors.toList());
 
         if (ids != null && !ids.isEmpty()) {
             System.out.println("Get Polygon:");

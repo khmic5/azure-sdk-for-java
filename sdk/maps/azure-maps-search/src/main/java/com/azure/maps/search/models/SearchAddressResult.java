@@ -8,34 +8,31 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.maps.search.implementation.models.SearchAddressResultPrivate;
+import com.azure.maps.search.implementation.helpers.SearchAddressResultPropertiesHelper;
+import com.azure.maps.search.implementation.helpers.Utility;
+import com.azure.maps.search.implementation.models.SearchAddressResultItemPrivate;
+import com.azure.maps.search.implementation.models.SearchSummaryPrivate;
 
 /** This object is returned from a successful Search calls. */
 @Immutable
 public final class SearchAddressResult {
+    private SearchSummary summary;
+    private List<SearchAddressResultItem> results;
 
-    /*
-     * Internal model
-     */
-    private SearchAddressResultPrivate internalModel = null;
+    static {
+        SearchAddressResultPropertiesHelper.setAccessor(new SearchAddressResultPropertiesHelper
+            .SearchAddressResultAccessor() {
+            @Override
+            public void setSummary(SearchAddressResult result, SearchSummaryPrivate privateSearchSummary) {
+                result.setSummary(privateSearchSummary);
+            }
 
-    /*
-     * A list of Search API results.
-     */
-    private List<SearchAddressResultItem> results = null;
-
-    /**
-     * Constructor
-     */
-    public SearchAddressResult(SearchAddressResultPrivate internalModel) {
-        this.internalModel = internalModel;
-
-        // configure results to replace SearchAddressResultItem with the proper model
-        // this is a heavy operation so it will be done here and cached.
-        if (this.internalModel != null && this.internalModel.getResults() != null) {
-            this.results = this.internalModel.getResults().stream().map(item -> new SearchAddressResultItem(item))
-                .collect(Collectors.toList());
-        }
+            @Override
+            public void setResults(SearchAddressResult result,
+                List<SearchAddressResultItemPrivate> privateResults) {
+                result.setResults(privateResults);
+            }
+        });
     }
 
     /**
@@ -44,7 +41,7 @@ public final class SearchAddressResult {
      * @return the summary value.
      */
     public SearchSummary getSummary() {
-        return this.internalModel.getSummary();
+        return this.summary;
     }
 
     /**
@@ -54,5 +51,18 @@ public final class SearchAddressResult {
      */
     public List<SearchAddressResultItem> getResults() {
         return this.results;
+    }
+
+    // private setters
+    private void setSummary(SearchSummaryPrivate privateSearchSummary) {
+        this.summary = Utility.toSearchSummary(privateSearchSummary);
+    }
+
+    private void setResults(List<SearchAddressResultItemPrivate> privateResults) {
+        if (privateResults != null) {
+            this.results = privateResults.stream()
+                .map(item -> Utility.toSearchAddressResultItem(item))
+                .collect(Collectors.toList());
+        }
     }
 }
