@@ -850,104 +850,8 @@ public final class SearchAsyncClient {
 
     /**
      * **Search Fuzzy Batch API**
-     *
-     * <p>**Applies to**: S1 pricing tier.
-     *
-     * <p>The Search Address Batch API sends batches of queries to [Search Fuzzy
-     * API](https://docs.microsoft.com/rest/api/maps/search/getsearchfuzzy) using just a single API call. You can call
-     * Search Address Fuzzy Batch API to run either asynchronously (async) or synchronously (sync). The async API allows
-     * caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous Batch Request
-     * The Synchronous API is recommended for lightweight batch requests. When the service receives a request, it will
-     * respond as soon as the batch items are calculated and there will be no possibility to retrieve the results later.
-     * The Synchronous API will return a timeout error (a 408 response) if the request takes longer than 60 seconds. The
-     * number of batch items is limited to **100** for this API. ``` POST
-     * https://atlas.microsoft.com/search/fuzzy/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` ### Submit Asynchronous Batch Request The Asynchronous API is appropriate for processing big volumes of
-     * relatively complex search requests - It allows the retrieval of results in a separate call (multiple downloads
-     * are possible). - The asynchronous API is optimized for reliability and is not expected to run into a timeout. -
-     * The number of batch items is limited to **10,000** for this API.
-     *
-     * <p>When you make a request by using async request, by default the service returns a 202 response code along a
-     * redirect URL in the Location field of the response header. This URL should be checked periodically until the
-     * response data or error information is available. The asynchronous responses are stored for **14** days. The
-     * redirect URL returns a 404 response if used after the expiration period.
-     *
-     * <p>Please note that asynchronous batch request is a long-running request. Here's a typical sequence of
-     * operations: 1. Client sends a Search Address Batch `POST` request to Azure Maps 2. The server will respond with
-     * one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request has been accepted.
-     *
-     * <p>&gt; HTTP `Error` - There was an error processing your Batch request. This could either be a `400 Bad Request`
-     * or any other `Error` status code.
-     *
-     * <p>3. If the batch request was accepted successfully, the `Location` header in the response contains the URL to
-     * download the results of the batch request. This status URI looks like following:
-     *
-     * <p>``` GET
-     * https://atlas.microsoft.com/search/fuzzy/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to download the batch results.
-     *
-     * <p>### POST Body for Batch Request To send the _search fuzzy_ queries you will use a `POST` request where the
-     * request body will contain the `batchItems` array in `json` format and the `Content-Type` header will be set to
-     * `application/json`. Here's a sample request body containing 5 _search fuzzy_ queries:
-     *
-     * <p>```json { "batchItems": [ {"query":
-     * "?query=atm&amp;lat=47.639769&amp;lon=-122.128362&amp;radius=5000&amp;limit=5"}, {"query": "?query=Statue Of
-     * Liberty&amp;limit=2"}, {"query": "?query=Starbucks&amp;lat=47.639769&amp;lon=-122.128362&amp;radius=5000"},
-     * {"query": "?query=Space Needle"}, {"query": "?query=pizza&amp;limit=10"} ] } ```
-     *
-     * <p>A _search fuzzy_ query in a batch is just a partial URL _without_ the protocol, base URL, path, api-version
-     * and subscription-key. It can accept any of the supported _search fuzzy_ [URI
-     * parameters](https://docs.microsoft.com/rest/api/maps/search/getsearchfuzzy#uri-parameters). The string values in
-     * the _search fuzzy_ query must be properly escaped (e.g. " character should be escaped with \\ ) and it should
-     * also be properly URL-encoded.
-     *
-     * <p>The async API allows caller to batch up to **10,000** queries and sync API up to **100** queries, and the
-     * batch should contain at least **1** query.
-     *
-     * <p>### Download Asynchronous Batch Results To download the async batch results you will issue a `GET` request to
-     * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
-     * `POST` batch request and looks like the following:
-     *
-     * <p>```
-     * https://atlas.microsoft.com/search/fuzzy/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
-     * using the _download URL_. 2. The server will respond with one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
-     * time.
-     *
-     * <p>&gt; HTTP `200 OK` - Batch request successfully processed. The response body contains all the batch results.
-     *
-     * <p>### Batch Response Model The returned data content is similar for async and sync requests. When downloading
-     * the results of an async batch request, if the batch has finished processing, the response body contains the batch
-     * response. This batch response contains a `summary` component that indicates the `totalRequests` that were part of
-     * the original batch request and `successfulRequests`i.e. queries which were executed successfully. The batch
-     * response also includes a `batchItems` array which contains a response for each and every query in the batch
-     * request. The `batchItems` will contain the results in the exact same order the original queries were sent in the
-     * batch request. Each item in `batchItems` contains `statusCode` and `response` fields. Each `response` in
-     * `batchItems` is of one of the following types:
-     *
-     * <p>-
-     * [`SearchAddressResponse`](https://docs.microsoft.com/rest/api/maps/search/getsearchfuzzy#SearchAddressResponse) -
-     * If the query completed successfully.
-     *
-     * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
-     *
-     * <p>Here's a sample Batch Response with 2 _successful_ and 1 _failed_ result:
-     *
-     * <p>```json { "summary": { "successfulRequests": 2, "totalRequests": 3 }, "batchItems": [ { "statusCode": 200,
-     * "response": { "summary": { "query": "atm" }, "results": [ { "type": "POI", "poi": { "name": "ATM at Wells Fargo"
-     * }, "address": { "country": "United States Of America", "freeformAddress": "3240 157th Ave NE, Redmond, WA 98052"
-     * } } ] } }, { "statusCode": 200, "response": { "summary": { "query": "statue of liberty" }, "results": [ { "type":
-     * "POI", "poi": { "name": "Statue of Liberty" }, "address": { "country": "United States Of America",
-     * "freeformAddress": "New York, NY 10004" } } ] } }, { "statusCode": 400, "response": { "error": { "code": "400
-     * BadRequest", "message": "Bad request: one or more parameters were incorrectly specified or are mutually
-     * exclusive." } } } ] } ```.
-     *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchFuzzyBatchRequestBody The list of search fuzzy queries/requests to process. The list can contain a
+     * @param batchRequest The list of search fuzzy queries/requests to process. The list can contain a
      *     max of 10,000 queries and must contain at least 1 query.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -956,110 +860,31 @@ public final class SearchAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<SearchAddressBatchResult>> fuzzySearchBatchSyncWithResponse(
-            BatchRequest searchFuzzyBatchRequestBody) {
-        return this.serviceClient.fuzzySearchBatchSyncWithResponseAsync(JsonFormat.JSON, searchFuzzyBatchRequestBody);
+            BatchRequest batchRequest) {
+        return this.serviceClient.fuzzySearchBatchSyncWithResponseAsync(JsonFormat.JSON, batchRequest);
     }
 
     /**
      * **Search Fuzzy Batch API**
-     *
-     * <p>**Applies to**: S1 pricing tier.
-     *
-     * <p>The Search Address Batch API sends batches of queries to [Search Fuzzy
-     * API](https://docs.microsoft.com/rest/api/maps/search/getsearchfuzzy) using just a single API call. You can call
-     * Search Address Fuzzy Batch API to run either asynchronously (async) or synchronously (sync). The async API allows
-     * caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous Batch Request
-     * The Synchronous API is recommended for lightweight batch requests. When the service receives a request, it will
-     * respond as soon as the batch items are calculated and there will be no possibility to retrieve the results later.
-     * The Synchronous API will return a timeout error (a 408 response) if the request takes longer than 60 seconds. The
-     * number of batch items is limited to **100** for this API. ``` POST
-     * https://atlas.microsoft.com/search/fuzzy/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` ### Submit Asynchronous Batch Request The Asynchronous API is appropriate for processing big volumes of
-     * relatively complex search requests - It allows the retrieval of results in a separate call (multiple downloads
-     * are possible). - The asynchronous API is optimized for reliability and is not expected to run into a timeout. -
-     * The number of batch items is limited to **10,000** for this API.
-     *
-     * <p>When you make a request by using async request, by default the service returns a 202 response code along a
-     * redirect URL in the Location field of the response header. This URL should be checked periodically until the
-     * response data or error information is available. The asynchronous responses are stored for **14** days. The
-     * redirect URL returns a 404 response if used after the expiration period.
-     *
-     * <p>Please note that asynchronous batch request is a long-running request. Here's a typical sequence of
-     * operations: 1. Client sends a Search Address Batch `POST` request to Azure Maps 2. The server will respond with
-     * one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request has been accepted.
-     *
-     * <p>&gt; HTTP `Error` - There was an error processing your Batch request. This could either be a `400 Bad Request`
-     * or any other `Error` status code.
-     *
-     * <p>3. If the batch request was accepted successfully, the `Location` header in the response contains the URL to
-     * download the results of the batch request. This status URI looks like following:
-     *
-     * <p>``` GET
-     * https://atlas.microsoft.com/search/fuzzy/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to download the batch results.
-     *
-     * <p>### POST Body for Batch Request To send the _search fuzzy_ queries you will use a `POST` request where the
-     * request body will contain the `batchItems` array in `json` format and the `Content-Type` header will be set to
-     * `application/json`. Here's a sample request body containing 5 _search fuzzy_ queries:
-     *
-     * <p>```json { "batchItems": [ {"query":
-     * "?query=atm&amp;lat=47.639769&amp;lon=-122.128362&amp;radius=5000&amp;limit=5"}, {"query": "?query=Statue Of
-     * Liberty&amp;limit=2"}, {"query": "?query=Starbucks&amp;lat=47.639769&amp;lon=-122.128362&amp;radius=5000"},
-     * {"query": "?query=Space Needle"}, {"query": "?query=pizza&amp;limit=10"} ] } ```
-     *
-     * <p>A _search fuzzy_ query in a batch is just a partial URL _without_ the protocol, base URL, path, api-version
-     * and subscription-key. It can accept any of the supported _search fuzzy_ [URI
-     * parameters](https://docs.microsoft.com/rest/api/maps/search/getsearchfuzzy#uri-parameters). The string values in
-     * the _search fuzzy_ query must be properly escaped (e.g. " character should be escaped with \\ ) and it should
-     * also be properly URL-encoded.
-     *
-     * <p>The async API allows caller to batch up to **10,000** queries and sync API up to **100** queries, and the
-     * batch should contain at least **1** query.
-     *
-     * <p>### Download Asynchronous Batch Results To download the async batch results you will issue a `GET` request to
-     * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
-     * `POST` batch request and looks like the following:
-     *
-     * <p>```
-     * https://atlas.microsoft.com/search/fuzzy/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
-     * using the _download URL_. 2. The server will respond with one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
-     * time.
-     *
-     * <p>&gt; HTTP `200 OK` - Batch request successfully processed. The response body contains all the batch results.
-     *
-     * <p>### Batch Response Model The returned data content is similar for async and sync requests. When downloading
-     * the results of an async batch request, if the batch has finished processing, the response body contains the batch
-     * response. This batch response contains a `summary` component that indicates the `totalRequests` that were part of
-     * the original batch request and `successfulRequests`i.e. queries which were executed successfully. The batch
-     * response also includes a `batchItems` array which contains a response for each and every query in the batch
-     * request. The `batchItems` will contain the results in the exact same order the original queries were sent in the
-     * batch request. Each item in `batchItems` contains `statusCode` and `response` fields. Each `response` in
-     * `batchItems` is of one of the following types:
-     *
-     * <p>-
-     * [`SearchAddressResponse`](https://docs.microsoft.com/rest/api/maps/search/getsearchfuzzy#SearchAddressResponse) -
-     * If the query completed successfully.
-     *
-     * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
-     *
-     * <p>Here's a sample Batch Response with 2 _successful_ and 1 _failed_ result:
-     *
-     * <p>```json { "summary": { "successfulRequests": 2, "totalRequests": 3 }, "batchItems": [ { "statusCode": 200,
-     * "response": { "summary": { "query": "atm" }, "results": [ { "type": "POI", "poi": { "name": "ATM at Wells Fargo"
-     * }, "address": { "country": "United States Of America", "freeformAddress": "3240 157th Ave NE, Redmond, WA 98052"
-     * } } ] } }, { "statusCode": 200, "response": { "summary": { "query": "statue of liberty" }, "results": [ { "type":
-     * "POI", "poi": { "name": "Statue of Liberty" }, "address": { "country": "United States Of America",
-     * "freeformAddress": "New York, NY 10004" } } ] } }, { "statusCode": 400, "response": { "error": { "code": "400
-     * BadRequest", "message": "Bad request: one or more parameters were incorrectly specified or are mutually
-     * exclusive." } } } ] } ```.
-     *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchFuzzyBatchRequestBody The list of search fuzzy queries/requests to process. The list can contain a
+     * @param batchRequest The list of search fuzzy queries/requests to process. The list can contain a
+     *     max of 10,000 queries and must contain at least 1 query.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful Search Address Batch service call.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    Mono<Response<SearchAddressBatchResult>> fuzzySearchBatchSyncWithResponse(BatchRequest batchRequest,
+            Context context) {
+        return this.serviceClient.fuzzySearchBatchSyncWithResponseAsync(JsonFormat.JSON,
+            batchRequest, context);
+    }
+
+    /**
+     * **Search Fuzzy Batch API**
+     * @param format Desired format of the response. Only `json` format is supported.
+     * @param batchRequest The list of search fuzzy queries/requests to process. The list can contain a
      *     max of 10,000 queries and must contain at least 1 query.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -1068,110 +893,31 @@ public final class SearchAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<SearchAddressBatchResult> fuzzySearchBatchSync(
-            BatchRequest searchFuzzyBatchRequestBody) {
-        return this.serviceClient.fuzzySearchBatchSyncAsync(JsonFormat.JSON, searchFuzzyBatchRequestBody);
+            BatchRequest batchRequest) {
+        return this.serviceClient.fuzzySearchBatchSyncAsync(JsonFormat.JSON, batchRequest);
+    }
+
+    /**
+     * **Search Fuzzy Batch API**
+     * @param format Desired format of the response. Only `json` format is supported.
+     * @param batchRequest The list of search fuzzy queries/requests to process. The list can contain a
+     *     max of 10,000 queries and must contain at least 1 query.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful Search Address Batch service call.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    Mono<SearchAddressBatchResult> fuzzySearchBatchSync(BatchRequest batchRequest,
+            Context context) {
+        return this.serviceClient.fuzzySearchBatchSyncAsync(JsonFormat.JSON, batchRequest, context);
     }
 
     /**
      * **Search Fuzzy Batch API**
      *
-     * <p>**Applies to**: S1 pricing tier.
-     *
-     * <p>The Search Address Batch API sends batches of queries to [Search Fuzzy
-     * API](https://docs.microsoft.com/rest/api/maps/search/getsearchfuzzy) using just a single API call. You can call
-     * Search Address Fuzzy Batch API to run either asynchronously (async) or synchronously (sync). The async API allows
-     * caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous Batch Request
-     * The Synchronous API is recommended for lightweight batch requests. When the service receives a request, it will
-     * respond as soon as the batch items are calculated and there will be no possibility to retrieve the results later.
-     * The Synchronous API will return a timeout error (a 408 response) if the request takes longer than 60 seconds. The
-     * number of batch items is limited to **100** for this API. ``` POST
-     * https://atlas.microsoft.com/search/fuzzy/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` ### Submit Asynchronous Batch Request The Asynchronous API is appropriate for processing big volumes of
-     * relatively complex search requests - It allows the retrieval of results in a separate call (multiple downloads
-     * are possible). - The asynchronous API is optimized for reliability and is not expected to run into a timeout. -
-     * The number of batch items is limited to **10,000** for this API.
-     *
-     * <p>When you make a request by using async request, by default the service returns a 202 response code along a
-     * redirect URL in the Location field of the response header. This URL should be checked periodically until the
-     * response data or error information is available. The asynchronous responses are stored for **14** days. The
-     * redirect URL returns a 404 response if used after the expiration period.
-     *
-     * <p>Please note that asynchronous batch request is a long-running request. Here's a typical sequence of
-     * operations: 1. Client sends a Search Address Batch `POST` request to Azure Maps 2. The server will respond with
-     * one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request has been accepted.
-     *
-     * <p>&gt; HTTP `Error` - There was an error processing your Batch request. This could either be a `400 Bad Request`
-     * or any other `Error` status code.
-     *
-     * <p>3. If the batch request was accepted successfully, the `Location` header in the response contains the URL to
-     * download the results of the batch request. This status URI looks like following:
-     *
-     * <p>``` GET
-     * https://atlas.microsoft.com/search/fuzzy/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to download the batch results.
-     *
-     * <p>### POST Body for Batch Request To send the _search fuzzy_ queries you will use a `POST` request where the
-     * request body will contain the `batchItems` array in `json` format and the `Content-Type` header will be set to
-     * `application/json`. Here's a sample request body containing 5 _search fuzzy_ queries:
-     *
-     * <p>```json { "batchItems": [ {"query":
-     * "?query=atm&amp;lat=47.639769&amp;lon=-122.128362&amp;radius=5000&amp;limit=5"}, {"query": "?query=Statue Of
-     * Liberty&amp;limit=2"}, {"query": "?query=Starbucks&amp;lat=47.639769&amp;lon=-122.128362&amp;radius=5000"},
-     * {"query": "?query=Space Needle"}, {"query": "?query=pizza&amp;limit=10"} ] } ```
-     *
-     * <p>A _search fuzzy_ query in a batch is just a partial URL _without_ the protocol, base URL, path, api-version
-     * and subscription-key. It can accept any of the supported _search fuzzy_ [URI
-     * parameters](https://docs.microsoft.com/rest/api/maps/search/getsearchfuzzy#uri-parameters). The string values in
-     * the _search fuzzy_ query must be properly escaped (e.g. " character should be escaped with \\ ) and it should
-     * also be properly URL-encoded.
-     *
-     * <p>The async API allows caller to batch up to **10,000** queries and sync API up to **100** queries, and the
-     * batch should contain at least **1** query.
-     *
-     * <p>### Download Asynchronous Batch Results To download the async batch results you will issue a `GET` request to
-     * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
-     * `POST` batch request and looks like the following:
-     *
-     * <p>```
-     * https://atlas.microsoft.com/search/fuzzy/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
-     * using the _download URL_. 2. The server will respond with one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
-     * time.
-     *
-     * <p>&gt; HTTP `200 OK` - Batch request successfully processed. The response body contains all the batch results.
-     *
-     * <p>### Batch Response Model The returned data content is similar for async and sync requests. When downloading
-     * the results of an async batch request, if the batch has finished processing, the response body contains the batch
-     * response. This batch response contains a `summary` component that indicates the `totalRequests` that were part of
-     * the original batch request and `successfulRequests`i.e. queries which were executed successfully. The batch
-     * response also includes a `batchItems` array which contains a response for each and every query in the batch
-     * request. The `batchItems` will contain the results in the exact same order the original queries were sent in the
-     * batch request. Each item in `batchItems` contains `statusCode` and `response` fields. Each `response` in
-     * `batchItems` is of one of the following types:
-     *
-     * <p>-
-     * [`SearchAddressResponse`](https://docs.microsoft.com/rest/api/maps/search/getsearchfuzzy#SearchAddressResponse) -
-     * If the query completed successfully.
-     *
-     * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
-     *
-     * <p>Here's a sample Batch Response with 2 _successful_ and 1 _failed_ result:
-     *
-     * <p>```json { "summary": { "successfulRequests": 2, "totalRequests": 3 }, "batchItems": [ { "statusCode": 200,
-     * "response": { "summary": { "query": "atm" }, "results": [ { "type": "POI", "poi": { "name": "ATM at Wells Fargo"
-     * }, "address": { "country": "United States Of America", "freeformAddress": "3240 157th Ave NE, Redmond, WA 98052"
-     * } } ] } }, { "statusCode": 200, "response": { "summary": { "query": "statue of liberty" }, "results": [ { "type":
-     * "POI", "poi": { "name": "Statue of Liberty" }, "address": { "country": "United States Of America",
-     * "freeformAddress": "New York, NY 10004" } } ] } }, { "statusCode": 400, "response": { "error": { "code": "400
-     * BadRequest", "message": "Bad request: one or more parameters were incorrectly specified or are mutually
-     * exclusive." } } } ] } ```.
-     *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchFuzzyBatchRequestBody The list of search fuzzy queries/requests to process. The list can contain a
+     * @param batchRequest The list of search fuzzy queries/requests to process. The list can contain a
      *     max of 10,000 queries and must contain at least 1 query.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -1180,110 +926,15 @@ public final class SearchAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<SearchesFuzzySearchBatchResponse> fuzzySearchBatchWithResponse(
-            BatchRequest searchFuzzyBatchRequestBody) {
-        return this.serviceClient.fuzzySearchBatchWithResponseAsync(JsonFormat.JSON, searchFuzzyBatchRequestBody);
+            BatchRequest batchRequest) {
+        return this.serviceClient.fuzzySearchBatchWithResponseAsync(JsonFormat.JSON, batchRequest);
     }
 
     /**
      * **Search Fuzzy Batch API**
      *
-     * <p>**Applies to**: S1 pricing tier.
-     *
-     * <p>The Search Address Batch API sends batches of queries to [Search Fuzzy
-     * API](https://docs.microsoft.com/rest/api/maps/search/getsearchfuzzy) using just a single API call. You can call
-     * Search Address Fuzzy Batch API to run either asynchronously (async) or synchronously (sync). The async API allows
-     * caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous Batch Request
-     * The Synchronous API is recommended for lightweight batch requests. When the service receives a request, it will
-     * respond as soon as the batch items are calculated and there will be no possibility to retrieve the results later.
-     * The Synchronous API will return a timeout error (a 408 response) if the request takes longer than 60 seconds. The
-     * number of batch items is limited to **100** for this API. ``` POST
-     * https://atlas.microsoft.com/search/fuzzy/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` ### Submit Asynchronous Batch Request The Asynchronous API is appropriate for processing big volumes of
-     * relatively complex search requests - It allows the retrieval of results in a separate call (multiple downloads
-     * are possible). - The asynchronous API is optimized for reliability and is not expected to run into a timeout. -
-     * The number of batch items is limited to **10,000** for this API.
-     *
-     * <p>When you make a request by using async request, by default the service returns a 202 response code along a
-     * redirect URL in the Location field of the response header. This URL should be checked periodically until the
-     * response data or error information is available. The asynchronous responses are stored for **14** days. The
-     * redirect URL returns a 404 response if used after the expiration period.
-     *
-     * <p>Please note that asynchronous batch request is a long-running request. Here's a typical sequence of
-     * operations: 1. Client sends a Search Address Batch `POST` request to Azure Maps 2. The server will respond with
-     * one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request has been accepted.
-     *
-     * <p>&gt; HTTP `Error` - There was an error processing your Batch request. This could either be a `400 Bad Request`
-     * or any other `Error` status code.
-     *
-     * <p>3. If the batch request was accepted successfully, the `Location` header in the response contains the URL to
-     * download the results of the batch request. This status URI looks like following:
-     *
-     * <p>``` GET
-     * https://atlas.microsoft.com/search/fuzzy/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to download the batch results.
-     *
-     * <p>### POST Body for Batch Request To send the _search fuzzy_ queries you will use a `POST` request where the
-     * request body will contain the `batchItems` array in `json` format and the `Content-Type` header will be set to
-     * `application/json`. Here's a sample request body containing 5 _search fuzzy_ queries:
-     *
-     * <p>```json { "batchItems": [ {"query":
-     * "?query=atm&amp;lat=47.639769&amp;lon=-122.128362&amp;radius=5000&amp;limit=5"}, {"query": "?query=Statue Of
-     * Liberty&amp;limit=2"}, {"query": "?query=Starbucks&amp;lat=47.639769&amp;lon=-122.128362&amp;radius=5000"},
-     * {"query": "?query=Space Needle"}, {"query": "?query=pizza&amp;limit=10"} ] } ```
-     *
-     * <p>A _search fuzzy_ query in a batch is just a partial URL _without_ the protocol, base URL, path, api-version
-     * and subscription-key. It can accept any of the supported _search fuzzy_ [URI
-     * parameters](https://docs.microsoft.com/rest/api/maps/search/getsearchfuzzy#uri-parameters). The string values in
-     * the _search fuzzy_ query must be properly escaped (e.g. " character should be escaped with \\ ) and it should
-     * also be properly URL-encoded.
-     *
-     * <p>The async API allows caller to batch up to **10,000** queries and sync API up to **100** queries, and the
-     * batch should contain at least **1** query.
-     *
-     * <p>### Download Asynchronous Batch Results To download the async batch results you will issue a `GET` request to
-     * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
-     * `POST` batch request and looks like the following:
-     *
-     * <p>```
-     * https://atlas.microsoft.com/search/fuzzy/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
-     * using the _download URL_. 2. The server will respond with one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
-     * time.
-     *
-     * <p>&gt; HTTP `200 OK` - Batch request successfully processed. The response body contains all the batch results.
-     *
-     * <p>### Batch Response Model The returned data content is similar for async and sync requests. When downloading
-     * the results of an async batch request, if the batch has finished processing, the response body contains the batch
-     * response. This batch response contains a `summary` component that indicates the `totalRequests` that were part of
-     * the original batch request and `successfulRequests`i.e. queries which were executed successfully. The batch
-     * response also includes a `batchItems` array which contains a response for each and every query in the batch
-     * request. The `batchItems` will contain the results in the exact same order the original queries were sent in the
-     * batch request. Each item in `batchItems` contains `statusCode` and `response` fields. Each `response` in
-     * `batchItems` is of one of the following types:
-     *
-     * <p>-
-     * [`SearchAddressResponse`](https://docs.microsoft.com/rest/api/maps/search/getsearchfuzzy#SearchAddressResponse) -
-     * If the query completed successfully.
-     *
-     * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
-     *
-     * <p>Here's a sample Batch Response with 2 _successful_ and 1 _failed_ result:
-     *
-     * <p>```json { "summary": { "successfulRequests": 2, "totalRequests": 3 }, "batchItems": [ { "statusCode": 200,
-     * "response": { "summary": { "query": "atm" }, "results": [ { "type": "POI", "poi": { "name": "ATM at Wells Fargo"
-     * }, "address": { "country": "United States Of America", "freeformAddress": "3240 157th Ave NE, Redmond, WA 98052"
-     * } } ] } }, { "statusCode": 200, "response": { "summary": { "query": "statue of liberty" }, "results": [ { "type":
-     * "POI", "poi": { "name": "Statue of Liberty" }, "address": { "country": "United States Of America",
-     * "freeformAddress": "New York, NY 10004" } } ] } }, { "statusCode": 400, "response": { "error": { "code": "400
-     * BadRequest", "message": "Bad request: one or more parameters were incorrectly specified or are mutually
-     * exclusive." } } } ] } ```.
-     *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchFuzzyBatchRequestBody The list of search fuzzy queries/requests to process. The list can contain a
+     * @param batchRequest The list of search fuzzy queries/requests to process. The list can contain a
      *     max of 10,000 queries and must contain at least 1 query.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -1292,107 +943,30 @@ public final class SearchAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public PollerFlux<SearchAddressBatchResult, SearchAddressBatchResult> beginFuzzySearchBatch(
-            BatchRequest searchFuzzyBatchRequestBody) {
-        return this.serviceClient.beginFuzzySearchBatchAsync(JsonFormat.JSON, searchFuzzyBatchRequestBody);
+            BatchRequest batchRequest) {
+        return this.serviceClient.beginFuzzySearchBatchAsync(JsonFormat.JSON, batchRequest);
     }
 
     /**
      * **Search Fuzzy Batch API**
      *
-     * <p>**Applies to**: S1 pricing tier.
-     *
-     * <p>The Search Address Batch API sends batches of queries to [Search Fuzzy
-     * API](https://docs.microsoft.com/rest/api/maps/search/getsearchfuzzy) using just a single API call. You can call
-     * Search Address Fuzzy Batch API to run either asynchronously (async) or synchronously (sync). The async API allows
-     * caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous Batch Request
-     * The Synchronous API is recommended for lightweight batch requests. When the service receives a request, it will
-     * respond as soon as the batch items are calculated and there will be no possibility to retrieve the results later.
-     * The Synchronous API will return a timeout error (a 408 response) if the request takes longer than 60 seconds. The
-     * number of batch items is limited to **100** for this API. ``` POST
-     * https://atlas.microsoft.com/search/fuzzy/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` ### Submit Asynchronous Batch Request The Asynchronous API is appropriate for processing big volumes of
-     * relatively complex search requests - It allows the retrieval of results in a separate call (multiple downloads
-     * are possible). - The asynchronous API is optimized for reliability and is not expected to run into a timeout. -
-     * The number of batch items is limited to **10,000** for this API.
-     *
-     * <p>When you make a request by using async request, by default the service returns a 202 response code along a
-     * redirect URL in the Location field of the response header. This URL should be checked periodically until the
-     * response data or error information is available. The asynchronous responses are stored for **14** days. The
-     * redirect URL returns a 404 response if used after the expiration period.
-     *
-     * <p>Please note that asynchronous batch request is a long-running request. Here's a typical sequence of
-     * operations: 1. Client sends a Search Address Batch `POST` request to Azure Maps 2. The server will respond with
-     * one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request has been accepted.
-     *
-     * <p>&gt; HTTP `Error` - There was an error processing your Batch request. This could either be a `400 Bad Request`
-     * or any other `Error` status code.
-     *
-     * <p>3. If the batch request was accepted successfully, the `Location` header in the response contains the URL to
-     * download the results of the batch request. This status URI looks like following:
-     *
-     * <p>``` GET
-     * https://atlas.microsoft.com/search/fuzzy/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to download the batch results.
-     *
-     * <p>### POST Body for Batch Request To send the _search fuzzy_ queries you will use a `POST` request where the
-     * request body will contain the `batchItems` array in `json` format and the `Content-Type` header will be set to
-     * `application/json`. Here's a sample request body containing 5 _search fuzzy_ queries:
-     *
-     * <p>```json { "batchItems": [ {"query":
-     * "?query=atm&amp;lat=47.639769&amp;lon=-122.128362&amp;radius=5000&amp;limit=5"}, {"query": "?query=Statue Of
-     * Liberty&amp;limit=2"}, {"query": "?query=Starbucks&amp;lat=47.639769&amp;lon=-122.128362&amp;radius=5000"},
-     * {"query": "?query=Space Needle"}, {"query": "?query=pizza&amp;limit=10"} ] } ```
-     *
-     * <p>A _search fuzzy_ query in a batch is just a partial URL _without_ the protocol, base URL, path, api-version
-     * and subscription-key. It can accept any of the supported _search fuzzy_ [URI
-     * parameters](https://docs.microsoft.com/rest/api/maps/search/getsearchfuzzy#uri-parameters). The string values in
-     * the _search fuzzy_ query must be properly escaped (e.g. " character should be escaped with \\ ) and it should
-     * also be properly URL-encoded.
-     *
-     * <p>The async API allows caller to batch up to **10,000** queries and sync API up to **100** queries, and the
-     * batch should contain at least **1** query.
-     *
-     * <p>### Download Asynchronous Batch Results To download the async batch results you will issue a `GET` request to
-     * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
-     * `POST` batch request and looks like the following:
-     *
-     * <p>```
-     * https://atlas.microsoft.com/search/fuzzy/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
-     * using the _download URL_. 2. The server will respond with one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
-     * time.
-     *
-     * <p>&gt; HTTP `200 OK` - Batch request successfully processed. The response body contains all the batch results.
-     *
-     * <p>### Batch Response Model The returned data content is similar for async and sync requests. When downloading
-     * the results of an async batch request, if the batch has finished processing, the response body contains the batch
-     * response. This batch response contains a `summary` component that indicates the `totalRequests` that were part of
-     * the original batch request and `successfulRequests`i.e. queries which were executed successfully. The batch
-     * response also includes a `batchItems` array which contains a response for each and every query in the batch
-     * request. The `batchItems` will contain the results in the exact same order the original queries were sent in the
-     * batch request. Each item in `batchItems` contains `statusCode` and `response` fields. Each `response` in
-     * `batchItems` is of one of the following types:
-     *
-     * <p>-
-     * [`SearchAddressResponse`](https://docs.microsoft.com/rest/api/maps/search/getsearchfuzzy#SearchAddressResponse) -
-     * If the query completed successfully.
-     *
-     * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
-     *
-     * <p>Here's a sample Batch Response with 2 _successful_ and 1 _failed_ result:
-     *
-     * <p>```json { "summary": { "successfulRequests": 2, "totalRequests": 3 }, "batchItems": [ { "statusCode": 200,
-     * "response": { "summary": { "query": "atm" }, "results": [ { "type": "POI", "poi": { "name": "ATM at Wells Fargo"
-     * }, "address": { "country": "United States Of America", "freeformAddress": "3240 157th Ave NE, Redmond, WA 98052"
-     * } } ] } }, { "statusCode": 200, "response": { "summary": { "query": "statue of liberty" }, "results": [ { "type":
-     * "POI", "poi": { "name": "Statue of Liberty" }, "address": { "country": "United States Of America",
-     * "freeformAddress": "New York, NY 10004" } } ] } }, { "statusCode": 400, "response": { "error": { "code": "400
-     * BadRequest", "message": "Bad request: one or more parameters were incorrectly specified or are mutually
-     * exclusive." } } } ] } ```.
+     * @param format Desired format of the response. Only `json` format is supported.
+     * @param batchRequest The list of search fuzzy queries/requests to process. The list can contain a
+     *     max of 10,000 queries and must contain at least 1 query.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful Search Address Batch service call.
+     */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    PollerFlux<SearchAddressBatchResult, SearchAddressBatchResult> beginFuzzySearchBatch(
+            BatchRequest batchRequest, Context context) {
+        return this.serviceClient.beginFuzzySearchBatchAsync(JsonFormat.JSON,
+            batchRequest, context);
+    }
+
+    /**
+     * **Search Fuzzy Batch API**
      *
      * @param batchId Batch id for querying the operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1408,101 +982,6 @@ public final class SearchAsyncClient {
     /**
      * **Search Fuzzy Batch API**
      *
-     * <p>**Applies to**: S1 pricing tier.
-     *
-     * <p>The Search Address Batch API sends batches of queries to [Search Fuzzy
-     * API](https://docs.microsoft.com/rest/api/maps/search/getsearchfuzzy) using just a single API call. You can call
-     * Search Address Fuzzy Batch API to run either asynchronously (async) or synchronously (sync). The async API allows
-     * caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous Batch Request
-     * The Synchronous API is recommended for lightweight batch requests. When the service receives a request, it will
-     * respond as soon as the batch items are calculated and there will be no possibility to retrieve the results later.
-     * The Synchronous API will return a timeout error (a 408 response) if the request takes longer than 60 seconds. The
-     * number of batch items is limited to **100** for this API. ``` POST
-     * https://atlas.microsoft.com/search/fuzzy/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` ### Submit Asynchronous Batch Request The Asynchronous API is appropriate for processing big volumes of
-     * relatively complex search requests - It allows the retrieval of results in a separate call (multiple downloads
-     * are possible). - The asynchronous API is optimized for reliability and is not expected to run into a timeout. -
-     * The number of batch items is limited to **10,000** for this API.
-     *
-     * <p>When you make a request by using async request, by default the service returns a 202 response code along a
-     * redirect URL in the Location field of the response header. This URL should be checked periodically until the
-     * response data or error information is available. The asynchronous responses are stored for **14** days. The
-     * redirect URL returns a 404 response if used after the expiration period.
-     *
-     * <p>Please note that asynchronous batch request is a long-running request. Here's a typical sequence of
-     * operations: 1. Client sends a Search Address Batch `POST` request to Azure Maps 2. The server will respond with
-     * one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request has been accepted.
-     *
-     * <p>&gt; HTTP `Error` - There was an error processing your Batch request. This could either be a `400 Bad Request`
-     * or any other `Error` status code.
-     *
-     * <p>3. If the batch request was accepted successfully, the `Location` header in the response contains the URL to
-     * download the results of the batch request. This status URI looks like following:
-     *
-     * <p>``` GET
-     * https://atlas.microsoft.com/search/fuzzy/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to download the batch results.
-     *
-     * <p>### POST Body for Batch Request To send the _search fuzzy_ queries you will use a `POST` request where the
-     * request body will contain the `batchItems` array in `json` format and the `Content-Type` header will be set to
-     * `application/json`. Here's a sample request body containing 5 _search fuzzy_ queries:
-     *
-     * <p>```json { "batchItems": [ {"query":
-     * "?query=atm&amp;lat=47.639769&amp;lon=-122.128362&amp;radius=5000&amp;limit=5"}, {"query": "?query=Statue Of
-     * Liberty&amp;limit=2"}, {"query": "?query=Starbucks&amp;lat=47.639769&amp;lon=-122.128362&amp;radius=5000"},
-     * {"query": "?query=Space Needle"}, {"query": "?query=pizza&amp;limit=10"} ] } ```
-     *
-     * <p>A _search fuzzy_ query in a batch is just a partial URL _without_ the protocol, base URL, path, api-version
-     * and subscription-key. It can accept any of the supported _search fuzzy_ [URI
-     * parameters](https://docs.microsoft.com/rest/api/maps/search/getsearchfuzzy#uri-parameters). The string values in
-     * the _search fuzzy_ query must be properly escaped (e.g. " character should be escaped with \\ ) and it should
-     * also be properly URL-encoded.
-     *
-     * <p>The async API allows caller to batch up to **10,000** queries and sync API up to **100** queries, and the
-     * batch should contain at least **1** query.
-     *
-     * <p>### Download Asynchronous Batch Results To download the async batch results you will issue a `GET` request to
-     * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
-     * `POST` batch request and looks like the following:
-     *
-     * <p>```
-     * https://atlas.microsoft.com/search/fuzzy/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
-     * using the _download URL_. 2. The server will respond with one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
-     * time.
-     *
-     * <p>&gt; HTTP `200 OK` - Batch request successfully processed. The response body contains all the batch results.
-     *
-     * <p>### Batch Response Model The returned data content is similar for async and sync requests. When downloading
-     * the results of an async batch request, if the batch has finished processing, the response body contains the batch
-     * response. This batch response contains a `summary` component that indicates the `totalRequests` that were part of
-     * the original batch request and `successfulRequests`i.e. queries which were executed successfully. The batch
-     * response also includes a `batchItems` array which contains a response for each and every query in the batch
-     * request. The `batchItems` will contain the results in the exact same order the original queries were sent in the
-     * batch request. Each item in `batchItems` contains `statusCode` and `response` fields. Each `response` in
-     * `batchItems` is of one of the following types:
-     *
-     * <p>-
-     * [`SearchAddressResponse`](https://docs.microsoft.com/rest/api/maps/search/getsearchfuzzy#SearchAddressResponse) -
-     * If the query completed successfully.
-     *
-     * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
-     *
-     * <p>Here's a sample Batch Response with 2 _successful_ and 1 _failed_ result:
-     *
-     * <p>```json { "summary": { "successfulRequests": 2, "totalRequests": 3 }, "batchItems": [ { "statusCode": 200,
-     * "response": { "summary": { "query": "atm" }, "results": [ { "type": "POI", "poi": { "name": "ATM at Wells Fargo"
-     * }, "address": { "country": "United States Of America", "freeformAddress": "3240 157th Ave NE, Redmond, WA 98052"
-     * } } ] } }, { "statusCode": 200, "response": { "summary": { "query": "statue of liberty" }, "results": [ { "type":
-     * "POI", "poi": { "name": "Statue of Liberty" }, "address": { "country": "United States Of America",
-     * "freeformAddress": "New York, NY 10004" } } ] } }, { "statusCode": 400, "response": { "error": { "code": "400
-     * BadRequest", "message": "Bad request: one or more parameters were incorrectly specified or are mutually
-     * exclusive." } } } ] } ```.
-     *
      * @param batchId Batch id for querying the operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -1516,104 +995,24 @@ public final class SearchAsyncClient {
     }
 
     /**
+     * **Search Fuzzy Batch API**
+     *
+     * @param batchId Batch id for querying the operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful Search Address Batch service call.
+     */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    PollerFlux<SearchAddressBatchResult, SearchAddressBatchResult> beginGetFuzzySearchBatch(
+            String batchId, Context context) {
+        return this.serviceClient.beginGetFuzzySearchBatchAsync(batchId, context);
+    }
+
+    /**
      * **Search Address Batch API**
-     *
-     * <p>**Applies to**: S1 pricing tier.
-     *
-     * <p>The Search Address Batch API sends batches of queries to [Search Address
-     * API](https://docs.microsoft.com/rest/api/maps/search/getsearchaddress) using just a single API call. You can call
-     * Search Address Batch API to run either asynchronously (async) or synchronously (sync). The async API allows
-     * caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous Batch Request
-     * The Synchronous API is recommended for lightweight batch requests. When the service receives a request, it will
-     * respond as soon as the batch items are calculated and there will be no possibility to retrieve the results later.
-     * The Synchronous API will return a timeout error (a 408 response) if the request takes longer than 60 seconds. The
-     * number of batch items is limited to **100** for this API. ``` POST
-     * https://atlas.microsoft.com/search/address/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` ### Submit Asynchronous Batch Request The Asynchronous API is appropriate for processing big volumes of
-     * relatively complex search requests - It allows the retrieval of results in a separate call (multiple downloads
-     * are possible). - The asynchronous API is optimized for reliability and is not expected to run into a timeout. -
-     * The number of batch items is limited to **10,000** for this API.
-     *
-     * <p>When you make a request by using async request, by default the service returns a 202 response code along a
-     * redirect URL in the Location field of the response header. This URL should be checked periodically until the
-     * response data or error information is available. The asynchronous responses are stored for **14** days. The
-     * redirect URL returns a 404 response if used after the expiration period.
-     *
-     * <p>Please note that asynchronous batch request is a long-running request. Here's a typical sequence of
-     * operations: 1. Client sends a Search Address Batch `POST` request to Azure Maps 2. The server will respond with
-     * one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request has been accepted.
-     *
-     * <p>&gt; HTTP `Error` - There was an error processing your Batch request. This could either be a `400 Bad Request`
-     * or any other `Error` status code.
-     *
-     * <p>3. If the batch request was accepted successfully, the `Location` header in the response contains the URL to
-     * download the results of the batch request. This status URI looks like following:
-     *
-     * <p>``` GET
-     * https://atlas.microsoft.com/search/address/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to download the batch results.
-     *
-     * <p>### POST Body for Batch Request To send the _search address_ queries you will use a `POST` request where the
-     * request body will contain the `batchItems` array in `json` format and the `Content-Type` header will be set to
-     * `application/json`. Here's a sample request body containing 5 _search address_ queries:
-     *
-     * <p>```json { "batchItems": [ {"query": "?query=400 Broad St, Seattle, WA 98109&amp;limit=3"}, {"query":
-     * "?query=One, Microsoft Way, Redmond, WA 98052&amp;limit=3"}, {"query": "?query=350 5th Ave, New York, NY
-     * 10118&amp;limit=1"}, {"query": "?query=Pike Pl, Seattle, WA
-     * 98101&amp;lat=47.610970&amp;lon=-122.342469&amp;radius=1000"}, {"query": "?query=Champ de Mars, 5 Avenue Anatole
-     * France, 75007 Paris, France&amp;limit=1"} ] } ```
-     *
-     * <p>A _search address_ query in a batch is just a partial URL _without_ the protocol, base URL, path, api-version
-     * and subscription-key. It can accept any of the supported _search address_ [URI
-     * parameters](https://docs.microsoft.com/rest/api/maps/search/getsearchaddress#uri-parameters). The string values
-     * in the _search address_ query must be properly escaped (e.g. " character should be escaped with \\ ) and it
-     * should also be properly URL-encoded.
-     *
-     * <p>The async API allows caller to batch up to **10,000** queries and sync API up to **100** queries, and the
-     * batch should contain at least **1** query.
-     *
-     * <p>### Download Asynchronous Batch Results To download the async batch results you will issue a `GET` request to
-     * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
-     * `POST` batch request and looks like the following:
-     *
-     * <p>```
-     * https://atlas.microsoft.com/search/address/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
-     * using the _download URL_. 2. The server will respond with one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
-     * time.
-     *
-     * <p>&gt; HTTP `200 OK` - Batch request successfully processed. The response body contains all the batch results.
-     *
-     * <p>### Batch Response Model The returned data content is similar for async and sync requests. When downloading
-     * the results of an async batch request, if the batch has finished processing, the response body contains the batch
-     * response. This batch response contains a `summary` component that indicates the `totalRequests` that were part of
-     * the original batch request and `successfulRequests`i.e. queries which were executed successfully. The batch
-     * response also includes a `batchItems` array which contains a response for each and every query in the batch
-     * request. The `batchItems` will contain the results in the exact same order the original queries were sent in the
-     * batch request. Each item in `batchItems` contains `statusCode` and `response` fields. Each `response` in
-     * `batchItems` is of one of the following types:
-     *
-     * <p>-
-     * [`SearchAddressResponse`](https://docs.microsoft.com/rest/api/maps/search/getsearchaddress#SearchAddressResponse)
-     * - If the query completed successfully.
-     *
-     * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
-     *
-     * <p>Here's a sample Batch Response with 2 _successful_ and 1 _failed_ result:
-     *
-     * <p>```json { "summary": { "successfulRequests": 2, "totalRequests": 3 }, "batchItems": [ { "statusCode": 200,
-     * "response": { "summary": { "query": "one microsoft way redmond wa 98052" }, "results": [ { "position": { "lat":
-     * 47.63989, "lon": -122.12509 } } ] } }, { "statusCode": 200, "response": { "summary": { "query": "pike pl seattle
-     * wa 98101" }, "results": [ { "position": { "lat": 47.60963, "lon": -122.34215 } } ] } }, { "statusCode": 400,
-     * "response": { "error": { "code": "400 BadRequest", "message": "Bad request: one or more parameters were
-     * incorrectly specified or are mutually exclusive." } } } ] } ```.
-     *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchAddressBatchRequestBody The list of address geocoding queries/requests to process. The list can
+     * @param batchRequest The list of address geocoding queries/requests to process. The list can
      *     contain a max of 10,000 queries and must contain at least 1 query.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -1622,109 +1021,32 @@ public final class SearchAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<SearchAddressBatchResult>> searchAddressBatchSyncWithResponse(
-            BatchRequest searchAddressBatchRequestBody) {
-        return this.serviceClient.searchAddressBatchSyncWithResponseAsync(JsonFormat.JSON, searchAddressBatchRequestBody);
+            BatchRequest batchRequest) {
+        return this.serviceClient.searchAddressBatchSyncWithResponseAsync(JsonFormat.JSON, batchRequest);
+    }
+
+    /**
+     * **Search Address Batch API**
+     * @param format Desired format of the response. Only `json` format is supported.
+     * @param batchRequest The list of address geocoding queries/requests to process. The list can
+     *     contain a max of 10,000 queries and must contain at least 1 query.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful Search Address Batch service call.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    Mono<Response<SearchAddressBatchResult>> searchAddressBatchSyncWithResponse(
+            BatchRequest batchRequest, Context context) {
+        return this.serviceClient.searchAddressBatchSyncWithResponseAsync(JsonFormat.JSON,
+            batchRequest, context);
     }
 
     /**
      * **Search Address Batch API**
      *
-     * <p>**Applies to**: S1 pricing tier.
-     *
-     * <p>The Search Address Batch API sends batches of queries to [Search Address
-     * API](https://docs.microsoft.com/rest/api/maps/search/getsearchaddress) using just a single API call. You can call
-     * Search Address Batch API to run either asynchronously (async) or synchronously (sync). The async API allows
-     * caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous Batch Request
-     * The Synchronous API is recommended for lightweight batch requests. When the service receives a request, it will
-     * respond as soon as the batch items are calculated and there will be no possibility to retrieve the results later.
-     * The Synchronous API will return a timeout error (a 408 response) if the request takes longer than 60 seconds. The
-     * number of batch items is limited to **100** for this API. ``` POST
-     * https://atlas.microsoft.com/search/address/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` ### Submit Asynchronous Batch Request The Asynchronous API is appropriate for processing big volumes of
-     * relatively complex search requests - It allows the retrieval of results in a separate call (multiple downloads
-     * are possible). - The asynchronous API is optimized for reliability and is not expected to run into a timeout. -
-     * The number of batch items is limited to **10,000** for this API.
-     *
-     * <p>When you make a request by using async request, by default the service returns a 202 response code along a
-     * redirect URL in the Location field of the response header. This URL should be checked periodically until the
-     * response data or error information is available. The asynchronous responses are stored for **14** days. The
-     * redirect URL returns a 404 response if used after the expiration period.
-     *
-     * <p>Please note that asynchronous batch request is a long-running request. Here's a typical sequence of
-     * operations: 1. Client sends a Search Address Batch `POST` request to Azure Maps 2. The server will respond with
-     * one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request has been accepted.
-     *
-     * <p>&gt; HTTP `Error` - There was an error processing your Batch request. This could either be a `400 Bad Request`
-     * or any other `Error` status code.
-     *
-     * <p>3. If the batch request was accepted successfully, the `Location` header in the response contains the URL to
-     * download the results of the batch request. This status URI looks like following:
-     *
-     * <p>``` GET
-     * https://atlas.microsoft.com/search/address/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to download the batch results.
-     *
-     * <p>### POST Body for Batch Request To send the _search address_ queries you will use a `POST` request where the
-     * request body will contain the `batchItems` array in `json` format and the `Content-Type` header will be set to
-     * `application/json`. Here's a sample request body containing 5 _search address_ queries:
-     *
-     * <p>```json { "batchItems": [ {"query": "?query=400 Broad St, Seattle, WA 98109&amp;limit=3"}, {"query":
-     * "?query=One, Microsoft Way, Redmond, WA 98052&amp;limit=3"}, {"query": "?query=350 5th Ave, New York, NY
-     * 10118&amp;limit=1"}, {"query": "?query=Pike Pl, Seattle, WA
-     * 98101&amp;lat=47.610970&amp;lon=-122.342469&amp;radius=1000"}, {"query": "?query=Champ de Mars, 5 Avenue Anatole
-     * France, 75007 Paris, France&amp;limit=1"} ] } ```
-     *
-     * <p>A _search address_ query in a batch is just a partial URL _without_ the protocol, base URL, path, api-version
-     * and subscription-key. It can accept any of the supported _search address_ [URI
-     * parameters](https://docs.microsoft.com/rest/api/maps/search/getsearchaddress#uri-parameters). The string values
-     * in the _search address_ query must be properly escaped (e.g. " character should be escaped with \\ ) and it
-     * should also be properly URL-encoded.
-     *
-     * <p>The async API allows caller to batch up to **10,000** queries and sync API up to **100** queries, and the
-     * batch should contain at least **1** query.
-     *
-     * <p>### Download Asynchronous Batch Results To download the async batch results you will issue a `GET` request to
-     * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
-     * `POST` batch request and looks like the following:
-     *
-     * <p>```
-     * https://atlas.microsoft.com/search/address/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
-     * using the _download URL_. 2. The server will respond with one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
-     * time.
-     *
-     * <p>&gt; HTTP `200 OK` - Batch request successfully processed. The response body contains all the batch results.
-     *
-     * <p>### Batch Response Model The returned data content is similar for async and sync requests. When downloading
-     * the results of an async batch request, if the batch has finished processing, the response body contains the batch
-     * response. This batch response contains a `summary` component that indicates the `totalRequests` that were part of
-     * the original batch request and `successfulRequests`i.e. queries which were executed successfully. The batch
-     * response also includes a `batchItems` array which contains a response for each and every query in the batch
-     * request. The `batchItems` will contain the results in the exact same order the original queries were sent in the
-     * batch request. Each item in `batchItems` contains `statusCode` and `response` fields. Each `response` in
-     * `batchItems` is of one of the following types:
-     *
-     * <p>-
-     * [`SearchAddressResponse`](https://docs.microsoft.com/rest/api/maps/search/getsearchaddress#SearchAddressResponse)
-     * - If the query completed successfully.
-     *
-     * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
-     *
-     * <p>Here's a sample Batch Response with 2 _successful_ and 1 _failed_ result:
-     *
-     * <p>```json { "summary": { "successfulRequests": 2, "totalRequests": 3 }, "batchItems": [ { "statusCode": 200,
-     * "response": { "summary": { "query": "one microsoft way redmond wa 98052" }, "results": [ { "position": { "lat":
-     * 47.63989, "lon": -122.12509 } } ] } }, { "statusCode": 200, "response": { "summary": { "query": "pike pl seattle
-     * wa 98101" }, "results": [ { "position": { "lat": 47.60963, "lon": -122.34215 } } ] } }, { "statusCode": 400,
-     * "response": { "error": { "code": "400 BadRequest", "message": "Bad request: one or more parameters were
-     * incorrectly specified or are mutually exclusive." } } } ] } ```.
-     *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchAddressBatchRequestBody The list of address geocoding queries/requests to process. The list can
+     * @param batchRequest The list of address geocoding queries/requests to process. The list can
      *     contain a max of 10,000 queries and must contain at least 1 query.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -1733,109 +1055,14 @@ public final class SearchAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<SearchAddressBatchResult> searchAddressBatchSync(
-            BatchRequest searchAddressBatchRequestBody) {
-        return this.serviceClient.searchAddressBatchSyncAsync(JsonFormat.JSON, searchAddressBatchRequestBody);
+            BatchRequest batchRequest) {
+        return this.serviceClient.searchAddressBatchSyncAsync(JsonFormat.JSON, batchRequest);
     }
 
     /**
      * **Search Address Batch API**
-     *
-     * <p>**Applies to**: S1 pricing tier.
-     *
-     * <p>The Search Address Batch API sends batches of queries to [Search Address
-     * API](https://docs.microsoft.com/rest/api/maps/search/getsearchaddress) using just a single API call. You can call
-     * Search Address Batch API to run either asynchronously (async) or synchronously (sync). The async API allows
-     * caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous Batch Request
-     * The Synchronous API is recommended for lightweight batch requests. When the service receives a request, it will
-     * respond as soon as the batch items are calculated and there will be no possibility to retrieve the results later.
-     * The Synchronous API will return a timeout error (a 408 response) if the request takes longer than 60 seconds. The
-     * number of batch items is limited to **100** for this API. ``` POST
-     * https://atlas.microsoft.com/search/address/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` ### Submit Asynchronous Batch Request The Asynchronous API is appropriate for processing big volumes of
-     * relatively complex search requests - It allows the retrieval of results in a separate call (multiple downloads
-     * are possible). - The asynchronous API is optimized for reliability and is not expected to run into a timeout. -
-     * The number of batch items is limited to **10,000** for this API.
-     *
-     * <p>When you make a request by using async request, by default the service returns a 202 response code along a
-     * redirect URL in the Location field of the response header. This URL should be checked periodically until the
-     * response data or error information is available. The asynchronous responses are stored for **14** days. The
-     * redirect URL returns a 404 response if used after the expiration period.
-     *
-     * <p>Please note that asynchronous batch request is a long-running request. Here's a typical sequence of
-     * operations: 1. Client sends a Search Address Batch `POST` request to Azure Maps 2. The server will respond with
-     * one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request has been accepted.
-     *
-     * <p>&gt; HTTP `Error` - There was an error processing your Batch request. This could either be a `400 Bad Request`
-     * or any other `Error` status code.
-     *
-     * <p>3. If the batch request was accepted successfully, the `Location` header in the response contains the URL to
-     * download the results of the batch request. This status URI looks like following:
-     *
-     * <p>``` GET
-     * https://atlas.microsoft.com/search/address/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to download the batch results.
-     *
-     * <p>### POST Body for Batch Request To send the _search address_ queries you will use a `POST` request where the
-     * request body will contain the `batchItems` array in `json` format and the `Content-Type` header will be set to
-     * `application/json`. Here's a sample request body containing 5 _search address_ queries:
-     *
-     * <p>```json { "batchItems": [ {"query": "?query=400 Broad St, Seattle, WA 98109&amp;limit=3"}, {"query":
-     * "?query=One, Microsoft Way, Redmond, WA 98052&amp;limit=3"}, {"query": "?query=350 5th Ave, New York, NY
-     * 10118&amp;limit=1"}, {"query": "?query=Pike Pl, Seattle, WA
-     * 98101&amp;lat=47.610970&amp;lon=-122.342469&amp;radius=1000"}, {"query": "?query=Champ de Mars, 5 Avenue Anatole
-     * France, 75007 Paris, France&amp;limit=1"} ] } ```
-     *
-     * <p>A _search address_ query in a batch is just a partial URL _without_ the protocol, base URL, path, api-version
-     * and subscription-key. It can accept any of the supported _search address_ [URI
-     * parameters](https://docs.microsoft.com/rest/api/maps/search/getsearchaddress#uri-parameters). The string values
-     * in the _search address_ query must be properly escaped (e.g. " character should be escaped with \\ ) and it
-     * should also be properly URL-encoded.
-     *
-     * <p>The async API allows caller to batch up to **10,000** queries and sync API up to **100** queries, and the
-     * batch should contain at least **1** query.
-     *
-     * <p>### Download Asynchronous Batch Results To download the async batch results you will issue a `GET` request to
-     * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
-     * `POST` batch request and looks like the following:
-     *
-     * <p>```
-     * https://atlas.microsoft.com/search/address/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
-     * using the _download URL_. 2. The server will respond with one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
-     * time.
-     *
-     * <p>&gt; HTTP `200 OK` - Batch request successfully processed. The response body contains all the batch results.
-     *
-     * <p>### Batch Response Model The returned data content is similar for async and sync requests. When downloading
-     * the results of an async batch request, if the batch has finished processing, the response body contains the batch
-     * response. This batch response contains a `summary` component that indicates the `totalRequests` that were part of
-     * the original batch request and `successfulRequests`i.e. queries which were executed successfully. The batch
-     * response also includes a `batchItems` array which contains a response for each and every query in the batch
-     * request. The `batchItems` will contain the results in the exact same order the original queries were sent in the
-     * batch request. Each item in `batchItems` contains `statusCode` and `response` fields. Each `response` in
-     * `batchItems` is of one of the following types:
-     *
-     * <p>-
-     * [`SearchAddressResponse`](https://docs.microsoft.com/rest/api/maps/search/getsearchaddress#SearchAddressResponse)
-     * - If the query completed successfully.
-     *
-     * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
-     *
-     * <p>Here's a sample Batch Response with 2 _successful_ and 1 _failed_ result:
-     *
-     * <p>```json { "summary": { "successfulRequests": 2, "totalRequests": 3 }, "batchItems": [ { "statusCode": 200,
-     * "response": { "summary": { "query": "one microsoft way redmond wa 98052" }, "results": [ { "position": { "lat":
-     * 47.63989, "lon": -122.12509 } } ] } }, { "statusCode": 200, "response": { "summary": { "query": "pike pl seattle
-     * wa 98101" }, "results": [ { "position": { "lat": 47.60963, "lon": -122.34215 } } ] } }, { "statusCode": 400,
-     * "response": { "error": { "code": "400 BadRequest", "message": "Bad request: one or more parameters were
-     * incorrectly specified or are mutually exclusive." } } } ] } ```.
-     *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchAddressBatchRequestBody The list of address geocoding queries/requests to process. The list can
+     * @param batchRequest The list of address geocoding queries/requests to process. The list can
      *     contain a max of 10,000 queries and must contain at least 1 query.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -1844,109 +1071,14 @@ public final class SearchAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<SearchesSearchAddressBatchResponse> searchAddressBatchWithResponse(
-            BatchRequest searchAddressBatchRequestBody) {
-        return this.serviceClient.searchAddressBatchWithResponseAsync(JsonFormat.JSON, searchAddressBatchRequestBody);
+            BatchRequest batchRequest) {
+        return this.serviceClient.searchAddressBatchWithResponseAsync(JsonFormat.JSON, batchRequest);
     }
 
     /**
      * **Search Address Batch API**
-     *
-     * <p>**Applies to**: S1 pricing tier.
-     *
-     * <p>The Search Address Batch API sends batches of queries to [Search Address
-     * API](https://docs.microsoft.com/rest/api/maps/search/getsearchaddress) using just a single API call. You can call
-     * Search Address Batch API to run either asynchronously (async) or synchronously (sync). The async API allows
-     * caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous Batch Request
-     * The Synchronous API is recommended for lightweight batch requests. When the service receives a request, it will
-     * respond as soon as the batch items are calculated and there will be no possibility to retrieve the results later.
-     * The Synchronous API will return a timeout error (a 408 response) if the request takes longer than 60 seconds. The
-     * number of batch items is limited to **100** for this API. ``` POST
-     * https://atlas.microsoft.com/search/address/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` ### Submit Asynchronous Batch Request The Asynchronous API is appropriate for processing big volumes of
-     * relatively complex search requests - It allows the retrieval of results in a separate call (multiple downloads
-     * are possible). - The asynchronous API is optimized for reliability and is not expected to run into a timeout. -
-     * The number of batch items is limited to **10,000** for this API.
-     *
-     * <p>When you make a request by using async request, by default the service returns a 202 response code along a
-     * redirect URL in the Location field of the response header. This URL should be checked periodically until the
-     * response data or error information is available. The asynchronous responses are stored for **14** days. The
-     * redirect URL returns a 404 response if used after the expiration period.
-     *
-     * <p>Please note that asynchronous batch request is a long-running request. Here's a typical sequence of
-     * operations: 1. Client sends a Search Address Batch `POST` request to Azure Maps 2. The server will respond with
-     * one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request has been accepted.
-     *
-     * <p>&gt; HTTP `Error` - There was an error processing your Batch request. This could either be a `400 Bad Request`
-     * or any other `Error` status code.
-     *
-     * <p>3. If the batch request was accepted successfully, the `Location` header in the response contains the URL to
-     * download the results of the batch request. This status URI looks like following:
-     *
-     * <p>``` GET
-     * https://atlas.microsoft.com/search/address/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to download the batch results.
-     *
-     * <p>### POST Body for Batch Request To send the _search address_ queries you will use a `POST` request where the
-     * request body will contain the `batchItems` array in `json` format and the `Content-Type` header will be set to
-     * `application/json`. Here's a sample request body containing 5 _search address_ queries:
-     *
-     * <p>```json { "batchItems": [ {"query": "?query=400 Broad St, Seattle, WA 98109&amp;limit=3"}, {"query":
-     * "?query=One, Microsoft Way, Redmond, WA 98052&amp;limit=3"}, {"query": "?query=350 5th Ave, New York, NY
-     * 10118&amp;limit=1"}, {"query": "?query=Pike Pl, Seattle, WA
-     * 98101&amp;lat=47.610970&amp;lon=-122.342469&amp;radius=1000"}, {"query": "?query=Champ de Mars, 5 Avenue Anatole
-     * France, 75007 Paris, France&amp;limit=1"} ] } ```
-     *
-     * <p>A _search address_ query in a batch is just a partial URL _without_ the protocol, base URL, path, api-version
-     * and subscription-key. It can accept any of the supported _search address_ [URI
-     * parameters](https://docs.microsoft.com/rest/api/maps/search/getsearchaddress#uri-parameters). The string values
-     * in the _search address_ query must be properly escaped (e.g. " character should be escaped with \\ ) and it
-     * should also be properly URL-encoded.
-     *
-     * <p>The async API allows caller to batch up to **10,000** queries and sync API up to **100** queries, and the
-     * batch should contain at least **1** query.
-     *
-     * <p>### Download Asynchronous Batch Results To download the async batch results you will issue a `GET` request to
-     * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
-     * `POST` batch request and looks like the following:
-     *
-     * <p>```
-     * https://atlas.microsoft.com/search/address/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
-     * using the _download URL_. 2. The server will respond with one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
-     * time.
-     *
-     * <p>&gt; HTTP `200 OK` - Batch request successfully processed. The response body contains all the batch results.
-     *
-     * <p>### Batch Response Model The returned data content is similar for async and sync requests. When downloading
-     * the results of an async batch request, if the batch has finished processing, the response body contains the batch
-     * response. This batch response contains a `summary` component that indicates the `totalRequests` that were part of
-     * the original batch request and `successfulRequests`i.e. queries which were executed successfully. The batch
-     * response also includes a `batchItems` array which contains a response for each and every query in the batch
-     * request. The `batchItems` will contain the results in the exact same order the original queries were sent in the
-     * batch request. Each item in `batchItems` contains `statusCode` and `response` fields. Each `response` in
-     * `batchItems` is of one of the following types:
-     *
-     * <p>-
-     * [`SearchAddressResponse`](https://docs.microsoft.com/rest/api/maps/search/getsearchaddress#SearchAddressResponse)
-     * - If the query completed successfully.
-     *
-     * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
-     *
-     * <p>Here's a sample Batch Response with 2 _successful_ and 1 _failed_ result:
-     *
-     * <p>```json { "summary": { "successfulRequests": 2, "totalRequests": 3 }, "batchItems": [ { "statusCode": 200,
-     * "response": { "summary": { "query": "one microsoft way redmond wa 98052" }, "results": [ { "position": { "lat":
-     * 47.63989, "lon": -122.12509 } } ] } }, { "statusCode": 200, "response": { "summary": { "query": "pike pl seattle
-     * wa 98101" }, "results": [ { "position": { "lat": 47.60963, "lon": -122.34215 } } ] } }, { "statusCode": 400,
-     * "response": { "error": { "code": "400 BadRequest", "message": "Bad request: one or more parameters were
-     * incorrectly specified or are mutually exclusive." } } } ] } ```.
-     *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchAddressBatchRequestBody The list of address geocoding queries/requests to process. The list can
+     * @param batchRequest The list of address geocoding queries/requests to process. The list can
      *     contain a max of 10,000 queries and must contain at least 1 query.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -1955,107 +1087,28 @@ public final class SearchAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public PollerFlux<SearchAddressBatchResult, SearchAddressBatchResult> beginSearchAddressBatch(
-            BatchRequest searchAddressBatchRequestBody) {
-        return this.serviceClient.beginSearchAddressBatchAsync(JsonFormat.JSON, searchAddressBatchRequestBody);
+            BatchRequest batchRequest) {
+        return this.serviceClient.beginSearchAddressBatchAsync(JsonFormat.JSON, batchRequest);
     }
 
     /**
      * **Search Address Batch API**
-     *
-     * <p>**Applies to**: S1 pricing tier.
-     *
-     * <p>The Search Address Batch API sends batches of queries to [Search Address
-     * API](https://docs.microsoft.com/rest/api/maps/search/getsearchaddress) using just a single API call. You can call
-     * Search Address Batch API to run either asynchronously (async) or synchronously (sync). The async API allows
-     * caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous Batch Request
-     * The Synchronous API is recommended for lightweight batch requests. When the service receives a request, it will
-     * respond as soon as the batch items are calculated and there will be no possibility to retrieve the results later.
-     * The Synchronous API will return a timeout error (a 408 response) if the request takes longer than 60 seconds. The
-     * number of batch items is limited to **100** for this API. ``` POST
-     * https://atlas.microsoft.com/search/address/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` ### Submit Asynchronous Batch Request The Asynchronous API is appropriate for processing big volumes of
-     * relatively complex search requests - It allows the retrieval of results in a separate call (multiple downloads
-     * are possible). - The asynchronous API is optimized for reliability and is not expected to run into a timeout. -
-     * The number of batch items is limited to **10,000** for this API.
-     *
-     * <p>When you make a request by using async request, by default the service returns a 202 response code along a
-     * redirect URL in the Location field of the response header. This URL should be checked periodically until the
-     * response data or error information is available. The asynchronous responses are stored for **14** days. The
-     * redirect URL returns a 404 response if used after the expiration period.
-     *
-     * <p>Please note that asynchronous batch request is a long-running request. Here's a typical sequence of
-     * operations: 1. Client sends a Search Address Batch `POST` request to Azure Maps 2. The server will respond with
-     * one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request has been accepted.
-     *
-     * <p>&gt; HTTP `Error` - There was an error processing your Batch request. This could either be a `400 Bad Request`
-     * or any other `Error` status code.
-     *
-     * <p>3. If the batch request was accepted successfully, the `Location` header in the response contains the URL to
-     * download the results of the batch request. This status URI looks like following:
-     *
-     * <p>``` GET
-     * https://atlas.microsoft.com/search/address/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to download the batch results.
-     *
-     * <p>### POST Body for Batch Request To send the _search address_ queries you will use a `POST` request where the
-     * request body will contain the `batchItems` array in `json` format and the `Content-Type` header will be set to
-     * `application/json`. Here's a sample request body containing 5 _search address_ queries:
-     *
-     * <p>```json { "batchItems": [ {"query": "?query=400 Broad St, Seattle, WA 98109&amp;limit=3"}, {"query":
-     * "?query=One, Microsoft Way, Redmond, WA 98052&amp;limit=3"}, {"query": "?query=350 5th Ave, New York, NY
-     * 10118&amp;limit=1"}, {"query": "?query=Pike Pl, Seattle, WA
-     * 98101&amp;lat=47.610970&amp;lon=-122.342469&amp;radius=1000"}, {"query": "?query=Champ de Mars, 5 Avenue Anatole
-     * France, 75007 Paris, France&amp;limit=1"} ] } ```
-     *
-     * <p>A _search address_ query in a batch is just a partial URL _without_ the protocol, base URL, path, api-version
-     * and subscription-key. It can accept any of the supported _search address_ [URI
-     * parameters](https://docs.microsoft.com/rest/api/maps/search/getsearchaddress#uri-parameters). The string values
-     * in the _search address_ query must be properly escaped (e.g. " character should be escaped with \\ ) and it
-     * should also be properly URL-encoded.
-     *
-     * <p>The async API allows caller to batch up to **10,000** queries and sync API up to **100** queries, and the
-     * batch should contain at least **1** query.
-     *
-     * <p>### Download Asynchronous Batch Results To download the async batch results you will issue a `GET` request to
-     * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
-     * `POST` batch request and looks like the following:
-     *
-     * <p>```
-     * https://atlas.microsoft.com/search/address/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
-     * using the _download URL_. 2. The server will respond with one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
-     * time.
-     *
-     * <p>&gt; HTTP `200 OK` - Batch request successfully processed. The response body contains all the batch results.
-     *
-     * <p>### Batch Response Model The returned data content is similar for async and sync requests. When downloading
-     * the results of an async batch request, if the batch has finished processing, the response body contains the batch
-     * response. This batch response contains a `summary` component that indicates the `totalRequests` that were part of
-     * the original batch request and `successfulRequests`i.e. queries which were executed successfully. The batch
-     * response also includes a `batchItems` array which contains a response for each and every query in the batch
-     * request. The `batchItems` will contain the results in the exact same order the original queries were sent in the
-     * batch request. Each item in `batchItems` contains `statusCode` and `response` fields. Each `response` in
-     * `batchItems` is of one of the following types:
-     *
-     * <p>-
-     * [`SearchAddressResponse`](https://docs.microsoft.com/rest/api/maps/search/getsearchaddress#SearchAddressResponse)
-     * - If the query completed successfully.
-     *
-     * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
-     *
-     * <p>Here's a sample Batch Response with 2 _successful_ and 1 _failed_ result:
-     *
-     * <p>```json { "summary": { "successfulRequests": 2, "totalRequests": 3 }, "batchItems": [ { "statusCode": 200,
-     * "response": { "summary": { "query": "one microsoft way redmond wa 98052" }, "results": [ { "position": { "lat":
-     * 47.63989, "lon": -122.12509 } } ] } }, { "statusCode": 200, "response": { "summary": { "query": "pike pl seattle
-     * wa 98101" }, "results": [ { "position": { "lat": 47.60963, "lon": -122.34215 } } ] } }, { "statusCode": 400,
-     * "response": { "error": { "code": "400 BadRequest", "message": "Bad request: one or more parameters were
-     * incorrectly specified or are mutually exclusive." } } } ] } ```.
-     *
+     * @param format Desired format of the response. Only `json` format is supported.
+     * @param batchRequest The list of address geocoding queries/requests to process. The list can
+     *     contain a max of 10,000 queries and must contain at least 1 query.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful Search Address Batch service call.
+     */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    PollerFlux<SearchAddressBatchResult, SearchAddressBatchResult> beginSearchAddressBatch(
+            BatchRequest batchRequest, Context context) {
+        return this.serviceClient.beginSearchAddressBatchAsync(JsonFormat.JSON, batchRequest, context);
+    }
+
+    /**
+     * **Search Address Batch API**
      * @param batchId Batch id for querying the operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -2069,101 +1122,6 @@ public final class SearchAsyncClient {
 
     /**
      * **Search Address Batch API**
-     *
-     * <p>**Applies to**: S1 pricing tier.
-     *
-     * <p>The Search Address Batch API sends batches of queries to [Search Address
-     * API](https://docs.microsoft.com/rest/api/maps/search/getsearchaddress) using just a single API call. You can call
-     * Search Address Batch API to run either asynchronously (async) or synchronously (sync). The async API allows
-     * caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous Batch Request
-     * The Synchronous API is recommended for lightweight batch requests. When the service receives a request, it will
-     * respond as soon as the batch items are calculated and there will be no possibility to retrieve the results later.
-     * The Synchronous API will return a timeout error (a 408 response) if the request takes longer than 60 seconds. The
-     * number of batch items is limited to **100** for this API. ``` POST
-     * https://atlas.microsoft.com/search/address/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` ### Submit Asynchronous Batch Request The Asynchronous API is appropriate for processing big volumes of
-     * relatively complex search requests - It allows the retrieval of results in a separate call (multiple downloads
-     * are possible). - The asynchronous API is optimized for reliability and is not expected to run into a timeout. -
-     * The number of batch items is limited to **10,000** for this API.
-     *
-     * <p>When you make a request by using async request, by default the service returns a 202 response code along a
-     * redirect URL in the Location field of the response header. This URL should be checked periodically until the
-     * response data or error information is available. The asynchronous responses are stored for **14** days. The
-     * redirect URL returns a 404 response if used after the expiration period.
-     *
-     * <p>Please note that asynchronous batch request is a long-running request. Here's a typical sequence of
-     * operations: 1. Client sends a Search Address Batch `POST` request to Azure Maps 2. The server will respond with
-     * one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request has been accepted.
-     *
-     * <p>&gt; HTTP `Error` - There was an error processing your Batch request. This could either be a `400 Bad Request`
-     * or any other `Error` status code.
-     *
-     * <p>3. If the batch request was accepted successfully, the `Location` header in the response contains the URL to
-     * download the results of the batch request. This status URI looks like following:
-     *
-     * <p>``` GET
-     * https://atlas.microsoft.com/search/address/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to download the batch results.
-     *
-     * <p>### POST Body for Batch Request To send the _search address_ queries you will use a `POST` request where the
-     * request body will contain the `batchItems` array in `json` format and the `Content-Type` header will be set to
-     * `application/json`. Here's a sample request body containing 5 _search address_ queries:
-     *
-     * <p>```json { "batchItems": [ {"query": "?query=400 Broad St, Seattle, WA 98109&amp;limit=3"}, {"query":
-     * "?query=One, Microsoft Way, Redmond, WA 98052&amp;limit=3"}, {"query": "?query=350 5th Ave, New York, NY
-     * 10118&amp;limit=1"}, {"query": "?query=Pike Pl, Seattle, WA
-     * 98101&amp;lat=47.610970&amp;lon=-122.342469&amp;radius=1000"}, {"query": "?query=Champ de Mars, 5 Avenue Anatole
-     * France, 75007 Paris, France&amp;limit=1"} ] } ```
-     *
-     * <p>A _search address_ query in a batch is just a partial URL _without_ the protocol, base URL, path, api-version
-     * and subscription-key. It can accept any of the supported _search address_ [URI
-     * parameters](https://docs.microsoft.com/rest/api/maps/search/getsearchaddress#uri-parameters). The string values
-     * in the _search address_ query must be properly escaped (e.g. " character should be escaped with \\ ) and it
-     * should also be properly URL-encoded.
-     *
-     * <p>The async API allows caller to batch up to **10,000** queries and sync API up to **100** queries, and the
-     * batch should contain at least **1** query.
-     *
-     * <p>### Download Asynchronous Batch Results To download the async batch results you will issue a `GET` request to
-     * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
-     * `POST` batch request and looks like the following:
-     *
-     * <p>```
-     * https://atlas.microsoft.com/search/address/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
-     * using the _download URL_. 2. The server will respond with one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
-     * time.
-     *
-     * <p>&gt; HTTP `200 OK` - Batch request successfully processed. The response body contains all the batch results.
-     *
-     * <p>### Batch Response Model The returned data content is similar for async and sync requests. When downloading
-     * the results of an async batch request, if the batch has finished processing, the response body contains the batch
-     * response. This batch response contains a `summary` component that indicates the `totalRequests` that were part of
-     * the original batch request and `successfulRequests`i.e. queries which were executed successfully. The batch
-     * response also includes a `batchItems` array which contains a response for each and every query in the batch
-     * request. The `batchItems` will contain the results in the exact same order the original queries were sent in the
-     * batch request. Each item in `batchItems` contains `statusCode` and `response` fields. Each `response` in
-     * `batchItems` is of one of the following types:
-     *
-     * <p>-
-     * [`SearchAddressResponse`](https://docs.microsoft.com/rest/api/maps/search/getsearchaddress#SearchAddressResponse)
-     * - If the query completed successfully.
-     *
-     * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
-     *
-     * <p>Here's a sample Batch Response with 2 _successful_ and 1 _failed_ result:
-     *
-     * <p>```json { "summary": { "successfulRequests": 2, "totalRequests": 3 }, "batchItems": [ { "statusCode": 200,
-     * "response": { "summary": { "query": "one microsoft way redmond wa 98052" }, "results": [ { "position": { "lat":
-     * 47.63989, "lon": -122.12509 } } ] } }, { "statusCode": 200, "response": { "summary": { "query": "pike pl seattle
-     * wa 98101" }, "results": [ { "position": { "lat": 47.60963, "lon": -122.34215 } } ] } }, { "statusCode": 400,
-     * "response": { "error": { "code": "400 BadRequest", "message": "Bad request: one or more parameters were
-     * incorrectly specified or are mutually exclusive." } } } ] } ```.
-     *
      * @param batchId Batch id for querying the operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -2176,104 +1134,24 @@ public final class SearchAsyncClient {
         return this.serviceClient.beginGetSearchAddressBatchAsync(batchId);
     }
 
+        /**
+     * **Search Address Batch API**
+     * @param batchId Batch id for querying the operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful Search Address Batch service call.
+     */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    PollerFlux<SearchAddressBatchResult, SearchAddressBatchResult> beginGetSearchAddressBatch(
+            String batchId, Context context) {
+        return this.serviceClient.beginGetSearchAddressBatchAsync(batchId, context);
+    }
+
     /**
      * **Search Address Reverse Batch API**
-     *
-     * <p>**Applies to**: S1 pricing tier.
-     *
-     * <p>The Search Address Batch API sends batches of queries to [Search Address Reverse
-     * API](https://docs.microsoft.com/rest/api/maps/search/getsearchaddressreverse) using just a single API call. You
-     * can call Search Address Reverse Batch API to run either asynchronously (async) or synchronously (sync). The async
-     * API allows caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous
-     * Batch Request The Synchronous API is recommended for lightweight batch requests. When the service receives a
-     * request, it will respond as soon as the batch items are calculated and there will be no possibility to retrieve
-     * the results later. The Synchronous API will return a timeout error (a 408 response) if the request takes longer
-     * than 60 seconds. The number of batch items is limited to **100** for this API. ``` POST
-     * https://atlas.microsoft.com/search/address/reverse/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` ### Submit Asynchronous Batch Request The Asynchronous API is appropriate for processing big volumes of
-     * relatively complex search requests - It allows the retrieval of results in a separate call (multiple downloads
-     * are possible). - The asynchronous API is optimized for reliability and is not expected to run into a timeout. -
-     * The number of batch items is limited to **10,000** for this API.
-     *
-     * <p>When you make a request by using async request, by default the service returns a 202 response code along a
-     * redirect URL in the Location field of the response header. This URL should be checked periodically until the
-     * response data or error information is available. The asynchronous responses are stored for **14** days. The
-     * redirect URL returns a 404 response if used after the expiration period.
-     *
-     * <p>Please note that asynchronous batch request is a long-running request. Here's a typical sequence of
-     * operations: 1. Client sends a Search Address Batch `POST` request to Azure Maps 2. The server will respond with
-     * one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request has been accepted.
-     *
-     * <p>&gt; HTTP `Error` - There was an error processing your Batch request. This could either be a `400 Bad Request`
-     * or any other `Error` status code.
-     *
-     * <p>3. If the batch request was accepted successfully, the `Location` header in the response contains the URL to
-     * download the results of the batch request. This status URI looks like following:
-     *
-     * <p>``` GET
-     * https://atlas.microsoft.com/search/address/reverse/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to download the batch results.
-     *
-     * <p>### POST Body for Batch Request To send the _search address reverse_ queries you will use a `POST` request
-     * where the request body will contain the `batchItems` array in `json` format and the `Content-Type` header will be
-     * set to `application/json`. Here's a sample request body containing 5 _search address reverse_ queries:
-     *
-     * <p>```json { "batchItems": [ {"query": "?query=48.858561,2.294911"}, {"query":
-     * "?query=47.639765,-122.127896&amp;radius=5000&amp;limit=2"}, {"query": "?query=47.621028,-122.348170"}, {"query":
-     * "?query=43.722990,10.396695"}, {"query": "?query=40.750958,-73.982336"} ] } ```
-     *
-     * <p>A _search address reverse_ query in a batch is just a partial URL _without_ the protocol, base URL, path,
-     * api-version and subscription-key. It can accept any of the supported _search address reverse_ [URI
-     * parameters](https://docs.microsoft.com/rest/api/maps/search/getsearchaddressreverse#uri-parameters). The string
-     * values in the _search address reverse_ query must be properly escaped (e.g. " character should be escaped with \\
-     * ) and it should also be properly URL-encoded.
-     *
-     * <p>The async API allows caller to batch up to **10,000** queries and sync API up to **100** queries, and the
-     * batch should contain at least **1** query.
-     *
-     * <p>### Download Asynchronous Batch Results To download the async batch results you will issue a `GET` request to
-     * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
-     * `POST` batch request and looks like the following:
-     *
-     * <p>```
-     * https://atlas.microsoft.com/search/address/reverse/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
-     * using the _download URL_. 2. The server will respond with one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
-     * time.
-     *
-     * <p>&gt; HTTP `200 OK` - Batch request successfully processed. The response body contains all the batch results.
-     *
-     * <p>### Batch Response Model The returned data content is similar for async and sync requests. When downloading
-     * the results of an async batch request, if the batch has finished processing, the response body contains the batch
-     * response. This batch response contains a `summary` component that indicates the `totalRequests` that were part of
-     * the original batch request and `successfulRequests`i.e. queries which were executed successfully. The batch
-     * response also includes a `batchItems` array which contains a response for each and every query in the batch
-     * request. The `batchItems` will contain the results in the exact same order the original queries were sent in the
-     * batch request. Each item in `batchItems` contains `statusCode` and `response` fields. Each `response` in
-     * `batchItems` is of one of the following types:
-     *
-     * <p>-
-     * [`SearchAddressReverseResponse`](https://docs.microsoft.com/rest/api/maps/search/getsearchaddressreverse#searchaddressreverseresponse)
-     * - If the query completed successfully.
-     *
-     * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
-     *
-     * <p>Here's a sample Batch Response with 2 _successful_ and 1 _failed_ result:
-     *
-     * <p>```json { "summary": { "successfulRequests": 2, "totalRequests": 3 }, "batchItems": [ { "statusCode": 200,
-     * "response": { "summary": { "queryTime": 11 }, "addresses": [ { "address": { "country": "France",
-     * "freeformAddress": "Avenue Anatole France, 75007 Paris" }, "position": "48.858490,2.294820" } ] } }, {
-     * "statusCode": 200, "response": { "summary": { "queryTime": 1 }, "addresses": [ { "address": { "country": "United
-     * States of America", "freeformAddress": "157th Pl NE, Redmond WA 98052" }, "position": "47.640470,-122.129430" } ]
-     * } }, { "statusCode": 400, "response": { "error": { "code": "400 BadRequest", "message": "Bad request: one or more
-     * parameters were incorrectly specified or are mutually exclusive." } } } ] } ```.
-     *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchAddressReverseBatchRequestBody The list of reverse geocoding queries/requests to process. The list
+     * @param batchRequest The list of reverse geocoding queries/requests to process. The list
      *     can contain a max of 10,000 queries and must contain at least 1 query.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -2282,109 +1160,32 @@ public final class SearchAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<ReverseSearchAddressBatchProcessResult>> reverseSearchAddressBatchSyncWithResponse(
-            BatchRequest searchAddressReverseBatchRequestBody) {
+            BatchRequest batchRequest) {
         return this.serviceClient.reverseSearchAddressBatchSyncWithResponseAsync(
-                JsonFormat.JSON, searchAddressReverseBatchRequestBody);
+                JsonFormat.JSON, batchRequest);
     }
 
     /**
      * **Search Address Reverse Batch API**
-     *
-     * <p>**Applies to**: S1 pricing tier.
-     *
-     * <p>The Search Address Batch API sends batches of queries to [Search Address Reverse
-     * API](https://docs.microsoft.com/rest/api/maps/search/getsearchaddressreverse) using just a single API call. You
-     * can call Search Address Reverse Batch API to run either asynchronously (async) or synchronously (sync). The async
-     * API allows caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous
-     * Batch Request The Synchronous API is recommended for lightweight batch requests. When the service receives a
-     * request, it will respond as soon as the batch items are calculated and there will be no possibility to retrieve
-     * the results later. The Synchronous API will return a timeout error (a 408 response) if the request takes longer
-     * than 60 seconds. The number of batch items is limited to **100** for this API. ``` POST
-     * https://atlas.microsoft.com/search/address/reverse/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` ### Submit Asynchronous Batch Request The Asynchronous API is appropriate for processing big volumes of
-     * relatively complex search requests - It allows the retrieval of results in a separate call (multiple downloads
-     * are possible). - The asynchronous API is optimized for reliability and is not expected to run into a timeout. -
-     * The number of batch items is limited to **10,000** for this API.
-     *
-     * <p>When you make a request by using async request, by default the service returns a 202 response code along a
-     * redirect URL in the Location field of the response header. This URL should be checked periodically until the
-     * response data or error information is available. The asynchronous responses are stored for **14** days. The
-     * redirect URL returns a 404 response if used after the expiration period.
-     *
-     * <p>Please note that asynchronous batch request is a long-running request. Here's a typical sequence of
-     * operations: 1. Client sends a Search Address Batch `POST` request to Azure Maps 2. The server will respond with
-     * one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request has been accepted.
-     *
-     * <p>&gt; HTTP `Error` - There was an error processing your Batch request. This could either be a `400 Bad Request`
-     * or any other `Error` status code.
-     *
-     * <p>3. If the batch request was accepted successfully, the `Location` header in the response contains the URL to
-     * download the results of the batch request. This status URI looks like following:
-     *
-     * <p>``` GET
-     * https://atlas.microsoft.com/search/address/reverse/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to download the batch results.
-     *
-     * <p>### POST Body for Batch Request To send the _search address reverse_ queries you will use a `POST` request
-     * where the request body will contain the `batchItems` array in `json` format and the `Content-Type` header will be
-     * set to `application/json`. Here's a sample request body containing 5 _search address reverse_ queries:
-     *
-     * <p>```json { "batchItems": [ {"query": "?query=48.858561,2.294911"}, {"query":
-     * "?query=47.639765,-122.127896&amp;radius=5000&amp;limit=2"}, {"query": "?query=47.621028,-122.348170"}, {"query":
-     * "?query=43.722990,10.396695"}, {"query": "?query=40.750958,-73.982336"} ] } ```
-     *
-     * <p>A _search address reverse_ query in a batch is just a partial URL _without_ the protocol, base URL, path,
-     * api-version and subscription-key. It can accept any of the supported _search address reverse_ [URI
-     * parameters](https://docs.microsoft.com/rest/api/maps/search/getsearchaddressreverse#uri-parameters). The string
-     * values in the _search address reverse_ query must be properly escaped (e.g. " character should be escaped with \\
-     * ) and it should also be properly URL-encoded.
-     *
-     * <p>The async API allows caller to batch up to **10,000** queries and sync API up to **100** queries, and the
-     * batch should contain at least **1** query.
-     *
-     * <p>### Download Asynchronous Batch Results To download the async batch results you will issue a `GET` request to
-     * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
-     * `POST` batch request and looks like the following:
-     *
-     * <p>```
-     * https://atlas.microsoft.com/search/address/reverse/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
-     * using the _download URL_. 2. The server will respond with one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
-     * time.
-     *
-     * <p>&gt; HTTP `200 OK` - Batch request successfully processed. The response body contains all the batch results.
-     *
-     * <p>### Batch Response Model The returned data content is similar for async and sync requests. When downloading
-     * the results of an async batch request, if the batch has finished processing, the response body contains the batch
-     * response. This batch response contains a `summary` component that indicates the `totalRequests` that were part of
-     * the original batch request and `successfulRequests`i.e. queries which were executed successfully. The batch
-     * response also includes a `batchItems` array which contains a response for each and every query in the batch
-     * request. The `batchItems` will contain the results in the exact same order the original queries were sent in the
-     * batch request. Each item in `batchItems` contains `statusCode` and `response` fields. Each `response` in
-     * `batchItems` is of one of the following types:
-     *
-     * <p>-
-     * [`SearchAddressReverseResponse`](https://docs.microsoft.com/rest/api/maps/search/getsearchaddressreverse#searchaddressreverseresponse)
-     * - If the query completed successfully.
-     *
-     * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
-     *
-     * <p>Here's a sample Batch Response with 2 _successful_ and 1 _failed_ result:
-     *
-     * <p>```json { "summary": { "successfulRequests": 2, "totalRequests": 3 }, "batchItems": [ { "statusCode": 200,
-     * "response": { "summary": { "queryTime": 11 }, "addresses": [ { "address": { "country": "France",
-     * "freeformAddress": "Avenue Anatole France, 75007 Paris" }, "position": "48.858490,2.294820" } ] } }, {
-     * "statusCode": 200, "response": { "summary": { "queryTime": 1 }, "addresses": [ { "address": { "country": "United
-     * States of America", "freeformAddress": "157th Pl NE, Redmond WA 98052" }, "position": "47.640470,-122.129430" } ]
-     * } }, { "statusCode": 400, "response": { "error": { "code": "400 BadRequest", "message": "Bad request: one or more
-     * parameters were incorrectly specified or are mutually exclusive." } } } ] } ```.
-     *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchAddressReverseBatchRequestBody The list of reverse geocoding queries/requests to process. The list
+     * @param batchRequest The list of reverse geocoding queries/requests to process. The list
+     *     can contain a max of 10,000 queries and must contain at least 1 query.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful Search Address Reverse Batch service call.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    Mono<Response<ReverseSearchAddressBatchProcessResult>> reverseSearchAddressBatchSyncWithResponse(
+            BatchRequest batchRequest, Context context) {
+        return this.serviceClient.reverseSearchAddressBatchSyncWithResponseAsync(
+                JsonFormat.JSON, batchRequest, context);
+    }
+
+    /**
+     * **Search Address Reverse Batch API**
+     * @param format Desired format of the response. Only `json` format is supported.
+     * @param batchRequest The list of reverse geocoding queries/requests to process. The list
      *     can contain a max of 10,000 queries and must contain at least 1 query.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -2393,109 +1194,16 @@ public final class SearchAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<ReverseSearchAddressBatchProcessResult> reverseSearchAddressBatchSync(
-            BatchRequest searchAddressReverseBatchRequestBody) {
+            BatchRequest batchRequest) {
         return this.serviceClient.reverseSearchAddressBatchSyncAsync(JsonFormat.JSON,
-            searchAddressReverseBatchRequestBody);
+            batchRequest);
     }
 
     /**
      * **Search Address Reverse Batch API**
      *
-     * <p>**Applies to**: S1 pricing tier.
-     *
-     * <p>The Search Address Batch API sends batches of queries to [Search Address Reverse
-     * API](https://docs.microsoft.com/rest/api/maps/search/getsearchaddressreverse) using just a single API call. You
-     * can call Search Address Reverse Batch API to run either asynchronously (async) or synchronously (sync). The async
-     * API allows caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous
-     * Batch Request The Synchronous API is recommended for lightweight batch requests. When the service receives a
-     * request, it will respond as soon as the batch items are calculated and there will be no possibility to retrieve
-     * the results later. The Synchronous API will return a timeout error (a 408 response) if the request takes longer
-     * than 60 seconds. The number of batch items is limited to **100** for this API. ``` POST
-     * https://atlas.microsoft.com/search/address/reverse/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` ### Submit Asynchronous Batch Request The Asynchronous API is appropriate for processing big volumes of
-     * relatively complex search requests - It allows the retrieval of results in a separate call (multiple downloads
-     * are possible). - The asynchronous API is optimized for reliability and is not expected to run into a timeout. -
-     * The number of batch items is limited to **10,000** for this API.
-     *
-     * <p>When you make a request by using async request, by default the service returns a 202 response code along a
-     * redirect URL in the Location field of the response header. This URL should be checked periodically until the
-     * response data or error information is available. The asynchronous responses are stored for **14** days. The
-     * redirect URL returns a 404 response if used after the expiration period.
-     *
-     * <p>Please note that asynchronous batch request is a long-running request. Here's a typical sequence of
-     * operations: 1. Client sends a Search Address Batch `POST` request to Azure Maps 2. The server will respond with
-     * one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request has been accepted.
-     *
-     * <p>&gt; HTTP `Error` - There was an error processing your Batch request. This could either be a `400 Bad Request`
-     * or any other `Error` status code.
-     *
-     * <p>3. If the batch request was accepted successfully, the `Location` header in the response contains the URL to
-     * download the results of the batch request. This status URI looks like following:
-     *
-     * <p>``` GET
-     * https://atlas.microsoft.com/search/address/reverse/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to download the batch results.
-     *
-     * <p>### POST Body for Batch Request To send the _search address reverse_ queries you will use a `POST` request
-     * where the request body will contain the `batchItems` array in `json` format and the `Content-Type` header will be
-     * set to `application/json`. Here's a sample request body containing 5 _search address reverse_ queries:
-     *
-     * <p>```json { "batchItems": [ {"query": "?query=48.858561,2.294911"}, {"query":
-     * "?query=47.639765,-122.127896&amp;radius=5000&amp;limit=2"}, {"query": "?query=47.621028,-122.348170"}, {"query":
-     * "?query=43.722990,10.396695"}, {"query": "?query=40.750958,-73.982336"} ] } ```
-     *
-     * <p>A _search address reverse_ query in a batch is just a partial URL _without_ the protocol, base URL, path,
-     * api-version and subscription-key. It can accept any of the supported _search address reverse_ [URI
-     * parameters](https://docs.microsoft.com/rest/api/maps/search/getsearchaddressreverse#uri-parameters). The string
-     * values in the _search address reverse_ query must be properly escaped (e.g. " character should be escaped with \\
-     * ) and it should also be properly URL-encoded.
-     *
-     * <p>The async API allows caller to batch up to **10,000** queries and sync API up to **100** queries, and the
-     * batch should contain at least **1** query.
-     *
-     * <p>### Download Asynchronous Batch Results To download the async batch results you will issue a `GET` request to
-     * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
-     * `POST` batch request and looks like the following:
-     *
-     * <p>```
-     * https://atlas.microsoft.com/search/address/reverse/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
-     * using the _download URL_. 2. The server will respond with one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
-     * time.
-     *
-     * <p>&gt; HTTP `200 OK` - Batch request successfully processed. The response body contains all the batch results.
-     *
-     * <p>### Batch Response Model The returned data content is similar for async and sync requests. When downloading
-     * the results of an async batch request, if the batch has finished processing, the response body contains the batch
-     * response. This batch response contains a `summary` component that indicates the `totalRequests` that were part of
-     * the original batch request and `successfulRequests`i.e. queries which were executed successfully. The batch
-     * response also includes a `batchItems` array which contains a response for each and every query in the batch
-     * request. The `batchItems` will contain the results in the exact same order the original queries were sent in the
-     * batch request. Each item in `batchItems` contains `statusCode` and `response` fields. Each `response` in
-     * `batchItems` is of one of the following types:
-     *
-     * <p>-
-     * [`SearchAddressReverseResponse`](https://docs.microsoft.com/rest/api/maps/search/getsearchaddressreverse#searchaddressreverseresponse)
-     * - If the query completed successfully.
-     *
-     * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
-     *
-     * <p>Here's a sample Batch Response with 2 _successful_ and 1 _failed_ result:
-     *
-     * <p>```json { "summary": { "successfulRequests": 2, "totalRequests": 3 }, "batchItems": [ { "statusCode": 200,
-     * "response": { "summary": { "queryTime": 11 }, "addresses": [ { "address": { "country": "France",
-     * "freeformAddress": "Avenue Anatole France, 75007 Paris" }, "position": "48.858490,2.294820" } ] } }, {
-     * "statusCode": 200, "response": { "summary": { "queryTime": 1 }, "addresses": [ { "address": { "country": "United
-     * States of America", "freeformAddress": "157th Pl NE, Redmond WA 98052" }, "position": "47.640470,-122.129430" } ]
-     * } }, { "statusCode": 400, "response": { "error": { "code": "400 BadRequest", "message": "Bad request: one or more
-     * parameters were incorrectly specified or are mutually exclusive." } } } ] } ```.
-     *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchAddressReverseBatchRequestBody The list of reverse geocoding queries/requests to process. The list
+     * @param batchRequest The list of reverse geocoding queries/requests to process. The list
      *     can contain a max of 10,000 queries and must contain at least 1 query.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -2504,109 +1212,15 @@ public final class SearchAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<SearchesReverseSearchAddressBatchResponse> reverseSearchAddressBatchWithResponse(
-            BatchRequest searchAddressReverseBatchRequestBody) {
+            BatchRequest batchRequest) {
         return this.serviceClient.reverseSearchAddressBatchWithResponseAsync(
-                JsonFormat.JSON, searchAddressReverseBatchRequestBody);
+                JsonFormat.JSON, batchRequest);
     }
 
     /**
      * **Search Address Reverse Batch API**
-     *
-     * <p>**Applies to**: S1 pricing tier.
-     *
-     * <p>The Search Address Batch API sends batches of queries to [Search Address Reverse
-     * API](https://docs.microsoft.com/rest/api/maps/search/getsearchaddressreverse) using just a single API call. You
-     * can call Search Address Reverse Batch API to run either asynchronously (async) or synchronously (sync). The async
-     * API allows caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous
-     * Batch Request The Synchronous API is recommended for lightweight batch requests. When the service receives a
-     * request, it will respond as soon as the batch items are calculated and there will be no possibility to retrieve
-     * the results later. The Synchronous API will return a timeout error (a 408 response) if the request takes longer
-     * than 60 seconds. The number of batch items is limited to **100** for this API. ``` POST
-     * https://atlas.microsoft.com/search/address/reverse/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` ### Submit Asynchronous Batch Request The Asynchronous API is appropriate for processing big volumes of
-     * relatively complex search requests - It allows the retrieval of results in a separate call (multiple downloads
-     * are possible). - The asynchronous API is optimized for reliability and is not expected to run into a timeout. -
-     * The number of batch items is limited to **10,000** for this API.
-     *
-     * <p>When you make a request by using async request, by default the service returns a 202 response code along a
-     * redirect URL in the Location field of the response header. This URL should be checked periodically until the
-     * response data or error information is available. The asynchronous responses are stored for **14** days. The
-     * redirect URL returns a 404 response if used after the expiration period.
-     *
-     * <p>Please note that asynchronous batch request is a long-running request. Here's a typical sequence of
-     * operations: 1. Client sends a Search Address Batch `POST` request to Azure Maps 2. The server will respond with
-     * one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request has been accepted.
-     *
-     * <p>&gt; HTTP `Error` - There was an error processing your Batch request. This could either be a `400 Bad Request`
-     * or any other `Error` status code.
-     *
-     * <p>3. If the batch request was accepted successfully, the `Location` header in the response contains the URL to
-     * download the results of the batch request. This status URI looks like following:
-     *
-     * <p>``` GET
-     * https://atlas.microsoft.com/search/address/reverse/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to download the batch results.
-     *
-     * <p>### POST Body for Batch Request To send the _search address reverse_ queries you will use a `POST` request
-     * where the request body will contain the `batchItems` array in `json` format and the `Content-Type` header will be
-     * set to `application/json`. Here's a sample request body containing 5 _search address reverse_ queries:
-     *
-     * <p>```json { "batchItems": [ {"query": "?query=48.858561,2.294911"}, {"query":
-     * "?query=47.639765,-122.127896&amp;radius=5000&amp;limit=2"}, {"query": "?query=47.621028,-122.348170"}, {"query":
-     * "?query=43.722990,10.396695"}, {"query": "?query=40.750958,-73.982336"} ] } ```
-     *
-     * <p>A _search address reverse_ query in a batch is just a partial URL _without_ the protocol, base URL, path,
-     * api-version and subscription-key. It can accept any of the supported _search address reverse_ [URI
-     * parameters](https://docs.microsoft.com/rest/api/maps/search/getsearchaddressreverse#uri-parameters). The string
-     * values in the _search address reverse_ query must be properly escaped (e.g. " character should be escaped with \\
-     * ) and it should also be properly URL-encoded.
-     *
-     * <p>The async API allows caller to batch up to **10,000** queries and sync API up to **100** queries, and the
-     * batch should contain at least **1** query.
-     *
-     * <p>### Download Asynchronous Batch Results To download the async batch results you will issue a `GET` request to
-     * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
-     * `POST` batch request and looks like the following:
-     *
-     * <p>```
-     * https://atlas.microsoft.com/search/address/reverse/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
-     * using the _download URL_. 2. The server will respond with one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
-     * time.
-     *
-     * <p>&gt; HTTP `200 OK` - Batch request successfully processed. The response body contains all the batch results.
-     *
-     * <p>### Batch Response Model The returned data content is similar for async and sync requests. When downloading
-     * the results of an async batch request, if the batch has finished processing, the response body contains the batch
-     * response. This batch response contains a `summary` component that indicates the `totalRequests` that were part of
-     * the original batch request and `successfulRequests`i.e. queries which were executed successfully. The batch
-     * response also includes a `batchItems` array which contains a response for each and every query in the batch
-     * request. The `batchItems` will contain the results in the exact same order the original queries were sent in the
-     * batch request. Each item in `batchItems` contains `statusCode` and `response` fields. Each `response` in
-     * `batchItems` is of one of the following types:
-     *
-     * <p>-
-     * [`SearchAddressReverseResponse`](https://docs.microsoft.com/rest/api/maps/search/getsearchaddressreverse#searchaddressreverseresponse)
-     * - If the query completed successfully.
-     *
-     * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
-     *
-     * <p>Here's a sample Batch Response with 2 _successful_ and 1 _failed_ result:
-     *
-     * <p>```json { "summary": { "successfulRequests": 2, "totalRequests": 3 }, "batchItems": [ { "statusCode": 200,
-     * "response": { "summary": { "queryTime": 11 }, "addresses": [ { "address": { "country": "France",
-     * "freeformAddress": "Avenue Anatole France, 75007 Paris" }, "position": "48.858490,2.294820" } ] } }, {
-     * "statusCode": 200, "response": { "summary": { "queryTime": 1 }, "addresses": [ { "address": { "country": "United
-     * States of America", "freeformAddress": "157th Pl NE, Redmond WA 98052" }, "position": "47.640470,-122.129430" } ]
-     * } }, { "statusCode": 400, "response": { "error": { "code": "400 BadRequest", "message": "Bad request: one or more
-     * parameters were incorrectly specified or are mutually exclusive." } } } ] } ```.
-     *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchAddressReverseBatchRequestBody The list of reverse geocoding queries/requests to process. The list
+     * @param batchRequest The list of reverse geocoding queries/requests to process. The list
      *     can contain a max of 10,000 queries and must contain at least 1 query.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -2615,107 +1229,30 @@ public final class SearchAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public PollerFlux<ReverseSearchAddressBatchProcessResult, ReverseSearchAddressBatchProcessResult>
-            beginReverseSearchAddressBatch(BatchRequest searchAddressReverseBatchRequestBody) {
+            beginReverseSearchAddressBatch(BatchRequest batchRequest) {
         return this.serviceClient.beginReverseSearchAddressBatchAsync(JsonFormat.JSON,
-            searchAddressReverseBatchRequestBody);
+            batchRequest);
     }
 
     /**
      * **Search Address Reverse Batch API**
-     *
-     * <p>**Applies to**: S1 pricing tier.
-     *
-     * <p>The Search Address Batch API sends batches of queries to [Search Address Reverse
-     * API](https://docs.microsoft.com/rest/api/maps/search/getsearchaddressreverse) using just a single API call. You
-     * can call Search Address Reverse Batch API to run either asynchronously (async) or synchronously (sync). The async
-     * API allows caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous
-     * Batch Request The Synchronous API is recommended for lightweight batch requests. When the service receives a
-     * request, it will respond as soon as the batch items are calculated and there will be no possibility to retrieve
-     * the results later. The Synchronous API will return a timeout error (a 408 response) if the request takes longer
-     * than 60 seconds. The number of batch items is limited to **100** for this API. ``` POST
-     * https://atlas.microsoft.com/search/address/reverse/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` ### Submit Asynchronous Batch Request The Asynchronous API is appropriate for processing big volumes of
-     * relatively complex search requests - It allows the retrieval of results in a separate call (multiple downloads
-     * are possible). - The asynchronous API is optimized for reliability and is not expected to run into a timeout. -
-     * The number of batch items is limited to **10,000** for this API.
-     *
-     * <p>When you make a request by using async request, by default the service returns a 202 response code along a
-     * redirect URL in the Location field of the response header. This URL should be checked periodically until the
-     * response data or error information is available. The asynchronous responses are stored for **14** days. The
-     * redirect URL returns a 404 response if used after the expiration period.
-     *
-     * <p>Please note that asynchronous batch request is a long-running request. Here's a typical sequence of
-     * operations: 1. Client sends a Search Address Batch `POST` request to Azure Maps 2. The server will respond with
-     * one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request has been accepted.
-     *
-     * <p>&gt; HTTP `Error` - There was an error processing your Batch request. This could either be a `400 Bad Request`
-     * or any other `Error` status code.
-     *
-     * <p>3. If the batch request was accepted successfully, the `Location` header in the response contains the URL to
-     * download the results of the batch request. This status URI looks like following:
-     *
-     * <p>``` GET
-     * https://atlas.microsoft.com/search/address/reverse/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to download the batch results.
-     *
-     * <p>### POST Body for Batch Request To send the _search address reverse_ queries you will use a `POST` request
-     * where the request body will contain the `batchItems` array in `json` format and the `Content-Type` header will be
-     * set to `application/json`. Here's a sample request body containing 5 _search address reverse_ queries:
-     *
-     * <p>```json { "batchItems": [ {"query": "?query=48.858561,2.294911"}, {"query":
-     * "?query=47.639765,-122.127896&amp;radius=5000&amp;limit=2"}, {"query": "?query=47.621028,-122.348170"}, {"query":
-     * "?query=43.722990,10.396695"}, {"query": "?query=40.750958,-73.982336"} ] } ```
-     *
-     * <p>A _search address reverse_ query in a batch is just a partial URL _without_ the protocol, base URL, path,
-     * api-version and subscription-key. It can accept any of the supported _search address reverse_ [URI
-     * parameters](https://docs.microsoft.com/rest/api/maps/search/getsearchaddressreverse#uri-parameters). The string
-     * values in the _search address reverse_ query must be properly escaped (e.g. " character should be escaped with \\
-     * ) and it should also be properly URL-encoded.
-     *
-     * <p>The async API allows caller to batch up to **10,000** queries and sync API up to **100** queries, and the
-     * batch should contain at least **1** query.
-     *
-     * <p>### Download Asynchronous Batch Results To download the async batch results you will issue a `GET` request to
-     * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
-     * `POST` batch request and looks like the following:
-     *
-     * <p>```
-     * https://atlas.microsoft.com/search/address/reverse/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
-     * using the _download URL_. 2. The server will respond with one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
-     * time.
-     *
-     * <p>&gt; HTTP `200 OK` - Batch request successfully processed. The response body contains all the batch results.
-     *
-     * <p>### Batch Response Model The returned data content is similar for async and sync requests. When downloading
-     * the results of an async batch request, if the batch has finished processing, the response body contains the batch
-     * response. This batch response contains a `summary` component that indicates the `totalRequests` that were part of
-     * the original batch request and `successfulRequests`i.e. queries which were executed successfully. The batch
-     * response also includes a `batchItems` array which contains a response for each and every query in the batch
-     * request. The `batchItems` will contain the results in the exact same order the original queries were sent in the
-     * batch request. Each item in `batchItems` contains `statusCode` and `response` fields. Each `response` in
-     * `batchItems` is of one of the following types:
-     *
-     * <p>-
-     * [`SearchAddressReverseResponse`](https://docs.microsoft.com/rest/api/maps/search/getsearchaddressreverse#searchaddressreverseresponse)
-     * - If the query completed successfully.
-     *
-     * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
-     *
-     * <p>Here's a sample Batch Response with 2 _successful_ and 1 _failed_ result:
-     *
-     * <p>```json { "summary": { "successfulRequests": 2, "totalRequests": 3 }, "batchItems": [ { "statusCode": 200,
-     * "response": { "summary": { "queryTime": 11 }, "addresses": [ { "address": { "country": "France",
-     * "freeformAddress": "Avenue Anatole France, 75007 Paris" }, "position": "48.858490,2.294820" } ] } }, {
-     * "statusCode": 200, "response": { "summary": { "queryTime": 1 }, "addresses": [ { "address": { "country": "United
-     * States of America", "freeformAddress": "157th Pl NE, Redmond WA 98052" }, "position": "47.640470,-122.129430" } ]
-     * } }, { "statusCode": 400, "response": { "error": { "code": "400 BadRequest", "message": "Bad request: one or more
-     * parameters were incorrectly specified or are mutually exclusive." } } } ] } ```.
-     *
+     * @param format Desired format of the response. Only `json` format is supported.
+     * @param batchRequest The list of reverse geocoding queries/requests to process. The list
+     *     can contain a max of 10,000 queries and must contain at least 1 query.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful Search Address Reverse Batch service call.
+     */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    PollerFlux<ReverseSearchAddressBatchProcessResult, ReverseSearchAddressBatchProcessResult>
+            beginReverseSearchAddressBatch(BatchRequest batchRequest, Context context) {
+        return this.serviceClient.beginReverseSearchAddressBatchAsync(JsonFormat.JSON,
+            batchRequest, context);
+    }
+
+    /**
+     * **Search Address Reverse Batch API**
      * @param batchId Batch id for querying the operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -2724,106 +1261,12 @@ public final class SearchAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<SearchesGetReverseSearchAddressBatchResponse> getReverseSearchAddressBatchWithResponse(
-                String batchId) {
+            String batchId) {
         return this.serviceClient.getReverseSearchAddressBatchWithResponseAsync(batchId);
     }
 
     /**
      * **Search Address Reverse Batch API**
-     *
-     * <p>**Applies to**: S1 pricing tier.
-     *
-     * <p>The Search Address Batch API sends batches of queries to [Search Address Reverse
-     * API](https://docs.microsoft.com/rest/api/maps/search/getsearchaddressreverse) using just a single API call. You
-     * can call Search Address Reverse Batch API to run either asynchronously (async) or synchronously (sync). The async
-     * API allows caller to batch up to **10,000** queries and sync API up to **100** queries. ### Submit Synchronous
-     * Batch Request The Synchronous API is recommended for lightweight batch requests. When the service receives a
-     * request, it will respond as soon as the batch items are calculated and there will be no possibility to retrieve
-     * the results later. The Synchronous API will return a timeout error (a 408 response) if the request takes longer
-     * than 60 seconds. The number of batch items is limited to **100** for this API. ``` POST
-     * https://atlas.microsoft.com/search/address/reverse/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` ### Submit Asynchronous Batch Request The Asynchronous API is appropriate for processing big volumes of
-     * relatively complex search requests - It allows the retrieval of results in a separate call (multiple downloads
-     * are possible). - The asynchronous API is optimized for reliability and is not expected to run into a timeout. -
-     * The number of batch items is limited to **10,000** for this API.
-     *
-     * <p>When you make a request by using async request, by default the service returns a 202 response code along a
-     * redirect URL in the Location field of the response header. This URL should be checked periodically until the
-     * response data or error information is available. The asynchronous responses are stored for **14** days. The
-     * redirect URL returns a 404 response if used after the expiration period.
-     *
-     * <p>Please note that asynchronous batch request is a long-running request. Here's a typical sequence of
-     * operations: 1. Client sends a Search Address Batch `POST` request to Azure Maps 2. The server will respond with
-     * one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request has been accepted.
-     *
-     * <p>&gt; HTTP `Error` - There was an error processing your Batch request. This could either be a `400 Bad Request`
-     * or any other `Error` status code.
-     *
-     * <p>3. If the batch request was accepted successfully, the `Location` header in the response contains the URL to
-     * download the results of the batch request. This status URI looks like following:
-     *
-     * <p>``` GET
-     * https://atlas.microsoft.com/search/address/reverse/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to download the batch results.
-     *
-     * <p>### POST Body for Batch Request To send the _search address reverse_ queries you will use a `POST` request
-     * where the request body will contain the `batchItems` array in `json` format and the `Content-Type` header will be
-     * set to `application/json`. Here's a sample request body containing 5 _search address reverse_ queries:
-     *
-     * <p>```json { "batchItems": [ {"query": "?query=48.858561,2.294911"}, {"query":
-     * "?query=47.639765,-122.127896&amp;radius=5000&amp;limit=2"}, {"query": "?query=47.621028,-122.348170"}, {"query":
-     * "?query=43.722990,10.396695"}, {"query": "?query=40.750958,-73.982336"} ] } ```
-     *
-     * <p>A _search address reverse_ query in a batch is just a partial URL _without_ the protocol, base URL, path,
-     * api-version and subscription-key. It can accept any of the supported _search address reverse_ [URI
-     * parameters](https://docs.microsoft.com/rest/api/maps/search/getsearchaddressreverse#uri-parameters). The string
-     * values in the _search address reverse_ query must be properly escaped (e.g. " character should be escaped with \\
-     * ) and it should also be properly URL-encoded.
-     *
-     * <p>The async API allows caller to batch up to **10,000** queries and sync API up to **100** queries, and the
-     * batch should contain at least **1** query.
-     *
-     * <p>### Download Asynchronous Batch Results To download the async batch results you will issue a `GET` request to
-     * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
-     * `POST` batch request and looks like the following:
-     *
-     * <p>```
-     * https://atlas.microsoft.com/search/address/reverse/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
-     * using the _download URL_. 2. The server will respond with one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
-     * time.
-     *
-     * <p>&gt; HTTP `200 OK` - Batch request successfully processed. The response body contains all the batch results.
-     *
-     * <p>### Batch Response Model The returned data content is similar for async and sync requests. When downloading
-     * the results of an async batch request, if the batch has finished processing, the response body contains the batch
-     * response. This batch response contains a `summary` component that indicates the `totalRequests` that were part of
-     * the original batch request and `successfulRequests`i.e. queries which were executed successfully. The batch
-     * response also includes a `batchItems` array which contains a response for each and every query in the batch
-     * request. The `batchItems` will contain the results in the exact same order the original queries were sent in the
-     * batch request. Each item in `batchItems` contains `statusCode` and `response` fields. Each `response` in
-     * `batchItems` is of one of the following types:
-     *
-     * <p>-
-     * [`SearchAddressReverseResponse`](https://docs.microsoft.com/rest/api/maps/search/getsearchaddressreverse#searchaddressreverseresponse)
-     * - If the query completed successfully.
-     *
-     * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
-     *
-     * <p>Here's a sample Batch Response with 2 _successful_ and 1 _failed_ result:
-     *
-     * <p>```json { "summary": { "successfulRequests": 2, "totalRequests": 3 }, "batchItems": [ { "statusCode": 200,
-     * "response": { "summary": { "queryTime": 11 }, "addresses": [ { "address": { "country": "France",
-     * "freeformAddress": "Avenue Anatole France, 75007 Paris" }, "position": "48.858490,2.294820" } ] } }, {
-     * "statusCode": 200, "response": { "summary": { "queryTime": 1 }, "addresses": [ { "address": { "country": "United
-     * States of America", "freeformAddress": "157th Pl NE, Redmond WA 98052" }, "position": "47.640470,-122.129430" } ]
-     * } }, { "statusCode": 400, "response": { "error": { "code": "400 BadRequest", "message": "Bad request: one or more
-     * parameters were incorrectly specified or are mutually exclusive." } } } ] } ```.
-     *
      * @param batchId Batch id for querying the operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -2834,5 +1277,19 @@ public final class SearchAsyncClient {
     public PollerFlux<ReverseSearchAddressBatchProcessResult, ReverseSearchAddressBatchProcessResult>
             beginGetReverseSearchAddressBatch(String batchId) {
         return this.serviceClient.beginGetReverseSearchAddressBatchAsync(batchId);
+    }
+
+    /**
+     * **Search Address Reverse Batch API**
+     * @param batchId Batch id for querying the operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful Search Address Reverse Batch service call.
+     */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    PollerFlux<ReverseSearchAddressBatchProcessResult, ReverseSearchAddressBatchProcessResult>
+            beginGetReverseSearchAddressBatch(String batchId, Context context) {
+        return this.serviceClient.beginGetReverseSearchAddressBatchAsync(batchId, context);
     }
 }

@@ -311,6 +311,6 @@ public final class SearchClientBuilder {
      * @return an instance of SearchClient.
      */
     public SearchClient buildClient() {
-        return new SearchClient(buildInnerClient().getSearches(), buildAsyncClient());
+        return new SearchClient(buildAsyncClient());
     }
 }
