@@ -16,7 +16,6 @@ import com.azure.maps.search.implementation.SearchesImpl;
 import com.azure.maps.search.models.BatchRequest;
 import com.azure.maps.search.models.ErrorResponseException;
 import com.azure.maps.search.models.FuzzySearchOptions;
-import com.azure.maps.search.models.JsonFormat;
 import com.azure.maps.search.models.PointOfInterestCategoryTreeResult;
 import com.azure.maps.search.models.Polygon;
 import com.azure.maps.search.models.ReverseSearchAddressBatchProcessResult;
@@ -38,7 +37,6 @@ import com.azure.maps.search.models.StructuredAddress;
 /** Initializes a new instance of the synchronous SearchClient type. */
 @ServiceClient(builder = SearchClientBuilder.class)
 public final class SearchClient {
-    private final SearchesImpl serviceClient;
     private final SearchAsyncClient asyncClient;
 
     /**
@@ -46,8 +44,7 @@ public final class SearchClient {
      *
      * @param serviceClient the service client implementation.
      */
-    SearchClient(SearchesImpl serviceClient, SearchAsyncClient asyncClient) {
-        this.serviceClient = serviceClient;
+    SearchClient(SearchAsyncClient asyncClient) {
         this.asyncClient = asyncClient;
     }
 
@@ -410,7 +407,7 @@ public final class SearchClient {
     /**
      * **Search Fuzzy Batch API**
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchFuzzyBatchRequestBody The list of search fuzzy queries/requests to process. The list can contain a
+     * @param batchRequest The list of search fuzzy queries/requests to process. The list can contain a
      *     max of 10,000 queries and must contain at least 1 query.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -418,15 +415,15 @@ public final class SearchClient {
      * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressBatchResult fuzzySearchBatchSync(BatchRequest searchFuzzyBatchRequestBody) {
-        return this.serviceClient.fuzzySearchBatchSync(JsonFormat.JSON, searchFuzzyBatchRequestBody);
+    public SearchAddressBatchResult fuzzySearchBatchSync(BatchRequest batchRequest) {
+        return this.asyncClient.fuzzySearchBatchSync(batchRequest).block();
     }
 
     /**
      * **Search Fuzzy Batch API**
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchFuzzyBatchRequestBody The list of search fuzzy queries/requests to process. The list can contain a
+     * @param batchRequest The list of search fuzzy queries/requests to process. The list can contain a
      *     max of 10,000 queries and must contain at least 1 query.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -436,15 +433,15 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<SearchAddressBatchResult> fuzzySearchBatchSyncWithResponse(
-            BatchRequest searchFuzzyBatchRequestBody, Context context) {
-        return this.serviceClient.fuzzySearchBatchSyncWithResponse(JsonFormat.JSON, searchFuzzyBatchRequestBody, context);
+            BatchRequest batchRequest, Context context) {
+        return this.asyncClient.fuzzySearchBatchSyncWithResponse(batchRequest, context).block();
     }
 
     /**
      * **Search Fuzzy Batch API**
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchFuzzyBatchRequestBody The list of search fuzzy queries/requests to process. The list can contain a
+     * @param batchRequest The list of search fuzzy queries/requests to process. The list can contain a
      *     max of 10,000 queries and must contain at least 1 query.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -453,14 +450,14 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<SearchAddressBatchResult, SearchAddressBatchResult> beginFuzzySearchBatch(
-            BatchRequest searchFuzzyBatchRequestBody) {
-        return this.serviceClient.beginFuzzySearchBatch(JsonFormat.JSON, searchFuzzyBatchRequestBody);
+            BatchRequest batchRequest) {
+        return this.asyncClient.beginFuzzySearchBatch(batchRequest).getSyncPoller();
     }
 
     /**
      * **Search Fuzzy Batch API**
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchFuzzyBatchRequestBody The list of search fuzzy queries/requests to process. The list can contain a
+     * @param batchRequest The list of search fuzzy queries/requests to process. The list can contain a
      *     max of 10,000 queries and must contain at least 1 query.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -470,8 +467,8 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<SearchAddressBatchResult, SearchAddressBatchResult> beginFuzzySearchBatch(
-            BatchRequest searchFuzzyBatchRequestBody, Context context) {
-        return this.serviceClient.beginFuzzySearchBatch(JsonFormat.JSON, searchFuzzyBatchRequestBody, context);
+            BatchRequest batchRequest, Context context) {
+        return this.asyncClient.beginFuzzySearchBatch(batchRequest, context).getSyncPoller();
     }
 
     /**
@@ -486,7 +483,7 @@ public final class SearchClient {
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<SearchAddressBatchResult, SearchAddressBatchResult> beginGetFuzzySearchBatch(
             String batchId) {
-        return this.serviceClient.beginGetFuzzySearchBatch(batchId);
+        return this.asyncClient.beginGetFuzzySearchBatch(batchId).getSyncPoller();
     }
 
     /**
@@ -503,14 +500,14 @@ public final class SearchClient {
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<SearchAddressBatchResult, SearchAddressBatchResult> beginGetFuzzySearchBatch(
             String batchId, Context context) {
-        return this.serviceClient.beginGetFuzzySearchBatch(batchId, context);
+        return this.asyncClient.beginGetFuzzySearchBatch(batchId, context).getSyncPoller();
     }
 
     /**
      * **Search Address Batch API**
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchAddressBatchRequestBody The list of address geocoding queries/requests to process. The list can
+     * @param batchRequest The list of address geocoding queries/requests to process. The list can
      *     contain a max of 10,000 queries and must contain at least 1 query.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -518,15 +515,15 @@ public final class SearchClient {
      * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressBatchResult searchAddressBatchSync(BatchRequest searchAddressBatchRequestBody) {
-        return this.serviceClient.searchAddressBatchSync(JsonFormat.JSON, searchAddressBatchRequestBody);
+    public SearchAddressBatchResult searchAddressBatchSync(BatchRequest batchRequest) {
+        return this.asyncClient.searchAddressBatchSync(batchRequest).block();
     }
 
     /**
      * **Search Address Batch API**
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchAddressBatchRequestBody The list of address geocoding queries/requests to process. The list can
+     * @param batchRequest The list of address geocoding queries/requests to process. The list can
      *     contain a max of 10,000 queries and must contain at least 1 query.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -536,15 +533,15 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<SearchAddressBatchResult> searchAddressBatchSyncWithResponse(
-            BatchRequest searchAddressBatchRequestBody, Context context) {
-        return this.serviceClient.searchAddressBatchSyncWithResponse(JsonFormat.JSON, searchAddressBatchRequestBody, context);
+            BatchRequest batchRequest, Context context) {
+        return this.asyncClient.searchAddressBatchSyncWithResponse(batchRequest, context).block();
     }
 
     /**
      * **Search Address Batch API**
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchAddressBatchRequestBody The list of address geocoding queries/requests to process. The list can
+     * @param batchRequest The list of address geocoding queries/requests to process. The list can
      *     contain a max of 10,000 queries and must contain at least 1 query.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -553,15 +550,15 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<SearchAddressBatchResult, SearchAddressBatchResult> beginSearchAddressBatch(
-            BatchRequest searchAddressBatchRequestBody) {
-        return this.serviceClient.beginSearchAddressBatch(JsonFormat.JSON, searchAddressBatchRequestBody);
+            BatchRequest batchRequest) {
+        return this.asyncClient.beginSearchAddressBatch(batchRequest).getSyncPoller();
     }
 
     /**
      * **Search Address Batch API**
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchAddressBatchRequestBody The list of address geocoding queries/requests to process. The list can
+     * @param batchRequest The list of address geocoding queries/requests to process. The list can
      *     contain a max of 10,000 queries and must contain at least 1 query.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -571,8 +568,8 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<SearchAddressBatchResult, SearchAddressBatchResult> beginSearchAddressBatch(
-            BatchRequest searchAddressBatchRequestBody, Context context) {
-        return this.serviceClient.beginSearchAddressBatch(JsonFormat.JSON, searchAddressBatchRequestBody, context);
+            BatchRequest batchRequest, Context context) {
+        return this.asyncClient.beginSearchAddressBatch(batchRequest, context).getSyncPoller();
     }
 
     /**
@@ -587,7 +584,7 @@ public final class SearchClient {
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<SearchAddressBatchResult, SearchAddressBatchResult> beginGetSearchAddressBatch(
             String batchId) {
-        return this.serviceClient.beginGetSearchAddressBatch(batchId);
+        return this.asyncClient.beginGetSearchAddressBatch(batchId).getSyncPoller();
     }
 
     /**
@@ -602,14 +599,14 @@ public final class SearchClient {
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<SearchAddressBatchResult, SearchAddressBatchResult> beginGetSearchAddressBatch(
             String batchId, Context context) {
-        return this.serviceClient.beginGetSearchAddressBatch(batchId, context);
+        return this.asyncClient.beginGetSearchAddressBatch(batchId, context).getSyncPoller();
     }
 
     /**
      * **Search Address Reverse Batch API**
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchAddressReverseBatchRequestBody The list of reverse geocoding queries/requests to process. The list
+     * @param batchRequest The list of reverse geocoding queries/requests to process. The list
      *     can contain a max of 10,000 queries and must contain at least 1 query.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -618,8 +615,8 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public ReverseSearchAddressBatchProcessResult reverseSearchAddressBatchSync(
-            BatchRequest searchAddressReverseBatchRequestBody) {
-        return this.serviceClient.reverseSearchAddressBatchSync(JsonFormat.JSON, searchAddressReverseBatchRequestBody);
+            BatchRequest batchRequest) {
+        return this.asyncClient.reverseSearchAddressBatchSync(batchRequest).block();
     }
 
     /**
@@ -627,7 +624,7 @@ public final class SearchClient {
      *
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchAddressReverseBatchRequestBody The list of reverse geocoding queries/requests to process. The list
+     * @param batchRequest The list of reverse geocoding queries/requests to process. The list
      *     can contain a max of 10,000 queries and must contain at least 1 query.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -637,9 +634,8 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<ReverseSearchAddressBatchProcessResult> reverseSearchAddressBatchSyncWithResponse(
-            BatchRequest searchAddressReverseBatchRequestBody, Context context) {
-        return this.serviceClient.reverseSearchAddressBatchSyncWithResponse(
-                JsonFormat.JSON, searchAddressReverseBatchRequestBody, context);
+            BatchRequest batchRequest, Context context) {
+        return this.asyncClient.reverseSearchAddressBatchSyncWithResponse(batchRequest, context).block();
     }
 
     /**
@@ -647,7 +643,7 @@ public final class SearchClient {
      *
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchAddressReverseBatchRequestBody The list of reverse geocoding queries/requests to process. The list
+     * @param batchRequest The list of reverse geocoding queries/requests to process. The list
      *     can contain a max of 10,000 queries and must contain at least 1 query.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -656,15 +652,15 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<ReverseSearchAddressBatchProcessResult, ReverseSearchAddressBatchProcessResult>
-            beginReverseSearchAddressBatch(BatchRequest searchAddressReverseBatchRequestBody) {
-        return this.serviceClient.beginReverseSearchAddressBatch(JsonFormat.JSON, searchAddressReverseBatchRequestBody);
+            beginReverseSearchAddressBatch(BatchRequest batchRequest) {
+        return this.asyncClient.beginReverseSearchAddressBatch(batchRequest).getSyncPoller();
     }
 
     /**
      * **Search Address Reverse Batch API**
      *
      * @param format Desired format of the response. Only `json` format is supported.
-     * @param searchAddressReverseBatchRequestBody The list of reverse geocoding queries/requests to process. The list
+     * @param batchRequest The list of reverse geocoding queries/requests to process. The list
      *     can contain a max of 10,000 queries and must contain at least 1 query.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -674,8 +670,8 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<ReverseSearchAddressBatchProcessResult, ReverseSearchAddressBatchProcessResult>
-            beginReverseSearchAddressBatch(BatchRequest searchAddressReverseBatchRequestBody, Context context) {
-        return this.serviceClient.beginReverseSearchAddressBatch(JsonFormat.JSON, searchAddressReverseBatchRequestBody, context);
+            beginReverseSearchAddressBatch(BatchRequest batchRequest, Context context) {
+        return this.asyncClient.beginReverseSearchAddressBatch(batchRequest, context).getSyncPoller();
     }
 
     /**
@@ -689,7 +685,7 @@ public final class SearchClient {
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<ReverseSearchAddressBatchProcessResult, ReverseSearchAddressBatchProcessResult>
             beginGetReverseSearchAddressBatch(String batchId) {
-        return this.serviceClient.beginGetReverseSearchAddressBatch(batchId);
+        return this.asyncClient.beginGetReverseSearchAddressBatch(batchId).getSyncPoller();
     }
 
     /**
@@ -706,6 +702,6 @@ public final class SearchClient {
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<ReverseSearchAddressBatchProcessResult, ReverseSearchAddressBatchProcessResult>
             beginGetReverseSearchAddressBatch(String batchId, Context context) {
-        return this.serviceClient.beginGetReverseSearchAddressBatch(batchId, context);
+        return this.asyncClient.beginGetReverseSearchAddressBatch(batchId, context).getSyncPoller();
     }
 }
