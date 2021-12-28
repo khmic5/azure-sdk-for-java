@@ -31,11 +31,20 @@ import com.azure.core.util.serializer.CollectionFormat;
 import com.azure.core.util.serializer.JacksonAdapter;
 import com.azure.core.util.serializer.TypeReference;
 import com.azure.maps.search.implementation.models.PolygonResult;
+import com.azure.maps.search.implementation.models.ResponseFormat;
+import com.azure.maps.search.implementation.models.ReverseSearchAddressBatchResultPrivate;
 import com.azure.maps.search.implementation.models.ReverseSearchAddressResultPrivate;
 import com.azure.maps.search.implementation.models.ReverseSearchCrossStreetAddressResultPrivate;
+import com.azure.maps.search.implementation.models.SearchAddressBatchResult;
 import com.azure.maps.search.implementation.models.SearchAddressResultPrivate;
 import com.azure.maps.search.implementation.models.SearchAlongRouteRequest;
 import com.azure.maps.search.implementation.models.SearchInsideGeometryRequest;
+import com.azure.maps.search.implementation.models.SearchesFuzzySearchBatchResponse;
+import com.azure.maps.search.implementation.models.SearchesGetFuzzySearchBatchResponse;
+import com.azure.maps.search.implementation.models.SearchesGetReverseSearchAddressBatchResponse;
+import com.azure.maps.search.implementation.models.SearchesGetSearchAddressBatchResponse;
+import com.azure.maps.search.implementation.models.SearchesReverseSearchAddressBatchResponse;
+import com.azure.maps.search.implementation.models.SearchesSearchAddressBatchResponse;
 import com.azure.maps.search.models.BatchRequest;
 import com.azure.maps.search.models.ElectricVehicleConnector;
 import com.azure.maps.search.models.ErrorResponseException;
@@ -45,17 +54,8 @@ import com.azure.maps.search.models.LocalizedMapView;
 import com.azure.maps.search.models.OperatingHoursRange;
 import com.azure.maps.search.models.PointOfInterestCategoryTreeResult;
 import com.azure.maps.search.models.PointOfInterestExtendedPostalCodes;
-import com.azure.maps.search.models.ResponseFormat;
-import com.azure.maps.search.models.ReverseSearchAddressBatchProcessResult;
 import com.azure.maps.search.models.RoadUseType;
-import com.azure.maps.search.models.SearchAddressBatchResult;
 import com.azure.maps.search.models.SearchIndexes;
-import com.azure.maps.search.models.SearchesFuzzySearchBatchResponse;
-import com.azure.maps.search.models.SearchesGetFuzzySearchBatchResponse;
-import com.azure.maps.search.models.SearchesGetReverseSearchAddressBatchResponse;
-import com.azure.maps.search.models.SearchesGetSearchAddressBatchResponse;
-import com.azure.maps.search.models.SearchesReverseSearchAddressBatchResponse;
-import com.azure.maps.search.models.SearchesSearchAddressBatchResponse;
 import java.time.Duration;
 import java.util.List;
 import reactor.core.publisher.Mono;
@@ -436,7 +436,7 @@ public final class SearchesImpl {
                 value = ErrorResponseException.class,
                 code = {408})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
-        Mono<Response<ReverseSearchAddressBatchProcessResult>> reverseSearchAddressBatchSync(
+        Mono<Response<ReverseSearchAddressBatchResultPrivate>> reverseSearchAddressBatchSync(
                 @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String clientId,
                 @QueryParam("api-version") String apiVersion,
@@ -13000,7 +13000,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search Address Reverse Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<ReverseSearchAddressBatchProcessResult>> reverseSearchAddressBatchSyncWithResponseAsync(
+    public Mono<Response<ReverseSearchAddressBatchResultPrivate>> reverseSearchAddressBatchSyncWithResponseAsync(
             JsonFormat format, BatchRequest batchRequest) {
         final String accept = "application/json";
         return FluxUtil.withContext(
@@ -13122,7 +13122,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search Address Reverse Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<ReverseSearchAddressBatchProcessResult>> reverseSearchAddressBatchSyncWithResponseAsync(
+    public Mono<Response<ReverseSearchAddressBatchResultPrivate>> reverseSearchAddressBatchSyncWithResponseAsync(
             JsonFormat format, BatchRequest batchRequest, Context context) {
         final String accept = "application/json";
         return service.reverseSearchAddressBatchSync(
@@ -13241,11 +13241,11 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search Address Reverse Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<ReverseSearchAddressBatchProcessResult> reverseSearchAddressBatchSyncAsync(
+    public Mono<ReverseSearchAddressBatchResultPrivate> reverseSearchAddressBatchSyncAsync(
             JsonFormat format, BatchRequest batchRequest) {
         return reverseSearchAddressBatchSyncWithResponseAsync(format, batchRequest)
                 .flatMap(
-                        (Response<ReverseSearchAddressBatchProcessResult> res) -> {
+                        (Response<ReverseSearchAddressBatchResultPrivate> res) -> {
                             if (res.getValue() != null) {
                                 return Mono.just(res.getValue());
                             } else {
@@ -13361,11 +13361,11 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search Address Reverse Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<ReverseSearchAddressBatchProcessResult> reverseSearchAddressBatchSyncAsync(
+    public Mono<ReverseSearchAddressBatchResultPrivate> reverseSearchAddressBatchSyncAsync(
             JsonFormat format, BatchRequest batchRequest, Context context) {
         return reverseSearchAddressBatchSyncWithResponseAsync(format, batchRequest, context)
                 .flatMap(
-                        (Response<ReverseSearchAddressBatchProcessResult> res) -> {
+                        (Response<ReverseSearchAddressBatchResultPrivate> res) -> {
                             if (res.getValue() != null) {
                                 return Mono.just(res.getValue());
                             } else {
@@ -13480,7 +13480,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search Address Reverse Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public ReverseSearchAddressBatchProcessResult reverseSearchAddressBatchSync(
+    public ReverseSearchAddressBatchResultPrivate reverseSearchAddressBatchSync(
             JsonFormat format, BatchRequest batchRequest) {
         return reverseSearchAddressBatchSyncAsync(format, batchRequest).block();
     }
@@ -13592,7 +13592,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search Address Reverse Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<ReverseSearchAddressBatchProcessResult> reverseSearchAddressBatchSyncWithResponse(
+    public Response<ReverseSearchAddressBatchResultPrivate> reverseSearchAddressBatchSyncWithResponse(
             JsonFormat format, BatchRequest batchRequest, Context context) {
         return reverseSearchAddressBatchSyncWithResponseAsync(format, batchRequest, context).block();
     }
@@ -13941,14 +13941,14 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search Address Reverse Batch service call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public PollerFlux<ReverseSearchAddressBatchProcessResult, ReverseSearchAddressBatchProcessResult>
+    public PollerFlux<ReverseSearchAddressBatchResultPrivate, ReverseSearchAddressBatchResultPrivate>
             beginReverseSearchAddressBatchAsync(JsonFormat format, BatchRequest batchRequest) {
         return PollerFlux.create(
                 Duration.ofSeconds(1),
                 () -> this.reverseSearchAddressBatchWithResponseAsync(format, batchRequest),
                 new DefaultPollingStrategy<>(this.client.getHttpPipeline()),
-                new TypeReference<ReverseSearchAddressBatchProcessResult>() {},
-                new TypeReference<ReverseSearchAddressBatchProcessResult>() {});
+                new TypeReference<ReverseSearchAddressBatchResultPrivate>() {},
+                new TypeReference<ReverseSearchAddressBatchResultPrivate>() {});
     }
 
     /**
@@ -14057,14 +14057,14 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search Address Reverse Batch service call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public PollerFlux<ReverseSearchAddressBatchProcessResult, ReverseSearchAddressBatchProcessResult>
+    public PollerFlux<ReverseSearchAddressBatchResultPrivate, ReverseSearchAddressBatchResultPrivate>
             beginReverseSearchAddressBatchAsync(JsonFormat format, BatchRequest batchRequest, Context context) {
         return PollerFlux.create(
                 Duration.ofSeconds(1),
                 () -> this.reverseSearchAddressBatchWithResponseAsync(format, batchRequest, context),
                 new DefaultPollingStrategy<>(this.client.getHttpPipeline()),
-                new TypeReference<ReverseSearchAddressBatchProcessResult>() {},
-                new TypeReference<ReverseSearchAddressBatchProcessResult>() {});
+                new TypeReference<ReverseSearchAddressBatchResultPrivate>() {},
+                new TypeReference<ReverseSearchAddressBatchResultPrivate>() {});
     }
 
     /**
@@ -14172,7 +14172,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search Address Reverse Batch service call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<ReverseSearchAddressBatchProcessResult, ReverseSearchAddressBatchProcessResult>
+    public SyncPoller<ReverseSearchAddressBatchResultPrivate, ReverseSearchAddressBatchResultPrivate>
             beginReverseSearchAddressBatch(JsonFormat format, BatchRequest batchRequest) {
         return this.beginReverseSearchAddressBatchAsync(format, batchRequest).getSyncPoller();
     }
@@ -14283,7 +14283,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search Address Reverse Batch service call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<ReverseSearchAddressBatchProcessResult, ReverseSearchAddressBatchProcessResult>
+    public SyncPoller<ReverseSearchAddressBatchResultPrivate, ReverseSearchAddressBatchResultPrivate>
             beginReverseSearchAddressBatch(JsonFormat format, BatchRequest batchRequest, Context context) {
         return this.beginReverseSearchAddressBatchAsync(format, batchRequest, context).getSyncPoller();
     }
@@ -14624,14 +14624,14 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search Address Reverse Batch service call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public PollerFlux<ReverseSearchAddressBatchProcessResult, ReverseSearchAddressBatchProcessResult>
+    public PollerFlux<ReverseSearchAddressBatchResultPrivate, ReverseSearchAddressBatchResultPrivate>
             beginGetReverseSearchAddressBatchAsync(String batchId) {
         return PollerFlux.create(
                 Duration.ofSeconds(1),
                 () -> this.getReverseSearchAddressBatchWithResponseAsync(batchId),
                 new DefaultPollingStrategy<>(this.client.getHttpPipeline()),
-                new TypeReference<ReverseSearchAddressBatchProcessResult>() {},
-                new TypeReference<ReverseSearchAddressBatchProcessResult>() {});
+                new TypeReference<ReverseSearchAddressBatchResultPrivate>() {},
+                new TypeReference<ReverseSearchAddressBatchResultPrivate>() {});
     }
 
     /**
@@ -14738,14 +14738,14 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search Address Reverse Batch service call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public PollerFlux<ReverseSearchAddressBatchProcessResult, ReverseSearchAddressBatchProcessResult>
+    public PollerFlux<ReverseSearchAddressBatchResultPrivate, ReverseSearchAddressBatchResultPrivate>
             beginGetReverseSearchAddressBatchAsync(String batchId, Context context) {
         return PollerFlux.create(
                 Duration.ofSeconds(1),
                 () -> this.getReverseSearchAddressBatchWithResponseAsync(batchId, context),
                 new DefaultPollingStrategy<>(this.client.getHttpPipeline()),
-                new TypeReference<ReverseSearchAddressBatchProcessResult>() {},
-                new TypeReference<ReverseSearchAddressBatchProcessResult>() {});
+                new TypeReference<ReverseSearchAddressBatchResultPrivate>() {},
+                new TypeReference<ReverseSearchAddressBatchResultPrivate>() {});
     }
 
     /**
@@ -14851,7 +14851,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search Address Reverse Batch service call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<ReverseSearchAddressBatchProcessResult, ReverseSearchAddressBatchProcessResult>
+    public SyncPoller<ReverseSearchAddressBatchResultPrivate, ReverseSearchAddressBatchResultPrivate>
             beginGetReverseSearchAddressBatch(String batchId) {
         return this.beginGetReverseSearchAddressBatchAsync(batchId).getSyncPoller();
     }
@@ -14960,7 +14960,7 @@ public final class SearchesImpl {
      * @return this object is returned from a successful Search Address Reverse Batch service call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<ReverseSearchAddressBatchProcessResult, ReverseSearchAddressBatchProcessResult>
+    public SyncPoller<ReverseSearchAddressBatchResultPrivate, ReverseSearchAddressBatchResultPrivate>
             beginGetReverseSearchAddressBatch(String batchId, Context context) {
         return this.beginGetReverseSearchAddressBatchAsync(batchId, context).getSyncPoller();
     }

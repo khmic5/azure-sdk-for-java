@@ -12,18 +12,19 @@ import com.azure.core.annotation.ServiceMethod;
 import com.azure.core.http.rest.Response;
 import com.azure.core.util.Context;
 import com.azure.core.util.polling.SyncPoller;
-import com.azure.maps.search.implementation.SearchesImpl;
+import com.azure.maps.search.implementation.models.ReverseSearchAddressBatchResultPrivate;
+import com.azure.maps.search.implementation.models.SearchAddressBatchResult;
 import com.azure.maps.search.models.BatchRequest;
+import com.azure.maps.search.models.BatchReverseSearchResult;
+import com.azure.maps.search.models.BatchSearchResult;
 import com.azure.maps.search.models.ErrorResponseException;
 import com.azure.maps.search.models.FuzzySearchOptions;
 import com.azure.maps.search.models.PointOfInterestCategoryTreeResult;
 import com.azure.maps.search.models.Polygon;
-import com.azure.maps.search.models.ReverseSearchAddressBatchProcessResult;
 import com.azure.maps.search.models.ReverseSearchAddressOptions;
 import com.azure.maps.search.models.ReverseSearchAddressResult;
 import com.azure.maps.search.models.ReverseSearchCrossStreetAddressOptions;
 import com.azure.maps.search.models.ReverseSearchCrossStreetAddressResult;
-import com.azure.maps.search.models.SearchAddressBatchResult;
 import com.azure.maps.search.models.SearchAddressOptions;
 import com.azure.maps.search.models.SearchAddressResult;
 import com.azure.maps.search.models.SearchAlongRouteOptions;
@@ -415,7 +416,7 @@ public final class SearchClient {
      * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressBatchResult fuzzySearchBatchSync(BatchRequest batchRequest) {
+    public BatchSearchResult fuzzySearchBatchSync(BatchRequest batchRequest) {
         return this.asyncClient.fuzzySearchBatchSync(batchRequest).block();
     }
 
@@ -432,7 +433,7 @@ public final class SearchClient {
      * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<SearchAddressBatchResult> fuzzySearchBatchSyncWithResponse(
+    public Response<BatchSearchResult> fuzzySearchBatchSyncWithResponse(
             BatchRequest batchRequest, Context context) {
         return this.asyncClient.fuzzySearchBatchSyncWithResponse(batchRequest, context).block();
     }
@@ -515,7 +516,7 @@ public final class SearchClient {
      * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SearchAddressBatchResult searchAddressBatchSync(BatchRequest batchRequest) {
+    public BatchSearchResult searchAddressBatchSync(BatchRequest batchRequest) {
         return this.asyncClient.searchAddressBatchSync(batchRequest).block();
     }
 
@@ -532,7 +533,7 @@ public final class SearchClient {
      * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<SearchAddressBatchResult> searchAddressBatchSyncWithResponse(
+    public Response<BatchSearchResult> searchAddressBatchSyncWithResponse(
             BatchRequest batchRequest, Context context) {
         return this.asyncClient.searchAddressBatchSyncWithResponse(batchRequest, context).block();
     }
@@ -614,7 +615,7 @@ public final class SearchClient {
      * @return this object is returned from a successful Search Address Reverse Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public ReverseSearchAddressBatchProcessResult reverseSearchAddressBatchSync(
+    public BatchReverseSearchResult reverseSearchAddressBatchSync(
             BatchRequest batchRequest) {
         return this.asyncClient.reverseSearchAddressBatchSync(batchRequest).block();
     }
@@ -633,7 +634,7 @@ public final class SearchClient {
      * @return this object is returned from a successful Search Address Reverse Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<ReverseSearchAddressBatchProcessResult> reverseSearchAddressBatchSyncWithResponse(
+    public Response<BatchReverseSearchResult> reverseSearchAddressBatchSyncWithResponse(
             BatchRequest batchRequest, Context context) {
         return this.asyncClient.reverseSearchAddressBatchSyncWithResponse(batchRequest, context).block();
     }
@@ -651,7 +652,7 @@ public final class SearchClient {
      * @return this object is returned from a successful Search Address Reverse Batch service call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<ReverseSearchAddressBatchProcessResult, ReverseSearchAddressBatchProcessResult>
+    public SyncPoller<ReverseSearchAddressBatchResultPrivate, ReverseSearchAddressBatchResultPrivate>
             beginReverseSearchAddressBatch(BatchRequest batchRequest) {
         return this.asyncClient.beginReverseSearchAddressBatch(batchRequest).getSyncPoller();
     }
@@ -669,7 +670,7 @@ public final class SearchClient {
      * @return this object is returned from a successful Search Address Reverse Batch service call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<ReverseSearchAddressBatchProcessResult, ReverseSearchAddressBatchProcessResult>
+    public SyncPoller<ReverseSearchAddressBatchResultPrivate, ReverseSearchAddressBatchResultPrivate>
             beginReverseSearchAddressBatch(BatchRequest batchRequest, Context context) {
         return this.asyncClient.beginReverseSearchAddressBatch(batchRequest, context).getSyncPoller();
     }
@@ -683,7 +684,7 @@ public final class SearchClient {
      * @return this object is returned from a successful Search Address Reverse Batch service call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<ReverseSearchAddressBatchProcessResult, ReverseSearchAddressBatchProcessResult>
+    public SyncPoller<ReverseSearchAddressBatchResultPrivate, ReverseSearchAddressBatchResultPrivate>
             beginGetReverseSearchAddressBatch(String batchId) {
         return this.asyncClient.beginGetReverseSearchAddressBatch(batchId).getSyncPoller();
     }
@@ -700,7 +701,7 @@ public final class SearchClient {
      * @return this object is returned from a successful Search Address Reverse Batch service call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<ReverseSearchAddressBatchProcessResult, ReverseSearchAddressBatchProcessResult>
+    public SyncPoller<ReverseSearchAddressBatchResultPrivate, ReverseSearchAddressBatchResultPrivate>
             beginGetReverseSearchAddressBatch(String batchId, Context context) {
         return this.asyncClient.beginGetReverseSearchAddressBatch(batchId, context).getSyncPoller();
     }
