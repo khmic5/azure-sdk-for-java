@@ -1,22 +1,34 @@
 package com.azure.maps.search.implementation.helpers;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.azure.maps.search.implementation.models.AddressPrivate;
 import com.azure.maps.search.implementation.models.AddressRangesPrivate;
 import com.azure.maps.search.implementation.models.EntryPointPrivate;
+import com.azure.maps.search.implementation.models.ReverseSearchAddressBatchItemPrivate;
+import com.azure.maps.search.implementation.models.ReverseSearchAddressBatchResultPrivate;
 import com.azure.maps.search.implementation.models.ReverseSearchAddressResultItemPrivate;
 import com.azure.maps.search.implementation.models.ReverseSearchAddressResultPrivate;
 import com.azure.maps.search.implementation.models.ReverseSearchCrossStreetAddressResultItemPrivate;
 import com.azure.maps.search.implementation.models.ReverseSearchCrossStreetAddressResultPrivate;
+import com.azure.maps.search.implementation.models.SearchAddressBatchItemPrivate;
+import com.azure.maps.search.implementation.models.SearchAddressBatchResult;
 import com.azure.maps.search.implementation.models.SearchAddressResultItemPrivate;
 import com.azure.maps.search.implementation.models.SearchAddressResultPrivate;
 import com.azure.maps.search.implementation.models.SearchSummaryPrivate;
 import com.azure.maps.search.models.Address;
 import com.azure.maps.search.models.AddressRanges;
+import com.azure.maps.search.models.BatchResultSummary;
+import com.azure.maps.search.models.BatchReverseSearchResult;
+import com.azure.maps.search.models.BatchSearchResult;
 import com.azure.maps.search.models.EntryPoint;
+import com.azure.maps.search.models.ReverseSearchAddressBatchItem;
 import com.azure.maps.search.models.ReverseSearchAddressResult;
 import com.azure.maps.search.models.ReverseSearchAddressResultItem;
 import com.azure.maps.search.models.ReverseSearchCrossStreetAddressResult;
 import com.azure.maps.search.models.ReverseSearchCrossStreetAddressResultItem;
+import com.azure.maps.search.models.SearchAddressBatchItem;
 import com.azure.maps.search.models.SearchAddressResult;
 import com.azure.maps.search.models.SearchAddressResultItem;
 import com.azure.maps.search.models.SearchSummary;
@@ -140,5 +152,45 @@ public class Utility {
         ReverseSearchCrossStreetAddressResultPropertiesHelper.setAddresses(result, privateResult.getAddresses());
 
         return result;
+    }
+
+    public static SearchAddressBatchItem toSearchAddressBatchItem(SearchAddressBatchItemPrivate item) {
+        SearchAddressBatchItem resultItem = new SearchAddressBatchItem();
+        SearchAddressBatchItemPropertiesHelper.setErrorDetail(resultItem, item.getResponse().getError());
+        SearchAddressBatchItemPropertiesHelper.setStatusCode(resultItem, item.getStatusCode());
+        SearchAddressResult result = toSearchAddressResult(item.getResponse());
+        SearchAddressBatchItemPropertiesHelper.setSearchAddressResult(resultItem, result);
+
+        return resultItem;
+    }
+
+    public static BatchSearchResult toBatchSearchResult(SearchAddressBatchResult result) {
+        BatchResultSummary summary = result.getBatchSummary();
+        List<SearchAddressBatchItem> items = result.getBatchItems().stream()
+            .map(item -> toSearchAddressBatchItem(item))
+            .collect(Collectors.toList());
+
+        return new BatchSearchResult(summary, items);
+    }
+
+    public static ReverseSearchAddressBatchItem toReverseSearchAddressBatchItem(
+            ReverseSearchAddressBatchItemPrivate item) {
+        ReverseSearchAddressBatchItem resultItem = new ReverseSearchAddressBatchItem();
+        ReverseSearchAddressBatchItemPropertiesHelper.setErrorDetail(resultItem, item.getResponse().getError());
+        ReverseSearchAddressBatchItemPropertiesHelper.setStatusCode(resultItem, item.getStatusCode());
+        ReverseSearchAddressResult result = toReverseSearchAddressResult(item.getResponse());
+        ReverseSearchAddressBatchItemPropertiesHelper.setReverseSearchAddressResult(resultItem, result);
+
+        return resultItem;
+    }
+
+    public static BatchReverseSearchResult toBatchReverseSearchResult(
+            ReverseSearchAddressBatchResultPrivate result) {
+        BatchResultSummary summary = result.getBatchSummary();
+        List<ReverseSearchAddressBatchItem> items = result.getBatchItems().stream()
+            .map(item -> toReverseSearchAddressBatchItem(item))
+            .collect(Collectors.toList());
+
+        return new BatchReverseSearchResult(summary, items);
     }
 }

@@ -7,11 +7,14 @@
 package com.azure.maps.search.implementation.models;
 
 import com.azure.core.annotation.Fluent;
+import com.azure.maps.search.models.ErrorDetail;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** The result of the query. SearchAddressResponse if the query completed successfully, ErrorResponse otherwise. */
+/**
+ * The result of the query. SearchAddressReverseResponse if the query completed successfully, ErrorResponse otherwise.
+ */
 @Fluent
-public final class SearchAddressBatchItemResponse extends SearchAddressResultPrivate {
+public final class ReverseSearchAddressBatchItemPrivateResponse extends ReverseSearchAddressResultPrivate {
     /*
      * The error object.
      */
@@ -31,9 +34,9 @@ public final class SearchAddressBatchItemResponse extends SearchAddressResultPri
      * Set the error property: The error object.
      *
      * @param error the error value to set.
-     * @return the SearchAddressBatchItemResponse object itself.
+     * @return the ReverseSearchAddressBatchItemPrivateResponse object itself.
      */
-    public SearchAddressBatchItemResponse setError(ErrorDetail error) {
+    public ReverseSearchAddressBatchItemPrivateResponse setError(ErrorDetail error) {
         this.error = error;
         return this;
     }

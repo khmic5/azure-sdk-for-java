@@ -7,19 +7,33 @@
 package com.azure.maps.search.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.maps.search.implementation.models.BatchResult;
-import com.azure.maps.search.implementation.models.SearchAddressBatchItem;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /** This object is returned from a successful Search Address Batch service call. */
 @Immutable
-public final class SearchAddressBatchResult extends BatchResult {
-    /*
-     * Array containing the batch results.
-     */
-    @JsonProperty(value = "batchItems", access = JsonProperty.Access.WRITE_ONLY)
+public final class BatchSearchResult {
+    private BatchResultSummary batchSummary;
     private List<SearchAddressBatchItem> batchItems;
+
+    /**
+     * Creates a new BatchSearchResult with a summary and batch items.
+     *
+     * @param batchSummary
+     * @param batchItems
+     */
+    public BatchSearchResult(BatchResultSummary batchSummary, List<SearchAddressBatchItem> batchItems) {
+        this.batchSummary = batchSummary;
+        this.batchItems = batchItems;
+    }
+
+    /**
+     * Get the batchSummary property: Summary of the results for the batch request.
+     *
+     * @return the batchSummary value.
+     */
+    public BatchResultSummary getBatchSummary() {
+        return this.batchSummary;
+    }
 
     /**
      * Get the batchItems property: Array containing the batch results.

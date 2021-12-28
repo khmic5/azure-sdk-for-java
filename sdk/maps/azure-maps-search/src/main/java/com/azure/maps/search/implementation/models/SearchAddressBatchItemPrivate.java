@@ -11,13 +11,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** An item returned from Search Address Batch service call. */
 @Immutable
-public final class SearchAddressBatchItem extends BatchResultItem {
+public final class SearchAddressBatchItemPrivate extends BatchResultItem {
     /*
      * The result of the query. SearchAddressResponse if the query completed
      * successfully, ErrorResponse otherwise.
      */
     @JsonProperty(value = "response", access = JsonProperty.Access.WRITE_ONLY)
-    private SearchAddressBatchItemResponse response;
+    private SearchAddressBatchItemPrivateResponse response;
 
     /**
      * Get the response property: The result of the query. SearchAddressResponse if the query completed successfully,
@@ -25,7 +25,7 @@ public final class SearchAddressBatchItem extends BatchResultItem {
      *
      * @return the response value.
      */
-    public SearchAddressBatchItemResponse getResponse() {
+    public SearchAddressBatchItemPrivateResponse getResponse() {
         return this.response;
     }
 }
