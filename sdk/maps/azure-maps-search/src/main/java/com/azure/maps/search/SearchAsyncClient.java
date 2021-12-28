@@ -3,7 +3,6 @@
 
 package com.azure.maps.search;
 
-import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -11,13 +10,10 @@ import java.util.Optional;
 import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceClient;
 import com.azure.core.annotation.ServiceMethod;
-import com.azure.core.http.HttpPipeline;
 import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.SimpleResponse;
 import com.azure.core.util.Context;
-import com.azure.core.util.polling.DefaultPollingStrategy;
 import com.azure.core.util.polling.PollerFlux;
-import com.azure.core.util.serializer.TypeReference;
 import com.azure.maps.search.implementation.SearchesImpl;
 import com.azure.maps.search.implementation.helpers.TypeMapper;
 import com.azure.maps.search.implementation.helpers.Utility;
@@ -60,16 +56,14 @@ import reactor.core.publisher.Mono;
 @ServiceClient(builder = SearchClientBuilder.class, isAsync = true)
 public final class SearchAsyncClient {
     private final SearchesImpl serviceClient;
-    private final HttpPipeline httpPipeline;
 
     /**
      * Initializes an instance of Searches client.
      *
      * @param serviceClient the service client implementation.
      */
-    SearchAsyncClient(SearchesImpl serviceClient, HttpPipeline pipeline) {
+    SearchAsyncClient(SearchesImpl serviceClient) {
         this.serviceClient = serviceClient;
-        this.httpPipeline = pipeline;
     }
 
     /**
@@ -978,20 +972,10 @@ public final class SearchAsyncClient {
      * @return this object is returned from a successful Search Address Batch service call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    PollerFlux<BatchSearchResult, BatchSearchResult> beginFuzzySearchBatch(
+    PollerFlux<SearchAddressBatchResult, SearchAddressBatchResult> beginFuzzySearchBatch(
             BatchRequest batchRequest, Context context) {
-        //return this.serviceClient.beginFuzzySearchBatchAsync(JsonFormat.JSON,
-        //    batchRequest, context);
-
-        return PollerFlux.create(
-            Duration.ofSeconds(1),
-            () -> this.serviceClient.fuzzySearchBatchWithResponseAsync(JsonFormat.JSON,
-                batchRequest, context).flatMap(response -> {
-                    return Mono.just(TypeMapper.createBatchSearchResponse(response));
-                }),
-            new DefaultPollingStrategy<>(this.httpPipeline),
-            new TypeReference<BatchSearchResult>() {},
-            new TypeReference<BatchSearchResult>() {});
+        return this.serviceClient.beginFuzzySearchBatchAsync(JsonFormat.JSON,
+            batchRequest, context);
     }
 
     /**
