@@ -1,6 +1,9 @@
 package com.azure.maps.examples;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import com.azure.core.http.HttpPipelineCallContext;
 import com.azure.core.http.HttpPipelineNextPolicy;
@@ -8,12 +11,30 @@ import com.azure.core.http.HttpResponse;
 import com.azure.core.http.policy.HttpLogDetailLevel;
 import com.azure.core.http.policy.HttpLogOptions;
 import com.azure.core.http.policy.HttpPipelinePolicy;
+import com.azure.core.http.rest.Response;
 import com.azure.core.util.polling.SyncPoller;
 import com.azure.maps.search.SearchClient;
 import com.azure.maps.search.SearchClientBuilder;
 import com.azure.maps.search.models.BatchRequest;
 import com.azure.maps.search.models.BatchReverseSearchResult;
 import com.azure.maps.search.models.BatchSearchResult;
+import com.azure.maps.search.models.FuzzySearchOptions;
+import com.azure.maps.search.models.GeoJsonLineString;
+import com.azure.maps.search.models.GeoJsonObject;
+import com.azure.maps.search.models.GeographicEntityType;
+import com.azure.maps.search.models.LatLong;
+import com.azure.maps.search.models.OperatingHoursRange;
+import com.azure.maps.search.models.ReverseSearchAddressOptions;
+import com.azure.maps.search.models.ReverseSearchCrossStreetAddressOptions;
+import com.azure.maps.search.models.SearchAddressOptions;
+import com.azure.maps.search.models.SearchAddressResult;
+import com.azure.maps.search.models.SearchAlongRouteOptions;
+import com.azure.maps.search.models.SearchInsideGeometryOptions;
+import com.azure.maps.search.models.SearchNearbyPointsOfInterestOptions;
+import com.azure.maps.search.models.SearchPointOfInterestCategoryOptions;
+import com.azure.maps.search.models.SearchPointOfInterestOptions;
+import com.azure.maps.search.models.SearchStructuredAddressOptions;
+import com.azure.maps.search.models.StructuredAddress;
 
 import reactor.core.publisher.Mono;
 
@@ -49,7 +70,7 @@ public class SearchSample {
         builder.httpLogOptions(new HttpLogOptions().setLogLevel(HttpLogDetailLevel.BODY_AND_HEADERS));
         SearchClient client = builder.buildClient();
 
-        /* Stand-alone, one-shot operations
+        /* Stand-alone, one-shot operations */
         // Search address -
         // https://docs.microsoft.com/en-us/rest/api/maps/search/get-search-address
         System.out.println("Search Address:");
@@ -323,7 +344,6 @@ public class SearchSample {
             client.beginReverseSearchAddressBatch(contentJson).getFinalResult();
         MapsCommon.print(br1.getBatchItems());
         MapsCommon.print(br1.getBatchItems().get(0).getResult().getAddresses().get(0).getAddress());
-        System.exit(0);
 
         // Post search address reverse batch -
         // https://docs.microsoft.com/en-us/rest/api/maps/search/post-search-fuzzy-batch
