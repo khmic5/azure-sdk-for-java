@@ -70,7 +70,6 @@ public final class TypeMapper {
     public static SimpleResponse<BatchSearchResult> createBatchSearchResponse(
             Response<SearchAddressBatchResult> response) {
         BatchSearchResult result = (response.getValue() == null) ? null : Utility.toBatchSearchResult(response.getValue());
-        System.err.println("Result is now something " + result);
         SimpleResponse<BatchSearchResult> simpleResponse = new SimpleResponse<>(response.getRequest(),
             response.getStatusCode(),
             response.getHeaders(),

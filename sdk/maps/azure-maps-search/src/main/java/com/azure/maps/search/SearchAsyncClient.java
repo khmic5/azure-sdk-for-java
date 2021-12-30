@@ -15,14 +15,13 @@ import com.azure.core.http.HttpPipeline;
 import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.SimpleResponse;
 import com.azure.core.util.Context;
-import com.azure.core.util.polling.DefaultPollingStrategy;
 import com.azure.core.util.polling.PollerFlux;
 import com.azure.core.util.serializer.TypeReference;
 import com.azure.maps.search.implementation.SearchesImpl;
 import com.azure.maps.search.implementation.helpers.TypeMapper;
 import com.azure.maps.search.implementation.helpers.TypeTransformerPollingStrategy;
-import com.azure.maps.search.implementation.helpers.Utility;
 import com.azure.maps.search.implementation.helpers.TypeTransformerPollingStrategy.PollerType;
+import com.azure.maps.search.implementation.helpers.Utility;
 import com.azure.maps.search.implementation.models.PolygonResult;
 import com.azure.maps.search.implementation.models.ResponseFormat;
 import com.azure.maps.search.implementation.models.ReverseSearchAddressBatchResultPrivate;
@@ -991,7 +990,7 @@ public final class SearchAsyncClient {
                 batchRequest, context).flatMap(response -> {
                     return Mono.just(TypeMapper.createBatchSearchResponse(response));
                 }),
-            new DefaultPollingStrategy<>(this.httpPipeline),
+            new TypeTransformerPollingStrategy<>(this.httpPipeline, PollerType.FORWARD),
             new TypeReference<BatchSearchResult>() {},
             new TypeReference<BatchSearchResult>() {});
     }
@@ -1052,7 +1051,7 @@ public final class SearchAsyncClient {
                     .flatMap(response -> {
                         return Mono.just(TypeMapper.createBatchSearchResponse(response));
                     }),
-            new DefaultPollingStrategy<>(this.httpPipeline),
+            new TypeTransformerPollingStrategy<>(this.httpPipeline, PollerType.FORWARD),
             new TypeReference<BatchSearchResult>() {},
             new TypeReference<BatchSearchResult>() {});
     }
@@ -1196,8 +1195,6 @@ public final class SearchAsyncClient {
             () -> this.serviceClient.searchAddressBatchWithResponseAsync(JsonFormat.JSON,
                 batchRequest, context)
                     .flatMap(response -> {
-                        System.err.println("Resspone is " + response.getClass());
-                        System.err.println(response.getValue());
                         return Mono.just(TypeMapper.createBatchSearchResponse(response));
                     }),
             new TypeTransformerPollingStrategy<>(this.httpPipeline, PollerType.FORWARD),
@@ -1251,7 +1248,7 @@ public final class SearchAsyncClient {
                 .flatMap(response -> {
                     return Mono.just(TypeMapper.createBatchSearchResponse(response));
                 }),
-            new DefaultPollingStrategy<>(this.httpPipeline),
+            new TypeTransformerPollingStrategy<>(this.httpPipeline, PollerType.FORWARD),
             new TypeReference<BatchSearchResult>() {},
             new TypeReference<BatchSearchResult>() {});
     }
@@ -1443,7 +1440,7 @@ public final class SearchAsyncClient {
                 .flatMap(response -> {
                     return Mono.just(TypeMapper.createBatchReverseSearchResponse(response));
                 }),
-            new DefaultPollingStrategy<>(this.httpPipeline),
+            new TypeTransformerPollingStrategy<>(this.httpPipeline, PollerType.REVERSE),
             new TypeReference<BatchReverseSearchResult>() {},
             new TypeReference<BatchReverseSearchResult>() {});
     }
