@@ -69,7 +69,8 @@ public final class TypeMapper {
      */
     public static SimpleResponse<BatchSearchResult> createBatchSearchResponse(
             Response<SearchAddressBatchResult> response) {
-        BatchSearchResult result = Utility.toBatchSearchResult(response.getValue());
+        BatchSearchResult result = (response.getValue() == null) ? null : Utility.toBatchSearchResult(response.getValue());
+        System.err.println("Result is now something " + result);
         SimpleResponse<BatchSearchResult> simpleResponse = new SimpleResponse<>(response.getRequest(),
             response.getStatusCode(),
             response.getHeaders(),
@@ -85,7 +86,7 @@ public final class TypeMapper {
      */
     public static SimpleResponse<BatchReverseSearchResult> createBatchReverseSearchResponse(
             Response<ReverseSearchAddressBatchResultPrivate> response) {
-        BatchReverseSearchResult result = Utility.toBatchReverseSearchResult(response.getValue());
+        BatchReverseSearchResult result = (response.getValue() == null) ? null : Utility.toBatchReverseSearchResult(response.getValue());
         SimpleResponse<BatchReverseSearchResult> simpleResponse = new SimpleResponse<>(response.getRequest(),
             response.getStatusCode(),
             response.getHeaders(),

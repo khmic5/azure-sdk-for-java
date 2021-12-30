@@ -302,7 +302,7 @@ public final class SearchClientBuilder {
      * @return an instance of SearchAsyncClient.
      */
     public SearchAsyncClient buildAsyncClient() {
-        return new SearchAsyncClient(buildInnerClient().getSearches());
+        return new SearchAsyncClient(buildInnerClient().getSearches(), this.pipeline);
     }
 
     /**
