@@ -15,6 +15,10 @@ public final class BatchSearchResult {
     private BatchResultSummary batchSummary;
     private List<SearchAddressBatchItem> batchItems;
 
+    public BatchSearchResult() {
+
+    }
+
     /**
      * Creates a new BatchSearchResult with a summary and batch items.
      *

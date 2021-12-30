@@ -1,9 +1,6 @@
 package com.azure.maps.examples;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import com.azure.core.http.HttpPipelineCallContext;
 import com.azure.core.http.HttpPipelineNextPolicy;
@@ -11,30 +8,8 @@ import com.azure.core.http.HttpResponse;
 import com.azure.core.http.policy.HttpLogDetailLevel;
 import com.azure.core.http.policy.HttpLogOptions;
 import com.azure.core.http.policy.HttpPipelinePolicy;
-import com.azure.core.http.rest.Response;
-import com.azure.maps.search.models.GeoJsonObject;
-import com.azure.maps.search.models.GeoJsonLineString;
 import com.azure.maps.search.SearchAsyncClient;
-import com.azure.maps.search.SearchClient;
 import com.azure.maps.search.SearchClientBuilder;
-import com.azure.maps.search.models.BatchRequest;
-import com.azure.maps.search.models.FuzzySearchOptions;
-import com.azure.maps.search.models.GeographicEntityType;
-import com.azure.maps.search.models.LatLong;
-import com.azure.maps.search.models.OperatingHoursRange;
-import com.azure.maps.search.models.ReverseSearchAddressBatchProcessResult;
-import com.azure.maps.search.models.ReverseSearchAddressOptions;
-import com.azure.maps.search.models.ReverseSearchCrossStreetAddressOptions;
-import com.azure.maps.search.models.SearchAddressOptions;
-import com.azure.maps.search.models.SearchAddressResult;
-import com.azure.maps.search.models.SearchAddressResultItem;
-import com.azure.maps.search.models.SearchAlongRouteOptions;
-import com.azure.maps.search.models.SearchInsideGeometryOptions;
-import com.azure.maps.search.models.SearchNearbyPointsOfInterestOptions;
-import com.azure.maps.search.models.SearchPointOfInterestCategoryOptions;
-import com.azure.maps.search.models.SearchPointOfInterestOptions;
-import com.azure.maps.search.models.SearchStructuredAddressOptions;
-import com.azure.maps.search.models.StructuredAddress;
 
 import reactor.core.publisher.Mono;
 
@@ -150,12 +125,10 @@ public class SearchSampleAsync {
                         .top(2)
                         .radiusInMeters(1000),
                 null).getStatusCode());
-        */
 
         // Search fuzzy -
         // https://docs.microsoft.com/en-us/rest/api/maps/search/get-search-fuzzy
         System.out.println("Search Fuzzy:");
-        /*
         Mono<SearchAddressResult> result = client.fuzzySearch("starbucks", new LatLong(40.706270, -74.011454), null);
         SearchAddressResult searchResult = result.block();
         MapsCommon.print(searchResult.getResults().get(0).getBoundingBox());
