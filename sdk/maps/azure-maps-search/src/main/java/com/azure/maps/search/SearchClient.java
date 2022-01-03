@@ -411,11 +411,11 @@ public final class SearchClient {
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search Address Batch service call.
-     */
+     *
     @ServiceMethod(returns = ReturnType.SINGLE)
     public BatchSearchResult fuzzySearchBatchSync(BatchRequest batchRequest) {
         return this.asyncClient.fuzzySearchBatchSync(batchRequest).block();
-    }
+    }*/
 
     /**
      * **Search Fuzzy Batch API**
@@ -428,12 +428,12 @@ public final class SearchClient {
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search Address Batch service call.
-     */
+     *
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<BatchSearchResult> fuzzySearchBatchSyncWithResponse(
             BatchRequest batchRequest, Context context) {
         return this.asyncClient.fuzzySearchBatchSyncWithResponse(batchRequest, context).block();
-    }
+    }*/
 
     /**
      * **Search Fuzzy Batch API**
@@ -511,11 +511,11 @@ public final class SearchClient {
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search Address Batch service call.
-     */
+     *
     @ServiceMethod(returns = ReturnType.SINGLE)
     public BatchSearchResult searchAddressBatchSync(BatchRequest batchRequest) {
         return this.asyncClient.searchAddressBatchSync(batchRequest).block();
-    }
+    }*/
 
     /**
      * **Search Address Batch API**
@@ -528,12 +528,12 @@ public final class SearchClient {
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search Address Batch service call.
-     */
+     *
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<BatchSearchResult> searchAddressBatchSyncWithResponse(
             BatchRequest batchRequest, Context context) {
         return this.asyncClient.searchAddressBatchSyncWithResponse(batchRequest, context).block();
-    }
+    }*/
 
     /**
      * **Search Address Batch API**
@@ -610,12 +610,12 @@ public final class SearchClient {
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search Address Reverse Batch service call.
-     */
+     *
     @ServiceMethod(returns = ReturnType.SINGLE)
     public BatchReverseSearchResult reverseSearchAddressBatchSync(
             BatchRequest batchRequest) {
         return this.asyncClient.reverseSearchAddressBatchSync(batchRequest).block();
-    }
+    }*/
 
     /**
      * **Search Address Reverse Batch API**
@@ -629,12 +629,12 @@ public final class SearchClient {
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search Address Reverse Batch service call.
-     */
+     *
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<BatchReverseSearchResult> reverseSearchAddressBatchSyncWithResponse(
             BatchRequest batchRequest, Context context) {
         return this.asyncClient.reverseSearchAddressBatchSyncWithResponse(batchRequest, context).block();
-    }
+    }*/
 
     /**
      * **Search Address Reverse Batch API**

@@ -7,6 +7,7 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceClient;
@@ -16,18 +17,13 @@ import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.SimpleResponse;
 import com.azure.core.util.Context;
 import com.azure.core.util.polling.DefaultPollingStrategy;
-import com.azure.core.util.polling.OperationResourcePollingStrategy;
 import com.azure.core.util.polling.PollerFlux;
 import com.azure.core.util.serializer.TypeReference;
 import com.azure.maps.search.implementation.SearchesImpl;
 import com.azure.maps.search.implementation.helpers.BatchResponseSerializer;
 import com.azure.maps.search.implementation.helpers.TypeMapper;
-import com.azure.maps.search.implementation.helpers.TypeTransformerPollingStrategy;
-import com.azure.maps.search.implementation.helpers.TypeTransformerPollingStrategy.PollerType;
-import com.azure.maps.search.implementation.helpers.Utility;
 import com.azure.maps.search.implementation.models.PolygonResult;
 import com.azure.maps.search.implementation.models.ResponseFormat;
-import com.azure.maps.search.implementation.models.ReverseSearchAddressBatchResultPrivate;
 import com.azure.maps.search.implementation.models.ReverseSearchAddressResultPrivate;
 import com.azure.maps.search.implementation.models.ReverseSearchCrossStreetAddressResultPrivate;
 import com.azure.maps.search.implementation.models.SearchAddressBatchResult;
@@ -63,6 +59,11 @@ import reactor.core.publisher.Mono;
 /** Initializes a new instance of the asynchronous SearchClient type. */
 @ServiceClient(builder = SearchClientBuilder.class, isAsync = true)
 public final class SearchAsyncClient {
+    // constants
+    private static final int BATCH_SIZE = 100;
+    private static final int POLLING_FREQUENCY = 1;
+
+    // instance fields
     private final SearchesImpl serviceClient;
     private final HttpPipeline httpPipeline;
     private final BatchResponseSerializer serializer;
@@ -869,11 +870,11 @@ public final class SearchAsyncClient {
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search Address Batch service call.
-     */
+     *
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<BatchSearchResult> fuzzySearchBatchSync(BatchRequest batchRequest) {
         return this.fuzzySearchBatchSync(batchRequest, null);
-    }
+    }*/
 
     /**
      * **Search Fuzzy Batch API**
@@ -884,7 +885,7 @@ public final class SearchAsyncClient {
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search Address Batch service call.
-     */
+     *
     @ServiceMethod(returns = ReturnType.SINGLE)
     Mono<BatchSearchResult> fuzzySearchBatchSync(BatchRequest batchRequest, Context context) {
         Mono<SearchAddressBatchResult> responseMono = this.serviceClient
@@ -895,7 +896,7 @@ public final class SearchAsyncClient {
             BatchSearchResult result = Utility.toBatchSearchResult(response);
             return Mono.just(result);
         });
-    }
+    }*/
 
     /**
      * **Search Fuzzy Batch API**
@@ -906,11 +907,11 @@ public final class SearchAsyncClient {
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search Address Batch service call.
-     */
+     *
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<BatchSearchResult>> fuzzySearchBatchSyncWithResponse(BatchRequest batchRequest) {
         return this.fuzzySearchBatchSyncWithResponse(batchRequest, null);
-    }
+    }*/
 
     /**
      * **Search Fuzzy Batch API**
@@ -990,15 +991,23 @@ public final class SearchAsyncClient {
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     PollerFlux<BatchSearchResult, BatchSearchResult> beginFuzzySearchBatch(
             BatchRequest batchRequest, Context context) {
-        return PollerFlux.create(
-            Duration.ofSeconds(1),
-            () -> this.serviceClient.fuzzySearchBatchWithResponseAsync(JsonFormat.JSON,
-                batchRequest, context).flatMap(response -> {
+        if (batchRequest.getBatchItems().size() <= BATCH_SIZE) {
+            return createPollerFlux(
+                () -> this.serviceClient.fuzzySearchBatchSyncWithResponseAsync(JsonFormat.JSON,
+                    batchRequest, context)
+                    .flatMap(response -> {
+                        return Mono.just(TypeMapper.createBatchSearchResponse(response));
+                    }),
+                this.forwardStrategy);
+        }
+        else {
+            return createPollerFlux(
+                () -> this.serviceClient.fuzzySearchBatchWithResponseAsync(JsonFormat.JSON,
+                    batchRequest, context).flatMap(response -> {
                     return Mono.just(TypeMapper.createBatchSearchResponse(response));
                 }),
-            this.forwardStrategy,
-            new TypeReference<BatchSearchResult>() {},
-            new TypeReference<BatchSearchResult>() {});
+                this.forwardStrategy);
+        }
     }
 
     /**
@@ -1049,15 +1058,12 @@ public final class SearchAsyncClient {
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     PollerFlux<BatchSearchResult, BatchSearchResult> beginGetFuzzySearchBatch(
             String batchId, Context context) {
-        return PollerFlux.create(
-            Duration.ofSeconds(1),
+        return createPollerFlux(
             () -> this.serviceClient.getFuzzySearchBatchWithResponseAsync(batchId, context)
                     .flatMap(response -> {
                         return Mono.just(TypeMapper.createBatchSearchResponse(response));
                     }),
-            this.forwardStrategy,
-            new TypeReference<BatchSearchResult>() {},
-            new TypeReference<BatchSearchResult>() {});
+            this.forwardStrategy);
     }
 
     /**
@@ -1070,11 +1076,11 @@ public final class SearchAsyncClient {
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search Address Batch service call.
-     */
+     *
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<BatchSearchResult> searchAddressBatchSync(BatchRequest batchRequest) {
         return this.searchAddressBatchSync(batchRequest, null);
-    }
+    }*/
 
     /**
      * **Search Address Batch API**
@@ -1086,7 +1092,7 @@ public final class SearchAsyncClient {
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search Address Batch service call.
-     */
+     *
     @ServiceMethod(returns = ReturnType.SINGLE)
     Mono<BatchSearchResult> searchAddressBatchSync(BatchRequest batchRequest, Context context) {
         Mono<SearchAddressBatchResult> responseMono = this.serviceClient
@@ -1097,7 +1103,7 @@ public final class SearchAsyncClient {
             BatchSearchResult result = Utility.toBatchSearchResult(response);
             return Mono.just(result);
         });
-    }
+    }*/
 
     /**
      * **Search Address Batch API**
@@ -1108,12 +1114,12 @@ public final class SearchAsyncClient {
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search Address Batch service call.
-     */
+     *
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<BatchSearchResult>> searchAddressBatchSyncWithResponse(
             BatchRequest batchRequest) {
         return this.searchAddressBatchSyncWithResponse(batchRequest, null);
-    }
+    }*/
 
     /**
      * **Search Address Batch API**
@@ -1124,7 +1130,7 @@ public final class SearchAsyncClient {
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search Address Batch service call.
-     */
+     *
     @ServiceMethod(returns = ReturnType.SINGLE)
     Mono<Response<BatchSearchResult>> searchAddressBatchSyncWithResponse(
             BatchRequest batchRequest, Context context) {
@@ -1136,7 +1142,7 @@ public final class SearchAsyncClient {
             Response<BatchSearchResult> simpleResponse = TypeMapper.createBatchSearchResponse(response);
             return Mono.just(simpleResponse);
         });
-    }
+    }*/
 
     /**
      * **Search Address Batch API**
@@ -1190,16 +1196,23 @@ public final class SearchAsyncClient {
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     PollerFlux<BatchSearchResult, BatchSearchResult> beginSearchAddressBatch(
             BatchRequest batchRequest, Context context) {
-        return PollerFlux.create(
-            Duration.ofSeconds(1),
-            () -> this.serviceClient.searchAddressBatchWithResponseAsync(JsonFormat.JSON,
-                batchRequest, context)
+        if (batchRequest.getBatchItems().size() <= BATCH_SIZE) {
+            return createPollerFlux(
+                () -> this.serviceClient.searchAddressBatchSyncWithResponseAsync(JsonFormat.JSON,
+                    batchRequest, context)
                     .flatMap(response -> {
                         return Mono.just(TypeMapper.createBatchSearchResponse(response));
                     }),
-            this.forwardStrategy,
-            new TypeReference<BatchSearchResult>() {},
-            new TypeReference<BatchSearchResult>() {});
+                this.forwardStrategy);
+        }
+        else {
+            return createPollerFlux(
+                () -> this.serviceClient.searchAddressBatchWithResponseAsync(JsonFormat.JSON,
+                    batchRequest, context).flatMap(response -> {
+                    return Mono.just(TypeMapper.createBatchSearchResponse(response));
+                }),
+                this.forwardStrategy);
+        }
     }
 
     /**
@@ -1240,15 +1253,12 @@ public final class SearchAsyncClient {
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     PollerFlux<BatchSearchResult, BatchSearchResult> beginGetSearchAddressBatch(
             String batchId, Context context) {
-        return PollerFlux.create(
-            Duration.ofSeconds(1),
+        return createPollerFlux(
             () -> this.serviceClient.getSearchAddressBatchWithResponseAsync(batchId, context)
                 .flatMap(response -> {
                     return Mono.just(TypeMapper.createBatchSearchResponse(response));
                 }),
-            this.forwardStrategy,
-            new TypeReference<BatchSearchResult>() {},
-            new TypeReference<BatchSearchResult>() {});
+            this.forwardStrategy);
     }
 
     /**
@@ -1260,11 +1270,11 @@ public final class SearchAsyncClient {
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search Address Reverse Batch service call.
-     */
+     *
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<BatchReverseSearchResult> reverseSearchAddressBatchSync(BatchRequest batchRequest) {
         return this.reverseSearchAddressBatchSync(batchRequest, null);
-    }
+    }*/
 
     /**
      * **Search Address Reverse Batch API**
@@ -1275,7 +1285,7 @@ public final class SearchAsyncClient {
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search Address Reverse Batch service call.
-     */
+     *
     @ServiceMethod(returns = ReturnType.SINGLE)
     Mono<BatchReverseSearchResult> reverseSearchAddressBatchSync(BatchRequest batchRequest,
             Context context) {
@@ -1287,7 +1297,7 @@ public final class SearchAsyncClient {
             BatchReverseSearchResult result = Utility.toBatchReverseSearchResult(response);
             return Mono.just(result);
         });
-    }
+    }*/
 
     /**
      * **Search Address Reverse Batch API**
@@ -1298,12 +1308,12 @@ public final class SearchAsyncClient {
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search Address Reverse Batch service call.
-     */
+     *
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<BatchReverseSearchResult>> reverseSearchAddressBatchSyncWithResponse(
             BatchRequest batchRequest) {
         return this.reverseSearchAddressBatchSyncWithResponse(batchRequest, null);
-    }
+    }*/
 
     /**
      * **Search Address Reverse Batch API**
@@ -1314,7 +1324,7 @@ public final class SearchAsyncClient {
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search Address Reverse Batch service call.
-     */
+     *
     @ServiceMethod(returns = ReturnType.SINGLE)
     Mono<Response<BatchReverseSearchResult>> reverseSearchAddressBatchSyncWithResponse(
             BatchRequest batchRequest, Context context) {
@@ -1327,7 +1337,7 @@ public final class SearchAsyncClient {
                 .createBatchReverseSearchResponse(response);
             return Mono.just(result);
         });
-    }
+    }*/
 
     /**
      * **Search Address Reverse Batch API**
@@ -1376,16 +1386,23 @@ public final class SearchAsyncClient {
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     PollerFlux<BatchReverseSearchResult, BatchReverseSearchResult>
             beginReverseSearchAddressBatch(BatchRequest batchRequest, Context context) {
-        return PollerFlux.create(
-            Duration.ofSeconds(1),
-            () -> this.serviceClient.reverseSearchAddressBatchWithResponseAsync(JsonFormat.JSON,
+        if (batchRequest.getBatchItems().size() <= BATCH_SIZE) {
+            return createReversePollerFlux(
+                () -> this.serviceClient.reverseSearchAddressBatchSyncWithResponseAsync(JsonFormat.JSON,
                     batchRequest, context)
-                .flatMap(response -> {
+                    .flatMap(response -> {
+                        return Mono.just(TypeMapper.createBatchReverseSearchResponse(response));
+                    }),
+                this.reverseStrategy);
+        }
+        else {
+            return createReversePollerFlux(
+                () -> this.serviceClient.reverseSearchAddressBatchWithResponseAsync(JsonFormat.JSON,
+                    batchRequest, context).flatMap(response -> {
                     return Mono.just(TypeMapper.createBatchReverseSearchResponse(response));
                 }),
-            this.reverseStrategy,
-            new TypeReference<BatchReverseSearchResult>() {},
-            new TypeReference<BatchReverseSearchResult>() {});
+                this.reverseStrategy);
+        }
     }
 
     /**
@@ -1427,13 +1444,35 @@ public final class SearchAsyncClient {
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     PollerFlux<BatchReverseSearchResult, BatchReverseSearchResult>
             beginGetReverseSearchAddressBatch(String batchId, Context context) {
-        return PollerFlux.create(
-            Duration.ofSeconds(1),
+        return createReversePollerFlux(
             () -> this.serviceClient.getReverseSearchAddressBatchWithResponseAsync(batchId, context)
                 .flatMap(response -> {
                     return Mono.just(TypeMapper.createBatchReverseSearchResponse(response));
                 }),
-            this.reverseStrategy,
+            this.reverseStrategy);
+    }
+
+    // private utility methods
+    private PollerFlux<BatchSearchResult, BatchSearchResult> createPollerFlux(
+            Supplier<Mono<? extends Response<?>>> initialOperation,
+            DefaultPollingStrategy<BatchSearchResult, BatchSearchResult> strategy) {
+
+        return PollerFlux.create(
+            Duration.ofSeconds(POLLING_FREQUENCY),
+            initialOperation,
+            strategy,
+            new TypeReference<BatchSearchResult>() {},
+            new TypeReference<BatchSearchResult>() {});
+    }
+
+    private PollerFlux<BatchReverseSearchResult, BatchReverseSearchResult> createReversePollerFlux(
+        Supplier<Mono<? extends Response<?>>> initialOperation,
+        DefaultPollingStrategy<BatchReverseSearchResult, BatchReverseSearchResult> strategy) {
+
+        return PollerFlux.create(
+            Duration.ofSeconds(POLLING_FREQUENCY),
+            initialOperation,
+            strategy,
             new TypeReference<BatchReverseSearchResult>() {},
             new TypeReference<BatchReverseSearchResult>() {});
     }

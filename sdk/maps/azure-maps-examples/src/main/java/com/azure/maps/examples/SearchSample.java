@@ -1,10 +1,9 @@
 package com.azure.maps.examples;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.azure.core.http.HttpPipelineCallContext;
 import com.azure.core.http.HttpPipelineNextPolicy;
@@ -12,10 +11,7 @@ import com.azure.core.http.HttpResponse;
 import com.azure.core.http.policy.HttpLogDetailLevel;
 import com.azure.core.http.policy.HttpLogOptions;
 import com.azure.core.http.policy.HttpPipelinePolicy;
-import com.azure.core.models.GeoLineString;
-import com.azure.core.models.GeoLinearRing;
-import com.azure.core.models.GeoPolygon;
-import com.azure.core.models.GeoPosition;
+import com.azure.core.http.rest.Response;
 import com.azure.core.serializer.json.jackson.JacksonJsonSerializer;
 import com.azure.core.serializer.json.jackson.JacksonJsonSerializerProvider;
 import com.azure.core.util.polling.SyncPoller;
@@ -24,8 +20,23 @@ import com.azure.maps.search.SearchClientBuilder;
 import com.azure.maps.search.models.BatchRequest;
 import com.azure.maps.search.models.BatchReverseSearchResult;
 import com.azure.maps.search.models.BatchSearchResult;
+import com.azure.maps.search.models.FuzzySearchOptions;
+import com.azure.maps.search.models.GeoJsonLineString;
 import com.azure.maps.search.models.GeoJsonObject;
+import com.azure.maps.search.models.GeographicEntityType;
+import com.azure.maps.search.models.LatLong;
+import com.azure.maps.search.models.OperatingHoursRange;
+import com.azure.maps.search.models.ReverseSearchAddressOptions;
+import com.azure.maps.search.models.ReverseSearchCrossStreetAddressOptions;
+import com.azure.maps.search.models.SearchAddressOptions;
+import com.azure.maps.search.models.SearchAddressResult;
+import com.azure.maps.search.models.SearchAlongRouteOptions;
 import com.azure.maps.search.models.SearchInsideGeometryOptions;
+import com.azure.maps.search.models.SearchNearbyPointsOfInterestOptions;
+import com.azure.maps.search.models.SearchPointOfInterestCategoryOptions;
+import com.azure.maps.search.models.SearchPointOfInterestOptions;
+import com.azure.maps.search.models.SearchStructuredAddressOptions;
+import com.azure.maps.search.models.StructuredAddress;
 
 import reactor.core.publisher.Mono;
 
@@ -61,7 +72,7 @@ public class SearchSample {
         builder.httpLogOptions(new HttpLogOptions().setLogLevel(HttpLogDetailLevel.BODY_AND_HEADERS));
         SearchClient client = builder.buildClient();
 
-        /* Stand-alone, one-shot operations
+        /* Stand-alone, one-shot operations */
         // Search address -
         // https://docs.microsoft.com/en-us/rest/api/maps/search/get-search-address
         System.out.println("Search Address:");
@@ -279,9 +290,8 @@ public class SearchSample {
             MapsCommon.readContent(MapsCommon.getResource("/search_inside_geometry_request_body.json")),
             GeoJsonObject.class);
 
+        /* TODO REVIEW AND MODIFY
         JacksonJsonSerializer serializer = new JacksonJsonSerializerProvider().createInstance();
-
-
         GeoLineString line = new GeoLineString(Arrays.asList(new GeoPosition(0, 0)));
         List<GeoPosition> coordinates = new ArrayList<>();
         coordinates.add(new GeoPosition(-122.43576049804686, 37.7524152343544));
@@ -295,8 +305,7 @@ public class SearchSample {
 
         serializer.serialize(baos, polygon);
         System.out.println(new String(baos.toByteArray()));
-
-        System.exit(0);
+        */
 
         // simple
         MapsCommon.print(client.searchInsideGeometry(
@@ -320,11 +329,9 @@ public class SearchSample {
         // This call posts addresses for search using the Synchronous Batch API.
         // All results will be available when the call returns. A maximum of 100
         // addresses can be searched this way.
-        System.out.println("Search Address Batch Sync");
         BatchRequest contentJson = MapsCommon.readJson(
             MapsCommon.readContent(MapsCommon.getResource("/search_address_batch_request_body.json")),
             BatchRequest.class);
-        // MapsCommon.print(client.searchAddressBatchSync(contentJson));
 
         // Search address batch async -
         // https://docs.microsoft.com/en-us/rest/api/maps/search/post-search-address-batch
@@ -332,7 +339,7 @@ public class SearchSample {
         // SyncPoller will do the polling automatically and you can retrieve the result
         // with getFinalResult()
         System.out.println("Search Address Batch Async");
-        // MapsCommon.print(client.beginSearchAddressBatch(contentJson).getFinalResult());
+        MapsCommon.print(client.beginSearchAddressBatch(contentJson).getFinalResult());
         SyncPoller<BatchSearchResult, BatchSearchResult> poller = client.beginSearchAddressBatch(contentJson);
         BatchSearchResult result = poller.getFinalResult();
         MapsCommon.print(result.getBatchSummary());
@@ -342,12 +349,9 @@ public class SearchSample {
         // https://docs.microsoft.com/en-us/rest/api/maps/search/post-search-address-reverse-batch
         // This is also a batch API like searchAddressBatch(), so the same calling
         // patterns apply.
-        System.out.println("Reverse Search Address Batch Sync");
         contentJson = MapsCommon.readJson(
             MapsCommon.readContent(MapsCommon.getResource("/search_address_reverse_batch_request_body.json")),
             BatchRequest.class);
-        BatchReverseSearchResult br = client.reverseSearchAddressBatchSync(contentJson);
-        MapsCommon.print(br.getBatchItems());
 
         System.out.println("Reverse Search Address Batch Async");
         BatchReverseSearchResult br1 =
@@ -359,11 +363,9 @@ public class SearchSample {
         // https://docs.microsoft.com/en-us/rest/api/maps/search/post-search-fuzzy-batch
         // This is also a batch API like postSearchAddressBatch(), so the same calling
         // patterns apply.
-        System.out.println("Post Search Fuzzy Batch Sync");
         contentJson = MapsCommon.readJson(
             MapsCommon.readContent(MapsCommon.getResource("/search_fuzzy_batch_request_body.json")),
             BatchRequest.class);
-        MapsCommon.print(client.fuzzySearchBatchSync(contentJson));
 
         System.out.println("Post Search Fuzzy Batch Async");
         MapsCommon.print(client.beginFuzzySearchBatch(contentJson).getFinalResult());
