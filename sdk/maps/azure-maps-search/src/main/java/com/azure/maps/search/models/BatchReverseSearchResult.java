@@ -15,6 +15,10 @@ public final class BatchReverseSearchResult {
     private BatchResultSummary batchSummary;
     private List<ReverseSearchAddressBatchItem> batchItems;
 
+    public BatchReverseSearchResult() {
+
+    }
+
     /**
      * Creates a new BatchSearchResult with a summary and batch items.
      *
