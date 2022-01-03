@@ -15,9 +15,12 @@ import com.azure.core.http.HttpPipeline;
 import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.SimpleResponse;
 import com.azure.core.util.Context;
+import com.azure.core.util.polling.DefaultPollingStrategy;
+import com.azure.core.util.polling.OperationResourcePollingStrategy;
 import com.azure.core.util.polling.PollerFlux;
 import com.azure.core.util.serializer.TypeReference;
 import com.azure.maps.search.implementation.SearchesImpl;
+import com.azure.maps.search.implementation.helpers.BatchResponseSerializer;
 import com.azure.maps.search.implementation.helpers.TypeMapper;
 import com.azure.maps.search.implementation.helpers.TypeTransformerPollingStrategy;
 import com.azure.maps.search.implementation.helpers.TypeTransformerPollingStrategy.PollerType;
@@ -62,6 +65,9 @@ import reactor.core.publisher.Mono;
 public final class SearchAsyncClient {
     private final SearchesImpl serviceClient;
     private final HttpPipeline httpPipeline;
+    private final BatchResponseSerializer serializer;
+    private final DefaultPollingStrategy<BatchSearchResult, BatchSearchResult> forwardStrategy;
+    private final DefaultPollingStrategy<BatchReverseSearchResult, BatchReverseSearchResult> reverseStrategy;
 
     /**
      * Initializes an instance of Searches client.
@@ -71,6 +77,9 @@ public final class SearchAsyncClient {
     SearchAsyncClient(SearchesImpl serviceClient, HttpPipeline pipeline) {
         this.serviceClient = serviceClient;
         this.httpPipeline = pipeline;
+        this.serializer = new BatchResponseSerializer();
+        this.forwardStrategy = new DefaultPollingStrategy<>(httpPipeline, serializer);
+        this.reverseStrategy = new DefaultPollingStrategy<>(httpPipeline, serializer);
     }
 
     /**
@@ -981,16 +990,13 @@ public final class SearchAsyncClient {
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     PollerFlux<BatchSearchResult, BatchSearchResult> beginFuzzySearchBatch(
             BatchRequest batchRequest, Context context) {
-        //return this.serviceClient.beginFuzzySearchBatchAsync(JsonFormat.JSON,
-        //    batchRequest, context);
-
         return PollerFlux.create(
             Duration.ofSeconds(1),
             () -> this.serviceClient.fuzzySearchBatchWithResponseAsync(JsonFormat.JSON,
                 batchRequest, context).flatMap(response -> {
                     return Mono.just(TypeMapper.createBatchSearchResponse(response));
                 }),
-            new TypeTransformerPollingStrategy<>(this.httpPipeline, PollerType.FORWARD),
+            this.forwardStrategy,
             new TypeReference<BatchSearchResult>() {},
             new TypeReference<BatchSearchResult>() {});
     }
@@ -1043,15 +1049,13 @@ public final class SearchAsyncClient {
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     PollerFlux<BatchSearchResult, BatchSearchResult> beginGetFuzzySearchBatch(
             String batchId, Context context) {
-        // return this.serviceClient.beginGetFuzzySearchBatchAsync(batchId, context);
-
         return PollerFlux.create(
             Duration.ofSeconds(1),
             () -> this.serviceClient.getFuzzySearchBatchWithResponseAsync(batchId, context)
                     .flatMap(response -> {
                         return Mono.just(TypeMapper.createBatchSearchResponse(response));
                     }),
-            new TypeTransformerPollingStrategy<>(this.httpPipeline, PollerType.FORWARD),
+            this.forwardStrategy,
             new TypeReference<BatchSearchResult>() {},
             new TypeReference<BatchSearchResult>() {});
     }
@@ -1186,10 +1190,6 @@ public final class SearchAsyncClient {
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     PollerFlux<BatchSearchResult, BatchSearchResult> beginSearchAddressBatch(
             BatchRequest batchRequest, Context context) {
-        //return this.serviceClient.beginSearchAddressBatchAsync(JsonFormat.JSON, batchRequest, context)
-
-
-
         return PollerFlux.create(
             Duration.ofSeconds(1),
             () -> this.serviceClient.searchAddressBatchWithResponseAsync(JsonFormat.JSON,
@@ -1197,7 +1197,7 @@ public final class SearchAsyncClient {
                     .flatMap(response -> {
                         return Mono.just(TypeMapper.createBatchSearchResponse(response));
                     }),
-            new TypeTransformerPollingStrategy<>(this.httpPipeline, PollerType.FORWARD),
+            this.forwardStrategy,
             new TypeReference<BatchSearchResult>() {},
             new TypeReference<BatchSearchResult>() {});
     }
@@ -1240,15 +1240,13 @@ public final class SearchAsyncClient {
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     PollerFlux<BatchSearchResult, BatchSearchResult> beginGetSearchAddressBatch(
             String batchId, Context context) {
-        // return this.serviceClient.beginGetSearchAddressBatchAsync(batchId, context);
-
         return PollerFlux.create(
             Duration.ofSeconds(1),
             () -> this.serviceClient.getSearchAddressBatchWithResponseAsync(batchId, context)
                 .flatMap(response -> {
                     return Mono.just(TypeMapper.createBatchSearchResponse(response));
                 }),
-            new TypeTransformerPollingStrategy<>(this.httpPipeline, PollerType.FORWARD),
+            this.forwardStrategy,
             new TypeReference<BatchSearchResult>() {},
             new TypeReference<BatchSearchResult>() {});
     }
@@ -1378,9 +1376,6 @@ public final class SearchAsyncClient {
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     PollerFlux<BatchReverseSearchResult, BatchReverseSearchResult>
             beginReverseSearchAddressBatch(BatchRequest batchRequest, Context context) {
-        // return this.serviceClient.beginReverseSearchAddressBatchAsync(JsonFormat.JSON,
-        //    batchRequest, context);
-
         return PollerFlux.create(
             Duration.ofSeconds(1),
             () -> this.serviceClient.reverseSearchAddressBatchWithResponseAsync(JsonFormat.JSON,
@@ -1388,7 +1383,7 @@ public final class SearchAsyncClient {
                 .flatMap(response -> {
                     return Mono.just(TypeMapper.createBatchReverseSearchResponse(response));
                 }),
-            new TypeTransformerPollingStrategy<>(this.httpPipeline, PollerType.REVERSE),
+            this.reverseStrategy,
             new TypeReference<BatchReverseSearchResult>() {},
             new TypeReference<BatchReverseSearchResult>() {});
     }
@@ -1432,15 +1427,13 @@ public final class SearchAsyncClient {
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     PollerFlux<BatchReverseSearchResult, BatchReverseSearchResult>
             beginGetReverseSearchAddressBatch(String batchId, Context context) {
-        // return this.serviceClient.beginGetReverseSearchAddressBatchAsync(batchId, context);
-
         return PollerFlux.create(
             Duration.ofSeconds(1),
             () -> this.serviceClient.getReverseSearchAddressBatchWithResponseAsync(batchId, context)
                 .flatMap(response -> {
                     return Mono.just(TypeMapper.createBatchReverseSearchResponse(response));
                 }),
-            new TypeTransformerPollingStrategy<>(this.httpPipeline, PollerType.REVERSE),
+            this.reverseStrategy,
             new TypeReference<BatchReverseSearchResult>() {},
             new TypeReference<BatchReverseSearchResult>() {});
     }
