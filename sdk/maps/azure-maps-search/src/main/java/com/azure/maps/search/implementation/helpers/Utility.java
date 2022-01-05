@@ -1,8 +1,13 @@
 package com.azure.maps.search.implementation.helpers;
 
+import java.io.ByteArrayOutputStream;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.azure.core.models.GeoObject;
+import com.azure.core.serializer.json.jackson.JacksonJsonSerializer;
+import com.azure.core.serializer.json.jackson.JacksonJsonSerializerProvider;
+import com.azure.core.util.serializer.TypeReference;
 import com.azure.maps.search.implementation.models.AddressPrivate;
 import com.azure.maps.search.implementation.models.AddressRangesPrivate;
 import com.azure.maps.search.implementation.models.EntryPointPrivate;
@@ -23,6 +28,7 @@ import com.azure.maps.search.models.BatchResultSummary;
 import com.azure.maps.search.models.BatchReverseSearchResult;
 import com.azure.maps.search.models.BatchSearchResult;
 import com.azure.maps.search.models.EntryPoint;
+import com.azure.maps.search.models.GeoJsonObject;
 import com.azure.maps.search.models.ReverseSearchAddressBatchItem;
 import com.azure.maps.search.models.ReverseSearchAddressResult;
 import com.azure.maps.search.models.ReverseSearchAddressResultItem;
@@ -37,6 +43,7 @@ import com.azure.maps.search.models.SearchSummary;
  * Utility method class.
  */
 public class Utility {
+    private static final JacksonJsonSerializer serializer = new JacksonJsonSerializerProvider().createInstance();
 
     /**
      * Helper method to convert {@link AddressPrivate} to
@@ -192,5 +199,12 @@ public class Utility {
             .collect(Collectors.toList());
 
         return new BatchReverseSearchResult(summary, items);
+    }
+
+    public static GeoJsonObject toGeoJsonObject(GeoObject object) {
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        final TypeReference<GeoJsonObject> typeReference = new TypeReference<GeoJsonObject>(){};
+        serializer.serialize(baos, object);
+        return serializer.deserializeFromBytes(baos.toByteArray(), typeReference);
     }
 }
