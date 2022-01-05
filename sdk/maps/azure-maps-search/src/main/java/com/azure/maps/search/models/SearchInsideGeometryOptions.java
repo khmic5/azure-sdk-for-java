@@ -2,19 +2,21 @@ package com.azure.maps.search.models;
 
 import java.util.List;
 
+import com.azure.core.models.GeoObject;
+
 /**
  * Class holding optional parameters for Geometry Search.
  */
 public final class SearchInsideGeometryOptions extends BaseSearchGeometryOptions<SearchInsideGeometryOptions> {
     private String language;
-    private GeoJsonObject geometry;
+    private GeoObject geometry;
     private List<SearchIndexes> extendedPostalCodesFor;
     private List<SearchIndexes> indexFilter;
 
     /**
      * Create a new options object with query and Geometry.
      */
-    public SearchInsideGeometryOptions(String query, GeoJsonObject geometry) {
+    public SearchInsideGeometryOptions(String query, GeoObject geometry) {
         this.geometry = geometry;
         this.setQuery(query);
     }
@@ -47,7 +49,7 @@ public final class SearchInsideGeometryOptions extends BaseSearchGeometryOptions
      * Returns the geometry used for search.
      * @return
      */
-    public GeoJsonObject getGeometry() {
+    public GeoObject getGeometry() {
         return this.geometry;
     }
 
@@ -86,7 +88,7 @@ public final class SearchInsideGeometryOptions extends BaseSearchGeometryOptions
      * @param geometry
      * @return
      */
-    public SearchInsideGeometryOptions setGeometry(GeoJsonObject geometry) {
+    public SearchInsideGeometryOptions setGeometry(GeoObject geometry) {
         this.geometry = geometry;
         return this;
     }

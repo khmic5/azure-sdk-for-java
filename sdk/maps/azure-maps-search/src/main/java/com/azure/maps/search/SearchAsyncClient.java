@@ -22,6 +22,7 @@ import com.azure.core.util.serializer.TypeReference;
 import com.azure.maps.search.implementation.SearchesImpl;
 import com.azure.maps.search.implementation.helpers.BatchResponseSerializer;
 import com.azure.maps.search.implementation.helpers.TypeMapper;
+import com.azure.maps.search.implementation.helpers.Utility;
 import com.azure.maps.search.implementation.models.PolygonResult;
 import com.azure.maps.search.implementation.models.ResponseFormat;
 import com.azure.maps.search.implementation.models.ReverseSearchAddressResultPrivate;
@@ -36,6 +37,7 @@ import com.azure.maps.search.models.BatchSearchResult;
 import com.azure.maps.search.models.BoundingBox;
 import com.azure.maps.search.models.ErrorResponseException;
 import com.azure.maps.search.models.FuzzySearchOptions;
+import com.azure.maps.search.models.GeoJsonObject;
 import com.azure.maps.search.models.JsonFormat;
 import com.azure.maps.search.models.LatLong;
 import com.azure.maps.search.models.PointOfInterestCategoryTreeResult;
@@ -778,11 +780,12 @@ public final class SearchAsyncClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     Mono<Response<SearchAddressResult>> searchInsideGeometryWithResponse(SearchInsideGeometryOptions options,
             Context context) {
+        GeoJsonObject geoJsonObject = Utility.toGeoJsonObject(options.getGeometry());
         Mono<Response<SearchAddressResultPrivate>> responseMono =
             this.serviceClient.searchInsideGeometryWithResponseAsync(
                 ResponseFormat.JSON,
                 options.getQuery(),
-                new SearchInsideGeometryRequest().setGeometry(options.getGeometry()),
+                new SearchInsideGeometryRequest().setGeometry(geoJsonObject),
                 options.getTop(),
                 options.getLanguage(),
                 options.getCategoryFilter(),

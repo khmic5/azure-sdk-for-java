@@ -1,9 +1,9 @@
 package com.azure.maps.examples;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.azure.core.http.HttpPipelineCallContext;
 import com.azure.core.http.HttpPipelineNextPolicy;
@@ -11,32 +11,18 @@ import com.azure.core.http.HttpResponse;
 import com.azure.core.http.policy.HttpLogDetailLevel;
 import com.azure.core.http.policy.HttpLogOptions;
 import com.azure.core.http.policy.HttpPipelinePolicy;
-import com.azure.core.http.rest.Response;
-import com.azure.core.serializer.json.jackson.JacksonJsonSerializer;
-import com.azure.core.serializer.json.jackson.JacksonJsonSerializerProvider;
+import com.azure.core.models.GeoLineString;
+import com.azure.core.models.GeoLinearRing;
+import com.azure.core.models.GeoPolygon;
+import com.azure.core.models.GeoPosition;
 import com.azure.core.util.polling.SyncPoller;
 import com.azure.maps.search.SearchClient;
 import com.azure.maps.search.SearchClientBuilder;
 import com.azure.maps.search.models.BatchRequest;
 import com.azure.maps.search.models.BatchReverseSearchResult;
 import com.azure.maps.search.models.BatchSearchResult;
-import com.azure.maps.search.models.FuzzySearchOptions;
-import com.azure.maps.search.models.GeoJsonLineString;
 import com.azure.maps.search.models.GeoJsonObject;
-import com.azure.maps.search.models.GeographicEntityType;
-import com.azure.maps.search.models.LatLong;
-import com.azure.maps.search.models.OperatingHoursRange;
-import com.azure.maps.search.models.ReverseSearchAddressOptions;
-import com.azure.maps.search.models.ReverseSearchCrossStreetAddressOptions;
-import com.azure.maps.search.models.SearchAddressOptions;
-import com.azure.maps.search.models.SearchAddressResult;
-import com.azure.maps.search.models.SearchAlongRouteOptions;
 import com.azure.maps.search.models.SearchInsideGeometryOptions;
-import com.azure.maps.search.models.SearchNearbyPointsOfInterestOptions;
-import com.azure.maps.search.models.SearchPointOfInterestCategoryOptions;
-import com.azure.maps.search.models.SearchPointOfInterestOptions;
-import com.azure.maps.search.models.SearchStructuredAddressOptions;
-import com.azure.maps.search.models.StructuredAddress;
 
 import reactor.core.publisher.Mono;
 
@@ -72,7 +58,7 @@ public class SearchSample {
         builder.httpLogOptions(new HttpLogOptions().setLogLevel(HttpLogDetailLevel.BODY_AND_HEADERS));
         SearchClient client = builder.buildClient();
 
-        /* Stand-alone, one-shot operations */
+        /* Stand-alone, one-shot operations
         // Search address -
         // https://docs.microsoft.com/en-us/rest/api/maps/search/get-search-address
         System.out.println("Search Address:");
@@ -282,7 +268,7 @@ public class SearchSample {
                 .setCategoryFilter(Arrays.asList(7315))
                 .setTop(5),
             null).getStatusCode());
-
+        */
         // Search insider geometry -
         // https://docs.microsoft.com/en-us/rest/api/maps/search/post-search-along-route
         System.out.println("Search Inside Geometry");
@@ -290,37 +276,33 @@ public class SearchSample {
             MapsCommon.readContent(MapsCommon.getResource("/search_inside_geometry_request_body.json")),
             GeoJsonObject.class);
 
-        /* TODO REVIEW AND MODIFY
-        JacksonJsonSerializer serializer = new JacksonJsonSerializerProvider().createInstance();
+        /* TODO REVIEW AND MODIFY */
         GeoLineString line = new GeoLineString(Arrays.asList(new GeoPosition(0, 0)));
         List<GeoPosition> coordinates = new ArrayList<>();
         coordinates.add(new GeoPosition(-122.43576049804686, 37.7524152343544));
         coordinates.add(new GeoPosition(-122.43301391601562, 37.70660472542312));
-        coordinates.add(new GeoPosition(-122.43576049804686, 37.712059855877314));
+        coordinates.add(new GeoPosition(-122.36434936523438, 37.712059855877314));
         coordinates.add(new GeoPosition(-122.43576049804686, 37.7524152343544));
 
         GeoLinearRing ring = new GeoLinearRing(coordinates);
         GeoPolygon polygon = new GeoPolygon(ring);
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-        serializer.serialize(baos, polygon);
-        System.out.println(new String(baos.toByteArray()));
-        */
 
         // simple
         MapsCommon.print(client.searchInsideGeometry(
-            new SearchInsideGeometryOptions("Leland Avenue", geometry)));
+            new SearchInsideGeometryOptions("Leland Avenue", polygon)));
 
         // options
         MapsCommon.print(client.searchInsideGeometry(
-            new SearchInsideGeometryOptions("Leland Avenue", geometry)
+            new SearchInsideGeometryOptions("Leland Avenue", polygon)
                 .setTop(5)));
 
         // complete
         MapsCommon.print(client.searchInsideGeometryWithResponse(
-            new SearchInsideGeometryOptions("Leland Avenue", geometry)
+            new SearchInsideGeometryOptions("Leland Avenue", polygon)
                 .setTop(5),
             null).getStatusCode());
+
+            System.exit(0);
 
         /* Batch operations. */
 
