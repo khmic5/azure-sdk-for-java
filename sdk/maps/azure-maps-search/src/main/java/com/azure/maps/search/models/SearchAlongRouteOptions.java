@@ -2,6 +2,8 @@ package com.azure.maps.search.models;
 
 import java.util.List;
 
+import com.azure.core.models.GeoLineString;
+
 /**
  * Class holding optional parameters for Search along a route.
  */
@@ -9,12 +11,12 @@ public final class SearchAlongRouteOptions extends BaseSearchGeometryOptions<Sea
     private List<String> brandFilter;
     private List<ElectricVehicleConnector> electricVehicleConnectorFilter;
     private int maxDetourTime;
-    private GeoJsonLineString route;
+    private GeoLineString route;
 
     /**
      * Create search along route options.
      */
-    public SearchAlongRouteOptions(String query, int maxDetourTime, GeoJsonLineString route) {
+    public SearchAlongRouteOptions(String query, int maxDetourTime, GeoLineString route) {
         this.maxDetourTime = maxDetourTime;
         this.setQuery(query);
         this.setRoute(route);
@@ -38,7 +40,7 @@ public final class SearchAlongRouteOptions extends BaseSearchGeometryOptions<Sea
     /**
      * @return GeoJsonLineString return the route
      */
-    public GeoJsonLineString getRoute() {
+    public GeoLineString getRoute() {
         return route;
     }
 
@@ -65,7 +67,7 @@ public final class SearchAlongRouteOptions extends BaseSearchGeometryOptions<Sea
      * @param route
      * @return
      */
-    public SearchAlongRouteOptions setRoute(GeoJsonLineString route) {
+    public SearchAlongRouteOptions setRoute(GeoLineString route) {
         this.route = route;
         return this;
     }
