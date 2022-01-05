@@ -37,6 +37,7 @@ import com.azure.maps.search.models.BatchSearchResult;
 import com.azure.maps.search.models.BoundingBox;
 import com.azure.maps.search.models.ErrorResponseException;
 import com.azure.maps.search.models.FuzzySearchOptions;
+import com.azure.maps.search.models.GeoJsonLineString;
 import com.azure.maps.search.models.GeoJsonObject;
 import com.azure.maps.search.models.JsonFormat;
 import com.azure.maps.search.models.LatLong;
@@ -843,12 +844,13 @@ public final class SearchAsyncClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     Mono<Response<SearchAddressResult>> searchAlongRouteWithResponse(SearchAlongRouteOptions options,
             Context context) {
+        GeoJsonLineString geoJsonLineString = (GeoJsonLineString) Utility.toGeoJsonObject(options.getRoute());
         Mono<Response<SearchAddressResultPrivate>> responseMono =
             this.serviceClient.searchAlongRouteWithResponseAsync(
                 ResponseFormat.JSON,
                 options.getQuery(),
                 options.getMaxDetourTime(),
-                new SearchAlongRouteRequest().setRoute(options.getRoute()),
+                new SearchAlongRouteRequest().setRoute(geoJsonLineString),
                 options.getTop(),
                 options.getBrandFilter(),
                 options.getCategoryFilter(),
