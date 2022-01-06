@@ -23,6 +23,8 @@ import com.azure.maps.search.implementation.SearchesImpl;
 import com.azure.maps.search.implementation.helpers.BatchResponseSerializer;
 import com.azure.maps.search.implementation.helpers.TypeMapper;
 import com.azure.maps.search.implementation.helpers.Utility;
+import com.azure.maps.search.implementation.models.GeoJsonLineString;
+import com.azure.maps.search.implementation.models.GeoJsonObject;
 import com.azure.maps.search.implementation.models.PolygonResult;
 import com.azure.maps.search.implementation.models.ResponseFormat;
 import com.azure.maps.search.implementation.models.ReverseSearchAddressResultPrivate;
@@ -37,8 +39,6 @@ import com.azure.maps.search.models.BatchSearchResult;
 import com.azure.maps.search.models.BoundingBox;
 import com.azure.maps.search.models.ErrorResponseException;
 import com.azure.maps.search.models.FuzzySearchOptions;
-import com.azure.maps.search.models.GeoJsonLineString;
-import com.azure.maps.search.models.GeoJsonObject;
 import com.azure.maps.search.models.JsonFormat;
 import com.azure.maps.search.models.LatLong;
 import com.azure.maps.search.models.PointOfInterestCategoryTreeResult;
@@ -135,8 +135,9 @@ public final class SearchAsyncClient {
         Mono<Response<PolygonResult>> result = this.serviceClient.listPolygonsWithResponseAsync(JsonFormat.JSON,
             geometryIds, context);
         return result.flatMap(response -> {
+            List<Polygon> polygons = Utility.toPolygonList(response.getValue().getPolygons());
             Response<List<Polygon>> simpleResponse = new SimpleResponse<List<Polygon>>(response,
-                response.getValue().getPolygons());
+                polygons);
             return Mono.just(simpleResponse);
         });
     }

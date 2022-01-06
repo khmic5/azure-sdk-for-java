@@ -89,7 +89,7 @@ public final class SearchAddressResultItemPrivate {
      * bottom-right coordinates of the viewport.
      */
     @JsonProperty(value = "viewport", access = JsonProperty.Access.WRITE_ONLY)
-    private BoundingBox viewport;
+    private BoundingBoxPrivate viewport;
 
     /*
      * Array of EntryPoints. Those describe the types of entrances available at
@@ -247,7 +247,7 @@ public final class SearchAddressResultItemPrivate {
      *
      * @return the viewport value.
      */
-    public BoundingBox getViewport() {
+    public BoundingBoxPrivate getViewport() {
         return this.viewport;
     }
 

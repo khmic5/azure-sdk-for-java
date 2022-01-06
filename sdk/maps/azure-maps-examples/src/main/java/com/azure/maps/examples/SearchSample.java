@@ -181,9 +181,10 @@ public class SearchSample {
 
         // with response
         Response<SearchAddressResult> response = client.fuzzySearchWithResponse(
-            new FuzzySearchOptions("California")
+            new FuzzySearchOptions("Monaco").setEntityType(GeographicEntityType.COUNTRY)
                 .setTop(5), null);
         MapsCommon.print(response.getStatusCode());
+        String id = response.getValue().getResults().get(0).getDataSource().getGeometry().getId();
 
         // Get polygon -
         // https://docs.microsoft.com/en-us/rest/api/maps/search/get-search-polygon
@@ -191,11 +192,14 @@ public class SearchSample {
             .filter(item -> item.getDataSource() != null && item.getDataSource().getGeometry() != null)
             .map(item -> item.getDataSource().getGeometry().getId())
             .collect(Collectors.toList());
+        ids.add(id);
 
         if (ids != null && !ids.isEmpty()) {
-            System.out.println("Get Polygon:");
-            MapsCommon.print(client.getPolygons(ids).get(0));
+            System.out.println("Get Polygon: " + ids);
+            // MapsCommon.print(client.getPolygons(ids).get(1));
+            MapsCommon.print(client.getPolygons(ids).size());
             MapsCommon.print(client.getPolygonsWithResponse(ids, null).getValue().getClass());
+            System.exit(0);
         }
 
         // Search POI -
