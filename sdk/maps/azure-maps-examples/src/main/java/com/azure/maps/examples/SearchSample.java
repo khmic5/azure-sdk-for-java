@@ -199,7 +199,6 @@ public class SearchSample {
             // MapsCommon.print(client.getPolygons(ids).get(1));
             MapsCommon.print(client.getPolygons(ids).size());
             MapsCommon.print(client.getPolygonsWithResponse(ids, null).getValue().getClass());
-            System.exit(0);
         }
 
         // Search POI -
