@@ -15,7 +15,7 @@ import com.azure.maps.search.implementation.models.GeoJsonFeatureCollection;
 import com.azure.maps.search.implementation.models.GeoJsonObject;
 import com.azure.maps.search.implementation.models.PolygonPrivate;
 import com.azure.maps.search.implementation.models.ReverseSearchAddressBatchItemPrivate;
-import com.azure.maps.search.implementation.models.ReverseSearchAddressBatchResultPrivate;
+import com.azure.maps.search.implementation.models.ReverseSearchAddressBatchResult;
 import com.azure.maps.search.implementation.models.ReverseSearchAddressResultItemPrivate;
 import com.azure.maps.search.implementation.models.ReverseSearchAddressResultPrivate;
 import com.azure.maps.search.implementation.models.ReverseSearchCrossStreetAddressResultItemPrivate;
@@ -195,7 +195,7 @@ public class Utility {
     }
 
     public static BatchReverseSearchResult toBatchReverseSearchResult(
-            ReverseSearchAddressBatchResultPrivate result) {
+            ReverseSearchAddressBatchResult result) {
         BatchResultSummary summary = result.getBatchSummary();
         List<ReverseSearchAddressBatchItem> items = result.getBatchItems().stream()
             .map(item -> toReverseSearchAddressBatchItem(item))

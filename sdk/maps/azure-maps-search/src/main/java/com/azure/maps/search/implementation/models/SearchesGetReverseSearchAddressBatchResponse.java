@@ -12,7 +12,7 @@ import com.azure.core.http.rest.ResponseBase;
 
 /** Contains all response data for the getReverseSearchAddressBatch operation. */
 public final class SearchesGetReverseSearchAddressBatchResponse
-        extends ResponseBase<SearchesGetReverseSearchAddressBatchHeaders, ReverseSearchAddressBatchResultPrivate> {
+        extends ResponseBase<SearchesGetReverseSearchAddressBatchHeaders, ReverseSearchAddressBatchResult> {
     /**
      * Creates an instance of SearchesGetReverseSearchAddressBatchResponse.
      *
@@ -26,14 +26,14 @@ public final class SearchesGetReverseSearchAddressBatchResponse
             HttpRequest request,
             int statusCode,
             HttpHeaders rawHeaders,
-            ReverseSearchAddressBatchResultPrivate value,
+            ReverseSearchAddressBatchResult value,
             SearchesGetReverseSearchAddressBatchHeaders headers) {
         super(request, statusCode, rawHeaders, value, headers);
     }
 
     /** @return the deserialized response body. */
     @Override
-    public ReverseSearchAddressBatchResultPrivate getValue() {
+    public ReverseSearchAddressBatchResult getValue() {
         return super.getValue();
     }
 }

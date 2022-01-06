@@ -41,7 +41,7 @@ public final class AddressPrivate {
      * The codes used to unambiguously identify the street
      */
     @JsonProperty(value = "routeNumbers", access = JsonProperty.Access.WRITE_ONLY)
-    private List<Integer> routeNumbers;
+    private List<String> routeNumbers;
 
     /*
      * The street name.
@@ -187,7 +187,7 @@ public final class AddressPrivate {
      *
      * @return the routeNumbers value.
      */
-    public List<Integer> getRouteNumbers() {
+    public List<String> getRouteNumbers() {
         return this.routeNumbers;
     }
 

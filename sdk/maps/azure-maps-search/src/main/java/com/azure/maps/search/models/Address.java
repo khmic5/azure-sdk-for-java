@@ -17,7 +17,7 @@ public final class Address {
     private String street;
     private String crossStreet;
     private String streetNumber;
-    private List<Integer> routeNumbers;
+    private List<String> routeNumbers;
     private String streetName;
     private String streetNameAndNumber;
     private String municipality;
@@ -85,7 +85,7 @@ public final class Address {
      *
      * @return the routeNumbers value.
      */
-    public List<Integer> getRouteNumbers() {
+    public List<String> getRouteNumbers() {
         return this.routeNumbers;
     }
 
