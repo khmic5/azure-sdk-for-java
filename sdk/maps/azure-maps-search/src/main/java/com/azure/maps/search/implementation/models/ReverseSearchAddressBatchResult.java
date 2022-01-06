@@ -12,7 +12,7 @@ import java.util.List;
 
 /** This object is returned from a successful Search Address Reverse Batch service call. */
 @Immutable
-public final class ReverseSearchAddressBatchResultPrivate extends BatchResult {
+public final class ReverseSearchAddressBatchResult extends BatchResult {
     /*
      * Array containing the batch results.
      */

@@ -13,15 +13,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @Immutable
 public final class BoundingBoxCompassNotation {
     /*
-     * North-east (top-left) latitude,longitude coordinate of the bounding box
-     * as comma-separated floats
+     * North-east latitude,longitude coordinate of the bounding box as
+     * comma-separated floats
      */
     @JsonProperty(value = "northEast", access = JsonProperty.Access.WRITE_ONLY)
     private String northEast;
 
     /*
-     * South-west (bottom-right) latitude,longitude coordinate of the bounding
-     * box as comma-separated floats
+     * South-west latitude,longitude coordinate of the bounding box as
+     * comma-separated floats
      */
     @JsonProperty(value = "southWest", access = JsonProperty.Access.WRITE_ONLY)
     private String southWest;
@@ -34,8 +34,8 @@ public final class BoundingBoxCompassNotation {
     private Entity entity;
 
     /**
-     * Get the northEast property: North-east (top-left) latitude,longitude coordinate of the bounding box as
-     * comma-separated floats.
+     * Get the northEast property: North-east latitude,longitude coordinate of the bounding box as comma-separated
+     * floats.
      *
      * @return the northEast value.
      */
@@ -44,8 +44,8 @@ public final class BoundingBoxCompassNotation {
     }
 
     /**
-     * Get the southWest property: South-west (bottom-right) latitude,longitude coordinate of the bounding box as
-     * comma-separated floats.
+     * Get the southWest property: South-west latitude,longitude coordinate of the bounding box as comma-separated
+     * floats.
      *
      * @return the southWest value.
      */

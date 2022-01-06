@@ -14,7 +14,7 @@ import com.azure.core.util.serializer.JsonSerializer;
 import com.azure.core.util.serializer.SerializerAdapter;
 import com.azure.core.util.serializer.SerializerEncoding;
 import com.azure.core.util.serializer.TypeReference;
-import com.azure.maps.search.implementation.models.ReverseSearchAddressBatchResultPrivate;
+import com.azure.maps.search.implementation.models.ReverseSearchAddressBatchResult;
 import com.azure.maps.search.implementation.models.SearchAddressBatchResult;
 import com.azure.maps.search.models.BatchReverseSearchResult;
 import com.azure.maps.search.models.BatchSearchResult;
@@ -45,9 +45,9 @@ public final class BatchResponseSerializer implements JsonSerializer {
                 return (T) result;
             }
             else if (typeReference.getJavaType().getTypeName().contains("BatchReverseSearchResult")){
-                TypeReference<ReverseSearchAddressBatchResultPrivate> interimType = new TypeReference<ReverseSearchAddressBatchResultPrivate>(){};
-                ReverseSearchAddressBatchResultPrivate interimResult = jacksonAdapter
-                    .<ReverseSearchAddressBatchResultPrivate>deserialize(data, interimType.getJavaType(),
+                TypeReference<ReverseSearchAddressBatchResult> interimType = new TypeReference<ReverseSearchAddressBatchResult>(){};
+                ReverseSearchAddressBatchResult interimResult = jacksonAdapter
+                    .<ReverseSearchAddressBatchResult>deserialize(data, interimType.getJavaType(),
                         SerializerEncoding.JSON);
                 BatchReverseSearchResult result = Utility.toBatchReverseSearchResult(interimResult);
                 if (result == null) {

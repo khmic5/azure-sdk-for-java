@@ -2,7 +2,7 @@ package com.azure.maps.search.implementation.helpers;
 
 import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.SimpleResponse;
-import com.azure.maps.search.implementation.models.ReverseSearchAddressBatchResultPrivate;
+import com.azure.maps.search.implementation.models.ReverseSearchAddressBatchResult;
 import com.azure.maps.search.implementation.models.ReverseSearchAddressResultPrivate;
 import com.azure.maps.search.implementation.models.ReverseSearchCrossStreetAddressResultPrivate;
 import com.azure.maps.search.implementation.models.SearchAddressBatchResult;
@@ -84,7 +84,7 @@ public final class TypeMapper {
      * @return
      */
     public static SimpleResponse<BatchReverseSearchResult> createBatchReverseSearchResponse(
-            Response<ReverseSearchAddressBatchResultPrivate> response) {
+            Response<ReverseSearchAddressBatchResult> response) {
         BatchReverseSearchResult result = (response.getValue() == null) ? null : Utility.toBatchReverseSearchResult(response.getValue());
         SimpleResponse<BatchReverseSearchResult> simpleResponse = new SimpleResponse<>(response.getRequest(),
             response.getStatusCode(),
