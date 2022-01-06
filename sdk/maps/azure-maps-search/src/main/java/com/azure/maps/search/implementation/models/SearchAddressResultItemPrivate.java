@@ -10,6 +10,8 @@ import com.azure.core.annotation.Fluent;
 import com.azure.maps.search.models.DataSource;
 import com.azure.maps.search.models.GeographicEntityType;
 import com.azure.maps.search.models.MatchType;
+import com.azure.maps.search.models.PointOfInterest;
+import com.azure.maps.search.models.SearchAddressResultType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
