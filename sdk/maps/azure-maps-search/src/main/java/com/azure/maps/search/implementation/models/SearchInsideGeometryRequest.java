@@ -7,7 +7,6 @@
 package com.azure.maps.search.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.maps.search.models.GeoJsonObject;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** This type represents the request body for the Search Inside Geometry service. */

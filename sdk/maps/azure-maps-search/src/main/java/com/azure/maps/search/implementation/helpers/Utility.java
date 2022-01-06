@@ -11,6 +11,9 @@ import com.azure.core.util.serializer.TypeReference;
 import com.azure.maps.search.implementation.models.AddressPrivate;
 import com.azure.maps.search.implementation.models.AddressRangesPrivate;
 import com.azure.maps.search.implementation.models.EntryPointPrivate;
+import com.azure.maps.search.implementation.models.GeoJsonFeatureCollection;
+import com.azure.maps.search.implementation.models.GeoJsonObject;
+import com.azure.maps.search.implementation.models.PolygonPrivate;
 import com.azure.maps.search.implementation.models.ReverseSearchAddressBatchItemPrivate;
 import com.azure.maps.search.implementation.models.ReverseSearchAddressBatchResultPrivate;
 import com.azure.maps.search.implementation.models.ReverseSearchAddressResultItemPrivate;
@@ -28,7 +31,7 @@ import com.azure.maps.search.models.BatchResultSummary;
 import com.azure.maps.search.models.BatchReverseSearchResult;
 import com.azure.maps.search.models.BatchSearchResult;
 import com.azure.maps.search.models.EntryPoint;
-import com.azure.maps.search.models.GeoJsonObject;
+import com.azure.maps.search.models.Polygon;
 import com.azure.maps.search.models.ReverseSearchAddressBatchItem;
 import com.azure.maps.search.models.ReverseSearchAddressResult;
 import com.azure.maps.search.models.ReverseSearchAddressResultItem;
@@ -201,10 +204,40 @@ public class Utility {
         return new BatchReverseSearchResult(summary, items);
     }
 
+    public static Polygon toPolygon(PolygonPrivate privatePolygon) {
+        Polygon polygon = new Polygon();
+        PolygonPropertiesHelper.setGeometry(polygon, privatePolygon.getGeometryData());
+        PolygonPropertiesHelper.setProviderID(polygon, privatePolygon.getProviderID());
+
+        return polygon;
+    }
+
+    public static List<Polygon> toPolygonList(List<PolygonPrivate> privatePolygonList) {
+        List<Polygon> polygons = privatePolygonList.stream().map(item -> toPolygon(item))
+            .collect(Collectors.toList());
+
+        return polygons;
+    }
+
     public static GeoJsonObject toGeoJsonObject(GeoObject object) {
+        // serialize to GeoJson
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        final TypeReference<GeoJsonObject> typeReference = new TypeReference<GeoJsonObject>(){};
         serializer.serialize(baos, object);
+
+        // deserialize into GeoJsonObject
+        final TypeReference<GeoJsonObject> typeReference = new TypeReference<GeoJsonObject>(){};
+        return serializer.deserializeFromBytes(baos.toByteArray(), typeReference);
+    }
+
+    public static GeoObject toGeoObject(GeoJsonObject object) {
+        // serialize to GeoJson
+        // TODO Review this for other types of returned FeatureCollection
+        GeoJsonFeatureCollection fc = (GeoJsonFeatureCollection) object;
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        serializer.serialize(baos, fc.getFeatures().get(0).getGeometry());
+
+        // deserialize into GeoObject
+        final TypeReference<GeoObject> typeReference = new TypeReference<GeoObject>(){};
         return serializer.deserializeFromBytes(baos.toByteArray(), typeReference);
     }
 }
