@@ -31,6 +31,8 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 
 import reactor.core.publisher.Mono;
 
+// TODO DEPRECATE THIS CLASS
+
 /**
  * Implements a operation resource polling strategy, typically from Operation-Location.
  *
