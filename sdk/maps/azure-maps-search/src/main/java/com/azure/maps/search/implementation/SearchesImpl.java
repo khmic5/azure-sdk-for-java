@@ -13946,8 +13946,13 @@ public final class SearchesImpl {
                 Duration.ofSeconds(1),
                 () -> this.reverseSearchAddressBatchWithResponseAsync(format, batchRequest),
                 new DefaultPollingStrategy<>(this.client.getHttpPipeline()),
+<<<<<<< HEAD
                 new TypeReferenceReverseSearchAddressBatchResult(),
                 new TypeReferenceReverseSearchAddressBatchResult());
+=======
+                new TypeReferenceReverseSearchAddressBatchResultPrivate(),
+                new TypeReferenceReverseSearchAddressBatchResultPrivate());
+>>>>>>> erroradditionalinfo modified
     }
 
     /**
@@ -14062,8 +14067,13 @@ public final class SearchesImpl {
                 Duration.ofSeconds(1),
                 () -> this.reverseSearchAddressBatchWithResponseAsync(format, batchRequest, context),
                 new DefaultPollingStrategy<>(this.client.getHttpPipeline()),
+<<<<<<< HEAD
                 new TypeReferenceReverseSearchAddressBatchResult(),
                 new TypeReferenceReverseSearchAddressBatchResult());
+=======
+                new TypeReferenceReverseSearchAddressBatchResultPrivate(),
+                new TypeReferenceReverseSearchAddressBatchResultPrivate());
+>>>>>>> erroradditionalinfo modified
     }
 
     /**
@@ -14629,8 +14639,13 @@ public final class SearchesImpl {
                 Duration.ofSeconds(1),
                 () -> this.getReverseSearchAddressBatchWithResponseAsync(batchId),
                 new DefaultPollingStrategy<>(this.client.getHttpPipeline()),
+<<<<<<< HEAD
                 new TypeReferenceReverseSearchAddressBatchResult(),
                 new TypeReferenceReverseSearchAddressBatchResult());
+=======
+                new TypeReferenceReverseSearchAddressBatchResultPrivate(),
+                new TypeReferenceReverseSearchAddressBatchResultPrivate());
+>>>>>>> erroradditionalinfo modified
     }
 
     /**
@@ -14743,8 +14758,13 @@ public final class SearchesImpl {
                 Duration.ofSeconds(1),
                 () -> this.getReverseSearchAddressBatchWithResponseAsync(batchId, context),
                 new DefaultPollingStrategy<>(this.client.getHttpPipeline()),
+<<<<<<< HEAD
                 new TypeReferenceReverseSearchAddressBatchResult(),
                 new TypeReferenceReverseSearchAddressBatchResult());
+=======
+                new TypeReferenceReverseSearchAddressBatchResultPrivate(),
+                new TypeReferenceReverseSearchAddressBatchResultPrivate());
+>>>>>>> erroradditionalinfo modified
     }
 
     /**
