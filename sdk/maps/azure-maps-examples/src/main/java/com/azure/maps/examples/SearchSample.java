@@ -331,14 +331,21 @@ public class SearchSample {
             MapsCommon.readContent(MapsCommon.getResource("/search_address_batch_request_body.json")),
             BatchRequest.class);
 
+        List<SearchAddressOptions> optionsList = new ArrayList<>();
+        optionsList.add(new SearchAddressOptions("400 Broad St, Seattle, WA 98109").setTop(3));
+        optionsList.add(new SearchAddressOptions("One, Microsoft Way, Redmond, WA 98052").setTop(3));
+        optionsList.add(new SearchAddressOptions("350 5th Ave, New York, NY 10118").setTop(3));
+        optionsList.add(new SearchAddressOptions("1 Main Street")
+            .setCountryFilter(Arrays.asList("GB")).setTop(1));
+
         // Search address batch async -
         // https://docs.microsoft.com/en-us/rest/api/maps/search/post-search-address-batch
         // This call posts addresses for search using the Asynchronous Batch API.
         // SyncPoller will do the polling automatically and you can retrieve the result
         // with getFinalResult()
         System.out.println("Search Address Batch Async");
-        MapsCommon.print(client.beginSearchAddressBatch(contentJson).getFinalResult());
-        SyncPoller<BatchSearchResult, BatchSearchResult> poller = client.beginSearchAddressBatch(contentJson);
+        MapsCommon.print(client.beginSearchAddressBatch(optionsList).getFinalResult());
+        SyncPoller<BatchSearchResult, BatchSearchResult> poller = client.beginSearchAddressBatch(optionsList);
         BatchSearchResult result = poller.getFinalResult();
         MapsCommon.print(result.getBatchSummary());
         MapsCommon.print(result.getBatchItems().get(0).getResult().getResults().get(0).getBoundingBox());

@@ -1,15 +1,21 @@
 package com.azure.maps.search.implementation.helpers;
 
 import java.io.ByteArrayOutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.azure.core.models.GeoObject;
 import com.azure.core.serializer.json.jackson.JacksonJsonSerializer;
 import com.azure.core.serializer.json.jackson.JacksonJsonSerializerProvider;
+import com.azure.core.util.UrlBuilder;
 import com.azure.core.util.serializer.TypeReference;
 import com.azure.maps.search.implementation.models.AddressPrivate;
 import com.azure.maps.search.implementation.models.AddressRangesPrivate;
+import com.azure.maps.search.implementation.models.BatchRequestItem;
 import com.azure.maps.search.implementation.models.EntryPointPrivate;
 import com.azure.maps.search.implementation.models.GeoJsonFeatureCollection;
 import com.azure.maps.search.implementation.models.GeoJsonObject;
@@ -30,7 +36,9 @@ import com.azure.maps.search.models.AddressRanges;
 import com.azure.maps.search.models.BatchResultSummary;
 import com.azure.maps.search.models.BatchReverseSearchResult;
 import com.azure.maps.search.models.BatchSearchResult;
+import com.azure.maps.search.models.BoundingBox;
 import com.azure.maps.search.models.EntryPoint;
+import com.azure.maps.search.models.LatLong;
 import com.azure.maps.search.models.Polygon;
 import com.azure.maps.search.models.ReverseSearchAddressBatchItem;
 import com.azure.maps.search.models.ReverseSearchAddressResult;
@@ -38,6 +46,7 @@ import com.azure.maps.search.models.ReverseSearchAddressResultItem;
 import com.azure.maps.search.models.ReverseSearchCrossStreetAddressResult;
 import com.azure.maps.search.models.ReverseSearchCrossStreetAddressResultItem;
 import com.azure.maps.search.models.SearchAddressBatchItem;
+import com.azure.maps.search.models.SearchAddressOptions;
 import com.azure.maps.search.models.SearchAddressResult;
 import com.azure.maps.search.models.SearchAddressResultItem;
 import com.azure.maps.search.models.SearchSummary;
@@ -239,5 +248,58 @@ public class Utility {
         // deserialize into GeoObject
         final TypeReference<GeoObject> typeReference = new TypeReference<GeoObject>(){};
         return serializer.deserializeFromBytes(baos.toByteArray(), typeReference);
+    }
+
+    public static BatchRequestItem toBatchRequestItem(SearchAddressOptions options) {
+        Map<String, Object> params = new HashMap<>();
+
+        // single value parameters
+        params.compute("query", (k, v) -> options.getQuery());
+        params.compute("typeahead", (k, v) -> options.isTypeAhead());
+        params.compute("limit", (k, v) -> options.getTop());
+        params.compute("ofs", (k, v) -> options.getSkip());
+        params.compute("language", (k, v) -> options.getLanguage());
+        params.compute("entityType", (k, v) -> options.getEntityType());
+        params.compute("radius", (k, v) -> options.getRadiusInMeters());
+        params.compute("view", (k, v) -> options.getLocalizedMapView());
+
+        // comma separated parameters
+        if (options.getCountryFilter() != null) {
+            params.compute("countrySet", (k, v) -> String.join(",", options.getCountryFilter()));
+        }
+
+        if (options.getExtendedPostalCodesFor() != null) {
+            params.compute("extendedPostalCodesFor", (k, v) ->
+                String.join(",", options.getExtendedPostalCodesFor()
+                    .stream()
+                    .map(item -> item.toString())
+                    .collect(Collectors.toList())));
+        }
+
+        params.compute("topLeft", (k, v) -> options.getBoundingBox()
+            .map(BoundingBox::getTopLeft).map(LatLong::toString).orElse(null));
+        params.compute("btmRight", (k, v) -> options.getBoundingBox()
+            .map(BoundingBox::getBottomRight).map(LatLong::toString).orElse(null));
+
+        // double parameters
+        params.compute("lat", (k, v) -> options.getCoordinates().map(LatLong::getLat).orElse(null));
+        params.compute("lon", (k, v) -> options.getCoordinates().map(LatLong::getLon).orElse(null));
+
+        // batch request item conversion
+        BatchRequestItem item = new BatchRequestItem();
+        UrlBuilder urlBuilder = new UrlBuilder();
+
+        for (String key : params.keySet()) {
+            try {
+                urlBuilder.addQueryParameter(key, URLEncoder.encode(params.get(key).toString(), "UTF-8"));
+            }
+            catch (UnsupportedEncodingException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        item.setQuery(urlBuilder.getQueryString());
+
+        return item;
     }
 }

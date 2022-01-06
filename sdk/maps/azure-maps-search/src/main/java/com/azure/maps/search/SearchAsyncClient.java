@@ -6,8 +6,10 @@ package com.azure.maps.search;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceClient;
@@ -23,6 +25,7 @@ import com.azure.maps.search.implementation.SearchesImpl;
 import com.azure.maps.search.implementation.helpers.BatchResponseSerializer;
 import com.azure.maps.search.implementation.helpers.TypeMapper;
 import com.azure.maps.search.implementation.helpers.Utility;
+import com.azure.maps.search.implementation.models.BatchRequestItem;
 import com.azure.maps.search.implementation.models.GeoJsonLineString;
 import com.azure.maps.search.implementation.models.GeoJsonObject;
 import com.azure.maps.search.implementation.models.PolygonResult;
@@ -1185,8 +1188,8 @@ public final class SearchAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public PollerFlux<BatchSearchResult, BatchSearchResult> beginSearchAddressBatch(
-            BatchRequest batchRequest) {
-        return this.beginSearchAddressBatch(batchRequest, null);
+            List<SearchAddressOptions> optionsList) {
+        return this.beginSearchAddressBatch(optionsList, null);
     }
 
     /**
@@ -1201,7 +1204,15 @@ public final class SearchAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     PollerFlux<BatchSearchResult, BatchSearchResult> beginSearchAddressBatch(
-            BatchRequest batchRequest, Context context) {
+            List<SearchAddressOptions> optionsList, Context context) {
+        Objects.requireNonNull(optionsList, "'optionsList' is a required parameter.");
+
+        // convert list to batch request
+        List<BatchRequestItem> items = optionsList.stream()
+            .map(item -> Utility.toBatchRequestItem(item)).collect(Collectors.toList());
+        BatchRequest batchRequest = new BatchRequest().setBatchItems(items);
+
+        // run
         if (batchRequest.getBatchItems().size() <= BATCH_SIZE) {
             return createPollerFlux(
                 () -> this.serviceClient.searchAddressBatchSyncWithResponseAsync(JsonFormat.JSON,

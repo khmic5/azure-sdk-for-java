@@ -548,8 +548,8 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<BatchSearchResult, BatchSearchResult> beginSearchAddressBatch(
-            BatchRequest batchRequest) {
-        return this.asyncClient.beginSearchAddressBatch(batchRequest).getSyncPoller();
+            List<SearchAddressOptions> optionsList) {
+        return this.asyncClient.beginSearchAddressBatch(optionsList).getSyncPoller();
     }
 
     /**
@@ -566,8 +566,8 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<BatchSearchResult, BatchSearchResult> beginSearchAddressBatch(
-            BatchRequest batchRequest, Context context) {
-        return this.asyncClient.beginSearchAddressBatch(batchRequest, context).getSyncPoller();
+            List<SearchAddressOptions> optionsList, Context context) {
+        return this.asyncClient.beginSearchAddressBatch(optionsList, context).getSyncPoller();
     }
 
     /**
