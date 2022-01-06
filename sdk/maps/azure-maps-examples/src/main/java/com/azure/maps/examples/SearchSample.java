@@ -336,7 +336,7 @@ public class SearchSample {
         optionsList.add(new SearchAddressOptions("One, Microsoft Way, Redmond, WA 98052").setTop(3));
         optionsList.add(new SearchAddressOptions("350 5th Ave, New York, NY 10118").setTop(3));
         optionsList.add(new SearchAddressOptions("1 Main Street")
-            .setCountryFilter(Arrays.asList("GB")).setTop(1));
+            .setCountryFilter(Arrays.asList("GB", "US", "AU")).setTop(3));
 
         // Search address batch async -
         // https://docs.microsoft.com/en-us/rest/api/maps/search/post-search-address-batch
