@@ -7,6 +7,7 @@
 package com.azure.maps.search.implementation.models;
 
 import com.azure.core.annotation.Immutable;
+import com.azure.maps.search.models.QueryType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** Summary object for a Search API response. */
