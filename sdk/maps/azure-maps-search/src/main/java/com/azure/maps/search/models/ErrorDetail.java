@@ -7,7 +7,6 @@
 package com.azure.maps.search.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.maps.search.implementation.models.ErrorAdditionalInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 

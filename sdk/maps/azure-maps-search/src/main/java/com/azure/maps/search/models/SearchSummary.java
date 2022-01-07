@@ -8,7 +8,7 @@ package com.azure.maps.search.models;
 
 import com.azure.core.annotation.Immutable;
 import com.azure.maps.search.implementation.helpers.SearchSummaryPropertiesHelper;
-import com.azure.maps.search.implementation.models.QueryType;
+import com.azure.maps.search.models.QueryType;
 import com.azure.maps.search.implementation.models.SearchSummaryPrivate;
 
 /** Summary object for a Search API response. */
