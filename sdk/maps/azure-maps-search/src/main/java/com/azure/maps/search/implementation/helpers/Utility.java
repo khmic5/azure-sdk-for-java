@@ -34,7 +34,6 @@ import com.azure.maps.search.implementation.models.SearchSummaryPrivate;
 import com.azure.maps.search.models.Address;
 import com.azure.maps.search.models.AddressRanges;
 import com.azure.maps.search.models.BaseSearchOptions;
-import com.azure.maps.search.models.BatchRequest;
 import com.azure.maps.search.models.BatchResultSummary;
 import com.azure.maps.search.models.BatchReverseSearchResult;
 import com.azure.maps.search.models.BatchSearchResult;
@@ -263,16 +262,12 @@ public class Utility {
 
         // comma separated parameters
         if (options.getCountryFilter() != null) {
-            params.compute("countrySet", (k, v) -> String.join(",", options.getCountryFilter()));
+            params.compute("countrySet", (k, v) ->
+                listToCommaSeparatedString(options.getCountryFilter()));
         }
 
-        if (options.getExtendedPostalCodesFor() != null) {
-            params.compute("extendedPostalCodesFor", (k, v) ->
-                String.join(",", options.getExtendedPostalCodesFor()
-                    .stream()
-                    .map(item -> item.toString())
-                    .collect(Collectors.toList())));
-        }
+        params.compute("extendedPostalCodesFor", (k, v) ->
+            listToCommaSeparatedString(options.getExtendedPostalCodesFor()));
 
         // double parameters
         params.compute("lat", (k, v) -> options.getCoordinates().map(LatLong::getLat).orElse(null));
@@ -285,12 +280,70 @@ public class Utility {
     }
 
     public static BatchRequestItem toBatchRequestItem(FuzzySearchOptions options) {
-        // query, brandset, categorySet, connectorSet, country, extendedPostalCodes, idxSet
-        // lat, lon, min/max fuzzy levelopeningHours
-        // typeahead
         Map<String, Object> params = fillCommonParameters(options);
 
-        return null;
+        // single value parameters
+        params.compute("query", (k, v) -> options.getQuery());
+        params.compute("typeahead", (k, v) -> options.isTypeAhead());
+        params.compute("entityType", (k, v) -> options.getEntityType());
+        params.compute("openingHours", (k, v) -> options.getOperatingHours());
+        params.compute("minFuzzyLevel", (k, v) -> options.getMinFuzzyLevel());
+        params.compute("maxFuzzyLevel", (k, v) -> options.getMaxFuzzyLevel());
+
+        // comma separated parameters
+        if (options.getCountryFilter() != null) {
+            params.compute("countrySet", (k, v) -> String.join(",", options.getCountryFilter()));
+        }
+
+        if (options.getExtendedPostalCodesFor() != null) {
+            params.compute("extendedPostalCodesFor", (k, v) ->
+                String.join(",", options.getExtendedPostalCodesFor()
+                    .stream()
+                    .map(item -> item.toString())
+                    .collect(Collectors.toList())));
+        }
+
+        if (options.getIndexFilter() != null) {
+            params.compute("idxSet", (k, v) ->
+                String.join(",", options.getIndexFilter()
+                    .stream()
+                    .map(item -> item.toString())
+                    .collect(Collectors.toList())));
+        }
+
+        if (options.getElectricVehicleConnectorFilter() != null) {
+            params.compute("connectorSet", (k, v) ->
+                String.join(",", options.getElectricVehicleConnectorFilter()
+                    .stream()
+                    .map(item -> item.toString())
+                    .collect(Collectors.toList())));
+        }
+
+        if (options.getCategoryFilter() != null) {
+            params.compute("categorySet", (k, v) ->
+                String.join(",", options.getCategoryFilter()
+                    .stream()
+                    .map(item -> item.toString())
+                    .collect(Collectors.toList())));
+        }
+
+        if (options.getBrandFilter() != null) {
+            params.compute("brandSet", (k, v) ->
+                String.join(",", options.getBrandFilter()
+                    .stream()
+                    .map(item -> item.toString())
+                    .collect(Collectors.toList())));
+        }
+
+
+        // double parameters
+        params.compute("lat", (k, v) -> options.getCoordinates().getLat());
+        params.compute("lon", (k, v) -> options.getCoordinates().getLon());
+
+        // convert to item
+        BatchRequestItem fuzzyItem = convertParametersToRequestItem(params);
+
+        return fuzzyItem;
     }
 
     private static <T extends BaseSearchOptions<T>> Map<String, Object> fillCommonParameters(BaseSearchOptions<T> options) {
@@ -308,6 +361,15 @@ public class Utility {
             .map(BoundingBox::getBottomRight).map(LatLong::toString).orElse(null));
 
         return params;
+    }
+
+    private static <T> String listToCommaSeparatedString(List<T> list) {
+        if (list != null) {
+            return String.join(",", list.stream()
+                .map(item -> item.toString())
+                .collect(Collectors.toList()));
+        }
+        return null;
     }
 
     private static BatchRequestItem convertParametersToRequestItem(Map<String, Object> params) {
