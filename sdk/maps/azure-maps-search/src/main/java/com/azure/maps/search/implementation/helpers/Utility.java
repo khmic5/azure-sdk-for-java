@@ -33,11 +33,14 @@ import com.azure.maps.search.implementation.models.SearchAddressResultPrivate;
 import com.azure.maps.search.implementation.models.SearchSummaryPrivate;
 import com.azure.maps.search.models.Address;
 import com.azure.maps.search.models.AddressRanges;
+import com.azure.maps.search.models.BaseSearchOptions;
+import com.azure.maps.search.models.BatchRequest;
 import com.azure.maps.search.models.BatchResultSummary;
 import com.azure.maps.search.models.BatchReverseSearchResult;
 import com.azure.maps.search.models.BatchSearchResult;
 import com.azure.maps.search.models.BoundingBox;
 import com.azure.maps.search.models.EntryPoint;
+import com.azure.maps.search.models.FuzzySearchOptions;
 import com.azure.maps.search.models.LatLong;
 import com.azure.maps.search.models.Polygon;
 import com.azure.maps.search.models.ReverseSearchAddressBatchItem;
@@ -251,17 +254,12 @@ public class Utility {
     }
 
     public static BatchRequestItem toBatchRequestItem(SearchAddressOptions options) {
-        Map<String, Object> params = new HashMap<>();
+        Map<String, Object> params = fillCommonParameters(options);
 
         // single value parameters
         params.compute("query", (k, v) -> options.getQuery());
         params.compute("typeahead", (k, v) -> options.isTypeAhead());
-        params.compute("limit", (k, v) -> options.getTop());
-        params.compute("ofs", (k, v) -> options.getSkip());
-        params.compute("language", (k, v) -> options.getLanguage());
         params.compute("entityType", (k, v) -> options.getEntityType());
-        params.compute("radius", (k, v) -> options.getRadiusInMeters());
-        params.compute("view", (k, v) -> options.getLocalizedMapView());
 
         // comma separated parameters
         if (options.getCountryFilter() != null) {
@@ -276,15 +274,43 @@ public class Utility {
                     .collect(Collectors.toList())));
         }
 
+        // double parameters
+        params.compute("lat", (k, v) -> options.getCoordinates().map(LatLong::getLat).orElse(null));
+        params.compute("lon", (k, v) -> options.getCoordinates().map(LatLong::getLon).orElse(null));
+
+        // batch request item conversion
+        BatchRequestItem item = convertParametersToRequestItem(params);
+
+        return item;
+    }
+
+    public static BatchRequestItem toBatchRequestItem(FuzzySearchOptions options) {
+        // query, brandset, categorySet, connectorSet, country, extendedPostalCodes, idxSet
+        // lat, lon, min/max fuzzy levelopeningHours
+        // typeahead
+        Map<String, Object> params = fillCommonParameters(options);
+
+        return null;
+    }
+
+    private static <T extends BaseSearchOptions<T>> Map<String, Object> fillCommonParameters(BaseSearchOptions<T> options) {
+        Map<String, Object> params = new HashMap<>();
+
+        // single value parameters
+        params.compute("limit", (k, v) -> options.getTop());
+        params.compute("ofs", (k, v) -> options.getSkip());
+        params.compute("language", (k, v) -> options.getLanguage());
+        params.compute("radius", (k, v) -> options.getRadiusInMeters());
+        params.compute("view", (k, v) -> options.getLocalizedMapView());
         params.compute("topLeft", (k, v) -> options.getBoundingBox()
             .map(BoundingBox::getTopLeft).map(LatLong::toString).orElse(null));
         params.compute("btmRight", (k, v) -> options.getBoundingBox()
             .map(BoundingBox::getBottomRight).map(LatLong::toString).orElse(null));
 
-        // double parameters
-        params.compute("lat", (k, v) -> options.getCoordinates().map(LatLong::getLat).orElse(null));
-        params.compute("lon", (k, v) -> options.getCoordinates().map(LatLong::getLon).orElse(null));
+        return params;
+    }
 
+    private static BatchRequestItem convertParametersToRequestItem(Map<String, Object> params) {
         // batch request item conversion
         BatchRequestItem item = new BatchRequestItem();
         UrlBuilder urlBuilder = new UrlBuilder();
@@ -299,7 +325,6 @@ public class Utility {
         }
 
         item.setQuery(urlBuilder.getQueryString());
-
         return item;
     }
 }

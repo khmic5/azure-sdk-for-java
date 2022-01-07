@@ -9775,8 +9775,8 @@ public final class SearchesImpl {
                 Duration.ofSeconds(1),
                 () -> this.fuzzySearchBatchWithResponseAsync(format, batchRequest),
                 new DefaultPollingStrategy<>(this.client.getHttpPipeline()),
-                new TypeReference<SearchAddressBatchResult>() {},
-                new TypeReference<SearchAddressBatchResult>() {});
+                new TypeReferenceSearchAddressBatchResult(),
+                new TypeReferenceSearchAddressBatchResult());
     }
 
     /**
@@ -9893,8 +9893,8 @@ public final class SearchesImpl {
                 Duration.ofSeconds(1),
                 () -> this.fuzzySearchBatchWithResponseAsync(format, batchRequest, context),
                 new DefaultPollingStrategy<>(this.client.getHttpPipeline()),
-                new TypeReference<SearchAddressBatchResult>() {},
-                new TypeReference<SearchAddressBatchResult>() {});
+                new TypeReferenceSearchAddressBatchResult(),
+                new TypeReferenceSearchAddressBatchResult());
     }
 
     /**
@@ -10469,8 +10469,8 @@ public final class SearchesImpl {
                 Duration.ofSeconds(1),
                 () -> this.getFuzzySearchBatchWithResponseAsync(batchId),
                 new DefaultPollingStrategy<>(this.client.getHttpPipeline()),
-                new TypeReference<SearchAddressBatchResult>() {},
-                new TypeReference<SearchAddressBatchResult>() {});
+                new TypeReferenceSearchAddressBatchResult(),
+                new TypeReferenceSearchAddressBatchResult());
     }
 
     /**
@@ -10585,8 +10585,8 @@ public final class SearchesImpl {
                 Duration.ofSeconds(1),
                 () -> this.getFuzzySearchBatchWithResponseAsync(batchId, context),
                 new DefaultPollingStrategy<>(this.client.getHttpPipeline()),
-                new TypeReference<SearchAddressBatchResult>() {},
-                new TypeReference<SearchAddressBatchResult>() {});
+                new TypeReferenceSearchAddressBatchResult(),
+                new TypeReferenceSearchAddressBatchResult());
     }
 
     /**
@@ -11869,8 +11869,8 @@ public final class SearchesImpl {
                 Duration.ofSeconds(1),
                 () -> this.searchAddressBatchWithResponseAsync(format, batchRequest),
                 new DefaultPollingStrategy<>(this.client.getHttpPipeline()),
-                new TypeReference<SearchAddressBatchResult>() {},
-                new TypeReference<SearchAddressBatchResult>() {});
+                new TypeReferenceSearchAddressBatchResult(),
+                new TypeReferenceSearchAddressBatchResult());
     }
 
     /**
@@ -11986,8 +11986,8 @@ public final class SearchesImpl {
                 Duration.ofSeconds(1),
                 () -> this.searchAddressBatchWithResponseAsync(format, batchRequest, context),
                 new DefaultPollingStrategy<>(this.client.getHttpPipeline()),
-                new TypeReference<SearchAddressBatchResult>() {},
-                new TypeReference<SearchAddressBatchResult>() {});
+                new TypeReferenceSearchAddressBatchResult(),
+                new TypeReferenceSearchAddressBatchResult());
     }
 
     /**
@@ -12557,8 +12557,8 @@ public final class SearchesImpl {
                 Duration.ofSeconds(1),
                 () -> this.getSearchAddressBatchWithResponseAsync(batchId),
                 new DefaultPollingStrategy<>(this.client.getHttpPipeline()),
-                new TypeReference<SearchAddressBatchResult>() {},
-                new TypeReference<SearchAddressBatchResult>() {});
+                new TypeReferenceSearchAddressBatchResult(),
+                new TypeReferenceSearchAddressBatchResult());
     }
 
     /**
@@ -12672,8 +12672,8 @@ public final class SearchesImpl {
                 Duration.ofSeconds(1),
                 () -> this.getSearchAddressBatchWithResponseAsync(batchId, context),
                 new DefaultPollingStrategy<>(this.client.getHttpPipeline()),
-                new TypeReference<SearchAddressBatchResult>() {},
-                new TypeReference<SearchAddressBatchResult>() {});
+                new TypeReferenceSearchAddressBatchResult(),
+                new TypeReferenceSearchAddressBatchResult());
     }
 
     /**
@@ -13946,8 +13946,8 @@ public final class SearchesImpl {
                 Duration.ofSeconds(1),
                 () -> this.reverseSearchAddressBatchWithResponseAsync(format, batchRequest),
                 new DefaultPollingStrategy<>(this.client.getHttpPipeline()),
-                new TypeReference<ReverseSearchAddressBatchResult>() {},
-                new TypeReference<ReverseSearchAddressBatchResult>() {});
+                new TypeReferenceReverseSearchAddressBatchResult(),
+                new TypeReferenceReverseSearchAddressBatchResult());
     }
 
     /**
@@ -14062,8 +14062,8 @@ public final class SearchesImpl {
                 Duration.ofSeconds(1),
                 () -> this.reverseSearchAddressBatchWithResponseAsync(format, batchRequest, context),
                 new DefaultPollingStrategy<>(this.client.getHttpPipeline()),
-                new TypeReference<ReverseSearchAddressBatchResult>() {},
-                new TypeReference<ReverseSearchAddressBatchResult>() {});
+                new TypeReferenceReverseSearchAddressBatchResult(),
+                new TypeReferenceReverseSearchAddressBatchResult());
     }
 
     /**
@@ -14629,8 +14629,8 @@ public final class SearchesImpl {
                 Duration.ofSeconds(1),
                 () -> this.getReverseSearchAddressBatchWithResponseAsync(batchId),
                 new DefaultPollingStrategy<>(this.client.getHttpPipeline()),
-                new TypeReference<ReverseSearchAddressBatchResult>() {},
-                new TypeReference<ReverseSearchAddressBatchResult>() {});
+                new TypeReferenceReverseSearchAddressBatchResult(),
+                new TypeReferenceReverseSearchAddressBatchResult());
     }
 
     /**
@@ -14743,8 +14743,8 @@ public final class SearchesImpl {
                 Duration.ofSeconds(1),
                 () -> this.getReverseSearchAddressBatchWithResponseAsync(batchId, context),
                 new DefaultPollingStrategy<>(this.client.getHttpPipeline()),
-                new TypeReference<ReverseSearchAddressBatchResult>() {},
-                new TypeReference<ReverseSearchAddressBatchResult>() {});
+                new TypeReferenceReverseSearchAddressBatchResult(),
+                new TypeReferenceReverseSearchAddressBatchResult());
     }
 
     /**
@@ -14962,5 +14962,14 @@ public final class SearchesImpl {
     public SyncPoller<ReverseSearchAddressBatchResult, ReverseSearchAddressBatchResult>
             beginGetReverseSearchAddressBatch(String batchId, Context context) {
         return this.beginGetReverseSearchAddressBatchAsync(batchId, context).getSyncPoller();
+    }
+
+    private static final class TypeReferenceSearchAddressBatchResult extends TypeReference<SearchAddressBatchResult> {
+        // empty
+    }
+
+    private static final class TypeReferenceReverseSearchAddressBatchResult
+            extends TypeReference<ReverseSearchAddressBatchResult> {
+        // empty
     }
 }

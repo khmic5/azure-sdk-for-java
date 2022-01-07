@@ -6,11 +6,13 @@
 
 package com.azure.maps.search.implementation;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.annotation.ServiceClientBuilder;
 import com.azure.core.http.HttpClient;
 import com.azure.core.http.HttpHeaders;
 import com.azure.core.http.HttpPipeline;
 import com.azure.core.http.HttpPipelineBuilder;
+import com.azure.core.http.HttpPipelinePosition;
 import com.azure.core.http.policy.AddHeadersPolicy;
 import com.azure.core.http.policy.CookiePolicy;
 import com.azure.core.http.policy.HttpLogOptions;
@@ -28,19 +30,21 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /** A builder for creating a new instance of the SearchClient type. */
 @ServiceClientBuilder(serviceClients = {SearchClientImpl.class})
 public final class SearchClientImplBuilder {
-    private static final String SDK_NAME = "name";
+    @Generated private static final String SDK_NAME = "name";
 
-    private static final String SDK_VERSION = "version";
+    @Generated private static final String SDK_VERSION = "version";
 
-    static final String[] DEFAULT_SCOPES = new String[] {"https://atlas.microsoft.com/.default"};
+    @Generated static final String[] DEFAULT_SCOPES = new String[] {"https://atlas.microsoft.com/.default"};
 
-    private final Map<String, String> properties = new HashMap<>();
+    @Generated private final Map<String, String> properties = new HashMap<>();
 
     /** Create an instance of the SearchClientImplBuilder. */
+    @Generated
     public SearchClientImplBuilder() {
         this.pipelinePolicies = new ArrayList<>();
     }
@@ -52,7 +56,7 @@ public final class SearchClientImplBuilder {
      * Account API. To use Azure AD security in Azure Maps see the following
      * [articles](https://aka.ms/amauthdetails) for guidance.
      */
-    private String clientId;
+    @Generated private String clientId;
 
     /**
      * Sets Specifies which account is intended for usage in conjunction with the Azure AD security model. It represents
@@ -62,6 +66,7 @@ public final class SearchClientImplBuilder {
      * @param clientId the clientId value.
      * @return the SearchClientImplBuilder.
      */
+    @Generated
     public SearchClientImplBuilder clientId(String clientId) {
         this.clientId = clientId;
         return this;
@@ -70,7 +75,7 @@ public final class SearchClientImplBuilder {
     /*
      * server parameter
      */
-    private String host;
+    @Generated private String host;
 
     /**
      * Sets server parameter.
@@ -78,6 +83,7 @@ public final class SearchClientImplBuilder {
      * @param host the host value.
      * @return the SearchClientImplBuilder.
      */
+    @Generated
     public SearchClientImplBuilder host(String host) {
         this.host = host;
         return this;
@@ -86,7 +92,7 @@ public final class SearchClientImplBuilder {
     /*
      * Api Version
      */
-    private String apiVersion;
+    @Generated private String apiVersion;
 
     /**
      * Sets Api Version.
@@ -94,6 +100,7 @@ public final class SearchClientImplBuilder {
      * @param apiVersion the apiVersion value.
      * @return the SearchClientImplBuilder.
      */
+    @Generated
     public SearchClientImplBuilder apiVersion(String apiVersion) {
         this.apiVersion = apiVersion;
         return this;
@@ -102,7 +109,7 @@ public final class SearchClientImplBuilder {
     /*
      * The HTTP pipeline to send requests through
      */
-    private HttpPipeline pipeline;
+    @Generated private HttpPipeline pipeline;
 
     /**
      * Sets The HTTP pipeline to send requests through.
@@ -110,6 +117,7 @@ public final class SearchClientImplBuilder {
      * @param pipeline the pipeline value.
      * @return the SearchClientImplBuilder.
      */
+    @Generated
     public SearchClientImplBuilder pipeline(HttpPipeline pipeline) {
         this.pipeline = pipeline;
         return this;
@@ -118,7 +126,7 @@ public final class SearchClientImplBuilder {
     /*
      * The serializer to serialize an object into a string
      */
-    private SerializerAdapter serializerAdapter;
+    @Generated private SerializerAdapter serializerAdapter;
 
     /**
      * Sets The serializer to serialize an object into a string.
@@ -126,6 +134,7 @@ public final class SearchClientImplBuilder {
      * @param serializerAdapter the serializerAdapter value.
      * @return the SearchClientImplBuilder.
      */
+    @Generated
     public SearchClientImplBuilder serializerAdapter(SerializerAdapter serializerAdapter) {
         this.serializerAdapter = serializerAdapter;
         return this;
@@ -134,7 +143,7 @@ public final class SearchClientImplBuilder {
     /*
      * The HTTP client used to send the request.
      */
-    private HttpClient httpClient;
+    @Generated private HttpClient httpClient;
 
     /**
      * Sets The HTTP client used to send the request.
@@ -142,6 +151,7 @@ public final class SearchClientImplBuilder {
      * @param httpClient the httpClient value.
      * @return the SearchClientImplBuilder.
      */
+    @Generated
     public SearchClientImplBuilder httpClient(HttpClient httpClient) {
         this.httpClient = httpClient;
         return this;
@@ -151,7 +161,7 @@ public final class SearchClientImplBuilder {
      * The configuration store that is used during construction of the service
      * client.
      */
-    private Configuration configuration;
+    @Generated private Configuration configuration;
 
     /**
      * Sets The configuration store that is used during construction of the service client.
@@ -159,6 +169,7 @@ public final class SearchClientImplBuilder {
      * @param configuration the configuration value.
      * @return the SearchClientImplBuilder.
      */
+    @Generated
     public SearchClientImplBuilder configuration(Configuration configuration) {
         this.configuration = configuration;
         return this;
@@ -167,7 +178,7 @@ public final class SearchClientImplBuilder {
     /*
      * The logging configuration for HTTP requests and responses.
      */
-    private HttpLogOptions httpLogOptions;
+    @Generated private HttpLogOptions httpLogOptions;
 
     /**
      * Sets The logging configuration for HTTP requests and responses.
@@ -175,6 +186,7 @@ public final class SearchClientImplBuilder {
      * @param httpLogOptions the httpLogOptions value.
      * @return the SearchClientImplBuilder.
      */
+    @Generated
     public SearchClientImplBuilder httpLogOptions(HttpLogOptions httpLogOptions) {
         this.httpLogOptions = httpLogOptions;
         return this;
@@ -184,7 +196,7 @@ public final class SearchClientImplBuilder {
      * The retry policy that will attempt to retry failed requests, if
      * applicable.
      */
-    private RetryPolicy retryPolicy;
+    @Generated private RetryPolicy retryPolicy;
 
     /**
      * Sets The retry policy that will attempt to retry failed requests, if applicable.
@@ -192,6 +204,7 @@ public final class SearchClientImplBuilder {
      * @param retryPolicy the retryPolicy value.
      * @return the SearchClientImplBuilder.
      */
+    @Generated
     public SearchClientImplBuilder retryPolicy(RetryPolicy retryPolicy) {
         this.retryPolicy = retryPolicy;
         return this;
@@ -200,13 +213,13 @@ public final class SearchClientImplBuilder {
     /*
      * The list of Http pipeline policies to add.
      */
-    private final List<HttpPipelinePolicy> pipelinePolicies;
+    @Generated private final List<HttpPipelinePolicy> pipelinePolicies;
 
     /*
      * The client options such as application ID and custom headers to set on a
      * request.
      */
-    private ClientOptions clientOptions;
+    @Generated private ClientOptions clientOptions;
 
     /**
      * Sets The client options such as application ID and custom headers to set on a request.
@@ -214,6 +227,7 @@ public final class SearchClientImplBuilder {
      * @param clientOptions the clientOptions value.
      * @return the SearchClientImplBuilder.
      */
+    @Generated
     public SearchClientImplBuilder clientOptions(ClientOptions clientOptions) {
         this.clientOptions = clientOptions;
         return this;
@@ -225,6 +239,7 @@ public final class SearchClientImplBuilder {
      * @param customPolicy The custom Http pipeline policy to add.
      * @return the SearchClientImplBuilder.
      */
+    @Generated
     public SearchClientImplBuilder addPolicy(HttpPipelinePolicy customPolicy) {
         pipelinePolicies.add(customPolicy);
         return this;
@@ -235,6 +250,7 @@ public final class SearchClientImplBuilder {
      *
      * @return an instance of SearchClientImpl.
      */
+    @Generated
     public SearchClientImpl buildClient() {
         if (host == null) {
             this.host = "https://atlas.microsoft.com";
@@ -252,6 +268,7 @@ public final class SearchClientImplBuilder {
         return client;
     }
 
+    @Generated
     private HttpPipeline createHttpPipeline() {
         Configuration buildConfiguration =
                 (configuration == null) ? Configuration.getGlobalConfiguration() : configuration;
@@ -271,16 +288,24 @@ public final class SearchClientImplBuilder {
         if (headers.getSize() > 0) {
             policies.add(new AddHeadersPolicy(headers));
         }
+        policies.addAll(
+                this.pipelinePolicies.stream()
+                        .filter(p -> p.getPipelinePosition() == HttpPipelinePosition.PER_CALL)
+                        .collect(Collectors.toList()));
         HttpPolicyProviders.addBeforeRetryPolicies(policies);
         policies.add(retryPolicy == null ? new RetryPolicy() : retryPolicy);
         policies.add(new CookiePolicy());
-        policies.addAll(this.pipelinePolicies);
+        policies.addAll(
+                this.pipelinePolicies.stream()
+                        .filter(p -> p.getPipelinePosition() == HttpPipelinePosition.PER_RETRY)
+                        .collect(Collectors.toList()));
         HttpPolicyProviders.addAfterRetryPolicies(policies);
         policies.add(new HttpLoggingPolicy(httpLogOptions));
         HttpPipeline httpPipeline =
                 new HttpPipelineBuilder()
                         .policies(policies.toArray(new HttpPipelinePolicy[0]))
                         .httpClient(httpClient)
+                        .clientOptions(clientOptions)
                         .build();
         return httpPipeline;
     }
