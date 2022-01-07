@@ -197,7 +197,7 @@ public class SearchSample {
         if (ids != null && !ids.isEmpty()) {
             System.out.println("Get Polygon: " + ids);
             // MapsCommon.print(client.getPolygons(ids).get(1));
-            MapsCommon.print(client.getPolygons(ids).size());
+            MapsCommon.print(client.getPolygons(ids));
             MapsCommon.print(client.getPolygonsWithResponse(ids, null).getValue().getClass());
         }
 
