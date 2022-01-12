@@ -11,7 +11,6 @@ import com.azure.core.annotation.ServiceMethod;
 import com.azure.core.http.rest.Response;
 import com.azure.core.util.Context;
 import com.azure.core.util.polling.SyncPoller;
-import com.azure.maps.search.models.BatchRequest;
 import com.azure.maps.search.models.BatchReverseSearchResult;
 import com.azure.maps.search.models.BatchSearchResult;
 import com.azure.maps.search.models.ErrorResponseException;
@@ -448,8 +447,8 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<BatchSearchResult, BatchSearchResult> beginFuzzySearchBatch(
-            BatchRequest batchRequest) {
-        return this.asyncClient.beginFuzzySearchBatch(batchRequest).getSyncPoller();
+            List<FuzzySearchOptions> optionsList) {
+        return this.asyncClient.beginFuzzySearchBatch(optionsList).getSyncPoller();
     }
 
     /**
@@ -465,8 +464,8 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<BatchSearchResult, BatchSearchResult> beginFuzzySearchBatch(
-            BatchRequest batchRequest, Context context) {
-        return this.asyncClient.beginFuzzySearchBatch(batchRequest, context).getSyncPoller();
+            List<FuzzySearchOptions> optionsList, Context context) {
+        return this.asyncClient.beginFuzzySearchBatch(optionsList, context).getSyncPoller();
     }
 
     /**
@@ -650,8 +649,8 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<BatchReverseSearchResult, BatchReverseSearchResult>
-            beginReverseSearchAddressBatch(BatchRequest batchRequest) {
-        return this.asyncClient.beginReverseSearchAddressBatch(batchRequest).getSyncPoller();
+            beginReverseSearchAddressBatch(List<ReverseSearchAddressOptions> optionsList) {
+        return this.asyncClient.beginReverseSearchAddressBatch(optionsList).getSyncPoller();
     }
 
     /**
@@ -668,8 +667,8 @@ public final class SearchClient {
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<BatchReverseSearchResult, BatchReverseSearchResult>
-            beginReverseSearchAddressBatch(BatchRequest batchRequest, Context context) {
-        return this.asyncClient.beginReverseSearchAddressBatch(batchRequest, context).getSyncPoller();
+            beginReverseSearchAddressBatch(List<ReverseSearchAddressOptions> optionsList, Context context) {
+        return this.asyncClient.beginReverseSearchAddressBatch(optionsList, context).getSyncPoller();
     }
 
     /**

@@ -20,7 +20,6 @@ import com.azure.core.models.GeoPosition;
 import com.azure.core.util.polling.SyncPoller;
 import com.azure.maps.search.SearchClient;
 import com.azure.maps.search.SearchClientBuilder;
-import com.azure.maps.search.models.BatchRequest;
 import com.azure.maps.search.models.BatchReverseSearchResult;
 import com.azure.maps.search.models.BatchSearchResult;
 import com.azure.maps.search.models.FuzzySearchOptions;
@@ -327,10 +326,6 @@ public class SearchSample {
         // This call posts addresses for search using the Synchronous Batch API.
         // All results will be available when the call returns. A maximum of 100
         // addresses can be searched this way.
-        BatchRequest contentJson = MapsCommon.readJson(
-            MapsCommon.readContent(MapsCommon.getResource("/search_address_batch_request_body.json")),
-            BatchRequest.class);
-
         List<SearchAddressOptions> optionsList = new ArrayList<>();
         optionsList.add(new SearchAddressOptions("400 Broad St, Seattle, WA 98109").setTop(3));
         optionsList.add(new SearchAddressOptions("One, Microsoft Way, Redmond, WA 98052").setTop(3));
@@ -354,13 +349,17 @@ public class SearchSample {
         // https://docs.microsoft.com/en-us/rest/api/maps/search/post-search-address-reverse-batch
         // This is also a batch API like searchAddressBatch(), so the same calling
         // patterns apply.
-        contentJson = MapsCommon.readJson(
-            MapsCommon.readContent(MapsCommon.getResource("/search_address_reverse_batch_request_body.json")),
-            BatchRequest.class);
+        List<ReverseSearchAddressOptions> reverseOptionsList = new ArrayList<>();
+        reverseOptionsList.add(new ReverseSearchAddressOptions(new LatLong(48.858561, 2.294911)));
+        reverseOptionsList.add(
+            new ReverseSearchAddressOptions(new LatLong(47.639765, -122.127896))
+                .setRadiusInMeters(5000)
+            );
+        reverseOptionsList.add(new ReverseSearchAddressOptions(new LatLong(47.621028, -122.348170)));
 
         System.out.println("Reverse Search Address Batch Async");
         BatchReverseSearchResult br1 =
-            client.beginReverseSearchAddressBatch(contentJson).getFinalResult();
+            client.beginReverseSearchAddressBatch(reverseOptionsList).getFinalResult();
         MapsCommon.print(br1.getBatchItems());
         MapsCommon.print(br1.getBatchItems().get(0).getResult().getAddresses().get(0).getAddress());
 
@@ -368,11 +367,14 @@ public class SearchSample {
         // https://docs.microsoft.com/en-us/rest/api/maps/search/post-search-fuzzy-batch
         // This is also a batch API like postSearchAddressBatch(), so the same calling
         // patterns apply.
-        contentJson = MapsCommon.readJson(
-            MapsCommon.readContent(MapsCommon.getResource("/search_fuzzy_batch_request_body.json")),
-            BatchRequest.class);
+        List<FuzzySearchOptions> fuzzyOptionsList = new ArrayList<>();
+        fuzzyOptionsList.add(new FuzzySearchOptions("atm", new LatLong(47.639769, -122.128362))
+            .setRadiusInMeters(5000).setTop(5));
+        fuzzyOptionsList.add(new FuzzySearchOptions("Statue of Liberty").setTop(2));
+        fuzzyOptionsList.add(new FuzzySearchOptions("Starbucks", new LatLong(47.639769, -122.128362))
+            .setRadiusInMeters(5000));
 
         System.out.println("Post Search Fuzzy Batch Async");
-        MapsCommon.print(client.beginFuzzySearchBatch(contentJson).getFinalResult());
+        MapsCommon.print(client.beginFuzzySearchBatch(fuzzyOptionsList).getFinalResult());
     }
 }

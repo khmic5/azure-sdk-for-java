@@ -7,7 +7,6 @@
 package com.azure.maps.search.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.maps.search.models.OperatingHoursTime;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** Open time range for a day. */

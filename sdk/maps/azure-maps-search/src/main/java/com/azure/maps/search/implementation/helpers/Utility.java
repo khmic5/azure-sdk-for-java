@@ -43,6 +43,7 @@ import com.azure.maps.search.models.FuzzySearchOptions;
 import com.azure.maps.search.models.LatLong;
 import com.azure.maps.search.models.Polygon;
 import com.azure.maps.search.models.ReverseSearchAddressBatchItem;
+import com.azure.maps.search.models.ReverseSearchAddressOptions;
 import com.azure.maps.search.models.ReverseSearchAddressResult;
 import com.azure.maps.search.models.ReverseSearchAddressResultItem;
 import com.azure.maps.search.models.ReverseSearchCrossStreetAddressResult;
@@ -252,8 +253,8 @@ public class Utility {
         return serializer.deserializeFromBytes(baos.toByteArray(), typeReference);
     }
 
-    public static BatchRequestItem toBatchRequestItem(SearchAddressOptions options) {
-        Map<String, Object> params = fillCommonParameters(options);
+    public static BatchRequestItem toSearchBatchRequestItem(SearchAddressOptions options) {
+        Map<String, Object> params = fillCommonSearchParameters(options);
 
         // single value parameters
         params.compute("query", (k, v) -> options.getQuery());
@@ -261,13 +262,8 @@ public class Utility {
         params.compute("entityType", (k, v) -> options.getEntityType());
 
         // comma separated parameters
-        if (options.getCountryFilter() != null) {
-            params.compute("countrySet", (k, v) ->
-                listToCommaSeparatedString(options.getCountryFilter()));
-        }
-
-        params.compute("extendedPostalCodesFor", (k, v) ->
-            listToCommaSeparatedString(options.getExtendedPostalCodesFor()));
+        params.compute("countrySet", (k, v) -> listToCommaSeparatedString(options.getCountryFilter()));
+        params.compute("extendedPostalCodesFor", (k, v) -> listToCommaSeparatedString(options.getExtendedPostalCodesFor()));
 
         // double parameters
         params.compute("lat", (k, v) -> options.getCoordinates().map(LatLong::getLat).orElse(null));
@@ -275,12 +271,11 @@ public class Utility {
 
         // batch request item conversion
         BatchRequestItem item = convertParametersToRequestItem(params);
-
         return item;
     }
 
-    public static BatchRequestItem toBatchRequestItem(FuzzySearchOptions options) {
-        Map<String, Object> params = fillCommonParameters(options);
+    public static BatchRequestItem toFuzzySearchBatchRequestItem(FuzzySearchOptions options) {
+        Map<String, Object> params = fillCommonSearchParameters(options);
 
         // single value parameters
         params.compute("query", (k, v) -> options.getQuery());
@@ -291,62 +286,45 @@ public class Utility {
         params.compute("maxFuzzyLevel", (k, v) -> options.getMaxFuzzyLevel());
 
         // comma separated parameters
-        if (options.getCountryFilter() != null) {
-            params.compute("countrySet", (k, v) -> String.join(",", options.getCountryFilter()));
-        }
-
-        if (options.getExtendedPostalCodesFor() != null) {
-            params.compute("extendedPostalCodesFor", (k, v) ->
-                String.join(",", options.getExtendedPostalCodesFor()
-                    .stream()
-                    .map(item -> item.toString())
-                    .collect(Collectors.toList())));
-        }
-
-        if (options.getIndexFilter() != null) {
-            params.compute("idxSet", (k, v) ->
-                String.join(",", options.getIndexFilter()
-                    .stream()
-                    .map(item -> item.toString())
-                    .collect(Collectors.toList())));
-        }
-
-        if (options.getElectricVehicleConnectorFilter() != null) {
-            params.compute("connectorSet", (k, v) ->
-                String.join(",", options.getElectricVehicleConnectorFilter()
-                    .stream()
-                    .map(item -> item.toString())
-                    .collect(Collectors.toList())));
-        }
-
-        if (options.getCategoryFilter() != null) {
-            params.compute("categorySet", (k, v) ->
-                String.join(",", options.getCategoryFilter()
-                    .stream()
-                    .map(item -> item.toString())
-                    .collect(Collectors.toList())));
-        }
-
-        if (options.getBrandFilter() != null) {
-            params.compute("brandSet", (k, v) ->
-                String.join(",", options.getBrandFilter()
-                    .stream()
-                    .map(item -> item.toString())
-                    .collect(Collectors.toList())));
-        }
-
+        params.compute("countrySet", (k, v) -> listToCommaSeparatedString(options.getCountryFilter()));
+        params.compute("extendedPostalCodesFor", (k, v) -> listToCommaSeparatedString(options.getExtendedPostalCodesFor()));
+        params.compute("idxSet", (k, v) -> listToCommaSeparatedString(options.getIndexFilter()));
+        params.compute("connectorSet", (k, v) -> listToCommaSeparatedString(options.getElectricVehicleConnectorFilter()));
+        params.compute("categorySet", (k, v) -> listToCommaSeparatedString(options.getCategoryFilter()));
+        params.compute("brandSet", (k, v) -> listToCommaSeparatedString(options.getBrandFilter()));
 
         // double parameters
-        params.compute("lat", (k, v) -> options.getCoordinates().getLat());
-        params.compute("lon", (k, v) -> options.getCoordinates().getLon());
+        params.compute("lat", (k, v) -> options.getCoordinates().map(LatLong::getLat).orElse(null));
+        params.compute("lon", (k, v) -> options.getCoordinates().map(LatLong::getLon).orElse(null));
 
         // convert to item
         BatchRequestItem fuzzyItem = convertParametersToRequestItem(params);
-
         return fuzzyItem;
     }
 
-    private static <T extends BaseSearchOptions<T>> Map<String, Object> fillCommonParameters(BaseSearchOptions<T> options) {
+    public static BatchRequestItem toReverseSearchBatchRequestItem(ReverseSearchAddressOptions options) {
+        Map<String, Object> params = new HashMap<>();
+
+        // single value parameters
+        params.compute("query", (k, v) -> options.getCoordinates());
+        params.compute("allowFreeformNewline", (k, v) -> options.allowFreeformNewline());
+        params.compute("entityType", (k, v) -> options.getEntityType());
+        params.compute("heading", (k, v) -> options.getHeading());
+        params.compute("number", (k, v) -> options.getNumber());
+        params.compute("radius", (k, v) -> options.getRadiusInMeters());
+        params.compute("returnMatchType", (k, v) -> options.includeMatchType());
+        params.compute("returnSpeedLimit", (k, v) -> options.includeSpeedLimit());
+        params.compute("returnRoadUse", (k, v) -> options.includeRoadUse());
+        params.compute("roadUse", (k, v) -> listToCommaSeparatedString(options.getRoadUse()));
+        params.compute("view", (k, v) -> options.getLocalizedMapView());
+
+        // convert to batchrequestitem
+        BatchRequestItem reverseItem = convertParametersToRequestItem(params);
+        return reverseItem;
+    }
+
+    private static <T extends BaseSearchOptions<T>> Map<String, Object>
+            fillCommonSearchParameters(BaseSearchOptions<T> options) {
         Map<String, Object> params = new HashMap<>();
 
         // single value parameters
