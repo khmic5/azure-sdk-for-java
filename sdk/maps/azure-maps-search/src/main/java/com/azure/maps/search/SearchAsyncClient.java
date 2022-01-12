@@ -25,24 +25,23 @@ import com.azure.maps.search.implementation.SearchesImpl;
 import com.azure.maps.search.implementation.helpers.BatchResponseSerializer;
 import com.azure.maps.search.implementation.helpers.TypeMapper;
 import com.azure.maps.search.implementation.helpers.Utility;
+import com.azure.maps.search.implementation.models.BatchRequest;
 import com.azure.maps.search.implementation.models.BatchRequestItem;
 import com.azure.maps.search.implementation.models.GeoJsonLineString;
 import com.azure.maps.search.implementation.models.GeoJsonObject;
+import com.azure.maps.search.implementation.models.JsonFormat;
 import com.azure.maps.search.implementation.models.PolygonResult;
 import com.azure.maps.search.implementation.models.ResponseFormat;
 import com.azure.maps.search.implementation.models.ReverseSearchAddressResultPrivate;
 import com.azure.maps.search.implementation.models.ReverseSearchCrossStreetAddressResultPrivate;
-import com.azure.maps.search.implementation.models.SearchAddressBatchResult;
 import com.azure.maps.search.implementation.models.SearchAddressResultPrivate;
 import com.azure.maps.search.implementation.models.SearchAlongRouteRequest;
 import com.azure.maps.search.implementation.models.SearchInsideGeometryRequest;
-import com.azure.maps.search.models.BatchRequest;
 import com.azure.maps.search.models.BatchReverseSearchResult;
 import com.azure.maps.search.models.BatchSearchResult;
 import com.azure.maps.search.models.BoundingBox;
 import com.azure.maps.search.models.ErrorResponseException;
 import com.azure.maps.search.models.FuzzySearchOptions;
-import com.azure.maps.search.models.JsonFormat;
 import com.azure.maps.search.models.LatLong;
 import com.azure.maps.search.models.PointOfInterestCategoryTreeResult;
 import com.azure.maps.search.models.Polygon;
@@ -179,7 +178,6 @@ public final class SearchAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     Mono<Response<SearchAddressResult>> fuzzySearchWithResponse(FuzzySearchOptions options, Context context) {
-        final Optional<LatLong> optCoordinates = Optional.ofNullable(options.getCoordinates());
         Mono<Response<SearchAddressResultPrivate>> responseMono =
             this.serviceClient.fuzzySearchWithResponseAsync(
                 ResponseFormat.JSON,
@@ -189,8 +187,8 @@ public final class SearchAsyncClient {
                 options.getSkip(),
                 options.getCategoryFilter(),
                 options.getCountryFilter(),
-                optCoordinates.map(LatLong::getLat).orElse(null),
-                optCoordinates.map(LatLong::getLon).orElse(null),
+                options.getCoordinates().map(LatLong::getLat).orElse(null),
+                options.getCoordinates().map(LatLong::getLon).orElse(null),
                 options.getRadiusInMeters(),
                 options.getBoundingBox().map(BoundingBox::getTopLeft).map(LatLong::toString).orElse(null),
                 options.getBoundingBox().map(BoundingBox::getBottomRight).map(LatLong::toString).orElse(null),
@@ -248,7 +246,6 @@ public final class SearchAsyncClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     Mono<Response<SearchAddressResult>> searchPointOfInterestWithResponse(SearchPointOfInterestOptions options,
             Context context) {
-        final Optional<LatLong> optCoordinates = Optional.ofNullable(options.getCoordinates());
         Mono<Response<SearchAddressResultPrivate>> responseMono =
             this.serviceClient.searchPointOfInterestWithResponseAsync(
                 ResponseFormat.JSON,
@@ -258,8 +255,8 @@ public final class SearchAsyncClient {
                 options.getSkip(),
                 options.getCategoryFilter(),
                 options.getCountryFilter(),
-                optCoordinates.map(LatLong::getLat).orElse(null),
-                optCoordinates.map(LatLong::getLon).orElse(null),
+                options.getCoordinates().map(LatLong::getLat).orElse(null),
+                options.getCoordinates().map(LatLong::getLon).orElse(null),
                 options.getRadiusInMeters(),
                 options.getBoundingBox().map(BoundingBox::getTopLeft).map(LatLong::toString).orElse(null),
                 options.getBoundingBox().map(BoundingBox::getBottomRight).map(LatLong::toString).orElse(null),
@@ -322,11 +319,14 @@ public final class SearchAsyncClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     Mono<Response<SearchAddressResult>> searchNearbyPointOfInterestWithResponse(
             SearchNearbyPointsOfInterestOptions options, Context context) {
+        // this should throw an exception if the coordinates are null, as for
+        // this method they are mandatory
+        final LatLong coordinates = options.getCoordinates().get();
         Mono<Response<SearchAddressResultPrivate>> responseMono =
             this.serviceClient.searchNearbyPointOfInterestWithResponseAsync(
                 ResponseFormat.JSON,
-                options.getCoordinates().getLat(),
-                options.getCoordinates().getLon(),
+                coordinates.getLat(),
+                coordinates.getLon(),
                 options.getTop(),
                 options.getSkip(),
                 options.getCategoryFilter(),
@@ -389,7 +389,6 @@ public final class SearchAsyncClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     Mono<Response<SearchAddressResult>> searchPointOfInterestCategoryWithResponse(
                 SearchPointOfInterestCategoryOptions options, Context context) {
-        final Optional<LatLong> optCoordinates = Optional.ofNullable(options.getCoordinates());
         Mono<Response<SearchAddressResultPrivate>> responseMono =
             this.serviceClient.searchPointOfInterestCategoryWithResponseAsync(
                 ResponseFormat.JSON,
@@ -399,8 +398,8 @@ public final class SearchAsyncClient {
                 options.getSkip(),
                 options.getCategoryFilter(),
                 options.getCountryFilter(),
-                optCoordinates.map(LatLong::getLat).orElse(null),
-                optCoordinates.map(LatLong::getLon).orElse(null),
+                options.getCoordinates().map(LatLong::getLat).orElse(null),
+                options.getCoordinates().map(LatLong::getLon).orElse(null),
                 options.getRadiusInMeters(),
                 options.getBoundingBox().map(BoundingBox::getTopLeft).map(LatLong::toString).orElse(null),
                 options.getBoundingBox().map(BoundingBox::getBottomRight).map(LatLong::toString).orElse(null),
@@ -931,10 +930,10 @@ public final class SearchAsyncClient {
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Search Address Batch service call.
-     */
+     *
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Mono<Response<BatchSearchResult>> fuzzySearchBatchSyncWithResponse(BatchRequest batchRequest,
-            Context context) {
+    Mono<Response<BatchSearchResult>> fuzzySearchBatchSyncWithResponse(
+            List<FuzzySearchOptions> optionsList, Context context) {
         Mono<Response<SearchAddressBatchResult>> responseMono = this.serviceClient
             .fuzzySearchBatchSyncWithResponseAsync(JsonFormat.JSON, batchRequest, context);
 
@@ -943,7 +942,7 @@ public final class SearchAsyncClient {
             Response<BatchSearchResult> simpleResponse = TypeMapper.createBatchSearchResponse(response);
             return Mono.just(simpleResponse);
         });
-    }
+    }*/
 
     /**
      * **Search Fuzzy Batch API**
@@ -982,8 +981,8 @@ public final class SearchAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public PollerFlux<BatchSearchResult, BatchSearchResult> beginFuzzySearchBatch(
-            BatchRequest batchRequest) {
-        return this.beginFuzzySearchBatch(batchRequest, null);
+            List<FuzzySearchOptions> optionsList) {
+        return this.beginFuzzySearchBatch(optionsList, null);
     }
 
     /**
@@ -999,7 +998,14 @@ public final class SearchAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     PollerFlux<BatchSearchResult, BatchSearchResult> beginFuzzySearchBatch(
-            BatchRequest batchRequest, Context context) {
+            List<FuzzySearchOptions> optionsList, Context context) {
+        Objects.requireNonNull(optionsList, "'optionsList' is a required parameter.");
+
+        // convert list to batch request
+        List<BatchRequestItem> items = optionsList.stream()
+            .map(item -> Utility.toFuzzySearchBatchRequestItem(item)).collect(Collectors.toList());
+        BatchRequest batchRequest = new BatchRequest().setBatchItems(items);
+
         if (batchRequest.getBatchItems().size() <= BATCH_SIZE) {
             return createPollerFlux(
                 () -> this.serviceClient.fuzzySearchBatchSyncWithResponseAsync(JsonFormat.JSON,
@@ -1209,7 +1215,7 @@ public final class SearchAsyncClient {
 
         // convert list to batch request
         List<BatchRequestItem> items = optionsList.stream()
-            .map(item -> Utility.toBatchRequestItem(item)).collect(Collectors.toList());
+            .map(item -> Utility.toSearchBatchRequestItem(item)).collect(Collectors.toList());
         BatchRequest batchRequest = new BatchRequest().setBatchItems(items);
 
         // run
@@ -1386,8 +1392,8 @@ public final class SearchAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public PollerFlux<BatchReverseSearchResult, BatchReverseSearchResult>
-            beginReverseSearchAddressBatch(BatchRequest batchRequest) {
-        return this.beginReverseSearchAddressBatch(batchRequest, null);
+            beginReverseSearchAddressBatch(List<ReverseSearchAddressOptions> optionsList) {
+        return this.beginReverseSearchAddressBatch(optionsList, null);
     }
 
     /**
@@ -1402,7 +1408,14 @@ public final class SearchAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     PollerFlux<BatchReverseSearchResult, BatchReverseSearchResult>
-            beginReverseSearchAddressBatch(BatchRequest batchRequest, Context context) {
+            beginReverseSearchAddressBatch(List<ReverseSearchAddressOptions> optionsList, Context context) {
+        Objects.requireNonNull(optionsList, "'optionsList' is a required parameter.");
+
+        // convert list to batch request
+        List<BatchRequestItem> items = optionsList.stream()
+            .map(item -> Utility.toReverseSearchBatchRequestItem(item)).collect(Collectors.toList());
+        BatchRequest batchRequest = new BatchRequest().setBatchItems(items);
+
         if (batchRequest.getBatchItems().size() <= BATCH_SIZE) {
             return createReversePollerFlux(
                 () -> this.serviceClient.reverseSearchAddressBatchSyncWithResponseAsync(JsonFormat.JSON,

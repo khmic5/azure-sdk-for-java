@@ -1,6 +1,7 @@
 package com.azure.maps.search.models;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Class holding optional parameters for POI Search.
@@ -48,8 +49,8 @@ public class BaseSearchPointOfInterestOptions<T extends BaseSearchPointOfInteres
      * Returns the coordinates.
      * @return
      */
-    public LatLong getCoordinates() {
-        return coordinates;
+    public Optional<LatLong> getCoordinates() {
+        return Optional.ofNullable(coordinates);
     }
 
     /**
