@@ -6,18 +6,17 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.azure.core.http.HttpPipelineCallContext;
-import com.azure.core.http.HttpPipelineNextPolicy;
-import com.azure.core.http.HttpResponse;
+import com.azure.core.credential.AzureKeyCredential;
 import com.azure.core.http.policy.HttpLogDetailLevel;
 import com.azure.core.http.policy.HttpLogOptions;
-import com.azure.core.http.policy.HttpPipelinePolicy;
 import com.azure.core.http.rest.Response;
 import com.azure.core.models.GeoLineString;
 import com.azure.core.models.GeoLinearRing;
 import com.azure.core.models.GeoPolygon;
 import com.azure.core.models.GeoPosition;
 import com.azure.core.util.polling.SyncPoller;
+import com.azure.identity.DefaultAzureCredential;
+import com.azure.identity.DefaultAzureCredentialBuilder;
 import com.azure.maps.search.SearchClient;
 import com.azure.maps.search.SearchClientBuilder;
 import com.azure.maps.search.models.BatchReverseSearchResult;
@@ -38,37 +37,25 @@ import com.azure.maps.search.models.SearchPointOfInterestOptions;
 import com.azure.maps.search.models.SearchStructuredAddressOptions;
 import com.azure.maps.search.models.StructuredAddress;
 
-import reactor.core.publisher.Mono;
-
 public class SearchSample {
 
     public static void main(String[] args) throws IOException {
-        // build Client ID policy for use with Azure AD authentication
-        HttpPipelinePolicy clientIdPolicy = new HttpPipelinePolicy() {
-            @Override
-            public Mono<HttpResponse> process(HttpPipelineCallContext context, HttpPipelineNextPolicy next) {
-                return Mono.defer(() -> {
-                    context.getHttpRequest().setHeader("x-ms-client-id", System.getenv("CLIENT_ID"));
-                    return next.process();
-                });
-            }
-        };
+        // authenticates using subscription key
+        AzureKeyCredential keyCredential = new AzureKeyCredential(System.getenv("SUBSCRIPTION_KEY"));
 
-        // build subscription policy for use with Shared Key Authentication
-        HttpPipelinePolicy subscriptionKeyPolicy = new HttpPipelinePolicy() {
-            @Override
-            public Mono<HttpResponse> process(HttpPipelineCallContext context, HttpPipelineNextPolicy next) {
-                return Mono.defer(() -> {
-                    context.getHttpRequest().setUrl(context.getHttpRequest().getUrl().toString() + "&subscription-key="
-                            + System.getenv("SUBSCRIPTION_KEY"));
-                    return next.process();
-                });
-            }
-        };
+        // authenticates using Azure AD building a default credential
+        // This will look for AZURE_CLIENT_ID, AZURE_TENANT_ID, and AZURE_CLIENT_SECRET env variables
+        DefaultAzureCredential tokenCredential = new DefaultAzureCredentialBuilder().build();
 
-        // use default credentials
+        // build client
         SearchClientBuilder builder = new SearchClientBuilder();
-        builder.addPolicy(subscriptionKeyPolicy);
+
+        // use this for key authentication
+        // builder.credential(keyCredential);
+
+        // use the next 2 lines for Azure AD authentication
+        builder.credential(tokenCredential);
+        builder.mapsClientId(System.getenv("CLIENT_ID"));
         builder.httpLogOptions(new HttpLogOptions().setLogLevel(HttpLogDetailLevel.BODY_AND_HEADERS));
         SearchClient client = builder.buildClient();
 
