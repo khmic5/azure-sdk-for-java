@@ -51,6 +51,11 @@
     </dependency>
     <dependency>
       <groupId>com.azure</groupId>
+      <artifactId>azure-core-http-netty</artifactId>
+      <version>1.11.5</version>
+    </dependency>
+    <dependency>
+      <groupId>com.azure</groupId>
       <artifactId>azure-core-serializer-json-jackson</artifactId>
       <version>1.2.9</version>
     </dependency>
