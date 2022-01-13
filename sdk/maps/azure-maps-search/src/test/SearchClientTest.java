@@ -1,7 +1,7 @@
 package com.azure.maps.search.test.java.com.azure.maps.search;
 
 import com.azure.maps.search.SearchClientBuilder;
-
+import static org.mockito.Mockito;
 import com.azure.maps.search.SearchClient;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -12,14 +12,29 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 
-public class SearchClientTest {
+public class SearchClientTest extends SearchClientTestBase {
 
-    private SearchClient searchClient;
+    //private SearchClient searchClient;
+
+    // @Override
+    // protected void beforeTest() {
+    //     super.beforeTest();
+    //     assumeTrue(shouldEnableSmsTests());
+    // }
+
+
 
     @Test
-    public void testing {
+    public void testGetPolygons() {
+        //SearchClientBuilder builder = new SearchClientBuilder();
+        SearchClient searchClient = mock(SearchClient.class);
+        // when(searchClient.getPolygons())
         assertTrue(true);
     }
+
+    
+
+
 
     /*
     protected SearchClientBuilder getSmsClient(HttpClient httpClient) {
@@ -40,16 +55,6 @@ public class SearchClientTest {
     }
 
     */
-
-    protected void beforeTest() {
-
-    }
     
-    SearchClientBuilder builder = new SearchClientBuilder();
-
-
-
-    @Test
-
 
 }
