@@ -2,6 +2,9 @@ package com.azure.maps.search;
 
 import com.azure.core.util.ServiceVersion;
 
+/**
+ * Contains the versions of the Search Service available for the clients.
+ */
 public enum MapsSearchServiceVersion implements ServiceVersion {
     /**
      * Service version {@code 1.0}.
@@ -10,6 +13,11 @@ public enum MapsSearchServiceVersion implements ServiceVersion {
 
     private final String version;
 
+    /**
+     * Creates a new {@link MapsSearchServiceVersion} with a version string.
+     *
+     * @param version
+     */
     MapsSearchServiceVersion(String version) {
         this.version = version;
     }
