@@ -4,7 +4,7 @@ import com.azure.maps.search.implementation.models.SearchSummaryPrivate;
 import com.azure.maps.search.models.SearchSummary;
 
 /**
- * The helper class to set the non-public properties of an {@link SearchSummaryPrivate} instance.
+ * The helper class to set the non-public properties of an {@link SearchSummary} instance.
  */
 public final class SearchSummaryPropertiesHelper {
     private static SearchSummaryAccessor accessor;
@@ -12,7 +12,7 @@ public final class SearchSummaryPropertiesHelper {
     private SearchSummaryPropertiesHelper() { }
 
     /**
-     * Type defining the methods to set the non-public properties of an {@link SearchSummaryPRivate} instance.
+     * Type defining the methods to set the non-public properties of an {@link SearchSummary} instance.
      */
     public interface SearchSummaryAccessor {
         void setFromPrivateSearchSummary(SearchSummary searchSummary, SearchSummaryPrivate privateSearchSummary);
@@ -27,6 +27,12 @@ public final class SearchSummaryPropertiesHelper {
         accessor = searchSummaryAccessor;
     }
 
+    /**
+     * Sets all properties of this {@link SearchSummary} instance from a private model.
+     *
+     * @param searchSummary
+     * @param privateSearchSummary
+     */
     public static void setFromPrivateSearchSummary(SearchSummary searchSummary, SearchSummaryPrivate privateSearchSummary) {
         accessor.setFromPrivateSearchSummary(searchSummary, privateSearchSummary);
     }

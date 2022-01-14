@@ -4,7 +4,7 @@ import com.azure.maps.search.implementation.models.SearchAddressResultItemPrivat
 import com.azure.maps.search.models.SearchAddressResultItem;
 
 /**
- * The helper class to set the non-public properties of an {@link SearchAddressResultItemPrivate} instance.
+ * The helper class to set the non-public properties of an {@link SearchAddressResultItem} instance.
  */
 public final class SearchAddressResultItemPropertiesHelper {
     private static SearchAddressResultItemAccessor accessor;
@@ -12,7 +12,7 @@ public final class SearchAddressResultItemPropertiesHelper {
     private SearchAddressResultItemPropertiesHelper() { }
 
     /**
-     * Type defining the methods to set the non-public properties of an {@link SearchAddressResultItemPrivate} instance.
+     * Type defining the methods to set the non-public properties of an {@link SearchAddressResultItem} instance.
      */
     public interface SearchAddressResultItemAccessor {
         void setFromSearchAddressResultItemPrivate(SearchAddressResultItem resultItem,
@@ -28,8 +28,14 @@ public final class SearchAddressResultItemPropertiesHelper {
         accessor = searchAddressResultAccessor;
     }
 
+    /**
+     * Sets all properties of this {@link SearchAddressResultItem} from a private model.
+     *
+     * @param resultItem
+     * @param privateResultItem
+     */
     public static void setFromSearchAddressResultItemPrivate(SearchAddressResultItem resultItem,
-        SearchAddressResultItemPrivate privateResultItem) {
+            SearchAddressResultItemPrivate privateResultItem) {
         accessor.setFromSearchAddressResultItemPrivate(resultItem, privateResultItem);
     }
 }

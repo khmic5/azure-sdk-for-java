@@ -6,7 +6,7 @@ import java.util.Optional;
 /**
  * Class holding optional parameters for Search.
  */
-public class BaseSearchOptions<T extends BaseSearchOptions<T>> {
+public abstract class BaseSearchOptions<T extends BaseSearchOptions<T>> {
     private Integer top;
     private Integer skip;
     private List<String> countryFilter;

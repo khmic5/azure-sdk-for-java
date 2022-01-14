@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Class holding optional parameters for Geometry Search.
  */
-public class BaseSearchGeometryOptions<T extends BaseSearchGeometryOptions<T>> {
+public abstract class BaseSearchGeometryOptions<T extends BaseSearchGeometryOptions<T>> {
     private String query;
     private Integer top;
     private List<Integer> categoryFilter;

@@ -23,7 +23,6 @@ import com.azure.core.util.polling.PollerFlux;
 import com.azure.core.util.serializer.TypeReference;
 import com.azure.maps.search.implementation.SearchesImpl;
 import com.azure.maps.search.implementation.helpers.BatchResponseSerializer;
-import com.azure.maps.search.implementation.helpers.TypeMapper;
 import com.azure.maps.search.implementation.helpers.Utility;
 import com.azure.maps.search.implementation.models.BatchRequest;
 import com.azure.maps.search.implementation.models.BatchRequestItem;
@@ -206,7 +205,7 @@ public final class MapsSearchAsyncClient {
 
         // convert to the right (public) SearchAddressResult
         return responseMono.flatMap(response -> {
-            Response<SearchAddressResult> simpleResponse = TypeMapper.createSearchResponse(response);
+            Response<SearchAddressResult> simpleResponse = Utility.createSearchResponse(response);
             return Mono.just(simpleResponse);
         });
     }
@@ -270,7 +269,7 @@ public final class MapsSearchAsyncClient {
 
         // convert to the right (public) SearchAddressResult
         return responseMono.flatMap(response -> {
-            Response<SearchAddressResult> simpleResponse = TypeMapper.createSearchResponse(response);
+            Response<SearchAddressResult> simpleResponse = Utility.createSearchResponse(response);
             return Mono.just(simpleResponse);
         });
     }
@@ -341,7 +340,7 @@ public final class MapsSearchAsyncClient {
 
         // convert to the right (public) SearchAddressResult
         return responseMono.flatMap(response -> {
-            Response<SearchAddressResult> simpleResponse = TypeMapper.createSearchResponse(response);
+            Response<SearchAddressResult> simpleResponse = Utility.createSearchResponse(response);
             return Mono.just(simpleResponse);
         });
     }
@@ -413,7 +412,7 @@ public final class MapsSearchAsyncClient {
 
         // convert to the right (public) SearchAddressResult
         return responseMono.flatMap(response -> {
-            Response<SearchAddressResult> simpleResponse = TypeMapper.createSearchResponse(response);
+            Response<SearchAddressResult> simpleResponse = Utility.createSearchResponse(response);
             return Mono.just(simpleResponse);
         });
     }
@@ -535,7 +534,7 @@ public final class MapsSearchAsyncClient {
 
         // convert to the right (public) SearchAddressResult
         return responseMono.flatMap(response -> {
-            Response<SearchAddressResult> simpleResponse = TypeMapper.createSearchResponse(response);
+            Response<SearchAddressResult> simpleResponse = Utility.createSearchResponse(response);
             return Mono.just(simpleResponse);
         });
     }
@@ -600,7 +599,7 @@ public final class MapsSearchAsyncClient {
 
         // convert to the right (public) SearchAddressResult
         return responseMono.flatMap(response -> {
-            Response<ReverseSearchAddressResult> simpleResponse = TypeMapper.createReverseSearchResponse(response);
+            Response<ReverseSearchAddressResult> simpleResponse = Utility.createReverseSearchResponse(response);
             return Mono.just(simpleResponse);
         });
     }
@@ -664,7 +663,7 @@ public final class MapsSearchAsyncClient {
 
         // convert to the right (public) SearchAddressResult
         return responseMono.flatMap(response -> {
-            Response<ReverseSearchCrossStreetAddressResult> simpleResponse = TypeMapper
+            Response<ReverseSearchCrossStreetAddressResult> simpleResponse = Utility
                 .createReverseSearchCrossStreetResponse(response);
             return Mono.just(simpleResponse);
         });
@@ -738,7 +737,7 @@ public final class MapsSearchAsyncClient {
 
         // convert to the right (public) SearchAddressResult
         return responseMono.flatMap(response -> {
-            Response<SearchAddressResult> simpleResponse = TypeMapper.createSearchResponse(response);
+            Response<SearchAddressResult> simpleResponse = Utility.createSearchResponse(response);
             return Mono.just(simpleResponse);
         });
     }
@@ -801,7 +800,7 @@ public final class MapsSearchAsyncClient {
 
         // convert to the right (public) SearchAddressResult
         return responseMono.flatMap(response -> {
-            Response<SearchAddressResult> simpleResponse = TypeMapper.createSearchResponse(response);
+            Response<SearchAddressResult> simpleResponse = Utility.createSearchResponse(response);
             return Mono.just(simpleResponse);
         });
     }
@@ -864,7 +863,7 @@ public final class MapsSearchAsyncClient {
 
         // convert to the right (public) SearchAddressResult
         return responseMono.flatMap(response -> {
-            Response<SearchAddressResult> simpleResponse = TypeMapper.createSearchResponse(response);
+            Response<SearchAddressResult> simpleResponse = Utility.createSearchResponse(response);
             return Mono.just(simpleResponse);
         });
     }
@@ -939,7 +938,7 @@ public final class MapsSearchAsyncClient {
 
         // convert to BatchSearchResult
         return responseMono.flatMap(response -> {
-            Response<BatchSearchResult> simpleResponse = TypeMapper.createBatchSearchResponse(response);
+            Response<BatchSearchResult> simpleResponse = Utility.createBatchSearchResponse(response);
             return Mono.just(simpleResponse);
         });
     }*/
@@ -961,7 +960,7 @@ public final class MapsSearchAsyncClient {
             .fuzzySearchBatchWithResponseAsync(JsonFormat.JSON, batchRequest);
 
         return responseMono.flatMap(response -> {
-            Response<BatchSearchResult> simpleResponse = TypeMapper
+            Response<BatchSearchResult> simpleResponse = Utility
                 .createBatchSearchResponse(response);
             return Mono.just(simpleResponse);
         });
@@ -1011,7 +1010,7 @@ public final class MapsSearchAsyncClient {
                 () -> this.serviceClient.fuzzySearchBatchSyncWithResponseAsync(JsonFormat.JSON,
                     batchRequest, context)
                     .flatMap(response -> {
-                        return Mono.just(TypeMapper.createBatchSearchResponse(response));
+                        return Mono.just(Utility.createBatchSearchResponse(response));
                     }),
                 this.forwardStrategy);
         }
@@ -1019,7 +1018,7 @@ public final class MapsSearchAsyncClient {
             return createPollerFlux(
                 () -> this.serviceClient.fuzzySearchBatchWithResponseAsync(JsonFormat.JSON,
                     batchRequest, context).flatMap(response -> {
-                    return Mono.just(TypeMapper.createBatchSearchResponse(response));
+                    return Mono.just(Utility.createBatchSearchResponse(response));
                 }),
                 this.forwardStrategy);
         }
@@ -1040,7 +1039,7 @@ public final class MapsSearchAsyncClient {
             .getFuzzySearchBatchWithResponseAsync(batchId);
 
         return responseMono.flatMap(response -> {
-            Response<BatchSearchResult> simpleResponse = TypeMapper
+            Response<BatchSearchResult> simpleResponse = Utility
                 .createBatchSearchResponse(response);
             return Mono.just(simpleResponse);
         });
@@ -1076,7 +1075,7 @@ public final class MapsSearchAsyncClient {
         return createPollerFlux(
             () -> this.serviceClient.getFuzzySearchBatchWithResponseAsync(batchId, context)
                     .flatMap(response -> {
-                        return Mono.just(TypeMapper.createBatchSearchResponse(response));
+                        return Mono.just(Utility.createBatchSearchResponse(response));
                     }),
             this.forwardStrategy);
     }
@@ -1154,7 +1153,7 @@ public final class MapsSearchAsyncClient {
 
         // convert to BatchSearchResult
         return responseMono.flatMap(response -> {
-            Response<BatchSearchResult> simpleResponse = TypeMapper.createBatchSearchResponse(response);
+            Response<BatchSearchResult> simpleResponse = Utility.createBatchSearchResponse(response);
             return Mono.just(simpleResponse);
         });
     }*/
@@ -1176,7 +1175,7 @@ public final class MapsSearchAsyncClient {
             this.serviceClient.searchAddressBatchWithResponseAsync(JsonFormat.JSON, batchRequest);
 
         return responseMono.flatMap(response -> {
-            Response<BatchSearchResult> simpleResponse = TypeMapper
+            Response<BatchSearchResult> simpleResponse = Utility
                 .createBatchSearchResponse(response);
             return Mono.just(simpleResponse);
         });
@@ -1224,7 +1223,7 @@ public final class MapsSearchAsyncClient {
                 () -> this.serviceClient.searchAddressBatchSyncWithResponseAsync(JsonFormat.JSON,
                     batchRequest, context)
                     .flatMap(response -> {
-                        return Mono.just(TypeMapper.createBatchSearchResponse(response));
+                        return Mono.just(Utility.createBatchSearchResponse(response));
                     }),
                 this.forwardStrategy);
         }
@@ -1232,7 +1231,7 @@ public final class MapsSearchAsyncClient {
             return createPollerFlux(
                 () -> this.serviceClient.searchAddressBatchWithResponseAsync(JsonFormat.JSON,
                     batchRequest, context).flatMap(response -> {
-                    return Mono.just(TypeMapper.createBatchSearchResponse(response));
+                    return Mono.just(Utility.createBatchSearchResponse(response));
                 }),
                 this.forwardStrategy);
         }
@@ -1279,7 +1278,7 @@ public final class MapsSearchAsyncClient {
         return createPollerFlux(
             () -> this.serviceClient.getSearchAddressBatchWithResponseAsync(batchId, context)
                 .flatMap(response -> {
-                    return Mono.just(TypeMapper.createBatchSearchResponse(response));
+                    return Mono.just(Utility.createBatchSearchResponse(response));
                 }),
             this.forwardStrategy);
     }
@@ -1356,7 +1355,7 @@ public final class MapsSearchAsyncClient {
 
         // convert to BatchReverseSearchResult
         return responseMono.flatMap(response -> {
-            Response<BatchReverseSearchResult> result = TypeMapper
+            Response<BatchReverseSearchResult> result = Utility
                 .createBatchReverseSearchResponse(response);
             return Mono.just(result);
         });
@@ -1421,7 +1420,7 @@ public final class MapsSearchAsyncClient {
                 () -> this.serviceClient.reverseSearchAddressBatchSyncWithResponseAsync(JsonFormat.JSON,
                     batchRequest, context)
                     .flatMap(response -> {
-                        return Mono.just(TypeMapper.createBatchReverseSearchResponse(response));
+                        return Mono.just(Utility.createBatchReverseSearchResponse(response));
                     }),
                 this.reverseStrategy);
         }
@@ -1429,7 +1428,7 @@ public final class MapsSearchAsyncClient {
             return createReversePollerFlux(
                 () -> this.serviceClient.reverseSearchAddressBatchWithResponseAsync(JsonFormat.JSON,
                     batchRequest, context).flatMap(response -> {
-                    return Mono.just(TypeMapper.createBatchReverseSearchResponse(response));
+                    return Mono.just(Utility.createBatchReverseSearchResponse(response));
                 }),
                 this.reverseStrategy);
         }
@@ -1477,7 +1476,7 @@ public final class MapsSearchAsyncClient {
         return createReversePollerFlux(
             () -> this.serviceClient.getReverseSearchAddressBatchWithResponseAsync(batchId, context)
                 .flatMap(response -> {
-                    return Mono.just(TypeMapper.createBatchReverseSearchResponse(response));
+                    return Mono.just(Utility.createBatchReverseSearchResponse(response));
                 }),
             this.reverseStrategy);
     }

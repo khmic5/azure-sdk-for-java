@@ -15,12 +15,13 @@ public final class BatchReverseSearchResult {
     private BatchResultSummary batchSummary;
     private List<ReverseSearchAddressBatchItem> batchItems;
 
-    public BatchReverseSearchResult() {
-
-    }
+    /**
+     * Creates a new {@link BatchReverseSearchResult} with default properties.
+     */
+    public BatchReverseSearchResult() {}
 
     /**
-     * Creates a new BatchSearchResult with a summary and batch items.
+     * Creates a new {@link BatchReverseSearchResult} with a summary and batch items.
      *
      * @param batchSummary
      * @param batchItems

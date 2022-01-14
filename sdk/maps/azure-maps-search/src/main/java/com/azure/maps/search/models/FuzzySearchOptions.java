@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Class holding parameters for a fuzzy search.
  */
-public class FuzzySearchOptions extends BaseSearchPointOfInterestOptions<FuzzySearchOptions> {
+public final class FuzzySearchOptions extends BaseSearchPointOfInterestOptions<FuzzySearchOptions> {
     private Boolean isTypeAhead;
     private List<SearchIndexes> extendedPostalCodesFor;
     private Integer minFuzzyLevel;

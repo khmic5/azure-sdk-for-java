@@ -6,7 +6,7 @@ import java.util.Optional;
 /**
  * Class holding optional parameters for POI Search.
  */
-public class BaseSearchPointOfInterestOptions<T extends BaseSearchPointOfInterestOptions<T>> extends BaseSearchOptions<T> {
+public abstract class BaseSearchPointOfInterestOptions<T extends BaseSearchPointOfInterestOptions<T>> extends BaseSearchOptions<T> {
     private List<Integer> categoryFilter;
     private List<String> brandFilter;
     private List<ElectricVehicleConnector> electricVehicleConnectorFilter;

@@ -4,7 +4,7 @@ import com.azure.maps.search.implementation.models.ReverseSearchCrossStreetAddre
 import com.azure.maps.search.models.ReverseSearchCrossStreetAddressResultItem;
 
 /**
- * The helper class to set the non-public properties of an {@link ReverseSearchCrossStreetAddressResultItemPrivate} instance.
+ * The helper class to set the non-public properties of an {@link ReverseSearchCrossStreetAddressResultItem} instance.
  */
 public final class ReverseSearchCrossStreetAddressResultItemPropertiesHelper {
     private static ReverseSearchCrossStreetAddressResultItemAccessor accessor;
@@ -12,7 +12,7 @@ public final class ReverseSearchCrossStreetAddressResultItemPropertiesHelper {
     private ReverseSearchCrossStreetAddressResultItemPropertiesHelper() { }
 
     /**
-     * Type defining the methods to set the non-public properties of an {@link ReverseSearchCrossStreetAddressResultItemPrivate} instance.
+     * Type defining the methods to set the non-public properties of an {@link ReverseSearchCrossStreetAddressResultItem} instance.
      */
     public interface ReverseSearchCrossStreetAddressResultItemAccessor {
         void setFromReverseSearchCrossStreetAddressResultItemPrivate(ReverseSearchCrossStreetAddressResultItem resultItem,
@@ -28,6 +28,12 @@ public final class ReverseSearchCrossStreetAddressResultItemPropertiesHelper {
         accessor = itemAccessor;
     }
 
+    /**
+     * Sets all properties of this {@link ReverseSearchCrossStreetAddressResultItem} using a private model.
+     *
+     * @param resultItem
+     * @param privateResultItem
+     */
     public static void setFromReverseSearchCrossStreetAddressResultItemPrivate(ReverseSearchCrossStreetAddressResultItem resultItem,
         ReverseSearchCrossStreetAddressResultItemPrivate privateResultItem) {
         accessor.setFromReverseSearchCrossStreetAddressResultItemPrivate(resultItem, privateResultItem);

@@ -22,13 +22,20 @@ import com.azure.maps.search.models.BatchSearchResult;
 import reactor.core.publisher.Mono;
 
 /**
- * Jackson based implementation of the {@link JsonSerializer}. This can be used as a default Json serializer if
- * no JsonSerializerProvider is in the class path.
+ * Jackson based implementation of the {@link JsonSerializer}.
+ *
+ * This implementation first deserializes the response into a private {@link SearchAddressResult}
+ * then converts it to a public {@link BatchSearchResult} with the right properties and methods.
+ *
  */
 public final class BatchResponseSerializer implements JsonSerializer {
     private final SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
     private final ClientLogger logger = new ClientLogger(BatchResponseSerializer.class);
 
+    /**
+     * Performs deserialization from {@link SearchAddressBatchResult} or {@link ReverseSearchAddressBatchResult}
+     * and conversion to {@link BatchSearchResult}.
+     */
     @SuppressWarnings("unchecked")
     @Override
     public <T> T deserializeFromBytes(byte[] data, TypeReference<T> typeReference) {

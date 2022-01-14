@@ -27,10 +27,21 @@ public class EntryPointPropertiesHelper {
         accessor = entryPointAccessor;
     }
 
+    /**
+     * Sets the type of {@link EntryPoint}.
+     *
+     * @param entryPoint
+     * @param type
+     */
     public static void setType(EntryPoint entryPoint, EntryPointType type) {
         accessor.setType(entryPoint, type);
     }
 
+    /**
+     * Sets the position of this {@link EntryPoint}
+     * @param entryPoint
+     * @param position
+     */
     public static void setPosition(EntryPoint entryPoint, LatLongPairAbbreviated position) {
         accessor.setPosition(entryPoint, position);
     }

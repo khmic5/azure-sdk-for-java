@@ -27,6 +27,12 @@ public final class AddressRangesPropertiesHelper {
         accessor = addressRangesAccessor;
     }
 
+    /**
+     * Sets properties of an {@link AddressRanges} object using a private model.
+     *
+     * @param addressRanges
+     * @param addressRangesPrivate
+     */
     public static void setFromAddressRangesPrivate(AddressRanges addressRanges, AddressRangesPrivate addressRangesPrivate) {
         accessor.setFromAddressRangesPrivate(addressRanges, addressRangesPrivate);
     }
