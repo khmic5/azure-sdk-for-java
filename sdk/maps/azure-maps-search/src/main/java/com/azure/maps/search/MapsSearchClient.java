@@ -53,7 +53,6 @@ public final class MapsSearchClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public List<Polygon> getPolygons(List<String> geometryIds) {
-        for (String s : geometryIds) System.out.println(s);
         return this.asyncClient.getPolygons(geometryIds).block();
     }
 

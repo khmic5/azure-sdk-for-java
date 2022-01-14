@@ -100,6 +100,7 @@ public final class MapsSearchAsyncClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<List<Polygon>> getPolygons(List<String> geometryIds) {
         Mono<Response<List<Polygon>>> result = this.getPolygonsWithResponse(geometryIds);
+        System.out.println("Ice cream " + result);
         return result.flatMap(response -> {
             return Mono.just(response.getValue());
         });
