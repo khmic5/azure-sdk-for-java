@@ -41,7 +41,7 @@ public class SearchSample {
 
     public static void main(String[] args) throws IOException {
         // authenticates using subscription key
-        AzureKeyCredential keyCredential = new AzureKeyCredential(System.getenv("SUBSCRIPTION_KEY"));
+        // AzureKeyCredential keyCredential = new AzureKeyCredential(System.getenv("SUBSCRIPTION_KEY"));
 
         // authenticates using Azure AD building a default credential
         // This will look for AZURE_CLIENT_ID, AZURE_TENANT_ID, and AZURE_CLIENT_SECRET env variables
@@ -55,7 +55,7 @@ public class SearchSample {
 
         // use the next 2 lines for Azure AD authentication
         builder.credential(tokenCredential);
-        builder.mapsClientId(System.getenv("CLIENT_ID"));
+        builder.mapsClientId(System.getenv("MAPS_CLIENT_ID"));
         builder.httpLogOptions(new HttpLogOptions().setLogLevel(HttpLogDetailLevel.BODY_AND_HEADERS));
         SearchClient client = builder.buildClient();
 
