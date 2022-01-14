@@ -32,16 +32,16 @@ import com.azure.maps.search.models.SearchStructuredAddressOptions;
 import com.azure.maps.search.models.StructuredAddress;
 
 /** Initializes a new instance of the synchronous SearchClient type. */
-@ServiceClient(builder = SearchClientBuilder.class)
-public final class SearchClient {
-    private final SearchAsyncClient asyncClient;
+@ServiceClient(builder = MapsSearchClientBuilder.class)
+public final class MapsSearchClient {
+    private final MapsSearchAsyncClient asyncClient;
 
     /**
      * Initializes an instance of Searches client.
      *
      * @param serviceClient the service client implementation.
      */
-    SearchClient(SearchAsyncClient asyncClient) {
+    MapsSearchClient(MapsSearchAsyncClient asyncClient) {
         this.asyncClient = asyncClient;
     }
 
