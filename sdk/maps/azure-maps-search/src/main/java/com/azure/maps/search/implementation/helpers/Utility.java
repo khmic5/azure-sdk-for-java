@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.azure.core.http.rest.Response;
+import com.azure.core.http.rest.SimpleResponse;
 import com.azure.core.models.GeoObject;
 import com.azure.core.serializer.json.jackson.JacksonJsonSerializer;
 import com.azure.core.serializer.json.jackson.JacksonJsonSerializerProvider;
@@ -60,42 +62,81 @@ import com.azure.maps.search.models.SearchSummary;
 public class Utility {
     private static final JacksonJsonSerializer serializer = new JacksonJsonSerializerProvider().createInstance();
 
-    /**
-     * Helper method to convert {@link AddressPrivate} to
-     * {@link Address}.
-     *
-     * @param addressPrivate The {@link AddressPrivate}.
-     *
-     * @return A {@link Address}.
+        /**
+     * converts the internal representation of SearchAddressResult into the public one
+     * @param response
+     * @return
+     */
+    public static SimpleResponse<SearchAddressResult> createSearchResponse(
+            Response<SearchAddressResultPrivate> response) {
+        SearchAddressResult result = Utility.toSearchAddressResult(response.getValue());
+        SimpleResponse<SearchAddressResult> simpleResponse = new SimpleResponse<>(response.getRequest(),
+            response.getStatusCode(),
+            response.getHeaders(),
+            result);
 
-    public static SingleCategoryClassifyResultCollection toSingleCategoryClassifyResultCollection(
-        CustomSingleClassificationResult customSingleClassificationResult) {
-        final List<SingleCategoryClassifyResult> singleCategoryClassifyResults = new ArrayList<>();
-        final List<SingleClassificationDocument> singleClassificationDocuments =
-            customSingleClassificationResult.getDocuments();
-
-        for (SingleClassificationDocument documentSummary : singleClassificationDocuments) {
-            singleCategoryClassifyResults.add(toSingleCategoryClassifyResult(documentSummary));
-        }
-
-        for (DocumentError documentError : customSingleClassificationResult.getErrors()) {
-            singleCategoryClassifyResults.add(new SingleCategoryClassifyResult(documentError.getId(), null,
-                toTextAnalyticsError(documentError.getError())));
-        }
-
-        final SingleCategoryClassifyResultCollection resultCollection =
-            new SingleCategoryClassifyResultCollection(singleCategoryClassifyResults);
-        SingleCategoryClassifyResultCollectionPropertiesHelper.setProjectName(resultCollection,
-            customSingleClassificationResult.getProjectName());
-        SingleCategoryClassifyResultCollectionPropertiesHelper.setDeploymentName(resultCollection,
-            customSingleClassificationResult.getDeploymentName());
-        if (customSingleClassificationResult.getStatistics() != null) {
-            SingleCategoryClassifyResultCollectionPropertiesHelper.setStatistics(resultCollection,
-                toBatchStatistics(customSingleClassificationResult.getStatistics()));
-        }
-        return resultCollection;
+        return simpleResponse;
     }
-    */
+
+    /**
+     * converts the internal representation of ReverseSearchAddressResult into the public one
+     */
+    public static SimpleResponse<ReverseSearchAddressResult> createReverseSearchResponse(
+            Response<ReverseSearchAddressResultPrivate> response) {
+        ReverseSearchAddressResult result = Utility.toReverseSearchAddressResult(response.getValue());
+        SimpleResponse<ReverseSearchAddressResult> simpleResponse = new SimpleResponse<>(response.getRequest(),
+            response.getStatusCode(),
+            response.getHeaders(),
+            result);
+
+        return simpleResponse;
+    }
+
+    /**
+     * converts the internal representation of ReverseSearchCrossStreetAddressResult into the public one
+     */
+    public static SimpleResponse<ReverseSearchCrossStreetAddressResult> createReverseSearchCrossStreetResponse(
+            Response<ReverseSearchCrossStreetAddressResultPrivate> response) {
+        ReverseSearchCrossStreetAddressResult result = Utility.toReverseSearchCrossStreetAddressResult(response.getValue());
+        SimpleResponse<ReverseSearchCrossStreetAddressResult> simpleResponse = new SimpleResponse<>(response.getRequest(),
+            response.getStatusCode(),
+            response.getHeaders(),
+            result);
+
+        return simpleResponse;
+    }
+
+    /**
+     * converts the internal representation of SearchAddressResult into the public one
+     * @param response
+     * @return
+     */
+    public static SimpleResponse<BatchSearchResult> createBatchSearchResponse(
+            Response<SearchAddressBatchResult> response) {
+        BatchSearchResult result = (response.getValue() == null) ? null : Utility.toBatchSearchResult(response.getValue());
+        SimpleResponse<BatchSearchResult> simpleResponse = new SimpleResponse<>(response.getRequest(),
+            response.getStatusCode(),
+            response.getHeaders(),
+            result);
+
+        return simpleResponse;
+    }
+
+    /**
+     * converts the internal representation of SearchAddressResult into the public one
+     * @param response
+     * @return
+     */
+    public static SimpleResponse<BatchReverseSearchResult> createBatchReverseSearchResponse(
+            Response<ReverseSearchAddressBatchResult> response) {
+        BatchReverseSearchResult result = (response.getValue() == null) ? null : Utility.toBatchReverseSearchResult(response.getValue());
+        SimpleResponse<BatchReverseSearchResult> simpleResponse = new SimpleResponse<>(response.getRequest(),
+            response.getStatusCode(),
+            response.getHeaders(),
+            result);
+
+        return simpleResponse;
+    }
 
     public static Address toAddress(AddressPrivate addressPrivate) {
         Address address = new Address();

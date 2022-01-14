@@ -29,10 +29,22 @@ public final class PolygonPropertiesHelper {
         accessor = PolygonAccessor;
     }
 
+    /**
+     * Sets the provider id of this {@link Polygon}
+     *
+     * @param result
+     * @param providerId
+     */
     public static void setProviderID(Polygon result, String providerId) {
         accessor.setProviderID(result, providerId);
     }
 
+    /**
+     * Sets the geometry of this {@link Polygon}
+     *
+     * @param result
+     * @param geometry
+     */
     public static void setGeometry(Polygon result, GeoJsonObject geometry) {
         accessor.setGeometry(result, geometry);
     }

@@ -1,13 +1,12 @@
 package com.azure.maps.search.implementation.helpers;
 
-import com.azure.maps.search.implementation.models.BatchResult;
 import com.azure.maps.search.models.ErrorDetail;
 import com.azure.maps.search.models.ReverseSearchAddressBatchItem;
 import com.azure.maps.search.models.ReverseSearchAddressResult;
 import com.azure.maps.search.models.SearchAddressResult;
 
 /**
- * The helper class to set the non-public properties of an {@link BatchResult} instance.
+ * The helper class to set the non-public properties of an {@link ReverseSearchAddressBatchItem} instance.
  * @param <T>
  */
 public final class ReverseSearchAddressBatchItemPropertiesHelper {
@@ -33,14 +32,32 @@ public final class ReverseSearchAddressBatchItemPropertiesHelper {
         accessor = batchResultAccessor;
     }
 
+    /**
+     * Sets the status code of this {@link ReverseSearchAddressBatchItem}
+     *
+     * @param item
+     * @param statusCode
+     */
     public static void setStatusCode(ReverseSearchAddressBatchItem item, Integer statusCode) {
         accessor.setStatusCode(item, statusCode);
     }
 
+    /**
+     * Sets the error detail of this {@link ReverseSearchAddressBatchItem}
+     *
+     * @param item
+     * @param detail
+     */
     public static void setErrorDetail(ReverseSearchAddressBatchItem item, ErrorDetail detail) {
         accessor.setErrorDetail(item, detail);
     }
 
+    /**
+     * Sets the {@link ReverseSearchAddressResult} of this {@link ReverseSearchAddressBatchItem}.
+     *
+     * @param item
+     * @param result
+     */
     public static void setReverseSearchAddressResult(ReverseSearchAddressBatchItem item,
             ReverseSearchAddressResult result) {
         accessor.setReverseSearchAddressResult(item, result);

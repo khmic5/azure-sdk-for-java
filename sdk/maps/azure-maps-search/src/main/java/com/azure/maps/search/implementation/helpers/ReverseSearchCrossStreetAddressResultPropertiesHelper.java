@@ -3,12 +3,11 @@ package com.azure.maps.search.implementation.helpers;
 import java.util.List;
 
 import com.azure.maps.search.implementation.models.ReverseSearchCrossStreetAddressResultItemPrivate;
-import com.azure.maps.search.implementation.models.ReverseSearchCrossStreetAddressResultPrivate;
 import com.azure.maps.search.implementation.models.SearchSummaryPrivate;
 import com.azure.maps.search.models.ReverseSearchCrossStreetAddressResult;
 
 /**
- * The helper class to set the non-public properties of an {@link ReverseSearchCrossStreetAddressResultPrivate} instance.
+ * The helper class to set the non-public properties of an {@link ReverseSearchCrossStreetAddressResult} instance.
  */
 public final class ReverseSearchCrossStreetAddressResultPropertiesHelper {
     private static ReverseSearchCrossStreetAddressResultAccessor accessor;
@@ -16,7 +15,7 @@ public final class ReverseSearchCrossStreetAddressResultPropertiesHelper {
     private ReverseSearchCrossStreetAddressResultPropertiesHelper() { }
 
     /**
-     * Type defining the methods to set the non-public properties of an {@link ReverseSearchCrossStreetAddressResultPrivate} instance.
+     * Type defining the methods to set the non-public properties of an {@link ReverseSearchCrossStreetAddressResult} instance.
      */
     public interface ReverseSearchCrossStreetAddressResultAccessor {
         void setSummary(ReverseSearchCrossStreetAddressResult result, SearchSummaryPrivate privateSearchSummary);
@@ -32,10 +31,22 @@ public final class ReverseSearchCrossStreetAddressResultPropertiesHelper {
         accessor = ReverseSearchCrossStreetAddressResultAccessor;
     }
 
+    /**
+     * Sets the search summary of this {@link ReverseSearchCrossStreetAddressResult}
+     *
+     * @param result
+     * @param privateSearchSummary
+     */
     public static void setSummary(ReverseSearchCrossStreetAddressResult result, SearchSummaryPrivate privateSearchSummary) {
         accessor.setSummary(result, privateSearchSummary);
     }
 
+    /**
+     * Sets the addresses of this {@link ReverseSearchCrossStreetAddressResult}
+     *
+     * @param result
+     * @param privateResults
+     */
     public static void setAddresses(ReverseSearchCrossStreetAddressResult result, List<ReverseSearchCrossStreetAddressResultItemPrivate> privateResults) {
         accessor.setAddresses(result, privateResults);
     }

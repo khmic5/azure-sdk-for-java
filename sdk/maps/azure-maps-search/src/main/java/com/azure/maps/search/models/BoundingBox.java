@@ -7,7 +7,7 @@ import com.azure.maps.search.implementation.models.BoundingBoxCompassNotation;
 /**
  * Class representing a bounding box.
  */
-public class BoundingBox {
+public final class BoundingBox {
     private LatLong topLeft;
     private LatLong bottomRight;
 

@@ -3,7 +3,7 @@ package com.azure.maps.search.models;
 /**
  * Class holding optional parameters for reverse search.
  */
-public class BaseReverseSearchOptions<T extends BaseReverseSearchOptions<T>> {
+public abstract class BaseReverseSearchOptions<T extends BaseReverseSearchOptions<T>> {
     private String language;
     private Integer heading;
     private Integer radiusInMeters;

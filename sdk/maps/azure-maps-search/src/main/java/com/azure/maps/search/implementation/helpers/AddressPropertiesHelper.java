@@ -4,7 +4,7 @@ import com.azure.maps.search.implementation.models.AddressPrivate;
 import com.azure.maps.search.models.Address;
 
 /**
- * The helper class to set the non-public properties of an {@link AddressPrivate} instance.
+ * The helper class to set the non-public properties of an {@link Address} instance.
  */
 public final class AddressPropertiesHelper {
     private static AddressAccessor accessor;
@@ -12,7 +12,7 @@ public final class AddressPropertiesHelper {
     private AddressPropertiesHelper() { }
 
     /**
-     * Type defining the methods to set the non-public properties of an {@link AddressPrivate} instance.
+     * Type defining the methods to set the non-public properties of an {@link Address} instance.
      */
     public interface AddressAccessor {
         void setFromAddressPrivate(Address address, AddressPrivate addressPrivate);
@@ -27,6 +27,12 @@ public final class AddressPropertiesHelper {
         accessor = addressAccessor;
     }
 
+    /**
+     * Sets properties of an {@link Address} using a private model.
+     *
+     * @param address
+     * @param addressPrivate
+     */
     public static void setFromAddressPrivate(Address address, AddressPrivate addressPrivate) {
         accessor.setFromAddressPrivate(address, addressPrivate);
     }

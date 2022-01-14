@@ -15,12 +15,15 @@ public final class BatchSearchResult {
     private BatchResultSummary batchSummary;
     private List<SearchAddressBatchItem> batchItems;
 
+    /**
+     * Creates a new {@link BatchSearchResult} with default properties.
+     */
     public BatchSearchResult() {
 
     }
 
     /**
-     * Creates a new BatchSearchResult with a summary and batch items.
+     * Creates a new {@link BatchSearchResult} with a summary and batch items.
      *
      * @param batchSummary
      * @param batchItems

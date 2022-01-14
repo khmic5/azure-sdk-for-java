@@ -4,7 +4,7 @@ import com.azure.maps.search.implementation.models.ReverseSearchAddressResultIte
 import com.azure.maps.search.models.ReverseSearchAddressResultItem;
 
 /**
- * The helper class to set the non-public properties of an {@link ReverseSearchAddressResultItemPrivate} instance.
+ * The helper class to set the non-public properties of an {@link ReverseSearchAddressResultItem} instance.
  */
 public final class ReverseSearchAddressResultItemPropertiesHelper {
     private static ReverseSearchAddressResultItemAccessor accessor;
@@ -12,7 +12,7 @@ public final class ReverseSearchAddressResultItemPropertiesHelper {
     private ReverseSearchAddressResultItemPropertiesHelper() { }
 
     /**
-     * Type defining the methods to set the non-public properties of an {@link ReverseSearchAddressResultItemPrivate} instance.
+     * Type defining the methods to set the non-public properties of an {@link ReverseSearchAddressResultItem} instance.
      */
     public interface ReverseSearchAddressResultItemAccessor {
         void setFromReverseSearchAddressResultItemPrivate(ReverseSearchAddressResultItem resultItem,
@@ -28,8 +28,14 @@ public final class ReverseSearchAddressResultItemPropertiesHelper {
         accessor = itemAccessor;
     }
 
-    public static void setFromReverseSearchAddressResultItemPrivate(ReverseSearchAddressResultItem resultItem,
-        ReverseSearchAddressResultItemPrivate privateResultItem) {
+    /**
+     * Sets all properties of this {@link ReverseSearchAddressResultItem} using a private model.
+     *
+     * @param resultItem
+     * @param privateResultItem
+     */
+    public static void setFromReverseSearchAddressResultItemPrivate(
+            ReverseSearchAddressResultItem resultItem, ReverseSearchAddressResultItemPrivate privateResultItem) {
         accessor.setFromReverseSearchAddressResultItemPrivate(resultItem, privateResultItem);
     }
 }
