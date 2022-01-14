@@ -1,6 +1,8 @@
 package com.azure.maps.search.test.java.com.azure.maps.search;
 
 import com.azure.maps.search.SearchClientBuilder;
+import com.azure.maps.search.implementation.helpers.PolygonPropertiesHelper;
+
 import static org.mockito.Mockito;
 import com.azure.maps.search.SearchClient;
 import org.junit.jupiter.api.Test;
@@ -14,9 +16,20 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class SearchClientTest extends SearchClientTestBase {
 
+    @Override
+    protected void beforeTest() {
+        
+    }
+
+
     // ***** Testing List<Polygon> getPolygons(List<String> geometryIds) *****
     
     // 1. Was the function called? Mockito.verify
+    @Test
+    public void testFunctionCallGetPolygons() {
+        SearchAsyncClient mockSearchAsyncClient = mock(SearchAsyncClient.class);
+        SearchClient searchClient = new SearchClient(mockSearchAsyncClient);
+    }
     // 2. Does it catch exceptions when input is invalid?
     // 3. Are the outputs correct?
         //A. Test empty list case
@@ -51,8 +64,6 @@ public class SearchClientTest extends SearchClientTestBase {
     //     assumeTrue(shouldEnableSmsTests());
     // }
 
-
-
     @Test
     public void testGetPolygons() {
         //SearchClientBuilder builder = new SearchClientBuilder();
@@ -60,14 +71,17 @@ public class SearchClientTest extends SearchClientTestBase {
         SearchClient searchClient = new SearchClient(mockSearchAsyncClient);
         List<String> geometryIds = Arrays.asList("1111-2222-32-4444444444444","8bceafe8-3d98-4445-b29b-fd81d3e9adf5");
         List<Polygon> l = searchClient.getPolygons(geometryIds);
-        Mono<Response<List<Polygon>>> l 
-        when(mockSearchAsyncClient).getPolygons(geometryIds).then(Mono<List<Polygon>> l);
-        // Polygon p1 = new Polygon("8bceafe8-3d98-4445-b29b-fd81d3e9adf5", );
+        Polygon p1 = new Polygon("8bceafe8-3d98-4445-b29b-fd81d3e9adf5");
+        GeoJsonObject gs = new GeoJsonObject();
+        gs.setType("FeatureCollection");
+        //PolygonPropertiesHelper.setGeometry(p1, geometry);
+        Polygon p2 = new Polygon("1111-2222-32-4444444444444");
+        List<Polygon> expectedResult = Arrays.asList(p1, p2);
+        Response resp = new Response(expectedResult);
+        Mono<Response<List<Polygon>>> list = new Mono<Response<List<Polygon>>>(resp);
+        when(mockSearchAsyncClient).getPolygons(geometryIds).thenReturn(list);
         verify(mockSearchAsyncClient).getPolygons(geometryIds);
-        // List<Polygon> compareResult = new ArrayList<>();
-        assertEquals(l.size(), 4);
-        
-        
+        assertEquals(l.size(), 2);
     }
 
     

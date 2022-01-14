@@ -24,6 +24,7 @@ import com.azure.maps.search.models.FuzzySearchOptions;
 import com.azure.maps.search.models.GeographicEntityType;
 import com.azure.maps.search.models.LatLong;
 import com.azure.maps.search.models.OperatingHoursRange;
+import com.azure.maps.search.models.Polygon;
 import com.azure.maps.search.models.ReverseSearchAddressOptions;
 import com.azure.maps.search.models.ReverseSearchCrossStreetAddressOptions;
 import com.azure.maps.search.models.SearchAddressOptions;
@@ -62,7 +63,7 @@ public class SearchSample {
         // Search address -
         // https://docs.microsoft.com/en-us/rest/api/maps/search/get-search-address
         System.out.println("Search Address:");
-
+/*
         // simple
         MapsCommon.print(client.searchAddress(
             new SearchAddressOptions("15127 NE 24th Street, Redmond, WA 98052")));
@@ -157,18 +158,18 @@ public class SearchSample {
 
         // simple
         MapsCommon.print(client.fuzzySearch(new FuzzySearchOptions("starbucks")));
-
+*/
         // with options
         SearchAddressResult results = client.fuzzySearch(
             new FuzzySearchOptions("1 Microsoft Way", new LatLong(40.706270, -74.011454))
                 .setTop(5));
-        MapsCommon.print(results);
+    //    MapsCommon.print(results);
 
         // with response
         Response<SearchAddressResult> response = client.fuzzySearchWithResponse(
             new FuzzySearchOptions("Monaco").setEntityType(GeographicEntityType.COUNTRY)
                 .setTop(5), null);
-        MapsCommon.print(response.getStatusCode());
+    //    MapsCommon.print(response.getStatusCode());
         String id = response.getValue().getResults().get(0).getDataSource().getGeometry().getId();
 
         // Get polygon -
@@ -180,12 +181,13 @@ public class SearchSample {
         ids.add(id);
 
         if (ids != null && !ids.isEmpty()) {
-            System.out.println("Get Polygon: " + ids);
+            client.getPolygons(ids);
+        //    System.out.println("Get Polygon: " + ids);
             // MapsCommon.print(client.getPolygons(ids).get(1));
-            MapsCommon.print(client.getPolygons(ids));
-            MapsCommon.print(client.getPolygonsWithResponse(ids, null).getValue().getClass());
+    //        MapsCommon.print(client.getPolygons(ids));  
+    //        MapsCommon.print(client.getPolygonsWithResponse(ids, null).getValue().getClass());
         }
-
+/*
         // Search POI -
         // https://docs.microsoft.com/en-us/rest/api/maps/search/get-search-poi
         System.out.println("Search Points of Interest:");
@@ -306,7 +308,7 @@ public class SearchSample {
             null).getStatusCode());
 
         /* Batch operations. */
-
+/*
         // Search address batch sync -
         // https://docs.microsoft.com/en-us/rest/api/maps/search/post-search-address-batch
         // This call posts addresses for search using the Synchronous Batch API.
@@ -361,6 +363,7 @@ public class SearchSample {
             .setRadiusInMeters(5000));
 
         System.out.println("Post Search Fuzzy Batch Async");
-        MapsCommon.print(client.beginFuzzySearchBatch(fuzzyOptionsList).getFinalResult());
+        MapsCommon.print(client.beginFuzzySearchBatch(fuzzyOptionsList).getFinalResult()); */
     }
+    
 }

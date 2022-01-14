@@ -11,6 +11,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import com.azure.maps.examples.MapsCommon;
 import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceClient;
 import com.azure.core.annotation.ServiceMethod;
@@ -57,6 +58,7 @@ import com.azure.maps.search.models.SearchPointOfInterestCategoryOptions;
 import com.azure.maps.search.models.SearchPointOfInterestOptions;
 import com.azure.maps.search.models.SearchStructuredAddressOptions;
 import com.azure.maps.search.models.StructuredAddress;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import reactor.core.publisher.Mono;
 
@@ -100,7 +102,18 @@ public final class MapsSearchAsyncClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<List<Polygon>> getPolygons(List<String> geometryIds) {
         Mono<Response<List<Polygon>>> result = this.getPolygonsWithResponse(geometryIds);
-        System.out.println("Ice cream " + result);
+        Response<List<Polygon>> resp = result.block();
+        List<Polygon> result1 = resp.getValue();
+        
+        System.out.println(resp);
+        System.out.println("Ice cream " + result.log().subscribe());
+        
+        // try {
+        //     MapsCommon.print(result.then());
+        // } catch (JsonProcessingException e) {
+        //     // TODO Auto-generated catch block
+        //     e.printStackTrace();
+        // }
         return result.flatMap(response -> {
             return Mono.just(response.getValue());
         });
