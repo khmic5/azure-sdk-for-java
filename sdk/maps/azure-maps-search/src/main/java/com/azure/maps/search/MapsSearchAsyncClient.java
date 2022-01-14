@@ -62,8 +62,8 @@ import com.azure.maps.search.models.StructuredAddress;
 import reactor.core.publisher.Mono;
 
 /** Initializes a new instance of the asynchronous SearchClient type. */
-@ServiceClient(builder = SearchClientBuilder.class, isAsync = true)
-public final class SearchAsyncClient {
+@ServiceClient(builder = MapsSearchClientBuilder.class, isAsync = true)
+public final class MapsSearchAsyncClient {
     // constants
     private static final int BATCH_SIZE = 100;
     private static final int POLLING_FREQUENCY = 1;
@@ -80,7 +80,7 @@ public final class SearchAsyncClient {
      *
      * @param serviceClient the service client implementation.
      */
-    SearchAsyncClient(SearchesImpl serviceClient, HttpPipeline pipeline) {
+    MapsSearchAsyncClient(SearchesImpl serviceClient, HttpPipeline pipeline) {
         this.serviceClient = serviceClient;
         this.httpPipeline = pipeline;
         this.serializer = new BatchResponseSerializer();

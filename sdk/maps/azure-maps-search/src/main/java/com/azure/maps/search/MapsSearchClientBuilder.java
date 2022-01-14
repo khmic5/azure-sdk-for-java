@@ -34,8 +34,8 @@ import com.azure.maps.search.implementation.SearchClientImpl;
 import com.azure.maps.search.implementation.SearchClientImplBuilder;
 
 /** A builder for creating a new instance of the SearchClient type. */
-@ServiceClientBuilder(serviceClients = {SearchClient.class, SearchAsyncClient.class})
-public final class SearchClientBuilder {
+@ServiceClientBuilder(serviceClients = {MapsSearchClient.class, MapsSearchAsyncClient.class})
+public final class MapsSearchClientBuilder {
     // auth scope
     static final String[] DEFAULT_SCOPES = new String[] {"https://atlas.microsoft.com/.default"};
 
@@ -64,7 +64,7 @@ public final class SearchClientBuilder {
     private TokenCredential tokenCredential;
 
     /** Create an instance of the SearchClientBuilder. */
-    public SearchClientBuilder() {
+    public MapsSearchClientBuilder() {
         this.pipelinePolicies = new ArrayList<>();
     }
     /**
@@ -76,7 +76,7 @@ public final class SearchClientBuilder {
      * @param mapsClientId the clientId value.
      * @return the SearchClientBuilder.
      */
-    public SearchClientBuilder mapsClientId(String mapsClientId) {
+    public MapsSearchClientBuilder mapsClientId(String mapsClientId) {
         this.mapsClientId = Objects.requireNonNull(mapsClientId, "'mapsClientId' cannot be null.");;
         return this;
     }
@@ -87,7 +87,7 @@ public final class SearchClientBuilder {
      * @param endpoint url of the service
      * @return SearchClientBuilder
      */
-    public SearchClientBuilder endpoint(String endpoint) {
+    public MapsSearchClientBuilder endpoint(String endpoint) {
         this.endpoint = Objects.requireNonNull(endpoint, "'endpoint' cannot be null.");
         return this;
     }
@@ -104,7 +104,7 @@ public final class SearchClientBuilder {
      * @param version {@link SmsServiceVersion} of the service to be used when making requests.
      * @return the updated SmsClientBuilder object
      */
-    public SearchClientBuilder serviceVersion(MapsSearchServiceVersion version) {
+    public MapsSearchClientBuilder serviceVersion(MapsSearchServiceVersion version) {
         this.serviceVersion = version;
         return this;
     }
@@ -115,7 +115,7 @@ public final class SearchClientBuilder {
      * @param pipeline the pipeline value.
      * @return the SearchClientBuilder.
      */
-    public SearchClientBuilder pipeline(HttpPipeline pipeline) {
+    public MapsSearchClientBuilder pipeline(HttpPipeline pipeline) {
         this.pipeline = Objects.requireNonNull(pipeline, "'pipeline' cannot be null.");
         return this;
     }
@@ -126,7 +126,7 @@ public final class SearchClientBuilder {
      * @param httpClient the httpClient value.
      * @return the SearchClientBuilder.
      */
-    public SearchClientBuilder httpClient(HttpClient httpClient) {
+    public MapsSearchClientBuilder httpClient(HttpClient httpClient) {
         this.httpClient = Objects.requireNonNull(httpClient, "'httpClient' cannot be null.");
         return this;
     }
@@ -137,7 +137,7 @@ public final class SearchClientBuilder {
      * @param configuration the configuration value.
      * @return the SearchClientBuilder.
      */
-    public SearchClientBuilder configuration(Configuration configuration) {
+    public MapsSearchClientBuilder configuration(Configuration configuration) {
         this.configuration = Objects.requireNonNull(configuration, "'configuration' cannot be null.");;
         return this;
     }
@@ -148,7 +148,7 @@ public final class SearchClientBuilder {
      * @param httpLogOptions the httpLogOptions value.
      * @return the SearchClientBuilder.
      */
-    public SearchClientBuilder httpLogOptions(HttpLogOptions httpLogOptions) {
+    public MapsSearchClientBuilder httpLogOptions(HttpLogOptions httpLogOptions) {
         this.httpLogOptions = Objects.requireNonNull(httpLogOptions, "'logOptions' cannot be null.");
         return this;
     }
@@ -159,7 +159,7 @@ public final class SearchClientBuilder {
      * @param retryPolicy the retryPolicy value.
      * @return the SearchClientBuilder.
      */
-    public SearchClientBuilder retryPolicy(RetryPolicy retryPolicy) {
+    public MapsSearchClientBuilder retryPolicy(RetryPolicy retryPolicy) {
         this.retryPolicy = Objects.requireNonNull(retryPolicy, "'retryPolicy' cannot be null.");
         return this;
     }
@@ -170,7 +170,7 @@ public final class SearchClientBuilder {
      * @param clientOptions the clientOptions value.
      * @return the SearchClientBuilder.
      */
-    public SearchClientBuilder clientOptions(ClientOptions clientOptions) {
+    public MapsSearchClientBuilder clientOptions(ClientOptions clientOptions) {
         this.clientOptions = Objects.requireNonNull(clientOptions, "'clientOptions' cannot be null.");
         return this;
     }
@@ -181,7 +181,7 @@ public final class SearchClientBuilder {
      * @param customPolicy The custom Http pipeline policy to add.
      * @return the SearchClientBuilder.
      */
-    public SearchClientBuilder addPolicy(HttpPipelinePolicy customPolicy) {
+    public MapsSearchClientBuilder addPolicy(HttpPipelinePolicy customPolicy) {
         pipelinePolicies.add(Objects.requireNonNull(customPolicy, "'customPolicy' cannot be null."));
         return this;
     }
@@ -193,7 +193,7 @@ public final class SearchClientBuilder {
      * @return The updated {@link SmsClientBuilder} object.
      * @throws NullPointerException If {@code tokenCredential} is null.
      */
-    public SearchClientBuilder credential(TokenCredential tokenCredential) {
+    public MapsSearchClientBuilder credential(TokenCredential tokenCredential) {
         this.tokenCredential = Objects.requireNonNull(tokenCredential, "'tokenCredential' cannot be null.");
         return this;
     }
@@ -205,7 +205,7 @@ public final class SearchClientBuilder {
      * @return The updated {@link SmsClientBuilder} object.
      * @throws NullPointerException If {@code keyCredential} is null.
      */
-    public SearchClientBuilder credential(AzureKeyCredential keyCredential)  {
+    public MapsSearchClientBuilder credential(AzureKeyCredential keyCredential)  {
         this.keyCredential = Objects.requireNonNull(keyCredential, "'keyCredential' cannot be null.");
         return this;
     }
@@ -303,8 +303,8 @@ public final class SearchClientBuilder {
      *
      * @return an instance of SearchAsyncClient.
      */
-    public SearchAsyncClient buildAsyncClient() {
-        return new SearchAsyncClient(buildInnerClient().getSearches(), this.pipeline);
+    public MapsSearchAsyncClient buildAsyncClient() {
+        return new MapsSearchAsyncClient(buildInnerClient().getSearches(), this.pipeline);
     }
 
     /**
@@ -312,7 +312,7 @@ public final class SearchClientBuilder {
      *
      * @return an instance of SearchClient.
      */
-    public SearchClient buildClient() {
-        return new SearchClient(buildAsyncClient());
+    public MapsSearchClient buildClient() {
+        return new MapsSearchClient(buildAsyncClient());
     }
 }
