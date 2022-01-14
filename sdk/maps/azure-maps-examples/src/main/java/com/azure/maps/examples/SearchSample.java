@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.azure.core.credential.AzureKeyCredential;
 import com.azure.core.http.policy.HttpLogDetailLevel;
 import com.azure.core.http.policy.HttpLogOptions;
 import com.azure.core.http.rest.Response;
@@ -17,8 +16,8 @@ import com.azure.core.models.GeoPosition;
 import com.azure.core.util.polling.SyncPoller;
 import com.azure.identity.DefaultAzureCredential;
 import com.azure.identity.DefaultAzureCredentialBuilder;
-import com.azure.maps.search.SearchClient;
-import com.azure.maps.search.SearchClientBuilder;
+import com.azure.maps.search.MapsSearchClientBuilder;
+import com.azure.maps.search.MapsSearchClient;
 import com.azure.maps.search.models.BatchReverseSearchResult;
 import com.azure.maps.search.models.BatchSearchResult;
 import com.azure.maps.search.models.FuzzySearchOptions;
@@ -48,7 +47,7 @@ public class SearchSample {
         DefaultAzureCredential tokenCredential = new DefaultAzureCredentialBuilder().build();
 
         // build client
-        SearchClientBuilder builder = new SearchClientBuilder();
+        MapsSearchClientBuilder builder = new MapsSearchClientBuilder();
 
         // use this for key authentication
         // builder.credential(keyCredential);
@@ -57,7 +56,7 @@ public class SearchSample {
         builder.credential(tokenCredential);
         builder.mapsClientId(System.getenv("MAPS_CLIENT_ID"));
         builder.httpLogOptions(new HttpLogOptions().setLogLevel(HttpLogDetailLevel.BODY_AND_HEADERS));
-        SearchClient client = builder.buildClient();
+        MapsSearchClient client = builder.buildClient();
 
         /* Stand-alone, one-shot operations */
         // Search address -

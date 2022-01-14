@@ -8,8 +8,9 @@ import com.azure.core.http.HttpResponse;
 import com.azure.core.http.policy.HttpLogDetailLevel;
 import com.azure.core.http.policy.HttpLogOptions;
 import com.azure.core.http.policy.HttpPipelinePolicy;
-import com.azure.maps.search.SearchAsyncClient;
-import com.azure.maps.search.SearchClientBuilder;
+import com.azure.maps.search.MapsSearchClientBuilder;
+import com.azure.maps.search.MapsSearchAsyncClient;
+
 
 import reactor.core.publisher.Mono;
 
@@ -40,10 +41,10 @@ public class SearchSampleAsync {
         };
 
         // use default credentials
-        SearchClientBuilder builder = new SearchClientBuilder();
+        MapsSearchClientBuilder builder = new MapsSearchClientBuilder();
         builder.addPolicy(subscriptionKeyPolicy);
         builder.httpLogOptions(new HttpLogOptions().setLogLevel(HttpLogDetailLevel.BODY_AND_HEADERS));
-        SearchAsyncClient client = builder.buildAsyncClient();
+        MapsSearchAsyncClient client = builder.buildAsyncClient();
 
         /* Stand-alone, one-shot operations
         // Search address -
