@@ -10,8 +10,8 @@ import com.azure.core.http.policy.HttpLogDetailLevel;
 import com.azure.core.http.policy.HttpLogOptions;
 import com.azure.core.http.policy.HttpPipelinePolicy;
 import com.azure.core.http.rest.Response;
-import com.azure.maps.search.SearchClient;
-import com.azure.maps.search.SearchClientBuilder;
+import com.azure.maps.search.MapsSearchClient;
+import com.azure.maps.search.MapsSearchClientBuilder;
 
 import reactor.core.publisher.Mono;
 
@@ -43,11 +43,14 @@ public class Testing {
         };
 
         // use default credentials
-        SearchClientBuilder builder = new SearchClientBuilder();
+        MapsSearchClientBuilder builder = new MapsSearchClientBuilder();
         builder.addPolicy(subscriptionKeyPolicy);
         builder.httpLogOptions(new HttpLogOptions().setLogLevel(HttpLogDetailLevel.BODY_AND_HEADERS));
-        SearchClient client = builder.buildClient();
-
+        MapsSearchClient client = builder.buildClient();
+        
+        //DefaultAzureCredential tokenCredential = new DefaultAzureCredentialBuilder().build();
+        
+/*
         System.out.println("Search Address:");
 
         // with options
@@ -79,7 +82,7 @@ public class Testing {
     //        MapsCommon.print(client.getPolygons(ids));  
     //        MapsCommon.print(client.getPolygonsWithResponse(ids, null).getValue().getClass());
 
-            
-        }
+       */     
+ //       } 
     }
 }
