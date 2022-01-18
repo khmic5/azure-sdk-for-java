@@ -1,4 +1,4 @@
-package com.azure.search;
+package com.azure.maps.search;
 
 import org.junit.jupiter.api.Test;
 
@@ -42,21 +42,21 @@ public class MapsSearchClientBuilderTest {
         });
     }
 
-    // Test for missing pipeline 
+    // Test for missing pipeline
     @Test
     public void missingPipeline() {
         assertThrows(NullPointerException.class, () -> {
             final MapsSearchClientBuilder builder = new MapsSearchClientBuilder();
-            builder.pipeline(null); 
+            builder.pipeline(null);
         });
     }
 
-    // Test for missing http client 
+    // Test for missing http client
     @Test
     public void missingHttpClient() {
         assertThrows(NullPointerException.class, () -> {
             final MapsSearchClientBuilder builder = new MapsSearchClientBuilder();
-            builder.httpClient(null); 
+            builder.httpClient(null);
         });
     }
 
@@ -65,7 +65,7 @@ public class MapsSearchClientBuilderTest {
     public void missingConfiguration() {
         assertThrows(NullPointerException.class, () -> {
             final MapsSearchClientBuilder builder = new MapsSearchClientBuilder();
-            builder.configuration(null); 
+            builder.configuration(null);
         });
     }
 
@@ -125,5 +125,5 @@ public class MapsSearchClientBuilderTest {
             builder.buildClient();
         });
     }
-    
+
 }
