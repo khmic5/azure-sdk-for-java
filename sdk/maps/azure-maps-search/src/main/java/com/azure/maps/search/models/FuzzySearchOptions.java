@@ -26,8 +26,8 @@ public final class FuzzySearchOptions extends BaseSearchPointOfInterestOptions<F
 
     /**
      * Builds fuzzy search options with query string and coordinates.
-     * @param query
-     * @param countryFilter
+     * @param query The query to be used to search for points of interest.
+     * @param coordinates The {@link LatLong} coordinates to be searched.
      */
     public FuzzySearchOptions(String query, LatLong coordinates) {
         this.query = query;
@@ -36,8 +36,8 @@ public final class FuzzySearchOptions extends BaseSearchPointOfInterestOptions<F
 
     /**
      * Builds fuzzy search options with query string and country filter.
-     * @param query
-     * @param countryFilter
+     * @param query The query to be used to search for points of interest.
+     * @param countryFilter A list of country codes - e.g. "US", "GB", "DE", etc.
      */
     public FuzzySearchOptions(String query, List<String> countryFilter) {
         this.query = query;

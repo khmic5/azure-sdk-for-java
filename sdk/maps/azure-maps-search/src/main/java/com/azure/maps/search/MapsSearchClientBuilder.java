@@ -62,7 +62,9 @@ public final class MapsSearchClientBuilder {
     private AzureKeyCredential keyCredential;
     private TokenCredential tokenCredential;
 
-    /** Create an instance of the SearchClientBuilder. */
+    /**
+     * <!-- src_embed com.azure.maps.search.builder.instantiation -->
+     */
     public MapsSearchClientBuilder() {
         this.pipelinePolicies = new ArrayList<>();
     }
@@ -100,8 +102,8 @@ public final class MapsSearchClientBuilder {
      * <p>
      * Targeting a specific service version may also mean that the service will return an error for newer APIs.
      *
-     * @param version {@link SmsServiceVersion} of the service to be used when making requests.
-     * @return the updated SmsClientBuilder object
+     * @param version {@link MapsSearchServiceVersion} of the service to be used when making requests.
+     * @return the updated MapsSearchClientBuilder object
      */
     public MapsSearchClientBuilder serviceVersion(MapsSearchServiceVersion version) {
         this.serviceVersion = version;
@@ -189,7 +191,7 @@ public final class MapsSearchClientBuilder {
      * Sets the {@link TokenCredential} used to authenticate HTTP requests.
      *
      * @param tokenCredential {@link TokenCredential} used to authenticate HTTP requests.
-     * @return The updated {@link SmsClientBuilder} object.
+     * @return The updated {@link MapsSearchClientBuilder} object.
      * @throws NullPointerException If {@code tokenCredential} is null.
      */
     public MapsSearchClientBuilder credential(TokenCredential tokenCredential) {
@@ -201,7 +203,7 @@ public final class MapsSearchClientBuilder {
      * Sets the {@link AzureKeyCredential} used to authenticate HTTP requests.
      *
      * @param keyCredential The {@link AzureKeyCredential} used to authenticate HTTP requests.
-     * @return The updated {@link SmsClientBuilder} object.
+     * @return The updated {@link MapsSearchClientBuilder} object.
      * @throws NullPointerException If {@code keyCredential} is null.
      */
     public MapsSearchClientBuilder credential(AzureKeyCredential keyCredential)  {

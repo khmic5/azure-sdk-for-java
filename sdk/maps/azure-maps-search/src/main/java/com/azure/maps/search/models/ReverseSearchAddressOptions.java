@@ -16,8 +16,7 @@ public final class ReverseSearchAddressOptions extends BaseReverseSearchOptions<
 
     /**
      * Builds fuzzy search options with query string and coordinates.
-     * @param query
-     * @param countryFilter
+     * @param coordinates The {@link LatLong} coordinates to be searched.
      */
     public ReverseSearchAddressOptions(LatLong coordinates) {
         this.setCoordinates(coordinates);

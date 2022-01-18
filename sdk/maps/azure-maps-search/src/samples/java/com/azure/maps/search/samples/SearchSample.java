@@ -1,4 +1,4 @@
-package com.azure.maps.examples;
+package com.azure.maps.search.samples;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -48,7 +48,9 @@ public class SearchSample {
         DefaultAzureCredential tokenCredential = new DefaultAzureCredentialBuilder().build();
 
         // build client
+        // BEGIN: com.azure.maps.search.builder.instantiation
         MapsSearchClientBuilder builder = new MapsSearchClientBuilder();
+        // END: com.azure.maps.search.builder.instantiation
 
         // use this for key authentication
         // builder.credential(keyCredential);

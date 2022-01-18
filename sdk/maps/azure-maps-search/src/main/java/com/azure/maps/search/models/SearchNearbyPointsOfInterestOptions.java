@@ -10,8 +10,7 @@ public final class SearchNearbyPointsOfInterestOptions extends BaseSearchPointOf
 
     /**
      * Builds search nearby options with coordinates.
-     * @param query
-     * @param countryFilter
+     * @param coordinates The {@link LatLong} coordinates to be searched.
      */
     public SearchNearbyPointsOfInterestOptions(LatLong coordinates) {
         this.setCoordinates(coordinates);
