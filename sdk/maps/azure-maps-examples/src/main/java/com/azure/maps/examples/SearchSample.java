@@ -24,6 +24,7 @@ import com.azure.maps.search.models.FuzzySearchOptions;
 import com.azure.maps.search.models.GeographicEntityType;
 import com.azure.maps.search.models.LatLong;
 import com.azure.maps.search.models.OperatingHoursRange;
+import com.azure.maps.search.models.Polygon;
 import com.azure.maps.search.models.ReverseSearchAddressOptions;
 import com.azure.maps.search.models.ReverseSearchCrossStreetAddressOptions;
 import com.azure.maps.search.models.SearchAddressOptions;
@@ -180,10 +181,10 @@ public class SearchSample {
         ids.add(id);
 
         if (ids != null && !ids.isEmpty()) {
-            System.out.println("Get Polygon: " + ids);
-            // MapsCommon.print(client.getPolygons(ids).get(1));
-            MapsCommon.print(client.getPolygons(ids));
-            MapsCommon.print(client.getPolygonsWithResponse(ids, null).getValue().getClass());
+           System.out.println("Get Polygon: " + ids);
+           // MapsCommon.print(client.getPolygons(ids).get(1));
+           MapsCommon.print(client.getPolygons(ids));
+           MapsCommon.print(client.getPolygonsWithResponse(ids, null).getValue().getClass());
         }
 
         // Search POI -
@@ -361,6 +362,7 @@ public class SearchSample {
             .setRadiusInMeters(5000));
 
         System.out.println("Post Search Fuzzy Batch Async");
-        MapsCommon.print(client.beginFuzzySearchBatch(fuzzyOptionsList).getFinalResult());
+        MapsCommon.print(client.beginFuzzySearchBatch(fuzzyOptionsList).getFinalResult()); 
     }
+    
 }
