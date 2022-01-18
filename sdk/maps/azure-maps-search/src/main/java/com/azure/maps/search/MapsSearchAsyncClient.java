@@ -64,8 +64,9 @@ import reactor.core.publisher.Mono;
 @ServiceClient(builder = MapsSearchClientBuilder.class, isAsync = true)
 public final class MapsSearchAsyncClient {
     // constants
-    private static final int BATCH_SIZE = 100;
+    private static final int BATCH_SIZE = 2;
     private static final int POLLING_FREQUENCY = 1;
+    private static final String POLLING_BATCH_HEADER_KEY = "BatchId";
 
     // instance fields
     private final SearchesImpl serviceClient;
@@ -1018,8 +1019,8 @@ public final class MapsSearchAsyncClient {
             return createPollerFlux(
                 () -> this.serviceClient.fuzzySearchBatchWithResponseAsync(JsonFormat.JSON,
                     batchRequest, context).flatMap(response -> {
-                    return Mono.just(Utility.createBatchSearchResponse(response));
-                }),
+                        return Mono.just(Utility.createBatchSearchResponse(response));
+                    }),
                 this.forwardStrategy);
         }
     }
@@ -1486,23 +1487,57 @@ public final class MapsSearchAsyncClient {
             Supplier<Mono<? extends Response<?>>> initialOperation,
             DefaultPollingStrategy<BatchSearchResult, BatchSearchResult> strategy) {
 
+        // Create poller instance
         return PollerFlux.create(
             Duration.ofSeconds(POLLING_FREQUENCY),
-            initialOperation,
-            strategy,
-            new TypeReference<BatchSearchResult>() {},
-            new TypeReference<BatchSearchResult>() {});
+            context -> initialOperation.get()
+                .flatMap(response -> strategy.canPoll(response).flatMap(canPoll -> {
+                    if (!canPoll) {
+                        return Mono.error(new IllegalStateException(
+                            "Cannot poll with strategy " + strategy.getClass().getSimpleName()));
+                    }
+                    context.setData(POLLING_BATCH_HEADER_KEY, Utility.getBatchId(response.getHeaders()));
+                    return strategy.onInitialResponse(response, context, new TypeReference<BatchSearchResult>() {});
+                })),
+            context -> strategy.poll(context, new TypeReference<BatchSearchResult>() {}),
+            strategy::cancel,
+            context -> {
+                return strategy
+                    .getResult(context, new TypeReference<BatchSearchResult>() {})
+                        .flatMap(result -> {
+                            final String batchId = context.getData(POLLING_BATCH_HEADER_KEY);
+                            result.setBatchId(batchId);
+                            return Mono.just(result);
+                        });
+            });
     }
 
     private PollerFlux<BatchReverseSearchResult, BatchReverseSearchResult> createReversePollerFlux(
-        Supplier<Mono<? extends Response<?>>> initialOperation,
-        DefaultPollingStrategy<BatchReverseSearchResult, BatchReverseSearchResult> strategy) {
+            Supplier<Mono<? extends Response<?>>> initialOperation,
+            DefaultPollingStrategy<BatchReverseSearchResult, BatchReverseSearchResult> strategy) {
 
+        // Create poller instance
         return PollerFlux.create(
             Duration.ofSeconds(POLLING_FREQUENCY),
-            initialOperation,
-            strategy,
-            new TypeReference<BatchReverseSearchResult>() {},
-            new TypeReference<BatchReverseSearchResult>() {});
+            context -> initialOperation.get()
+                .flatMap(response -> strategy.canPoll(response).flatMap(canPoll -> {
+                    if (!canPoll) {
+                        return Mono.error(new IllegalStateException(
+                            "Cannot poll with strategy " + strategy.getClass().getSimpleName()));
+                    }
+                    context.setData(POLLING_BATCH_HEADER_KEY, Utility.getBatchId(response.getHeaders()));
+                    return strategy.onInitialResponse(response, context, new TypeReference<BatchReverseSearchResult>() {});
+                })),
+            context -> strategy.poll(context, new TypeReference<BatchReverseSearchResult>() {}),
+            strategy::cancel,
+            context -> {
+                return strategy
+                    .getResult(context, new TypeReference<BatchReverseSearchResult>() {})
+                        .flatMap(result -> {
+                            final String batchId = context.getData(POLLING_BATCH_HEADER_KEY);
+                            result.setBatchId(batchId);
+                            return Mono.just(result);
+                        });
+            });
     }
 }

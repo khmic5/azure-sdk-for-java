@@ -6,14 +6,13 @@
 
 package com.azure.maps.search.models;
 
-import com.azure.core.annotation.Immutable;
 import java.util.List;
 
 /** This object is returned from a successful Search Address Batch service call. */
-@Immutable
 public final class BatchSearchResult {
     private BatchResultSummary batchSummary;
     private List<SearchAddressBatchItem> batchItems;
+    private String batchId;
 
     /**
      * Creates a new {@link BatchSearchResult} with default properties.
@@ -28,7 +27,8 @@ public final class BatchSearchResult {
      * @param batchSummary
      * @param batchItems
      */
-    public BatchSearchResult(BatchResultSummary batchSummary, List<SearchAddressBatchItem> batchItems) {
+    public BatchSearchResult(BatchResultSummary batchSummary,
+            List<SearchAddressBatchItem> batchItems) {
         this.batchSummary = batchSummary;
         this.batchItems = batchItems;
     }
@@ -49,5 +49,23 @@ public final class BatchSearchResult {
      */
     public List<SearchAddressBatchItem> getBatchItems() {
         return this.batchItems;
+    }
+
+    /**
+     * Return this id for this batch. Only available when the batch is cached.
+     *
+     * @return the batch id
+     */
+    public String getBatchId() {
+        return batchId;
+    }
+
+    /**
+     * Sets the if of this batch.
+     *
+     * @param batchId
+     */
+    public void setBatchId(String batchId) {
+        this.batchId = batchId;
     }
 }
