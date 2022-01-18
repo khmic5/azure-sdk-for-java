@@ -1,6 +1,11 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<!-- Copyright (c) Microsoft Corporation. All rights reserved.
+     Licensed under the MIT License. -->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
+    <?m2e execute onConfiguration?>
     <groupId>com.azure</groupId>
     <artifactId>azure-client-sdk-parent</artifactId>
     <version>1.7.0</version> <!-- {x-version-update;com.azure:azure-client-sdk-parent;current} -->
@@ -41,6 +46,14 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <legal><![CDATA[[INFO] Any downloads listed may be third party software.  Microsoft grants you no rights for third party software.]]></legal>
+    <src.dir>src/main</src.dir>
+    <test.dir>src/test</test.dir>
+    <jacoco.min.linecoverage>0.0</jacoco.min.linecoverage>
+    <jacoco.min.branchcoverage>0.0</jacoco.min.branchcoverage>
+    <jacoco.skip>false</jacoco.skip>
+    <codesnippet.skip>false</codesnippet.skip>
+    <javadocDoclet></javadocDoclet>
+    <javadocDocletOptions></javadocDocletOptions>
   </properties>
 
   <dependencies>
@@ -96,11 +109,6 @@
       <version>1.7.6</version> <!-- {x-version-update;com.azure:azure-core-http-okhttp;dependency} -->
       <scope>test</scope>
     </dependency>
-    <!-- <dependency> -->
-      <!-- <groupId>com.azure</groupId> -->
-      <!-- <artifactId>azure-maps-examples</artifactId> -->
-      <!-- <version>1.0.0-beta.1</version> --> <!-- {x-version-update;com.azure.resourcemanager:azure-resourcemanager-search-generated;current} -->
-    <!-- </dependency> -->
     <dependency>
       <groupId>com.azure</groupId>
       <artifactId>azure-identity</artifactId>
@@ -111,11 +119,6 @@
       <groupId>com.azure</groupId>
       <artifactId>azure-core-http-netty</artifactId>
       <version>1.11.5</version>
-    </dependency>
-    <dependency>
-      <groupId>com.azure</groupId>
-      <artifactId>azure-core-serializer-json-jackson</artifactId>
-      <version>1.2.9</version>
     </dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
@@ -128,18 +131,56 @@
   <build>
     <plugins>
       <plugin>
-        <groupId>com.github.spotbugs</groupId>
-        <artifactId>spotbugs-maven-plugin</artifactId>
-        <version>4.2.0</version>
-      </plugin>
-      <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.8.5</version> <!-- {x-version-update;org.jacoco:jacoco-maven-plugin;external_dependency} -->
+        <version>0.8.7</version> <!-- {x-version-update;org.jacoco:jacoco-maven-plugin;external_dependency} -->
         <configuration>
-          <skip>true</skip>
+          <includes>
+            <include>com/azure/communication/sms/*.class</include>
+          </includes>
+        </configuration>
+        <executions>
+          <execution>
+            <id>coverage-report</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>report</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>3.0.0-M3</version> <!-- {x-version-update;org.apache.maven.plugins:maven-enforcer-plugin;external_dependency} -->
+        <configuration>
+          <rules>
+            <bannedDependencies>
+              <includes>
+                <include>com.azure:*</include>
+              </includes>
+            </bannedDependencies>
+          </rules>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.revapi</groupId>
+        <artifactId>revapi-maven-plugin</artifactId>
+        <version>0.11.2</version> <!-- {x-version-update;org.revapi:revapi-maven-plugin;external_dependency} -->
+        <configuration>
+          <analysisConfiguration>
+            <revapi.ignore>
+              <item>
+                <code>java.method.added</code>
+                <class>com.azure.core.util.HttpClientOptions</class>
+                <justification>Transitive from Core. Not our problem</justification>
+              </item>
+            </revapi.ignore>
+          </analysisConfiguration>
         </configuration>
       </plugin>
     </plugins>
   </build>
+
+
 </project>

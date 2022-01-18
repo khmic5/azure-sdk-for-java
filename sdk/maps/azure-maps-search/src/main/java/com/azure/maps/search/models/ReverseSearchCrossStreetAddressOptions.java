@@ -8,8 +8,7 @@ public final class ReverseSearchCrossStreetAddressOptions extends BaseReverseSea
 
     /**
      * Builds reverse cross street search options with coordinates.
-     * @param query
-     * @param countryFilter
+     * @param coordinates The {@link LatLong} coordinates to be searched.
      */
     public ReverseSearchCrossStreetAddressOptions(LatLong coordinates) {
         this.setCoordinates(coordinates);

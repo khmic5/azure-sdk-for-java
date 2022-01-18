@@ -11,40 +11,40 @@ public abstract class BaseReverseSearchOptions<T extends BaseReverseSearchOption
     private LatLong coordinates;
 
     /**
-     * Returns the radius in meters.
-     * @return
+     * Returns an Integer with the radius, in meters.
+     * @return the radius in meters.
      */
     public Integer getRadiusInMeters() {
         return radiusInMeters;
     }
 
     /**
-     * Returns the language.
-     * @return
+     * Returns a String with the chosen language.
+     * @return the language.
      */
     public String getLanguage() {
         return language;
     }
 
     /**
-     * Returns the localized map view.
-     * @return
+     * Returns a LocalizedMapView representing the geopolitical view of the map.
+     * @return the localized map view.
      */
     public LocalizedMapView getLocalizedMapView() {
         return localizedMapView;
     }
 
     /**
-     * Returns the heading.
-     * @return
+     * Returns an Integer representing the heading.
+     * @return the heading.
      */
     public Integer getHeading() {
         return heading;
     }
 
     /**
-     * Returns the coordinates.
-     * @return
+     * Returns a LatLong with the requested coordinates.
+     * @return the coordinates to be used in the search.
      */
     public LatLong getCoordinates() {
         return this.coordinates;

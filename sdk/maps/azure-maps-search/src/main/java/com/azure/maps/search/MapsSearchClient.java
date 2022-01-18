@@ -59,7 +59,6 @@ public final class MapsSearchClient {
     /**
      * **Get Polygon**
      *
-     * @param format Desired format of the response. Only `json` format is supported.
      * @param geometryIds Comma separated list of geometry UUIDs, previously retrieved from an Online Search request.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -134,6 +133,7 @@ public final class MapsSearchClient {
     /**
      * **Nearby Search**
      *
+     * @param options a {@link SearchNearbyPointsOfInterestOptions} with the search options.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -149,9 +149,7 @@ public final class MapsSearchClient {
     /**
      * **Get POI by Category**
      *
-     * @param operatingHours Hours of operation for a POI (Points of Interest). The availability of hours of operation
-     *     will vary based on the data available. If not passed, then no opening hours information will be returned.
-     *     Supported value: nextSevenDays.
+     * @param options a {@link SearchPointOfInterestCategoryOptions} representing the search parameters.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -186,7 +184,6 @@ public final class MapsSearchClient {
      * results through other Search Service APIs, like [Get Search
      * POI](https://docs.microsoft.com/rest/api/maps/search/getsearchpoi).
      *
-     * @param format Desired format of the response. Only `json` format is supported.
      * @param language Language in which search results should be returned. Should be one of supported IETF language
      *     tags, except NGT and NGT-Latn. Language tag is case insensitive. When data in specified language is not
      *     available for a specific field, default language is used (English).
@@ -212,7 +209,6 @@ public final class MapsSearchClient {
      * results through other Search Service APIs, like [Get Search
      * POI](https://docs.microsoft.com/rest/api/maps/search/getsearchpoi).
      *
-     * @param format Desired format of the response. Only `json` format is supported.
      * @param language Language in which search results should be returned. Should be one of supported IETF language
      *     tags, except NGT and NGT-Latn. Language tag is case insensitive. When data in specified language is not
      *     available for a specific field, default language is used (English).
@@ -403,43 +399,8 @@ public final class MapsSearchClient {
 
     /**
      * **Search Fuzzy Batch API**
-     * @param format Desired format of the response. Only `json` format is supported.
-     * @param batchRequest The list of search fuzzy queries/requests to process. The list can contain a
-     *     max of 10,000 queries and must contain at least 1 query.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Search Address Batch service call.
      *
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public BatchSearchResult fuzzySearchBatchSync(BatchRequest batchRequest) {
-        return this.asyncClient.fuzzySearchBatchSync(batchRequest).block();
-    }*/
-
-    /**
-     * **Search Fuzzy Batch API**
-     *
-     * @param format Desired format of the response. Only `json` format is supported.
-     * @param batchRequest The list of search fuzzy queries/requests to process. The list can contain a
-     *     max of 10,000 queries and must contain at least 1 query.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Search Address Batch service call.
-     *
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<BatchSearchResult> fuzzySearchBatchSyncWithResponse(
-            BatchRequest batchRequest, Context context) {
-        return this.asyncClient.fuzzySearchBatchSyncWithResponse(batchRequest, context).block();
-    }*/
-
-    /**
-     * **Search Fuzzy Batch API**
-     *
-     * @param format Desired format of the response. Only `json` format is supported.
-     * @param batchRequest The list of search fuzzy queries/requests to process. The list can contain a
-     *     max of 10,000 queries and must contain at least 1 query.
+     * @param optionsList a list of {@link FuzzySearchOptions} to be searched.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -453,9 +414,7 @@ public final class MapsSearchClient {
 
     /**
      * **Search Fuzzy Batch API**
-     * @param format Desired format of the response. Only `json` format is supported.
-     * @param batchRequest The list of search fuzzy queries/requests to process. The list can contain a
-     *     max of 10,000 queries and must contain at least 1 query.
+     * @param optionsList a list of {@link FuzzySearchOptions} to be searched.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -486,7 +445,6 @@ public final class MapsSearchClient {
     /**
      * **Search Fuzzy Batch API**
      *
-     *
      * @param batchId Batch id for querying the operation.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -503,43 +461,7 @@ public final class MapsSearchClient {
     /**
      * **Search Address Batch API**
      *
-     * @param format Desired format of the response. Only `json` format is supported.
-     * @param batchRequest The list of address geocoding queries/requests to process. The list can
-     *     contain a max of 10,000 queries and must contain at least 1 query.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Search Address Batch service call.
-     *
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public BatchSearchResult searchAddressBatchSync(BatchRequest batchRequest) {
-        return this.asyncClient.searchAddressBatchSync(batchRequest).block();
-    }*/
-
-    /**
-     * **Search Address Batch API**
-     *
-     * @param format Desired format of the response. Only `json` format is supported.
-     * @param batchRequest The list of address geocoding queries/requests to process. The list can
-     *     contain a max of 10,000 queries and must contain at least 1 query.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Search Address Batch service call.
-     *
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<BatchSearchResult> searchAddressBatchSyncWithResponse(
-            BatchRequest batchRequest, Context context) {
-        return this.asyncClient.searchAddressBatchSyncWithResponse(batchRequest, context).block();
-    }*/
-
-    /**
-     * **Search Address Batch API**
-     *
-     * @param format Desired format of the response. Only `json` format is supported.
-     * @param batchRequest The list of address geocoding queries/requests to process. The list can
-     *     contain a max of 10,000 queries and must contain at least 1 query.
+     * @param optionsList a list of {@link FuzzySearchOptions} to be searched.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -554,9 +476,7 @@ public final class MapsSearchClient {
     /**
      * **Search Address Batch API**
      *
-     * @param format Desired format of the response. Only `json` format is supported.
-     * @param batchRequest The list of address geocoding queries/requests to process. The list can
-     *     contain a max of 10,000 queries and must contain at least 1 query.
+     * @param optionsList a list of {@link SearchAddressOptions} to be searched.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -600,52 +520,10 @@ public final class MapsSearchClient {
     }
 
     /**
-     * **Search Address Reverse Batch API**
+     * Searches a batch of addresses given their coordinates.
      *
-     * @param format Desired format of the response. Only `json` format is supported.
-     * @param batchRequest The list of reverse geocoding queries/requests to process. The list
-     *     can contain a max of 10,000 queries and must contain at least 1 query.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Search Address Reverse Batch service call.
-     *
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public BatchReverseSearchResult reverseSearchAddressBatchSync(
-            BatchRequest batchRequest) {
-        return this.asyncClient.reverseSearchAddressBatchSync(batchRequest).block();
-    }*/
-
-    /**
-     * **Search Address Reverse Batch API**
-     *
-     *
-     * @param format Desired format of the response. Only `json` format is supported.
-     * @param batchRequest The list of reverse geocoding queries/requests to process. The list
-     *     can contain a max of 10,000 queries and must contain at least 1 query.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Search Address Reverse Batch service call.
-     *
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<BatchReverseSearchResult> reverseSearchAddressBatchSyncWithResponse(
-            BatchRequest batchRequest, Context context) {
-        return this.asyncClient.reverseSearchAddressBatchSyncWithResponse(batchRequest, context).block();
-    }*/
-
-    /**
-     * **Search Address Reverse Batch API**
-     *
-     *
-     * @param format Desired format of the response. Only `json` format is supported.
-     * @param batchRequest The list of reverse geocoding queries/requests to process. The list
-     *     can contain a max of 10,000 queries and must contain at least 1 query.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Search Address Reverse Batch service call.
+     * @param optionsList a list of {@link ReverseSearchAddressOptions} to be searched.
+     * @return a {@code SyncPoller} wrapping the service call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<BatchReverseSearchResult, BatchReverseSearchResult>
@@ -654,16 +532,11 @@ public final class MapsSearchClient {
     }
 
     /**
-     * **Search Address Reverse Batch API**
+     * Searches a batch of addresses given their coordinates.
      *
-     * @param format Desired format of the response. Only `json` format is supported.
-     * @param batchRequest The list of reverse geocoding queries/requests to process. The list
-     *     can contain a max of 10,000 queries and must contain at least 1 query.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Search Address Reverse Batch service call.
+     * @param optionsList a list of {@link ReverseSearchAddressOptions} to be searched.
+     * @param context a {@link Context} object for distributed tracing.
+     * @return a {@code SyncPoller} wrapping the service call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<BatchReverseSearchResult, BatchReverseSearchResult>
@@ -672,12 +545,10 @@ public final class MapsSearchClient {
     }
 
     /**
-     * **Search Address Reverse Batch API**
+     * Returns a batch of previously searched addressed given a batch id.
+     *
      * @param batchId Batch id for querying the operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Search Address Reverse Batch service call.
+     * @return a {@code SyncPoller} wrapping the service call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<BatchReverseSearchResult, BatchReverseSearchResult>
@@ -686,15 +557,11 @@ public final class MapsSearchClient {
     }
 
     /**
-     * **Search Address Reverse Batch API**
-
+     * Returns a batch of previously searched addressed given a batch id.
      *
      * @param batchId Batch id for querying the operation.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Search Address Reverse Batch service call.
+     * @param context a {@link Context} object for distributed tracing.
+     * @return a {@code SyncPoller} wrapping the service call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<BatchReverseSearchResult, BatchReverseSearchResult>
