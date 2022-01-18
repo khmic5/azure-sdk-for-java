@@ -17,6 +17,7 @@ import com.azure.core.credential.BasicAuthenticationCredential;
 import java.beans.Transient;
 
 import com.azure.core.credential.TokenCredential;
+import com.azure.identity.DefaultAzureCredential;
 import com.azure.identity.DefaultAzureCredentialBuilder;
 import com.azure.maps.search.MapsSearchAsyncClient;
 import com.azure.maps.search.MapsSearchClientBuilder;
@@ -109,7 +110,7 @@ public class MapsSearchClientBuilderTest {
     public void missingMapsClientIdValidTokenCredential() {
         assertThrows(IllegalArgumentException.class, () -> {
             final MapsSearchClientBuilder builder = new MapsSearchClientBuilder();
-            BasicAuthenticationCredential tokenCredential = new BasicAuthenticationCredential("username", "password");
+            DefaultAzureCredential tokenCredential = new DefaultAzureCredentialBuilder().build();
             builder.credential(tokenCredential);
             builder.buildClient();
         });
