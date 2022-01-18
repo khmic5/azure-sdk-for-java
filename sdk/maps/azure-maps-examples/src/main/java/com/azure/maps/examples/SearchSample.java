@@ -59,7 +59,7 @@ public class SearchSample {
         builder.httpLogOptions(new HttpLogOptions().setLogLevel(HttpLogDetailLevel.BODY_AND_HEADERS));
         MapsSearchClient client = builder.buildClient();
 
-        /* Stand-alone, one-shot operations */
+        /* Stand-alone, one-shot operations
         // Search address -
         // https://docs.microsoft.com/en-us/rest/api/maps/search/get-search-address
         System.out.println("Search Address:");
@@ -347,6 +347,7 @@ public class SearchSample {
         System.out.println("Reverse Search Address Batch Async");
         BatchReverseSearchResult br1 =
             client.beginReverseSearchAddressBatch(reverseOptionsList).getFinalResult();
+        MapsCommon.print(br1);
         MapsCommon.print(br1.getBatchItems());
         MapsCommon.print(br1.getBatchItems().get(0).getResult().getAddresses().get(0).getAddress());
 

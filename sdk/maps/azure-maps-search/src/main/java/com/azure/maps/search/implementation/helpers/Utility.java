@@ -6,8 +6,11 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import com.azure.core.http.HttpHeaders;
 import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.SimpleResponse;
 import com.azure.core.models.GeoObject;
@@ -61,6 +64,7 @@ import com.azure.maps.search.models.SearchSummary;
  */
 public class Utility {
     private static final JacksonJsonSerializer serializer = new JacksonJsonSerializerProvider().createInstance();
+    private static final Pattern uuidPattern = Pattern.compile("[0-9A-Fa-f\\-]{36}");
 
         /**
      * converts the internal representation of SearchAddressResult into the public one
@@ -113,7 +117,7 @@ public class Utility {
      */
     public static SimpleResponse<BatchSearchResult> createBatchSearchResponse(
             Response<SearchAddressBatchResult> response) {
-        BatchSearchResult result = (response.getValue() == null) ? null : Utility.toBatchSearchResult(response.getValue());
+        BatchSearchResult result = (response.getValue() == null) ? null : toBatchSearchResult(response.getValue());
         SimpleResponse<BatchSearchResult> simpleResponse = new SimpleResponse<>(response.getRequest(),
             response.getStatusCode(),
             response.getHeaders(),
@@ -129,13 +133,33 @@ public class Utility {
      */
     public static SimpleResponse<BatchReverseSearchResult> createBatchReverseSearchResponse(
             Response<ReverseSearchAddressBatchResult> response) {
-        BatchReverseSearchResult result = (response.getValue() == null) ? null : Utility.toBatchReverseSearchResult(response.getValue());
+        BatchReverseSearchResult result = (response.getValue() == null) ? null : toBatchReverseSearchResult(response.getValue());
         SimpleResponse<BatchReverseSearchResult> simpleResponse = new SimpleResponse<>(response.getRequest(),
             response.getStatusCode(),
             response.getHeaders(),
             result);
 
         return simpleResponse;
+    }
+
+    /**
+     *
+     */
+    public static String getBatchId(HttpHeaders headers) {
+        // this can happen when deserialization is happening
+        // to convert the private model to public model (see BatchResponseSerializer)
+        if (headers == null) return null;
+
+        // if not, let's go
+        final String location = headers.getValue("Location");
+
+        if (location != null) {
+            Matcher matcher = uuidPattern.matcher(location);
+            matcher.find();
+            return matcher.group();
+        }
+
+        return null;
     }
 
     public static Address toAddress(AddressPrivate addressPrivate) {
@@ -247,8 +271,7 @@ public class Utility {
         return resultItem;
     }
 
-    public static BatchReverseSearchResult toBatchReverseSearchResult(
-            ReverseSearchAddressBatchResult result) {
+    public static BatchReverseSearchResult toBatchReverseSearchResult(ReverseSearchAddressBatchResult result) {
         BatchResultSummary summary = result.getBatchSummary();
         List<ReverseSearchAddressBatchItem> items = result.getBatchItems().stream()
             .map(item -> toReverseSearchAddressBatchItem(item))
