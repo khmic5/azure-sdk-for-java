@@ -1,26 +1,11 @@
 package com.azure.maps.search;
 
-import org.junit.jupiter.api.Test;
-
-import io.netty.handler.codec.http2.Http2HeadersEncoder.Configuration;
-
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assumptions.assumeTrue;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import com.azure.core.credential.AzureKeyCredential;
-import com.azure.core.credential.BasicAuthenticationCredential;
 
-import java.beans.Transient;
-
-import com.azure.core.credential.TokenCredential;
 import com.azure.identity.DefaultAzureCredential;
 import com.azure.identity.DefaultAzureCredentialBuilder;
-import com.azure.maps.search.MapsSearchAsyncClient;
-import com.azure.maps.search.MapsSearchClientBuilder;
+
+import org.junit.jupiter.api.Test;
 
 public class MapsSearchClientBuilderTest {
 
