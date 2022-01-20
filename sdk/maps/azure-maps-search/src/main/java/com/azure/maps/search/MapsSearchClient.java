@@ -31,7 +31,43 @@ import com.azure.maps.search.models.SearchPointOfInterestOptions;
 import com.azure.maps.search.models.SearchStructuredAddressOptions;
 import com.azure.maps.search.models.StructuredAddress;
 
-/** Initializes a new instance of the synchronous SearchClient type. */
+/**
+ * {@link MapsSearchClient} instances are created via the {@link MapsSearchClientBuilder}, as shown below.
+ * <p/>
+ * Creating a sync client using a {@link AzureKeyCredential}:
+ * <!-- src_embed com.azure.maps.search.sync.builder.key.instantiation -->
+ * <pre>
+ * &#47;&#47; Authenticates using subscription key
+ * AzureKeyCredential keyCredential = new AzureKeyCredential&#40;System.getenv&#40;&quot;SUBSCRIPTION_KEY&quot;&#41;&#41;;
+ *
+ * &#47;&#47; Creates a builder
+ * MapsSearchClientBuilder builder = new MapsSearchClientBuilder&#40;&#41;;
+ * builder.credential&#40;keyCredential&#41;;
+ * builder.httpLogOptions&#40;new HttpLogOptions&#40;&#41;.setLogLevel&#40;HttpLogDetailLevel.BODY_AND_HEADERS&#41;&#41;;
+ *
+ * &#47;&#47; Builds the client
+ * MapsSearchClient client = builder.buildClient&#40;&#41;;
+ * </pre>
+ * <!-- end com.azure.maps.search.sync.builder.key.instantiation -->
+ * Creating a sync client using a {@link TokenCredential}:
+ * <p/>
+ * <!-- src_embed com.azure.maps.search.sync.builder.ad.instantiation -->
+ * <pre>
+ * &#47;&#47; Authenticates using Azure AD building a default credential
+ * &#47;&#47; This will look for AZURE_CLIENT_ID, AZURE_TENANT_ID, and AZURE_CLIENT_SECRET env variables
+ * DefaultAzureCredential tokenCredential = new DefaultAzureCredentialBuilder&#40;&#41;.build&#40;&#41;;
+ *
+ * &#47;&#47; Creates a builder
+ * MapsSearchClientBuilder builder = new MapsSearchClientBuilder&#40;&#41;;
+ * builder.credential&#40;tokenCredential&#41;;
+ * builder.mapsClientId&#40;System.getenv&#40;&quot;MAPS_CLIENT_ID&quot;&#41;&#41;;
+ * builder.httpLogOptions&#40;new HttpLogOptions&#40;&#41;.setLogLevel&#40;HttpLogDetailLevel.BODY_AND_HEADERS&#41;&#41;;
+ *
+ * &#47;&#47; Builds a client
+ * MapsSearchClient client = builder.buildClient&#40;&#41;;
+ * </pre>
+ * <!-- end com.azure.maps.search.sync.builder.ad.instantiation -->
+ */
 @ServiceClient(builder = MapsSearchClientBuilder.class)
 public final class MapsSearchClient {
     private final MapsSearchAsyncClient asyncClient;

@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.azure.core.credential.AzureKeyCredential;
 import com.azure.core.http.policy.HttpLogDetailLevel;
 import com.azure.core.http.policy.HttpLogOptions;
 import com.azure.core.http.rest.Response;
@@ -37,29 +38,61 @@ import com.azure.maps.search.models.SearchPointOfInterestOptions;
 import com.azure.maps.search.models.SearchStructuredAddressOptions;
 import com.azure.maps.search.models.StructuredAddress;
 
-public class SearchSample {
+public class BuilderSamples {
 
-    public static void main(String[] args) throws IOException {
-        // authenticates using subscription key
-        // AzureKeyCredential keyCredential = new AzureKeyCredential(System.getenv("SUBSCRIPTION_KEY"));
+    public MapsSearchClient createMapsSyncClientUsingAzureKeyCredential() {
+        // BEGIN: com.azure.maps.search.sync.builder.key.instantiation
+        // Authenticates using subscription key
+        AzureKeyCredential keyCredential = new AzureKeyCredential(System.getenv("SUBSCRIPTION_KEY"));
 
-        // authenticates using Azure AD building a default credential
+        // Creates a builder
+        MapsSearchClientBuilder builder = new MapsSearchClientBuilder();
+        builder.credential(keyCredential);
+        builder.httpLogOptions(new HttpLogOptions().setLogLevel(HttpLogDetailLevel.BODY_AND_HEADERS));
+
+        // Builds the client
+        MapsSearchClient client = builder.buildClient();
+        // END: com.azure.maps.search.sync.builder.key.instantiation
+
+        return client;
+    }
+
+    public MapsSearchClient createMapsSyncClientUsingAzureADCredential() {
+        // BEGIN: com.azure.maps.search.sync.builder.ad.instantiation
+        // Authenticates using Azure AD building a default credential
         // This will look for AZURE_CLIENT_ID, AZURE_TENANT_ID, and AZURE_CLIENT_SECRET env variables
         DefaultAzureCredential tokenCredential = new DefaultAzureCredentialBuilder().build();
 
-        // build client
-        // BEGIN: com.azure.maps.search.builder.instantiation
+        // Creates a builder
         MapsSearchClientBuilder builder = new MapsSearchClientBuilder();
-        // END: com.azure.maps.search.builder.instantiation
+        builder.credential(tokenCredential);
+        builder.mapsClientId(System.getenv("MAPS_CLIENT_ID"));
+        builder.httpLogOptions(new HttpLogOptions().setLogLevel(HttpLogDetailLevel.BODY_AND_HEADERS));
 
-        // use this for key authentication
+        // Builds a client
+        MapsSearchClient client = builder.buildClient();
+        // END: com.azure.maps.search.sync.builder.ad.instantiation
+
+        return client;
+    }
+
+    public static void main(String[] args) throws IOException {
+        // BEGIN: com.azure.maps.search.sync.builder.instantiation
+        MapsSearchClientBuilder builder = new MapsSearchClientBuilder();
+
+        // Authenticates using subscription key
+        // AzureKeyCredential keyCredential = new AzureKeyCredential(System.getenv("SUBSCRIPTION_KEY"));
         // builder.credential(keyCredential);
 
-        // use the next 2 lines for Azure AD authentication
+        // Authenticates using Azure AD building a default credential
+        // This will look for AZURE_CLIENT_ID, AZURE_TENANT_ID, and AZURE_CLIENT_SECRET env variables
+        DefaultAzureCredential tokenCredential = new DefaultAzureCredentialBuilder().build();
+
         builder.credential(tokenCredential);
         builder.mapsClientId(System.getenv("MAPS_CLIENT_ID"));
         builder.httpLogOptions(new HttpLogOptions().setLogLevel(HttpLogDetailLevel.BODY_AND_HEADERS));
         MapsSearchClient client = builder.buildClient();
+        // END: com.azure.maps.search.sync.builder.instantiation
 
         /* Stand-alone, one-shot operations */
         // Search address -
