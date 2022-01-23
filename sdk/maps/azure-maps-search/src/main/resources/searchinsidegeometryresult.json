@@ -1,0 +1,182 @@
+{
+    "summary": {
+        "query": "pizza",
+        "queryType": "NON_NEAR",
+        "queryTime": 28,
+        "numResults": 2,
+        "offset": 0,
+        "totalResults": 18,
+        "fuzzyLevel": 1
+    },
+    "results": [
+        {
+            "type": "POI",
+            "id": "840069019255788",
+            "score": 2.1455702782,
+            "info": "search:ta:840069019255788-US",
+            "poi": {
+                "name": "Bernal Heights Pizzeria",
+                "phone": "+1 415-400-5644",
+                "categorySet": [
+                    {
+                        "id": 7315036
+                    }
+                ],
+                "url": "www.bernalheightspizzeria.com/",
+                "categories": [
+                    "pizza",
+                    "restaurant"
+                ],
+                "classifications": [
+                    {
+                        "code": "RESTAURANT",
+                        "names": [
+                            {
+                                "nameLocale": "en-US",
+                                "name": "restaurant"
+                            },
+                            {
+                                "nameLocale": "en-US",
+                                "name": "pizza"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "address": {
+                "streetNumber": "59",
+                "streetName": "30th Street",
+                "municipalitySubdivision": "Bernal Heights",
+                "municipality": "San Francisco",
+                "countrySecondarySubdivision": "San Francisco",
+                "countrySubdivision": "CA",
+                "countrySubdivisionName": "California",
+                "postalCode": "94110",
+                "extendedPostalCode": "94110-5401",
+                "countryCode": "US",
+                "country": "United States",
+                "countryCodeISO3": "USA",
+                "freeformAddress": "59 30th Street, San Francisco, CA 94110",
+                "localName": "San Francisco"
+            },
+            "position": {
+                "lat": 37.74222,
+                "lon": -122.42313
+            },
+            "viewport": {
+                "topLeftPoint": {
+                    "lat": 37.74312,
+                    "lon": -122.42427
+                },
+                "btmRightPoint": {
+                    "lat": 37.74132,
+                    "lon": -122.42199
+                }
+            },
+            "entryPoints": [
+                {
+                    "type": "main",
+                    "position": {
+                        "lat": 37.74234,
+                        "lon": -122.42268
+                    }
+                }
+            ],
+            "dataSources": {
+                "poiDetails": [
+                    {
+                        "id": "Rm91cnNxdWFyZTo1MjkyYWY2NTExZDI2NGM1ODdiOGE4ODM=",
+                        "sourceName": "Foursquare"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "POI",
+            "id": "840069002602194",
+            "score": 2.1454751492,
+            "info": "search:ta:840069002602194-US",
+            "poi": {
+                "name": "Round Table Pizza",
+                "phone": "+1 415-586-1200",
+                "brands": [
+                    {
+                        "name": "Round Table Pizza"
+                    }
+                ],
+                "categorySet": [
+                    {
+                        "id": 7315036
+                    }
+                ],
+                "url": "https://ordering.roundtablepizza.com/Site/rtsf",
+                "categories": [
+                    "pizza",
+                    "restaurant"
+                ],
+                "classifications": [
+                    {
+                        "code": "RESTAURANT",
+                        "names": [
+                            {
+                                "nameLocale": "en-US",
+                                "name": "restaurant"
+                            },
+                            {
+                                "nameLocale": "en-US",
+                                "name": "pizza"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "address": {
+                "streetNumber": "4523",
+                "streetName": "Mission Street",
+                "municipalitySubdivision": "Mission Terrace",
+                "municipality": "San Francisco",
+                "countrySecondarySubdivision": "San Francisco",
+                "countrySubdivision": "CA",
+                "countrySubdivisionName": "California",
+                "postalCode": "94112",
+                "extendedPostalCode": "94112-2600",
+                "countryCode": "US",
+                "country": "United States",
+                "countryCodeISO3": "USA",
+                "freeformAddress": "4523 Mission Street, San Francisco, CA 94112",
+                "localName": "San Francisco"
+            },
+            "position": {
+                "lat": 37.72572,
+                "lon": -122.43368
+            },
+            "viewport": {
+                "topLeftPoint": {
+                    "lat": 37.72662,
+                    "lon": -122.43482
+                },
+                "btmRightPoint": {
+                    "lat": 37.72482,
+                    "lon": -122.43254
+                }
+            },
+            "entryPoints": [
+                {
+                    "type": "main",
+                    "position": {
+                        "lat": 37.72585,
+                        "lon": -122.43393
+                    }
+                }
+            ],
+            "dataSources": {
+                "poiDetails": [
+                    {
+                        "id": "Rm91cnNxdWFyZTo0Yzc5ODcyNjNiYWRiMWY3ODA3ODRmNTQ=",
+                        "sourceName": "Foursquare"
+                    }
+                ]
+            }
+        }
+    ]
+}

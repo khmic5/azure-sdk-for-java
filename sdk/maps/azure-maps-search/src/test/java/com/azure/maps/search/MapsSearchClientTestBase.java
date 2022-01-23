@@ -19,6 +19,9 @@ import com.azure.core.test.TestBase;
 import com.azure.core.test.TestMode;
 import com.azure.core.util.Configuration;
 import com.azure.identity.EnvironmentCredentialBuilder;
+import com.azure.maps.search.models.Polygon;
+import com.azure.maps.search.models.ReverseSearchAddressResult;
+import com.azure.maps.search.models.ReverseSearchCrossStreetAddressResult;
 import com.azure.maps.search.models.SearchAddressResult;
 import com.azure.core.credential.AzureKeyCredential;
 
@@ -31,19 +34,19 @@ public class MapsSearchClientTestBase extends TestBase {
         MapsSearchServiceVersion serviceVersion) {
             System.out.println("beginning httpclient " + httpClient);
             MapsSearchClientBuilder builder = new MapsSearchClientBuilder()
-            .httpClient(httpClient == null ? interceptorManager.getPlaybackClient() : httpClient)
-            // .httpLogOptions(new HttpLogOptions().setLogLevel(HttpLogDetailLevel.BODY_AND_HEADERS))
+            //.httpClient(httpClient == null ? interceptorManager.getPlaybackClient() : httpClient)
+            .httpLogOptions(new HttpLogOptions().setLogLevel(HttpLogDetailLevel.BODY_AND_HEADERS))
             .serviceVersion(serviceVersion);
             String endpoint = getEndpoint();
             if (getEndpoint() != null) {
-                builder.endpoint(endpoint); 
+                builder.endpoint(endpoint);
             }
             System.out.println("after httpclient " + httpClient);
         if (getTestMode() == TestMode.RECORD) {
             builder.addPolicy(interceptorManager.getRecordPolicy());
         }
         if (getTestMode() == TestMode.PLAYBACK) {
-            builder.credential(new AzureKeyCredential(FAKE_API_KEY));
+            builder.credential(new AzureKeyCredential(FAKE_API_KEY)).httpClient(interceptorManager.getPlaybackClient());
         } else {
             System.out.println("snoopy " + Configuration.getGlobalConfiguration().get("SUBSCRIPTION_KEY"));
             builder.credential((new AzureKeyCredential(
@@ -78,8 +81,12 @@ public class MapsSearchClientTestBase extends TestBase {
 
     String getEndpoint() {
         return interceptorManager.isPlaybackMode()
-            ? "http://localhost:8080"
+            ? "https://localhost:8080"
             : endpoint;
+    }
+
+    static void validateGetPolygons(List<Polygon> expected, List<Polygon> actual) {
+        assertEquals(expected.size(), actual.size());
     }
 
     static void validateFuzzySearchWithResponse(SearchAddressResult expected, int expectedStatusCode,Response<SearchAddressResult> response) {
@@ -89,19 +96,50 @@ public class MapsSearchClientTestBase extends TestBase {
     }
 
     static void validateFuzzySearch(SearchAddressResult expected, SearchAddressResult actual) {
-        validateFuzzySearchContent(expected, actual);
+        assertNotNull(actual.getSummary());
+        assertNotNull(actual.getResults());
+        assertEquals(expected.getResults().size(), actual.getResults().size());
     }
 
-    /**
-     * Helper method to validate a single detected language.
-     *
-     * @param expectedLanguage detectedLanguage returned by the service.
-     * @param actualLanguage detectedLanguage returned by the API.
-     */
-    static void validateFuzzySearchContent(SearchAddressResult expectedResult, SearchAddressResult actualResult) {
-        // TODO: issue https://github.com/Azure/azure-sdk-for-java/issues/13841
-        assertNotNull(actualResult.getSummary());
-        assertNotNull(actualResult.getResults());
-        assertEquals(expectedResult.getResults().size(), actualResult.getResults().size());
+    static void validateSearchPointOfInterest(SearchAddressResult expected, SearchAddressResult actual) {
+        assertNotNull(actual.getSummary());
+        assertNotNull(actual.getResults());
+        assertEquals(expected.getResults().size(), actual.getResults().size());
+    }
+
+    static void validateSearchNearbyPointOfInterest(SearchAddressResult expected, SearchAddressResult actual) {
+        assertNotNull(actual.getSummary());
+        assertNotNull(actual.getResults());
+        assertEquals(expected.getResults().size(), actual.getResults().size());
+    }
+
+    static void validateSearchPointOfInterestCategory(SearchAddressResult expected, SearchAddressResult actual) {
+        assertNotNull(actual.getSummary());
+        assertNotNull(actual.getResults());
+        assertEquals(expected.getResults().size(), actual.getResults().size());
+    }
+
+    static void validateSearchAddress(SearchAddressResult expected, SearchAddressResult actual) {
+        assertNotNull(actual.getSummary());
+        assertNotNull(actual.getResults());
+        assertEquals(expected.getResults().size(), actual.getResults().size());
+    }
+
+    static void validateReverseSearchAddress(ReverseSearchAddressResult expected, ReverseSearchAddressResult actual) {
+        assertNotNull(actual.getSummary());
+        assertNotNull(actual.getAddresses());
+        assertEquals(expected.getAddresses().size(), actual.getAddresses().size());
+    }
+
+    static void validateReverseSearchCrossStreetAddress(ReverseSearchCrossStreetAddressResult expected, ReverseSearchCrossStreetAddressResult actual) {
+        assertNotNull(actual.getSummary());
+        assertNotNull(actual.getAddresses());
+        assertEquals(expected.getAddresses().size(), actual.getAddresses().size());
+    }
+
+    static void validateSearchStructuredAddress(SearchAddressResult expected, SearchAddressResult actual) {
+        assertNotNull(actual.getSummary());
+        assertNotNull(actual.getResults());
+        assertEquals(expected.getResults().size(), actual.getResults().size());
     }
 }

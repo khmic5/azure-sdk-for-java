@@ -38,6 +38,12 @@ public final class PointOfInterest {
     private List<PointOfInterestCategorySet> categorySet;
 
     /*
+     * Categories array
+     */
+    @JsonProperty(value = "categories", access = JsonProperty.Access.WRITE_ONLY)
+    private List<String> categories;
+
+    /*
      * Classification array
      */
     @JsonProperty(value = "classifications", access = JsonProperty.Access.WRITE_ONLY)
@@ -89,6 +95,15 @@ public final class PointOfInterest {
      */
     public List<PointOfInterestCategorySet> getCategorySet() {
         return this.categorySet;
+    }
+
+    /**
+     * Get the categories property: Categories array.
+     *
+     * @return the categories value.
+     */
+    public List<String> getCategories() {
+        return this.categories;
     }
 
     /**
