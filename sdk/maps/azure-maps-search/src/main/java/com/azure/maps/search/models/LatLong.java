@@ -10,6 +10,10 @@ public final class LatLong {
     private double longitude;
 
     public LatLong() {
+<<<<<<< HEAD
+=======
+        super();
+>>>>>>> babaa75808 (updated client functional test cases)
     }
 
     /**
