@@ -19,6 +19,7 @@ import com.azure.core.test.TestBase;
 import com.azure.core.test.TestMode;
 import com.azure.core.util.Configuration;
 import com.azure.identity.EnvironmentCredentialBuilder;
+import com.azure.maps.search.models.PointOfInterestCategoryTreeResult;
 import com.azure.maps.search.models.Polygon;
 import com.azure.maps.search.models.ReverseSearchAddressResult;
 import com.azure.maps.search.models.ReverseSearchCrossStreetAddressResult;
@@ -117,6 +118,10 @@ public class MapsSearchClientTestBase extends TestBase {
         assertNotNull(actual.getSummary());
         assertNotNull(actual.getResults());
         assertEquals(expected.getResults().size(), actual.getResults().size());
+    }
+
+    static void validateSearchPointOfInterestCategoryTree(PointOfInterestCategoryTreeResult expected, PointOfInterestCategoryTreeResult actual) {
+        assertEquals(expected.getCategories().size(), actual.getCategories().size());
     }
 
     static void validateSearchAddress(SearchAddressResult expected, SearchAddressResult actual) {

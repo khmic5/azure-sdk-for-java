@@ -2,7 +2,7 @@
     "summary": {
         "query": "starbucks",
         "queryType": "NON_NEAR",
-        "queryTime": 55,
+        "queryTime": 50,
         "numResults": 10,
         "offset": 0,
         "totalResults": 23582,

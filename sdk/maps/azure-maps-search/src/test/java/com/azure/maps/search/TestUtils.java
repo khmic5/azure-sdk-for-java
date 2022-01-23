@@ -73,13 +73,10 @@ public class TestUtils {
     static SearchAddressResult getExpectedSearchPointOfInterestResults() throws StreamReadException, DatabindException, IOException {
         File file = new File("src/main/resources/searchpointofinterestresult.json");
         SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
-        TypeReference<SearchAddressResult> interimType = new TypeReference<SearchAddressResult>(){};
+        TypeReference<SearchAddressResultPrivate> interimType = new TypeReference<SearchAddressResultPrivate>(){};
         byte[] data = Files.readAllBytes(file.toPath());
         SearchAddressResultPrivate searchAddressResultPrivate = jacksonAdapter.<SearchAddressResultPrivate>deserialize(data, interimType.getJavaType(),
            SerializerEncoding.JSON);
-        
-        // URL url = SearchAddressResultPrivate.class.getClassLoader().getResource("searchpointofinterestresult.json");
-        // SearchAddressResultPrivate searchAddressResultPrivate = new ObjectMapper().readValue(url, SearchAddressResultPrivate.class);
         SearchAddressResult searchAddressResult = Utility.toSearchAddressResult(searchAddressResultPrivate);
         return searchAddressResult;
     }
@@ -87,13 +84,10 @@ public class TestUtils {
     static SearchAddressResult getExpectedSearchNearbyPointOfInterestResults() throws StreamReadException, DatabindException, IOException {
         File file = new File("src/main/resources/searchnearbypointofinterestresult.json");
         SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
-        TypeReference<SearchAddressResult> interimType = new TypeReference<SearchAddressResult>(){};
+        TypeReference<SearchAddressResultPrivate> interimType = new TypeReference<SearchAddressResultPrivate>(){};
         byte[] data = Files.readAllBytes(file.toPath());
         SearchAddressResultPrivate searchAddressResultPrivate = jacksonAdapter.<SearchAddressResultPrivate>deserialize(data, interimType.getJavaType(),
            SerializerEncoding.JSON);
-        
-        // URL url = SearchAddressResultPrivate.class.getClassLoader().getResource("searchnearbypointofinterestresult.json");
-        // SearchAddressResultPrivate searchAddressResultPrivate = new ObjectMapper().readValue(url, SearchAddressResultPrivate.class);
         SearchAddressResult searchAddressResult = Utility.toSearchAddressResult(searchAddressResultPrivate);
         return searchAddressResult;
     }
@@ -101,41 +95,35 @@ public class TestUtils {
     static SearchAddressResult getExpectedSearchPointOfInterestCategoryResults() throws StreamReadException, DatabindException, IOException {
         File file = new File("src/main/resources/searchpointofinterestcategoryresult.json");
         SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
-        TypeReference<SearchAddressResult> interimType = new TypeReference<SearchAddressResult>(){};
+        TypeReference<SearchAddressResultPrivate> interimType = new TypeReference<SearchAddressResultPrivate>(){};
         byte[] data = Files.readAllBytes(file.toPath());
         SearchAddressResultPrivate searchAddressResultPrivate = jacksonAdapter.<SearchAddressResultPrivate>deserialize(data, interimType.getJavaType(),
            SerializerEncoding.JSON);
-        
-        // URL url = SearchAddressResultPrivate.class.getClassLoader().getResource("searchpointofinterestcategoryresult.json");
-        // SearchAddressResultPrivate searchAddressResultPrivate = new ObjectMapper().readValue(url, SearchAddressResultPrivate.class);
         SearchAddressResult searchAddressResult = Utility.toSearchAddressResult(searchAddressResultPrivate);
         return searchAddressResult;
     }
 
-    static SearchAddressResult getExpectedSearchPointOfInterestCategoryTreeResults() throws StreamReadException, DatabindException, IOException {
-        File file = new File("src/main/resources/searchpointofinterestcategorytreeresult.json");
+    static PointOfInterestCategoryTreeResult getExpectedSearchPointOfInterestCategoryTreeResults() throws StreamReadException, DatabindException, IOException {
+        File file = new File("src/main/resources/getpointofinterestcategorytreeresult.json");
         SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
         TypeReference<PointOfInterestCategoryTreeResult> interimType = new TypeReference<PointOfInterestCategoryTreeResult>(){};
         byte[] data = Files.readAllBytes(file.toPath());
-        // PointOfInterestCategoryTreeResultPrivate pointOfInterestCategoryTreeResultPrivate = jacksonAdapter.<SearchAddressResultPrivate>deserialize(data, interimType.getJavaType(),
-        //    SerializerEncoding.JSON);
+        PointOfInterestCategoryTreeResult pointOfInterestCategoryTreeResult = jacksonAdapter.<PointOfInterestCategoryTreeResult>deserialize(data, interimType.getJavaType(),
+           SerializerEncoding.JSON);
         
         // // URL url = SearchAddressResultPrivate.class.getClassLoader().getResource("searchpointofinterestcategoryresult.json");
         // // SearchAddressResultPrivate searchAddressResultPrivate = new ObjectMapper().readValue(url, SearchAddressResultPrivate.class);
         // SearchAddressResult searchAddressResult = Utility.toPointOf(pointOfInterestCategoryTreeResultPrivate);
-        return null;
+        return pointOfInterestCategoryTreeResult;
     }
 
     static SearchAddressResult getExpectedSearchAddressResults() throws StreamReadException, DatabindException, IOException {
         File file = new File("src/main/resources/searchaddressresult.json");
         SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
-        TypeReference<SearchAddressResult> interimType = new TypeReference<SearchAddressResult>(){};
+        TypeReference<SearchAddressResultPrivate> interimType = new TypeReference<SearchAddressResultPrivate>(){};
         byte[] data = Files.readAllBytes(file.toPath());
         SearchAddressResultPrivate searchAddressResultPrivate = jacksonAdapter.<SearchAddressResultPrivate>deserialize(data, interimType.getJavaType(),
            SerializerEncoding.JSON);
-        
-        // // URL url = SearchAddressResultPrivate.class.getClassLoader().getResource("searchpointofinterestcategoryresult.json");
-        // // SearchAddressResultPrivate searchAddressResultPrivate = new ObjectMapper().readValue(url, SearchAddressResultPrivate.class);
         SearchAddressResult searchAddressResult = Utility.toSearchAddressResult(searchAddressResultPrivate);
         return searchAddressResult;
     }
@@ -143,13 +131,10 @@ public class TestUtils {
     static ReverseSearchAddressResult getExpectedReverseSearchAddressResults() throws StreamReadException, DatabindException, IOException {
         File file = new File("src/main/resources/reversesearchaddressresult.json");
         SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
-        TypeReference<ReverseSearchAddressResult> interimType = new TypeReference<ReverseSearchAddressResult>(){};
+        TypeReference<ReverseSearchAddressResultPrivate> interimType = new TypeReference<ReverseSearchAddressResultPrivate>(){};
         byte[] data = Files.readAllBytes(file.toPath());
         ReverseSearchAddressResultPrivate searchReverseAddressResultPrivate = jacksonAdapter.<ReverseSearchAddressResultPrivate>deserialize(data, interimType.getJavaType(),
            SerializerEncoding.JSON);
-        
-        // URL url = SearchAddressResultPrivate.class.getClassLoader().getResource("reversesearchaddressresult.json");
-        // ReverseSearchAddressResultPrivate searchReverseAddressResultPrivate = new ObjectMapper().readValue(url, ReverseSearchAddressResultPrivate.class);
         ReverseSearchAddressResult reverseSearchAddressResult = Utility.toReverseSearchAddressResult(searchReverseAddressResultPrivate);
         return reverseSearchAddressResult;
     }
@@ -157,13 +142,10 @@ public class TestUtils {
     static ReverseSearchCrossStreetAddressResult getExpectedReverseSearchCrossStreetAddressResults() throws StreamReadException, DatabindException, IOException {
         File file = new File("src/main/resources/reversesearchcrossstreetaddressresult.json");
         SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
-        TypeReference<ReverseSearchCrossStreetAddressResult> interimType = new TypeReference<ReverseSearchCrossStreetAddressResult>(){};
+        TypeReference<ReverseSearchCrossStreetAddressResultPrivate> interimType = new TypeReference<ReverseSearchCrossStreetAddressResultPrivate>(){};
         byte[] data = Files.readAllBytes(file.toPath());
         ReverseSearchCrossStreetAddressResultPrivate reverseSearchCrossStreetAddressResultPrivate = jacksonAdapter.<ReverseSearchCrossStreetAddressResultPrivate>deserialize(data, interimType.getJavaType(),
            SerializerEncoding.JSON);
-        
-        // URL url = ReverseSearchAddressResultPrivate.class.getClassLoader().getResource("reversesearchcrossstreetaddressresult.json");
-        // ReverseSearchCrossStreetAddressResultPrivate reverseSearchCrossStreetAddressResultPrivate = new ObjectMapper().readValue(url, ReverseSearchCrossStreetAddressResultPrivate.class);
         ReverseSearchCrossStreetAddressResult reverseSearchCrossStreetAddressResult = Utility.toReverseSearchCrossStreetAddressResult(reverseSearchCrossStreetAddressResultPrivate);
         return reverseSearchCrossStreetAddressResult;
     }
@@ -171,13 +153,10 @@ public class TestUtils {
     static SearchAddressResult getExpectedSearchStructuredAddress() throws StreamReadException, DatabindException, IOException {
         File file = new File("src/main/resources/searchstructuredaddressresult.json");
         SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
-        TypeReference<SearchAddressResult> interimType = new TypeReference<SearchAddressResult>(){};
+        TypeReference<SearchAddressResultPrivate> interimType = new TypeReference<SearchAddressResultPrivate>(){};
         byte[] data = Files.readAllBytes(file.toPath());
         SearchAddressResultPrivate searchAddressResultPrivate = jacksonAdapter.<SearchAddressResultPrivate>deserialize(data, interimType.getJavaType(),
            SerializerEncoding.JSON);
-        
-        // URL url = SearchAddressResultPrivate.class.getClassLoader().getResource("searchstructuredaddressresult.json");
-        // SearchAddressResultPrivate searchAddressResultPrivate = new ObjectMapper().readValue(url, SearchAddressResultPrivate.class);
         SearchAddressResult searchAddressResult = Utility.toSearchAddressResult(searchAddressResultPrivate);
         return searchAddressResult;
     }

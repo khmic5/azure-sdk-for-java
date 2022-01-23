@@ -34,6 +34,16 @@
                     "lon": -66.95
                 }
             },
+            "boundingBox": {
+                "topLeftPoint": {
+                    "lat": 71.39048,
+                    "lon": 172.44475
+                },
+                "btmRightPoint": {
+                    "lat": 18.91079,
+                    "lon": -66.95
+                }
+            },
             "dataSources": {
                 "geometry": {
                     "id": "8cc529f8-a9ac-46a3-91ee-2e3b6bcb2e5b"

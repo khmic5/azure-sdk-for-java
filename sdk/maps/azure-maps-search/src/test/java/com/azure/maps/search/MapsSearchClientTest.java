@@ -9,6 +9,7 @@ import java.util.List;
 import com.azure.core.http.HttpClient;
 import com.azure.maps.search.models.FuzzySearchOptions;
 import com.azure.maps.search.models.LatLong;
+import com.azure.maps.search.models.PointOfInterestCategoryTreeResult;
 import com.azure.maps.search.models.Polygon;
 import com.azure.maps.search.models.ReverseSearchAddressOptions;
 import com.azure.maps.search.models.ReverseSearchAddressResult;
@@ -68,8 +69,6 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
         client = getMapsSearchClient(httpClient, MapsSearchServiceVersion.V1_0);
         SearchAddressResult actualResult = client.searchPointOfInterest(new SearchPointOfInterestOptions("caviar lobster pasta", new LatLong(36.98844, -121.97483)));
         SearchAddressResult expectedResult = TestUtils.getExpectedSearchPointOfInterestResults();
-        System.out.println("hi " + expectedResult.getResults().size());
-        System.out.println("hello " + actualResult.getResults().size());
         validateSearchPointOfInterest(expectedResult, actualResult);
     }
 
@@ -81,8 +80,6 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
         SearchAddressResult actualResult = client.searchNearbyPointOfInterest(
             new SearchNearbyPointsOfInterestOptions(new LatLong(40.706270, -74.011454)));
         SearchAddressResult expectedResult = TestUtils.getExpectedSearchNearbyPointOfInterestResults();
-        System.out.println("hi " + expectedResult.getResults().size());
-        System.out.println("hello " + actualResult.getResults().size());
         validateSearchNearbyPointOfInterest(expectedResult, actualResult);
     }
 
@@ -94,22 +91,20 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
         SearchAddressResult actualResult = client.searchPointOfInterestCategory(
             new SearchPointOfInterestCategoryOptions("atm", new LatLong(40.706270, -74.011454)));
         SearchAddressResult expectedResult = TestUtils.getExpectedSearchPointOfInterestCategoryResults();
-        System.out.println("hi " + expectedResult.getResults().size());
-        System.out.println("hello " + actualResult.getResults().size());
         validateSearchPointOfInterestCategory(expectedResult, actualResult);
     }
 
     // Test get point of interest category tree
-    // @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
-    // @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
-    // public void testSearchPointOfInterestCategoryTree(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
-    //     client = getMapsSearchClient(httpClient, MapsSearchServiceVersion.V1_0);
-    //     PointOfInterestCategoryTreeResult actualResult = client.getPointOfInterestCategoryTree(null);
-    //     SearchAddressResult expectedResult = TestUtils.getExpectedSearchPointOfInterestCategoryTreeResults();
-    //     System.out.println("hi " + expectedResult.getResults().size());
-    //     System.out.println("hello " + actualResult.getResults().size());
-    //     validateSearchPointOfInterestCategoryTree(expectedResult, actualResult);
-    // }
+    @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
+    @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
+    public void testSearchPointOfInterestCategoryTree(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
+        client = getMapsSearchClient(httpClient, MapsSearchServiceVersion.V1_0);
+        PointOfInterestCategoryTreeResult actualResult = client.getPointOfInterestCategoryTree(null);
+        PointOfInterestCategoryTreeResult expectedResult = TestUtils.getExpectedSearchPointOfInterestCategoryTreeResults();
+        System.out.println("hi1 " + expectedResult.getCategories().size());
+        System.out.println("hello " + actualResult.getCategories().size());
+        validateSearchPointOfInterestCategoryTree(expectedResult, actualResult);
+    }
 
     // Test search address
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
@@ -118,8 +113,6 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
         client = getMapsSearchClient(httpClient, MapsSearchServiceVersion.V1_0);
         SearchAddressResult actualResult = client.searchAddress(new SearchAddressOptions("NE 24th Street, Redmond, WA 98052"));
         SearchAddressResult expectedResult = TestUtils.getExpectedSearchAddressResults();
-        System.out.println("hi " + expectedResult.getResults().size());
-        System.out.println("hello " + actualResult.getResults().size());
         validateSearchAddress(expectedResult, actualResult);
     }
 
@@ -131,8 +124,6 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
         ReverseSearchAddressResult actualResult = client.reverseSearchAddress(
             new ReverseSearchAddressOptions(new LatLong(37.337, -121.89)));
         ReverseSearchAddressResult expectedResult = TestUtils.getExpectedReverseSearchAddressResults();
-        System.out.println("hi " + expectedResult.getAddresses().size());
-        System.out.println("hello " + actualResult.getAddresses().size());
         validateReverseSearchAddress(expectedResult, actualResult);
     }
 
@@ -144,8 +135,6 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
         ReverseSearchCrossStreetAddressResult actualResult = client.reverseSearchCrossStreetAddress(
             new ReverseSearchCrossStreetAddressOptions(new LatLong(37.337, -121.89)));
         ReverseSearchCrossStreetAddressResult expectedResult = TestUtils.getExpectedReverseSearchCrossStreetAddressResults();
-        System.out.println("hi " + expectedResult.getAddresses().size());
-        System.out.println("hello " + actualResult.getAddresses().size());
         validateReverseSearchCrossStreetAddress(expectedResult, actualResult);
     }
 
@@ -156,8 +145,6 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
         client = getMapsSearchClient(httpClient, MapsSearchServiceVersion.V1_0);
         SearchAddressResult actualResult = client.searchStructuredAddress(new StructuredAddress("US"), null);
         SearchAddressResult expectedResult = TestUtils.getExpectedSearchStructuredAddress();
-        System.out.println("hi " + expectedResult.getResults().size());
-        System.out.println("hello " + actualResult.getResults().size());
         validateSearchStructuredAddress(expectedResult, actualResult);
     }
 

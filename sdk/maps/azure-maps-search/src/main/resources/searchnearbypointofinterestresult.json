@@ -1,7 +1,7 @@
 {
     "summary": {
         "queryType": "NEARBY",
-        "queryTime": 114,
+        "queryTime": 94,
         "numResults": 10,
         "offset": 0,
         "totalResults": 399996,
@@ -255,11 +255,11 @@
                         "names": [
                             {
                                 "nameLocale": "en-US",
-                                "name": "hotel/motel"
+                                "name": "hotel"
                             },
                             {
                                 "nameLocale": "en-US",
-                                "name": "hotel"
+                                "name": "hotel/motel"
                             }
                         ]
                     }
@@ -377,6 +377,12 @@
                 }
             ],
             "dataSources": {
+                "poiDetails": [
+                    {
+                        "id": "Rm91cnNxdWFyZTo1ZDVmNzk0NDVjOWEwMzAwMDg4NWQzODc=",
+                        "sourceName": "Foursquare"
+                    }
+                ]
             }
         },
         {

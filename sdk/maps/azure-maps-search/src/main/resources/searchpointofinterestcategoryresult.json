@@ -1,7 +1,7 @@
 {
     "summary": {
         "queryType": "NEARBY",
-        "queryTime": 83,
+        "queryTime": 99,
         "numResults": 10,
         "offset": 0,
         "totalResults": 399996,
@@ -377,6 +377,12 @@
                 }
             ],
             "dataSources": {
+                "poiDetails": [
+                    {
+                        "id": "Rm91cnNxdWFyZTo1ZDVmNzk0NDVjOWEwMzAwMDg4NWQzODc=",
+                        "sourceName": "Foursquare"
+                    }
+                ]
             }
         },
         {
@@ -473,11 +479,11 @@
                         "names": [
                             {
                                 "nameLocale": "en-US",
-                                "name": "company"
+                                "name": "cleaning services"
                             },
                             {
                                 "nameLocale": "en-US",
-                                "name": "cleaning services"
+                                "name": "company"
                             }
                         ]
                     }
