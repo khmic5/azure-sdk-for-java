@@ -25,9 +25,12 @@ import com.azure.core.test.TestMode;
 import com.azure.core.util.Configuration;
 import com.azure.core.util.polling.SyncPoller;
 import com.azure.identity.EnvironmentCredentialBuilder;
+<<<<<<< HEAD
 import com.azure.maps.search.models.BatchReverseSearchResult;
 import com.azure.maps.search.models.BatchSearchResult;
 import com.azure.maps.search.models.PointOfInterestCategory;
+=======
+>>>>>>> babaa75808 (updated client functional test cases)
 import com.azure.maps.search.models.PointOfInterestCategoryTreeResult;
 import com.azure.maps.search.models.Polygon;
 import com.azure.maps.search.models.ReverseSearchAddressResult;
@@ -200,6 +203,10 @@ public class MapsSearchClientTestBase extends TestBase {
         assertNotNull(response);
         assertEquals(expectedStatusCode, response.getStatusCode());
         validateSearchPointOfInterestCategoryTree(expected, response.getValue());
+    }
+
+    static void validateSearchPointOfInterestCategoryTree(PointOfInterestCategoryTreeResult expected, PointOfInterestCategoryTreeResult actual) {
+        assertEquals(expected.getCategories().size(), actual.getCategories().size());
     }
 
     static void validateSearchAddress(SearchAddressResult expected, SearchAddressResult actual) {

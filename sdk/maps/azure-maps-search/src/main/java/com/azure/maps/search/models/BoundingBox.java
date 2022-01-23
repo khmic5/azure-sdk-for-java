@@ -12,6 +12,10 @@ public final class BoundingBox {
     private LatLong bottomRight;
 
     public BoundingBox() {
+<<<<<<< HEAD
+=======
+        super();
+>>>>>>> babaa75808 (updated client functional test cases)
     }
 
     /**
