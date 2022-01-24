@@ -32,7 +32,6 @@ import com.azure.maps.search.models.SearchPointOfInterestOptions;
 import com.azure.maps.search.models.SearchStructuredAddressOptions;
 import com.azure.maps.search.models.StructuredAddress;
 import com.nimbusds.jose.shaded.json.parser.ParseException;
-import com.azure.maps.search.implementation.helpers.Utility;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
