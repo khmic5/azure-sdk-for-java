@@ -10,6 +10,7 @@ import com.azure.core.http.HttpClient;
 import com.azure.core.models.GeoLineString;
 import com.azure.core.models.GeoObject;
 import com.azure.core.util.Context;
+import com.azure.core.util.polling.SyncPoller;
 import com.azure.maps.search.models.BatchReverseSearchResult;
 import com.azure.maps.search.models.BatchSearchResult;
 import com.azure.maps.search.models.FuzzySearchOptions;
@@ -324,7 +325,10 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
         fuzzyOptionsList.add(new FuzzySearchOptions("Statue of Liberty").setTop(2));
         fuzzyOptionsList.add(new FuzzySearchOptions("Starbucks", new LatLong(47.639769, -122.128362))
             .setRadiusInMeters(5000));
-        BatchSearchResult actualResult = client.beginFuzzySearchBatch(fuzzyOptionsList).getFinalResult();
+        SyncPoller<BatchSearchResult, BatchSearchResult> syncPoller = client.beginFuzzySearchBatch(fuzzyOptionsList);
+        syncPoller = setPollInterval(syncPoller);
+        syncPoller.waitForCompletion();
+        BatchSearchResult actualResult = syncPoller.getFinalResult();
         BatchSearchResult expectedResult = TestUtils.getExpectedBeginFuzzySearchBatch();
         validateBeginFuzzySearchBatch(expectedResult, actualResult);
     }
@@ -340,7 +344,10 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
         searchAddressOptionsList.add(new SearchAddressOptions("One, Microsoft Way, Redmond, WA 98052").setTop(3));
         searchAddressOptionsList.add(new SearchAddressOptions("350 5th Ave, New York, NY 10118").setTop(3));
         searchAddressOptionsList.add(new SearchAddressOptions("1 Main Street"));
-        BatchSearchResult actualResult = client.beginSearchAddressBatch(searchAddressOptionsList).getFinalResult();
+        SyncPoller<BatchSearchResult, BatchSearchResult> syncPoller = client.beginSearchAddressBatch(searchAddressOptionsList);
+        syncPoller = setPollInterval(syncPoller);
+        syncPoller.waitForCompletion();
+        BatchSearchResult actualResult = syncPoller.getFinalResult();
         BatchSearchResult expectedResult = TestUtils.getExpectedBeginSearchAddressBatch();
         validateBeginSearchAddressBatch(expectedResult, actualResult);
     }
@@ -355,7 +362,10 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
         reverseOptionsList.add(new ReverseSearchAddressOptions(new LatLong(48.858561, 2.294911)));
         reverseOptionsList.add(new ReverseSearchAddressOptions(new LatLong(47.639765, -122.127896)).setRadiusInMeters(5000));
         reverseOptionsList.add(new ReverseSearchAddressOptions(new LatLong(47.621028, -122.348170)));
-        BatchReverseSearchResult actualResult = client.beginReverseSearchAddressBatch(reverseOptionsList).getFinalResult();
+        SyncPoller<BatchReverseSearchResult, BatchReverseSearchResult> syncPoller = client.beginReverseSearchAddressBatch(reverseOptionsList);
+        syncPoller = setPollInterval(syncPoller);
+        syncPoller.waitForCompletion();
+        BatchReverseSearchResult actualResult = syncPoller.getFinalResult();
         BatchReverseSearchResult expectedResult = TestUtils.getExpectedReverseSearchAddressBatch();
         validateBeginReverseSearchAddressBatch(expectedResult, actualResult);
     }

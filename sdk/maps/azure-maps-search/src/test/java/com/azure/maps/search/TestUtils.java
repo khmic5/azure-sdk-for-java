@@ -3,6 +3,7 @@ package com.azure.maps.search;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -37,6 +38,7 @@ import org.junit.jupiter.params.provider.Arguments;
 public class TestUtils {
 
     static final String FAKE_API_KEY = "1234567890";
+    public static final Duration DEFAULT_POLL_INTERVAL = Duration.ofSeconds(30);
 
     /**
      * Helper method to get the expected Fuzzy Search Results

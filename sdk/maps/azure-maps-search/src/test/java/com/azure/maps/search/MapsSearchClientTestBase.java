@@ -3,6 +3,7 @@ package com.azure.maps.search;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,9 +16,11 @@ import com.azure.core.http.policy.HttpLogDetailLevel;
 import com.azure.core.http.policy.HttpLogOptions;
 import com.azure.core.http.policy.HttpPipelinePolicy;
 import com.azure.core.http.rest.Response;
+import com.azure.core.test.InterceptorManager;
 import com.azure.core.test.TestBase;
 import com.azure.core.test.TestMode;
 import com.azure.core.util.Configuration;
+import com.azure.core.util.polling.SyncPoller;
 import com.azure.identity.EnvironmentCredentialBuilder;
 import com.azure.maps.search.models.BatchReverseSearchResult;
 import com.azure.maps.search.models.BatchSearchResult;
@@ -32,6 +35,18 @@ public class MapsSearchClientTestBase extends TestBase {
     static final String FAKE_API_KEY = "1234567890";
 
     private final String endpoint = Configuration.getGlobalConfiguration().get("API-LEARN_ENDPOINT");
+    Duration durationTestMode;
+    static InterceptorManager interceptorManagerTestBase;
+
+    @Override
+    protected void beforeTest() {
+        if (interceptorManager.isPlaybackMode()) {
+            durationTestMode = Duration.ofMillis(1);
+        } else {
+            durationTestMode = TestUtils.DEFAULT_POLL_INTERVAL;
+        }
+        interceptorManagerTestBase = interceptorManager;
+    }
 
     MapsSearchClientBuilder getMapsSearchAsyncClientBuilder(HttpClient httpClient,
         MapsSearchServiceVersion serviceVersion) {
@@ -85,6 +100,10 @@ public class MapsSearchClientTestBase extends TestBase {
         return interceptorManager.isPlaybackMode()
             ? "https://localhost:8080"
             : endpoint;
+    }
+
+    protected <T, U> SyncPoller<T, U> setPollInterval(SyncPoller<T, U> syncPoller) {
+        return syncPoller.setPollInterval(durationTestMode);
     }
 
     static void validateGetPolygons(List<Polygon> expected, List<Polygon> actual) {
