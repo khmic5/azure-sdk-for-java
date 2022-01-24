@@ -147,4 +147,10 @@ public class MapsSearchClientTestBase extends TestBase {
         assertNotNull(actual.getResults());
         assertEquals(expected.getResults().size(), actual.getResults().size());
     }
+
+    static void validateSearchInsideGeometry(SearchAddressResult expected, SearchAddressResult actual) {
+        assertNotNull(actual.getSummary());
+        assertNotNull(actual.getResults());
+        assertEquals(expected.getResults().size(), actual.getResults().size());
+    }
 }

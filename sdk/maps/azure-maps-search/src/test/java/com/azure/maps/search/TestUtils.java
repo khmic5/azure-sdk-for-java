@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import com.azure.core.http.HttpClient;
+import com.azure.core.models.GeoLineString;
+import com.azure.core.models.GeoObject;
 import com.azure.core.test.TestBase;
 import com.azure.core.util.serializer.JacksonAdapter;
 import com.azure.core.util.serializer.SerializerAdapter;
@@ -110,10 +112,6 @@ public class TestUtils {
         byte[] data = Files.readAllBytes(file.toPath());
         PointOfInterestCategoryTreeResult pointOfInterestCategoryTreeResult = jacksonAdapter.<PointOfInterestCategoryTreeResult>deserialize(data, interimType.getJavaType(),
            SerializerEncoding.JSON);
-        
-        // // URL url = SearchAddressResultPrivate.class.getClassLoader().getResource("searchpointofinterestcategoryresult.json");
-        // // SearchAddressResultPrivate searchAddressResultPrivate = new ObjectMapper().readValue(url, SearchAddressResultPrivate.class);
-        // SearchAddressResult searchAddressResult = Utility.toPointOf(pointOfInterestCategoryTreeResultPrivate);
         return pointOfInterestCategoryTreeResult;
     }
 
@@ -160,6 +158,36 @@ public class TestUtils {
         SearchAddressResult searchAddressResult = Utility.toSearchAddressResult(searchAddressResultPrivate);
         return searchAddressResult;
     }
+
+    static GeoObject getGeoObject(File file) throws IOException {
+        SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
+        TypeReference<GeoObject> interimType = new TypeReference<GeoObject>(){};
+        byte[] data = Files.readAllBytes(file.toPath());
+        GeoObject obj = jacksonAdapter.<GeoObject>deserialize(data, interimType.getJavaType(),
+           SerializerEncoding.JSON);
+        return obj;
+    }
+
+    static SearchAddressResult getExpectedSearchInsideGeometry() throws StreamReadException, DatabindException, IOException {
+        File file = new File("src/main/resources/searchinsidegeometryresult.json");
+        SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
+        TypeReference<SearchAddressResultPrivate> interimType = new TypeReference<SearchAddressResultPrivate>(){};
+        byte[] data = Files.readAllBytes(file.toPath());
+        SearchAddressResultPrivate searchAddressResultPrivate = jacksonAdapter.<SearchAddressResultPrivate>deserialize(data, interimType.getJavaType(),
+           SerializerEncoding.JSON);
+        SearchAddressResult searchAddressResult = Utility.toSearchAddressResult(searchAddressResultPrivate);
+        return searchAddressResult;
+    }
+
+    static GeoLineString getGeoLineString(File file) throws IOException {
+        SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
+        TypeReference<GeoLineString> interimType = new TypeReference<GeoLineString>(){};
+        byte[] data = Files.readAllBytes(file.toPath());
+        GeoLineString obj = jacksonAdapter.<GeoLineString>deserialize(data, interimType.getJavaType(),
+           SerializerEncoding.JSON);
+        return obj;
+    }
+
 
     // file inside helpers --> implementation --> com/azure/maps/search/java --> resources
 

@@ -2,11 +2,20 @@ package com.azure.maps.search;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.List;
 
 import com.azure.core.http.HttpClient;
+import com.azure.core.models.GeoLineString;
+import com.azure.core.models.GeoObject;
+import com.azure.core.util.serializer.JacksonAdapter;
+import com.azure.core.util.serializer.SerializerAdapter;
+import com.azure.core.util.serializer.SerializerEncoding;
+import com.azure.core.util.serializer.TypeReference;
+import com.azure.maps.search.implementation.models.GeoJsonObject;
 import com.azure.maps.search.models.FuzzySearchOptions;
 import com.azure.maps.search.models.LatLong;
 import com.azure.maps.search.models.PointOfInterestCategoryTreeResult;
@@ -17,11 +26,13 @@ import com.azure.maps.search.models.ReverseSearchCrossStreetAddressOptions;
 import com.azure.maps.search.models.ReverseSearchCrossStreetAddressResult;
 import com.azure.maps.search.models.SearchAddressOptions;
 import com.azure.maps.search.models.SearchAddressResult;
+import com.azure.maps.search.models.SearchInsideGeometryOptions;
 import com.azure.maps.search.models.SearchNearbyPointsOfInterestOptions;
 import com.azure.maps.search.models.SearchPointOfInterestCategoryOptions;
 import com.azure.maps.search.models.SearchPointOfInterestOptions;
 import com.azure.maps.search.models.StructuredAddress;
 import com.nimbusds.jose.shaded.json.parser.ParseException;
+import com.azure.maps.search.implementation.helpers.Utility;
 
 import org.json.JSONException;
 import org.junit.jupiter.api.Test;
@@ -149,19 +160,30 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
     }
 
     // Test search inside geometry
-    // @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
-    // @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
-    // public void testSearchInsideGeometry(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
-    //     client = getMapsSearchClient(httpClient, MapsSearchServiceVersion.V1_0);
-    //     SearchAddressResult actualResult = client.searchInsideGeometry(
-    //         new SearchInsideGeometryOptions("Leland Avenue", polygon));
-    //     SearchAddressResult expectedResult = TestUtils.getExpectedSearchStructuredAddress();
-    //     System.out.println("hi " + expectedResult.getResults().size());
-    //     System.out.println("hello " + actualResult.getResults().size());
-    //     validateSearchStructuredAddress(expectedResult, actualResult);
-    // }
+    @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
+    @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
+    public void testSearchInsideGeometry(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
+        client = getMapsSearchClient(httpClient, MapsSearchServiceVersion.V1_0);
+        File file = new File("src/main/resources/geoobjectone.json");
+        GeoObject obj = TestUtils.getGeoObject(file);
+        SearchAddressResult actualResult = client.searchInsideGeometry(
+            new SearchInsideGeometryOptions("pizza", obj));
+        SearchAddressResult expectedResult = TestUtils.getExpectedSearchInsideGeometry();
+        validateSearchInsideGeometry(expectedResult, actualResult);
+    }
 
     // Test search along route
+    @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
+    @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
+    public void testSearchAlongRoute(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
+        client = getMapsSearchClient(httpClient, MapsSearchServiceVersion.V1_0);
+        File file = new File("src/main/resources/geolinestringone.json");
+        GeoLineString obj = TestUtils.getGeoLineString(file);
+        SearchAddressResult actualResult = client.searchInsideGeometry(
+            new SearchInsideGeometryOptions("pizza", obj));
+        SearchAddressResult expectedResult = TestUtils.getExpectedSearchInsideGeometry();
+        validateSearchInsideGeometry(expectedResult, actualResult);
+    }
 
     // Test begin fuzzy search batch
 
