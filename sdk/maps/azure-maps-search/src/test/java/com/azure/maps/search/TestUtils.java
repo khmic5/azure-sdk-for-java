@@ -23,8 +23,12 @@ import com.azure.maps.search.implementation.models.PolygonPrivate;
 import com.azure.maps.search.implementation.models.ReverseSearchAddressResultPrivate;
 import com.azure.maps.search.implementation.models.ReverseSearchCrossStreetAddressResultPrivate;
 import com.azure.maps.search.implementation.models.SearchAddressResultPrivate;
+<<<<<<< HEAD
 import com.azure.maps.search.models.BatchReverseSearchResult;
 import com.azure.maps.search.models.BatchSearchResult;
+=======
+import com.azure.maps.search.models.FuzzySearchOptions;
+>>>>>>> 65e0863502 (updated testing)
 import com.azure.maps.search.models.PointOfInterestCategoryTreeResult;
 import com.azure.maps.search.models.Polygon;
 import com.azure.maps.search.models.ReverseSearchAddressResult;
@@ -170,6 +174,7 @@ public class TestUtils {
         return obj;
     }
 
+<<<<<<< HEAD
     static SearchAddressResult getExpectedSearchAlongRoute() throws IOException {
         InputStream is = ClassLoader.getSystemResourceAsStream("searchalongrouteresult.json");
         byte[] data = null;
@@ -215,6 +220,30 @@ public class TestUtils {
            SerializerEncoding.JSON);
         return obj;
     }
+=======
+    static SearchAddressResult getExpectedSearchAlongRoute() throws StreamReadException, DatabindException, IOException {
+        File file = new File("src/main/resources/searchalongrouteresult.json");
+        SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
+        TypeReference<SearchAddressResultPrivate> interimType = new TypeReference<SearchAddressResultPrivate>(){};
+        byte[] data = Files.readAllBytes(file.toPath());
+        SearchAddressResultPrivate searchAddressResultPrivate = jacksonAdapter.<SearchAddressResultPrivate>deserialize(data, interimType.getJavaType(),
+           SerializerEncoding.JSON);
+        SearchAddressResult searchAddressResult = Utility.toSearchAddressResult(searchAddressResultPrivate);
+        return searchAddressResult;
+    }
+
+    static SearchAddressResult getExpectedBeginFuzzySearchBatch() throws StreamReadException, DatabindException, IOException {
+        File file = new File("src/main/resources/beginfuzzysearchbatchresult.json");
+        SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
+        TypeReference<SearchAddressResultPrivate> interimType = new TypeReference<SearchAddressResultPrivate>(){};
+        byte[] data = Files.readAllBytes(file.toPath());
+        SearchAddressResultPrivate searchAddressResultPrivate = jacksonAdapter.<SearchAddressResultPrivate>deserialize(data, interimType.getJavaType(),
+           SerializerEncoding.JSON);
+        SearchAddressResult searchAddressResult = Utility.toSearchAddressResult(searchAddressResultPrivate);
+        return searchAddressResult;
+    }
+
+>>>>>>> 65e0863502 (updated testing)
 
     // file inside helpers --> implementation --> com/azure/maps/search/java --> resources
 
