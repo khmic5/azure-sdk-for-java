@@ -1,11 +1,16 @@
 package com.azure.maps.examples;
 
+import java.io.BufferedReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.azure.core.credential.AzureKeyCredential;
 import com.azure.core.http.policy.HttpLogDetailLevel;
 import com.azure.core.http.policy.HttpLogOptions;
 import com.azure.core.http.rest.Response;
@@ -41,21 +46,20 @@ public class SearchSample {
 
     public static void main(String[] args) throws IOException {
         // authenticates using subscription key
-        // AzureKeyCredential keyCredential = new AzureKeyCredential(System.getenv("SUBSCRIPTION_KEY"));
-
+         AzureKeyCredential keyCredential = new AzureKeyCredential(System.getenv("SUBSCRIPTION_KEY"));
         // authenticates using Azure AD building a default credential
         // This will look for AZURE_CLIENT_ID, AZURE_TENANT_ID, and AZURE_CLIENT_SECRET env variables
-        DefaultAzureCredential tokenCredential = new DefaultAzureCredentialBuilder().build();
+        //DefaultAzureCredential tokenCredential = new DefaultAzureCredentialBuilder().build();
 
         // build client
         MapsSearchClientBuilder builder = new MapsSearchClientBuilder();
 
         // use this for key authentication
-        // builder.credential(keyCredential);
+         builder.credential(keyCredential);
 
         // use the next 2 lines for Azure AD authentication
-        builder.credential(tokenCredential);
-        builder.mapsClientId(System.getenv("MAPS_CLIENT_ID"));
+        //builder.credential(tokenCredential);
+        //builder.mapsClientId(System.getenv("MAPS_CLIENT_ID"));
         builder.httpLogOptions(new HttpLogOptions().setLogLevel(HttpLogDetailLevel.BODY_AND_HEADERS));
         MapsSearchClient client = builder.buildClient();
 
@@ -318,7 +322,8 @@ public class SearchSample {
         optionsList.add(new SearchAddressOptions("One, Microsoft Way, Redmond, WA 98052").setTop(3));
         optionsList.add(new SearchAddressOptions("350 5th Ave, New York, NY 10118").setTop(3));
         optionsList.add(new SearchAddressOptions("1 Main Street")
-            .setCountryFilter(Arrays.asList("GB", "US", "AU")).setTop(3));
+            .setCountryFilter(Arrays.asList("GB", "US", "AU")).setTop(3)
+            );
 
         // Search address batch async -
         // https://docs.microsoft.com/en-us/rest/api/maps/search/post-search-address-batch
@@ -326,11 +331,12 @@ public class SearchSample {
         // SyncPoller will do the polling automatically and you can retrieve the result
         // with getFinalResult()
         System.out.println("Search Address Batch Async");
+        // MapsCommon.print(client.beginSearchAddressBatch(optionsList).getFinalResult());
+        // SyncPoller<BatchSearchResult, BatchSearchResult> poller = client.beginSearchAddressBatch(optionsList);
+        // BatchSearchResult result = poller.getFinalResult();
         MapsCommon.print(client.beginSearchAddressBatch(optionsList).getFinalResult());
-        SyncPoller<BatchSearchResult, BatchSearchResult> poller = client.beginSearchAddressBatch(optionsList);
-        BatchSearchResult result = poller.getFinalResult();
-        MapsCommon.print(result.getBatchSummary());
-        MapsCommon.print(result.getBatchItems().get(0).getResult().getResults().get(0).getBoundingBox());
+        // MapsCommon.print(result.getBatchSummary());
+        // MapsCommon.print(result.getBatchItems().get(0).getResult().getResults().get(0).getBoundingBox());
 
         // Search address reverse batch -
         // https://docs.microsoft.com/en-us/rest/api/maps/search/post-search-address-reverse-batch
@@ -345,11 +351,12 @@ public class SearchSample {
         reverseOptionsList.add(new ReverseSearchAddressOptions(new LatLong(47.621028, -122.348170)));
 
         System.out.println("Reverse Search Address Batch Async");
-        BatchReverseSearchResult br1 =
-            client.beginReverseSearchAddressBatch(reverseOptionsList).getFinalResult();
-        MapsCommon.print(br1);
-        MapsCommon.print(br1.getBatchItems());
-        MapsCommon.print(br1.getBatchItems().get(0).getResult().getAddresses().get(0).getAddress());
+        // BatchReverseSearchResult br1 =
+        //     client.beginReverseSearchAddressBatch(reverseOptionsList).getFinalResult();
+            MapsCommon.print(client.beginReverseSearchAddressBatch(reverseOptionsList).getFinalResult());
+        // MapsCommon.print(br1);
+        // MapsCommon.print(br1.getBatchItems());
+        // MapsCommon.print(br1.getBatchItems().get(0).getResult().getAddresses().get(0).getAddress());
 
         // Post search address reverse batch -
         // https://docs.microsoft.com/en-us/rest/api/maps/search/post-search-fuzzy-batch

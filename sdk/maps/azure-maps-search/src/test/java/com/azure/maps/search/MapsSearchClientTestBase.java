@@ -19,6 +19,8 @@ import com.azure.core.test.TestBase;
 import com.azure.core.test.TestMode;
 import com.azure.core.util.Configuration;
 import com.azure.identity.EnvironmentCredentialBuilder;
+import com.azure.maps.search.models.BatchReverseSearchResult;
+import com.azure.maps.search.models.BatchSearchResult;
 import com.azure.maps.search.models.PointOfInterestCategoryTreeResult;
 import com.azure.maps.search.models.Polygon;
 import com.azure.maps.search.models.ReverseSearchAddressResult;
@@ -152,5 +154,23 @@ public class MapsSearchClientTestBase extends TestBase {
         assertNotNull(actual.getSummary());
         assertNotNull(actual.getResults());
         assertEquals(expected.getResults().size(), actual.getResults().size());
+    }
+
+    static void validateBeginFuzzySearchBatch(BatchSearchResult expected, BatchSearchResult actual) {
+        assertNotNull(actual.getBatchId());
+        assertNotNull(actual.getBatchId());
+        assertEquals(expected.getBatchItems().size(), actual.getBatchItems().size());
+    }
+
+    static void validateBeginSearchAddressBatch(BatchSearchResult expected, BatchSearchResult actual) {
+        assertNotNull(actual.getBatchId());
+        assertNotNull(actual.getBatchId());
+        assertEquals(expected.getBatchItems().size(), actual.getBatchItems().size());
+    }
+
+    static void validateBeginReverseSearchAddressBatch(BatchReverseSearchResult expected, BatchReverseSearchResult actual) {
+        assertNotNull(actual.getBatchId());
+        assertNotNull(actual.getBatchId());
+        assertEquals(expected.getBatchItems().size(), actual.getBatchItems().size());
     }
 }

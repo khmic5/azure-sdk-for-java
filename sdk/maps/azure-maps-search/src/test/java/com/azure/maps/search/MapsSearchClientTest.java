@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -12,12 +11,7 @@ import java.util.List;
 import com.azure.core.http.HttpClient;
 import com.azure.core.models.GeoLineString;
 import com.azure.core.models.GeoObject;
-import com.azure.core.util.polling.SyncPoller;
-import com.azure.core.util.serializer.JacksonAdapter;
-import com.azure.core.util.serializer.SerializerAdapter;
-import com.azure.core.util.serializer.SerializerEncoding;
-import com.azure.core.util.serializer.TypeReference;
-import com.azure.maps.search.implementation.models.GeoJsonObject;
+import com.azure.maps.search.models.BatchReverseSearchResult;
 import com.azure.maps.search.models.BatchSearchResult;
 import com.azure.maps.search.models.FuzzySearchOptions;
 import com.azure.maps.search.models.LatLong;
@@ -36,7 +30,6 @@ import com.azure.maps.search.models.SearchPointOfInterestCategoryOptions;
 import com.azure.maps.search.models.SearchPointOfInterestOptions;
 import com.azure.maps.search.models.StructuredAddress;
 import com.nimbusds.jose.shaded.json.parser.ParseException;
-import com.azure.maps.search.implementation.helpers.Utility;
 
 import org.json.JSONException;
 import org.junit.jupiter.api.Test;
@@ -64,6 +57,10 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
         List<Polygon> expectedResult = TestUtils.getMultiPolygonsResults();
         validateGetPolygons(expectedResult, actualResult);
     }
+
+    // Test get polygons with response
+
+    
     
     // Test fuzzy search
 
@@ -116,8 +113,6 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
         client = getMapsSearchClient(httpClient, MapsSearchServiceVersion.V1_0);
         PointOfInterestCategoryTreeResult actualResult = client.getPointOfInterestCategoryTree(null);
         PointOfInterestCategoryTreeResult expectedResult = TestUtils.getExpectedSearchPointOfInterestCategoryTreeResults();
-        System.out.println("hi1 " + expectedResult.getCategories().size());
-        System.out.println("hello " + actualResult.getCategories().size());
         validateSearchPointOfInterestCategoryTree(expectedResult, actualResult);
     }
 
@@ -189,33 +184,49 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
     }
 
     // Test begin fuzzy search batch
-    // @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
-    // @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
-    // public void testBeginFuzzySearchBatch(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
-    //     client = getMapsSearchClient(httpClient, MapsSearchServiceVersion.V1_0);
-    //     List<FuzzySearchOptions> fuzzyOptionsList = new ArrayList<>();
-    //     fuzzyOptionsList.add(new FuzzySearchOptions("atm", new LatLong(47.639769, -122.128362))
-    //         .setRadiusInMeters(5000).setTop(5));
-    //     fuzzyOptionsList.add(new FuzzySearchOptions("Statue of Liberty").setTop(2));
-    //     fuzzyOptionsList.add(new FuzzySearchOptions("Starbucks", new LatLong(47.639769, -122.128362))
-    //         .setRadiusInMeters(5000));
-    //     SyncPoller<BatchSearchResult, BatchSearchResult> actualResult = client.beginFuzzySearchBatch(fuzzyOptionsList);
-    //     // System.out.println(actualResult.);
-    //     SyncPoller<BatchSearchResult, BatchSearchResult> expectedResult = TestUtils.getExpectedBeginFuzzySearchBatch();
-    //     // validateSearchInsideGeometry(expectedResult, actualResult);
-    // }
-
-    // Test begin get fuzzy search batch
+    @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
+    @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
+    public void testBeginFuzzySearchBatch(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
+        client = getMapsSearchClient(httpClient, MapsSearchServiceVersion.V1_0);
+        List<FuzzySearchOptions> fuzzyOptionsList = new ArrayList<>();
+        fuzzyOptionsList.add(new FuzzySearchOptions("atm", new LatLong(47.639769, -122.128362))
+            .setRadiusInMeters(5000).setTop(5));
+        fuzzyOptionsList.add(new FuzzySearchOptions("Statue of Liberty").setTop(2));
+        fuzzyOptionsList.add(new FuzzySearchOptions("Starbucks", new LatLong(47.639769, -122.128362))
+            .setRadiusInMeters(5000));
+        BatchSearchResult actualResult = client.beginFuzzySearchBatch(fuzzyOptionsList).getFinalResult();
+        BatchSearchResult expectedResult = TestUtils.getExpectedBeginFuzzySearchBatch();
+        validateBeginFuzzySearchBatch(expectedResult, actualResult);
+    }
 
     // Test begin search address batch
-
-    // Test begin get search address batch
+    @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
+    @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
+    public void testBeginSearchAddressBatch(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
+        client = getMapsSearchClient(httpClient, MapsSearchServiceVersion.V1_0);
+        List<SearchAddressOptions> searchAddressOptionsList = new ArrayList<>();
+        searchAddressOptionsList.add(new SearchAddressOptions("400 Broad St, Seattle, WA 98109").setTop(3));
+        searchAddressOptionsList.add(new SearchAddressOptions("One, Microsoft Way, Redmond, WA 98052").setTop(3));
+        searchAddressOptionsList.add(new SearchAddressOptions("350 5th Ave, New York, NY 10118").setTop(3));
+        searchAddressOptionsList.add(new SearchAddressOptions("1 Main Street"));
+        BatchSearchResult actualResult = client.beginSearchAddressBatch(searchAddressOptionsList).getFinalResult();
+        BatchSearchResult expectedResult = TestUtils.getExpectedBeginSearchAddressBatch();
+        validateBeginSearchAddressBatch(expectedResult, actualResult);
+    }
 
     // Test begin reverse search address batch
-
-    // Test begin get reverse search address batch
-
-
+    @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
+    @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
+    public void testBeginReverSearchAddressBatch(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
+        client = getMapsSearchClient(httpClient, MapsSearchServiceVersion.V1_0);
+        List<ReverseSearchAddressOptions> reverseOptionsList = new ArrayList<>();
+        reverseOptionsList.add(new ReverseSearchAddressOptions(new LatLong(48.858561, 2.294911)));
+        reverseOptionsList.add(new ReverseSearchAddressOptions(new LatLong(47.639765, -122.127896)).setRadiusInMeters(5000));
+        reverseOptionsList.add(new ReverseSearchAddressOptions(new LatLong(47.621028, -122.348170)));
+        BatchReverseSearchResult actualResult = client.beginReverseSearchAddressBatch(reverseOptionsList).getFinalResult();
+        BatchReverseSearchResult expectedResult = TestUtils.getExpectedReverseSearchAddressBatch();
+        validateBeginReverseSearchAddressBatch(expectedResult, actualResult);
+    }
 
     @Test
     public void test() {
