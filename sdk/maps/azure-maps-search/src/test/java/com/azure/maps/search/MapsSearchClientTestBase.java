@@ -26,11 +26,16 @@ import com.azure.core.util.Configuration;
 import com.azure.core.util.polling.SyncPoller;
 import com.azure.identity.EnvironmentCredentialBuilder;
 <<<<<<< HEAD
+<<<<<<< HEAD
 import com.azure.maps.search.models.BatchReverseSearchResult;
 import com.azure.maps.search.models.BatchSearchResult;
 import com.azure.maps.search.models.PointOfInterestCategory;
 =======
 >>>>>>> babaa75808 (updated client functional test cases)
+=======
+import com.azure.maps.search.models.BatchReverseSearchResult;
+import com.azure.maps.search.models.BatchSearchResult;
+>>>>>>> a272f1c91a (completed basic client test cases)
 import com.azure.maps.search.models.PointOfInterestCategoryTreeResult;
 import com.azure.maps.search.models.Polygon;
 import com.azure.maps.search.models.ReverseSearchAddressResult;
@@ -294,6 +299,24 @@ public class MapsSearchClientTestBase extends TestBase {
         validateSearchStructuredAddress(expected, response.getValue());
     }
 
+
+    static void validateBeginFuzzySearchBatch(BatchSearchResult expected, BatchSearchResult actual) {
+        assertNotNull(actual.getBatchId());
+        assertNotNull(actual.getBatchId());
+        assertEquals(expected.getBatchItems().size(), actual.getBatchItems().size());
+    }
+
+    static void validateBeginSearchAddressBatch(BatchSearchResult expected, BatchSearchResult actual) {
+        assertNotNull(actual.getBatchId());
+        assertNotNull(actual.getBatchId());
+        assertEquals(expected.getBatchItems().size(), actual.getBatchItems().size());
+    }
+
+    static void validateBeginReverseSearchAddressBatch(BatchReverseSearchResult expected, BatchReverseSearchResult actual) {
+        assertNotNull(actual.getBatchId());
+        assertNotNull(actual.getBatchId());
+        assertEquals(expected.getBatchItems().size(), actual.getBatchItems().size());
+    }
 
     static void validateBeginFuzzySearchBatch(BatchSearchResult expected, BatchSearchResult actual) {
         assertNotNull(actual.getBatchId());

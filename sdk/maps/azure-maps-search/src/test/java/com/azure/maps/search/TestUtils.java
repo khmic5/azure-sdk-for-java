@@ -24,11 +24,16 @@ import com.azure.maps.search.implementation.models.ReverseSearchAddressResultPri
 import com.azure.maps.search.implementation.models.ReverseSearchCrossStreetAddressResultPrivate;
 import com.azure.maps.search.implementation.models.SearchAddressResultPrivate;
 <<<<<<< HEAD
+<<<<<<< HEAD
 import com.azure.maps.search.models.BatchReverseSearchResult;
 import com.azure.maps.search.models.BatchSearchResult;
 =======
 import com.azure.maps.search.models.FuzzySearchOptions;
 >>>>>>> 65e0863502 (updated testing)
+=======
+import com.azure.maps.search.models.BatchReverseSearchResult;
+import com.azure.maps.search.models.BatchSearchResult;
+>>>>>>> a272f1c91a (completed basic client test cases)
 import com.azure.maps.search.models.PointOfInterestCategoryTreeResult;
 import com.azure.maps.search.models.Polygon;
 import com.azure.maps.search.models.ReverseSearchAddressResult;
@@ -231,15 +236,35 @@ public class TestUtils {
         return searchAddressResult;
     }
 
-    static SearchAddressResult getExpectedBeginFuzzySearchBatch() throws StreamReadException, DatabindException, IOException {
+    static BatchSearchResult getExpectedBeginFuzzySearchBatch() throws StreamReadException, DatabindException, IOException {
         File file = new File("src/main/resources/beginfuzzysearchbatchresult.json");
         SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
-        TypeReference<SearchAddressResultPrivate> interimType = new TypeReference<SearchAddressResultPrivate>(){};
+        TypeReference<BatchSearchResult> interimType = new TypeReference<BatchSearchResult>(){};
         byte[] data = Files.readAllBytes(file.toPath());
-        SearchAddressResultPrivate searchAddressResultPrivate = jacksonAdapter.<SearchAddressResultPrivate>deserialize(data, interimType.getJavaType(),
+        BatchSearchResult expectedFuzzySearchBatch = jacksonAdapter.<BatchSearchResult>deserialize(data, interimType.getJavaType(),
            SerializerEncoding.JSON);
-        SearchAddressResult searchAddressResult = Utility.toSearchAddressResult(searchAddressResultPrivate);
-        return searchAddressResult;
+           System.out.println(expectedFuzzySearchBatch.getBatchId());
+        return expectedFuzzySearchBatch;
+    }
+
+    static BatchSearchResult getExpectedBeginSearchAddressBatch() throws StreamReadException, DatabindException, IOException {
+        File file = new File("src/main/resources/beginsearchaddressbatchresult.json");
+        SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
+        TypeReference<BatchSearchResult> interimType = new TypeReference<BatchSearchResult>(){};
+        byte[] data = Files.readAllBytes(file.toPath());
+        BatchSearchResult expectedSearchAddressBatch = jacksonAdapter.<BatchSearchResult>deserialize(data, interimType.getJavaType(),
+           SerializerEncoding.JSON);
+        return expectedSearchAddressBatch;
+    }
+
+    static BatchReverseSearchResult getExpectedReverseSearchAddressBatch() throws StreamReadException, DatabindException, IOException {
+        File file = new File("src/main/resources/beginreversesearchaddressbatchresult.json");
+        SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
+        TypeReference<BatchReverseSearchResult> interimType = new TypeReference<BatchReverseSearchResult>(){};
+        byte[] data = Files.readAllBytes(file.toPath());
+        BatchReverseSearchResult expectedReverseSearchAddressBatch = jacksonAdapter.<BatchReverseSearchResult>deserialize(data, interimType.getJavaType(),
+           SerializerEncoding.JSON);
+        return expectedReverseSearchAddressBatch;
     }
 
 >>>>>>> 65e0863502 (updated testing)
