@@ -5,17 +5,20 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import com.azure.core.http.HttpClient;
 import com.azure.core.models.GeoLineString;
 import com.azure.core.models.GeoObject;
+import com.azure.core.util.polling.SyncPoller;
 import com.azure.core.util.serializer.JacksonAdapter;
 import com.azure.core.util.serializer.SerializerAdapter;
 import com.azure.core.util.serializer.SerializerEncoding;
 import com.azure.core.util.serializer.TypeReference;
 import com.azure.maps.search.implementation.models.GeoJsonObject;
+import com.azure.maps.search.models.BatchSearchResult;
 import com.azure.maps.search.models.FuzzySearchOptions;
 import com.azure.maps.search.models.LatLong;
 import com.azure.maps.search.models.PointOfInterestCategoryTreeResult;
@@ -26,6 +29,7 @@ import com.azure.maps.search.models.ReverseSearchCrossStreetAddressOptions;
 import com.azure.maps.search.models.ReverseSearchCrossStreetAddressResult;
 import com.azure.maps.search.models.SearchAddressOptions;
 import com.azure.maps.search.models.SearchAddressResult;
+import com.azure.maps.search.models.SearchAlongRouteOptions;
 import com.azure.maps.search.models.SearchInsideGeometryOptions;
 import com.azure.maps.search.models.SearchNearbyPointsOfInterestOptions;
 import com.azure.maps.search.models.SearchPointOfInterestCategoryOptions;
@@ -179,13 +183,27 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
         client = getMapsSearchClient(httpClient, MapsSearchServiceVersion.V1_0);
         File file = new File("src/main/resources/geolinestringone.json");
         GeoLineString obj = TestUtils.getGeoLineString(file);
-        SearchAddressResult actualResult = client.searchInsideGeometry(
-            new SearchInsideGeometryOptions("pizza", obj));
-        SearchAddressResult expectedResult = TestUtils.getExpectedSearchInsideGeometry();
+        SearchAddressResult actualResult = client.searchAlongRoute(new SearchAlongRouteOptions("burger", 1000, obj));
+        SearchAddressResult expectedResult = TestUtils.getExpectedSearchAlongRoute();
         validateSearchInsideGeometry(expectedResult, actualResult);
     }
 
     // Test begin fuzzy search batch
+    // @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
+    // @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
+    // public void testBeginFuzzySearchBatch(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
+    //     client = getMapsSearchClient(httpClient, MapsSearchServiceVersion.V1_0);
+    //     List<FuzzySearchOptions> fuzzyOptionsList = new ArrayList<>();
+    //     fuzzyOptionsList.add(new FuzzySearchOptions("atm", new LatLong(47.639769, -122.128362))
+    //         .setRadiusInMeters(5000).setTop(5));
+    //     fuzzyOptionsList.add(new FuzzySearchOptions("Statue of Liberty").setTop(2));
+    //     fuzzyOptionsList.add(new FuzzySearchOptions("Starbucks", new LatLong(47.639769, -122.128362))
+    //         .setRadiusInMeters(5000));
+    //     SyncPoller<BatchSearchResult, BatchSearchResult> actualResult = client.beginFuzzySearchBatch(fuzzyOptionsList);
+    //     // System.out.println(actualResult.);
+    //     SyncPoller<BatchSearchResult, BatchSearchResult> expectedResult = TestUtils.getExpectedBeginFuzzySearchBatch();
+    //     // validateSearchInsideGeometry(expectedResult, actualResult);
+    // }
 
     // Test begin get fuzzy search batch
 
