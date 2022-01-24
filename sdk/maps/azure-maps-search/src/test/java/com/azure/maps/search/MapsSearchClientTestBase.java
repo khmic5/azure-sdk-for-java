@@ -255,16 +255,20 @@ public class MapsSearchClientTestBase extends TestBase {
         assertTrue(streetNameAndNumberList.contains(expected.getResults().get(0).getAddress().getStreetNameAndNumber()));
     }
 
+<<<<<<< HEAD
     static void validateSearchStructuredAddressWithResponse(SearchAddressResult expected, int expectedStatusCode, Response<SearchAddressResult> response) {
         assertNotNull(response);
         assertEquals(expectedStatusCode, response.getStatusCode());
         validateSearchStructuredAddress(expected, response.getValue());
     }
 
+=======
+>>>>>>> 3fc2525dcb (added tests)
     static void validateSearchInsideGeometry(SearchAddressResult expected, SearchAddressResult actual) {
         assertNotNull(actual.getSummary());
         assertNotNull(actual.getResults());
         assertEquals(expected.getResults().size(), actual.getResults().size());
+<<<<<<< HEAD
         List<String> streetNameAndNumberList = getStreetNameAndNumberList(actual.getResults());
         assertTrue(streetNameAndNumberList.contains(expected.getResults().get(0).getAddress().getStreetNameAndNumber()));
     }
@@ -309,3 +313,7 @@ public class MapsSearchClientTestBase extends TestBase {
         assertEquals(expected.getBatchItems().size(), actual.getBatchItems().size());
     }
 }
+=======
+    }
+}
+>>>>>>> 3fc2525dcb (added tests)

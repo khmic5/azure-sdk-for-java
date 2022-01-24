@@ -153,15 +153,6 @@ public class TestUtils {
         return getSearchAddressResult(data);
     }
 
-    static GeoObject getGeoObject(File file) throws IOException {
-        SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
-        TypeReference<GeoObject> interimType = new TypeReference<GeoObject>(){};
-        byte[] data = Files.readAllBytes(file.toPath());
-        GeoObject obj = jacksonAdapter.<GeoObject>deserialize(data, interimType.getJavaType(),
-           SerializerEncoding.JSON);
-        return obj;
-    }
-
     static SearchAddressResult getExpectedSearchInsideGeometry() throws IOException {
         InputStream is = ClassLoader.getSystemResourceAsStream("searchinsidegeometryresult.json");
         byte[] data = null;
@@ -213,6 +204,15 @@ public class TestUtils {
         BatchReverseSearchResult expectedReverseSearchAddressBatch = jacksonAdapter.<BatchReverseSearchResult>deserialize(data, interimType.getJavaType(),
            SerializerEncoding.JSON);
         return expectedReverseSearchAddressBatch;
+    }
+
+    static GeoObject getGeoObject(File file) throws IOException {
+        SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
+        TypeReference<GeoObject> interimType = new TypeReference<GeoObject>(){};
+        byte[] data = Files.readAllBytes(file.toPath());
+        GeoObject obj = jacksonAdapter.<GeoObject>deserialize(data, interimType.getJavaType(),
+           SerializerEncoding.JSON);
+        return obj;
     }
 
     // file inside helpers --> implementation --> com/azure/maps/search/java --> resources
