@@ -23,6 +23,7 @@ import com.azure.core.test.InterceptorManager;
 import com.azure.core.test.TestBase;
 import com.azure.core.test.TestMode;
 import com.azure.core.util.Configuration;
+import com.azure.core.util.polling.PollerFlux;
 import com.azure.core.util.polling.SyncPoller;
 import com.azure.identity.EnvironmentCredentialBuilder;
 <<<<<<< HEAD
@@ -117,6 +118,10 @@ public class MapsSearchClientTestBase extends TestBase {
     protected <T, U> SyncPoller<T, U> setPollInterval(SyncPoller<T, U> syncPoller) {
         return syncPoller.setPollInterval(durationTestMode);
     }
+
+    // protected <T, U> PollerFlux<T, U> setPollInterval(PollerFlux<T, U> pollerFlux) {
+    //     return pollerFlux.setPollInterval(durationTestMode);
+    // }
 
     static void validateGetPolygons(List<Polygon> expected, List<Polygon> actual) {
         assertEquals(expected.size(), actual.size());
