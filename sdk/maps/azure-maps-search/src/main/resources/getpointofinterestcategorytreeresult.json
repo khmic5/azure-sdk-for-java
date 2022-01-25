@@ -5,7 +5,8 @@
             "name": "Sports Center",
             "childCategoryIds": [
                 7320002,
-                7320003
+                7320003,
+                7320006
             ],
             "synonyms": [
                 "Sports Centre"
@@ -4570,6 +4571,12 @@
                 "Sports Equipment",
                 "Sports Clothing"
             ]
+        },
+        {
+            "id": 7320006,
+            "name": "Squash Court",
+            "childCategoryIds": [],
+            "synonyms": []
         },
         {
             "id": 9361074,

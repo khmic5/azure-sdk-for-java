@@ -50,7 +50,7 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
     public void testGetMultiPolygons(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException, ParseException {
-        client = getMapsSearchClient(httpClient, MapsSearchServiceVersion.V1_0);
+        client = getMapsSearchClient(httpClient, serviceVersion);
         List<String> geometryIds = Arrays.asList("8bceafe8-3d98-4445-b29b-fd81d3e9adf5", "00005858-5800-1200-0000-0000773694ca");
         List<Polygon> actualResult = client.getPolygons(geometryIds);
         List<Polygon> expectedResult = TestUtils.getMultiPolygonsResults();
@@ -92,7 +92,7 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
     public void testSearchPointOfInterest(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
-        client = getMapsSearchClient(httpClient, MapsSearchServiceVersion.V1_0);
+        client = getMapsSearchClient(httpClient, serviceVersion);
         SearchAddressResult actualResult = client.searchPointOfInterest(new SearchPointOfInterestOptions("caviar lobster pasta", new LatLong(36.98844, -121.97483)));
         SearchAddressResult expectedResult = TestUtils.getExpectedSearchPointOfInterestResults();
         validateSearchPointOfInterest(expectedResult, actualResult);
@@ -112,7 +112,7 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
     public void testSearchNearbyPointOfInterest(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
-        client = getMapsSearchClient(httpClient, MapsSearchServiceVersion.V1_0);
+        client = getMapsSearchClient(httpClient, serviceVersion);
         SearchAddressResult actualResult = client.searchNearbyPointOfInterest(
             new SearchNearbyPointsOfInterestOptions(new LatLong(40.706270, -74.011454)));
         SearchAddressResult expectedResult = TestUtils.getExpectedSearchNearbyPointOfInterestResults();
@@ -133,7 +133,7 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
     public void testSearchPointOfInterestCategory(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
-        client = getMapsSearchClient(httpClient, MapsSearchServiceVersion.V1_0);
+        client = getMapsSearchClient(httpClient, serviceVersion);
         SearchAddressResult actualResult = client.searchPointOfInterestCategory(
             new SearchPointOfInterestCategoryOptions("atm", new LatLong(40.706270, -74.011454)));
         SearchAddressResult expectedResult = TestUtils.getExpectedSearchPointOfInterestCategoryResults();
@@ -145,9 +145,7 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
     public void testSearchPointOfInterestCategoryWithResponse(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
-        System.out.println("1");
         client = getMapsSearchClient(httpClient, serviceVersion);
-        System.out.println("2");
         validateSearchPointOfInterestCategoryWithResponse(TestUtils.getExpectedSearchPointOfInterestCategoryResults(), 200, client.searchPointOfInterestCategoryWithResponse(
             new SearchPointOfInterestCategoryOptions("atm", new LatLong(40.706270, -74.011454)), Context.NONE));
     }
@@ -158,8 +156,8 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
     public void testSearchPointOfInterestCategoryTree(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
-        client = getMapsSearchClient(httpClient, MapsSearchServiceVersion.V1_0);
-        PointOfInterestCategoryTreeResult actualResult = client.getPointOfInterestCategoryTree(null);
+        client = getMapsSearchClient(httpClient, serviceVersion);
+        PointOfInterestCategoryTreeResult actualResult = client.getPointOfInterestCategoryTree("pizza");
         PointOfInterestCategoryTreeResult expectedResult = TestUtils.getExpectedSearchPointOfInterestCategoryTreeResults();
         validateSearchPointOfInterestCategoryTree(expectedResult, actualResult);
     }
@@ -170,7 +168,7 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
     @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
     public void testSearchPointOfInterestCategoryTreeWithResponse(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
         client = getMapsSearchClient(httpClient, serviceVersion);
-        validateSearchPointOfInterestCategoryTreeWithResponse(TestUtils.getExpectedSearchPointOfInterestCategoryTreeResults(), 200, client.getPointOfInterestCategoryTreeWithResponse(null, Context.NONE));
+        validateSearchPointOfInterestCategoryTreeWithResponse(TestUtils.getExpectedSearchPointOfInterestCategoryTreeResults(), 200, client.getPointOfInterestCategoryTreeWithResponse("pizza", Context.NONE));
     }
 
     // Test search address
@@ -178,7 +176,7 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
     public void testSearchAddress(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
-        client = getMapsSearchClient(httpClient, MapsSearchServiceVersion.V1_0);
+        client = getMapsSearchClient(httpClient, serviceVersion);
         SearchAddressResult actualResult = client.searchAddress(new SearchAddressOptions("NE 24th Street, Redmond, WA 98052"));
         SearchAddressResult expectedResult = TestUtils.getExpectedSearchAddressResults();
         validateSearchAddress(expectedResult, actualResult);
@@ -198,7 +196,7 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
     public void testReverseSearchAddress(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
-        client = getMapsSearchClient(httpClient, MapsSearchServiceVersion.V1_0);
+        client = getMapsSearchClient(httpClient, serviceVersion);
         ReverseSearchAddressResult actualResult = client.reverseSearchAddress(
             new ReverseSearchAddressOptions(new LatLong(37.337, -121.89)));
         ReverseSearchAddressResult expectedResult = TestUtils.getExpectedReverseSearchAddressResults();
@@ -220,7 +218,7 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
     public void testReverseSearchCrossStreetAddress(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
-        client = getMapsSearchClient(httpClient, MapsSearchServiceVersion.V1_0);
+        client = getMapsSearchClient(httpClient, serviceVersion);
         ReverseSearchCrossStreetAddressResult actualResult = client.reverseSearchCrossStreetAddress(
             new ReverseSearchCrossStreetAddressOptions(new LatLong(37.337, -121.89)));
         ReverseSearchCrossStreetAddressResult expectedResult = TestUtils.getExpectedReverseSearchCrossStreetAddressResults();
@@ -242,7 +240,7 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
     public void testSearchStructuredAddress(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
-        client = getMapsSearchClient(httpClient, MapsSearchServiceVersion.V1_0);
+        client = getMapsSearchClient(httpClient, serviceVersion);
         SearchAddressResult actualResult = client.searchStructuredAddress(new StructuredAddress("US"), null);
         SearchAddressResult expectedResult = TestUtils.getExpectedSearchStructuredAddress();
         validateSearchStructuredAddress(expectedResult, actualResult);
@@ -267,7 +265,7 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
     public void testSearchInsideGeometry(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
-        client = getMapsSearchClient(httpClient, MapsSearchServiceVersion.V1_0);
+        client = getMapsSearchClient(httpClient, serviceVersion);
         File file = new File("src/main/resources/geoobjectone.json");
         GeoObject obj = TestUtils.getGeoObject(file);
         SearchAddressResult actualResult = client.searchInsideGeometry(
@@ -293,7 +291,7 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
     public void testSearchAlongRoute(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
-        client = getMapsSearchClient(httpClient, MapsSearchServiceVersion.V1_0);
+        client = getMapsSearchClient(httpClient, serviceVersion);
         File file = new File("src/main/resources/geolinestringone.json");
         GeoLineString obj = TestUtils.getGeoLineString(file);
         SearchAddressResult actualResult = client.searchAlongRoute(new SearchAlongRouteOptions("burger", 1000, obj));
@@ -318,7 +316,7 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
     public void testBeginFuzzySearchBatch(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
-        client = getMapsSearchClient(httpClient, MapsSearchServiceVersion.V1_0);
+        client = getMapsSearchClient(httpClient, serviceVersion);
         List<FuzzySearchOptions> fuzzyOptionsList = new ArrayList<>();
         fuzzyOptionsList.add(new FuzzySearchOptions("atm", new LatLong(47.639769, -122.128362))
             .setRadiusInMeters(5000).setTop(5));
@@ -338,7 +336,7 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
     public void testBeginSearchAddressBatch(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
-        client = getMapsSearchClient(httpClient, MapsSearchServiceVersion.V1_0);
+        client = getMapsSearchClient(httpClient, serviceVersion);
         List<SearchAddressOptions> searchAddressOptionsList = new ArrayList<>();
         searchAddressOptionsList.add(new SearchAddressOptions("400 Broad St, Seattle, WA 98109").setTop(3));
         searchAddressOptionsList.add(new SearchAddressOptions("One, Microsoft Way, Redmond, WA 98052").setTop(3));
@@ -357,7 +355,7 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
     public void testBeginReverSearchAddressBatch(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
-        client = getMapsSearchClient(httpClient, MapsSearchServiceVersion.V1_0);
+        client = getMapsSearchClient(httpClient, serviceVersion);
         List<ReverseSearchAddressOptions> reverseOptionsList = new ArrayList<>();
         reverseOptionsList.add(new ReverseSearchAddressOptions(new LatLong(48.858561, 2.294911)));
         reverseOptionsList.add(new ReverseSearchAddressOptions(new LatLong(47.639765, -122.127896)).setRadiusInMeters(5000));
