@@ -244,7 +244,6 @@ public class TestUtils {
         byte[] data = Files.readAllBytes(file.toPath());
         BatchSearchResult expectedFuzzySearchBatch = jacksonAdapter.<BatchSearchResult>deserialize(data, interimType.getJavaType(),
            SerializerEncoding.JSON);
-           System.out.println(expectedFuzzySearchBatch.getBatchId());
         return expectedFuzzySearchBatch;
     }
 

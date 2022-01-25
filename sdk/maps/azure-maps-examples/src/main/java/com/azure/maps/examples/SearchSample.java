@@ -1,10 +1,6 @@
 package com.azure.maps.examples;
 
-import java.io.BufferedReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -46,20 +42,21 @@ public class SearchSample {
 
     public static void main(String[] args) throws IOException {
         // authenticates using subscription key
-         AzureKeyCredential keyCredential = new AzureKeyCredential(System.getenv("SUBSCRIPTION_KEY"));
+        // AzureKeyCredential keyCredential = new AzureKeyCredential(System.getenv("SUBSCRIPTION_KEY"));
+
         // authenticates using Azure AD building a default credential
         // This will look for AZURE_CLIENT_ID, AZURE_TENANT_ID, and AZURE_CLIENT_SECRET env variables
-        //DefaultAzureCredential tokenCredential = new DefaultAzureCredentialBuilder().build();
+        DefaultAzureCredential tokenCredential = new DefaultAzureCredentialBuilder().build();
 
         // build client
         MapsSearchClientBuilder builder = new MapsSearchClientBuilder();
 
         // use this for key authentication
-         builder.credential(keyCredential);
+        // builder.credential(keyCredential);
 
         // use the next 2 lines for Azure AD authentication
-        //builder.credential(tokenCredential);
-        //builder.mapsClientId(System.getenv("MAPS_CLIENT_ID"));
+        builder.credential(tokenCredential);
+        builder.mapsClientId(System.getenv("MAPS_CLIENT_ID"));
         builder.httpLogOptions(new HttpLogOptions().setLogLevel(HttpLogDetailLevel.BODY_AND_HEADERS));
         MapsSearchClient client = builder.buildClient();
 
@@ -167,13 +164,13 @@ public class SearchSample {
         SearchAddressResult results = client.fuzzySearch(
             new FuzzySearchOptions("1 Microsoft Way", new LatLong(40.706270, -74.011454))
                 .setTop(5));
-        MapsCommon.print(results);
+       MapsCommon.print(results);
 
         // with response
         Response<SearchAddressResult> response = client.fuzzySearchWithResponse(
             new FuzzySearchOptions("Monaco").setEntityType(GeographicEntityType.COUNTRY)
                 .setTop(5), null);
-        MapsCommon.print(response.getStatusCode());
+       MapsCommon.print(response.getStatusCode());
         String id = response.getValue().getResults().get(0).getDataSource().getGeometry().getId();
 
         // Get polygon -
@@ -194,6 +191,8 @@ public class SearchSample {
         // Search POI -
         // https://docs.microsoft.com/en-us/rest/api/maps/search/get-search-poi
         System.out.println("Search Points of Interest:");
+
+
 
         // coordinates
         MapsCommon.print(client.searchPointOfInterest(
@@ -322,8 +321,7 @@ public class SearchSample {
         optionsList.add(new SearchAddressOptions("One, Microsoft Way, Redmond, WA 98052").setTop(3));
         optionsList.add(new SearchAddressOptions("350 5th Ave, New York, NY 10118").setTop(3));
         optionsList.add(new SearchAddressOptions("1 Main Street")
-            .setCountryFilter(Arrays.asList("GB", "US", "AU")).setTop(3)
-            );
+            .setCountryFilter(Arrays.asList("GB", "US", "AU")).setTop(3));
 
         // Search address batch async -
         // https://docs.microsoft.com/en-us/rest/api/maps/search/post-search-address-batch
@@ -331,9 +329,6 @@ public class SearchSample {
         // SyncPoller will do the polling automatically and you can retrieve the result
         // with getFinalResult()
         System.out.println("Search Address Batch Async");
-        // MapsCommon.print(client.beginSearchAddressBatch(optionsList).getFinalResult());
-        // SyncPoller<BatchSearchResult, BatchSearchResult> poller = client.beginSearchAddressBatch(optionsList);
-        // BatchSearchResult result = poller.getFinalResult();
         MapsCommon.print(client.beginSearchAddressBatch(optionsList).getFinalResult());
         // MapsCommon.print(result.getBatchSummary());
         // MapsCommon.print(result.getBatchItems().get(0).getResult().getResults().get(0).getBoundingBox());
