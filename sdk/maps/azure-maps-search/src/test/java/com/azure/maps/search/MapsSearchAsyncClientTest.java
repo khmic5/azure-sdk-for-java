@@ -26,8 +26,11 @@ import com.azure.maps.search.models.SearchPointOfInterestCategoryOptions;
 import com.azure.maps.search.models.SearchPointOfInterestOptions;
 import com.azure.maps.search.models.SearchStructuredAddressOptions;
 import com.azure.maps.search.models.StructuredAddress;
+<<<<<<< HEAD
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+=======
+>>>>>>> 9295d06c9d (update bug fix)
 
 import java.io.File;
 import java.io.IOException;
@@ -630,6 +633,10 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
              .setRadiusInMeters(5000));
         PollerFlux<BatchSearchResult, BatchSearchResult> pollerFlux = client.beginFuzzySearchBatch(fuzzyOptionsList);
         SyncPoller<BatchSearchResult, BatchSearchResult> syncPoller = setPollInterval(pollerFlux.getSyncPoller());
+<<<<<<< HEAD
+=======
+        syncPoller.waitForCompletion();
+>>>>>>> 9295d06c9d (update bug fix)
         BatchSearchResult actualResult =  syncPoller.getFinalResult();
         BatchSearchResult expectedResult = TestUtils.getExpectedBeginFuzzySearchBatch();
         validateBeginFuzzySearchBatch(expectedResult, actualResult);
@@ -647,6 +654,10 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
         searchAddressOptionsList.add(new SearchAddressOptions("1 Main Street"));
         PollerFlux<BatchSearchResult, BatchSearchResult> pollerFlux = client.beginSearchAddressBatch(searchAddressOptionsList);
         SyncPoller<BatchSearchResult, BatchSearchResult> syncPoller = setPollInterval(pollerFlux.getSyncPoller());
+<<<<<<< HEAD
+=======
+        syncPoller.waitForCompletion();
+>>>>>>> 9295d06c9d (update bug fix)
         BatchSearchResult actualResult = syncPoller.getFinalResult();
         BatchSearchResult expectedResult = TestUtils.getExpectedBeginSearchAddressBatch();
         validateBeginSearchAddressBatch(expectedResult, actualResult);
@@ -663,6 +674,10 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
         reverseOptionsList.add(new ReverseSearchAddressOptions(new LatLong(47.621028, -122.348170)));
         PollerFlux<BatchReverseSearchResult, BatchReverseSearchResult> pollerFlux = client.beginReverseSearchAddressBatch(reverseOptionsList);
         SyncPoller<BatchReverseSearchResult, BatchReverseSearchResult> syncPoller = setPollInterval(pollerFlux.getSyncPoller());
+<<<<<<< HEAD
+=======
+        syncPoller.waitForCompletion();
+>>>>>>> 9295d06c9d (update bug fix)
         BatchReverseSearchResult actualResult = syncPoller.getFinalResult();
         BatchReverseSearchResult expectedResult = TestUtils.getExpectedReverseSearchAddressBatch();
         validateBeginReverseSearchAddressBatch(expectedResult, actualResult);
