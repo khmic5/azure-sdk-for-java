@@ -50,7 +50,11 @@ public class TestUtils {
     static final String FAKE_API_KEY = "1234567890";
     public static final Duration DEFAULT_POLL_INTERVAL = Duration.ofSeconds(30);
 
+<<<<<<< HEAD
     static Polygon getPolygon(InputStream is) throws IOException {
+=======
+    static Polygon getPolygon(File file) throws IOException {
+>>>>>>> 42452b0a73 (finished functional test cases)
         SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
         TypeReference<PolygonPrivate> interimType = new TypeReference<PolygonPrivate>(){};
         byte[] data = null;
@@ -64,15 +68,23 @@ public class TestUtils {
 
     static List<Polygon> getMultiPolygonsResults() throws IOException {
         List<Polygon> result = new ArrayList<>();
+<<<<<<< HEAD
         InputStream is = ClassLoader.getSystemResourceAsStream("polygon1.json");
         Polygon polygon1 = TestUtils.getPolygon(is);
         InputStream is2 = ClassLoader.getSystemResourceAsStream("polygon2.json");
         Polygon polygon2 = TestUtils.getPolygon(is2);
+=======
+        File file1 = new File("src/main/resources/polygon1.json");
+        Polygon polygon1 = TestUtils.getPolygon(file1);
+        File file2 = new File("src/main/resources/polygon2.json");
+        Polygon polygon2 = TestUtils.getPolygon(file2);
+>>>>>>> 42452b0a73 (finished functional test cases)
         result.add(polygon1);
         result.add(polygon2);
         return result;
     }
 
+<<<<<<< HEAD
     static SearchAddressResult getSearchAddressResult(byte[] data) throws IOException {
         SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
         TypeReference<SearchAddressResultPrivate> interimType = new TypeReference<SearchAddressResultPrivate>(){};
@@ -94,6 +106,36 @@ public class TestUtils {
         byte[] data = null;
         data = is.readAllBytes();
         return getSearchAddressResult(data);
+=======
+    static SearchAddressResult getSearchAddressResult(File file) throws IOException {
+        SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
+        TypeReference<SearchAddressResultPrivate> interimType = new TypeReference<SearchAddressResultPrivate>(){};
+        byte[] data = Files.readAllBytes(file.toPath());
+        SearchAddressResultPrivate searchAddressResultPrivate = jacksonAdapter.<SearchAddressResultPrivate>deserialize(data, interimType.getJavaType(),
+           SerializerEncoding.JSON);
+        return Utility.toSearchAddressResult(searchAddressResultPrivate);
+    }
+
+    static SearchAddressResult getExpectedFuzzySearchResults() throws IOException {
+        File file = new File("src/main/resources/searchaddressresult.json");
+        return getSearchAddressResult(file);
+    }
+
+
+    static SearchAddressResult getExpectedSearchPointOfInterestResults() throws StreamReadException, DatabindException, IOException {
+        File file = new File("src/main/resources/searchpointofinterestresult.json");
+        return getSearchAddressResult(file);
+    }
+
+    static SearchAddressResult getExpectedSearchNearbyPointOfInterestResults() throws StreamReadException, DatabindException, IOException {
+        File file = new File("src/main/resources/searchnearbypointofinterestresult.json");
+        return getSearchAddressResult(file);
+    }
+
+    static SearchAddressResult getExpectedSearchPointOfInterestCategoryResults() throws StreamReadException, DatabindException, IOException {
+        File file = new File("src/main/resources/searchpointofinterestcategoryresult.json");
+        return getSearchAddressResult(file);
+>>>>>>> 42452b0a73 (finished functional test cases)
     }
 
     static SearchAddressResult getExpectedSearchNearbyPointOfInterestResults() throws IOException {
@@ -122,11 +164,17 @@ public class TestUtils {
         return pointOfInterestCategoryTreeResult;
     }
 
+<<<<<<< HEAD
     static SearchAddressResult getExpectedSearchAddressResults() throws IOException {
         InputStream is = ClassLoader.getSystemResourceAsStream("searchaddressresult.json");
         byte[] data = null;
         data = is.readAllBytes();
         return getSearchAddressResult(data);
+=======
+    static SearchAddressResult getExpectedSearchAddressResults() throws StreamReadException, DatabindException, IOException {
+        File file = new File("src/main/resources/searchaddressresult.json");
+        return getSearchAddressResult(file);
+>>>>>>> 42452b0a73 (finished functional test cases)
     }
 
     static ReverseSearchAddressResult getExpectedReverseSearchAddressResults() throws IOException {
@@ -155,6 +203,7 @@ public class TestUtils {
         return reverseSearchCrossStreetAddressResult;
     }
 
+<<<<<<< HEAD
     static SearchAddressResult getExpectedSearchStructuredAddress() throws IOException {
         InputStream is = ClassLoader.getSystemResourceAsStream("searchstructuredaddressresult.json");
         byte[] data = null;
@@ -167,6 +216,25 @@ public class TestUtils {
         byte[] data = null;
         data = is.readAllBytes();
         return getSearchAddressResult(data);
+=======
+    static SearchAddressResult getExpectedSearchStructuredAddress() throws StreamReadException, DatabindException, IOException {
+        File file = new File("src/main/resources/searchstructuredaddressresult.json");
+        return getSearchAddressResult(file);
+    }
+
+    static GeoObject getGeoObject(File file) throws IOException {
+        SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
+        TypeReference<GeoObject> interimType = new TypeReference<GeoObject>(){};
+        byte[] data = Files.readAllBytes(file.toPath());
+        GeoObject obj = jacksonAdapter.<GeoObject>deserialize(data, interimType.getJavaType(),
+           SerializerEncoding.JSON);
+        return obj;
+    }
+
+    static SearchAddressResult getExpectedSearchInsideGeometry() throws StreamReadException, DatabindException, IOException {
+        File file = new File("src/main/resources/searchinsidegeometryresult.json");
+        return getSearchAddressResult(file);
+>>>>>>> 42452b0a73 (finished functional test cases)
     }
 
     static GeoLineString getGeoLineString(File file) throws IOException {
@@ -227,13 +295,7 @@ public class TestUtils {
 =======
     static SearchAddressResult getExpectedSearchAlongRoute() throws StreamReadException, DatabindException, IOException {
         File file = new File("src/main/resources/searchalongrouteresult.json");
-        SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
-        TypeReference<SearchAddressResultPrivate> interimType = new TypeReference<SearchAddressResultPrivate>(){};
-        byte[] data = Files.readAllBytes(file.toPath());
-        SearchAddressResultPrivate searchAddressResultPrivate = jacksonAdapter.<SearchAddressResultPrivate>deserialize(data, interimType.getJavaType(),
-           SerializerEncoding.JSON);
-        SearchAddressResult searchAddressResult = Utility.toSearchAddressResult(searchAddressResultPrivate);
-        return searchAddressResult;
+        return getSearchAddressResult(file);
     }
 
     static BatchSearchResult getExpectedBeginFuzzySearchBatch() throws StreamReadException, DatabindException, IOException {
