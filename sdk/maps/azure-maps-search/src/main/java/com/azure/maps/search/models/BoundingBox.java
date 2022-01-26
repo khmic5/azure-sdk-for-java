@@ -12,7 +12,6 @@ public final class BoundingBox {
     private LatLong bottomRight;
 
     public BoundingBox() {
-        super();
     }
 
     /**

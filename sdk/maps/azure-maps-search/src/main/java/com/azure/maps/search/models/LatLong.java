@@ -10,7 +10,6 @@ public final class LatLong {
     private double longitude;
 
     public LatLong() {
-        super();
     }
 
     /**
