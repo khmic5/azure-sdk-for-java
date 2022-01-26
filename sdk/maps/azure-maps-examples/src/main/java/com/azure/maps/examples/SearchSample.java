@@ -164,13 +164,13 @@ public class SearchSample {
         SearchAddressResult results = client.fuzzySearch(
             new FuzzySearchOptions("1 Microsoft Way", new LatLong(40.706270, -74.011454))
                 .setTop(5));
-       MapsCommon.print(results);
+        MapsCommon.print(results);
 
         // with response
         Response<SearchAddressResult> response = client.fuzzySearchWithResponse(
             new FuzzySearchOptions("Monaco").setEntityType(GeographicEntityType.COUNTRY)
                 .setTop(5), null);
-       MapsCommon.print(response.getStatusCode());
+        MapsCommon.print(response.getStatusCode());
         String id = response.getValue().getResults().get(0).getDataSource().getGeometry().getId();
 
         // Get polygon -
@@ -191,8 +191,6 @@ public class SearchSample {
         // Search POI -
         // https://docs.microsoft.com/en-us/rest/api/maps/search/get-search-poi
         System.out.println("Search Points of Interest:");
-
-
 
         // coordinates
         MapsCommon.print(client.searchPointOfInterest(
