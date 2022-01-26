@@ -433,14 +433,30 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
 
     // Test search along route with response
 
+    // Case 1: 200
+
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
     public void testSearchAlongRouteWithResponse(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
         client = getMapsSearchClient(httpClient, serviceVersion);
         File file = new File("src/main/resources/geolinestringone.json");
         GeoLineString obj = TestUtils.getGeoLineString(file);
-        validateSearchInsideGeometryWithResponse(TestUtils.getExpectedSearchAddressResults(), 200, client.searchAlongRouteWithResponse(
+        validateSearchAlongRouteWithResponse(TestUtils.getExpectedSearchAddressResults(), 200, client.searchAlongRouteWithResponse(
             new SearchAlongRouteOptions("burger", 1000, obj), null));
+    }
+
+    // Case 2: 400
+
+    @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
+    @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
+    public void testInvalidSearchAlongRouteWithResponse(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
+        client = getMapsSearchClient(httpClient, serviceVersion);
+        File file = new File("src/main/resources/geolinestringone.json");
+        GeoLineString obj = TestUtils.getGeoLineString(file);
+        final HttpResponseException httpResponseException = assertThrows(HttpResponseException.class,
+                () -> client.searchAlongRouteWithResponse(
+                    new SearchAlongRouteOptions("", 1000, obj), null));
+            assertEquals(400, httpResponseException.getResponse().getStatusCode());
     }
 
     // Test begin fuzzy search batch
