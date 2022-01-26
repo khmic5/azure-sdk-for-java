@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.azure.core.exception.HttpResponseException;
 import com.azure.core.http.HttpClient;
 import com.azure.core.models.GeoLineString;
 import com.azure.core.models.GeoObject;
@@ -31,6 +32,9 @@ import com.azure.maps.search.models.SearchPointOfInterestOptions;
 import com.azure.maps.search.models.SearchStructuredAddressOptions;
 import com.azure.maps.search.models.StructuredAddress;
 import com.nimbusds.jose.shaded.json.parser.ParseException;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -59,6 +63,8 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
 
     // Test get polygons with response
 
+    // Case 1: Response 200
+
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
     public void testGetPolygonsWithResponse(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
@@ -66,7 +72,19 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
         List<String> geometryIds = Arrays.asList("8bceafe8-3d98-4445-b29b-fd81d3e9adf5", "00005858-5800-1200-0000-0000773694ca");
         validateGetPolygonsWithResponse(TestUtils.getMultiPolygonsResults(), 200, client.getPolygonsWithResponse(geometryIds, Context.NONE));
     }
-    
+
+    // Case 2: Respone 400, incorrect input
+
+    @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
+    @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
+    public void testGetInvalidInputPolygonsWithResponse(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
+        client = getMapsSearchClient(httpClient, serviceVersion);
+        List<String> geometryIds = new ArrayList<>();
+        final HttpResponseException httpResponseException = assertThrows(HttpResponseException.class,
+                () -> client.getPolygonsWithResponse(geometryIds, Context.NONE));
+            assertEquals(400, httpResponseException.getResponse().getStatusCode());
+    }
+
     // Test fuzzy search
 
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
@@ -80,11 +98,24 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
 
     // Test fuzzy search with response
 
+    // Case 1: 200
+
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
     public void testFuzzySearchWithResponse(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
         client = getMapsSearchClient(httpClient, serviceVersion);
         validateFuzzySearchWithResponse(TestUtils.getExpectedFuzzySearchResults(), 200, client.fuzzySearchWithResponse(new FuzzySearchOptions("starbucks"), Context.NONE));
+    }
+
+    // Case 2: 400 incorrect input
+
+    @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
+    @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
+    public void testInvalidFuzzySearchWithResponse(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
+        client = getMapsSearchClient(httpClient, serviceVersion);
+        final HttpResponseException httpResponseException = assertThrows(HttpResponseException.class,
+                () -> client.fuzzySearchWithResponse(new FuzzySearchOptions(""), Context.NONE));
+            assertEquals(400, httpResponseException.getResponse().getStatusCode());
     }
 
     // Test search point of interest
@@ -100,11 +131,24 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
 
     // Test search point of interest with response
 
+    // Case 1: 200
+
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
     public void testSearchPointOfInterestWithResponse(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
         client = getMapsSearchClient(httpClient, serviceVersion);
         validateSearchPointOfInterestWithResponse(TestUtils.getExpectedSearchPointOfInterestResults(), 200, client.searchPointOfInterestWithResponse(new SearchPointOfInterestOptions("caviar lobster pasta", new LatLong(36.98844, -121.97483)), Context.NONE));
+    }
+
+    // Case 2: 400 incorrect input
+
+    @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
+    @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
+    public void testInvalidSearchPointOfInterestWithResponse(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
+        client = getMapsSearchClient(httpClient, serviceVersion);
+        final HttpResponseException httpResponseException = assertThrows(HttpResponseException.class,
+                () -> client.searchPointOfInterestWithResponse(new SearchPointOfInterestOptions("", new LatLong()), Context.NONE));
+            assertEquals(400, httpResponseException.getResponse().getStatusCode());
     }
 
     // Test search nearby point of interest
@@ -121,11 +165,24 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
 
     // Test search nearby point of interest with response
 
+    // Case 1: 200
+
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
     public void testSearchNearbyPointOfInterestWithResponse(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
         client = getMapsSearchClient(httpClient, serviceVersion);
         validateSearchNearbyPointOfInterestWithResponse(TestUtils.getExpectedSearchNearbyPointOfInterestResults(), 200, client.searchNearbyPointOfInterestWithResponse(new SearchNearbyPointsOfInterestOptions(new LatLong(40.706270, -74.011454)), Context.NONE));
+    }
+
+    // Case 2: 400 incorrect input
+
+    @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
+    @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
+    public void testInvalidSearchNearbyPointOfInterestWithResponse(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
+        client = getMapsSearchClient(httpClient, serviceVersion);
+        final HttpResponseException httpResponseException = assertThrows(HttpResponseException.class,
+                () -> client.searchNearbyPointOfInterestWithResponse(new SearchNearbyPointsOfInterestOptions(new LatLong(-100, -100)), Context.NONE));
+            assertEquals(400, httpResponseException.getResponse().getStatusCode());
     }
 
     // Test search point of interest category
@@ -142,6 +199,8 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
 
     // Test search point of interest category with response
 
+    // Case 1: 200
+
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
     public void testSearchPointOfInterestCategoryWithResponse(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
@@ -150,6 +209,17 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
             new SearchPointOfInterestCategoryOptions("atm", new LatLong(40.706270, -74.011454)), Context.NONE));
     }
 
+    // Case 2: 400 incorrect input
+
+    @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
+    @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
+    public void testInvalidSearchPointOfInterestCategoryWithResponse(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
+        client = getMapsSearchClient(httpClient, serviceVersion);
+        final HttpResponseException httpResponseException = assertThrows(HttpResponseException.class,
+                () -> client.searchPointOfInterestCategoryWithResponse(
+                    new SearchPointOfInterestCategoryOptions("atm", new LatLong(-100, -100)), Context.NONE));
+            assertEquals(400, httpResponseException.getResponse().getStatusCode());
+    }
 
     // Test get point of interest category tree
 
@@ -184,11 +254,24 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
 
     // Test search address with response
 
+    // Case 1: 200
+
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
     public void testSearchAddressWithResponse(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
         client = getMapsSearchClient(httpClient, serviceVersion);
         validateSearchAddressWithResponse(TestUtils.getExpectedSearchAddressResults(), 200, client.searchAddressWithResponse(new SearchAddressOptions("NE 24th Street, Redmond, WA 98052"), Context.NONE));
+    }
+
+    // Case 2: 400 Invalid Input
+
+    @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
+    @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
+    public void testInvalidSearchAddressWithResponse(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
+        client = getMapsSearchClient(httpClient, serviceVersion);
+        final HttpResponseException httpResponseException = assertThrows(HttpResponseException.class,
+                () -> client.searchAddressWithResponse(new SearchAddressOptions(""), Context.NONE));
+            assertEquals(400, httpResponseException.getResponse().getStatusCode());
     }
 
     // Test reverse search address
@@ -205,12 +288,26 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
 
     // Test reverse search address with response
 
+    // Case 1: 200
+
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
     public void testReverseSearchAddressWithResponse(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
         client = getMapsSearchClient(httpClient, serviceVersion);
         validateReverseSearchAddressWithResponse(TestUtils.getExpectedReverseSearchAddressResults(), 200, client.reverseSearchAddressWithResponse(
             new ReverseSearchAddressOptions(new LatLong(37.337, -121.89)), Context.NONE));
+    }
+
+    // Case 2: 400 Invalid Input
+
+    @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
+    @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
+    public void testInvalidReverseSearchAddressWithResponse(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
+        client = getMapsSearchClient(httpClient, serviceVersion);
+        final HttpResponseException httpResponseException = assertThrows(HttpResponseException.class,
+                () -> client.reverseSearchAddressWithResponse(
+                    new ReverseSearchAddressOptions(new LatLong(-100, -121.89)), Context.NONE));
+            assertEquals(400, httpResponseException.getResponse().getStatusCode());
     }
 
     // Test reverse search cross street address
@@ -227,12 +324,26 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
 
     // Test reverse search cross street address with response
 
+    // Case 1: 200
+
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
     public void testReverseSearchCrossStreetAddressWithResponse(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
         client = getMapsSearchClient(httpClient, serviceVersion);
         validateReverseSearchCrossStreetAddressWithResponse(TestUtils.getExpectedReverseSearchCrossStreetAddressResults(), 200, client.reverseSearchCrossStreetAddressWithResponse(
             new ReverseSearchCrossStreetAddressOptions(new LatLong(37.337, -121.89)), Context.NONE));
+    }
+
+    // Case 2: 400 Invalid Input
+
+    @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
+    @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
+    public void testInvalidReverseSearchCrossStreetAddressWithResponse(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
+        client = getMapsSearchClient(httpClient, serviceVersion);
+        final HttpResponseException httpResponseException = assertThrows(HttpResponseException.class,
+                () -> client.reverseSearchCrossStreetAddressWithResponse(
+                    new ReverseSearchCrossStreetAddressOptions(new LatLong(-100, -121.89)), Context.NONE));
+            assertEquals(400, httpResponseException.getResponse().getStatusCode());
     }
 
     // Test search structured address
@@ -248,6 +359,8 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
 
     // Test search structured address with response
 
+    // Case 1: 200
+
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
     public void testSearchStructuredAddressWithResponse(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
@@ -258,6 +371,19 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
         client.searchStructuredAddressWithResponse(
             new StructuredAddress("US"),
             new SearchStructuredAddressOptions(), null));
+    }
+
+    // Case 2: 400 Invalid input
+
+    @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
+    @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
+    public void testInvalidSearchStructuredAddressWithResponse(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
+        client = getMapsSearchClient(httpClient, serviceVersion);
+        final HttpResponseException httpResponseException = assertThrows(HttpResponseException.class,
+                () -> client.searchStructuredAddressWithResponse(
+                    new StructuredAddress(""),
+                    new SearchStructuredAddressOptions(), null));
+            assertEquals(400, httpResponseException.getResponse().getStatusCode());
     }
 
     // Test search inside geometry
@@ -276,6 +402,8 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
 
     // Test search inside geometry with response
 
+    // Case 1: 200
+
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
     public void testSearchInsideGeometryWithResponse(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
@@ -284,6 +412,20 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
         GeoObject obj = TestUtils.getGeoObject(file);
         validateSearchInsideGeometryWithResponse(TestUtils.getExpectedSearchInsideGeometry(), 200, client.searchInsideGeometryWithResponse(
             new SearchInsideGeometryOptions("pizza", obj), null));
+    }
+
+    // Case 2: 400 invalid input
+
+    @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
+    @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
+    public void testInvalidSearchInsideGeometryWithResponse(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
+        client = getMapsSearchClient(httpClient, serviceVersion);
+        File file = new File("src/main/resources/geoobjectone.json");
+        GeoObject obj = TestUtils.getGeoObject(file);
+        final HttpResponseException httpResponseException = assertThrows(HttpResponseException.class,
+                () -> client.searchInsideGeometryWithResponse(
+                    new SearchInsideGeometryOptions("", obj), null));
+            assertEquals(400, httpResponseException.getResponse().getStatusCode());
     }
 
     // Test search along route
@@ -296,10 +438,12 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
         GeoLineString obj = TestUtils.getGeoLineString(file);
         SearchAddressResult actualResult = client.searchAlongRoute(new SearchAlongRouteOptions("burger", 1000, obj));
         SearchAddressResult expectedResult = TestUtils.getExpectedSearchAlongRoute();
-        validateSearchInsideGeometry(expectedResult, actualResult);
+        validateSearchAlongRoute(expectedResult, actualResult);
     }
 
     // Test search along route with response
+
+    // Case 1: 200
 
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
@@ -307,8 +451,22 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
         client = getMapsSearchClient(httpClient, serviceVersion);
         File file = new File("src/main/resources/geolinestringone.json");
         GeoLineString obj = TestUtils.getGeoLineString(file);
-        validateSearchInsideGeometryWithResponse(TestUtils.getExpectedSearchAddressResults(), 200, client.searchAlongRouteWithResponse(
+        validateSearchAlongRouteWithResponse(TestUtils.getExpectedSearchAddressResults(), 200, client.searchAlongRouteWithResponse(
             new SearchAlongRouteOptions("burger", 1000, obj), null));
+    }
+
+    // Case 2: 400
+
+    @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
+    @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
+    public void testInvalidSearchAlongRouteWithResponse(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
+        client = getMapsSearchClient(httpClient, serviceVersion);
+        File file = new File("src/main/resources/geolinestringone.json");
+        GeoLineString obj = TestUtils.getGeoLineString(file);
+        final HttpResponseException httpResponseException = assertThrows(HttpResponseException.class,
+                () -> client.searchAlongRouteWithResponse(
+                    new SearchAlongRouteOptions("", 1000, obj), null));
+            assertEquals(400, httpResponseException.getResponse().getStatusCode());
     }
 
     // Test begin fuzzy search batch

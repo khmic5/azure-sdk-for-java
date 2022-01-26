@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.azure.core.exception.HttpResponseException;
 import com.azure.core.http.HttpClient;
 import com.azure.core.models.GeoLineString;
 import com.azure.core.models.GeoObject;
@@ -25,6 +26,8 @@ import com.azure.maps.search.models.SearchPointOfInterestCategoryOptions;
 import com.azure.maps.search.models.SearchPointOfInterestOptions;
 import com.azure.maps.search.models.SearchStructuredAddressOptions;
 import com.azure.maps.search.models.StructuredAddress;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.File;
 import java.io.IOException;
@@ -74,6 +77,8 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
 
     // Test async get polygons with response
 
+    // Case 1: 200
+
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
     public void testAsyncGetPolygonsWithResponse(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) {
@@ -89,6 +94,20 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
                     }
                 })
                 .verifyComplete();
+    }
+
+    // Case 2: 400 invalid input
+
+    @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
+    @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
+    public void testAsyncInvalidGetPolygonsWithResponse(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) {
+        client = getMapsSearchAsyncClient(httpClient, serviceVersion);
+        List<String> geometryIds = new ArrayList<>();
+        StepVerifier.create(client.getPolygonsWithResponse(geometryIds, Context.NONE))
+                .verifyErrorSatisfies(ex -> {
+                    final HttpResponseException httpResponseException = (HttpResponseException) ex;
+                    assertEquals(400, httpResponseException.getResponse().getStatusCode());
+                });
     }
 
     // Test async fuzzy search
@@ -109,6 +128,8 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
 
     // Test fuzzy search with response
 
+    // Case 1: 200
+
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
     public void testAsyncFuzzySearchWithResponse(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) {
@@ -123,6 +144,19 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
                     }
                 })
                 .verifyComplete();
+    }
+
+    // Case 2: 400 invalid input
+
+    @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
+    @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
+    public void testAsyncInvalidFuzzySearchWithResponse(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) {
+        client = getMapsSearchAsyncClient(httpClient, serviceVersion);
+        StepVerifier.create(client.fuzzySearchWithResponse(new FuzzySearchOptions(""), Context.NONE))
+                .verifyErrorSatisfies(ex -> {
+                    final HttpResponseException httpResponseException = (HttpResponseException) ex;
+                    assertEquals(400, httpResponseException.getResponse().getStatusCode());
+                });
     }
 
     // Test async search point of interest
@@ -143,6 +177,8 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
 
     // Test async search point of interest with response
 
+    // Case 1: 200
+
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
     public void testAsyncSearchPointOfInterestWithResponse(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) {
@@ -157,6 +193,19 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
                     }
                 })
                 .verifyComplete();
+    }
+
+    // Case 2: 400 invalid input
+
+    @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
+    @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
+    public void testAsyncInvalidSearchPointOfInterestWithResponse(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) {
+        client = getMapsSearchAsyncClient(httpClient, serviceVersion);
+        StepVerifier.create(client.searchPointOfInterestWithResponse(new SearchPointOfInterestOptions("", new LatLong(36.98844, -121.97483)), Context.NONE))
+                .verifyErrorSatisfies(ex -> {
+                    final HttpResponseException httpResponseException = (HttpResponseException) ex;
+                    assertEquals(400, httpResponseException.getResponse().getStatusCode());
+                });
     }
 
     // Test async search nearby point of interest
@@ -178,6 +227,8 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
 
     // Test async search nearby point of interest with response
 
+    // Case 1: 200
+
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
     public void testAsyncSearchNearbyPointOfInterestWithResponse(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) {
@@ -192,6 +243,19 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
                     }
                 })
                 .verifyComplete();
+    }
+
+    // Case 2: 400 invalid input
+
+    @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
+    @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
+    public void testAsyncInvalidSearchNearbyPointOfInterestWithResponse(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) {
+        client = getMapsSearchAsyncClient(httpClient, serviceVersion);
+        StepVerifier.create(client.searchNearbyPointOfInterestWithResponse(new SearchNearbyPointsOfInterestOptions(new LatLong(-100, -100)), Context.NONE))
+                .verifyErrorSatisfies(ex -> {
+                    final HttpResponseException httpResponseException = (HttpResponseException) ex;
+                    assertEquals(400, httpResponseException.getResponse().getStatusCode());
+                });
     }
 
     // Test async search point of interest category
@@ -213,6 +277,8 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
 
     // Test async search point of interest category with response
 
+    // Case 1: 200
+
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
     public void testAsyncSearchPointOfInterestCategoryWithResponse(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) {
@@ -228,6 +294,20 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
                     }
                 })
                 .verifyComplete();
+    }
+
+    // Case 2: 400 invalid input
+
+    @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
+    @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
+    public void testAsyncInvalidSearchPointOfInterestCategoryWithResponse(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) {
+        client = getMapsSearchAsyncClient(httpClient, serviceVersion);
+        StepVerifier.create(client.searchPointOfInterestCategoryWithResponse(
+            new SearchPointOfInterestCategoryOptions("", new LatLong(-100, -100)), Context.NONE))
+                .verifyErrorSatisfies(ex -> {
+                    final HttpResponseException httpResponseException = (HttpResponseException) ex;
+                    assertEquals(400, httpResponseException.getResponse().getStatusCode());
+                });
     }
 
     // Test async get point of interest category tree
@@ -282,6 +362,8 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
 
     // Test async search address with response
 
+    // Case 1:
+
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
     public void testAsyncSearchAddressWithResponse(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) {
@@ -296,6 +378,19 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
                     }
                 })
                 .verifyComplete();
+    }
+
+    // Case 2: 400 invalid input
+
+    @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
+    @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
+    public void testAsyncInvalidSearchAddressWithResponse(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) {
+        client = getMapsSearchAsyncClient(httpClient, serviceVersion);
+        StepVerifier.create(client.searchAddressWithResponse(new SearchAddressOptions(""), Context.NONE))
+                .verifyErrorSatisfies(ex -> {
+                    final HttpResponseException httpResponseException = (HttpResponseException) ex;
+                    assertEquals(400, httpResponseException.getResponse().getStatusCode());
+                });
     }
 
     // Test async reverse search address
@@ -317,6 +412,8 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
 
     // Test async reverse search address with response
 
+    // Case 1: 200
+
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
     public void testAsyncReverseSearchAddressWithResponse(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) {
@@ -332,6 +429,20 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
                     }
                 })
                 .verifyComplete();
+    }
+
+    // Case 2: 400 invalid input
+
+    @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
+    @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
+    public void testAsyncInvalidReverseSearchAddressWithResponse(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) {
+        client = getMapsSearchAsyncClient(httpClient, serviceVersion);
+        StepVerifier.create(client.reverseSearchAddressWithResponse(
+            new ReverseSearchAddressOptions(new LatLong(-100, -121.89)), Context.NONE))
+                .verifyErrorSatisfies(ex -> {
+                    final HttpResponseException httpResponseException = (HttpResponseException) ex;
+                    assertEquals(400, httpResponseException.getResponse().getStatusCode());
+                });
     }
 
     // Test async reverse search cross street address
@@ -353,6 +464,8 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
 
     // Test async reverse search cross street address with response
 
+    // Case 1: 200
+
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
     public void testAsyncReverseSearchCrossStreetAddressWithResponse(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) {
@@ -368,6 +481,20 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
                     }
                 })
                 .verifyComplete();
+    }
+
+    // Case 2: 400 invalid input
+
+    @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
+    @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
+    public void testAsyncInvalidReverseSearchCrossStreetAddressWithResponse(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) {
+        client = getMapsSearchAsyncClient(httpClient, serviceVersion);
+        StepVerifier.create(client.reverseSearchCrossStreetAddressWithResponse(
+            new ReverseSearchCrossStreetAddressOptions(new LatLong(-100, -121.89)), Context.NONE))
+                .verifyErrorSatisfies(ex -> {
+                    final HttpResponseException httpResponseException = (HttpResponseException) ex;
+                    assertEquals(400, httpResponseException.getResponse().getStatusCode());
+                });
     }
 
     // Test async search structured address
@@ -388,6 +515,8 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
 
     // Test async search structured address with response
 
+    // Case 1: 200
+
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
     public void testAsyncSearchStructuredAddressWithResponse(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) {
@@ -404,6 +533,19 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
                     }
                 })
                 .verifyComplete();
+    }
+
+    // Case 2: 400 invalid input
+
+    @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
+    @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
+    public void testAsyncInvalidSearchStructuredAddress(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) {
+        client = getMapsSearchAsyncClient(httpClient, serviceVersion);
+        StepVerifier.create(client.searchStructuredAddressWithResponse(new StructuredAddress(""), null))
+                .verifyErrorSatisfies(ex -> {
+                    final HttpResponseException httpResponseException = (HttpResponseException) ex;
+                    assertEquals(400, httpResponseException.getResponse().getStatusCode());
+                });
     }
 
     // Test async search inside geometry
@@ -427,6 +569,8 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
 
     // Test async search inside geometry with response
 
+    // Case 1: 200
+
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
     public void testAsyncSearchInsideGeometryWithResponse(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
@@ -446,6 +590,22 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
                 .verifyComplete();
     }
 
+    // Case 2: 400 invalid input
+
+    @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
+    @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
+    public void testAsyncInvalidSearchInsideGeometryWithResponse(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
+        client = getMapsSearchAsyncClient(httpClient, serviceVersion);
+        File file = new File("src/main/resources/geoobjectone.json");
+        GeoObject obj = TestUtils.getGeoObject(file);
+        StepVerifier.create(client.searchInsideGeometryWithResponse(
+            new SearchInsideGeometryOptions("", obj), null))
+                .verifyErrorSatisfies(ex -> {
+                    final HttpResponseException httpResponseException = (HttpResponseException) ex;
+                    assertEquals(400, httpResponseException.getResponse().getStatusCode());
+                });
+    }
+
     // Test async search along route
 
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
@@ -457,7 +617,7 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
         StepVerifier.create(client.searchAlongRoute(new SearchAlongRouteOptions("burger", 1000, obj))).assertNext(actualResults -> 
         {
             try {
-                validateSearchInsideGeometry(TestUtils.getExpectedSearchInsideGeometry(), actualResults);
+                validateSearchAlongRoute(TestUtils.getExpectedSearchAlongRoute(), actualResults);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -465,6 +625,8 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
     } 
 
     // Test async search along route with response
+
+    // Case 1: 200
 
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
@@ -477,12 +639,28 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
                 .assertNext(response ->
                 {
                     try {
-                        validateSearchInsideGeometryWithResponse(TestUtils.getExpectedSearchAddressResults(), 200, response);
+                        validateSearchAlongRouteWithResponse(TestUtils.getExpectedSearchAlongRoute(), 200, response);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 })
                 .verifyComplete();
+    }
+
+    // Case 2: 400 invalid input
+
+    @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
+    @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
+    public void testAsyncInvalidSearchAlongRouteWithResponse(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
+        client = getMapsSearchAsyncClient(httpClient, serviceVersion);
+        File file = new File("src/main/resources/geolinestringone.json");
+        GeoLineString obj = TestUtils.getGeoLineString(file);
+        StepVerifier.create(client.searchAlongRouteWithResponse(
+            new SearchAlongRouteOptions("", 1000, obj), null))
+                .verifyErrorSatisfies(ex -> {
+                    final HttpResponseException httpResponseException = (HttpResponseException) ex;
+                    assertEquals(400, httpResponseException.getResponse().getStatusCode());
+                });
     }
 
     // Test async begin fuzzy search batch

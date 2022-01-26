@@ -1,0 +1,25 @@
+{
+  "networkCallRecords" : [ {
+    "Method" : "POST",
+    "Uri" : "https://REDACTED.microsoft.com/search/alongRoute/json?api-version=1.0&query=&maxDetourTime=1000",
+    "Headers" : {
+      "User-Agent" : "azsdk-java-JavaSearchSDK/1.0 (11.0.13; Windows 10; 10.0)",
+      "Content-Type" : "application/json"
+    },
+    "Response" : {
+      "date" : "Wed, 26 Jan 2022 03:21:25 GMT",
+      "content-length" : "73",
+      "x-content-type-options" : "nosniff",
+      "x-msedge-ref" : "Ref A: B2A95665111F49FE97C40A42B69F007E Ref B: TPE30EDGE0513 Ref C: 2022-01-26T03:21:25Z",
+      "x-ms-azuremaps-region" : "West US 2",
+      "content-type" : "application/json; charset=utf-8",
+      "x-cache" : "CONFIG_NOCACHE",
+      "retry-after" : "0",
+      "StatusCode" : "400",
+      "Body" : "{\"error\":{\"code\":\"400 BadRequest\",\"message\":\"query is missing or empty\"}}",
+      "strict-transport-security" : "max-age=31536000; includeSubDomains"
+    },
+    "Exception" : null
+  } ],
+  "variables" : [ ]
+}
