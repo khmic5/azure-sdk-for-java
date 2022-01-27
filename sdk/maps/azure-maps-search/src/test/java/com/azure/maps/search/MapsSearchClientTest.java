@@ -475,5 +475,5 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
         BatchReverseSearchResult actualResult = syncPoller.getFinalResult();
         BatchReverseSearchResult expectedResult = TestUtils.getExpectedReverseSearchAddressBatch();
         validateBeginReverseSearchAddressBatch(expectedResult, actualResult);
-    }
+    } 
 }

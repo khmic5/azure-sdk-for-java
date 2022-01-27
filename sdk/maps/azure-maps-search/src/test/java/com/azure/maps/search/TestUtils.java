@@ -2,6 +2,7 @@ package com.azure.maps.search;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -72,15 +73,9 @@ public class TestUtils {
         return result;
     }
 
-    static SearchAddressResult getSearchAddressResult(File file) {
+    static SearchAddressResult getSearchAddressResult(byte[] data) {
         SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
         TypeReference<SearchAddressResultPrivate> interimType = new TypeReference<SearchAddressResultPrivate>(){};
-        byte[] data = null;
-        try {
-            data = Files.readAllBytes(file.toPath());
-        } catch (IOException e) {
-            Assertions.fail("Unable to find file");
-        }
         SearchAddressResultPrivate searchAddressResultPrivate = null;
         try {
             searchAddressResultPrivate = jacksonAdapter.<SearchAddressResultPrivate>deserialize(data, interimType.getJavaType(),
@@ -92,35 +87,59 @@ public class TestUtils {
     }
 
     static SearchAddressResult getExpectedFuzzySearchResults() {
-        File file = new File("src/main/resources/searchaddressresult.json");
-        return getSearchAddressResult(file);
+        InputStream is = ClassLoader.getSystemResourceAsStream("searchaddressresult.json");
+        byte[] data = null;
+        try {
+            data = is.readAllBytes();
+        } catch (IOException e) {
+            Assertions.fail("Unable to read searchaddressresult.json");
+        }
+        return getSearchAddressResult(data);
     }
 
 
     static SearchAddressResult getExpectedSearchPointOfInterestResults() {
-        File file = new File("src/main/resources/searchpointofinterestresult.json");
-        return getSearchAddressResult(file);
+        InputStream is = ClassLoader.getSystemResourceAsStream("searchpointofinterestresult.json");
+        byte[] data = null;
+        try {
+            data = is.readAllBytes();
+        } catch (IOException e) {
+            Assertions.fail("Unable to read searchpointofinterestresult.json");
+        }
+        return getSearchAddressResult(data);
     }
 
     static SearchAddressResult getExpectedSearchNearbyPointOfInterestResults() {
-        File file = new File("src/main/resources/searchnearbypointofinterestresult.json");
-        return getSearchAddressResult(file);
+        InputStream is = ClassLoader.getSystemResourceAsStream("searchnearbypointofinterestresult.json");
+        byte[] data = null;
+        try {
+            data = is.readAllBytes();
+        } catch (IOException e) {
+            Assertions.fail("Unable to read searchnearbypointofinterestresult.json");
+        }
+        return getSearchAddressResult(data);
     }
 
     static SearchAddressResult getExpectedSearchPointOfInterestCategoryResults() {
-        File file = new File("src/main/resources/searchpointofinterestcategoryresult.json");
-        return getSearchAddressResult(file);
+        InputStream is = ClassLoader.getSystemResourceAsStream("searchpointofinterestcategoryresult.json");
+        byte[] data = null;
+        try {
+            data = is.readAllBytes();
+        } catch (IOException e) {
+            Assertions.fail("Unable to read searchpointofinterestcategoryresult.json");
+        }
+        return getSearchAddressResult(data);
     }
 
     static PointOfInterestCategoryTreeResult getExpectedSearchPointOfInterestCategoryTreeResults() {
-        File file = new File("src/main/resources/getpointofinterestcategorytreeresult.json");
+        InputStream is = ClassLoader.getSystemResourceAsStream("getpointofinterestcategorytreeresult.json");
         SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
         TypeReference<PointOfInterestCategoryTreeResult> interimType = new TypeReference<PointOfInterestCategoryTreeResult>(){};
         byte[] data = null;
         try {
-            data = Files.readAllBytes(file.toPath());
+            data = is.readAllBytes();
         } catch (IOException e) {
-            Assertions.fail("Unable to find getpointofinterestcategorytreeresult.json");
+            Assertions.fail("Unable to read getpointofinterestcategorytreeresult.json");
         }
         PointOfInterestCategoryTreeResult pointOfInterestCategoryTreeResult = null;
         try {
@@ -133,19 +152,25 @@ public class TestUtils {
     }
 
     static SearchAddressResult getExpectedSearchAddressResults() {
-        File file = new File("src/main/resources/searchaddressresult.json");
-        return getSearchAddressResult(file);
+        InputStream is = ClassLoader.getSystemResourceAsStream("searchaddressresult.json");
+        byte[] data = null;
+        try {
+            data = is.readAllBytes();
+        } catch (IOException e) {
+            Assertions.fail("Unable to read searchaddressresult.json");
+        }
+        return getSearchAddressResult(data);
     }
 
     static ReverseSearchAddressResult getExpectedReverseSearchAddressResults() {
-        File file = new File("src/main/resources/reversesearchaddressresult.json");
+        InputStream is = ClassLoader.getSystemResourceAsStream("reversesearchaddressresult.json");
         SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
         TypeReference<ReverseSearchAddressResultPrivate> interimType = new TypeReference<ReverseSearchAddressResultPrivate>(){};
         byte[] data = null;
         try {
-            data = Files.readAllBytes(file.toPath());
+            data = is.readAllBytes();
         } catch (IOException e) {
-            Assertions.fail("Unable to find reversesearchaddressresult.json");
+            Assertions.fail("Unable to read reversesearchaddressresult.json");
         }
         ReverseSearchAddressResultPrivate searchReverseAddressResultPrivate = null;
         try {
@@ -159,14 +184,14 @@ public class TestUtils {
     }
 
     static ReverseSearchCrossStreetAddressResult getExpectedReverseSearchCrossStreetAddressResults() {
-        File file = new File("src/main/resources/reversesearchcrossstreetaddressresult.json");
+        InputStream is = ClassLoader.getSystemResourceAsStream("reversesearchcrossstreetaddressresult.json");
         SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
         TypeReference<ReverseSearchCrossStreetAddressResultPrivate> interimType = new TypeReference<ReverseSearchCrossStreetAddressResultPrivate>(){};
         byte[] data = null;
         try {
-            data = Files.readAllBytes(file.toPath());
+            data = is.readAllBytes();
         } catch (IOException e) {
-            Assertions.fail("Unable to find reversesearchcrossstreetaddressresult.json");
+            Assertions.fail("Unable to read reversesearchcrossstreetaddressresult.json");
         }
         ReverseSearchCrossStreetAddressResultPrivate reverseSearchCrossStreetAddressResultPrivate = null;
         try {
@@ -180,8 +205,14 @@ public class TestUtils {
     }
 
     static SearchAddressResult getExpectedSearchStructuredAddress() {
-        File file = new File("src/main/resources/searchstructuredaddressresult.json");
-        return getSearchAddressResult(file);
+        InputStream is = ClassLoader.getSystemResourceAsStream("searchstructuredaddressresult.json");
+        byte[] data = null;
+        try {
+            data = is.readAllBytes();
+        } catch (IOException e) {
+            Assertions.fail("Unable to read searchstructuredaddressresult.json");
+        }
+        return getSearchAddressResult(data);
     }
 
     static GeoObject getGeoObject(File file) throws IOException {
@@ -194,8 +225,14 @@ public class TestUtils {
     }
 
     static SearchAddressResult getExpectedSearchInsideGeometry() {
-        File file = new File("src/main/resources/searchinsidegeometryresult.json");
-        return getSearchAddressResult(file);
+        InputStream is = ClassLoader.getSystemResourceAsStream("searchinsidegeometryresult.json");
+        byte[] data = null;
+        try {
+            data = is.readAllBytes();
+        } catch (IOException e) {
+            Assertions.fail("Unable to read searchinsidegeometryresult.json");
+        }
+        return getSearchAddressResult(data);
     }
 
     static GeoLineString getGeoLineString(File file) throws IOException {
@@ -208,8 +245,14 @@ public class TestUtils {
     }
 
     static SearchAddressResult getExpectedSearchAlongRoute() {
-        File file = new File("src/main/resources/searchalongrouteresult.json");
-        return getSearchAddressResult(file);
+        InputStream is = ClassLoader.getSystemResourceAsStream("searchalongrouteresult.json");
+        byte[] data = null;
+        try {
+            data = is.readAllBytes();
+        } catch (IOException e) {
+            Assertions.fail("Unable to read searchalongrouteresult.json");
+        }
+        return getSearchAddressResult(data);
     }
 
     static BatchSearchResult getExpectedBeginFuzzySearchBatch() throws StreamReadException, DatabindException, IOException {
@@ -241,7 +284,6 @@ public class TestUtils {
            SerializerEncoding.JSON);
         return expectedReverseSearchAddressBatch;
     }
-
 
     // file inside helpers --> implementation --> com/azure/maps/search/java --> resources
 
