@@ -139,7 +139,6 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
     }
 
     // Test search nearby point of interest
-
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
     public void testSearchNearbyPointOfInterest(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
@@ -170,7 +169,6 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
     }
 
     // Test search point of interest category
-
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
     public void testSearchPointOfInterestCategory(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
@@ -203,7 +201,6 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
     }
 
     // Test get point of interest category tree
-
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
     public void testSearchPointOfInterestCategoryTree(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
@@ -222,7 +219,6 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
     }
 
     // Test search address
-
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
     public void testSearchAddress(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
@@ -252,7 +248,6 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
     }
 
     // Test reverse search address
-
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
     public void testReverseSearchAddress(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
@@ -285,7 +280,6 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
     }
 
     // Test reverse search cross street address
-
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
     public void testReverseSearchCrossStreetAddress(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
@@ -318,7 +312,6 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
     }
 
     // Test search structured address
-
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
     public void testSearchStructuredAddress(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
@@ -355,7 +348,6 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
     }
 
     // Test search inside geometry
-
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
     public void testSearchInsideGeometry(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
@@ -394,7 +386,6 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
     }
 
     // Test search along route
-
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
     public void testSearchAlongRoute(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
@@ -434,7 +425,6 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
     // Test search along route with response
 
     // Case 1: 200
-
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
     public void testSearchAlongRouteWithResponse(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
@@ -446,7 +436,6 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
     }
 
     // Case 2: 400
-
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
     public void testInvalidSearchAlongRouteWithResponse(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
@@ -460,7 +449,6 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
     }
 
     // Test begin fuzzy search batch
-
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
     public void testBeginFuzzySearchBatch(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
@@ -480,7 +468,6 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
     }
 
     // Test begin search address batch
-
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
     public void testBeginSearchAddressBatch(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
@@ -499,7 +486,6 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
     }
 
     // Test begin reverse search address batch
-    
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
     public void testBeginReverSearchAddressBatch(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
