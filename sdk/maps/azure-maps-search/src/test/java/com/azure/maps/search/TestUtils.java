@@ -52,6 +52,7 @@ public class TestUtils {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     static Polygon getPolygon(InputStream is) throws IOException {
 =======
     static Polygon getPolygon(File file) throws IOException {
@@ -65,13 +66,16 @@ public class TestUtils {
                SerializerEncoding.JSON);
 =======
     static Polygon getPolygon(File file) {
+=======
+    static Polygon getPolygon(InputStream is) {
+>>>>>>> 048666b00e (fixed filepath)
         SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
         TypeReference<PolygonPrivate> interimType = new TypeReference<PolygonPrivate>(){};
         byte[] data = null;
         try {
-            data = Files.readAllBytes(file.toPath());
+            data = is.readAllBytes();
         } catch (IOException e) {
-            Assertions.fail("Unable to find polygon json file");
+            Assertions.fail("Unable to read polygon json file");
         }
         PolygonPrivate polygonPrivate = null;
         try {
@@ -92,16 +96,22 @@ public class TestUtils {
 >>>>>>> 3fe6158c8c (removed try catch in tests)
         List<Polygon> result = new ArrayList<>();
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 048666b00e (fixed filepath)
         InputStream is = ClassLoader.getSystemResourceAsStream("polygon1.json");
         Polygon polygon1 = TestUtils.getPolygon(is);
         InputStream is2 = ClassLoader.getSystemResourceAsStream("polygon2.json");
         Polygon polygon2 = TestUtils.getPolygon(is2);
+<<<<<<< HEAD
 =======
         File file1 = new File("src/main/resources/polygon1.json");
         Polygon polygon1 = TestUtils.getPolygon(file1);
         File file2 = new File("src/main/resources/polygon2.json");
         Polygon polygon2 = TestUtils.getPolygon(file2);
 >>>>>>> 42452b0a73 (finished functional test cases)
+=======
+>>>>>>> 048666b00e (fixed filepath)
         result.add(polygon1);
         result.add(polygon2);
         return result;
@@ -479,30 +489,30 @@ public class TestUtils {
     }
 
     static BatchSearchResult getExpectedBeginFuzzySearchBatch() throws StreamReadException, DatabindException, IOException {
-        File file = new File("src/main/resources/beginfuzzysearchbatchresult.json");
+        InputStream is = ClassLoader.getSystemResourceAsStream("beginfuzzysearchbatchresult.json");
         SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
         TypeReference<BatchSearchResult> interimType = new TypeReference<BatchSearchResult>(){};
-        byte[] data = Files.readAllBytes(file.toPath());
+        byte[] data = is.readAllBytes();
         BatchSearchResult expectedFuzzySearchBatch = jacksonAdapter.<BatchSearchResult>deserialize(data, interimType.getJavaType(),
            SerializerEncoding.JSON);
         return expectedFuzzySearchBatch;
     }
 
     static BatchSearchResult getExpectedBeginSearchAddressBatch() throws StreamReadException, DatabindException, IOException {
-        File file = new File("src/main/resources/beginsearchaddressbatchresult.json");
+        InputStream is = ClassLoader.getSystemResourceAsStream("beginsearchaddressbatchresult.json");
         SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
         TypeReference<BatchSearchResult> interimType = new TypeReference<BatchSearchResult>(){};
-        byte[] data = Files.readAllBytes(file.toPath());
+        byte[] data = is.readAllBytes();
         BatchSearchResult expectedSearchAddressBatch = jacksonAdapter.<BatchSearchResult>deserialize(data, interimType.getJavaType(),
            SerializerEncoding.JSON);
         return expectedSearchAddressBatch;
     }
 
     static BatchReverseSearchResult getExpectedReverseSearchAddressBatch() throws StreamReadException, DatabindException, IOException {
-        File file = new File("src/main/resources/beginreversesearchaddressbatchresult.json");
+        InputStream is = ClassLoader.getSystemResourceAsStream("beginreversesearchaddressbatchresult.json");
         SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
         TypeReference<BatchReverseSearchResult> interimType = new TypeReference<BatchReverseSearchResult>(){};
-        byte[] data = Files.readAllBytes(file.toPath());
+        byte[] data = is.readAllBytes();
         BatchReverseSearchResult expectedReverseSearchAddressBatch = jacksonAdapter.<BatchReverseSearchResult>deserialize(data, interimType.getJavaType(),
            SerializerEncoding.JSON);
         return expectedReverseSearchAddressBatch;
