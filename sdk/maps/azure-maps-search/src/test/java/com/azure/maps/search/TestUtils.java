@@ -32,6 +32,7 @@ import com.azure.maps.search.models.SearchAddressResult;
 import com.fasterxml.jackson.core.exc.StreamReadException;
 import com.fasterxml.jackson.databind.DatabindException;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.provider.Arguments;
 
 
@@ -40,17 +41,27 @@ public class TestUtils {
     static final String FAKE_API_KEY = "1234567890";
     public static final Duration DEFAULT_POLL_INTERVAL = Duration.ofSeconds(30);
 
-    static Polygon getPolygon(File file) throws IOException {
+    static Polygon getPolygon(File file) {
         SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
         TypeReference<PolygonPrivate> interimType = new TypeReference<PolygonPrivate>(){};
-        byte[] data = Files.readAllBytes(file.toPath());
-        PolygonPrivate polygonPrivate = jacksonAdapter.<PolygonPrivate>deserialize(data, interimType.getJavaType(),
-           SerializerEncoding.JSON);
+        byte[] data = null;
+        try {
+            data = Files.readAllBytes(file.toPath());
+        } catch (IOException e) {
+            Assertions.fail("Unable to find polygon json file");
+        }
+        PolygonPrivate polygonPrivate = null;
+        try {
+            polygonPrivate = jacksonAdapter.<PolygonPrivate>deserialize(data, interimType.getJavaType(),
+               SerializerEncoding.JSON);
+        } catch (IOException e) {
+            Assertions.fail("Unable to parse polygon json file");
+        }
         Polygon polygon = Utility.toPolygon(polygonPrivate);
         return polygon;
     }
 
-    static List<Polygon> getMultiPolygonsResults() throws StreamReadException, DatabindException, IOException {
+    static List<Polygon> getMultiPolygonsResults() {
         List<Polygon> result = new ArrayList<>();
         File file1 = new File("src/main/resources/polygon1.json");
         Polygon polygon1 = TestUtils.getPolygon(file1);
@@ -61,74 +72,114 @@ public class TestUtils {
         return result;
     }
 
-    static SearchAddressResult getSearchAddressResult(File file) throws IOException {
+    static SearchAddressResult getSearchAddressResult(File file) {
         SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
         TypeReference<SearchAddressResultPrivate> interimType = new TypeReference<SearchAddressResultPrivate>(){};
-        byte[] data = Files.readAllBytes(file.toPath());
-        SearchAddressResultPrivate searchAddressResultPrivate = jacksonAdapter.<SearchAddressResultPrivate>deserialize(data, interimType.getJavaType(),
-           SerializerEncoding.JSON);
+        byte[] data = null;
+        try {
+            data = Files.readAllBytes(file.toPath());
+        } catch (IOException e) {
+            Assertions.fail("Unable to find file");
+        }
+        SearchAddressResultPrivate searchAddressResultPrivate = null;
+        try {
+            searchAddressResultPrivate = jacksonAdapter.<SearchAddressResultPrivate>deserialize(data, interimType.getJavaType(),
+               SerializerEncoding.JSON);
+        } catch (IOException e) {
+            Assertions.fail("unable to parse file");
+        }
         return Utility.toSearchAddressResult(searchAddressResultPrivate);
     }
 
-    static SearchAddressResult getExpectedFuzzySearchResults() throws IOException {
+    static SearchAddressResult getExpectedFuzzySearchResults() {
         File file = new File("src/main/resources/searchaddressresult.json");
         return getSearchAddressResult(file);
     }
 
 
-    static SearchAddressResult getExpectedSearchPointOfInterestResults() throws StreamReadException, DatabindException, IOException {
+    static SearchAddressResult getExpectedSearchPointOfInterestResults() {
         File file = new File("src/main/resources/searchpointofinterestresult.json");
         return getSearchAddressResult(file);
     }
 
-    static SearchAddressResult getExpectedSearchNearbyPointOfInterestResults() throws StreamReadException, DatabindException, IOException {
+    static SearchAddressResult getExpectedSearchNearbyPointOfInterestResults() {
         File file = new File("src/main/resources/searchnearbypointofinterestresult.json");
         return getSearchAddressResult(file);
     }
 
-    static SearchAddressResult getExpectedSearchPointOfInterestCategoryResults() throws StreamReadException, DatabindException, IOException {
+    static SearchAddressResult getExpectedSearchPointOfInterestCategoryResults() {
         File file = new File("src/main/resources/searchpointofinterestcategoryresult.json");
         return getSearchAddressResult(file);
     }
 
-    static PointOfInterestCategoryTreeResult getExpectedSearchPointOfInterestCategoryTreeResults() throws StreamReadException, DatabindException, IOException {
+    static PointOfInterestCategoryTreeResult getExpectedSearchPointOfInterestCategoryTreeResults() {
         File file = new File("src/main/resources/getpointofinterestcategorytreeresult.json");
         SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
         TypeReference<PointOfInterestCategoryTreeResult> interimType = new TypeReference<PointOfInterestCategoryTreeResult>(){};
-        byte[] data = Files.readAllBytes(file.toPath());
-        PointOfInterestCategoryTreeResult pointOfInterestCategoryTreeResult = jacksonAdapter.<PointOfInterestCategoryTreeResult>deserialize(data, interimType.getJavaType(),
-           SerializerEncoding.JSON);
+        byte[] data = null;
+        try {
+            data = Files.readAllBytes(file.toPath());
+        } catch (IOException e) {
+            Assertions.fail("Unable to find getpointofinterestcategorytreeresult.json");
+        }
+        PointOfInterestCategoryTreeResult pointOfInterestCategoryTreeResult = null;
+        try {
+            pointOfInterestCategoryTreeResult = jacksonAdapter.<PointOfInterestCategoryTreeResult>deserialize(data, interimType.getJavaType(),
+               SerializerEncoding.JSON);
+        } catch (IOException e) {
+            Assertions.fail("Unable to parse getpointofinterestcategorytreeresult.json");
+        }
         return pointOfInterestCategoryTreeResult;
     }
 
-    static SearchAddressResult getExpectedSearchAddressResults() throws StreamReadException, DatabindException, IOException {
+    static SearchAddressResult getExpectedSearchAddressResults() {
         File file = new File("src/main/resources/searchaddressresult.json");
         return getSearchAddressResult(file);
     }
 
-    static ReverseSearchAddressResult getExpectedReverseSearchAddressResults() throws StreamReadException, DatabindException, IOException {
+    static ReverseSearchAddressResult getExpectedReverseSearchAddressResults() {
         File file = new File("src/main/resources/reversesearchaddressresult.json");
         SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
         TypeReference<ReverseSearchAddressResultPrivate> interimType = new TypeReference<ReverseSearchAddressResultPrivate>(){};
-        byte[] data = Files.readAllBytes(file.toPath());
-        ReverseSearchAddressResultPrivate searchReverseAddressResultPrivate = jacksonAdapter.<ReverseSearchAddressResultPrivate>deserialize(data, interimType.getJavaType(),
-           SerializerEncoding.JSON);
+        byte[] data = null;
+        try {
+            data = Files.readAllBytes(file.toPath());
+        } catch (IOException e) {
+            Assertions.fail("Unable to find reversesearchaddressresult.json");
+        }
+        ReverseSearchAddressResultPrivate searchReverseAddressResultPrivate = null;
+        try {
+            searchReverseAddressResultPrivate = jacksonAdapter.<ReverseSearchAddressResultPrivate>deserialize(data, interimType.getJavaType(),
+               SerializerEncoding.JSON);
+        } catch (IOException e) {
+            Assertions.fail("Unable to parse reversesearchaddressresult.json");
+        }
         ReverseSearchAddressResult reverseSearchAddressResult = Utility.toReverseSearchAddressResult(searchReverseAddressResultPrivate);
         return reverseSearchAddressResult;
     }
 
-    static ReverseSearchCrossStreetAddressResult getExpectedReverseSearchCrossStreetAddressResults() throws StreamReadException, DatabindException, IOException {
+    static ReverseSearchCrossStreetAddressResult getExpectedReverseSearchCrossStreetAddressResults() {
         File file = new File("src/main/resources/reversesearchcrossstreetaddressresult.json");
         SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
         TypeReference<ReverseSearchCrossStreetAddressResultPrivate> interimType = new TypeReference<ReverseSearchCrossStreetAddressResultPrivate>(){};
-        byte[] data = Files.readAllBytes(file.toPath());
-        ReverseSearchCrossStreetAddressResultPrivate reverseSearchCrossStreetAddressResultPrivate = jacksonAdapter.<ReverseSearchCrossStreetAddressResultPrivate>deserialize(data, interimType.getJavaType(),
-           SerializerEncoding.JSON);
+        byte[] data = null;
+        try {
+            data = Files.readAllBytes(file.toPath());
+        } catch (IOException e) {
+            Assertions.fail("Unable to find reversesearchcrossstreetaddressresult.json");
+        }
+        ReverseSearchCrossStreetAddressResultPrivate reverseSearchCrossStreetAddressResultPrivate = null;
+        try {
+            reverseSearchCrossStreetAddressResultPrivate = jacksonAdapter.<ReverseSearchCrossStreetAddressResultPrivate>deserialize(data, interimType.getJavaType(),
+               SerializerEncoding.JSON);
+        } catch (IOException e) {
+            Assertions.fail("Unable to parse reversesearchcrossstreetaddressresult.json");
+        }
         ReverseSearchCrossStreetAddressResult reverseSearchCrossStreetAddressResult = Utility.toReverseSearchCrossStreetAddressResult(reverseSearchCrossStreetAddressResultPrivate);
         return reverseSearchCrossStreetAddressResult;
     }
 
-    static SearchAddressResult getExpectedSearchStructuredAddress() throws StreamReadException, DatabindException, IOException {
+    static SearchAddressResult getExpectedSearchStructuredAddress() {
         File file = new File("src/main/resources/searchstructuredaddressresult.json");
         return getSearchAddressResult(file);
     }
@@ -142,7 +193,7 @@ public class TestUtils {
         return obj;
     }
 
-    static SearchAddressResult getExpectedSearchInsideGeometry() throws StreamReadException, DatabindException, IOException {
+    static SearchAddressResult getExpectedSearchInsideGeometry() {
         File file = new File("src/main/resources/searchinsidegeometryresult.json");
         return getSearchAddressResult(file);
     }
@@ -156,7 +207,7 @@ public class TestUtils {
         return obj;
     }
 
-    static SearchAddressResult getExpectedSearchAlongRoute() throws StreamReadException, DatabindException, IOException {
+    static SearchAddressResult getExpectedSearchAlongRoute() {
         File file = new File("src/main/resources/searchalongrouteresult.json");
         return getSearchAddressResult(file);
     }

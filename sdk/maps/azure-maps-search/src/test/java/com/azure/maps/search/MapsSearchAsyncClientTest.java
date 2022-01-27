@@ -65,11 +65,7 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
         List<String> geometryIds = Arrays.asList("8bceafe8-3d98-4445-b29b-fd81d3e9adf5", "00005858-5800-1200-0000-0000773694ca");
         StepVerifier.create(client.getPolygons(geometryIds))
         .assertNext(actualResults -> {
-                try {
-                    validateGetPolygons(TestUtils.getMultiPolygonsResults(), actualResults);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            validateGetPolygons(TestUtils.getMultiPolygonsResults(), actualResults);
         }).verifyComplete();
     }
 
@@ -83,11 +79,7 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
         StepVerifier.create(client.getPolygonsWithResponse(geometryIds, Context.NONE))
                 .assertNext(response ->
                 {
-                    try {
-                        validateGetPolygonsWithResponse(TestUtils.getMultiPolygonsResults(), 200, response);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    validateGetPolygonsWithResponse(TestUtils.getMultiPolygonsResults(), 200, response);
                 })
                 .verifyComplete();
     }
@@ -112,11 +104,7 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
         MapsSearchAsyncClient client = getMapsSearchAsyncClient(httpClient, serviceVersion);
         StepVerifier.create(client.fuzzySearch(new FuzzySearchOptions("starbucks"))).assertNext(actualResults -> 
         {
-            try {
-                validateFuzzySearch(TestUtils.getExpectedFuzzySearchResults(), actualResults);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            validateFuzzySearch(TestUtils.getExpectedFuzzySearchResults(), actualResults);
         }).verifyComplete();
     }
 
@@ -129,11 +117,7 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
         StepVerifier.create(client.fuzzySearchWithResponse(new FuzzySearchOptions("starbucks"), Context.NONE))
                 .assertNext(response ->
                 {
-                    try {
-                        validateFuzzySearchWithResponse(TestUtils.getExpectedFuzzySearchResults(), 200, response);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    validateFuzzySearchWithResponse(TestUtils.getExpectedFuzzySearchResults(), 200, response);
                 })
                 .verifyComplete();
     }
@@ -157,11 +141,7 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
         MapsSearchAsyncClient client = getMapsSearchAsyncClient(httpClient, serviceVersion);
         StepVerifier.create(client.searchPointOfInterest(new SearchPointOfInterestOptions("caviar lobster pasta", new LatLong(36.98844, -121.97483)))).assertNext(actualResults -> 
         {
-            try {
-                validateSearchPointOfInterest(TestUtils.getExpectedSearchPointOfInterestResults(), actualResults);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            validateSearchPointOfInterest(TestUtils.getExpectedSearchPointOfInterestResults(), actualResults);
         }).verifyComplete();
     }
 
@@ -174,11 +154,7 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
         StepVerifier.create(client.searchPointOfInterestWithResponse(new SearchPointOfInterestOptions("caviar lobster pasta", new LatLong(36.98844, -121.97483)), Context.NONE))
                 .assertNext(response ->
                 {
-                    try {
-                        validateSearchPointOfInterestWithResponse(TestUtils.getExpectedSearchPointOfInterestResults(), 200, response);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    validateSearchPointOfInterestWithResponse(TestUtils.getExpectedSearchPointOfInterestResults(), 200, response);
                 })
                 .verifyComplete();
     }
@@ -203,11 +179,7 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
         StepVerifier.create(client.searchNearbyPointOfInterest(
             new SearchNearbyPointsOfInterestOptions(new LatLong(40.706270, -74.011454)))).assertNext(actualResults -> 
         {
-            try {
-                validateSearchNearbyPointOfInterest(TestUtils.getExpectedSearchNearbyPointOfInterestResults(), actualResults);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            validateSearchNearbyPointOfInterest(TestUtils.getExpectedSearchNearbyPointOfInterestResults(), actualResults);
         }).verifyComplete();
     }
 
@@ -220,11 +192,7 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
         StepVerifier.create(client.searchNearbyPointOfInterestWithResponse(new SearchNearbyPointsOfInterestOptions(new LatLong(40.706270, -74.011454)), Context.NONE))
                 .assertNext(response ->
                 {
-                    try {
-                        validateSearchNearbyPointOfInterestWithResponse(TestUtils.getExpectedSearchNearbyPointOfInterestResults(), 200, response);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    validateSearchNearbyPointOfInterestWithResponse(TestUtils.getExpectedSearchNearbyPointOfInterestResults(), 200, response);
                 })
                 .verifyComplete();
     }
@@ -249,11 +217,7 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
         StepVerifier.create(client.searchPointOfInterestCategory(
             new SearchPointOfInterestCategoryOptions("atm", new LatLong(40.706270, -74.011454)))).assertNext(actualResults -> 
         {
-            try {
-                validateSearchPointOfInterestCategory(TestUtils.getExpectedSearchPointOfInterestCategoryResults(), actualResults);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            validateSearchPointOfInterestCategory(TestUtils.getExpectedSearchPointOfInterestCategoryResults(), actualResults);
         }).verifyComplete();
     }
 
@@ -267,11 +231,7 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
             new SearchPointOfInterestCategoryOptions("atm", new LatLong(40.706270, -74.011454)), Context.NONE))
                 .assertNext(response ->
                 {
-                    try {
-                        validateSearchPointOfInterestCategoryWithResponse(TestUtils.getExpectedSearchPointOfInterestCategoryResults(), 200, response);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    validateSearchPointOfInterestCategoryWithResponse(TestUtils.getExpectedSearchPointOfInterestCategoryResults(), 200, response);
                 })
                 .verifyComplete();
     }
@@ -296,11 +256,7 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
         MapsSearchAsyncClient client = getMapsSearchAsyncClient(httpClient, serviceVersion);
         StepVerifier.create(client.getPointOfInterestCategoryTree(null)).assertNext(actualResults -> 
         {
-            try {
-                validateSearchPointOfInterestCategoryTree(TestUtils.getExpectedSearchPointOfInterestCategoryTreeResults(), actualResults);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            validateSearchPointOfInterestCategoryTree(TestUtils.getExpectedSearchPointOfInterestCategoryTreeResults(), actualResults);
         }).verifyComplete();
     }
 
@@ -312,11 +268,7 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
         StepVerifier.create(client.getPointOfInterestCategoryTreeWithResponse("pizza", Context.NONE))
                 .assertNext(response ->
                 {
-                    try {
-                        validateSearchPointOfInterestCategoryTreeWithResponse(TestUtils.getExpectedSearchPointOfInterestCategoryTreeResults(), 200, response);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    validateSearchPointOfInterestCategoryTreeWithResponse(TestUtils.getExpectedSearchPointOfInterestCategoryTreeResults(), 200, response);
                 })
                 .verifyComplete();
     }
@@ -328,11 +280,7 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
         MapsSearchAsyncClient client = getMapsSearchAsyncClient(httpClient, serviceVersion);
         StepVerifier.create(client.searchAddress(new SearchAddressOptions("NE 24th Street, Redmond, WA 98052"))).assertNext(actualResults -> 
         {
-            try {
-                validateSearchAddress(TestUtils.getExpectedSearchAddressResults(), actualResults);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            validateSearchAddress(TestUtils.getExpectedSearchAddressResults(), actualResults);
         }).verifyComplete();
     }
 
@@ -345,11 +293,7 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
         StepVerifier.create(client.searchAddressWithResponse(new SearchAddressOptions("NE 24th Street, Redmond, WA 98052"), Context.NONE))
                 .assertNext(response ->
                 {
-                    try {
-                        validateSearchAddressWithResponse(TestUtils.getExpectedSearchAddressResults(), 200, response);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    validateSearchAddressWithResponse(TestUtils.getExpectedSearchAddressResults(), 200, response);
                 })
                 .verifyComplete();
     }
@@ -374,11 +318,7 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
         StepVerifier.create(client.reverseSearchAddress(
             new ReverseSearchAddressOptions(new LatLong(37.337, -121.89)))).assertNext(actualResults -> 
         {
-            try {
-                validateReverseSearchAddress(TestUtils.getExpectedReverseSearchAddressResults(), actualResults);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            validateReverseSearchAddress(TestUtils.getExpectedReverseSearchAddressResults(), actualResults);
         }).verifyComplete();
     }
 
@@ -392,11 +332,7 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
             new ReverseSearchAddressOptions(new LatLong(37.337, -121.89)), Context.NONE))
                 .assertNext(response ->
                 {
-                    try {
-                        validateReverseSearchAddressWithResponse(TestUtils.getExpectedReverseSearchAddressResults(), 200, response);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    validateReverseSearchAddressWithResponse(TestUtils.getExpectedReverseSearchAddressResults(), 200, response);
                 })
                 .verifyComplete();
     }
@@ -422,11 +358,7 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
         StepVerifier.create(client.reverseSearchCrossStreetAddress(
             new ReverseSearchCrossStreetAddressOptions(new LatLong(37.337, -121.89)))).assertNext(actualResults -> 
         {
-            try {
-                validateReverseSearchCrossStreetAddress(TestUtils.getExpectedReverseSearchCrossStreetAddressResults(), actualResults);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            validateReverseSearchCrossStreetAddress(TestUtils.getExpectedReverseSearchCrossStreetAddressResults(), actualResults);
         }).verifyComplete();
     }
 
@@ -440,11 +372,7 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
             new ReverseSearchCrossStreetAddressOptions(new LatLong(37.337, -121.89)), Context.NONE))
                 .assertNext(response ->
                 {
-                    try {
-                        validateReverseSearchCrossStreetAddressWithResponse(TestUtils.getExpectedReverseSearchCrossStreetAddressResults(), 200, response);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    validateReverseSearchCrossStreetAddressWithResponse(TestUtils.getExpectedReverseSearchCrossStreetAddressResults(), 200, response);
                 })
                 .verifyComplete();
     }
@@ -469,11 +397,7 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
         MapsSearchAsyncClient client = getMapsSearchAsyncClient(httpClient, serviceVersion);
         StepVerifier.create(client.searchStructuredAddress(new StructuredAddress("US"), null)).assertNext(actualResults -> 
         {
-            try {
-                validateSearchStructuredAddress(TestUtils.getExpectedSearchStructuredAddress(), actualResults);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            validateSearchStructuredAddress(TestUtils.getExpectedSearchStructuredAddress(), actualResults);
         }).verifyComplete();
     }
 
@@ -488,11 +412,7 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
             new SearchStructuredAddressOptions(), null))
                 .assertNext(response ->
                 {
-                    try {
-                        validateSearchStructuredAddressWithResponse(TestUtils.getExpectedSearchStructuredAddress(), 200, response);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    validateSearchStructuredAddressWithResponse(TestUtils.getExpectedSearchStructuredAddress(), 200, response);
                 })
                 .verifyComplete();
     }
@@ -519,11 +439,7 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
         StepVerifier.create(client.searchInsideGeometry(
             new SearchInsideGeometryOptions("pizza", obj))).assertNext(actualResults -> 
         {
-            try {
-                validateSearchInsideGeometry(TestUtils.getExpectedSearchInsideGeometry(), actualResults);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            validateSearchInsideGeometry(TestUtils.getExpectedSearchInsideGeometry(), actualResults);
         }).verifyComplete();
     }
 
@@ -539,11 +455,7 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
             new SearchInsideGeometryOptions("pizza", obj), null))
                 .assertNext(response ->
                 {
-                    try {
-                        validateSearchInsideGeometryWithResponse(TestUtils.getExpectedSearchInsideGeometry(), 200, response);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    validateSearchInsideGeometryWithResponse(TestUtils.getExpectedSearchInsideGeometry(), 200, response);
                 })
                 .verifyComplete();
     }
@@ -572,11 +484,7 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
         GeoLineString obj = TestUtils.getGeoLineString(file);
         StepVerifier.create(client.searchAlongRoute(new SearchAlongRouteOptions("burger", 1000, obj))).assertNext(actualResults -> 
         {
-            try {
-                validateSearchAlongRoute(TestUtils.getExpectedSearchAlongRoute(), actualResults);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            validateSearchAlongRoute(TestUtils.getExpectedSearchAlongRoute(), actualResults);
         }).verifyComplete();
     } 
 
@@ -592,11 +500,7 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
             new SearchAlongRouteOptions("burger", 1000, obj), null))
                 .assertNext(response ->
                 {
-                    try {
-                        validateSearchAlongRouteWithResponse(TestUtils.getExpectedSearchAlongRoute(), 200, response);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    validateSearchAlongRouteWithResponse(TestUtils.getExpectedSearchAlongRoute(), 200, response);
                 })
                 .verifyComplete();
     }
