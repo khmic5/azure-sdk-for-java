@@ -28,6 +28,7 @@ import com.azure.identity.EnvironmentCredentialBuilder;
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import com.azure.maps.search.models.BatchReverseSearchResult;
 import com.azure.maps.search.models.BatchSearchResult;
 import com.azure.maps.search.models.PointOfInterestCategory;
@@ -39,24 +40,25 @@ import com.azure.maps.search.models.BatchSearchResult;
 >>>>>>> a272f1c91a (completed basic client test cases)
 =======
 import com.azure.maps.search.models.Address;
+=======
+>>>>>>> 26420554db (fixed all pr changes)
 import com.azure.maps.search.models.BatchReverseSearchResult;
 import com.azure.maps.search.models.BatchSearchResult;
 import com.azure.maps.search.models.PointOfInterestCategory;
 >>>>>>> 42452b0a73 (finished functional test cases)
 import com.azure.maps.search.models.PointOfInterestCategoryTreeResult;
 import com.azure.maps.search.models.Polygon;
-import com.azure.maps.search.models.ReverseSearchAddressBatchItem;
 import com.azure.maps.search.models.ReverseSearchAddressResult;
-import com.azure.maps.search.models.ReverseSearchAddressResultItem;
 import com.azure.maps.search.models.ReverseSearchCrossStreetAddressResult;
-import com.azure.maps.search.models.ReverseSearchCrossStreetAddressResultItem;
-import com.azure.maps.search.models.SearchAddressBatchItem;
 import com.azure.maps.search.models.SearchAddressResult;
 import com.azure.maps.search.models.SearchAddressResultItem;
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 import com.azure.core.credential.AzureKeyCredential;
 >>>>>>> 42452b0a73 (finished functional test cases)
+=======
+>>>>>>> 26420554db (fixed all pr changes)
 
 public class MapsSearchClientTestBase extends TestBase {
     static final String FAKE_API_KEY = "1234567890";
