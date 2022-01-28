@@ -33,6 +33,7 @@ import java.io.File;
 import java.io.IOException;
 
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -65,7 +66,11 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
         List<String> geometryIds = Arrays.asList("8bceafe8-3d98-4445-b29b-fd81d3e9adf5", "00005858-5800-1200-0000-0000773694ca");
         StepVerifier.create(client.getPolygons(geometryIds))
         .assertNext(actualResults -> {
-            validateGetPolygons(TestUtils.getMultiPolygonsResults(), actualResults);
+            try {
+                validateGetPolygons(TestUtils.getMultiPolygonsResults(), actualResults);
+            } catch (IOException e) {
+                Assertions.fail("Unable to get polygon from json file");
+            }
         }).verifyComplete();
     }
 
@@ -79,7 +84,11 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
         StepVerifier.create(client.getPolygonsWithResponse(geometryIds, Context.NONE))
                 .assertNext(response ->
                 {
-                    validateGetPolygonsWithResponse(TestUtils.getMultiPolygonsResults(), 200, response);
+                    try {
+                        validateGetPolygonsWithResponse(TestUtils.getMultiPolygonsResults(), 200, response);
+                    } catch (IOException e) {
+                        Assertions.fail("Unable to get polygon from json file");
+                    }
                 })
                 .verifyComplete();
     }
@@ -104,7 +113,11 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
         MapsSearchAsyncClient client = getMapsSearchAsyncClient(httpClient, serviceVersion);
         StepVerifier.create(client.fuzzySearch(new FuzzySearchOptions("starbucks"))).assertNext(actualResults -> 
         {
-            validateFuzzySearch(TestUtils.getExpectedFuzzySearchResults(), actualResults);
+            try {
+                validateFuzzySearch(TestUtils.getExpectedFuzzySearchResults(), actualResults);
+            } catch (IOException e) {
+                Assertions.fail("Unable to get SearchAddressResult from json file");
+            }
         }).verifyComplete();
     }
 
@@ -117,7 +130,11 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
         StepVerifier.create(client.fuzzySearchWithResponse(new FuzzySearchOptions("starbucks"), Context.NONE))
                 .assertNext(response ->
                 {
-                    validateFuzzySearchWithResponse(TestUtils.getExpectedFuzzySearchResults(), 200, response);
+                    try {
+                        validateFuzzySearchWithResponse(TestUtils.getExpectedFuzzySearchResults(), 200, response);
+                    } catch (IOException e) {
+                        Assertions.fail("Unable to get SearchAddressResult from json file");
+                    }
                 })
                 .verifyComplete();
     }
@@ -141,7 +158,11 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
         MapsSearchAsyncClient client = getMapsSearchAsyncClient(httpClient, serviceVersion);
         StepVerifier.create(client.searchPointOfInterest(new SearchPointOfInterestOptions("caviar lobster pasta", new LatLong(36.98844, -121.97483)))).assertNext(actualResults -> 
         {
-            validateSearchPointOfInterest(TestUtils.getExpectedSearchPointOfInterestResults(), actualResults);
+            try {
+                validateSearchPointOfInterest(TestUtils.getExpectedSearchPointOfInterestResults(), actualResults);
+            } catch (IOException e) {
+                Assertions.fail("Unable to get SearchAddressResult from json file");
+            }
         }).verifyComplete();
     }
 
@@ -154,7 +175,11 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
         StepVerifier.create(client.searchPointOfInterestWithResponse(new SearchPointOfInterestOptions("caviar lobster pasta", new LatLong(36.98844, -121.97483)), Context.NONE))
                 .assertNext(response ->
                 {
-                    validateSearchPointOfInterestWithResponse(TestUtils.getExpectedSearchPointOfInterestResults(), 200, response);
+                    try {
+                        validateSearchPointOfInterestWithResponse(TestUtils.getExpectedSearchPointOfInterestResults(), 200, response);
+                    } catch (IOException e) {
+                        Assertions.fail("Unable to get SearchAddressResult from json file");
+                    }
                 })
                 .verifyComplete();
     }
@@ -179,7 +204,11 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
         StepVerifier.create(client.searchNearbyPointOfInterest(
             new SearchNearbyPointsOfInterestOptions(new LatLong(40.706270, -74.011454)))).assertNext(actualResults -> 
         {
-            validateSearchNearbyPointOfInterest(TestUtils.getExpectedSearchNearbyPointOfInterestResults(), actualResults);
+            try {
+                validateSearchNearbyPointOfInterest(TestUtils.getExpectedSearchNearbyPointOfInterestResults(), actualResults);
+            } catch (IOException e) {
+                Assertions.fail("Unable to get SearchAddressResult from json file");
+            }
         }).verifyComplete();
     }
 
@@ -192,7 +221,11 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
         StepVerifier.create(client.searchNearbyPointOfInterestWithResponse(new SearchNearbyPointsOfInterestOptions(new LatLong(40.706270, -74.011454)), Context.NONE))
                 .assertNext(response ->
                 {
-                    validateSearchNearbyPointOfInterestWithResponse(TestUtils.getExpectedSearchNearbyPointOfInterestResults(), 200, response);
+                    try {
+                        validateSearchNearbyPointOfInterestWithResponse(TestUtils.getExpectedSearchNearbyPointOfInterestResults(), 200, response);
+                    } catch (IOException e) {
+                        Assertions.fail("Unable to get SearchAddressResult from json file");
+                    }
                 })
                 .verifyComplete();
     }
@@ -217,7 +250,11 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
         StepVerifier.create(client.searchPointOfInterestCategory(
             new SearchPointOfInterestCategoryOptions("atm", new LatLong(40.706270, -74.011454)))).assertNext(actualResults -> 
         {
-            validateSearchPointOfInterestCategory(TestUtils.getExpectedSearchPointOfInterestCategoryResults(), actualResults);
+            try {
+                validateSearchPointOfInterestCategory(TestUtils.getExpectedSearchPointOfInterestCategoryResults(), actualResults);
+            } catch (IOException e) {
+                Assertions.fail("Unable to get SearchAddressResult from json file");
+            }
         }).verifyComplete();
     }
 
@@ -231,7 +268,11 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
             new SearchPointOfInterestCategoryOptions("atm", new LatLong(40.706270, -74.011454)), Context.NONE))
                 .assertNext(response ->
                 {
-                    validateSearchPointOfInterestCategoryWithResponse(TestUtils.getExpectedSearchPointOfInterestCategoryResults(), 200, response);
+                    try {
+                        validateSearchPointOfInterestCategoryWithResponse(TestUtils.getExpectedSearchPointOfInterestCategoryResults(), 200, response);
+                    } catch (IOException e) {
+                        Assertions.fail("Unable to get SearchAddressResult from json file");
+                    }
                 })
                 .verifyComplete();
     }
@@ -256,7 +297,11 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
         MapsSearchAsyncClient client = getMapsSearchAsyncClient(httpClient, serviceVersion);
         StepVerifier.create(client.getPointOfInterestCategoryTree(null)).assertNext(actualResults -> 
         {
-            validateSearchPointOfInterestCategoryTree(TestUtils.getExpectedSearchPointOfInterestCategoryTreeResults(), actualResults);
+            try {
+                validateSearchPointOfInterestCategoryTree(TestUtils.getExpectedSearchPointOfInterestCategoryTreeResults(), actualResults);
+            } catch (IOException e) {
+                Assertions.fail("Unable to get PointOfInterestCategoryTreeResult from json file");
+            }
         }).verifyComplete();
     }
 
@@ -268,7 +313,11 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
         StepVerifier.create(client.getPointOfInterestCategoryTreeWithResponse("pizza", Context.NONE))
                 .assertNext(response ->
                 {
-                    validateSearchPointOfInterestCategoryTreeWithResponse(TestUtils.getExpectedSearchPointOfInterestCategoryTreeResults(), 200, response);
+                    try {
+                        validateSearchPointOfInterestCategoryTreeWithResponse(TestUtils.getExpectedSearchPointOfInterestCategoryTreeResults(), 200, response);
+                    } catch (IOException e) {
+                        Assertions.fail("Unable to get PointOfInterestCategoryTreeResult from json file");
+                    }
                 })
                 .verifyComplete();
     }
@@ -280,7 +329,11 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
         MapsSearchAsyncClient client = getMapsSearchAsyncClient(httpClient, serviceVersion);
         StepVerifier.create(client.searchAddress(new SearchAddressOptions("NE 24th Street, Redmond, WA 98052"))).assertNext(actualResults -> 
         {
-            validateSearchAddress(TestUtils.getExpectedSearchAddressResults(), actualResults);
+            try {
+                validateSearchAddress(TestUtils.getExpectedSearchAddressResults(), actualResults);
+            } catch (IOException e) {
+                Assertions.fail("Unable to get SearchAddressResult from json file");
+            }
         }).verifyComplete();
     }
 
@@ -293,7 +346,11 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
         StepVerifier.create(client.searchAddressWithResponse(new SearchAddressOptions("NE 24th Street, Redmond, WA 98052"), Context.NONE))
                 .assertNext(response ->
                 {
-                    validateSearchAddressWithResponse(TestUtils.getExpectedSearchAddressResults(), 200, response);
+                    try {
+                        validateSearchAddressWithResponse(TestUtils.getExpectedSearchAddressResults(), 200, response);
+                    } catch (IOException e) {
+                        Assertions.fail("Unable to get SearchAddressResult from json file");
+                    }
                 })
                 .verifyComplete();
     }
@@ -318,7 +375,11 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
         StepVerifier.create(client.reverseSearchAddress(
             new ReverseSearchAddressOptions(new LatLong(37.337, -121.89)))).assertNext(actualResults -> 
         {
-            validateReverseSearchAddress(TestUtils.getExpectedReverseSearchAddressResults(), actualResults);
+            try {
+                validateReverseSearchAddress(TestUtils.getExpectedReverseSearchAddressResults(), actualResults);
+            } catch (IOException e) {
+                Assertions.fail("Unable to get ReverseSearchAddressResult from json file");
+            }
         }).verifyComplete();
     }
 
@@ -332,7 +393,11 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
             new ReverseSearchAddressOptions(new LatLong(37.337, -121.89)), Context.NONE))
                 .assertNext(response ->
                 {
-                    validateReverseSearchAddressWithResponse(TestUtils.getExpectedReverseSearchAddressResults(), 200, response);
+                    try {
+                        validateReverseSearchAddressWithResponse(TestUtils.getExpectedReverseSearchAddressResults(), 200, response);
+                    } catch (IOException e) {
+                        Assertions.fail("Unable to get ReverseSearchAddressResult from json file");
+                    }
                 })
                 .verifyComplete();
     }
@@ -358,7 +423,11 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
         StepVerifier.create(client.reverseSearchCrossStreetAddress(
             new ReverseSearchCrossStreetAddressOptions(new LatLong(37.337, -121.89)))).assertNext(actualResults -> 
         {
-            validateReverseSearchCrossStreetAddress(TestUtils.getExpectedReverseSearchCrossStreetAddressResults(), actualResults);
+            try {
+                validateReverseSearchCrossStreetAddress(TestUtils.getExpectedReverseSearchCrossStreetAddressResults(), actualResults);
+            } catch (IOException e) {
+                Assertions.fail("Unable to get ReverseSearchCrossStreetAddressResult from json file");
+            }
         }).verifyComplete();
     }
 
@@ -372,7 +441,11 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
             new ReverseSearchCrossStreetAddressOptions(new LatLong(37.337, -121.89)), Context.NONE))
                 .assertNext(response ->
                 {
-                    validateReverseSearchCrossStreetAddressWithResponse(TestUtils.getExpectedReverseSearchCrossStreetAddressResults(), 200, response);
+                    try {
+                        validateReverseSearchCrossStreetAddressWithResponse(TestUtils.getExpectedReverseSearchCrossStreetAddressResults(), 200, response);
+                    } catch (IOException e) {
+                        Assertions.fail("Unable to get ReverseSearchCrossStreetAddressResult from json file");
+                    }
                 })
                 .verifyComplete();
     }
@@ -397,7 +470,11 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
         MapsSearchAsyncClient client = getMapsSearchAsyncClient(httpClient, serviceVersion);
         StepVerifier.create(client.searchStructuredAddress(new StructuredAddress("US"), null)).assertNext(actualResults -> 
         {
-            validateSearchStructuredAddress(TestUtils.getExpectedSearchStructuredAddress(), actualResults);
+            try {
+                validateSearchStructuredAddress(TestUtils.getExpectedSearchStructuredAddress(), actualResults);
+            } catch (IOException e) {
+                Assertions.fail("Unable to get SearchAddressResult from json file");
+            }
         }).verifyComplete();
     }
 
@@ -412,7 +489,11 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
             new SearchStructuredAddressOptions(), null))
                 .assertNext(response ->
                 {
-                    validateSearchStructuredAddressWithResponse(TestUtils.getExpectedSearchStructuredAddress(), 200, response);
+                    try {
+                        validateSearchStructuredAddressWithResponse(TestUtils.getExpectedSearchStructuredAddress(), 200, response);
+                    } catch (IOException e) {
+                        Assertions.fail("Unable to get SearchAddressResult from json file");
+                    }
                 })
                 .verifyComplete();
     }
@@ -439,7 +520,11 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
         StepVerifier.create(client.searchInsideGeometry(
             new SearchInsideGeometryOptions("pizza", obj))).assertNext(actualResults -> 
         {
-            validateSearchInsideGeometry(TestUtils.getExpectedSearchInsideGeometry(), actualResults);
+            try {
+                validateSearchInsideGeometry(TestUtils.getExpectedSearchInsideGeometry(), actualResults);
+            } catch (IOException e) {
+                Assertions.fail("Unable to get SearchAddressResult from json file");
+            }
         }).verifyComplete();
     }
 
@@ -455,7 +540,11 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
             new SearchInsideGeometryOptions("pizza", obj), null))
                 .assertNext(response ->
                 {
-                    validateSearchInsideGeometryWithResponse(TestUtils.getExpectedSearchInsideGeometry(), 200, response);
+                    try {
+                        validateSearchInsideGeometryWithResponse(TestUtils.getExpectedSearchInsideGeometry(), 200, response);
+                    } catch (IOException e) {
+                        Assertions.fail("Unable to get SearchAddressResult from json file");
+                    }
                 })
                 .verifyComplete();
     }
@@ -484,7 +573,11 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
         GeoLineString obj = TestUtils.getGeoLineString(file);
         StepVerifier.create(client.searchAlongRoute(new SearchAlongRouteOptions("burger", 1000, obj))).assertNext(actualResults -> 
         {
-            validateSearchAlongRoute(TestUtils.getExpectedSearchAlongRoute(), actualResults);
+            try {
+                validateSearchAlongRoute(TestUtils.getExpectedSearchAlongRoute(), actualResults);
+            } catch (IOException e) {
+                Assertions.fail("Unable to get SearchAddressResult from json file");
+            }
         }).verifyComplete();
     } 
 
@@ -500,7 +593,11 @@ public class MapsSearchAsyncClientTest extends MapsSearchClientTestBase {
             new SearchAlongRouteOptions("burger", 1000, obj), null))
                 .assertNext(response ->
                 {
-                    validateSearchAlongRouteWithResponse(TestUtils.getExpectedSearchAlongRoute(), 200, response);
+                    try {
+                        validateSearchAlongRouteWithResponse(TestUtils.getExpectedSearchAlongRoute(), 200, response);
+                    } catch (IOException e) {
+                        Assertions.fail("Unable to get SearchAddressResult from json file");
+                    }
                 })
                 .verifyComplete();
     }
