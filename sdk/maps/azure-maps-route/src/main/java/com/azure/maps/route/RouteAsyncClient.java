@@ -30,7 +30,6 @@ import com.azure.maps.route.implementation.models.RouteDirectionParameters;
 import com.azure.maps.route.implementation.models.RouteDirections;
 import com.azure.maps.route.implementation.models.RouteDirectionsBatchResult;
 import com.azure.maps.route.implementation.models.RouteInstructionsType;
-import com.azure.maps.route.implementation.models.RouteMatrixQuery;
 import com.azure.maps.route.implementation.models.RouteMatrixResult;
 import com.azure.maps.route.implementation.models.RouteRangeResult;
 import com.azure.maps.route.implementation.models.RouteRepresentationForBestOrder;
@@ -42,6 +41,7 @@ import com.azure.maps.route.implementation.models.TravelMode;
 import com.azure.maps.route.implementation.models.VehicleEngineType;
 import com.azure.maps.route.implementation.models.VehicleLoadType;
 import com.azure.maps.route.implementation.models.WindingnessLevel;
+import com.azure.maps.route.models.RouteDirectionsOptions;
 import com.azure.maps.route.models.RouteMatrixOptions;
 
 import reactor.core.publisher.Mono;
@@ -159,518 +159,6 @@ public final class RouteAsyncClient {
      * route will take into account factors such as current traffic and the typical road speeds on the requested day of
      * the week and time of day.
      *
-     * <p>Information returned includes the distance, estimated travel time, and a representation of the route geometry.
-     * Additional routing information such as optimized waypoint order or turn by turn instructions is also available,
-     * depending on the options selected.
-     *
-     * <p>Routing service provides a set of parameters for a detailed description of vehicle-specific Consumption Model.
-     * Please check [Consumption Model](https://docs.microsoft.com/azure/azure-maps/consumption-model) for detailed
-     * explanation of the concepts and parameters involved.
-     *
-     * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param routePoints The Coordinates through which the route is calculated, delimited by a colon. A minimum of two
-     *     coordinates is required. The first one is the origin and the last is the destination of the route. Optional
-     *     coordinates in-between act as WayPoints in the route. You can pass up to 150 WayPoints.
-     * @param maxAlternatives Number of desired alternative routes to be calculated. Default: 0, minimum: 0 and maximum:
-     *     5.
-     * @param alternativeType Controls the optimality, with respect to the given planning criteria, of the calculated
-     *     alternatives compared to the reference route.
-     * @param minDeviationDistance All alternative routes returned will follow the reference route (see section POST
-     *     Requests) from the origin point of the calculateRoute request for at least this number of meters. Can only be
-     *     used when reconstructing a route. The minDeviationDistance parameter cannot be used in conjunction with
-     *     arriveAt.
-     * @param arriveAt The date and time of arrival at the destination point. It must be specified as a dateTime. When a
-     *     time zone offset is not specified it will be assumed to be that of the destination point. The arriveAt value
-     *     must be in the future. The arriveAt parameter cannot be used in conjunction with departAt,
-     *     minDeviationDistance or minDeviationTime.
-     * @param departAt The date and time of departure from the origin point. Departure times apart from now must be
-     *     specified as a dateTime. When a time zone offset is not specified, it will be assumed to be that of the
-     *     origin point. The departAt value must be in the future in the date-time format (1996-12-19T16:39:57-08:00).
-     * @param minDeviationTime All alternative routes returned will follow the reference route (see section POST
-     *     Requests) from the origin point of the calculateRoute request for at least this number of seconds. Can only
-     *     be used when reconstructing a route. The minDeviationTime parameter cannot be used in conjunction with
-     *     arriveAt. Default value is 0. Setting )minDeviationTime_ to a value greater than zero has the following
-     *     consequences: - The origin point of the _calculateRoute_ Request must be on (or very near) the input
-     *     reference route. - If this is not the case, an error is returned. - However, the origin point does not need
-     *     to be at the beginning of the input reference route (it can be thought of as the current vehicle position on
-     *     the reference route). - The reference route, returned as the first route in the _calculateRoute_ Response,
-     *     will start at the origin point specified in the _calculateRoute_ Request. The initial part of the input
-     *     reference route up until the origin point will be excluded from the Response. - The values of
-     *     _minDeviationDistance_ and _minDeviationTime_ determine how far alternative routes will be guaranteed to
-     *     follow the reference route from the origin point onwards. - The route must use _departAt_. - The
-     *     _vehicleHeading_ is ignored.
-     * @param instructionsType If specified, guidance instructions will be returned. Note that the instructionsType
-     *     parameter cannot be used in conjunction with routeRepresentation=none.
-     * @param language The language parameter determines the language of the guidance messages. Proper nouns (the names
-     *     of streets, plazas, etc.) are returned in the specified language, or if that is not available, they are
-     *     returned in an available language that is close to it. Allowed values are (a subset of) the IETF language
-     *     tags. The currently supported languages are listed in the [Supported languages
-     *     section](https://docs.microsoft.com/azure/azure-maps/supported-languages).
-     *     <p>Default value: en-GB.
-     * @param computeBestWaypointOrder Re-order the route waypoints using a fast heuristic algorithm to reduce the route
-     *     length. Yields best results when used in conjunction with routeType _shortest_. Notice that origin and
-     *     destination are excluded from the optimized waypoint indices. To include origin and destination in the
-     *     response, please increase all the indices by 1 to account for the origin, and then add the destination as the
-     *     final index. Possible values are true or false. True computes a better order if possible, but is not allowed
-     *     to be used in conjunction with maxAlternatives value greater than 0 or in conjunction with circle waypoints.
-     *     False will use the locations in the given order and not allowed to be used in conjunction with
-     *     routeRepresentation _none_.
-     * @param routeRepresentationForBestOrder Specifies the representation of the set of routes provided as response.
-     *     This parameter value can only be used in conjunction with computeBestOrder=true.
-     * @param computeTravelTime Specifies whether to return additional travel times using different types of traffic
-     *     information (none, historic, live) as well as the default best-estimate travel time.
-     * @param vehicleHeading The directional heading of the vehicle in degrees starting at true North and continuing in
-     *     clockwise direction. North is 0 degrees, east is 90 degrees, south is 180 degrees, west is 270 degrees.
-     *     Possible values 0-359.
-     * @param report Specifies which data should be reported for diagnosis purposes. The only possible value is
-     *     _effectiveSettings_. Reports the effective parameters or data used when calling the API. In the case of
-     *     defaulted parameters the default will be reflected where the parameter was not specified by the caller.
-     * @param filterSectionType Specifies which of the section types is reported in the route response.
-     *     &lt;br&gt;&lt;br&gt;For example if sectionType = pedestrian the sections which are suited for pedestrians
-     *     only are returned. Multiple types can be used. The default sectionType refers to the travelMode input. By
-     *     default travelMode is set to car.
-     * @param vehicleAxleWeight Weight per axle of the vehicle in kg. A value of 0 means that weight restrictions per
-     *     axle are not considered.
-     * @param vehicleWidth Width of the vehicle in meters. A value of 0 means that width restrictions are not
-     *     considered.
-     * @param vehicleHeight Height of the vehicle in meters. A value of 0 means that height restrictions are not
-     *     considered.
-     * @param vehicleLength Length of the vehicle in meters. A value of 0 means that length restrictions are not
-     *     considered.
-     * @param vehicleMaxSpeed Maximum speed of the vehicle in km/hour. The max speed in the vehicle profile is used to
-     *     check whether a vehicle is allowed on motorways.
-     *     <p>* A value of 0 means that an appropriate value for the vehicle will be determined and applied during route
-     *     planning.
-     *     <p>* A non-zero value may be overridden during route planning. For example, the current traffic flow is 60
-     *     km/hour. If the vehicle maximum speed is set to 50 km/hour, the routing engine will consider 60 km/hour as
-     *     this is the current situation. If the maximum speed of the vehicle is provided as 80 km/hour but the current
-     *     traffic flow is 60 km/hour, then routing engine will again use 60 km/hour.
-     * @param vehicleWeight Weight of the vehicle in kilograms.
-     *     <p>* It is mandatory if any of the *Efficiency parameters are set.
-     *     <p>* It must be strictly positive when used in the context of the Consumption Model. Weight restrictions are
-     *     considered.
-     *     <p>* If no detailed **Consumption Model** is specified and the value of **vehicleWeight** is non-zero, then
-     *     weight restrictions are considered.
-     *     <p>* In all other cases, this parameter is ignored.
-     *     <p>Sensible Values : for **Combustion Model** : 1600, for **Electric Model** : 1900.
-     * @param isCommercialVehicle Whether the vehicle is used for commercial purposes. Commercial vehicles may not be
-     *     allowed to drive on some roads.
-     * @param windingness Level of turns for thrilling route. This parameter can only be used in conjunction with
-     *     `routeType`=thrilling.
-     * @param inclineLevel Degree of hilliness for thrilling route. This parameter can only be used in conjunction with
-     *     `routeType`=thrilling.
-     * @param travelMode The mode of travel for the requested route. If not defined, default is 'car'. Note that the
-     *     requested travelMode may not be available for the entire route. Where the requested travelMode is not
-     *     available for a particular section, the travelMode element of the response for that section will be "other".
-     *     Note that travel modes bus, motorcycle, taxi and van are BETA functionality. Full restriction data is not
-     *     available in all areas. In **calculateReachableRange** requests, the values bicycle and pedestrian must not
-     *     be used.
-     * @param avoid Specifies something that the route calculation should try to avoid when determining the route. Can
-     *     be specified multiple times in one request, for example,
-     *     '&amp;avoid=motorways&amp;avoid=tollRoads&amp;avoid=ferries'. In calculateReachableRange requests, the value
-     *     alreadyUsedRoads must not be used.
-     * @param useTrafficData Possible values: * true - Do consider all available traffic information during routing *
-     *     false - Ignore current traffic data during routing. Note that although the current traffic data is ignored
-     *     during routing, the effect of historic traffic on effective road speeds is still incorporated.
-     * @param routeType The type of route requested.
-     * @param vehicleLoadType Types of cargo that may be classified as hazardous materials and restricted from some
-     *     roads. Available vehicleLoadType values are US Hazmat classes 1 through 9, plus generic classifications for
-     *     use in other countries. Values beginning with USHazmat are for US routing while otherHazmat should be used
-     *     for all other countries. vehicleLoadType can be specified multiple times. This parameter is currently only
-     *     considered for travelMode=truck.
-     * @param vehicleEngineType Engine type of the vehicle. When a detailed Consumption Model is specified, it must be
-     *     consistent with the value of **vehicleEngineType**.
-     * @param constantSpeedConsumptionInLitersPerHundredKm Specifies the speed-dependent component of consumption.
-     *     <p>Provided as an unordered list of colon-delimited speed &amp; consumption-rate pairs. The list defines
-     *     points on a consumption curve. Consumption rates for speeds not in the list are found as follows:
-     *     <p>* by linear interpolation, if the given speed lies in between two speeds in the list
-     *     <p>* by linear extrapolation otherwise, assuming a constant (ΔConsumption/ΔSpeed) determined by the nearest
-     *     two points in the list
-     *     <p>The list must contain between 1 and 25 points (inclusive), and may not contain duplicate points for the
-     *     same speed. If it only contains a single point, then the consumption rate of that point is used without
-     *     further processing.
-     *     <p>Consumption specified for the largest speed must be greater than or equal to that of the penultimate
-     *     largest speed. This ensures that extrapolation does not lead to negative consumption rates.
-     *     <p>Similarly, consumption values specified for the two smallest speeds in the list cannot lead to a negative
-     *     consumption rate for any smaller speed.
-     *     <p>The valid range for the consumption values(expressed in l/100km) is between 0.01 and 100000.0.
-     *     <p>Sensible Values : 50,6.3:130,11.5
-     *     <p>**Note** : This parameter is required for **The Combustion Consumption Model**.
-     * @param currentFuelInLiters Specifies the current supply of fuel in liters.
-     *     <p>Sensible Values : 55.
-     * @param auxiliaryPowerInLitersPerHour Specifies the amount of fuel consumed for sustaining auxiliary systems of
-     *     the vehicle, in liters per hour.
-     *     <p>It can be used to specify consumption due to devices and systems such as AC systems, radio, heating, etc.
-     *     <p>Sensible Values : 0.2.
-     * @param fuelEnergyDensityInMegajoulesPerLiter Specifies the amount of chemical energy stored in one liter of fuel
-     *     in megajoules (MJ). It is used in conjunction with the ***Efficiency** parameters for conversions between
-     *     saved or consumed energy and fuel. For example, energy density is 34.2 MJ/l for gasoline, and 35.8 MJ/l for
-     *     Diesel fuel.
-     *     <p>This parameter is required if any ***Efficiency** parameter is set.
-     *     <p>Sensible Values : 34.2.
-     * @param accelerationEfficiency Specifies the efficiency of converting chemical energy stored in fuel to kinetic
-     *     energy when the vehicle accelerates _(i.e. KineticEnergyGained/ChemicalEnergyConsumed).
-     *     ChemicalEnergyConsumed_ is obtained by converting consumed fuel to chemical energy using
-     *     **fuelEnergyDensityInMJoulesPerLiter**.
-     *     <p>Must be paired with **decelerationEfficiency**.
-     *     <p>The range of values allowed are 0.0 to 1/**decelerationEfficiency**.
-     *     <p>Sensible Values : for **Combustion Model** : 0.33, for **Electric Model** : 0.66.
-     * @param decelerationEfficiency Specifies the efficiency of converting kinetic energy to saved (not consumed) fuel
-     *     when the vehicle decelerates _(i.e. ChemicalEnergySaved/KineticEnergyLost). ChemicalEnergySaved_ is obtained
-     *     by converting saved (not consumed) fuel to energy using **fuelEnergyDensityInMJoulesPerLiter**.
-     *     <p>Must be paired with **accelerationEfficiency**.
-     *     <p>The range of values allowed are 0.0 to 1/**accelerationEfficiency**.
-     *     <p>Sensible Values : for **Combustion Model** : 0.83, for **Electric Model** : 0.91.
-     * @param uphillEfficiency Specifies the efficiency of converting chemical energy stored in fuel to potential energy
-     *     when the vehicle gains elevation _(i.e. PotentialEnergyGained/ChemicalEnergyConsumed).
-     *     ChemicalEnergyConsumed_ is obtained by converting consumed fuel to chemical energy using
-     *     **fuelEnergyDensityInMJoulesPerLiter**.
-     *     <p>Must be paired with **downhillEfficiency**.
-     *     <p>The range of values allowed are 0.0 to 1/**downhillEfficiency**.
-     *     <p>Sensible Values : for **Combustion Model** : 0.27, for **Electric Model** : 0.74.
-     * @param downhillEfficiency Specifies the efficiency of converting potential energy to saved (not consumed) fuel
-     *     when the vehicle loses elevation _(i.e. ChemicalEnergySaved/PotentialEnergyLost). ChemicalEnergySaved_ is
-     *     obtained by converting saved (not consumed) fuel to energy using **fuelEnergyDensityInMJoulesPerLiter**.
-     *     <p>Must be paired with **uphillEfficiency**.
-     *     <p>The range of values allowed are 0.0 to 1/**uphillEfficiency**.
-     *     <p>Sensible Values : for **Combustion Model** : 0.51, for **Electric Model** : 0.73.
-     * @param constantSpeedConsumptionInKwHPerHundredKm Specifies the speed-dependent component of consumption.
-     *     <p>Provided as an unordered list of speed/consumption-rate pairs. The list defines points on a consumption
-     *     curve. Consumption rates for speeds not in the list are found as follows:
-     *     <p>* by linear interpolation, if the given speed lies in between two speeds in the list
-     *     <p>* by linear extrapolation otherwise, assuming a constant (ΔConsumption/ΔSpeed) determined by the nearest
-     *     two points in the list
-     *     <p>The list must contain between 1 and 25 points (inclusive), and may not contain duplicate points for the
-     *     same speed. If it only contains a single point, then the consumption rate of that point is used without
-     *     further processing.
-     *     <p>Consumption specified for the largest speed must be greater than or equal to that of the penultimate
-     *     largest speed. This ensures that extrapolation does not lead to negative consumption rates.
-     *     <p>Similarly, consumption values specified for the two smallest speeds in the list cannot lead to a negative
-     *     consumption rate for any smaller speed.
-     *     <p>The valid range for the consumption values(expressed in kWh/100km) is between 0.01 and 100000.0.
-     *     <p>Sensible Values : 50,8.2:130,21.3
-     *     <p>This parameter is required for **Electric consumption model**.
-     * @param currentChargeInKwH Specifies the current electric energy supply in kilowatt hours (kWh).
-     *     <p>This parameter co-exists with **maxChargeInkWh** parameter.
-     *     <p>The range of values allowed are 0.0 to **maxChargeInkWh**.
-     *     <p>Sensible Values : 43.
-     * @param maxChargeInKwH Specifies the maximum electric energy supply in kilowatt hours (kWh) that may be stored in
-     *     the vehicle's battery.
-     *     <p>This parameter co-exists with **currentChargeInkWh** parameter.
-     *     <p>Minimum value has to be greater than or equal to **currentChargeInkWh**.
-     *     <p>Sensible Values : 85.
-     * @param auxiliaryPowerInKw Specifies the amount of power consumed for sustaining auxiliary systems, in kilowatts
-     *     (kW).
-     *     <p>It can be used to specify consumption due to devices and systems such as AC systems, radio, heating, etc.
-     *     <p>Sensible Values : 1.7.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Route Directions call.
-     */
-    @Generated
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<RouteDirections>> getRouteDirectionsWithResponse(
-            ResponseFormat format,
-            String routePoints,
-            Integer maxAlternatives,
-            AlternativeRouteType alternativeType,
-            Integer minDeviationDistance,
-            OffsetDateTime arriveAt,
-            OffsetDateTime departAt,
-            Integer minDeviationTime,
-            RouteInstructionsType instructionsType,
-            String language,
-            Boolean computeBestWaypointOrder,
-            RouteRepresentationForBestOrder routeRepresentationForBestOrder,
-            ComputeTravelTime computeTravelTime,
-            Integer vehicleHeading,
-            Report report,
-            SectionType filterSectionType,
-            Integer vehicleAxleWeight,
-            Double vehicleWidth,
-            Double vehicleHeight,
-            Double vehicleLength,
-            Integer vehicleMaxSpeed,
-            Integer vehicleWeight,
-            Boolean isCommercialVehicle,
-            WindingnessLevel windingness,
-            InclineLevel inclineLevel,
-            TravelMode travelMode,
-            List<RouteAvoidType> avoid,
-            Boolean useTrafficData,
-            RouteType routeType,
-            VehicleLoadType vehicleLoadType,
-            VehicleEngineType vehicleEngineType,
-            String constantSpeedConsumptionInLitersPerHundredKm,
-            Double currentFuelInLiters,
-            Double auxiliaryPowerInLitersPerHour,
-            Double fuelEnergyDensityInMegajoulesPerLiter,
-            Double accelerationEfficiency,
-            Double decelerationEfficiency,
-            Double uphillEfficiency,
-            Double downhillEfficiency,
-            String constantSpeedConsumptionInKwHPerHundredKm,
-            Double currentChargeInKwH,
-            Double maxChargeInKwH,
-            Double auxiliaryPowerInKw) {
-        return this.serviceClient.getRouteDirectionsWithResponseAsync(
-                format,
-                routePoints,
-                maxAlternatives,
-                alternativeType,
-                minDeviationDistance,
-                arriveAt,
-                departAt,
-                minDeviationTime,
-                instructionsType,
-                language,
-                computeBestWaypointOrder,
-                routeRepresentationForBestOrder,
-                computeTravelTime,
-                vehicleHeading,
-                report,
-                filterSectionType,
-                vehicleAxleWeight,
-                vehicleWidth,
-                vehicleHeight,
-                vehicleLength,
-                vehicleMaxSpeed,
-                vehicleWeight,
-                isCommercialVehicle,
-                windingness,
-                inclineLevel,
-                travelMode,
-                avoid,
-                useTrafficData,
-                routeType,
-                vehicleLoadType,
-                vehicleEngineType,
-                constantSpeedConsumptionInLitersPerHundredKm,
-                currentFuelInLiters,
-                auxiliaryPowerInLitersPerHour,
-                fuelEnergyDensityInMegajoulesPerLiter,
-                accelerationEfficiency,
-                decelerationEfficiency,
-                uphillEfficiency,
-                downhillEfficiency,
-                constantSpeedConsumptionInKwHPerHundredKm,
-                currentChargeInKwH,
-                maxChargeInKwH,
-                auxiliaryPowerInKw);
-    }
-
-    /**
-     * **Applies to**: S0 and S1 pricing tiers.
-     *
-     * <p>Returns a route between an origin and a destination, passing through waypoints if they are specified. The
-     * route will take into account factors such as current traffic and the typical road speeds on the requested day of
-     * the week and time of day.
-     *
-     * <p>Information returned includes the distance, estimated travel time, and a representation of the route geometry.
-     * Additional routing information such as optimized waypoint order or turn by turn instructions is also available,
-     * depending on the options selected.
-     *
-     * <p>Routing service provides a set of parameters for a detailed description of vehicle-specific Consumption Model.
-     * Please check [Consumption Model](https://docs.microsoft.com/azure/azure-maps/consumption-model) for detailed
-     * explanation of the concepts and parameters involved.
-     *
-     * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param routePoints The Coordinates through which the route is calculated, delimited by a colon. A minimum of two
-     *     coordinates is required. The first one is the origin and the last is the destination of the route. Optional
-     *     coordinates in-between act as WayPoints in the route. You can pass up to 150 WayPoints.
-     * @param maxAlternatives Number of desired alternative routes to be calculated. Default: 0, minimum: 0 and maximum:
-     *     5.
-     * @param alternativeType Controls the optimality, with respect to the given planning criteria, of the calculated
-     *     alternatives compared to the reference route.
-     * @param minDeviationDistance All alternative routes returned will follow the reference route (see section POST
-     *     Requests) from the origin point of the calculateRoute request for at least this number of meters. Can only be
-     *     used when reconstructing a route. The minDeviationDistance parameter cannot be used in conjunction with
-     *     arriveAt.
-     * @param arriveAt The date and time of arrival at the destination point. It must be specified as a dateTime. When a
-     *     time zone offset is not specified it will be assumed to be that of the destination point. The arriveAt value
-     *     must be in the future. The arriveAt parameter cannot be used in conjunction with departAt,
-     *     minDeviationDistance or minDeviationTime.
-     * @param departAt The date and time of departure from the origin point. Departure times apart from now must be
-     *     specified as a dateTime. When a time zone offset is not specified, it will be assumed to be that of the
-     *     origin point. The departAt value must be in the future in the date-time format (1996-12-19T16:39:57-08:00).
-     * @param minDeviationTime All alternative routes returned will follow the reference route (see section POST
-     *     Requests) from the origin point of the calculateRoute request for at least this number of seconds. Can only
-     *     be used when reconstructing a route. The minDeviationTime parameter cannot be used in conjunction with
-     *     arriveAt. Default value is 0. Setting )minDeviationTime_ to a value greater than zero has the following
-     *     consequences: - The origin point of the _calculateRoute_ Request must be on (or very near) the input
-     *     reference route. - If this is not the case, an error is returned. - However, the origin point does not need
-     *     to be at the beginning of the input reference route (it can be thought of as the current vehicle position on
-     *     the reference route). - The reference route, returned as the first route in the _calculateRoute_ Response,
-     *     will start at the origin point specified in the _calculateRoute_ Request. The initial part of the input
-     *     reference route up until the origin point will be excluded from the Response. - The values of
-     *     _minDeviationDistance_ and _minDeviationTime_ determine how far alternative routes will be guaranteed to
-     *     follow the reference route from the origin point onwards. - The route must use _departAt_. - The
-     *     _vehicleHeading_ is ignored.
-     * @param instructionsType If specified, guidance instructions will be returned. Note that the instructionsType
-     *     parameter cannot be used in conjunction with routeRepresentation=none.
-     * @param language The language parameter determines the language of the guidance messages. Proper nouns (the names
-     *     of streets, plazas, etc.) are returned in the specified language, or if that is not available, they are
-     *     returned in an available language that is close to it. Allowed values are (a subset of) the IETF language
-     *     tags. The currently supported languages are listed in the [Supported languages
-     *     section](https://docs.microsoft.com/azure/azure-maps/supported-languages).
-     *     <p>Default value: en-GB.
-     * @param computeBestWaypointOrder Re-order the route waypoints using a fast heuristic algorithm to reduce the route
-     *     length. Yields best results when used in conjunction with routeType _shortest_. Notice that origin and
-     *     destination are excluded from the optimized waypoint indices. To include origin and destination in the
-     *     response, please increase all the indices by 1 to account for the origin, and then add the destination as the
-     *     final index. Possible values are true or false. True computes a better order if possible, but is not allowed
-     *     to be used in conjunction with maxAlternatives value greater than 0 or in conjunction with circle waypoints.
-     *     False will use the locations in the given order and not allowed to be used in conjunction with
-     *     routeRepresentation _none_.
-     * @param routeRepresentationForBestOrder Specifies the representation of the set of routes provided as response.
-     *     This parameter value can only be used in conjunction with computeBestOrder=true.
-     * @param computeTravelTime Specifies whether to return additional travel times using different types of traffic
-     *     information (none, historic, live) as well as the default best-estimate travel time.
-     * @param vehicleHeading The directional heading of the vehicle in degrees starting at true North and continuing in
-     *     clockwise direction. North is 0 degrees, east is 90 degrees, south is 180 degrees, west is 270 degrees.
-     *     Possible values 0-359.
-     * @param report Specifies which data should be reported for diagnosis purposes. The only possible value is
-     *     _effectiveSettings_. Reports the effective parameters or data used when calling the API. In the case of
-     *     defaulted parameters the default will be reflected where the parameter was not specified by the caller.
-     * @param filterSectionType Specifies which of the section types is reported in the route response.
-     *     &lt;br&gt;&lt;br&gt;For example if sectionType = pedestrian the sections which are suited for pedestrians
-     *     only are returned. Multiple types can be used. The default sectionType refers to the travelMode input. By
-     *     default travelMode is set to car.
-     * @param vehicleAxleWeight Weight per axle of the vehicle in kg. A value of 0 means that weight restrictions per
-     *     axle are not considered.
-     * @param vehicleWidth Width of the vehicle in meters. A value of 0 means that width restrictions are not
-     *     considered.
-     * @param vehicleHeight Height of the vehicle in meters. A value of 0 means that height restrictions are not
-     *     considered.
-     * @param vehicleLength Length of the vehicle in meters. A value of 0 means that length restrictions are not
-     *     considered.
-     * @param vehicleMaxSpeed Maximum speed of the vehicle in km/hour. The max speed in the vehicle profile is used to
-     *     check whether a vehicle is allowed on motorways.
-     *     <p>* A value of 0 means that an appropriate value for the vehicle will be determined and applied during route
-     *     planning.
-     *     <p>* A non-zero value may be overridden during route planning. For example, the current traffic flow is 60
-     *     km/hour. If the vehicle maximum speed is set to 50 km/hour, the routing engine will consider 60 km/hour as
-     *     this is the current situation. If the maximum speed of the vehicle is provided as 80 km/hour but the current
-     *     traffic flow is 60 km/hour, then routing engine will again use 60 km/hour.
-     * @param vehicleWeight Weight of the vehicle in kilograms.
-     *     <p>* It is mandatory if any of the *Efficiency parameters are set.
-     *     <p>* It must be strictly positive when used in the context of the Consumption Model. Weight restrictions are
-     *     considered.
-     *     <p>* If no detailed **Consumption Model** is specified and the value of **vehicleWeight** is non-zero, then
-     *     weight restrictions are considered.
-     *     <p>* In all other cases, this parameter is ignored.
-     *     <p>Sensible Values : for **Combustion Model** : 1600, for **Electric Model** : 1900.
-     * @param isCommercialVehicle Whether the vehicle is used for commercial purposes. Commercial vehicles may not be
-     *     allowed to drive on some roads.
-     * @param windingness Level of turns for thrilling route. This parameter can only be used in conjunction with
-     *     `routeType`=thrilling.
-     * @param inclineLevel Degree of hilliness for thrilling route. This parameter can only be used in conjunction with
-     *     `routeType`=thrilling.
-     * @param travelMode The mode of travel for the requested route. If not defined, default is 'car'. Note that the
-     *     requested travelMode may not be available for the entire route. Where the requested travelMode is not
-     *     available for a particular section, the travelMode element of the response for that section will be "other".
-     *     Note that travel modes bus, motorcycle, taxi and van are BETA functionality. Full restriction data is not
-     *     available in all areas. In **calculateReachableRange** requests, the values bicycle and pedestrian must not
-     *     be used.
-     * @param avoid Specifies something that the route calculation should try to avoid when determining the route. Can
-     *     be specified multiple times in one request, for example,
-     *     '&amp;avoid=motorways&amp;avoid=tollRoads&amp;avoid=ferries'. In calculateReachableRange requests, the value
-     *     alreadyUsedRoads must not be used.
-     * @param useTrafficData Possible values: * true - Do consider all available traffic information during routing *
-     *     false - Ignore current traffic data during routing. Note that although the current traffic data is ignored
-     *     during routing, the effect of historic traffic on effective road speeds is still incorporated.
-     * @param routeType The type of route requested.
-     * @param vehicleLoadType Types of cargo that may be classified as hazardous materials and restricted from some
-     *     roads. Available vehicleLoadType values are US Hazmat classes 1 through 9, plus generic classifications for
-     *     use in other countries. Values beginning with USHazmat are for US routing while otherHazmat should be used
-     *     for all other countries. vehicleLoadType can be specified multiple times. This parameter is currently only
-     *     considered for travelMode=truck.
-     * @param vehicleEngineType Engine type of the vehicle. When a detailed Consumption Model is specified, it must be
-     *     consistent with the value of **vehicleEngineType**.
-     * @param constantSpeedConsumptionInLitersPerHundredKm Specifies the speed-dependent component of consumption.
-     *     <p>Provided as an unordered list of colon-delimited speed &amp; consumption-rate pairs. The list defines
-     *     points on a consumption curve. Consumption rates for speeds not in the list are found as follows:
-     *     <p>* by linear interpolation, if the given speed lies in between two speeds in the list
-     *     <p>* by linear extrapolation otherwise, assuming a constant (ΔConsumption/ΔSpeed) determined by the nearest
-     *     two points in the list
-     *     <p>The list must contain between 1 and 25 points (inclusive), and may not contain duplicate points for the
-     *     same speed. If it only contains a single point, then the consumption rate of that point is used without
-     *     further processing.
-     *     <p>Consumption specified for the largest speed must be greater than or equal to that of the penultimate
-     *     largest speed. This ensures that extrapolation does not lead to negative consumption rates.
-     *     <p>Similarly, consumption values specified for the two smallest speeds in the list cannot lead to a negative
-     *     consumption rate for any smaller speed.
-     *     <p>The valid range for the consumption values(expressed in l/100km) is between 0.01 and 100000.0.
-     *     <p>Sensible Values : 50,6.3:130,11.5
-     *     <p>**Note** : This parameter is required for **The Combustion Consumption Model**.
-     * @param currentFuelInLiters Specifies the current supply of fuel in liters.
-     *     <p>Sensible Values : 55.
-     * @param auxiliaryPowerInLitersPerHour Specifies the amount of fuel consumed for sustaining auxiliary systems of
-     *     the vehicle, in liters per hour.
-     *     <p>It can be used to specify consumption due to devices and systems such as AC systems, radio, heating, etc.
-     *     <p>Sensible Values : 0.2.
-     * @param fuelEnergyDensityInMegajoulesPerLiter Specifies the amount of chemical energy stored in one liter of fuel
-     *     in megajoules (MJ). It is used in conjunction with the ***Efficiency** parameters for conversions between
-     *     saved or consumed energy and fuel. For example, energy density is 34.2 MJ/l for gasoline, and 35.8 MJ/l for
-     *     Diesel fuel.
-     *     <p>This parameter is required if any ***Efficiency** parameter is set.
-     *     <p>Sensible Values : 34.2.
-     * @param accelerationEfficiency Specifies the efficiency of converting chemical energy stored in fuel to kinetic
-     *     energy when the vehicle accelerates _(i.e. KineticEnergyGained/ChemicalEnergyConsumed).
-     *     ChemicalEnergyConsumed_ is obtained by converting consumed fuel to chemical energy using
-     *     **fuelEnergyDensityInMJoulesPerLiter**.
-     *     <p>Must be paired with **decelerationEfficiency**.
-     *     <p>The range of values allowed are 0.0 to 1/**decelerationEfficiency**.
-     *     <p>Sensible Values : for **Combustion Model** : 0.33, for **Electric Model** : 0.66.
-     * @param decelerationEfficiency Specifies the efficiency of converting kinetic energy to saved (not consumed) fuel
-     *     when the vehicle decelerates _(i.e. ChemicalEnergySaved/KineticEnergyLost). ChemicalEnergySaved_ is obtained
-     *     by converting saved (not consumed) fuel to energy using **fuelEnergyDensityInMJoulesPerLiter**.
-     *     <p>Must be paired with **accelerationEfficiency**.
-     *     <p>The range of values allowed are 0.0 to 1/**accelerationEfficiency**.
-     *     <p>Sensible Values : for **Combustion Model** : 0.83, for **Electric Model** : 0.91.
-     * @param uphillEfficiency Specifies the efficiency of converting chemical energy stored in fuel to potential energy
-     *     when the vehicle gains elevation _(i.e. PotentialEnergyGained/ChemicalEnergyConsumed).
-     *     ChemicalEnergyConsumed_ is obtained by converting consumed fuel to chemical energy using
-     *     **fuelEnergyDensityInMJoulesPerLiter**.
-     *     <p>Must be paired with **downhillEfficiency**.
-     *     <p>The range of values allowed are 0.0 to 1/**downhillEfficiency**.
-     *     <p>Sensible Values : for **Combustion Model** : 0.27, for **Electric Model** : 0.74.
-     * @param downhillEfficiency Specifies the efficiency of converting potential energy to saved (not consumed) fuel
-     *     when the vehicle loses elevation _(i.e. ChemicalEnergySaved/PotentialEnergyLost). ChemicalEnergySaved_ is
-     *     obtained by converting saved (not consumed) fuel to energy using **fuelEnergyDensityInMJoulesPerLiter**.
-     *     <p>Must be paired with **uphillEfficiency**.
-     *     <p>The range of values allowed are 0.0 to 1/**uphillEfficiency**.
-     *     <p>Sensible Values : for **Combustion Model** : 0.51, for **Electric Model** : 0.73.
-     * @param constantSpeedConsumptionInKwHPerHundredKm Specifies the speed-dependent component of consumption.
-     *     <p>Provided as an unordered list of speed/consumption-rate pairs. The list defines points on a consumption
-     *     curve. Consumption rates for speeds not in the list are found as follows:
-     *     <p>* by linear interpolation, if the given speed lies in between two speeds in the list
-     *     <p>* by linear extrapolation otherwise, assuming a constant (ΔConsumption/ΔSpeed) determined by the nearest
-     *     two points in the list
-     *     <p>The list must contain between 1 and 25 points (inclusive), and may not contain duplicate points for the
-     *     same speed. If it only contains a single point, then the consumption rate of that point is used without
-     *     further processing.
-     *     <p>Consumption specified for the largest speed must be greater than or equal to that of the penultimate
-     *     largest speed. This ensures that extrapolation does not lead to negative consumption rates.
-     *     <p>Similarly, consumption values specified for the two smallest speeds in the list cannot lead to a negative
-     *     consumption rate for any smaller speed.
-     *     <p>The valid range for the consumption values(expressed in kWh/100km) is between 0.01 and 100000.0.
-     *     <p>Sensible Values : 50,8.2:130,21.3
-     *     <p>This parameter is required for **Electric consumption model**.
-     * @param currentChargeInKwH Specifies the current electric energy supply in kilowatt hours (kWh).
-     *     <p>This parameter co-exists with **maxChargeInkWh** parameter.
-     *     <p>The range of values allowed are 0.0 to **maxChargeInkWh**.
-     *     <p>Sensible Values : 43.
-     * @param maxChargeInKwH Specifies the maximum electric energy supply in kilowatt hours (kWh) that may be stored in
-     *     the vehicle's battery.
-     *     <p>This parameter co-exists with **currentChargeInkWh** parameter.
-     *     <p>Minimum value has to be greater than or equal to **currentChargeInkWh**.
-     *     <p>Sensible Values : 85.
-     * @param auxiliaryPowerInKw Specifies the amount of power consumed for sustaining auxiliary systems, in kilowatts
-     *     (kW).
-     *     <p>It can be used to specify consumption due to devices and systems such as AC systems, radio, heating, etc.
-     *     <p>Sensible Values : 1.7.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -679,93 +167,11 @@ public final class RouteAsyncClient {
     @Generated
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<RouteDirections> getRouteDirections(
-            ResponseFormat format,
-            String routePoints,
-            Integer maxAlternatives,
-            AlternativeRouteType alternativeType,
-            Integer minDeviationDistance,
-            OffsetDateTime arriveAt,
-            OffsetDateTime departAt,
-            Integer minDeviationTime,
-            RouteInstructionsType instructionsType,
-            String language,
-            Boolean computeBestWaypointOrder,
-            RouteRepresentationForBestOrder routeRepresentationForBestOrder,
-            ComputeTravelTime computeTravelTime,
-            Integer vehicleHeading,
-            Report report,
-            SectionType filterSectionType,
-            Integer vehicleAxleWeight,
-            Double vehicleWidth,
-            Double vehicleHeight,
-            Double vehicleLength,
-            Integer vehicleMaxSpeed,
-            Integer vehicleWeight,
-            Boolean isCommercialVehicle,
-            WindingnessLevel windingness,
-            InclineLevel inclineLevel,
-            TravelMode travelMode,
-            List<RouteAvoidType> avoid,
-            Boolean useTrafficData,
-            RouteType routeType,
-            VehicleLoadType vehicleLoadType,
-            VehicleEngineType vehicleEngineType,
-            String constantSpeedConsumptionInLitersPerHundredKm,
-            Double currentFuelInLiters,
-            Double auxiliaryPowerInLitersPerHour,
-            Double fuelEnergyDensityInMegajoulesPerLiter,
-            Double accelerationEfficiency,
-            Double decelerationEfficiency,
-            Double uphillEfficiency,
-            Double downhillEfficiency,
-            String constantSpeedConsumptionInKwHPerHundredKm,
-            Double currentChargeInKwH,
-            Double maxChargeInKwH,
-            Double auxiliaryPowerInKw) {
-        return this.serviceClient.getRouteDirectionsAsync(
-                format,
-                routePoints,
-                maxAlternatives,
-                alternativeType,
-                minDeviationDistance,
-                arriveAt,
-                departAt,
-                minDeviationTime,
-                instructionsType,
-                language,
-                computeBestWaypointOrder,
-                routeRepresentationForBestOrder,
-                computeTravelTime,
-                vehicleHeading,
-                report,
-                filterSectionType,
-                vehicleAxleWeight,
-                vehicleWidth,
-                vehicleHeight,
-                vehicleLength,
-                vehicleMaxSpeed,
-                vehicleWeight,
-                isCommercialVehicle,
-                windingness,
-                inclineLevel,
-                travelMode,
-                avoid,
-                useTrafficData,
-                routeType,
-                vehicleLoadType,
-                vehicleEngineType,
-                constantSpeedConsumptionInLitersPerHundredKm,
-                currentFuelInLiters,
-                auxiliaryPowerInLitersPerHour,
-                fuelEnergyDensityInMegajoulesPerLiter,
-                accelerationEfficiency,
-                decelerationEfficiency,
-                uphillEfficiency,
-                downhillEfficiency,
-                constantSpeedConsumptionInKwHPerHundredKm,
-                currentChargeInKwH,
-                maxChargeInKwH,
-                auxiliaryPowerInKw);
+            RouteDirectionsOptions options) {
+        Mono<Response<RouteDirections>> result = this.getRouteDirectionsWithResponse(options);
+        return result.flatMap(response -> {
+            return Mono.just(response.getValue());
+        });
     }
 
     /**
@@ -775,224 +181,7 @@ public final class RouteAsyncClient {
      * route will take into account factors such as current traffic and the typical road speeds on the requested day of
      * the week and time of day.
      *
-     * <p>Information returned includes the distance, estimated travel time, and a representation of the route geometry.
-     * Additional routing information such as optimized waypoint order or turn by turn instructions is also available,
-     * depending on the options selected.
-     *
-     * <p>Routing service provides a set of parameters for a detailed description of a vehicle-specific Consumption
-     * Model. Please check [Consumption Model](https://docs.microsoft.com/azure/azure-maps/consumption-model) for
-     * detailed explanation of the concepts and parameters involved.
-     *
-     * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param routePoints The Coordinates through which the route is calculated, delimited by a colon. A minimum of two
-     *     coordinates is required. The first one is the origin and the last is the destination of the route. Optional
-     *     coordinates in-between act as WayPoints in the route. You can pass up to 150 WayPoints.
-     * @param routeDirectionParameters Used for reconstructing a route and for calculating zero or more alternative
-     *     routes to this reference route. The provided sequence of coordinates is used as input for route
-     *     reconstruction. The alternative routes are calculated between the origin and destination points specified in
-     *     the base path parameter locations. If both minDeviationDistance and minDeviationTime are set to zero, then
-     *     these origin and destination points are expected to be at (or very near) the beginning and end of the
-     *     reference route, respectively. Intermediate locations (waypoints) are not supported when using
-     *     supportingPoints.
-     *     <p>Setting at least one of minDeviationDistance or minDeviationTime to a value greater than zero has the
-     *     following consequences:
-     *     <p>* The origin point of the calculateRoute request must be on (or very near) the input reference route. If
-     *     this is not the case, an error is returned. However, the origin point does not need to be at the beginning of
-     *     the input reference route (it can be thought of as the current vehicle position on the reference route). *
-     *     The reference route, returned as the first route in the calculateRoute response, will start at the origin
-     *     point specified in the calculateRoute request. The initial part of the input reference route up until the
-     *     origin point will be excluded from the response. * The values of minDeviationDistance and minDeviationTime
-     *     determine how far alternative routes will be guaranteed to follow the reference route from the origin point
-     *     onwards. * The route must use departAt. * The vehicleHeading is ignored.
-     * @param maxAlternatives Number of desired alternative routes to be calculated. Default: 0, minimum: 0 and maximum:
-     *     5.
-     * @param alternativeType Controls the optimality, with respect to the given planning criteria, of the calculated
-     *     alternatives compared to the reference route.
-     * @param minDeviationDistance All alternative routes returned will follow the reference route (see section POST
-     *     Requests) from the origin point of the calculateRoute request for at least this number of meters. Can only be
-     *     used when reconstructing a route. The minDeviationDistance parameter cannot be used in conjunction with
-     *     arriveAt.
-     * @param minDeviationTime All alternative routes returned will follow the reference route (see section POST
-     *     Requests) from the origin point of the calculateRoute request for at least this number of seconds. Can only
-     *     be used when reconstructing a route. The minDeviationTime parameter cannot be used in conjunction with
-     *     arriveAt. Default value is 0. Setting )minDeviationTime_ to a value greater than zero has the following
-     *     consequences: - The origin point of the _calculateRoute_ Request must be on (or very near) the input
-     *     reference route. - If this is not the case, an error is returned. - However, the origin point does not need
-     *     to be at the beginning of the input reference route (it can be thought of as the current vehicle position on
-     *     the reference route). - The reference route, returned as the first route in the _calculateRoute_ Response,
-     *     will start at the origin point specified in the _calculateRoute_ Request. The initial part of the input
-     *     reference route up until the origin point will be excluded from the Response. - The values of
-     *     _minDeviationDistance_ and _minDeviationTime_ determine how far alternative routes will be guaranteed to
-     *     follow the reference route from the origin point onwards. - The route must use _departAt_. - The
-     *     _vehicleHeading_ is ignored.
-     * @param instructionsType If specified, guidance instructions will be returned. Note that the instructionsType
-     *     parameter cannot be used in conjunction with routeRepresentation=none.
-     * @param language The language parameter determines the language of the guidance messages. It does not affect
-     *     proper nouns (the names of streets, plazas, etc.) It has no effect when instructionsType=coded. Allowed
-     *     values are (a subset of) the IETF language tags described.
-     * @param computeBestWaypointOrder Re-order the route waypoints using a fast heuristic algorithm to reduce the route
-     *     length. Yields best results when used in conjunction with routeType _shortest_. Notice that origin and
-     *     destination are excluded from the optimized waypoint indices. To include origin and destination in the
-     *     response, please increase all the indices by 1 to account for the origin, and then add the destination as the
-     *     final index. Possible values are true or false. True computes a better order if possible, but is not allowed
-     *     to be used in conjunction with maxAlternatives value greater than 0 or in conjunction with circle waypoints.
-     *     False will use the locations in the given order and not allowed to be used in conjunction with
-     *     routeRepresentation _none_.
-     * @param routeRepresentationForBestOrder Specifies the representation of the set of routes provided as response.
-     *     This parameter value can only be used in conjunction with computeBestOrder=true.
-     * @param computeTravelTime Specifies whether to return additional travel times using different types of traffic
-     *     information (none, historic, live) as well as the default best-estimate travel time.
-     * @param vehicleHeading The directional heading of the vehicle in degrees starting at true North and continuing in
-     *     clockwise direction. North is 0 degrees, east is 90 degrees, south is 180 degrees, west is 270 degrees.
-     *     Possible values 0-359.
-     * @param report Specifies which data should be reported for diagnosis purposes. The only possible value is
-     *     _effectiveSettings_. Reports the effective parameters or data used when calling the API. In the case of
-     *     defaulted parameters the default will be reflected where the parameter was not specified by the caller.
-     * @param filterSectionType Specifies which of the section types is reported in the route response.
-     *     &lt;br&gt;&lt;br&gt;For example if sectionType = pedestrian the sections which are suited for pedestrians
-     *     only are returned. Multiple types can be used. The default sectionType refers to the travelMode input. By
-     *     default travelMode is set to car.
-     * @param arriveAt The date and time of arrival at the destination point. It must be specified as a dateTime. When a
-     *     time zone offset is not specified it will be assumed to be that of the destination point. The arriveAt value
-     *     must be in the future. The arriveAt parameter cannot be used in conjunction with departAt,
-     *     minDeviationDistance or minDeviationTime.
-     * @param departAt The date and time of departure from the origin point. Departure times apart from now must be
-     *     specified as a dateTime. When a time zone offset is not specified, it will be assumed to be that of the
-     *     origin point. The departAt value must be in the future in the date-time format (1996-12-19T16:39:57-08:00).
-     * @param vehicleAxleWeight Weight per axle of the vehicle in kg. A value of 0 means that weight restrictions per
-     *     axle are not considered.
-     * @param vehicleLength Length of the vehicle in meters. A value of 0 means that length restrictions are not
-     *     considered.
-     * @param vehicleHeight Height of the vehicle in meters. A value of 0 means that height restrictions are not
-     *     considered.
-     * @param vehicleWidth Width of the vehicle in meters. A value of 0 means that width restrictions are not
-     *     considered.
-     * @param vehicleMaxSpeed Maximum speed of the vehicle in km/hour. The max speed in the vehicle profile is used to
-     *     check whether a vehicle is allowed on motorways.
-     *     <p>* A value of 0 means that an appropriate value for the vehicle will be determined and applied during route
-     *     planning.
-     *     <p>* A non-zero value may be overridden during route planning. For example, the current traffic flow is 60
-     *     km/hour. If the vehicle maximum speed is set to 50 km/hour, the routing engine will consider 60 km/hour as
-     *     this is the current situation. If the maximum speed of the vehicle is provided as 80 km/hour but the current
-     *     traffic flow is 60 km/hour, then routing engine will again use 60 km/hour.
-     * @param vehicleWeight Weight of the vehicle in kilograms.
-     *     <p>* It is mandatory if any of the *Efficiency parameters are set.
-     *     <p>* It must be strictly positive when used in the context of the Consumption Model. Weight restrictions are
-     *     considered.
-     *     <p>* If no detailed **Consumption Model** is specified and the value of **vehicleWeight** is non-zero, then
-     *     weight restrictions are considered.
-     *     <p>* In all other cases, this parameter is ignored.
-     *     <p>Sensible Values : for **Combustion Model** : 1600, for **Electric Model** : 1900.
-     * @param isCommercialVehicle Whether the vehicle is used for commercial purposes. Commercial vehicles may not be
-     *     allowed to drive on some roads.
-     * @param windingness Level of turns for thrilling route. This parameter can only be used in conjunction with
-     *     `routeType`=thrilling.
-     * @param inclineLevel Degree of hilliness for thrilling route. This parameter can only be used in conjunction with
-     *     `routeType`=thrilling.
-     * @param travelMode The mode of travel for the requested route. If not defined, default is 'car'. Note that the
-     *     requested travelMode may not be available for the entire route. Where the requested travelMode is not
-     *     available for a particular section, the travelMode element of the response for that section will be "other".
-     *     Note that travel modes bus, motorcycle, taxi and van are BETA functionality. Full restriction data is not
-     *     available in all areas. In **calculateReachableRange** requests, the values bicycle and pedestrian must not
-     *     be used.
-     * @param avoid Specifies something that the route calculation should try to avoid when determining the route. Can
-     *     be specified multiple times in one request, for example,
-     *     '&amp;avoid=motorways&amp;avoid=tollRoads&amp;avoid=ferries'. In calculateReachableRange requests, the value
-     *     alreadyUsedRoads must not be used.
-     * @param useTrafficData Possible values: * true - Do consider all available traffic information during routing *
-     *     false - Ignore current traffic data during routing. Note that although the current traffic data is ignored
-     *     during routing, the effect of historic traffic on effective road speeds is still incorporated.
-     * @param routeType The type of route requested.
-     * @param vehicleLoadType Types of cargo that may be classified as hazardous materials and restricted from some
-     *     roads. Available vehicleLoadType values are US Hazmat classes 1 through 9, plus generic classifications for
-     *     use in other countries. Values beginning with USHazmat are for US routing while otherHazmat should be used
-     *     for all other countries. vehicleLoadType can be specified multiple times. This parameter is currently only
-     *     considered for travelMode=truck.
-     * @param vehicleEngineType Engine type of the vehicle. When a detailed Consumption Model is specified, it must be
-     *     consistent with the value of **vehicleEngineType**.
-     * @param constantSpeedConsumptionInLitersPerHundredKm Specifies the speed-dependent component of consumption.
-     *     <p>Provided as an unordered list of colon-delimited speed &amp; consumption-rate pairs. The list defines
-     *     points on a consumption curve. Consumption rates for speeds not in the list are found as follows:
-     *     <p>* by linear interpolation, if the given speed lies in between two speeds in the list
-     *     <p>* by linear extrapolation otherwise, assuming a constant (ΔConsumption/ΔSpeed) determined by the nearest
-     *     two points in the list
-     *     <p>The list must contain between 1 and 25 points (inclusive), and may not contain duplicate points for the
-     *     same speed. If it only contains a single point, then the consumption rate of that point is used without
-     *     further processing.
-     *     <p>Consumption specified for the largest speed must be greater than or equal to that of the penultimate
-     *     largest speed. This ensures that extrapolation does not lead to negative consumption rates.
-     *     <p>Similarly, consumption values specified for the two smallest speeds in the list cannot lead to a negative
-     *     consumption rate for any smaller speed.
-     *     <p>The valid range for the consumption values(expressed in l/100km) is between 0.01 and 100000.0.
-     *     <p>Sensible Values : 50,6.3:130,11.5
-     *     <p>**Note** : This parameter is required for **The Combustion Consumption Model**.
-     * @param currentFuelInLiters Specifies the current supply of fuel in liters.
-     *     <p>Sensible Values : 55.
-     * @param auxiliaryPowerInLitersPerHour Specifies the amount of fuel consumed for sustaining auxiliary systems of
-     *     the vehicle, in liters per hour.
-     *     <p>It can be used to specify consumption due to devices and systems such as AC systems, radio, heating, etc.
-     *     <p>Sensible Values : 0.2.
-     * @param fuelEnergyDensityInMegajoulesPerLiter Specifies the amount of chemical energy stored in one liter of fuel
-     *     in megajoules (MJ). It is used in conjunction with the ***Efficiency** parameters for conversions between
-     *     saved or consumed energy and fuel. For example, energy density is 34.2 MJ/l for gasoline, and 35.8 MJ/l for
-     *     Diesel fuel.
-     *     <p>This parameter is required if any ***Efficiency** parameter is set.
-     *     <p>Sensible Values : 34.2.
-     * @param accelerationEfficiency Specifies the efficiency of converting chemical energy stored in fuel to kinetic
-     *     energy when the vehicle accelerates _(i.e. KineticEnergyGained/ChemicalEnergyConsumed).
-     *     ChemicalEnergyConsumed_ is obtained by converting consumed fuel to chemical energy using
-     *     **fuelEnergyDensityInMJoulesPerLiter**.
-     *     <p>Must be paired with **decelerationEfficiency**.
-     *     <p>The range of values allowed are 0.0 to 1/**decelerationEfficiency**.
-     *     <p>Sensible Values : for **Combustion Model** : 0.33, for **Electric Model** : 0.66.
-     * @param decelerationEfficiency Specifies the efficiency of converting kinetic energy to saved (not consumed) fuel
-     *     when the vehicle decelerates _(i.e. ChemicalEnergySaved/KineticEnergyLost). ChemicalEnergySaved_ is obtained
-     *     by converting saved (not consumed) fuel to energy using **fuelEnergyDensityInMJoulesPerLiter**.
-     *     <p>Must be paired with **accelerationEfficiency**.
-     *     <p>The range of values allowed are 0.0 to 1/**accelerationEfficiency**.
-     *     <p>Sensible Values : for **Combustion Model** : 0.83, for **Electric Model** : 0.91.
-     * @param uphillEfficiency Specifies the efficiency of converting chemical energy stored in fuel to potential energy
-     *     when the vehicle gains elevation _(i.e. PotentialEnergyGained/ChemicalEnergyConsumed).
-     *     ChemicalEnergyConsumed_ is obtained by converting consumed fuel to chemical energy using
-     *     **fuelEnergyDensityInMJoulesPerLiter**.
-     *     <p>Must be paired with **downhillEfficiency**.
-     *     <p>The range of values allowed are 0.0 to 1/**downhillEfficiency**.
-     *     <p>Sensible Values : for **Combustion Model** : 0.27, for **Electric Model** : 0.74.
-     * @param downhillEfficiency Specifies the efficiency of converting potential energy to saved (not consumed) fuel
-     *     when the vehicle loses elevation _(i.e. ChemicalEnergySaved/PotentialEnergyLost). ChemicalEnergySaved_ is
-     *     obtained by converting saved (not consumed) fuel to energy using **fuelEnergyDensityInMJoulesPerLiter**.
-     *     <p>Must be paired with **uphillEfficiency**.
-     *     <p>The range of values allowed are 0.0 to 1/**uphillEfficiency**.
-     *     <p>Sensible Values : for **Combustion Model** : 0.51, for **Electric Model** : 0.73.
-     * @param constantSpeedConsumptionInKwHPerHundredKm Specifies the speed-dependent component of consumption.
-     *     <p>Provided as an unordered list of speed/consumption-rate pairs. The list defines points on a consumption
-     *     curve. Consumption rates for speeds not in the list are found as follows:
-     *     <p>* by linear interpolation, if the given speed lies in between two speeds in the list
-     *     <p>* by linear extrapolation otherwise, assuming a constant (ΔConsumption/ΔSpeed) determined by the nearest
-     *     two points in the list
-     *     <p>The list must contain between 1 and 25 points (inclusive), and may not contain duplicate points for the
-     *     same speed. If it only contains a single point, then the consumption rate of that point is used without
-     *     further processing.
-     *     <p>Consumption specified for the largest speed must be greater than or equal to that of the penultimate
-     *     largest speed. This ensures that extrapolation does not lead to negative consumption rates.
-     *     <p>Similarly, consumption values specified for the two smallest speeds in the list cannot lead to a negative
-     *     consumption rate for any smaller speed.
-     *     <p>The valid range for the consumption values(expressed in kWh/100km) is between 0.01 and 100000.0.
-     *     <p>Sensible Values : 50,8.2:130,21.3
-     *     <p>This parameter is required for **Electric consumption model**.
-     * @param currentChargeInKwH Specifies the current electric energy supply in kilowatt hours (kWh).
-     *     <p>This parameter co-exists with **maxChargeInkWh** parameter.
-     *     <p>The range of values allowed are 0.0 to **maxChargeInkWh**.
-     *     <p>Sensible Values : 43.
-     * @param maxChargeInKwH Specifies the maximum electric energy supply in kilowatt hours (kWh) that may be stored in
-     *     the vehicle's battery.
-     *     <p>This parameter co-exists with **currentChargeInkWh** parameter.
-     *     <p>Minimum value has to be greater than or equal to **currentChargeInkWh**.
-     *     <p>Sensible Values : 85.
-     * @param auxiliaryPowerInKw Specifies the amount of power consumed for sustaining auxiliary systems, in kilowatts
-     *     (kW).
-     *     <p>It can be used to specify consumption due to devices and systems such as AC systems, radio, heating, etc.
-     *     <p>Sensible Values : 1.7.
+
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -1000,96 +189,9 @@ public final class RouteAsyncClient {
      */
     @Generated
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<RouteDirections>> getRouteDirectionsWithAdditionalParametersWithResponse(
-            ResponseFormat format,
-            String routePoints,
-            RouteDirectionParameters routeDirectionParameters,
-            Integer maxAlternatives,
-            AlternativeRouteType alternativeType,
-            Integer minDeviationDistance,
-            Integer minDeviationTime,
-            RouteInstructionsType instructionsType,
-            String language,
-            Boolean computeBestWaypointOrder,
-            RouteRepresentationForBestOrder routeRepresentationForBestOrder,
-            ComputeTravelTime computeTravelTime,
-            Integer vehicleHeading,
-            Report report,
-            SectionType filterSectionType,
-            OffsetDateTime arriveAt,
-            OffsetDateTime departAt,
-            Integer vehicleAxleWeight,
-            Double vehicleLength,
-            Double vehicleHeight,
-            Double vehicleWidth,
-            Integer vehicleMaxSpeed,
-            Integer vehicleWeight,
-            Boolean isCommercialVehicle,
-            WindingnessLevel windingness,
-            InclineLevel inclineLevel,
-            TravelMode travelMode,
-            List<RouteAvoidType> avoid,
-            Boolean useTrafficData,
-            RouteType routeType,
-            VehicleLoadType vehicleLoadType,
-            VehicleEngineType vehicleEngineType,
-            String constantSpeedConsumptionInLitersPerHundredKm,
-            Double currentFuelInLiters,
-            Double auxiliaryPowerInLitersPerHour,
-            Double fuelEnergyDensityInMegajoulesPerLiter,
-            Double accelerationEfficiency,
-            Double decelerationEfficiency,
-            Double uphillEfficiency,
-            Double downhillEfficiency,
-            String constantSpeedConsumptionInKwHPerHundredKm,
-            Double currentChargeInKwH,
-            Double maxChargeInKwH,
-            Double auxiliaryPowerInKw) {
-        return this.serviceClient.getRouteDirectionsWithAdditionalParametersWithResponseAsync(
-                format,
-                routePoints,
-                routeDirectionParameters,
-                maxAlternatives,
-                alternativeType,
-                minDeviationDistance,
-                minDeviationTime,
-                instructionsType,
-                language,
-                computeBestWaypointOrder,
-                routeRepresentationForBestOrder,
-                computeTravelTime,
-                vehicleHeading,
-                report,
-                filterSectionType,
-                arriveAt,
-                departAt,
-                vehicleAxleWeight,
-                vehicleLength,
-                vehicleHeight,
-                vehicleWidth,
-                vehicleMaxSpeed,
-                vehicleWeight,
-                isCommercialVehicle,
-                windingness,
-                inclineLevel,
-                travelMode,
-                avoid,
-                useTrafficData,
-                routeType,
-                vehicleLoadType,
-                vehicleEngineType,
-                constantSpeedConsumptionInLitersPerHundredKm,
-                currentFuelInLiters,
-                auxiliaryPowerInLitersPerHour,
-                fuelEnergyDensityInMegajoulesPerLiter,
-                accelerationEfficiency,
-                decelerationEfficiency,
-                uphillEfficiency,
-                downhillEfficiency,
-                constantSpeedConsumptionInKwHPerHundredKm,
-                currentChargeInKwH,
-                maxChargeInKwH,
-                auxiliaryPowerInKw);
+    public Mono<Response<RouteDirections>> getRouteDirectionsWithResponse(
+            RouteDirectionsOptions options) {
+        return this.getRouteDirectionsWithResponse(options, null);
     }
 
     /**
@@ -1099,224 +201,71 @@ public final class RouteAsyncClient {
      * route will take into account factors such as current traffic and the typical road speeds on the requested day of
      * the week and time of day.
      *
-     * <p>Information returned includes the distance, estimated travel time, and a representation of the route geometry.
-     * Additional routing information such as optimized waypoint order or turn by turn instructions is also available,
-     * depending on the options selected.
+
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful Route Directions call.
+     */
+    @Generated
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    Mono<Response<RouteDirections>> getRouteDirectionsWithResponse(
+            RouteDirectionsOptions options, Context context) {
+
+        return this.serviceClient.getRouteDirectionsWithResponseAsync(
+                ResponseFormat.JSON,
+                options.getRoutePoints(),
+                options.getMaxAlternatives(),
+                options.getAlternativeType(),
+                options.getMinDeviationDistance(),
+                options.getArriveAt(),
+                options.getDepartAt(),
+                options.getMinDeviationTime(),
+                options.getInstructionsType(),
+                options.getLanguage(),
+                options.getComputeBestWaypointOrder(),
+                options.getRouteRepresentationForBestOrder(),
+                options.getComputeTravelTime(),
+                options.getVehicleHeading(),
+                options.getReport(),
+                options.getFilterSectionType(),
+                options.getVehicleAxleWeight(),
+                options.getVehicleWidth(),
+                options.getVehicleHeight(),
+                options.getVehicleLength(),
+                options.getVehicleMaxSpeed(),
+                options.getVehicleWeight(),
+                options.isCommercialVehicle(),
+                options.getWindingness(),
+                options.getInclineLevel(),
+                options.getTravelMode(),
+                options.getAvoid(),
+                options.getUseTrafficData(),
+                options.getRouteType(),
+                options.getVehicleLoadType(),
+                options.getVehicleEngineType(),
+                options.getConstantSpeedConsumptionInLitersPerHundredKm(),
+                options.getCurrentFuelInLiters(),
+                options.getAuxiliaryPowerInLitersPerHour(),
+                options.getFuelEnergyDensityInMegajoulesPerLiter(),
+                options.getAccelerationEfficiency(),
+                options.getDecelerationEfficiency(),
+                options.getUphillEfficiency(),
+                options.getDownhillEfficiency(),
+                options.getConstantSpeedConsumptionInKwHPerHundredKm(),
+                options.getCurrentChargeInKwH(),
+                options.getMaxChargeInKwH(),
+                options.getAuxiliaryPowerInKw(),
+                context);
+    }
+
+    /**
+     * **Applies to**: S0 and S1 pricing tiers.
      *
-     * <p>Routing service provides a set of parameters for a detailed description of a vehicle-specific Consumption
-     * Model. Please check [Consumption Model](https://docs.microsoft.com/azure/azure-maps/consumption-model) for
-     * detailed explanation of the concepts and parameters involved.
+     * <p>Returns a route between an origin and a destination, passing through waypoints if they are specified. The
+     * route will take into account factors such as current traffic and the typical road speeds on the requested day of
+     * the week and time of day.
      *
-     * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param routePoints The Coordinates through which the route is calculated, delimited by a colon. A minimum of two
-     *     coordinates is required. The first one is the origin and the last is the destination of the route. Optional
-     *     coordinates in-between act as WayPoints in the route. You can pass up to 150 WayPoints.
-     * @param routeDirectionParameters Used for reconstructing a route and for calculating zero or more alternative
-     *     routes to this reference route. The provided sequence of coordinates is used as input for route
-     *     reconstruction. The alternative routes are calculated between the origin and destination points specified in
-     *     the base path parameter locations. If both minDeviationDistance and minDeviationTime are set to zero, then
-     *     these origin and destination points are expected to be at (or very near) the beginning and end of the
-     *     reference route, respectively. Intermediate locations (waypoints) are not supported when using
-     *     supportingPoints.
-     *     <p>Setting at least one of minDeviationDistance or minDeviationTime to a value greater than zero has the
-     *     following consequences:
-     *     <p>* The origin point of the calculateRoute request must be on (or very near) the input reference route. If
-     *     this is not the case, an error is returned. However, the origin point does not need to be at the beginning of
-     *     the input reference route (it can be thought of as the current vehicle position on the reference route). *
-     *     The reference route, returned as the first route in the calculateRoute response, will start at the origin
-     *     point specified in the calculateRoute request. The initial part of the input reference route up until the
-     *     origin point will be excluded from the response. * The values of minDeviationDistance and minDeviationTime
-     *     determine how far alternative routes will be guaranteed to follow the reference route from the origin point
-     *     onwards. * The route must use departAt. * The vehicleHeading is ignored.
-     * @param maxAlternatives Number of desired alternative routes to be calculated. Default: 0, minimum: 0 and maximum:
-     *     5.
-     * @param alternativeType Controls the optimality, with respect to the given planning criteria, of the calculated
-     *     alternatives compared to the reference route.
-     * @param minDeviationDistance All alternative routes returned will follow the reference route (see section POST
-     *     Requests) from the origin point of the calculateRoute request for at least this number of meters. Can only be
-     *     used when reconstructing a route. The minDeviationDistance parameter cannot be used in conjunction with
-     *     arriveAt.
-     * @param minDeviationTime All alternative routes returned will follow the reference route (see section POST
-     *     Requests) from the origin point of the calculateRoute request for at least this number of seconds. Can only
-     *     be used when reconstructing a route. The minDeviationTime parameter cannot be used in conjunction with
-     *     arriveAt. Default value is 0. Setting )minDeviationTime_ to a value greater than zero has the following
-     *     consequences: - The origin point of the _calculateRoute_ Request must be on (or very near) the input
-     *     reference route. - If this is not the case, an error is returned. - However, the origin point does not need
-     *     to be at the beginning of the input reference route (it can be thought of as the current vehicle position on
-     *     the reference route). - The reference route, returned as the first route in the _calculateRoute_ Response,
-     *     will start at the origin point specified in the _calculateRoute_ Request. The initial part of the input
-     *     reference route up until the origin point will be excluded from the Response. - The values of
-     *     _minDeviationDistance_ and _minDeviationTime_ determine how far alternative routes will be guaranteed to
-     *     follow the reference route from the origin point onwards. - The route must use _departAt_. - The
-     *     _vehicleHeading_ is ignored.
-     * @param instructionsType If specified, guidance instructions will be returned. Note that the instructionsType
-     *     parameter cannot be used in conjunction with routeRepresentation=none.
-     * @param language The language parameter determines the language of the guidance messages. It does not affect
-     *     proper nouns (the names of streets, plazas, etc.) It has no effect when instructionsType=coded. Allowed
-     *     values are (a subset of) the IETF language tags described.
-     * @param computeBestWaypointOrder Re-order the route waypoints using a fast heuristic algorithm to reduce the route
-     *     length. Yields best results when used in conjunction with routeType _shortest_. Notice that origin and
-     *     destination are excluded from the optimized waypoint indices. To include origin and destination in the
-     *     response, please increase all the indices by 1 to account for the origin, and then add the destination as the
-     *     final index. Possible values are true or false. True computes a better order if possible, but is not allowed
-     *     to be used in conjunction with maxAlternatives value greater than 0 or in conjunction with circle waypoints.
-     *     False will use the locations in the given order and not allowed to be used in conjunction with
-     *     routeRepresentation _none_.
-     * @param routeRepresentationForBestOrder Specifies the representation of the set of routes provided as response.
-     *     This parameter value can only be used in conjunction with computeBestOrder=true.
-     * @param computeTravelTime Specifies whether to return additional travel times using different types of traffic
-     *     information (none, historic, live) as well as the default best-estimate travel time.
-     * @param vehicleHeading The directional heading of the vehicle in degrees starting at true North and continuing in
-     *     clockwise direction. North is 0 degrees, east is 90 degrees, south is 180 degrees, west is 270 degrees.
-     *     Possible values 0-359.
-     * @param report Specifies which data should be reported for diagnosis purposes. The only possible value is
-     *     _effectiveSettings_. Reports the effective parameters or data used when calling the API. In the case of
-     *     defaulted parameters the default will be reflected where the parameter was not specified by the caller.
-     * @param filterSectionType Specifies which of the section types is reported in the route response.
-     *     &lt;br&gt;&lt;br&gt;For example if sectionType = pedestrian the sections which are suited for pedestrians
-     *     only are returned. Multiple types can be used. The default sectionType refers to the travelMode input. By
-     *     default travelMode is set to car.
-     * @param arriveAt The date and time of arrival at the destination point. It must be specified as a dateTime. When a
-     *     time zone offset is not specified it will be assumed to be that of the destination point. The arriveAt value
-     *     must be in the future. The arriveAt parameter cannot be used in conjunction with departAt,
-     *     minDeviationDistance or minDeviationTime.
-     * @param departAt The date and time of departure from the origin point. Departure times apart from now must be
-     *     specified as a dateTime. When a time zone offset is not specified, it will be assumed to be that of the
-     *     origin point. The departAt value must be in the future in the date-time format (1996-12-19T16:39:57-08:00).
-     * @param vehicleAxleWeight Weight per axle of the vehicle in kg. A value of 0 means that weight restrictions per
-     *     axle are not considered.
-     * @param vehicleLength Length of the vehicle in meters. A value of 0 means that length restrictions are not
-     *     considered.
-     * @param vehicleHeight Height of the vehicle in meters. A value of 0 means that height restrictions are not
-     *     considered.
-     * @param vehicleWidth Width of the vehicle in meters. A value of 0 means that width restrictions are not
-     *     considered.
-     * @param vehicleMaxSpeed Maximum speed of the vehicle in km/hour. The max speed in the vehicle profile is used to
-     *     check whether a vehicle is allowed on motorways.
-     *     <p>* A value of 0 means that an appropriate value for the vehicle will be determined and applied during route
-     *     planning.
-     *     <p>* A non-zero value may be overridden during route planning. For example, the current traffic flow is 60
-     *     km/hour. If the vehicle maximum speed is set to 50 km/hour, the routing engine will consider 60 km/hour as
-     *     this is the current situation. If the maximum speed of the vehicle is provided as 80 km/hour but the current
-     *     traffic flow is 60 km/hour, then routing engine will again use 60 km/hour.
-     * @param vehicleWeight Weight of the vehicle in kilograms.
-     *     <p>* It is mandatory if any of the *Efficiency parameters are set.
-     *     <p>* It must be strictly positive when used in the context of the Consumption Model. Weight restrictions are
-     *     considered.
-     *     <p>* If no detailed **Consumption Model** is specified and the value of **vehicleWeight** is non-zero, then
-     *     weight restrictions are considered.
-     *     <p>* In all other cases, this parameter is ignored.
-     *     <p>Sensible Values : for **Combustion Model** : 1600, for **Electric Model** : 1900.
-     * @param isCommercialVehicle Whether the vehicle is used for commercial purposes. Commercial vehicles may not be
-     *     allowed to drive on some roads.
-     * @param windingness Level of turns for thrilling route. This parameter can only be used in conjunction with
-     *     `routeType`=thrilling.
-     * @param inclineLevel Degree of hilliness for thrilling route. This parameter can only be used in conjunction with
-     *     `routeType`=thrilling.
-     * @param travelMode The mode of travel for the requested route. If not defined, default is 'car'. Note that the
-     *     requested travelMode may not be available for the entire route. Where the requested travelMode is not
-     *     available for a particular section, the travelMode element of the response for that section will be "other".
-     *     Note that travel modes bus, motorcycle, taxi and van are BETA functionality. Full restriction data is not
-     *     available in all areas. In **calculateReachableRange** requests, the values bicycle and pedestrian must not
-     *     be used.
-     * @param avoid Specifies something that the route calculation should try to avoid when determining the route. Can
-     *     be specified multiple times in one request, for example,
-     *     '&amp;avoid=motorways&amp;avoid=tollRoads&amp;avoid=ferries'. In calculateReachableRange requests, the value
-     *     alreadyUsedRoads must not be used.
-     * @param useTrafficData Possible values: * true - Do consider all available traffic information during routing *
-     *     false - Ignore current traffic data during routing. Note that although the current traffic data is ignored
-     *     during routing, the effect of historic traffic on effective road speeds is still incorporated.
-     * @param routeType The type of route requested.
-     * @param vehicleLoadType Types of cargo that may be classified as hazardous materials and restricted from some
-     *     roads. Available vehicleLoadType values are US Hazmat classes 1 through 9, plus generic classifications for
-     *     use in other countries. Values beginning with USHazmat are for US routing while otherHazmat should be used
-     *     for all other countries. vehicleLoadType can be specified multiple times. This parameter is currently only
-     *     considered for travelMode=truck.
-     * @param vehicleEngineType Engine type of the vehicle. When a detailed Consumption Model is specified, it must be
-     *     consistent with the value of **vehicleEngineType**.
-     * @param constantSpeedConsumptionInLitersPerHundredKm Specifies the speed-dependent component of consumption.
-     *     <p>Provided as an unordered list of colon-delimited speed &amp; consumption-rate pairs. The list defines
-     *     points on a consumption curve. Consumption rates for speeds not in the list are found as follows:
-     *     <p>* by linear interpolation, if the given speed lies in between two speeds in the list
-     *     <p>* by linear extrapolation otherwise, assuming a constant (ΔConsumption/ΔSpeed) determined by the nearest
-     *     two points in the list
-     *     <p>The list must contain between 1 and 25 points (inclusive), and may not contain duplicate points for the
-     *     same speed. If it only contains a single point, then the consumption rate of that point is used without
-     *     further processing.
-     *     <p>Consumption specified for the largest speed must be greater than or equal to that of the penultimate
-     *     largest speed. This ensures that extrapolation does not lead to negative consumption rates.
-     *     <p>Similarly, consumption values specified for the two smallest speeds in the list cannot lead to a negative
-     *     consumption rate for any smaller speed.
-     *     <p>The valid range for the consumption values(expressed in l/100km) is between 0.01 and 100000.0.
-     *     <p>Sensible Values : 50,6.3:130,11.5
-     *     <p>**Note** : This parameter is required for **The Combustion Consumption Model**.
-     * @param currentFuelInLiters Specifies the current supply of fuel in liters.
-     *     <p>Sensible Values : 55.
-     * @param auxiliaryPowerInLitersPerHour Specifies the amount of fuel consumed for sustaining auxiliary systems of
-     *     the vehicle, in liters per hour.
-     *     <p>It can be used to specify consumption due to devices and systems such as AC systems, radio, heating, etc.
-     *     <p>Sensible Values : 0.2.
-     * @param fuelEnergyDensityInMegajoulesPerLiter Specifies the amount of chemical energy stored in one liter of fuel
-     *     in megajoules (MJ). It is used in conjunction with the ***Efficiency** parameters for conversions between
-     *     saved or consumed energy and fuel. For example, energy density is 34.2 MJ/l for gasoline, and 35.8 MJ/l for
-     *     Diesel fuel.
-     *     <p>This parameter is required if any ***Efficiency** parameter is set.
-     *     <p>Sensible Values : 34.2.
-     * @param accelerationEfficiency Specifies the efficiency of converting chemical energy stored in fuel to kinetic
-     *     energy when the vehicle accelerates _(i.e. KineticEnergyGained/ChemicalEnergyConsumed).
-     *     ChemicalEnergyConsumed_ is obtained by converting consumed fuel to chemical energy using
-     *     **fuelEnergyDensityInMJoulesPerLiter**.
-     *     <p>Must be paired with **decelerationEfficiency**.
-     *     <p>The range of values allowed are 0.0 to 1/**decelerationEfficiency**.
-     *     <p>Sensible Values : for **Combustion Model** : 0.33, for **Electric Model** : 0.66.
-     * @param decelerationEfficiency Specifies the efficiency of converting kinetic energy to saved (not consumed) fuel
-     *     when the vehicle decelerates _(i.e. ChemicalEnergySaved/KineticEnergyLost). ChemicalEnergySaved_ is obtained
-     *     by converting saved (not consumed) fuel to energy using **fuelEnergyDensityInMJoulesPerLiter**.
-     *     <p>Must be paired with **accelerationEfficiency**.
-     *     <p>The range of values allowed are 0.0 to 1/**accelerationEfficiency**.
-     *     <p>Sensible Values : for **Combustion Model** : 0.83, for **Electric Model** : 0.91.
-     * @param uphillEfficiency Specifies the efficiency of converting chemical energy stored in fuel to potential energy
-     *     when the vehicle gains elevation _(i.e. PotentialEnergyGained/ChemicalEnergyConsumed).
-     *     ChemicalEnergyConsumed_ is obtained by converting consumed fuel to chemical energy using
-     *     **fuelEnergyDensityInMJoulesPerLiter**.
-     *     <p>Must be paired with **downhillEfficiency**.
-     *     <p>The range of values allowed are 0.0 to 1/**downhillEfficiency**.
-     *     <p>Sensible Values : for **Combustion Model** : 0.27, for **Electric Model** : 0.74.
-     * @param downhillEfficiency Specifies the efficiency of converting potential energy to saved (not consumed) fuel
-     *     when the vehicle loses elevation _(i.e. ChemicalEnergySaved/PotentialEnergyLost). ChemicalEnergySaved_ is
-     *     obtained by converting saved (not consumed) fuel to energy using **fuelEnergyDensityInMJoulesPerLiter**.
-     *     <p>Must be paired with **uphillEfficiency**.
-     *     <p>The range of values allowed are 0.0 to 1/**uphillEfficiency**.
-     *     <p>Sensible Values : for **Combustion Model** : 0.51, for **Electric Model** : 0.73.
-     * @param constantSpeedConsumptionInKwHPerHundredKm Specifies the speed-dependent component of consumption.
-     *     <p>Provided as an unordered list of speed/consumption-rate pairs. The list defines points on a consumption
-     *     curve. Consumption rates for speeds not in the list are found as follows:
-     *     <p>* by linear interpolation, if the given speed lies in between two speeds in the list
-     *     <p>* by linear extrapolation otherwise, assuming a constant (ΔConsumption/ΔSpeed) determined by the nearest
-     *     two points in the list
-     *     <p>The list must contain between 1 and 25 points (inclusive), and may not contain duplicate points for the
-     *     same speed. If it only contains a single point, then the consumption rate of that point is used without
-     *     further processing.
-     *     <p>Consumption specified for the largest speed must be greater than or equal to that of the penultimate
-     *     largest speed. This ensures that extrapolation does not lead to negative consumption rates.
-     *     <p>Similarly, consumption values specified for the two smallest speeds in the list cannot lead to a negative
-     *     consumption rate for any smaller speed.
-     *     <p>The valid range for the consumption values(expressed in kWh/100km) is between 0.01 and 100000.0.
-     *     <p>Sensible Values : 50,8.2:130,21.3
-     *     <p>This parameter is required for **Electric consumption model**.
-     * @param currentChargeInKwH Specifies the current electric energy supply in kilowatt hours (kWh).
-     *     <p>This parameter co-exists with **maxChargeInkWh** parameter.
-     *     <p>The range of values allowed are 0.0 to **maxChargeInkWh**.
-     *     <p>Sensible Values : 43.
-     * @param maxChargeInKwH Specifies the maximum electric energy supply in kilowatt hours (kWh) that may be stored in
-     *     the vehicle's battery.
-     *     <p>This parameter co-exists with **currentChargeInkWh** parameter.
-     *     <p>Minimum value has to be greater than or equal to **currentChargeInkWh**.
-     *     <p>Sensible Values : 85.
-     * @param auxiliaryPowerInKw Specifies the amount of power consumed for sustaining auxiliary systems, in kilowatts
-     *     (kW).
-     *     <p>It can be used to specify consumption due to devices and systems such as AC systems, radio, heating, etc.
-     *     <p>Sensible Values : 1.7.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -1325,95 +274,99 @@ public final class RouteAsyncClient {
     @Generated
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<RouteDirections> getRouteDirectionsWithAdditionalParameters(
-            ResponseFormat format,
-            String routePoints,
+            RouteDirectionsOptions options,
+            RouteDirectionParameters routeDirectionParameters) {
+        Mono<Response<RouteDirections>> result =
+            this.getRouteDirectionsWithAdditionalParametersWithResponse(options, routeDirectionParameters);
+        return result.flatMap(response -> {
+            return Mono.just(response.getValue());
+        });
+    }
+
+    /**
+     * **Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>Returns a route between an origin and a destination, passing through waypoints if they are specified. The
+     * route will take into account factors such as current traffic and the typical road speeds on the requested day of
+     * the week and time of day.
+     *
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful Route Directions call.
+     */
+    @Generated
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Response<RouteDirections>> getRouteDirectionsWithAdditionalParametersWithResponse(
+            RouteDirectionsOptions options,
+            RouteDirectionParameters routeDirectionParameters) {
+        return this.getRouteDirectionsWithAdditionalParametersWithResponse(options, null);
+    }
+
+    /**
+     * **Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>Returns a route between an origin and a destination, passing through waypoints if they are specified. The
+     * route will take into account factors such as current traffic and the typical road speeds on the requested day of
+     * the week and time of day.
+     *
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful Route Directions call.
+     */
+    @Generated
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    Mono<Response<RouteDirections>> getRouteDirectionsWithAdditionalParametersWithResponse(
+            RouteDirectionsOptions options,
             RouteDirectionParameters routeDirectionParameters,
-            Integer maxAlternatives,
-            AlternativeRouteType alternativeType,
-            Integer minDeviationDistance,
-            Integer minDeviationTime,
-            RouteInstructionsType instructionsType,
-            String language,
-            Boolean computeBestWaypointOrder,
-            RouteRepresentationForBestOrder routeRepresentationForBestOrder,
-            ComputeTravelTime computeTravelTime,
-            Integer vehicleHeading,
-            Report report,
-            SectionType filterSectionType,
-            OffsetDateTime arriveAt,
-            OffsetDateTime departAt,
-            Integer vehicleAxleWeight,
-            Double vehicleLength,
-            Double vehicleHeight,
-            Double vehicleWidth,
-            Integer vehicleMaxSpeed,
-            Integer vehicleWeight,
-            Boolean isCommercialVehicle,
-            WindingnessLevel windingness,
-            InclineLevel inclineLevel,
-            TravelMode travelMode,
-            List<RouteAvoidType> avoid,
-            Boolean useTrafficData,
-            RouteType routeType,
-            VehicleLoadType vehicleLoadType,
-            VehicleEngineType vehicleEngineType,
-            String constantSpeedConsumptionInLitersPerHundredKm,
-            Double currentFuelInLiters,
-            Double auxiliaryPowerInLitersPerHour,
-            Double fuelEnergyDensityInMegajoulesPerLiter,
-            Double accelerationEfficiency,
-            Double decelerationEfficiency,
-            Double uphillEfficiency,
-            Double downhillEfficiency,
-            String constantSpeedConsumptionInKwHPerHundredKm,
-            Double currentChargeInKwH,
-            Double maxChargeInKwH,
-            Double auxiliaryPowerInKw) {
-        return this.serviceClient.getRouteDirectionsWithAdditionalParametersAsync(
-                format,
-                routePoints,
+            Context context) {
+        return this.serviceClient.getRouteDirectionsWithAdditionalParametersWithResponseAsync(
+                ResponseFormat.JSON,
+                options.getRoutePoints(),
                 routeDirectionParameters,
-                maxAlternatives,
-                alternativeType,
-                minDeviationDistance,
-                minDeviationTime,
-                instructionsType,
-                language,
-                computeBestWaypointOrder,
-                routeRepresentationForBestOrder,
-                computeTravelTime,
-                vehicleHeading,
-                report,
-                filterSectionType,
-                arriveAt,
-                departAt,
-                vehicleAxleWeight,
-                vehicleLength,
-                vehicleHeight,
-                vehicleWidth,
-                vehicleMaxSpeed,
-                vehicleWeight,
-                isCommercialVehicle,
-                windingness,
-                inclineLevel,
-                travelMode,
-                avoid,
-                useTrafficData,
-                routeType,
-                vehicleLoadType,
-                vehicleEngineType,
-                constantSpeedConsumptionInLitersPerHundredKm,
-                currentFuelInLiters,
-                auxiliaryPowerInLitersPerHour,
-                fuelEnergyDensityInMegajoulesPerLiter,
-                accelerationEfficiency,
-                decelerationEfficiency,
-                uphillEfficiency,
-                downhillEfficiency,
-                constantSpeedConsumptionInKwHPerHundredKm,
-                currentChargeInKwH,
-                maxChargeInKwH,
-                auxiliaryPowerInKw);
+                options.getMaxAlternatives(),
+                options.getAlternativeType(),
+                options.getMinDeviationDistance(),
+                options.getMinDeviationTime(),
+                options.getInstructionsType(),
+                options.getLanguage(),
+                options.getComputeBestWaypointOrder(),
+                options.getRouteRepresentationForBestOrder(),
+                options.getComputeTravelTime(),
+                options.getVehicleHeading(),
+                options.getReport(),
+                options.getFilterSectionType(),
+                options.getArriveAt(),
+                options.getDepartAt(),
+                options.getVehicleAxleWeight(),
+                options.getVehicleLength(),
+                options.getVehicleHeight(),
+                options.getVehicleWidth(),
+                options.getVehicleMaxSpeed(),
+                options.getVehicleWeight(),
+                options.isCommercialVehicle(),
+                options.getWindingness(),
+                options.getInclineLevel(),
+                options.getTravelMode(),
+                options.getAvoid(),
+                options.getUseTrafficData(),
+                options.getRouteType(),
+                options.getVehicleLoadType(),
+                options.getVehicleEngineType(),
+                options.getConstantSpeedConsumptionInLitersPerHundredKm(),
+                options.getCurrentFuelInLiters(),
+                options.getAuxiliaryPowerInLitersPerHour(),
+                options.getFuelEnergyDensityInMegajoulesPerLiter(),
+                options.getAccelerationEfficiency(),
+                options.getDecelerationEfficiency(),
+                options.getUphillEfficiency(),
+                options.getDownhillEfficiency(),
+                options.getConstantSpeedConsumptionInKwHPerHundredKm(),
+                options.getCurrentChargeInKwH(),
+                options.getMaxChargeInKwH(),
+                options.getAuxiliaryPowerInKw(),
+                context);
     }
 
     /**
