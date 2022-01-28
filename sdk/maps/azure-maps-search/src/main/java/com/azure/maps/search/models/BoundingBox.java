@@ -11,6 +11,9 @@ public final class BoundingBox {
     private LatLong topLeft;
     private LatLong bottomRight;
 
+    public BoundingBox() {
+    }
+
     /**
      * Constructs a bounding box with top left and bottom right parameters.
      * @param topLeft

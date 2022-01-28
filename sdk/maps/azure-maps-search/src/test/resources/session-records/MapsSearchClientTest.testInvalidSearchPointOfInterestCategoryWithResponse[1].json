@@ -1,0 +1,24 @@
+{
+  "networkCallRecords" : [ {
+    "Method" : "GET",
+    "Uri" : "https://REDACTED.microsoft.com/search/poi/category/json?api-version=1.0&query=atm&lat=-100.0&lon=-100.0",
+    "Headers" : {
+      "User-Agent" : "azsdk-java-JavaSearchSDK/1.0 (11.0.13; Windows 10; 10.0)"
+    },
+    "Response" : {
+      "date" : "Wed, 26 Jan 2022 03:20:22 GMT",
+      "content-length" : "128",
+      "x-content-type-options" : "nosniff",
+      "x-msedge-ref" : "Ref A: 3BCE034E9A4E4831B88C8DA3B9D7B07A Ref B: TPE30EDGE0406 Ref C: 2022-01-26T03:20:22Z",
+      "x-ms-azuremaps-region" : "West US 2",
+      "content-type" : "application/json; charset=utf-8",
+      "x-cache" : "CONFIG_NOCACHE",
+      "retry-after" : "0",
+      "StatusCode" : "400",
+      "Body" : "{\r\n  \"error\": {\r\n    \"code\": \"400 BadRequest\",\r\n    \"message\": \"Invalid latitude. Latitude should be a float [-90, 90].\"\r\n  }\r\n}",
+      "strict-transport-security" : "max-age=31536000; includeSubDomains"
+    },
+    "Exception" : null
+  } ],
+  "variables" : [ ]
+}

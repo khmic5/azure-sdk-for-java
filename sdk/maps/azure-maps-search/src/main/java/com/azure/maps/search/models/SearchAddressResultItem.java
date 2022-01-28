@@ -11,11 +11,7 @@ import com.azure.core.annotation.Immutable;
 import com.azure.maps.search.implementation.helpers.SearchAddressResultItemPropertiesHelper;
 import com.azure.maps.search.implementation.helpers.Utility;
 import com.azure.maps.search.implementation.models.EntryPointPrivate;
-import com.azure.maps.search.models.PointOfInterest;
-
 import com.azure.maps.search.implementation.models.SearchAddressResultItemPrivate;
-import com.azure.maps.search.models.LatLong;
-import com.azure.maps.search.models.SearchAddressResultType;
 
 /** Result object for a Search API response. */
 @Immutable
