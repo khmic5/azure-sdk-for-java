@@ -9,6 +9,9 @@ public final class LatLong {
     private double latitude;
     private double longitude;
 
+    public LatLong() {
+    }
+
     /**
      * Constructs a LatLong with a latitude and a longitude.
      * @param latitude

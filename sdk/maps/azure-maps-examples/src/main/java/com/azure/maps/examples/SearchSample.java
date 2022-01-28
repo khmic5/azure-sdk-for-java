@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.azure.core.credential.AzureKeyCredential;
 import com.azure.core.http.policy.HttpLogDetailLevel;
 import com.azure.core.http.policy.HttpLogOptions;
 import com.azure.core.http.rest.Response;
@@ -181,10 +182,10 @@ public class SearchSample {
         ids.add(id);
 
         if (ids != null && !ids.isEmpty()) {
-           System.out.println("Get Polygon: " + ids);
-           // MapsCommon.print(client.getPolygons(ids).get(1));
-           MapsCommon.print(client.getPolygons(ids));
-           MapsCommon.print(client.getPolygonsWithResponse(ids, null).getValue().getClass());
+            System.out.println("Get Polygon: " + ids);
+            MapsCommon.print(client.getPolygons(ids).get(1));
+            MapsCommon.print(client.getPolygons(ids));
+            MapsCommon.print(client.getPolygonsWithResponse(ids, null).getValue().getClass());
         }
 
         // Search POI -
@@ -327,10 +328,8 @@ public class SearchSample {
         // with getFinalResult()
         System.out.println("Search Address Batch Async");
         MapsCommon.print(client.beginSearchAddressBatch(optionsList).getFinalResult());
-        SyncPoller<BatchSearchResult, BatchSearchResult> poller = client.beginSearchAddressBatch(optionsList);
-        BatchSearchResult result = poller.getFinalResult();
-        MapsCommon.print(result.getBatchSummary());
-        MapsCommon.print(result.getBatchItems().get(0).getResult().getResults().get(0).getBoundingBox());
+        // MapsCommon.print(result.getBatchSummary());
+        // MapsCommon.print(result.getBatchItems().get(0).getResult().getResults().get(0).getBoundingBox());
 
         // Search address reverse batch -
         // https://docs.microsoft.com/en-us/rest/api/maps/search/post-search-address-reverse-batch
@@ -345,11 +344,12 @@ public class SearchSample {
         reverseOptionsList.add(new ReverseSearchAddressOptions(new LatLong(47.621028, -122.348170)));
 
         System.out.println("Reverse Search Address Batch Async");
-        BatchReverseSearchResult br1 =
-            client.beginReverseSearchAddressBatch(reverseOptionsList).getFinalResult();
-        MapsCommon.print(br1);
-        MapsCommon.print(br1.getBatchItems());
-        MapsCommon.print(br1.getBatchItems().get(0).getResult().getAddresses().get(0).getAddress());
+        // BatchReverseSearchResult br1 =
+        //     client.beginReverseSearchAddressBatch(reverseOptionsList).getFinalResult();
+            MapsCommon.print(client.beginReverseSearchAddressBatch(reverseOptionsList).getFinalResult());
+        // MapsCommon.print(br1);
+        // MapsCommon.print(br1.getBatchItems());
+        // MapsCommon.print(br1.getBatchItems().get(0).getResult().getAddresses().get(0).getAddress());
 
         // Post search address reverse batch -
         // https://docs.microsoft.com/en-us/rest/api/maps/search/post-search-fuzzy-batch
