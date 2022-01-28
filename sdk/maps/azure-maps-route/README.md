@@ -27,11 +27,11 @@ Various documentation is available to help you get started
 
 ### Adding the package to your product
 
-[//]: # ({x-version-update-start;com.azure.resourcemanager:azure-resourcemanager-route-generated;current})
-```xml
+[//]: # ({x-version-update-start;com.azure:azure-maps-route;current})
+```xml 
 <dependency>
-    <groupId>com.azure.resourcemanager</groupId>
-    <artifactId>azure-resourcemanager-route-generated</artifactId>
+    <groupId>com.azure.maps</groupId>
+    <artifactId>azure-maps-route</artifactId>
     <version>1.0.0-beta.1</version>
 </dependency>
 ```

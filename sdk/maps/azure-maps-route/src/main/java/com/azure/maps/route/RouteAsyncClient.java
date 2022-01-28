@@ -6,11 +6,15 @@
 
 package com.azure.maps.route;
 
+import java.time.OffsetDateTime;
+import java.util.List;
+
 import com.azure.core.annotation.Generated;
 import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceClient;
 import com.azure.core.annotation.ServiceMethod;
 import com.azure.core.http.rest.Response;
+import com.azure.core.util.Context;
 import com.azure.core.util.polling.PollerFlux;
 import com.azure.maps.route.implementation.RoutesImpl;
 import com.azure.maps.route.implementation.models.AlternativeRouteType;
@@ -32,21 +36,21 @@ import com.azure.maps.route.implementation.models.RouteRangeResult;
 import com.azure.maps.route.implementation.models.RouteRepresentationForBestOrder;
 import com.azure.maps.route.implementation.models.RouteType;
 import com.azure.maps.route.implementation.models.RoutesGetRouteDirectionsBatchResponse;
-import com.azure.maps.route.implementation.models.RoutesGetRouteMatrixResponse;
 import com.azure.maps.route.implementation.models.RoutesRequestRouteDirectionsBatchResponse;
-import com.azure.maps.route.implementation.models.RoutesRequestRouteMatrixResponse;
 import com.azure.maps.route.implementation.models.SectionType;
 import com.azure.maps.route.implementation.models.TravelMode;
 import com.azure.maps.route.implementation.models.VehicleEngineType;
 import com.azure.maps.route.implementation.models.VehicleLoadType;
 import com.azure.maps.route.implementation.models.WindingnessLevel;
-import java.time.OffsetDateTime;
-import java.util.List;
+import com.azure.maps.route.models.RouteMatrixOptions;
+
 import reactor.core.publisher.Mono;
 
 /** Initializes a new instance of the asynchronous RouteClient type. */
 @ServiceClient(builder = RouteClientBuilder.class, isAsync = true)
 public final class RouteAsyncClient {
+    private final static int ROUTE_MATRIX_SMALL_SIZE = 100;
+
     @Generated private final RoutesImpl serviceClient;
 
     /**
@@ -60,330 +64,8 @@ public final class RouteAsyncClient {
     }
 
     /**
-     * **Applies to**: S1 pricing tier.
+     * Wraps sync/sync behavior.
      *
-     * <p>The Matrix Routing service allows calculation of a matrix of route summaries for a set of routes defined by
-     * origin and destination locations by using an asynchronous (async) or synchronous (sync) POST request. For every
-     * given origin, the service calculates the cost of routing from that origin to every given destination. The set of
-     * origins and the set of destinations can be thought of as the column and row headers of a table and each cell in
-     * the table contains the costs of routing from the origin to the destination for that cell. As an example, let's
-     * say a food delivery company has 20 drivers and they need to find the closest driver to pick up the delivery from
-     * the restaurant. To solve this use case, they can call Matrix Route API.
-     *
-     * <p>For each route, the travel times and distances are returned. You can use the computed costs to determine which
-     * detailed routes to calculate using the Route Directions API.
-     *
-     * <p>The maximum size of a matrix for async request is **700** and for sync request it's **100** (the number of
-     * origins multiplied by the number of destinations).
-     *
-     * <p>### Submit Synchronous Route Matrix Request If your scenario requires synchronous requests and the maximum
-     * size of the matrix is less than or equal to 100, you might want to make synchronous request. The maximum size of
-     * a matrix for this API is **100** (the number of origins multiplied by the number of destinations). With that
-     * constraint in mind, examples of possible matrix dimensions are: 10x10, 6x8, 9x8 (it does not need to be square).
-     *
-     * <p>``` POST
-     * https://atlas.microsoft.com/route/matrix/sync/json?api-version=1.0&amp;subscription-key={subscription-key} ```
-     *
-     * <p>### Submit Asynchronous Route Matrix Request The Asynchronous API is appropriate for processing big volumes of
-     * relatively complex routing requests. When you make a request by using async request, by default the service
-     * returns a 202 response code along a redirect URL in the Location field of the response header. This URL should be
-     * checked periodically until the response data or error information is available. If `waitForResults` parameter in
-     * the request is set to true, user will get a 200 response if the request is finished under 120 seconds.
-     *
-     * <p>The maximum size of a matrix for this API is **700** (the number of origins multiplied by the number of
-     * destinations). With that constraint in mind, examples of possible matrix dimensions are: 50x10, 10x10, 28x25.
-     * 10x70 (it does not need to be square).
-     *
-     * <p>The asynchronous responses are stored for **14** days. The redirect URL returns a 404 response if used after
-     * the expiration period.
-     *
-     * <p>``` POST https://atlas.microsoft.com/route/matrix/json?api-version=1.0&amp;subscription-key={subscription-key}
-     * ```
-     *
-     * <p>Here's a typical sequence of asynchronous operations: 1. Client sends a Route Matrix POST request to Azure
-     * Maps
-     *
-     * <p>2. The server will respond with one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Route Matrix request has been accepted.
-     *
-     * <p>&gt; HTTP `Error` - There was an error processing your Route Matrix request. This could either be a 400 Bad
-     * Request or any other Error status code.
-     *
-     * <p>3. If the Matrix Route request was accepted successfully, the Location header in the response contains the URL
-     * to download the results of the request. This status URI looks like the following:
-     *
-     * <p>``` GET
-     * https://atlas.microsoft.com/route/matrix/{matrixId}?api-version=1.0?subscription-key={subscription-key} ```
-     *
-     * <p>4. Client issues a GET request on the download URL obtained in Step 3 to download the results
-     *
-     * <p>### Download Sync Results When you make a POST request for Route Matrix Sync API, the service returns 200
-     * response code for successful request and a response array. The response body will contain the data and there will
-     * be no possibility to retrieve the results later.
-     *
-     * <p>### Download Async Results When a request issues a `202 Accepted` response, the request is being processed
-     * using our async pipeline. You will be given a URL to check the progress of your async request in the location
-     * header of the response. This status URI looks like the following: ``` GET
-     * https://atlas.microsoft.com/route/matrix/{matrixId}?api-version=1.0?subscription-key={subscription-key} ```
-     *
-     * <p>The URL provided by the location header will return the following responses when a `GET` request is issued.
-     *
-     * <p>&gt; HTTP `202 Accepted` - Matrix request was accepted but is still being processed. Please try again in some
-     * time.
-     *
-     * <p>&gt; HTTP `200 OK` - Matrix request successfully processed. The response body contains all of the results.
-     *
-     * @param format Desired format of the response. Only `json` format is supported.
-     * @param routeMatrixQuery The matrix of origin and destination coordinates to compute the route distance, travel
-     *     time and other summary for each cell of the matrix based on the input parameters. The minimum and the maximum
-     *     cell count supported are 1 and **700** for async and **100** for sync respectively. For example, it can be 35
-     *     origins and 20 destinations or 25 origins and 25 destinations for async API.
-     * @param waitForResults Boolean to indicate whether to execute the request synchronously. If set to true, user will
-     *     get a 200 response if the request is finished under 120 seconds. Otherwise, user will get a 202 response
-     *     right away. Please refer to the API description for more details on 202 response. **Supported only for async
-     *     request**.
-     * @param computeTravelTime Specifies whether to return additional travel times using different types of traffic
-     *     information (none, historic, live) as well as the default best-estimate travel time.
-     * @param filterSectionType Specifies which of the section types is reported in the route response.
-     *     &lt;br&gt;&lt;br&gt;For example if sectionType = pedestrian the sections which are suited for pedestrians
-     *     only are returned. Multiple types can be used. The default sectionType refers to the travelMode input. By
-     *     default travelMode is set to car.
-     * @param arriveAt The date and time of arrival at the destination point. It must be specified as a dateTime. When a
-     *     time zone offset is not specified it will be assumed to be that of the destination point. The arriveAt value
-     *     must be in the future. The arriveAt parameter cannot be used in conjunction with departAt,
-     *     minDeviationDistance or minDeviationTime.
-     * @param departAt The date and time of departure from the origin point. Departure times apart from now must be
-     *     specified as a dateTime. When a time zone offset is not specified, it will be assumed to be that of the
-     *     origin point. The departAt value must be in the future in the date-time format (1996-12-19T16:39:57-08:00).
-     * @param vehicleAxleWeight Weight per axle of the vehicle in kg. A value of 0 means that weight restrictions per
-     *     axle are not considered.
-     * @param vehicleLength Length of the vehicle in meters. A value of 0 means that length restrictions are not
-     *     considered.
-     * @param vehicleHeight Height of the vehicle in meters. A value of 0 means that height restrictions are not
-     *     considered.
-     * @param vehicleWidth Width of the vehicle in meters. A value of 0 means that width restrictions are not
-     *     considered.
-     * @param vehicleMaxSpeed Maximum speed of the vehicle in km/hour. The max speed in the vehicle profile is used to
-     *     check whether a vehicle is allowed on motorways.
-     *     <p>* A value of 0 means that an appropriate value for the vehicle will be determined and applied during route
-     *     planning.
-     *     <p>* A non-zero value may be overridden during route planning. For example, the current traffic flow is 60
-     *     km/hour. If the vehicle maximum speed is set to 50 km/hour, the routing engine will consider 60 km/hour as
-     *     this is the current situation. If the maximum speed of the vehicle is provided as 80 km/hour but the current
-     *     traffic flow is 60 km/hour, then routing engine will again use 60 km/hour.
-     * @param vehicleWeight Weight of the vehicle in kilograms.
-     * @param windingness Level of turns for thrilling route. This parameter can only be used in conjunction with
-     *     `routeType`=thrilling.
-     * @param inclineLevel Degree of hilliness for thrilling route. This parameter can only be used in conjunction with
-     *     `routeType`=thrilling.
-     * @param travelMode The mode of travel for the requested route. If not defined, default is 'car'. Note that the
-     *     requested travelMode may not be available for the entire route. Where the requested travelMode is not
-     *     available for a particular section, the travelMode element of the response for that section will be "other".
-     *     Note that travel modes bus, motorcycle, taxi and van are BETA functionality. Full restriction data is not
-     *     available in all areas. In **calculateReachableRange** requests, the values bicycle and pedestrian must not
-     *     be used.
-     * @param avoid Specifies something that the route calculation should try to avoid when determining the route. Can
-     *     be specified multiple times in one request, for example,
-     *     '&amp;avoid=motorways&amp;avoid=tollRoads&amp;avoid=ferries'. In calculateReachableRange requests, the value
-     *     alreadyUsedRoads must not be used.
-     * @param useTrafficData Possible values: * true - Do consider all available traffic information during routing *
-     *     false - Ignore current traffic data during routing. Note that although the current traffic data is ignored
-     *     during routing, the effect of historic traffic on effective road speeds is still incorporated.
-     * @param routeType The type of route requested.
-     * @param vehicleLoadType Types of cargo that may be classified as hazardous materials and restricted from some
-     *     roads. Available vehicleLoadType values are US Hazmat classes 1 through 9, plus generic classifications for
-     *     use in other countries. Values beginning with USHazmat are for US routing while otherHazmat should be used
-     *     for all other countries. vehicleLoadType can be specified multiple times. This parameter is currently only
-     *     considered for travelMode=truck.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Route Matrix call.
-     */
-    @Generated
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<RoutesRequestRouteMatrixResponse> requestRouteMatrixWithResponse(
-            JsonFormat format,
-            RouteMatrixQuery routeMatrixQuery,
-            Boolean waitForResults,
-            ComputeTravelTime computeTravelTime,
-            SectionType filterSectionType,
-            OffsetDateTime arriveAt,
-            OffsetDateTime departAt,
-            Integer vehicleAxleWeight,
-            Double vehicleLength,
-            Double vehicleHeight,
-            Double vehicleWidth,
-            Integer vehicleMaxSpeed,
-            Integer vehicleWeight,
-            WindingnessLevel windingness,
-            InclineLevel inclineLevel,
-            TravelMode travelMode,
-            List<RouteAvoidType> avoid,
-            Boolean useTrafficData,
-            RouteType routeType,
-            VehicleLoadType vehicleLoadType) {
-        return this.serviceClient.requestRouteMatrixWithResponseAsync(
-                format,
-                routeMatrixQuery,
-                waitForResults,
-                computeTravelTime,
-                filterSectionType,
-                arriveAt,
-                departAt,
-                vehicleAxleWeight,
-                vehicleLength,
-                vehicleHeight,
-                vehicleWidth,
-                vehicleMaxSpeed,
-                vehicleWeight,
-                windingness,
-                inclineLevel,
-                travelMode,
-                avoid,
-                useTrafficData,
-                routeType,
-                vehicleLoadType);
-    }
-
-    /**
-     * **Applies to**: S1 pricing tier.
-     *
-     * <p>The Matrix Routing service allows calculation of a matrix of route summaries for a set of routes defined by
-     * origin and destination locations by using an asynchronous (async) or synchronous (sync) POST request. For every
-     * given origin, the service calculates the cost of routing from that origin to every given destination. The set of
-     * origins and the set of destinations can be thought of as the column and row headers of a table and each cell in
-     * the table contains the costs of routing from the origin to the destination for that cell. As an example, let's
-     * say a food delivery company has 20 drivers and they need to find the closest driver to pick up the delivery from
-     * the restaurant. To solve this use case, they can call Matrix Route API.
-     *
-     * <p>For each route, the travel times and distances are returned. You can use the computed costs to determine which
-     * detailed routes to calculate using the Route Directions API.
-     *
-     * <p>The maximum size of a matrix for async request is **700** and for sync request it's **100** (the number of
-     * origins multiplied by the number of destinations).
-     *
-     * <p>### Submit Synchronous Route Matrix Request If your scenario requires synchronous requests and the maximum
-     * size of the matrix is less than or equal to 100, you might want to make synchronous request. The maximum size of
-     * a matrix for this API is **100** (the number of origins multiplied by the number of destinations). With that
-     * constraint in mind, examples of possible matrix dimensions are: 10x10, 6x8, 9x8 (it does not need to be square).
-     *
-     * <p>``` POST
-     * https://atlas.microsoft.com/route/matrix/sync/json?api-version=1.0&amp;subscription-key={subscription-key} ```
-     *
-     * <p>### Submit Asynchronous Route Matrix Request The Asynchronous API is appropriate for processing big volumes of
-     * relatively complex routing requests. When you make a request by using async request, by default the service
-     * returns a 202 response code along a redirect URL in the Location field of the response header. This URL should be
-     * checked periodically until the response data or error information is available. If `waitForResults` parameter in
-     * the request is set to true, user will get a 200 response if the request is finished under 120 seconds.
-     *
-     * <p>The maximum size of a matrix for this API is **700** (the number of origins multiplied by the number of
-     * destinations). With that constraint in mind, examples of possible matrix dimensions are: 50x10, 10x10, 28x25.
-     * 10x70 (it does not need to be square).
-     *
-     * <p>The asynchronous responses are stored for **14** days. The redirect URL returns a 404 response if used after
-     * the expiration period.
-     *
-     * <p>``` POST https://atlas.microsoft.com/route/matrix/json?api-version=1.0&amp;subscription-key={subscription-key}
-     * ```
-     *
-     * <p>Here's a typical sequence of asynchronous operations: 1. Client sends a Route Matrix POST request to Azure
-     * Maps
-     *
-     * <p>2. The server will respond with one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Route Matrix request has been accepted.
-     *
-     * <p>&gt; HTTP `Error` - There was an error processing your Route Matrix request. This could either be a 400 Bad
-     * Request or any other Error status code.
-     *
-     * <p>3. If the Matrix Route request was accepted successfully, the Location header in the response contains the URL
-     * to download the results of the request. This status URI looks like the following:
-     *
-     * <p>``` GET
-     * https://atlas.microsoft.com/route/matrix/{matrixId}?api-version=1.0?subscription-key={subscription-key} ```
-     *
-     * <p>4. Client issues a GET request on the download URL obtained in Step 3 to download the results
-     *
-     * <p>### Download Sync Results When you make a POST request for Route Matrix Sync API, the service returns 200
-     * response code for successful request and a response array. The response body will contain the data and there will
-     * be no possibility to retrieve the results later.
-     *
-     * <p>### Download Async Results When a request issues a `202 Accepted` response, the request is being processed
-     * using our async pipeline. You will be given a URL to check the progress of your async request in the location
-     * header of the response. This status URI looks like the following: ``` GET
-     * https://atlas.microsoft.com/route/matrix/{matrixId}?api-version=1.0?subscription-key={subscription-key} ```
-     *
-     * <p>The URL provided by the location header will return the following responses when a `GET` request is issued.
-     *
-     * <p>&gt; HTTP `202 Accepted` - Matrix request was accepted but is still being processed. Please try again in some
-     * time.
-     *
-     * <p>&gt; HTTP `200 OK` - Matrix request successfully processed. The response body contains all of the results.
-     *
-     * @param format Desired format of the response. Only `json` format is supported.
-     * @param routeMatrixQuery The matrix of origin and destination coordinates to compute the route distance, travel
-     *     time and other summary for each cell of the matrix based on the input parameters. The minimum and the maximum
-     *     cell count supported are 1 and **700** for async and **100** for sync respectively. For example, it can be 35
-     *     origins and 20 destinations or 25 origins and 25 destinations for async API.
-     * @param waitForResults Boolean to indicate whether to execute the request synchronously. If set to true, user will
-     *     get a 200 response if the request is finished under 120 seconds. Otherwise, user will get a 202 response
-     *     right away. Please refer to the API description for more details on 202 response. **Supported only for async
-     *     request**.
-     * @param computeTravelTime Specifies whether to return additional travel times using different types of traffic
-     *     information (none, historic, live) as well as the default best-estimate travel time.
-     * @param filterSectionType Specifies which of the section types is reported in the route response.
-     *     &lt;br&gt;&lt;br&gt;For example if sectionType = pedestrian the sections which are suited for pedestrians
-     *     only are returned. Multiple types can be used. The default sectionType refers to the travelMode input. By
-     *     default travelMode is set to car.
-     * @param arriveAt The date and time of arrival at the destination point. It must be specified as a dateTime. When a
-     *     time zone offset is not specified it will be assumed to be that of the destination point. The arriveAt value
-     *     must be in the future. The arriveAt parameter cannot be used in conjunction with departAt,
-     *     minDeviationDistance or minDeviationTime.
-     * @param departAt The date and time of departure from the origin point. Departure times apart from now must be
-     *     specified as a dateTime. When a time zone offset is not specified, it will be assumed to be that of the
-     *     origin point. The departAt value must be in the future in the date-time format (1996-12-19T16:39:57-08:00).
-     * @param vehicleAxleWeight Weight per axle of the vehicle in kg. A value of 0 means that weight restrictions per
-     *     axle are not considered.
-     * @param vehicleLength Length of the vehicle in meters. A value of 0 means that length restrictions are not
-     *     considered.
-     * @param vehicleHeight Height of the vehicle in meters. A value of 0 means that height restrictions are not
-     *     considered.
-     * @param vehicleWidth Width of the vehicle in meters. A value of 0 means that width restrictions are not
-     *     considered.
-     * @param vehicleMaxSpeed Maximum speed of the vehicle in km/hour. The max speed in the vehicle profile is used to
-     *     check whether a vehicle is allowed on motorways.
-     *     <p>* A value of 0 means that an appropriate value for the vehicle will be determined and applied during route
-     *     planning.
-     *     <p>* A non-zero value may be overridden during route planning. For example, the current traffic flow is 60
-     *     km/hour. If the vehicle maximum speed is set to 50 km/hour, the routing engine will consider 60 km/hour as
-     *     this is the current situation. If the maximum speed of the vehicle is provided as 80 km/hour but the current
-     *     traffic flow is 60 km/hour, then routing engine will again use 60 km/hour.
-     * @param vehicleWeight Weight of the vehicle in kilograms.
-     * @param windingness Level of turns for thrilling route. This parameter can only be used in conjunction with
-     *     `routeType`=thrilling.
-     * @param inclineLevel Degree of hilliness for thrilling route. This parameter can only be used in conjunction with
-     *     `routeType`=thrilling.
-     * @param travelMode The mode of travel for the requested route. If not defined, default is 'car'. Note that the
-     *     requested travelMode may not be available for the entire route. Where the requested travelMode is not
-     *     available for a particular section, the travelMode element of the response for that section will be "other".
-     *     Note that travel modes bus, motorcycle, taxi and van are BETA functionality. Full restriction data is not
-     *     available in all areas. In **calculateReachableRange** requests, the values bicycle and pedestrian must not
-     *     be used.
-     * @param avoid Specifies something that the route calculation should try to avoid when determining the route. Can
-     *     be specified multiple times in one request, for example,
-     *     '&amp;avoid=motorways&amp;avoid=tollRoads&amp;avoid=ferries'. In calculateReachableRange requests, the value
-     *     alreadyUsedRoads must not be used.
-     * @param useTrafficData Possible values: * true - Do consider all available traffic information during routing *
-     *     false - Ignore current traffic data during routing. Note that although the current traffic data is ignored
-     *     during routing, the effect of historic traffic on effective road speeds is still incorporated.
-     * @param routeType The type of route requested.
-     * @param vehicleLoadType Types of cargo that may be classified as hazardous materials and restricted from some
-     *     roads. Available vehicleLoadType values are US Hazmat classes 1 through 9, plus generic classifications for
-     *     use in other countries. Values beginning with USHazmat are for US routing while otherHazmat should be used
-     *     for all other countries. vehicleLoadType can be specified multiple times. This parameter is currently only
-     *     considered for travelMode=truck.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -392,110 +74,55 @@ public final class RouteAsyncClient {
     @Generated
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public PollerFlux<RouteMatrixResult, RouteMatrixResult> beginRequestRouteMatrix(
-            JsonFormat format,
-            RouteMatrixQuery routeMatrixQuery,
-            Boolean waitForResults,
-            ComputeTravelTime computeTravelTime,
-            SectionType filterSectionType,
-            OffsetDateTime arriveAt,
-            OffsetDateTime departAt,
-            Integer vehicleAxleWeight,
-            Double vehicleLength,
-            Double vehicleHeight,
-            Double vehicleWidth,
-            Integer vehicleMaxSpeed,
-            Integer vehicleWeight,
-            WindingnessLevel windingness,
-            InclineLevel inclineLevel,
-            TravelMode travelMode,
-            List<RouteAvoidType> avoid,
-            Boolean useTrafficData,
-            RouteType routeType,
-            VehicleLoadType vehicleLoadType) {
-        return this.serviceClient.beginRequestRouteMatrixAsync(
-                format,
-                routeMatrixQuery,
-                waitForResults,
-                computeTravelTime,
-                filterSectionType,
-                arriveAt,
-                departAt,
-                vehicleAxleWeight,
-                vehicleLength,
-                vehicleHeight,
-                vehicleWidth,
-                vehicleMaxSpeed,
-                vehicleWeight,
-                windingness,
-                inclineLevel,
-                travelMode,
-                avoid,
-                useTrafficData,
-                routeType,
-                vehicleLoadType);
+            RouteMatrixOptions options) {
+        return this.beginRequestRouteMatrix(options, null);
     }
 
     /**
-     * If the Matrix Route request was accepted successfully, the Location header in the response contains the URL to
-     * download the results of the request. This status URI looks like the following:
+     * Wraps sync/sync behavior.
      *
-     * <p>``` GET
-     * https://atlas.microsoft.com/route/matrix/{matrixId}?api-version=1.0?subscription-key={subscription-key} ```
-     *
-     * <p>4. Client issues a GET request on the download URL obtained in Step 3 to download the results
-     *
-     * <p>### Download Sync Results When you make a POST request for Route Matrix Sync API, the service returns 200
-     * response code for successful request and a response array. The response body will contain the data and there will
-     * be no possibility to retrieve the results later.
-     *
-     * <p>### Download Async Results When a request issues a `202 Accepted` response, the request is being processed
-     * using our async pipeline. You will be given a URL to check the progress of your async request in the location
-     * header of the response. This status URI looks like the following: ``` GET
-     * https://atlas.microsoft.com/route/matrix/{matrixId}?api-version=1.0?subscription-key={subscription-key} ```
-     *
-     * <p>The URL provided by the location header will return the following responses when a `GET` request is issued.
-     *
-     * <p>&gt; HTTP `202 Accepted` - Matrix request was accepted but is still being processed. Please try again in some
-     * time.
-     *
-     * <p>&gt; HTTP `200 OK` - Matrix request successfully processed. The response body contains all of the results.
-     *
-     * @param matrixId Matrix id received after the Matrix Route request was accepted successfully.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Route Matrix call.
      */
     @Generated
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<RoutesGetRouteMatrixResponse> getRouteMatrixWithResponse(String matrixId) {
-        return this.serviceClient.getRouteMatrixWithResponseAsync(matrixId);
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    PollerFlux<RouteMatrixResult, RouteMatrixResult> beginRequestRouteMatrix(
+            RouteMatrixOptions options, Context context) {
+
+        // if it's a small batch, then let's wait for results and avoid polling
+        final int originSize = options.getRouteMatrixQuery().getOrigins().getCoordinates().size();
+        final int destSize = options.getRouteMatrixQuery().getDestinations().getCoordinates().size();
+        boolean waitForResults = (originSize * destSize <= ROUTE_MATRIX_SMALL_SIZE);
+
+        return this.serviceClient.beginRequestRouteMatrixAsync(
+                JsonFormat.JSON,
+                options.getRouteMatrixQuery(),
+                waitForResults, // make it false
+                options.getComputeTravelTime(),
+                options.getFilterSectionType(),
+                options.getArriveAt(),
+                options.getDepartAt(),
+                options.getVehicleAxleWeight(),
+                options.getVehicleLength(),
+                options.getVehicleHeight(),
+                options.getVehicleWidth(),
+                options.getVehicleMaxSpeed(),
+                options.getVehicleWeight(),
+                options.getWindingness(),
+                options.getInclineLevel(),
+                options.getTravelMode(),
+                options.getAvoid(),
+                options.getUseTrafficData(),
+                options.getRouteType(),
+                options.getVehicleLoadType(),
+                context);
     }
 
     /**
      * If the Matrix Route request was accepted successfully, the Location header in the response contains the URL to
      * download the results of the request. This status URI looks like the following:
-     *
-     * <p>``` GET
-     * https://atlas.microsoft.com/route/matrix/{matrixId}?api-version=1.0?subscription-key={subscription-key} ```
-     *
-     * <p>4. Client issues a GET request on the download URL obtained in Step 3 to download the results
-     *
-     * <p>### Download Sync Results When you make a POST request for Route Matrix Sync API, the service returns 200
-     * response code for successful request and a response array. The response body will contain the data and there will
-     * be no possibility to retrieve the results later.
-     *
-     * <p>### Download Async Results When a request issues a `202 Accepted` response, the request is being processed
-     * using our async pipeline. You will be given a URL to check the progress of your async request in the location
-     * header of the response. This status URI looks like the following: ``` GET
-     * https://atlas.microsoft.com/route/matrix/{matrixId}?api-version=1.0?subscription-key={subscription-key} ```
-     *
-     * <p>The URL provided by the location header will return the following responses when a `GET` request is issued.
-     *
-     * <p>&gt; HTTP `202 Accepted` - Matrix request was accepted but is still being processed. Please try again in some
-     * time.
-     *
-     * <p>&gt; HTTP `200 OK` - Matrix request successfully processed. The response body contains all of the results.
      *
      * @param matrixId Matrix id received after the Matrix Route request was accepted successfully.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -506,383 +133,23 @@ public final class RouteAsyncClient {
     @Generated
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public PollerFlux<RouteMatrixResult, RouteMatrixResult> beginGetRouteMatrix(String matrixId) {
-        return this.serviceClient.beginGetRouteMatrixAsync(matrixId);
+        return this.serviceClient.beginGetRouteMatrixAsync(matrixId, null);
     }
 
     /**
-     * **Applies to**: S1 pricing tier.
+     * If the Matrix Route request was accepted successfully, the Location header in the response contains the URL to
+     * download the results of the request. This status URI looks like the following:
      *
-     * <p>The Matrix Routing service allows calculation of a matrix of route summaries for a set of routes defined by
-     * origin and destination locations by using an asynchronous (async) or synchronous (sync) POST request. For every
-     * given origin, the service calculates the cost of routing from that origin to every given destination. The set of
-     * origins and the set of destinations can be thought of as the column and row headers of a table and each cell in
-     * the table contains the costs of routing from the origin to the destination for that cell. As an example, let's
-     * say a food delivery company has 20 drivers and they need to find the closest driver to pick up the delivery from
-     * the restaurant. To solve this use case, they can call Matrix Route API.
-     *
-     * <p>For each route, the travel times and distances are returned. You can use the computed costs to determine which
-     * detailed routes to calculate using the Route Directions API.
-     *
-     * <p>The maximum size of a matrix for async request is **700** and for sync request it's **100** (the number of
-     * origins multiplied by the number of destinations).
-     *
-     * <p>### Submit Synchronous Route Matrix Request If your scenario requires synchronous requests and the maximum
-     * size of the matrix is less than or equal to 100, you might want to make synchronous request. The maximum size of
-     * a matrix for this API is **100** (the number of origins multiplied by the number of destinations). With that
-     * constraint in mind, examples of possible matrix dimensions are: 10x10, 6x8, 9x8 (it does not need to be square).
-     *
-     * <p>``` POST
-     * https://atlas.microsoft.com/route/matrix/sync/json?api-version=1.0&amp;subscription-key={subscription-key} ```
-     *
-     * <p>### Submit Asynchronous Route Matrix Request The Asynchronous API is appropriate for processing big volumes of
-     * relatively complex routing requests. When you make a request by using async request, by default the service
-     * returns a 202 response code along a redirect URL in the Location field of the response header. This URL should be
-     * checked periodically until the response data or error information is available. If `waitForResults` parameter in
-     * the request is set to true, user will get a 200 response if the request is finished under 120 seconds.
-     *
-     * <p>The maximum size of a matrix for this API is **700** (the number of origins multiplied by the number of
-     * destinations). With that constraint in mind, examples of possible matrix dimensions are: 50x10, 10x10, 28x25.
-     * 10x70 (it does not need to be square).
-     *
-     * <p>The asynchronous responses are stored for **14** days. The redirect URL returns a 404 response if used after
-     * the expiration period.
-     *
-     * <p>``` POST https://atlas.microsoft.com/route/matrix/json?api-version=1.0&amp;subscription-key={subscription-key}
-     * ```
-     *
-     * <p>Here's a typical sequence of asynchronous operations: 1. Client sends a Route Matrix POST request to Azure
-     * Maps
-     *
-     * <p>2. The server will respond with one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Route Matrix request has been accepted.
-     *
-     * <p>&gt; HTTP `Error` - There was an error processing your Route Matrix request. This could either be a 400 Bad
-     * Request or any other Error status code.
-     *
-     * <p>3. If the Matrix Route request was accepted successfully, the Location header in the response contains the URL
-     * to download the results of the request. This status URI looks like the following:
-     *
-     * <p>``` GET
-     * https://atlas.microsoft.com/route/matrix/{matrixId}?api-version=1.0?subscription-key={subscription-key} ```
-     *
-     * <p>4. Client issues a GET request on the download URL obtained in Step 3 to download the results
-     *
-     * <p>### Download Sync Results When you make a POST request for Route Matrix Sync API, the service returns 200
-     * response code for successful request and a response array. The response body will contain the data and there will
-     * be no possibility to retrieve the results later.
-     *
-     * <p>### Download Async Results When a request issues a `202 Accepted` response, the request is being processed
-     * using our async pipeline. You will be given a URL to check the progress of your async request in the location
-     * header of the response. This status URI looks like the following: ``` GET
-     * https://atlas.microsoft.com/route/matrix/{matrixId}?api-version=1.0?subscription-key={subscription-key} ```
-     *
-     * <p>The URL provided by the location header will return the following responses when a `GET` request is issued.
-     *
-     * <p>&gt; HTTP `202 Accepted` - Matrix request was accepted but is still being processed. Please try again in some
-     * time.
-     *
-     * <p>&gt; HTTP `200 OK` - Matrix request successfully processed. The response body contains all of the results.
-     *
-     * @param format Desired format of the response. Only `json` format is supported.
-     * @param routeMatrixQuery The matrix of origin and destination coordinates to compute the route distance, travel
-     *     time and other summary for each cell of the matrix based on the input parameters. The minimum and the maximum
-     *     cell count supported are 1 and **700** for async and **100** for sync respectively. For example, it can be 35
-     *     origins and 20 destinations or 25 origins and 25 destinations for async API.
-     * @param waitForResults Boolean to indicate whether to execute the request synchronously. If set to true, user will
-     *     get a 200 response if the request is finished under 120 seconds. Otherwise, user will get a 202 response
-     *     right away. Please refer to the API description for more details on 202 response. **Supported only for async
-     *     request**.
-     * @param computeTravelTime Specifies whether to return additional travel times using different types of traffic
-     *     information (none, historic, live) as well as the default best-estimate travel time.
-     * @param filterSectionType Specifies which of the section types is reported in the route response.
-     *     &lt;br&gt;&lt;br&gt;For example if sectionType = pedestrian the sections which are suited for pedestrians
-     *     only are returned. Multiple types can be used. The default sectionType refers to the travelMode input. By
-     *     default travelMode is set to car.
-     * @param arriveAt The date and time of arrival at the destination point. It must be specified as a dateTime. When a
-     *     time zone offset is not specified it will be assumed to be that of the destination point. The arriveAt value
-     *     must be in the future. The arriveAt parameter cannot be used in conjunction with departAt,
-     *     minDeviationDistance or minDeviationTime.
-     * @param departAt The date and time of departure from the origin point. Departure times apart from now must be
-     *     specified as a dateTime. When a time zone offset is not specified, it will be assumed to be that of the
-     *     origin point. The departAt value must be in the future in the date-time format (1996-12-19T16:39:57-08:00).
-     * @param vehicleAxleWeight Weight per axle of the vehicle in kg. A value of 0 means that weight restrictions per
-     *     axle are not considered.
-     * @param vehicleLength Length of the vehicle in meters. A value of 0 means that length restrictions are not
-     *     considered.
-     * @param vehicleHeight Height of the vehicle in meters. A value of 0 means that height restrictions are not
-     *     considered.
-     * @param vehicleWidth Width of the vehicle in meters. A value of 0 means that width restrictions are not
-     *     considered.
-     * @param vehicleMaxSpeed Maximum speed of the vehicle in km/hour. The max speed in the vehicle profile is used to
-     *     check whether a vehicle is allowed on motorways.
-     *     <p>* A value of 0 means that an appropriate value for the vehicle will be determined and applied during route
-     *     planning.
-     *     <p>* A non-zero value may be overridden during route planning. For example, the current traffic flow is 60
-     *     km/hour. If the vehicle maximum speed is set to 50 km/hour, the routing engine will consider 60 km/hour as
-     *     this is the current situation. If the maximum speed of the vehicle is provided as 80 km/hour but the current
-     *     traffic flow is 60 km/hour, then routing engine will again use 60 km/hour.
-     * @param vehicleWeight Weight of the vehicle in kilograms.
-     * @param windingness Level of turns for thrilling route. This parameter can only be used in conjunction with
-     *     `routeType`=thrilling.
-     * @param inclineLevel Degree of hilliness for thrilling route. This parameter can only be used in conjunction with
-     *     `routeType`=thrilling.
-     * @param travelMode The mode of travel for the requested route. If not defined, default is 'car'. Note that the
-     *     requested travelMode may not be available for the entire route. Where the requested travelMode is not
-     *     available for a particular section, the travelMode element of the response for that section will be "other".
-     *     Note that travel modes bus, motorcycle, taxi and van are BETA functionality. Full restriction data is not
-     *     available in all areas. In **calculateReachableRange** requests, the values bicycle and pedestrian must not
-     *     be used.
-     * @param avoid Specifies something that the route calculation should try to avoid when determining the route. Can
-     *     be specified multiple times in one request, for example,
-     *     '&amp;avoid=motorways&amp;avoid=tollRoads&amp;avoid=ferries'. In calculateReachableRange requests, the value
-     *     alreadyUsedRoads must not be used.
-     * @param useTrafficData Possible values: * true - Do consider all available traffic information during routing *
-     *     false - Ignore current traffic data during routing. Note that although the current traffic data is ignored
-     *     during routing, the effect of historic traffic on effective road speeds is still incorporated.
-     * @param routeType The type of route requested.
-     * @param vehicleLoadType Types of cargo that may be classified as hazardous materials and restricted from some
-     *     roads. Available vehicleLoadType values are US Hazmat classes 1 through 9, plus generic classifications for
-     *     use in other countries. Values beginning with USHazmat are for US routing while otherHazmat should be used
-     *     for all other countries. vehicleLoadType can be specified multiple times. This parameter is currently only
-     *     considered for travelMode=truck.
+     * @param matrixId Matrix id received after the Matrix Route request was accepted successfully.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful Route Matrix call.
      */
     @Generated
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<RouteMatrixResult>> requestRouteMatrixSyncWithResponse(
-            JsonFormat format,
-            RouteMatrixQuery routeMatrixQuery,
-            Boolean waitForResults,
-            ComputeTravelTime computeTravelTime,
-            SectionType filterSectionType,
-            OffsetDateTime arriveAt,
-            OffsetDateTime departAt,
-            Integer vehicleAxleWeight,
-            Double vehicleLength,
-            Double vehicleHeight,
-            Double vehicleWidth,
-            Integer vehicleMaxSpeed,
-            Integer vehicleWeight,
-            WindingnessLevel windingness,
-            InclineLevel inclineLevel,
-            TravelMode travelMode,
-            List<RouteAvoidType> avoid,
-            Boolean useTrafficData,
-            RouteType routeType,
-            VehicleLoadType vehicleLoadType) {
-        return this.serviceClient.requestRouteMatrixSyncWithResponseAsync(
-                format,
-                routeMatrixQuery,
-                waitForResults,
-                computeTravelTime,
-                filterSectionType,
-                arriveAt,
-                departAt,
-                vehicleAxleWeight,
-                vehicleLength,
-                vehicleHeight,
-                vehicleWidth,
-                vehicleMaxSpeed,
-                vehicleWeight,
-                windingness,
-                inclineLevel,
-                travelMode,
-                avoid,
-                useTrafficData,
-                routeType,
-                vehicleLoadType);
-    }
-
-    /**
-     * **Applies to**: S1 pricing tier.
-     *
-     * <p>The Matrix Routing service allows calculation of a matrix of route summaries for a set of routes defined by
-     * origin and destination locations by using an asynchronous (async) or synchronous (sync) POST request. For every
-     * given origin, the service calculates the cost of routing from that origin to every given destination. The set of
-     * origins and the set of destinations can be thought of as the column and row headers of a table and each cell in
-     * the table contains the costs of routing from the origin to the destination for that cell. As an example, let's
-     * say a food delivery company has 20 drivers and they need to find the closest driver to pick up the delivery from
-     * the restaurant. To solve this use case, they can call Matrix Route API.
-     *
-     * <p>For each route, the travel times and distances are returned. You can use the computed costs to determine which
-     * detailed routes to calculate using the Route Directions API.
-     *
-     * <p>The maximum size of a matrix for async request is **700** and for sync request it's **100** (the number of
-     * origins multiplied by the number of destinations).
-     *
-     * <p>### Submit Synchronous Route Matrix Request If your scenario requires synchronous requests and the maximum
-     * size of the matrix is less than or equal to 100, you might want to make synchronous request. The maximum size of
-     * a matrix for this API is **100** (the number of origins multiplied by the number of destinations). With that
-     * constraint in mind, examples of possible matrix dimensions are: 10x10, 6x8, 9x8 (it does not need to be square).
-     *
-     * <p>``` POST
-     * https://atlas.microsoft.com/route/matrix/sync/json?api-version=1.0&amp;subscription-key={subscription-key} ```
-     *
-     * <p>### Submit Asynchronous Route Matrix Request The Asynchronous API is appropriate for processing big volumes of
-     * relatively complex routing requests. When you make a request by using async request, by default the service
-     * returns a 202 response code along a redirect URL in the Location field of the response header. This URL should be
-     * checked periodically until the response data or error information is available. If `waitForResults` parameter in
-     * the request is set to true, user will get a 200 response if the request is finished under 120 seconds.
-     *
-     * <p>The maximum size of a matrix for this API is **700** (the number of origins multiplied by the number of
-     * destinations). With that constraint in mind, examples of possible matrix dimensions are: 50x10, 10x10, 28x25.
-     * 10x70 (it does not need to be square).
-     *
-     * <p>The asynchronous responses are stored for **14** days. The redirect URL returns a 404 response if used after
-     * the expiration period.
-     *
-     * <p>``` POST https://atlas.microsoft.com/route/matrix/json?api-version=1.0&amp;subscription-key={subscription-key}
-     * ```
-     *
-     * <p>Here's a typical sequence of asynchronous operations: 1. Client sends a Route Matrix POST request to Azure
-     * Maps
-     *
-     * <p>2. The server will respond with one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Route Matrix request has been accepted.
-     *
-     * <p>&gt; HTTP `Error` - There was an error processing your Route Matrix request. This could either be a 400 Bad
-     * Request or any other Error status code.
-     *
-     * <p>3. If the Matrix Route request was accepted successfully, the Location header in the response contains the URL
-     * to download the results of the request. This status URI looks like the following:
-     *
-     * <p>``` GET
-     * https://atlas.microsoft.com/route/matrix/{matrixId}?api-version=1.0?subscription-key={subscription-key} ```
-     *
-     * <p>4. Client issues a GET request on the download URL obtained in Step 3 to download the results
-     *
-     * <p>### Download Sync Results When you make a POST request for Route Matrix Sync API, the service returns 200
-     * response code for successful request and a response array. The response body will contain the data and there will
-     * be no possibility to retrieve the results later.
-     *
-     * <p>### Download Async Results When a request issues a `202 Accepted` response, the request is being processed
-     * using our async pipeline. You will be given a URL to check the progress of your async request in the location
-     * header of the response. This status URI looks like the following: ``` GET
-     * https://atlas.microsoft.com/route/matrix/{matrixId}?api-version=1.0?subscription-key={subscription-key} ```
-     *
-     * <p>The URL provided by the location header will return the following responses when a `GET` request is issued.
-     *
-     * <p>&gt; HTTP `202 Accepted` - Matrix request was accepted but is still being processed. Please try again in some
-     * time.
-     *
-     * <p>&gt; HTTP `200 OK` - Matrix request successfully processed. The response body contains all of the results.
-     *
-     * @param format Desired format of the response. Only `json` format is supported.
-     * @param routeMatrixQuery The matrix of origin and destination coordinates to compute the route distance, travel
-     *     time and other summary for each cell of the matrix based on the input parameters. The minimum and the maximum
-     *     cell count supported are 1 and **700** for async and **100** for sync respectively. For example, it can be 35
-     *     origins and 20 destinations or 25 origins and 25 destinations for async API.
-     * @param waitForResults Boolean to indicate whether to execute the request synchronously. If set to true, user will
-     *     get a 200 response if the request is finished under 120 seconds. Otherwise, user will get a 202 response
-     *     right away. Please refer to the API description for more details on 202 response. **Supported only for async
-     *     request**.
-     * @param computeTravelTime Specifies whether to return additional travel times using different types of traffic
-     *     information (none, historic, live) as well as the default best-estimate travel time.
-     * @param filterSectionType Specifies which of the section types is reported in the route response.
-     *     &lt;br&gt;&lt;br&gt;For example if sectionType = pedestrian the sections which are suited for pedestrians
-     *     only are returned. Multiple types can be used. The default sectionType refers to the travelMode input. By
-     *     default travelMode is set to car.
-     * @param arriveAt The date and time of arrival at the destination point. It must be specified as a dateTime. When a
-     *     time zone offset is not specified it will be assumed to be that of the destination point. The arriveAt value
-     *     must be in the future. The arriveAt parameter cannot be used in conjunction with departAt,
-     *     minDeviationDistance or minDeviationTime.
-     * @param departAt The date and time of departure from the origin point. Departure times apart from now must be
-     *     specified as a dateTime. When a time zone offset is not specified, it will be assumed to be that of the
-     *     origin point. The departAt value must be in the future in the date-time format (1996-12-19T16:39:57-08:00).
-     * @param vehicleAxleWeight Weight per axle of the vehicle in kg. A value of 0 means that weight restrictions per
-     *     axle are not considered.
-     * @param vehicleLength Length of the vehicle in meters. A value of 0 means that length restrictions are not
-     *     considered.
-     * @param vehicleHeight Height of the vehicle in meters. A value of 0 means that height restrictions are not
-     *     considered.
-     * @param vehicleWidth Width of the vehicle in meters. A value of 0 means that width restrictions are not
-     *     considered.
-     * @param vehicleMaxSpeed Maximum speed of the vehicle in km/hour. The max speed in the vehicle profile is used to
-     *     check whether a vehicle is allowed on motorways.
-     *     <p>* A value of 0 means that an appropriate value for the vehicle will be determined and applied during route
-     *     planning.
-     *     <p>* A non-zero value may be overridden during route planning. For example, the current traffic flow is 60
-     *     km/hour. If the vehicle maximum speed is set to 50 km/hour, the routing engine will consider 60 km/hour as
-     *     this is the current situation. If the maximum speed of the vehicle is provided as 80 km/hour but the current
-     *     traffic flow is 60 km/hour, then routing engine will again use 60 km/hour.
-     * @param vehicleWeight Weight of the vehicle in kilograms.
-     * @param windingness Level of turns for thrilling route. This parameter can only be used in conjunction with
-     *     `routeType`=thrilling.
-     * @param inclineLevel Degree of hilliness for thrilling route. This parameter can only be used in conjunction with
-     *     `routeType`=thrilling.
-     * @param travelMode The mode of travel for the requested route. If not defined, default is 'car'. Note that the
-     *     requested travelMode may not be available for the entire route. Where the requested travelMode is not
-     *     available for a particular section, the travelMode element of the response for that section will be "other".
-     *     Note that travel modes bus, motorcycle, taxi and van are BETA functionality. Full restriction data is not
-     *     available in all areas. In **calculateReachableRange** requests, the values bicycle and pedestrian must not
-     *     be used.
-     * @param avoid Specifies something that the route calculation should try to avoid when determining the route. Can
-     *     be specified multiple times in one request, for example,
-     *     '&amp;avoid=motorways&amp;avoid=tollRoads&amp;avoid=ferries'. In calculateReachableRange requests, the value
-     *     alreadyUsedRoads must not be used.
-     * @param useTrafficData Possible values: * true - Do consider all available traffic information during routing *
-     *     false - Ignore current traffic data during routing. Note that although the current traffic data is ignored
-     *     during routing, the effect of historic traffic on effective road speeds is still incorporated.
-     * @param routeType The type of route requested.
-     * @param vehicleLoadType Types of cargo that may be classified as hazardous materials and restricted from some
-     *     roads. Available vehicleLoadType values are US Hazmat classes 1 through 9, plus generic classifications for
-     *     use in other countries. Values beginning with USHazmat are for US routing while otherHazmat should be used
-     *     for all other countries. vehicleLoadType can be specified multiple times. This parameter is currently only
-     *     considered for travelMode=truck.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Route Matrix call.
-     */
-    @Generated
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<RouteMatrixResult> requestRouteMatrixSync(
-            JsonFormat format,
-            RouteMatrixQuery routeMatrixQuery,
-            Boolean waitForResults,
-            ComputeTravelTime computeTravelTime,
-            SectionType filterSectionType,
-            OffsetDateTime arriveAt,
-            OffsetDateTime departAt,
-            Integer vehicleAxleWeight,
-            Double vehicleLength,
-            Double vehicleHeight,
-            Double vehicleWidth,
-            Integer vehicleMaxSpeed,
-            Integer vehicleWeight,
-            WindingnessLevel windingness,
-            InclineLevel inclineLevel,
-            TravelMode travelMode,
-            List<RouteAvoidType> avoid,
-            Boolean useTrafficData,
-            RouteType routeType,
-            VehicleLoadType vehicleLoadType) {
-        return this.serviceClient.requestRouteMatrixSyncAsync(
-                format,
-                routeMatrixQuery,
-                waitForResults,
-                computeTravelTime,
-                filterSectionType,
-                arriveAt,
-                departAt,
-                vehicleAxleWeight,
-                vehicleLength,
-                vehicleHeight,
-                vehicleWidth,
-                vehicleMaxSpeed,
-                vehicleWeight,
-                windingness,
-                inclineLevel,
-                travelMode,
-                avoid,
-                useTrafficData,
-                routeType,
-                vehicleLoadType);
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    PollerFlux<RouteMatrixResult, RouteMatrixResult> beginGetRouteMatrix(String matrixId, Context context) {
+        return this.serviceClient.beginGetRouteMatrixAsync(matrixId, context);
     }
 
     /**
