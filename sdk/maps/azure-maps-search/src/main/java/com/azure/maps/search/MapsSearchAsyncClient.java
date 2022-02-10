@@ -64,7 +64,7 @@ import reactor.core.publisher.Mono;
 @ServiceClient(builder = MapsSearchClientBuilder.class, isAsync = true)
 public final class MapsSearchAsyncClient {
     // constants
-    private static final int BATCH_SIZE = 2;
+    private static final int BATCH_SIZE = 100;
     private static final int POLLING_FREQUENCY = 1;
     private static final String POLLING_BATCH_HEADER_KEY = "BatchId";
 
@@ -230,7 +230,7 @@ public final class MapsSearchAsyncClient {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Mono<Response<SearchAddressResult>> searchPointOfInterestWithResponse(SearchPointOfInterestOptions options) {
+    public Mono<Response<SearchAddressResult>> searchPointOfInterestWithResponse(SearchPointOfInterestOptions options) {
         return this.searchPointOfInterestWithResponse(options, null);
     }
 
