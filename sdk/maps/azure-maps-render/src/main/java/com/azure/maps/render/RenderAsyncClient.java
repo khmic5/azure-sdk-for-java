@@ -9,22 +9,33 @@ import com.azure.core.annotation.ServiceClient;
 import com.azure.core.annotation.ServiceMethod;
 import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.StreamResponse;
+import com.azure.core.util.Context;
 import com.azure.maps.render.implementation.RenderClientImpl;
 import com.azure.maps.render.models.BoundingBox;
 import com.azure.maps.render.models.Copyright;
 import com.azure.maps.render.models.CopyrightCaption;
+import com.azure.maps.render.models.CopyrightForTitleOptions;
+import com.azure.maps.render.models.CopyrightForWorldOptions;
+import com.azure.maps.render.models.CopyrightFromBoundingBoxOptions;
 import com.azure.maps.render.models.ErrorResponseException;
 import com.azure.maps.render.models.IncludeText;
 import com.azure.maps.render.models.LocalizedMapView;
 import com.azure.maps.render.models.MapAttribution;
+import com.azure.maps.render.models.MapAttributionOptions;
 import com.azure.maps.render.models.MapImageStyle;
+import com.azure.maps.render.models.MapStateTileOptions;
+import com.azure.maps.render.models.MapStaticImageOptions;
 import com.azure.maps.render.models.MapTileSize;
+import com.azure.maps.render.models.MapTileV2Options;
 import com.azure.maps.render.models.MapTileset;
 import com.azure.maps.render.models.RasterTileFormat;
 import com.azure.maps.render.models.ResponseFormat;
 import com.azure.maps.render.models.StaticMapLayer;
 import com.azure.maps.render.models.TileIndex;
 import com.azure.maps.render.models.TilesetID;
+import com.azure.core.util.FluxUtil;
+
+import java.io.ByteArrayInputStream;
 import java.nio.ByteBuffer;
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -90,17 +101,32 @@ public final class RenderAsyncClient {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the response.
      */
+    // @ServiceMethod(returns = ReturnType.SINGLE)
+    // public Flux<ByteBuffer> getMapTileV2(
+    //         TilesetID tilesetId,
+    //         TileIndex tileIndex,
+    //         OffsetDateTime timeStamp,
+    //         MapTileSize tileSize,
+    //         String language,
+    //         LocalizedMapView localizedMapView) {
+    //     return this.serviceClient.getMapTileV2Async(
+    //             tilesetId, tileIndex, timeStamp, tileSize, language, localizedMapView);
+    // }
+
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<StreamResponse> getMapTileV2WithResponse(
-            TilesetID tilesetId,
-            TileIndex tileIndex,
-            OffsetDateTime timeStamp,
-            MapTileSize tileSize,
-            String language,
-            LocalizedMapView localizedMapView) {
-        return this.serviceClient.getMapTileV2WithResponseAsync(
-                tilesetId, tileIndex, timeStamp, tileSize, language, localizedMapView);
+    public Flux<ByteBuffer> getMapTileV2(MapTileV2Options options) {
+        Mono<StreamResponse> result = this.getMapTileV2WithResponse(options, null);
+        StreamResponse resp = result.block();
+        return resp.getValue();                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
     }
+
+    // @ServiceMethod(returns = ReturnType.SINGLE)
+    // public Mono<SearchAddressResult> fuzzySearch(FuzzySearchOptions options) {
+    //     Mono<Response<SearchAddressResult>> result = this.fuzzySearchWithResponse(options, null);
+    //     return result.flatMap(response -> {
+    //         return Mono.just(response.getValue());
+    //     });
+    // }
 
     /**
      * **Applies to**: S0 and S1 pricing tiers.
@@ -148,15 +174,52 @@ public final class RenderAsyncClient {
      * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Flux<ByteBuffer> getMapTileV2(
-            TilesetID tilesetId,
-            TileIndex tileIndex,
-            OffsetDateTime timeStamp,
-            MapTileSize tileSize,
-            String language,
-            LocalizedMapView localizedMapView) {
-        return this.serviceClient.getMapTileV2Async(
-                tilesetId, tileIndex, timeStamp, tileSize, language, localizedMapView);
+    public Mono<StreamResponse> getMapTileV2WithResponse(MapTileV2Options options) {
+        return this.getMapTileV2WithResponse(options, null);
+    }
+
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    Mono<StreamResponse> getMapTileV2WithResponse(MapTileV2Options options, Context context) {
+        Mono<StreamResponse> responseMono = 
+        this.serviceClient.getMapTileV2WithResponseAsync
+        (options.getTilesetID(), 
+        options.getTileIndex(), 
+        options.getTimeStamp(), 
+        options.getMapTileSize(), 
+        options.getLanguage(), 
+        options.getLocalizedMapView());
+        return responseMono;
+    }
+
+    //     // convert to the right (public) SearchAddressResult
+    //     return responseMono.flatMap(response -> {
+    //         Response<SearchAddressResult> simpleResponse = Utility.createSearchResponse(response);
+    //         return Mono.just(simpleResponse);
+    //     });
+    // }
+
+    /**
+     * **Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>The Get Map Tileset API allows users to request metadata for a tileset.
+     *
+     * @param tilesetId A tileset is a collection of raster or vector data broken up into a uniform grid of square tiles
+     *     at preset zoom levels. Every tileset has a **tilesetId** to use when making requests. The **tilesetId** for
+     *     tilesets created using [Azure Maps Creator](https://aka.ms/amcreator) are generated through the [Tileset
+     *     Create API](https://docs.microsoft.com/en-us/rest/api/maps/tileset). The ready-to-use tilesets supplied by
+     *     Azure Maps are listed below. For example, microsoft.base.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return metadata for a tileset in the TileJSON format.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<MapTileset> getMapTileset(TilesetID tilesetId) {
+        Mono<Response<MapTileset>> result = this.getMapTilesetWithResponse(tilesetId, null);
+        return result.flatMap(response -> {
+            return Mono.just(response.getValue());
+        });
+        // return this.serviceClient.getMapTilesetAsync(tilesetId);
     }
 
     /**
@@ -176,27 +239,19 @@ public final class RenderAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<MapTileset>> getMapTilesetWithResponse(TilesetID tilesetId) {
-        return this.serviceClient.getMapTilesetWithResponseAsync(tilesetId);
+        return this.getMapTilesetWithResponse(tilesetId, null);
+        // return this.serviceClient.getMapTilesetWithResponseAsync(tilesetId);
     }
-
-    /**
-     * **Applies to**: S0 and S1 pricing tiers.
-     *
-     * <p>The Get Map Tileset API allows users to request metadata for a tileset.
-     *
-     * @param tilesetId A tileset is a collection of raster or vector data broken up into a uniform grid of square tiles
-     *     at preset zoom levels. Every tileset has a **tilesetId** to use when making requests. The **tilesetId** for
-     *     tilesets created using [Azure Maps Creator](https://aka.ms/amcreator) are generated through the [Tileset
-     *     Create API](https://docs.microsoft.com/en-us/rest/api/maps/tileset). The ready-to-use tilesets supplied by
-     *     Azure Maps are listed below. For example, microsoft.base.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return metadata for a tileset in the TileJSON format.
-     */
+    
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<MapTileset> getMapTileset(TilesetID tilesetId) {
-        return this.serviceClient.getMapTilesetAsync(tilesetId);
+    Mono<Response<MapTileset>> getMapTilesetWithResponse(TilesetID tilesetId, Context context) {
+        Mono<Response<MapTileset>> responseMono =
+            this.serviceClient.getMapTilesetWithResponseAsync(
+                tilesetId);
+        return responseMono.flatMap(response -> {
+            // Response<MapTileset> simpleResponse = Utility.createSearchResponse(response);
+            return Mono.just(response);
+        });
     }
 
     /**
@@ -221,9 +276,12 @@ public final class RenderAsyncClient {
      * @return copyright attribution for the requested section of a tileset.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<MapAttribution>> getMapAttributionWithResponse(
-            TilesetID tilesetId, int zoom, List<Double> bounds) {
-        return this.serviceClient.getMapAttributionWithResponseAsync(tilesetId, zoom, bounds);
+    public Mono<MapAttribution> getMapAttribution(MapAttributionOptions options) {
+        // return this.serviceClient.getMapAttributionAsync(options);
+        Mono<Response<MapAttribution>> result = this.getMapAttributionWithResponse(options, null);
+        return result.flatMap(response -> {
+            return Mono.just(response.getValue());
+        });
     }
 
     /**
@@ -248,8 +306,22 @@ public final class RenderAsyncClient {
      * @return copyright attribution for the requested section of a tileset.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<MapAttribution> getMapAttribution(TilesetID tilesetId, int zoom, List<Double> bounds) {
-        return this.serviceClient.getMapAttributionAsync(tilesetId, zoom, bounds);
+    public Mono<Response<MapAttribution>> getMapAttributionWithResponse(MapAttributionOptions options) {
+        // return this.serviceClient.getMapAttributionWithResponseAsync(options);
+        return this.getMapAttributionWithResponse(options, null);
+    }
+
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    Mono<Response<MapAttribution>> getMapAttributionWithResponse(MapAttributionOptions options, Context context) {
+        Mono<Response<MapAttribution>> responseMono =
+            this.serviceClient.getMapAttributionWithResponseAsync(
+                options.getTilesetId(),
+                options.getZoom(),
+                options.getBounds());
+        return responseMono.flatMap(response -> {
+            // Response<MapTileset> simpleResponse = Utility.createSearchResponse(response);
+            return Mono.just(response);
+        });
     }
 
     /**
@@ -267,8 +339,10 @@ public final class RenderAsyncClient {
      * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<StreamResponse> getMapStateTileWithResponse(String statesetId, TileIndex tileIndex) {
-        return this.serviceClient.getMapStateTileWithResponseAsync(statesetId, tileIndex);
+    public Flux<ByteBuffer> getMapStateTile(MapStateTileOptions options) {
+        // return this.serviceClient.getMapStateTileAsync(options);
+        Mono<StreamResponse> result = this.getMapStateTileWithResponse(options, null);
+        return result.block().getValue();
     }
 
     /**
@@ -286,28 +360,21 @@ public final class RenderAsyncClient {
      * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Flux<ByteBuffer> getMapStateTile(String statesetId, TileIndex tileIndex) {
-        return this.serviceClient.getMapStateTileAsync(statesetId, tileIndex);
+    public Mono<StreamResponse> getMapStateTileWithResponse(MapStateTileOptions options) {
+        // return this.serviceClient.getMapStateTileWithResponseAsync(options);
+        return this.getMapStateTileWithResponse(options, null);
     }
 
-    /**
-     * **Applies to**: S0 and S1 pricing tiers.
-     *
-     * <p>Copyrights API is designed to serve copyright information for Render Tile service. In addition to basic
-     * copyright for the whole map, API is serving specific groups of copyrights for some countries.
-     *
-     * <p>As an alternative to copyrights for map request, one can receive captions for displaying the map provider
-     * information on the map.
-     *
-     * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful copyright call.
-     */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<CopyrightCaption>> getCopyrightCaptionWithResponse(ResponseFormat format) {
-        return this.serviceClient.getCopyrightCaptionWithResponseAsync(format);
+    Mono<StreamResponse> getMapStateTileWithResponse(MapStateTileOptions options, Context context) {
+        Mono<StreamResponse> responseMono =
+            this.serviceClient.getMapStateTileWithResponseAsync(
+                options.getStatesetId(),
+                options.getTileIndex());
+        return responseMono.flatMap(response -> {
+            // Response<MapTileset> simpleResponse = Utility.createSearchResponse(response);
+            return Mono.just(response);
+        });
     }
 
     /**
@@ -327,7 +394,43 @@ public final class RenderAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<CopyrightCaption> getCopyrightCaption(ResponseFormat format) {
-        return this.serviceClient.getCopyrightCaptionAsync(format);
+        Mono<Response<CopyrightCaption>> result = this.getCopyrightCaptionWithResponse(format, null);
+        return result.flatMap(response -> {
+            return Mono.just(response.getValue());
+        });
+        // return this.serviceClient.getCopyrightCaptionAsync(format);
+    }
+    
+    /**
+     * **Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>Copyrights API is designed to serve copyright information for Render Tile service. In addition to basic
+     * copyright for the whole map, API is serving specific groups of copyrights for some countries.
+     *
+     * <p>As an alternative to copyrights for map request, one can receive captions for displaying the map provider
+     * information on the map.
+     *
+     * @param format Desired format of the response. Value can be either _json_ or _xml_.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful copyright call.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Response<CopyrightCaption>> getCopyrightCaptionWithResponse(ResponseFormat format) {
+        // return this.serviceClient.getCopyrightCaptionWithResponseAsync(format);
+        return this.getCopyrightCaptionWithResponse(format, null);
+    }
+
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    Mono<Response<CopyrightCaption>> getCopyrightCaptionWithResponse(ResponseFormat format, Context context) {
+        Mono<Response<CopyrightCaption>> responseMono =
+            this.serviceClient.getCopyrightCaptionWithResponseAsync(
+                ResponseFormat.JSON);
+        return responseMono.flatMap(response -> {
+            // Response<MapTileset> simpleResponse = Utility.createSearchResponse(response);
+            return Mono.just(response);
+        });
     }
 
     /**
@@ -539,24 +642,13 @@ public final class RenderAsyncClient {
      * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<StreamResponse> getMapStaticImageWithResponse(
-            RasterTileFormat format,
-            StaticMapLayer layer,
-            MapImageStyle style,
-            Integer zoom,
-            List<Double> center,
-            List<Double> boundingBox,
-            Integer height,
-            Integer width,
-            String language,
-            LocalizedMapView localizedMapView,
-            List<String> pins,
-            List<String> path) {
-        return this.serviceClient.getMapStaticImageWithResponseAsync(
-                format, layer, style, zoom, center, boundingBox, height, width, language, localizedMapView, pins, path);
+    public Flux<ByteBuffer> getMapStaticImage(MapStaticImageOptions options) {
+        Mono<StreamResponse> result = this.getMapStaticImageWithResponse(options, null);
+        return result.block().getValue();
+        // return this.serviceClient.getMapStaticImageAsync(options);
     }
 
-    /**
+        /**
      * **Applies to**: S0 and S1 pricing tiers.
      *
      * <p>The static image service renders a user-defined, rectangular image containing a map section using a zoom level
@@ -765,21 +857,27 @@ public final class RenderAsyncClient {
      * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Flux<ByteBuffer> getMapStaticImage(
-            RasterTileFormat format,
-            StaticMapLayer layer,
-            MapImageStyle style,
-            Integer zoom,
-            List<Double> center,
-            List<Double> boundingBox,
-            Integer height,
-            Integer width,
-            String language,
-            LocalizedMapView localizedMapView,
-            List<String> pins,
-            List<String> path) {
-        return this.serviceClient.getMapStaticImageAsync(
-                format, layer, style, zoom, center, boundingBox, height, width, language, localizedMapView, pins, path);
+    public Mono<StreamResponse> getMapStaticImageWithResponse(MapStaticImageOptions options) {
+        return this.getMapStaticImageWithResponse(options, null);
+    }
+
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    Mono<StreamResponse> getMapStaticImageWithResponse(MapStaticImageOptions options, Context context) {
+        Mono<StreamResponse> responseMono = 
+        this.serviceClient.getMapStaticImageWithResponseAsync
+        (options.getRasterTileFormat(),
+        options.getStaticMapLayer(), 
+        options.getMapImageStyle(),
+        options.getZoom(), 
+        options.getCenter(), 
+        options.getBoundingBox(), 
+        options.getHeight(), 
+        options.getWidth(),
+        options.getLanguage(),
+        options.getLocalizedMapView(),
+        options.getPins(),
+        options.getPath());
+        return responseMono;
     }
 
     /**
@@ -798,9 +896,12 @@ public final class RenderAsyncClient {
      * @return this object is returned from a successful copyright request.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<Copyright>> getCopyrightFromBoundingBoxWithResponse(
-            ResponseFormat format, BoundingBox boundingBox, IncludeText includeText) {
-        return this.serviceClient.getCopyrightFromBoundingBoxWithResponseAsync(format, boundingBox, includeText);
+    public Mono<Copyright> getCopyrightFromBoundingBox(CopyrightFromBoundingBoxOptions options) {
+        Mono<Response<Copyright>> result = this.getCopyrightFromBoundingBoxWithResponse(options, null);
+        return result.flatMap(response -> {
+            return Mono.just(response.getValue());
+        });
+        // return this.serviceClient.getCopyrightFromBoundingBoxAsync(options);
     }
 
     /**
@@ -819,9 +920,21 @@ public final class RenderAsyncClient {
      * @return this object is returned from a successful copyright request.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Copyright> getCopyrightFromBoundingBox(
-            ResponseFormat format, BoundingBox boundingBox, IncludeText includeText) {
-        return this.serviceClient.getCopyrightFromBoundingBoxAsync(format, boundingBox, includeText);
+    public Mono<Response<Copyright>> getCopyrightFromBoundingBoxWithResponse(CopyrightFromBoundingBoxOptions options) {
+        return this.getCopyrightFromBoundingBoxWithResponse(options, null);
+    }
+
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    Mono<Response<Copyright>> getCopyrightFromBoundingBoxWithResponse(CopyrightFromBoundingBoxOptions options, Context context) {
+        Mono<Response<Copyright>> responseMono =
+            this.serviceClient.getCopyrightFromBoundingBoxWithResponseAsync(
+                options.getResponseFormat(),
+                options.getBoundingBox(),
+                options.getIncludeText());
+        return responseMono.flatMap(response -> {
+            // Response<MapTileset> simpleResponse = Utility.createSearchResponse(response);
+            return Mono.just(response);
+        });
     }
 
     /**
@@ -842,9 +955,12 @@ public final class RenderAsyncClient {
      * @return this object is returned from a successful copyright request.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<Copyright>> getCopyrightForTileWithResponse(
-            ResponseFormat format, TileIndex tileIndex, IncludeText includeText) {
-        return this.serviceClient.getCopyrightForTileWithResponseAsync(format, tileIndex, includeText);
+    public Mono<Copyright> getCopyrightForTile(CopyrightForTitleOptions options) {
+        // return this.serviceClient.getCopyrightForTileAsync(options);
+        Mono<Response<Copyright>> result = this.getCopyrightForTileWithResponse(options, null);
+        return result.flatMap(response -> {
+            return Mono.just(response.getValue());
+        });
     }
 
     /**
@@ -864,9 +980,27 @@ public final class RenderAsyncClient {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful copyright request.
      */
+    // @ServiceMethod(returns = ReturnType.SINGLE)
+    // public Mono<Response<Copyright>> getCopyrightForTileWithResponse(CopyrightForTitleOptions options) {
+    //     return this.serviceClient.getCopyrightForTileWithResponseAsync(options);
+    // }
+
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Copyright> getCopyrightForTile(ResponseFormat format, TileIndex tileIndex, IncludeText includeText) {
-        return this.serviceClient.getCopyrightForTileAsync(format, tileIndex, includeText);
+    public Mono<Response<Copyright>> getCopyrightForTileWithResponse(CopyrightForTitleOptions options) {
+        return this.getCopyrightForTileWithResponse(options, null);
+    }
+
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    Mono<Response<Copyright>> getCopyrightForTileWithResponse(CopyrightForTitleOptions options, Context context) {
+        Mono<Response<Copyright>> responseMono =
+            this.serviceClient.getCopyrightForTileWithResponseAsync(
+                ResponseFormat.JSON,
+                options.getTileIndex(),
+                options.getIncludeText());
+        return responseMono.flatMap(response -> {
+            // Response<MapTileset> simpleResponse = Utility.createSearchResponse(response);
+            return Mono.just(response);
+        });
     }
 
     /**
@@ -886,8 +1020,12 @@ public final class RenderAsyncClient {
      * @return this object is returned from a successful copyright request.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<Copyright>> getCopyrightForWorldWithResponse(ResponseFormat format, IncludeText includeText) {
-        return this.serviceClient.getCopyrightForWorldWithResponseAsync(format, includeText);
+    public Mono<Copyright> getCopyrightForWorld(CopyrightForWorldOptions options) {
+        // return this.serviceClient.getCopyrightForWorldAsync(options);
+        Mono<Response<Copyright>> result = this.getCopyrightForWorldWithResponse(options, null);
+        return result.flatMap(response -> {
+            return Mono.just(response.getValue());
+        });
     }
 
     /**
@@ -906,8 +1044,23 @@ public final class RenderAsyncClient {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful copyright request.
      */
+    // @ServiceMethod(returns = ReturnType.SINGLE)
+    // public Mono<Response<Copyright>> getCopyrightForWorldWithResponse(CopyrightForWorldOptions options) {
+    //     return this.serviceClient.getCopyrightForWorldWithResponseAsync(options);
+    // }
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Copyright> getCopyrightForWorld(ResponseFormat format, IncludeText includeText) {
-        return this.serviceClient.getCopyrightForWorldAsync(format, includeText);
+    public Mono<Response<Copyright>> getCopyrightForWorldWithResponse(CopyrightForWorldOptions options) {
+        return this.getCopyrightForWorldWithResponse(options, null);
+    }
+
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    Mono<Response<Copyright>> getCopyrightForWorldWithResponse(CopyrightForWorldOptions options, Context context) {
+        Mono<Response<Copyright>> responseMono =
+            this.serviceClient.getCopyrightForWorldWithResponseAsync(
+                options.getResponseFormat(), options.getIncludeText());
+        return responseMono.flatMap(response -> {
+            // Response<MapTileset> simpleResponse = Utility.createSearchResponse(response);
+            return Mono.just(response);
+        });
     }
 }

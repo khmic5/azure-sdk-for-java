@@ -299,6 +299,6 @@ public final class RenderClientBuilder {
      * @return an instance of RenderClient.
      */
     public RenderClient buildClient() {
-        return new RenderClient(buildInnerClient());
+        return new RenderClient(buildAsyncClient());
     }
 }

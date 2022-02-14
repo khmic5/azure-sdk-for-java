@@ -7,38 +7,66 @@ package com.azure.maps.render;
 import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceClient;
 import com.azure.core.annotation.ServiceMethod;
+import com.azure.core.http.rest.Response;
+import com.azure.core.http.rest.StreamResponse;
+import com.azure.core.util.Context;
+import com.azure.core.util.FluxUtil;
 import com.azure.maps.render.implementation.RenderClientImpl;
 import com.azure.maps.render.models.BoundingBox;
 import com.azure.maps.render.models.Copyright;
 import com.azure.maps.render.models.CopyrightCaption;
+import com.azure.maps.render.models.CopyrightForTitleOptions;
+import com.azure.maps.render.models.CopyrightForWorldOptions;
+import com.azure.maps.render.models.CopyrightFromBoundingBoxOptions;
 import com.azure.maps.render.models.ErrorResponseException;
 import com.azure.maps.render.models.IncludeText;
 import com.azure.maps.render.models.LocalizedMapView;
 import com.azure.maps.render.models.MapAttribution;
+import com.azure.maps.render.models.MapAttributionOptions;
 import com.azure.maps.render.models.MapImageStyle;
+import com.azure.maps.render.models.MapStateTileOptions;
+import com.azure.maps.render.models.MapStaticImageOptions;
 import com.azure.maps.render.models.MapTileSize;
+import com.azure.maps.render.models.MapTileV2Options;
 import com.azure.maps.render.models.MapTileset;
 import com.azure.maps.render.models.RasterTileFormat;
 import com.azure.maps.render.models.ResponseFormat;
 import com.azure.maps.render.models.StaticMapLayer;
 import com.azure.maps.render.models.TileIndex;
 import com.azure.maps.render.models.TilesetID;
+
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
 import java.time.OffsetDateTime;
 import java.util.List;
 
 /** Initializes a new instance of the synchronous RenderClient type. */
 @ServiceClient(builder = RenderClientBuilder.class)
 public final class RenderClient {
-    private final RenderClientImpl serviceClient;
+    // private final RenderClientImpl serviceClient;
 
     /**
      * Initializes an instance of RenderClient client.
      *
      * @param serviceClient the service client implementation.
      */
-    RenderClient(RenderClientImpl serviceClient) {
-        this.serviceClient = serviceClient;
+    // RenderClient(RenderClientImpl serviceClient) {
+    //     this.serviceClient = serviceClient;
+    // }
+
+    private final RenderAsyncClient asyncClient;
+
+    /**
+     * Initializes an instance of Searches client.
+     *
+     * @param serviceClient the service client implementation.
+     */
+    RenderClient(RenderAsyncClient asyncClient) {
+        this.asyncClient = asyncClient;
     }
 
     /**
@@ -87,16 +115,25 @@ public final class RenderClient {
      * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public InputStream getMapTileV2(
-            TilesetID tilesetId,
-            TileIndex tileIndex,
-            OffsetDateTime timeStamp,
-            MapTileSize tileSize,
-            String language,
-            LocalizedMapView localizedMapView) {
-        return this.serviceClient.getMapTileV2(tilesetId, tileIndex, timeStamp, tileSize, language, localizedMapView);
+    public InputStream getMapTileV2(MapTileV2Options options) {
+        Mono<byte[]> byteArray = FluxUtil.collectBytesInByteBufferStream(this.asyncClient.getMapTileV2(options));
+        return new ByteArrayInputStream(byteArray.block());
+        // return this.asyncClient.getMapTileV2(options).block();
     }
 
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<StreamResponse> getMapTileV2WithResponse(MapTileV2Options options, Context context) {
+        return this.asyncClient.getMapTileV2WithResponse(options, context);
+    } 
+
+    /*
+    [11:23 AM] Daniel Rocha
+so you would create a new ByteArrayInputStream(byte[] myBytes) and return that.
+
+[11:23 AM] Daniel Rocha
+myBytes = FluxUtil.collectBytesInByteBufferStream
+
+*/
     /**
      * **Applies to**: S0 and S1 pricing tiers.
      *
@@ -114,7 +151,12 @@ public final class RenderClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public MapTileset getMapTileset(TilesetID tilesetId) {
-        return this.serviceClient.getMapTileset(tilesetId);
+        return this.asyncClient.getMapTileset(tilesetId).block();
+    }
+
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<MapTileset> getMapTilesetWithResponse(TilesetID tilesetID, Context context) {
+        return this.asyncClient.getMapTilesetWithResponse(tilesetID, context).block();
     }
 
     /**
@@ -139,8 +181,13 @@ public final class RenderClient {
      * @return copyright attribution for the requested section of a tileset.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public MapAttribution getMapAttribution(TilesetID tilesetId, int zoom, List<Double> bounds) {
-        return this.serviceClient.getMapAttribution(tilesetId, zoom, bounds);
+    public MapAttribution getMapAttribution(MapAttributionOptions options) {
+        return this.asyncClient.getMapAttribution(options).block();
+    }
+
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<MapAttribution> getMapAttributionWithResponse(MapAttributionOptions options, Context context) {
+        return this.asyncClient.getMapAttributionWithResponse(options, context).block();
     }
 
     /**
@@ -158,8 +205,15 @@ public final class RenderClient {
      * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public InputStream getMapStateTile(String statesetId, TileIndex tileIndex) {
-        return this.serviceClient.getMapStateTile(statesetId, tileIndex);
+    public InputStream getMapStateTile(MapStateTileOptions options) {
+        Mono<byte[]> byteArray = FluxUtil.collectBytesInByteBufferStream(this.asyncClient.getMapStateTile(options));
+        return new ByteArrayInputStream(byteArray.block());
+        // return this.asyncClient.getMapStateTile(options).block();
+    }
+
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<StreamResponse> getMapStateTileWithResponse(MapStateTileOptions options, Context context) {
+        return this.asyncClient.getMapStateTileWithResponse(options, context);
     }
 
     /**
@@ -179,7 +233,12 @@ public final class RenderClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public CopyrightCaption getCopyrightCaption(ResponseFormat format) {
-        return this.serviceClient.getCopyrightCaption(format);
+        return this.asyncClient.getCopyrightCaption(format).block();
+    }
+
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<CopyrightCaption> getCopyrightCaptionWithResponse(ResponseFormat format, Context context) {
+        return this.asyncClient.getCopyrightCaptionWithResponse(format, context).block();
     }
 
     /**
@@ -391,21 +450,15 @@ public final class RenderClient {
      * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public InputStream getMapStaticImage(
-            RasterTileFormat format,
-            StaticMapLayer layer,
-            MapImageStyle style,
-            Integer zoom,
-            List<Double> center,
-            List<Double> boundingBox,
-            Integer height,
-            Integer width,
-            String language,
-            LocalizedMapView localizedMapView,
-            List<String> pins,
-            List<String> path) {
-        return this.serviceClient.getMapStaticImage(
-                format, layer, style, zoom, center, boundingBox, height, width, language, localizedMapView, pins, path);
+    public InputStream getMapStaticImage(MapStaticImageOptions options) {
+        Mono<byte[]> byteArray = FluxUtil.collectBytesInByteBufferStream(this.asyncClient.getMapStaticImage(options));
+        return new ByteArrayInputStream(byteArray.block());
+        // return this.asyncClient.getMapStaticImage(options).block();
+    }
+
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<StreamResponse> getMapStaticImageWithResponse(MapStaticImageOptions options, Context context) {
+        return this.asyncClient.getMapStaticImageWithResponse(options, context);
     }
 
     /**
@@ -424,9 +477,13 @@ public final class RenderClient {
      * @return this object is returned from a successful copyright request.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Copyright getCopyrightFromBoundingBox(
-            ResponseFormat format, BoundingBox boundingBox, IncludeText includeText) {
-        return this.serviceClient.getCopyrightFromBoundingBox(format, boundingBox, includeText);
+    public Copyright getCopyrightFromBoundingBox(CopyrightFromBoundingBoxOptions options) {
+        return this.asyncClient.getCopyrightFromBoundingBox(options).block();
+    }
+
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<Copyright> getCopyrightFromBoundingBoxWithResponse(CopyrightFromBoundingBoxOptions options, Context context) {
+        return this.asyncClient.getCopyrightFromBoundingBoxWithResponse(options, context).block();
     }
 
     /**
@@ -447,8 +504,13 @@ public final class RenderClient {
      * @return this object is returned from a successful copyright request.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Copyright getCopyrightForTile(ResponseFormat format, TileIndex tileIndex, IncludeText includeText) {
-        return this.serviceClient.getCopyrightForTile(format, tileIndex, includeText);
+    public Copyright getCopyrightForTile(CopyrightForTitleOptions options) {
+        return this.asyncClient.getCopyrightForTile(options).block();
+    }
+
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<Copyright> getCopyrightForTileWithResponse(CopyrightForTitleOptions options, Context context) {
+        return this.asyncClient.getCopyrightForTileWithResponse(options, context).block();
     }
 
     /**
@@ -468,7 +530,12 @@ public final class RenderClient {
      * @return this object is returned from a successful copyright request.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Copyright getCopyrightForWorld(ResponseFormat format, IncludeText includeText) {
-        return this.serviceClient.getCopyrightForWorld(format, includeText);
+    public Copyright getCopyrightForWorld(CopyrightForWorldOptions options) {
+        return this.asyncClient.getCopyrightForWorld(options).block();
+    }
+
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<Copyright> getCopyrightForWorldWithResponse(CopyrightForWorldOptions options, Context context) {
+        return this.asyncClient.getCopyrightForWorldWithResponse(options, context).block();
     }
 }
