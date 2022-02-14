@@ -10,13 +10,6 @@ public final class LatLong {
     private double longitude;
 
     public LatLong() {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-        super();
->>>>>>> babaa75808 (updated client functional test cases)
-=======
->>>>>>> c8fee447cd (fixed partial pr changes)
     }
 
     /**

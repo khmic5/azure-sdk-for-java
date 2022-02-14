@@ -20,6 +20,9 @@ import com.azure.core.util.Context;
 import com.azure.maps.render.models.BoundingBox;
 import com.azure.maps.render.models.Copyright;
 import com.azure.maps.render.models.CopyrightCaption;
+import com.azure.maps.render.models.CopyrightForTitleOptions;
+import com.azure.maps.render.models.CopyrightForWorldOptions;
+import com.azure.maps.render.models.CopyrightFromBoundingBoxOptions;
 import com.azure.maps.render.models.ErrorResponseException;
 import com.azure.maps.render.models.MapAttribution;
 import com.azure.maps.render.models.MapStaticImageOptions;
@@ -103,6 +106,19 @@ public final class RenderClient {
         return getInputStream(iterator);
     }
 
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<StreamResponse> getMapTileV2WithResponse(MapTileV2Options options, Context context) {
+        return this.asyncClient.getMapTileV2WithResponse(options, context);
+    } 
+
+    /*
+    [11:23 AM] Daniel Rocha
+so you would create a new ByteArrayInputStream(byte[] myBytes) and return that.
+
+[11:23 AM] Daniel Rocha
+myBytes = FluxUtil.collectBytesInByteBufferStream
+
+*/
     /**
      * The Get Map Tiles With Response API allows users to request map tiles in vector or raster formats typically to be integrated
      * into a map control or SDK with response. Some example tiles that can be requested are Azure Maps road tiles, real-time Weather

@@ -31,7 +31,6 @@ import com.azure.maps.render.models.MapTileOptions;
 import com.azure.maps.render.models.MapTileset;
 import com.azure.maps.render.models.TileIndex;
 import com.azure.maps.render.models.TilesetID;
-
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -94,6 +93,18 @@ public final class RenderAsyncClient {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the response.
      */
+    // @ServiceMethod(returns = ReturnType.SINGLE)
+    // public Flux<ByteBuffer> getMapTileV2(
+    //         TilesetID tilesetId,
+    //         TileIndex tileIndex,
+    //         OffsetDateTime timeStamp,
+    //         MapTileSize tileSize,
+    //         String language,
+    //         LocalizedMapView localizedMapView) {
+    //     return this.serviceClient.getMapTileV2Async(
+    //             tilesetId, tileIndex, timeStamp, tileSize, language, localizedMapView);
+    // }
+
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Flux<ByteBuffer> getMapTile(MapTileOptions options) {
         Mono<StreamResponse> responseMono = this.getMapTileWithResponse(options, null);
@@ -637,7 +648,7 @@ public final class RenderAsyncClient {
         }); 
     }
 
-    /**
+        /**
      * **Applies to**: S0 and S1 pricing tiers.
      *
      * The static image service renders a user-defined, rectangular image containing a map section using a zoom level
@@ -991,6 +1002,11 @@ public final class RenderAsyncClient {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful copyright request.
      */
+    // @ServiceMethod(returns = ReturnType.SINGLE)
+    // public Mono<Response<Copyright>> getCopyrightForTileWithResponse(CopyrightForTitleOptions options) {
+    //     return this.serviceClient.getCopyrightForTileWithResponseAsync(options);
+    // }
+
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<Copyright>> getCopyrightForTileWithResponse(TileIndex tileIndex, boolean includeText) {
         return this.getCopyrightForTileWithResponse(tileIndex, includeText, null);
@@ -1055,6 +1071,10 @@ public final class RenderAsyncClient {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return this object is returned from a successful copyright request.
      */
+    // @ServiceMethod(returns = ReturnType.SINGLE)
+    // public Mono<Response<Copyright>> getCopyrightForWorldWithResponse(CopyrightForWorldOptions options) {
+    //     return this.serviceClient.getCopyrightForWorldWithResponseAsync(options);
+    // }
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<Copyright>> getCopyrightForWorldWithResponse(boolean includeText) {
         return this.getCopyrightForWorldWithResponse(includeText, null);
