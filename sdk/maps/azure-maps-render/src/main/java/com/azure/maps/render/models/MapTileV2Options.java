@@ -2,6 +2,11 @@ package com.azure.maps.render.models;
 
 import java.time.OffsetDateTime;
 
+import com.azure.maps.render.implementation.models.LocalizedMapView;
+import com.azure.maps.render.implementation.models.MapTileSize;
+import com.azure.maps.render.implementation.models.TileIndex;
+import com.azure.maps.render.implementation.models.TilesetID;
+
 public class MapTileV2Options {
     private TilesetID tilesetId;
     private TileIndex tileIndex;

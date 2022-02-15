@@ -1,5 +1,9 @@
 package com.azure.maps.render.models;
 
+import com.azure.maps.render.implementation.models.IncludeText;
+import com.azure.maps.render.implementation.models.ResponseFormat;
+import com.azure.maps.render.implementation.models.TileIndex;
+
 public class CopyrightForTitleOptions {
     private ResponseFormat format;
     private TileIndex tileIndex;

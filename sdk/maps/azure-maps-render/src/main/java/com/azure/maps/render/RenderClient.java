@@ -14,20 +14,20 @@ import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.StreamResponse;
 import com.azure.core.util.Context;
 import com.azure.core.util.FluxUtil;
-import com.azure.maps.render.models.Copyright;
-import com.azure.maps.render.models.CopyrightCaption;
+import com.azure.maps.render.implementation.models.Copyright;
+import com.azure.maps.render.implementation.models.CopyrightCaption;
+import com.azure.maps.render.implementation.models.ErrorResponseException;
+import com.azure.maps.render.implementation.models.MapAttribution;
+import com.azure.maps.render.implementation.models.MapTileset;
+import com.azure.maps.render.implementation.models.ResponseFormat;
+import com.azure.maps.render.implementation.models.TilesetID;
 import com.azure.maps.render.models.CopyrightForTitleOptions;
 import com.azure.maps.render.models.CopyrightForWorldOptions;
 import com.azure.maps.render.models.CopyrightFromBoundingBoxOptions;
-import com.azure.maps.render.models.ErrorResponseException;
-import com.azure.maps.render.models.MapAttribution;
 import com.azure.maps.render.models.MapAttributionOptions;
 import com.azure.maps.render.models.MapStateTileOptions;
 import com.azure.maps.render.models.MapStaticImageOptions;
 import com.azure.maps.render.models.MapTileV2Options;
-import com.azure.maps.render.models.MapTileset;
-import com.azure.maps.render.models.ResponseFormat;
-import com.azure.maps.render.models.TilesetID;
 
 import reactor.core.publisher.Mono;
 

@@ -2,6 +2,8 @@ package com.azure.maps.render.models;
 
 import java.util.List;
 
+import com.azure.maps.render.implementation.models.TilesetID;
+
 public class MapAttributionOptions {
     private TilesetID tilesetId;
     private int zoom;

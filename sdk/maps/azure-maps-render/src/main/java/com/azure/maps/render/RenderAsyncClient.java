@@ -13,20 +13,21 @@ import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.StreamResponse;
 import com.azure.core.util.Context;
 import com.azure.maps.render.implementation.RenderClientImpl;
-import com.azure.maps.render.models.Copyright;
-import com.azure.maps.render.models.CopyrightCaption;
+import com.azure.maps.render.implementation.RenderV2sImpl;
+import com.azure.maps.render.implementation.models.Copyright;
+import com.azure.maps.render.implementation.models.CopyrightCaption;
+import com.azure.maps.render.implementation.models.ErrorResponseException;
+import com.azure.maps.render.implementation.models.MapAttribution;
+import com.azure.maps.render.implementation.models.MapTileset;
+import com.azure.maps.render.implementation.models.ResponseFormat;
+import com.azure.maps.render.implementation.models.TilesetID;
 import com.azure.maps.render.models.CopyrightForTitleOptions;
 import com.azure.maps.render.models.CopyrightForWorldOptions;
 import com.azure.maps.render.models.CopyrightFromBoundingBoxOptions;
-import com.azure.maps.render.models.ErrorResponseException;
-import com.azure.maps.render.models.MapAttribution;
 import com.azure.maps.render.models.MapAttributionOptions;
 import com.azure.maps.render.models.MapStateTileOptions;
 import com.azure.maps.render.models.MapStaticImageOptions;
 import com.azure.maps.render.models.MapTileV2Options;
-import com.azure.maps.render.models.MapTileset;
-import com.azure.maps.render.models.ResponseFormat;
-import com.azure.maps.render.models.TilesetID;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -34,7 +35,7 @@ import reactor.core.publisher.Mono;
 /** Initializes a new instance of the asynchronous RenderClient type. */
 @ServiceClient(builder = RenderClientBuilder.class, isAsync = true)
 public final class RenderAsyncClient {
-    private final RenderClientImpl serviceClient;
+    private final RenderV2sImpl serviceClient;
 
     /**
      * Initializes an instance of RenderClient client.
@@ -42,7 +43,7 @@ public final class RenderAsyncClient {
      * @param serviceClient the service client implementation.
      */
     RenderAsyncClient(RenderClientImpl serviceClient) {
-        this.serviceClient = serviceClient;
+        this.serviceClient = serviceClient.getRenderV2s();
     }
 
     /**
@@ -99,7 +100,7 @@ public final class RenderAsyncClient {
         });                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
     }
 
-    /**
+    /** 
      * **Applies to**: S0 and S1 pricing tiers.
      *
      * <p>The Get Map Tiles API allows users to request map tiles in vector or raster formats typically to be integrated
@@ -151,7 +152,7 @@ public final class RenderAsyncClient {
 
     @ServiceMethod(returns = ReturnType.SINGLE)
     Mono<StreamResponse> getMapTileV2WithResponse(MapTileV2Options options, Context context) {        
-        return this.serviceClient.getMapTileV2WithResponseAsync(options.getTilesetID(), 
+        return this.serviceClient.getMapTileWithResponseAsync(options.getTilesetID(), 
             options.getTileIndex(), 
             options.getTimeStamp(), 
             options.getMapTileSize(), 
