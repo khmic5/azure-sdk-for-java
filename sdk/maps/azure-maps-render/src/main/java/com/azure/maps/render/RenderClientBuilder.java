@@ -4,6 +4,12 @@
 
 package com.azure.maps.render;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
 import com.azure.core.annotation.ServiceClientBuilder;
 import com.azure.core.http.HttpClient;
 import com.azure.core.http.HttpHeaders;
@@ -23,20 +29,16 @@ import com.azure.core.util.CoreUtils;
 import com.azure.core.util.serializer.JacksonAdapter;
 import com.azure.core.util.serializer.SerializerAdapter;
 import com.azure.maps.render.implementation.RenderClientImpl;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /** A builder for creating a new instance of the RenderClient type. */
 @ServiceClientBuilder(serviceClients = {RenderClient.class, RenderAsyncClient.class})
 public final class RenderClientBuilder {
-    private static final String SDK_NAME = "name";
-
-    private static final String SDK_VERSION = "version";
-
+    // auth scope
     static final String[] DEFAULT_SCOPES = new String[] {"https://atlas.microsoft.com/.default"};
 
+    //constants
+    private static final String SDK_NAME = "name";
+    private static final String SDK_VERSION = "version";
     private final Map<String, String> properties = new HashMap<>();
 
     /** Create an instance of the RenderClientBuilder. */
@@ -62,7 +64,7 @@ public final class RenderClientBuilder {
      * @return the RenderClientBuilder.
      */
     public RenderClientBuilder clientId(String clientId) {
-        this.clientId = clientId;
+        this.clientId = Objects.requireNonNull(clientId, "'clientID' cannot be null.");
         return this;
     }
 
@@ -110,7 +112,7 @@ public final class RenderClientBuilder {
      * @return the RenderClientBuilder.
      */
     public RenderClientBuilder pipeline(HttpPipeline pipeline) {
-        this.pipeline = pipeline;
+        this.pipeline = Objects.requireNonNull(pipeline, "'pipeline' cannot be null.");
         return this;
     }
 

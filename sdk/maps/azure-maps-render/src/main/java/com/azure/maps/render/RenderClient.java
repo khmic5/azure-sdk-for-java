@@ -4,6 +4,9 @@
 
 package com.azure.maps.render;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+
 import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceClient;
 import com.azure.core.annotation.ServiceMethod;
@@ -11,52 +14,31 @@ import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.StreamResponse;
 import com.azure.core.util.Context;
 import com.azure.core.util.FluxUtil;
-import com.azure.maps.render.implementation.RenderClientImpl;
-import com.azure.maps.render.models.BoundingBox;
 import com.azure.maps.render.models.Copyright;
 import com.azure.maps.render.models.CopyrightCaption;
 import com.azure.maps.render.models.CopyrightForTitleOptions;
 import com.azure.maps.render.models.CopyrightForWorldOptions;
 import com.azure.maps.render.models.CopyrightFromBoundingBoxOptions;
 import com.azure.maps.render.models.ErrorResponseException;
-import com.azure.maps.render.models.IncludeText;
-import com.azure.maps.render.models.LocalizedMapView;
 import com.azure.maps.render.models.MapAttribution;
 import com.azure.maps.render.models.MapAttributionOptions;
-import com.azure.maps.render.models.MapImageStyle;
 import com.azure.maps.render.models.MapStateTileOptions;
 import com.azure.maps.render.models.MapStaticImageOptions;
-import com.azure.maps.render.models.MapTileSize;
 import com.azure.maps.render.models.MapTileV2Options;
 import com.azure.maps.render.models.MapTileset;
-import com.azure.maps.render.models.RasterTileFormat;
 import com.azure.maps.render.models.ResponseFormat;
-import com.azure.maps.render.models.StaticMapLayer;
-import com.azure.maps.render.models.TileIndex;
 import com.azure.maps.render.models.TilesetID;
 
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.nio.ByteBuffer;
-import java.time.OffsetDateTime;
-import java.util.List;
 
 /** Initializes a new instance of the synchronous RenderClient type. */
 @ServiceClient(builder = RenderClientBuilder.class)
 public final class RenderClient {
-    // private final RenderClientImpl serviceClient;
-
     /**
      * Initializes an instance of RenderClient client.
      *
      * @param serviceClient the service client implementation.
      */
-    // RenderClient(RenderClientImpl serviceClient) {
-    //     this.serviceClient = serviceClient;
-    // }
 
     private final RenderAsyncClient asyncClient;
 
@@ -118,7 +100,6 @@ public final class RenderClient {
     public InputStream getMapTileV2(MapTileV2Options options) {
         Mono<byte[]> byteArray = FluxUtil.collectBytesInByteBufferStream(this.asyncClient.getMapTileV2(options));
         return new ByteArrayInputStream(byteArray.block());
-        // return this.asyncClient.getMapTileV2(options).block();
     }
 
     @ServiceMethod(returns = ReturnType.SINGLE)
@@ -126,14 +107,6 @@ public final class RenderClient {
         return this.asyncClient.getMapTileV2WithResponse(options, context);
     } 
 
-    /*
-    [11:23 AM] Daniel Rocha
-so you would create a new ByteArrayInputStream(byte[] myBytes) and return that.
-
-[11:23 AM] Daniel Rocha
-myBytes = FluxUtil.collectBytesInByteBufferStream
-
-*/
     /**
      * **Applies to**: S0 and S1 pricing tiers.
      *
@@ -208,7 +181,6 @@ myBytes = FluxUtil.collectBytesInByteBufferStream
     public InputStream getMapStateTile(MapStateTileOptions options) {
         Mono<byte[]> byteArray = FluxUtil.collectBytesInByteBufferStream(this.asyncClient.getMapStateTile(options));
         return new ByteArrayInputStream(byteArray.block());
-        // return this.asyncClient.getMapStateTile(options).block();
     }
 
     @ServiceMethod(returns = ReturnType.SINGLE)
@@ -453,7 +425,6 @@ myBytes = FluxUtil.collectBytesInByteBufferStream
     public InputStream getMapStaticImage(MapStaticImageOptions options) {
         Mono<byte[]> byteArray = FluxUtil.collectBytesInByteBufferStream(this.asyncClient.getMapStaticImage(options));
         return new ByteArrayInputStream(byteArray.block());
-        // return this.asyncClient.getMapStaticImage(options).block();
     }
 
     @ServiceMethod(returns = ReturnType.SINGLE)
