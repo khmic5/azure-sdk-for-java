@@ -93,6 +93,7 @@ public final class RenderAsyncClient {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the response.
      */
+
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Flux<ByteBuffer> getMapTile(MapTileOptions options) {
         Mono<StreamResponse> responseMono = this.getMapTileWithResponse(options, null);
