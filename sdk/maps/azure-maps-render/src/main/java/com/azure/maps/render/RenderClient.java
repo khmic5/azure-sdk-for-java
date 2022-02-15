@@ -37,7 +37,6 @@ import reactor.core.publisher.Mono;
 /** Initializes a new instance of the synchronous RenderClient type. */
 @ServiceClient(builder = RenderClientBuilder.class)
 public final class RenderClient {
-
     /**
      * Initializes an instance of RenderClient client.
      *
@@ -111,14 +110,6 @@ public final class RenderClient {
         return this.asyncClient.getMapTileV2WithResponse(options, context);
     } 
 
-    /*
-    [11:23 AM] Daniel Rocha
-so you would create a new ByteArrayInputStream(byte[] myBytes) and return that.
-
-[11:23 AM] Daniel Rocha
-myBytes = FluxUtil.collectBytesInByteBufferStream
-
-*/
     /**
      * The Get Map Tiles With Response API allows users to request map tiles in vector or raster formats typically to be integrated
      * into a map control or SDK with response. Some example tiles that can be requested are Azure Maps road tiles, real-time Weather
