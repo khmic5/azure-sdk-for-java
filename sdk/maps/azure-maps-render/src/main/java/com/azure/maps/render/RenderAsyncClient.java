@@ -90,11 +90,13 @@ public final class RenderAsyncClient {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the response.
      */
+
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Flux<ByteBuffer> getMapTileV2(MapTileV2Options options) {
-        Mono<StreamResponse> result = this.getMapTileV2WithResponse(options, null);
-        StreamResponse resp = result.block();
-        return resp.getValue();                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+        Mono<StreamResponse> responseMono = this.getMapTileV2WithResponse(options, null);
+        return responseMono.flatMapMany(response -> {
+            return response.getValue();
+        });                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
     }
 
     /**
@@ -148,16 +150,13 @@ public final class RenderAsyncClient {
     }
 
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Mono<StreamResponse> getMapTileV2WithResponse(MapTileV2Options options, Context context) {
-        Mono<StreamResponse> responseMono = 
-        this.serviceClient.getMapTileV2WithResponseAsync
-        (options.getTilesetID(), 
-        options.getTileIndex(), 
-        options.getTimeStamp(), 
-        options.getMapTileSize(), 
-        options.getLanguage(), 
-        options.getLocalizedMapView());
-        return responseMono;
+    Mono<StreamResponse> getMapTileV2WithResponse(MapTileV2Options options, Context context) {        
+        return this.serviceClient.getMapTileV2WithResponseAsync(options.getTilesetID(), 
+            options.getTileIndex(), 
+            options.getTimeStamp(), 
+            options.getMapTileSize(), 
+            options.getLanguage(), 
+            options.getLocalizedMapView());
     }
 
     /**
@@ -208,9 +207,7 @@ public final class RenderAsyncClient {
         Mono<Response<MapTileset>> responseMono =
             this.serviceClient.getMapTilesetWithResponseAsync(
                 tilesetId);
-        return responseMono.flatMap(response -> {
-            return Mono.just(response);
-        });
+        return responseMono;
     }
 
     /**
@@ -275,9 +272,7 @@ public final class RenderAsyncClient {
                 options.getTilesetId(),
                 options.getZoom(),
                 options.getBounds());
-        return responseMono.flatMap(response -> {
-            return Mono.just(response);
-        });
+        return responseMono;
     }
 
     /**
@@ -296,8 +291,10 @@ public final class RenderAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Flux<ByteBuffer> getMapStateTile(MapStateTileOptions options) {
-        Mono<StreamResponse> result = this.getMapStateTileWithResponse(options, null);
-        return result.block().getValue();
+        Mono<StreamResponse> responseMono = this.getMapStateTileWithResponse(options, null);
+        return responseMono.flatMapMany(response -> {
+            return response.getValue();
+        });  
     }
 
     /**
@@ -325,9 +322,7 @@ public final class RenderAsyncClient {
             this.serviceClient.getMapStateTileWithResponseAsync(
                 options.getStatesetId(),
                 options.getTileIndex());
-        return responseMono.flatMap(response -> {
-            return Mono.just(response);
-        });
+        return responseMono;
     }
 
     /**
@@ -378,9 +373,7 @@ public final class RenderAsyncClient {
         Mono<Response<CopyrightCaption>> responseMono =
             this.serviceClient.getCopyrightCaptionWithResponseAsync(
                 ResponseFormat.JSON);
-        return responseMono.flatMap(response -> {
-            return Mono.just(response);
-        });
+        return responseMono;
     }
 
     /**
@@ -593,8 +586,10 @@ public final class RenderAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Flux<ByteBuffer> getMapStaticImage(MapStaticImageOptions options) {
-        Mono<StreamResponse> result = this.getMapStaticImageWithResponse(options, null);
-        return result.block().getValue();
+        Mono<StreamResponse> responseMono = this.getMapStaticImageWithResponse(options, null);
+        return responseMono.flatMapMany(response -> {
+            return response.getValue();
+        }); 
     }
 
         /**
@@ -879,9 +874,7 @@ public final class RenderAsyncClient {
                 options.getResponseFormat(),
                 options.getBoundingBox(),
                 options.getIncludeText());
-        return responseMono.flatMap(response -> {
-            return Mono.just(response);
-        });
+        return responseMono;
     }
 
     /**
@@ -938,9 +931,7 @@ public final class RenderAsyncClient {
                 ResponseFormat.JSON,
                 options.getTileIndex(),
                 options.getIncludeText());
-        return responseMono.flatMap(response -> {
-            return Mono.just(response);
-        });
+        return responseMono;
     }
 
     /**
