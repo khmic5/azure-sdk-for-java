@@ -6,6 +6,7 @@ package com.azure.maps.render;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.List;
 
 import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceClient;
@@ -18,18 +19,17 @@ import com.azure.maps.render.implementation.models.Copyright;
 import com.azure.maps.render.implementation.models.CopyrightCaption;
 import com.azure.maps.render.implementation.models.ErrorResponseException;
 import com.azure.maps.render.implementation.models.MapAttribution;
-import com.azure.maps.render.implementation.models.MapTileset;
-import com.azure.maps.render.implementation.models.ResponseFormat;
+import com.azure.maps.render.implementation.models.MapTilesetPrivate;
+import com.azure.maps.render.implementation.models.TileIndex;
 import com.azure.maps.render.implementation.models.TilesetID;
-import com.azure.maps.render.models.CopyrightForTitleOptions;
-import com.azure.maps.render.models.CopyrightForWorldOptions;
-import com.azure.maps.render.models.CopyrightFromBoundingBoxOptions;
-import com.azure.maps.render.models.MapAttributionOptions;
-import com.azure.maps.render.models.MapStateTileOptions;
+import com.azure.maps.render.models.BoundingBox;
 import com.azure.maps.render.models.MapStaticImageOptions;
-import com.azure.maps.render.models.MapTileV2Options;
+import com.azure.maps.render.models.MapTileOptions;
 
 import reactor.core.publisher.Mono;
+
+
+// NOTE: take public bounding box, inside method convert to private bounding box
 
 /** Initializes a new instance of the synchronous RenderClient type. */
 @ServiceClient(builder = RenderClientBuilder.class)
@@ -97,13 +97,13 @@ public final class RenderClient {
      * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public InputStream getMapTileV2(MapTileV2Options options) {
+    public InputStream getMapTileV2(MapTileOptions options) {
         Mono<byte[]> byteArray = FluxUtil.collectBytesInByteBufferStream(this.asyncClient.getMapTileV2(options));
         return new ByteArrayInputStream(byteArray.block());
     }
 
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<StreamResponse> getMapTileV2WithResponse(MapTileV2Options options, Context context) {
+    public Mono<StreamResponse> getMapTileV2WithResponse(MapTileOptions options, Context context) {
         return this.asyncClient.getMapTileV2WithResponse(options, context);
     } 
 
@@ -123,12 +123,12 @@ public final class RenderClient {
      * @return metadata for a tileset in the TileJSON format.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public MapTileset getMapTileset(TilesetID tilesetId) {
+    public MapTilesetPrivate getMapTileset(TilesetID tilesetId) {
         return this.asyncClient.getMapTileset(tilesetId).block();
     }
 
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<MapTileset> getMapTilesetWithResponse(TilesetID tilesetID, Context context) {
+    public Response<MapTilesetPrivate> getMapTilesetWithResponse(TilesetID tilesetID, Context context) {
         return this.asyncClient.getMapTilesetWithResponse(tilesetID, context).block();
     }
 
@@ -154,13 +154,13 @@ public final class RenderClient {
      * @return copyright attribution for the requested section of a tileset.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public MapAttribution getMapAttribution(MapAttributionOptions options) {
-        return this.asyncClient.getMapAttribution(options).block();
+    public MapAttribution getMapAttribution(TilesetID tilesetId, int zoom, List<Double> bounds) {
+        return this.asyncClient.getMapAttribution(tilesetId, zoom, bounds).block();
     }
 
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<MapAttribution> getMapAttributionWithResponse(MapAttributionOptions options, Context context) {
-        return this.asyncClient.getMapAttributionWithResponse(options, context).block();
+    public Response<MapAttribution> getMapAttributionWithResponseTilesetID(TilesetID tilesetId, int zoom, List<Double> bounds, Context context) {
+        return this.asyncClient.getMapAttributionWithResponse(tilesetId, zoom, bounds, context).block();
     }
 
     /**
@@ -178,14 +178,14 @@ public final class RenderClient {
      * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public InputStream getMapStateTile(MapStateTileOptions options) {
-        Mono<byte[]> byteArray = FluxUtil.collectBytesInByteBufferStream(this.asyncClient.getMapStateTile(options));
+    public InputStream getMapStateTile(String statesetId, TileIndex tileIndex) {
+        Mono<byte[]> byteArray = FluxUtil.collectBytesInByteBufferStream(this.asyncClient.getMapStateTile(statesetId, tileIndex));
         return new ByteArrayInputStream(byteArray.block());
     }
 
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<StreamResponse> getMapStateTileWithResponse(MapStateTileOptions options, Context context) {
-        return this.asyncClient.getMapStateTileWithResponse(options, context);
+    public Mono<StreamResponse> getMapStateTileWithResponse(String statesetId, TileIndex tileIndex, Context context) {
+        return this.asyncClient.getMapStateTileWithResponse(statesetId, tileIndex, context);
     }
 
     /**
@@ -204,13 +204,13 @@ public final class RenderClient {
      * @return this object is returned from a successful copyright call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public CopyrightCaption getCopyrightCaption(ResponseFormat format) {
-        return this.asyncClient.getCopyrightCaption(format).block();
+    public CopyrightCaption getCopyrightCaption() { 
+        return this.asyncClient.getCopyrightCaption().block();
     }
 
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<CopyrightCaption> getCopyrightCaptionWithResponse(ResponseFormat format, Context context) {
-        return this.asyncClient.getCopyrightCaptionWithResponse(format, context).block();
+    public Response<CopyrightCaption> getCopyrightCaptionWithResponse(Context context) {
+        return this.asyncClient.getCopyrightCaptionWithResponse(context).block();
     }
 
     /**
@@ -448,13 +448,15 @@ public final class RenderClient {
      * @return this object is returned from a successful copyright request.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Copyright getCopyrightFromBoundingBox(CopyrightFromBoundingBoxOptions options) {
-        return this.asyncClient.getCopyrightFromBoundingBox(options).block();
+    public Copyright getCopyrightFromBoundingBox(BoundingBox boundingBox, boolean includeText) {
+        // options.getBoudningbox --> convert to boundingbox private (check utility class in search sdk)
+        // Utility.toprivateboundingbox
+        return this.asyncClient.getCopyrightFromBoundingBox(boundingBox, includeText).block();
     }
 
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<Copyright> getCopyrightFromBoundingBoxWithResponse(CopyrightFromBoundingBoxOptions options, Context context) {
-        return this.asyncClient.getCopyrightFromBoundingBoxWithResponse(options, context).block();
+    public Response<Copyright> getCopyrightFromBoundingBoxWithResponse(BoundingBox boundingBox, boolean includeText, Context context) {
+        return this.asyncClient.getCopyrightFromBoundingBoxWithResponse(boundingBox, includeText, context).block();
     }
 
     /**
@@ -475,13 +477,13 @@ public final class RenderClient {
      * @return this object is returned from a successful copyright request.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Copyright getCopyrightForTile(CopyrightForTitleOptions options) {
-        return this.asyncClient.getCopyrightForTile(options).block();
+    public Copyright getCopyrightForTile(TileIndex tileIndex, boolean includeText) {
+        return this.asyncClient.getCopyrightForTile(tileIndex, includeText).block();
     }
 
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<Copyright> getCopyrightForTileWithResponse(CopyrightForTitleOptions options, Context context) {
-        return this.asyncClient.getCopyrightForTileWithResponse(options, context).block();
+    public Response<Copyright> getCopyrightForTileWithResponse(TileIndex tileIndex, boolean includeText, Context context) {
+        return this.asyncClient.getCopyrightForTileWithResponse(tileIndex, includeText).block();
     }
 
     /**
@@ -501,12 +503,12 @@ public final class RenderClient {
      * @return this object is returned from a successful copyright request.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Copyright getCopyrightForWorld(CopyrightForWorldOptions options) {
-        return this.asyncClient.getCopyrightForWorld(options).block();
+    public Copyright getCopyrightForWorld(boolean includeText) {
+        return this.asyncClient.getCopyrightForWorld(includeText).block();
     }
 
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<Copyright> getCopyrightForWorldWithResponse(CopyrightForWorldOptions options, Context context) {
-        return this.asyncClient.getCopyrightForWorldWithResponse(options, context).block();
+    public Response<Copyright> getCopyrightForWorldWithResponse(boolean includeText, Context context) {
+        return this.asyncClient.getCopyrightForWorldWithResponse(includeText, context).block();
     }
 }

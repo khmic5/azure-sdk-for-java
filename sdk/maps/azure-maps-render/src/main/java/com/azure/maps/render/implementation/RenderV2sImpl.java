@@ -25,7 +25,7 @@ import com.azure.core.util.FluxUtil;
 import com.azure.core.util.logging.ClientLogger;
 import com.azure.core.util.serializer.CollectionFormat;
 import com.azure.core.util.serializer.JacksonAdapter;
-import com.azure.maps.render.implementation.models.BoundingBox;
+import com.azure.maps.render.implementation.models.BoundingBoxPrivate;
 import com.azure.maps.render.implementation.models.Copyright;
 import com.azure.maps.render.implementation.models.CopyrightCaption;
 import com.azure.maps.render.implementation.models.ErrorResponseException;
@@ -34,7 +34,7 @@ import com.azure.maps.render.implementation.models.LocalizedMapView;
 import com.azure.maps.render.implementation.models.MapAttribution;
 import com.azure.maps.render.implementation.models.MapImageStyle;
 import com.azure.maps.render.implementation.models.MapTileSize;
-import com.azure.maps.render.implementation.models.MapTileset;
+import com.azure.maps.render.implementation.models.MapTilesetPrivate;
 import com.azure.maps.render.implementation.models.RasterTileFormat;
 import com.azure.maps.render.implementation.models.ResponseFormat;
 import com.azure.maps.render.implementation.models.StaticMapLayer;
@@ -105,7 +105,7 @@ public final class RenderV2sImpl {
         @Get("/map/tileset")
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
-        Mono<Response<MapTileset>> getMapTileset(
+        Mono<Response<MapTilesetPrivate>> getMapTileset(
                 @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String clientId,
                 @QueryParam("api-version") String apiVersion,
@@ -163,7 +163,7 @@ public final class RenderV2sImpl {
                 @QueryParam("style") MapImageStyle style,
                 @QueryParam("zoom") Integer zoom,
                 @QueryParam("center") String center,
-                @QueryParam("bbox") String boundingBox,
+                @QueryParam("bbox") String boundingBoxPrivate,
                 @QueryParam("height") Integer height,
                 @QueryParam("width") Integer width,
                 @QueryParam("language") String language,
@@ -632,7 +632,7 @@ public final class RenderV2sImpl {
      *     {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<MapTileset>> getMapTilesetWithResponseAsync(TilesetID tilesetId) {
+    public Mono<Response<MapTilesetPrivate>> getMapTilesetWithResponseAsync(TilesetID tilesetId) {
         final String accept = "application/json";
         return FluxUtil.withContext(
                 context ->
@@ -663,7 +663,7 @@ public final class RenderV2sImpl {
      *     {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<MapTileset>> getMapTilesetWithResponseAsync(TilesetID tilesetId, Context context) {
+    public Mono<Response<MapTilesetPrivate>> getMapTilesetWithResponseAsync(TilesetID tilesetId, Context context) {
         final String accept = "application/json";
         return service.getMapTileset(
                 this.client.getHost(),
@@ -690,10 +690,10 @@ public final class RenderV2sImpl {
      * @return metadata for a tileset in the TileJSON format on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<MapTileset> getMapTilesetAsync(TilesetID tilesetId) {
+    public Mono<MapTilesetPrivate> getMapTilesetAsync(TilesetID tilesetId) {
         return getMapTilesetWithResponseAsync(tilesetId)
                 .flatMap(
-                        (Response<MapTileset> res) -> {
+                        (Response<MapTilesetPrivate> res) -> {
                             if (res.getValue() != null) {
                                 return Mono.just(res.getValue());
                             } else {
@@ -719,10 +719,10 @@ public final class RenderV2sImpl {
      * @return metadata for a tileset in the TileJSON format on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<MapTileset> getMapTilesetAsync(TilesetID tilesetId, Context context) {
+    public Mono<MapTilesetPrivate> getMapTilesetAsync(TilesetID tilesetId, Context context) {
         return getMapTilesetWithResponseAsync(tilesetId, context)
                 .flatMap(
-                        (Response<MapTileset> res) -> {
+                        (Response<MapTilesetPrivate> res) -> {
                             if (res.getValue() != null) {
                                 return Mono.just(res.getValue());
                             } else {
@@ -747,7 +747,7 @@ public final class RenderV2sImpl {
      * @return metadata for a tileset in the TileJSON format.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public MapTileset getMapTileset(TilesetID tilesetId) {
+    public MapTilesetPrivate getMapTileset(TilesetID tilesetId) {
         return getMapTilesetAsync(tilesetId).block();
     }
 
@@ -768,7 +768,7 @@ public final class RenderV2sImpl {
      * @return metadata for a tileset in the TileJSON format along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<MapTileset> getMapTilesetWithResponse(TilesetID tilesetId, Context context) {
+    public Response<MapTilesetPrivate> getMapTilesetWithResponse(TilesetID tilesetId, Context context) {
         return getMapTilesetWithResponseAsync(tilesetId, context).block();
     }
 
@@ -1332,7 +1332,7 @@ public final class RenderV2sImpl {
      * @param center Coordinates of the center point. Format: 'lon,lat'. Projection used - EPSG:3857. Longitude range:
      *     -180 to 180. Latitude range: -85 to 85.
      *     <p>Note: Either center or bbox are required parameters. They are mutually exclusive.
-     * @param boundingBox Bounding box. Projection used - EPSG:3857. Format : 'minLon, minLat, maxLon, maxLat'.
+     * @param boundingBoxPrivate Bounding box. Projection used - EPSG:3857. Format : 'minLon, minLat, maxLon, maxLat'.
      *     <p>Note: Either bbox or center are required parameters. They are mutually exclusive. It shouldn’t be used
      *     with height or width.
      *     <p>The maximum allowed ranges for Lat and Lon are defined for each zoom level in the table at the top of this
@@ -1505,7 +1505,7 @@ public final class RenderV2sImpl {
             MapImageStyle style,
             Integer zoom,
             List<Double> center,
-            List<Double> boundingBox,
+            List<Double> boundingBoxPrivate,
             Integer height,
             Integer width,
             String language,
@@ -1515,8 +1515,8 @@ public final class RenderV2sImpl {
         final String accept = "application/json, image/jpeg, image/png, image/pbf, application/vnd.mapbox-vector-tile";
         String centerConverted =
                 JacksonAdapter.createDefaultSerializerAdapter().serializeList(center, CollectionFormat.CSV);
-        String boundingBoxConverted =
-                JacksonAdapter.createDefaultSerializerAdapter().serializeList(boundingBox, CollectionFormat.CSV);
+        String boundingBoxPrivateConverted =
+                JacksonAdapter.createDefaultSerializerAdapter().serializeList(boundingBoxPrivate, CollectionFormat.CSV);
         List<String> pinsConverted =
                 Optional.ofNullable(pins)
                         .map(Collection::stream)
@@ -1540,7 +1540,7 @@ public final class RenderV2sImpl {
                                 style,
                                 zoom,
                                 centerConverted,
-                                boundingBoxConverted,
+                                boundingBoxPrivateConverted,
                                 height,
                                 width,
                                 language,
@@ -1593,7 +1593,7 @@ public final class RenderV2sImpl {
      * @param center Coordinates of the center point. Format: 'lon,lat'. Projection used - EPSG:3857. Longitude range:
      *     -180 to 180. Latitude range: -85 to 85.
      *     <p>Note: Either center or bbox are required parameters. They are mutually exclusive.
-     * @param boundingBox Bounding box. Projection used - EPSG:3857. Format : 'minLon, minLat, maxLon, maxLat'.
+     * @param boundingBoxPrivate Bounding box. Projection used - EPSG:3857. Format : 'minLon, minLat, maxLon, maxLat'.
      *     <p>Note: Either bbox or center are required parameters. They are mutually exclusive. It shouldn’t be used
      *     with height or width.
      *     <p>The maximum allowed ranges for Lat and Lon are defined for each zoom level in the table at the top of this
@@ -1767,7 +1767,7 @@ public final class RenderV2sImpl {
             MapImageStyle style,
             Integer zoom,
             List<Double> center,
-            List<Double> boundingBox,
+            List<Double> boundingBoxPrivate,
             Integer height,
             Integer width,
             String language,
@@ -1778,8 +1778,8 @@ public final class RenderV2sImpl {
         final String accept = "application/json, image/jpeg, image/png, image/pbf, application/vnd.mapbox-vector-tile";
         String centerConverted =
                 JacksonAdapter.createDefaultSerializerAdapter().serializeList(center, CollectionFormat.CSV);
-        String boundingBoxConverted =
-                JacksonAdapter.createDefaultSerializerAdapter().serializeList(boundingBox, CollectionFormat.CSV);
+        String boundingBoxPrivateConverted =
+                JacksonAdapter.createDefaultSerializerAdapter().serializeList(boundingBoxPrivate, CollectionFormat.CSV);
         List<String> pinsConverted =
                 Optional.ofNullable(pins)
                         .map(Collection::stream)
@@ -1801,7 +1801,7 @@ public final class RenderV2sImpl {
                 style,
                 zoom,
                 centerConverted,
-                boundingBoxConverted,
+                boundingBoxPrivateConverted,
                 height,
                 width,
                 language,
@@ -1854,7 +1854,7 @@ public final class RenderV2sImpl {
      * @param center Coordinates of the center point. Format: 'lon,lat'. Projection used - EPSG:3857. Longitude range:
      *     -180 to 180. Latitude range: -85 to 85.
      *     <p>Note: Either center or bbox are required parameters. They are mutually exclusive.
-     * @param boundingBox Bounding box. Projection used - EPSG:3857. Format : 'minLon, minLat, maxLon, maxLat'.
+     * @param boundingBoxPrivate Bounding box. Projection used - EPSG:3857. Format : 'minLon, minLat, maxLon, maxLat'.
      *     <p>Note: Either bbox or center are required parameters. They are mutually exclusive. It shouldn’t be used
      *     with height or width.
      *     <p>The maximum allowed ranges for Lat and Lon are defined for each zoom level in the table at the top of this
@@ -2027,7 +2027,7 @@ public final class RenderV2sImpl {
             MapImageStyle style,
             Integer zoom,
             List<Double> center,
-            List<Double> boundingBox,
+            List<Double> boundingBoxPrivate,
             Integer height,
             Integer width,
             String language,
@@ -2040,7 +2040,7 @@ public final class RenderV2sImpl {
                         style,
                         zoom,
                         center,
-                        boundingBox,
+                        boundingBoxPrivate,
                         height,
                         width,
                         language,
@@ -2092,7 +2092,7 @@ public final class RenderV2sImpl {
      * @param center Coordinates of the center point. Format: 'lon,lat'. Projection used - EPSG:3857. Longitude range:
      *     -180 to 180. Latitude range: -85 to 85.
      *     <p>Note: Either center or bbox are required parameters. They are mutually exclusive.
-     * @param boundingBox Bounding box. Projection used - EPSG:3857. Format : 'minLon, minLat, maxLon, maxLat'.
+     * @param boundingBoxPrivate Bounding box. Projection used - EPSG:3857. Format : 'minLon, minLat, maxLon, maxLat'.
      *     <p>Note: Either bbox or center are required parameters. They are mutually exclusive. It shouldn’t be used
      *     with height or width.
      *     <p>The maximum allowed ranges for Lat and Lon are defined for each zoom level in the table at the top of this
@@ -2266,7 +2266,7 @@ public final class RenderV2sImpl {
             MapImageStyle style,
             Integer zoom,
             List<Double> center,
-            List<Double> boundingBox,
+            List<Double> boundingBoxPrivate,
             Integer height,
             Integer width,
             String language,
@@ -2280,7 +2280,7 @@ public final class RenderV2sImpl {
                         style,
                         zoom,
                         center,
-                        boundingBox,
+                        boundingBoxPrivate,
                         height,
                         width,
                         language,
@@ -2333,7 +2333,7 @@ public final class RenderV2sImpl {
      * @param center Coordinates of the center point. Format: 'lon,lat'. Projection used - EPSG:3857. Longitude range:
      *     -180 to 180. Latitude range: -85 to 85.
      *     <p>Note: Either center or bbox are required parameters. They are mutually exclusive.
-     * @param boundingBox Bounding box. Projection used - EPSG:3857. Format : 'minLon, minLat, maxLon, maxLat'.
+     * @param boundingBoxPrivate Bounding box. Projection used - EPSG:3857. Format : 'minLon, minLat, maxLon, maxLat'.
      *     <p>Note: Either bbox or center are required parameters. They are mutually exclusive. It shouldn’t be used
      *     with height or width.
      *     <p>The maximum allowed ranges for Lat and Lon are defined for each zoom level in the table at the top of this
@@ -2506,7 +2506,7 @@ public final class RenderV2sImpl {
             MapImageStyle style,
             Integer zoom,
             List<Double> center,
-            List<Double> boundingBox,
+            List<Double> boundingBoxPrivate,
             Integer height,
             Integer width,
             String language,
@@ -2520,7 +2520,7 @@ public final class RenderV2sImpl {
                                 style,
                                 zoom,
                                 center,
-                                boundingBox,
+                                boundingBoxPrivate,
                                 height,
                                 width,
                                 language,
@@ -2587,7 +2587,7 @@ public final class RenderV2sImpl {
      * @param center Coordinates of the center point. Format: 'lon,lat'. Projection used - EPSG:3857. Longitude range:
      *     -180 to 180. Latitude range: -85 to 85.
      *     <p>Note: Either center or bbox are required parameters. They are mutually exclusive.
-     * @param boundingBox Bounding box. Projection used - EPSG:3857. Format : 'minLon, minLat, maxLon, maxLat'.
+     * @param boundingBoxPrivate Bounding box. Projection used - EPSG:3857. Format : 'minLon, minLat, maxLon, maxLat'.
      *     <p>Note: Either bbox or center are required parameters. They are mutually exclusive. It shouldn’t be used
      *     with height or width.
      *     <p>The maximum allowed ranges for Lat and Lon are defined for each zoom level in the table at the top of this
@@ -2761,7 +2761,7 @@ public final class RenderV2sImpl {
             MapImageStyle style,
             Integer zoom,
             List<Double> center,
-            List<Double> boundingBox,
+            List<Double> boundingBoxPrivate,
             Integer height,
             Integer width,
             String language,
@@ -2775,7 +2775,7 @@ public final class RenderV2sImpl {
                         style,
                         zoom,
                         center,
-                        boundingBox,
+                        boundingBoxPrivate,
                         height,
                         width,
                         language,
@@ -2793,7 +2793,7 @@ public final class RenderV2sImpl {
      * maximum longitude and latitude (EPSG-3857) coordinates.
      *
      * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param boundingBox Parameter group.
+     * @param boundingBoxPrivate Parameter group.
      * @param includeText Yes/no value to exclude textual data from response. Only images and country names will be in
      *     response.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -2804,10 +2804,10 @@ public final class RenderV2sImpl {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<Copyright>> getCopyrightFromBoundingBoxWithResponseAsync(
-            ResponseFormat format, BoundingBox boundingBox, IncludeText includeText) {
+            ResponseFormat format, BoundingBoxPrivate boundingBoxPrivate, IncludeText includeText) {
         final String accept = "application/json";
-        List<Double> southWest = boundingBox.getSouthWest();
-        List<Double> northEast = boundingBox.getNorthEast();
+        List<Double> southWest = boundingBoxPrivate.getSouthWest();
+        List<Double> northEast = boundingBoxPrivate.getNorthEast();
         String southWestConverted =
                 JacksonAdapter.createDefaultSerializerAdapter().serializeList(southWest, CollectionFormat.CSV);
         String northEastConverted =
@@ -2833,7 +2833,7 @@ public final class RenderV2sImpl {
      * maximum longitude and latitude (EPSG-3857) coordinates.
      *
      * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param boundingBox Parameter group.
+     * @param boundingBoxPrivate Parameter group.
      * @param includeText Yes/no value to exclude textual data from response. Only images and country names will be in
      *     response.
      * @param context The context to associate with this operation.
@@ -2845,10 +2845,10 @@ public final class RenderV2sImpl {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<Copyright>> getCopyrightFromBoundingBoxWithResponseAsync(
-            ResponseFormat format, BoundingBox boundingBox, IncludeText includeText, Context context) {
+            ResponseFormat format, BoundingBoxPrivate boundingBoxPrivate, IncludeText includeText, Context context) {
         final String accept = "application/json";
-        List<Double> southWest = boundingBox.getSouthWest();
-        List<Double> northEast = boundingBox.getNorthEast();
+        List<Double> southWest = boundingBoxPrivate.getSouthWest();
+        List<Double> northEast = boundingBoxPrivate.getNorthEast();
         String southWestConverted =
                 JacksonAdapter.createDefaultSerializerAdapter().serializeList(southWest, CollectionFormat.CSV);
         String northEastConverted =
@@ -2872,7 +2872,7 @@ public final class RenderV2sImpl {
      * maximum longitude and latitude (EPSG-3857) coordinates.
      *
      * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param boundingBox Parameter group.
+     * @param boundingBoxPrivate Parameter group.
      * @param includeText Yes/no value to exclude textual data from response. Only images and country names will be in
      *     response.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -2882,8 +2882,8 @@ public final class RenderV2sImpl {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Copyright> getCopyrightFromBoundingBoxAsync(
-            ResponseFormat format, BoundingBox boundingBox, IncludeText includeText) {
-        return getCopyrightFromBoundingBoxWithResponseAsync(format, boundingBox, includeText)
+            ResponseFormat format, BoundingBoxPrivate boundingBoxPrivate, IncludeText includeText) {
+        return getCopyrightFromBoundingBoxWithResponseAsync(format, boundingBoxPrivate, includeText)
                 .flatMap(
                         (Response<Copyright> res) -> {
                             if (res.getValue() != null) {
@@ -2901,7 +2901,7 @@ public final class RenderV2sImpl {
      * maximum longitude and latitude (EPSG-3857) coordinates.
      *
      * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param boundingBox Parameter group.
+     * @param boundingBoxPrivate Parameter group.
      * @param includeText Yes/no value to exclude textual data from response. Only images and country names will be in
      *     response.
      * @param context The context to associate with this operation.
@@ -2912,8 +2912,8 @@ public final class RenderV2sImpl {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Copyright> getCopyrightFromBoundingBoxAsync(
-            ResponseFormat format, BoundingBox boundingBox, IncludeText includeText, Context context) {
-        return getCopyrightFromBoundingBoxWithResponseAsync(format, boundingBox, includeText, context)
+            ResponseFormat format, BoundingBoxPrivate boundingBoxPrivate, IncludeText includeText, Context context) {
+        return getCopyrightFromBoundingBoxWithResponseAsync(format, boundingBoxPrivate, includeText, context)
                 .flatMap(
                         (Response<Copyright> res) -> {
                             if (res.getValue() != null) {
@@ -2931,7 +2931,7 @@ public final class RenderV2sImpl {
      * maximum longitude and latitude (EPSG-3857) coordinates.
      *
      * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param boundingBox Parameter group.
+     * @param boundingBoxPrivate Parameter group.
      * @param includeText Yes/no value to exclude textual data from response. Only images and country names will be in
      *     response.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -2941,8 +2941,8 @@ public final class RenderV2sImpl {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Copyright getCopyrightFromBoundingBox(
-            ResponseFormat format, BoundingBox boundingBox, IncludeText includeText) {
-        return getCopyrightFromBoundingBoxAsync(format, boundingBox, includeText).block();
+            ResponseFormat format, BoundingBoxPrivate boundingBoxPrivate, IncludeText includeText) {
+        return getCopyrightFromBoundingBoxAsync(format, boundingBoxPrivate, includeText).block();
     }
 
     /**
@@ -2952,7 +2952,7 @@ public final class RenderV2sImpl {
      * maximum longitude and latitude (EPSG-3857) coordinates.
      *
      * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param boundingBox Parameter group.
+     * @param boundingBoxPrivate Parameter group.
      * @param includeText Yes/no value to exclude textual data from response. Only images and country names will be in
      *     response.
      * @param context The context to associate with this operation.
@@ -2963,8 +2963,8 @@ public final class RenderV2sImpl {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<Copyright> getCopyrightFromBoundingBoxWithResponse(
-            ResponseFormat format, BoundingBox boundingBox, IncludeText includeText, Context context) {
-        return getCopyrightFromBoundingBoxWithResponseAsync(format, boundingBox, includeText, context).block();
+            ResponseFormat format, BoundingBoxPrivate boundingBoxPrivate, IncludeText includeText, Context context) {
+        return getCopyrightFromBoundingBoxWithResponseAsync(format, boundingBoxPrivate, includeText, context).block();
     }
 
     /**

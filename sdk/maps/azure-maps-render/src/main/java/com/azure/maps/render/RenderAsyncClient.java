@@ -5,6 +5,8 @@
 package com.azure.maps.render;
 
 import java.nio.ByteBuffer;
+import java.util.Arrays;
+import java.util.List;
 
 import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceClient;
@@ -14,20 +16,20 @@ import com.azure.core.http.rest.StreamResponse;
 import com.azure.core.util.Context;
 import com.azure.maps.render.implementation.RenderClientImpl;
 import com.azure.maps.render.implementation.RenderV2sImpl;
+import com.azure.maps.render.implementation.helpers.Utility;
+import com.azure.maps.render.implementation.models.BoundingBoxPrivate;
 import com.azure.maps.render.implementation.models.Copyright;
 import com.azure.maps.render.implementation.models.CopyrightCaption;
 import com.azure.maps.render.implementation.models.ErrorResponseException;
 import com.azure.maps.render.implementation.models.MapAttribution;
-import com.azure.maps.render.implementation.models.MapTileset;
+import com.azure.maps.render.implementation.models.MapTilesetPrivate;
 import com.azure.maps.render.implementation.models.ResponseFormat;
+import com.azure.maps.render.implementation.models.TileIndex;
 import com.azure.maps.render.implementation.models.TilesetID;
-import com.azure.maps.render.models.CopyrightForTitleOptions;
-import com.azure.maps.render.models.CopyrightForWorldOptions;
-import com.azure.maps.render.models.CopyrightFromBoundingBoxOptions;
-import com.azure.maps.render.models.MapAttributionOptions;
-import com.azure.maps.render.models.MapStateTileOptions;
+import com.azure.maps.render.models.BoundingBox;
+import com.azure.maps.render.models.LatLong;
 import com.azure.maps.render.models.MapStaticImageOptions;
-import com.azure.maps.render.models.MapTileV2Options;
+import com.azure.maps.render.models.MapTileOptions;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -93,7 +95,7 @@ public final class RenderAsyncClient {
      */
 
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Flux<ByteBuffer> getMapTileV2(MapTileV2Options options) {
+    public Flux<ByteBuffer> getMapTileV2(MapTileOptions options) {
         Mono<StreamResponse> responseMono = this.getMapTileV2WithResponse(options, null);
         return responseMono.flatMapMany(response -> {
             return response.getValue();
@@ -146,12 +148,12 @@ public final class RenderAsyncClient {
      * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<StreamResponse> getMapTileV2WithResponse(MapTileV2Options options) {
+    public Mono<StreamResponse> getMapTileV2WithResponse(MapTileOptions options) {
         return this.getMapTileV2WithResponse(options, null);
     }
 
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Mono<StreamResponse> getMapTileV2WithResponse(MapTileV2Options options, Context context) {        
+    Mono<StreamResponse> getMapTileV2WithResponse(MapTileOptions options, Context context) {        
         return this.serviceClient.getMapTileWithResponseAsync(options.getTilesetID(), 
             options.getTileIndex(), 
             options.getTimeStamp(), 
@@ -176,8 +178,8 @@ public final class RenderAsyncClient {
      * @return metadata for a tileset in the TileJSON format.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<MapTileset> getMapTileset(TilesetID tilesetId) {
-        Mono<Response<MapTileset>> result = this.getMapTilesetWithResponse(tilesetId, null);
+    public Mono<MapTilesetPrivate> getMapTileset(TilesetID tilesetId) {
+        Mono<Response<MapTilesetPrivate>> result = this.getMapTilesetWithResponse(tilesetId, null);
         return result.flatMap(response -> {
             return Mono.just(response.getValue());
         });
@@ -199,16 +201,13 @@ public final class RenderAsyncClient {
      * @return metadata for a tileset in the TileJSON format.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<MapTileset>> getMapTilesetWithResponse(TilesetID tilesetId) {
+    public Mono<Response<MapTilesetPrivate>> getMapTilesetWithResponse(TilesetID tilesetId) {
         return this.getMapTilesetWithResponse(tilesetId, null);
     }
     
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Mono<Response<MapTileset>> getMapTilesetWithResponse(TilesetID tilesetId, Context context) {
-        Mono<Response<MapTileset>> responseMono =
-            this.serviceClient.getMapTilesetWithResponseAsync(
-                tilesetId);
-        return responseMono;
+    Mono<Response<MapTilesetPrivate>> getMapTilesetWithResponse(TilesetID tilesetId, Context context) {
+        return this.serviceClient.getMapTilesetWithResponseAsync(tilesetId);
     }
 
     /**
@@ -233,8 +232,8 @@ public final class RenderAsyncClient {
      * @return copyright attribution for the requested section of a tileset.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<MapAttribution> getMapAttribution(MapAttributionOptions options) {
-        Mono<Response<MapAttribution>> result = this.getMapAttributionWithResponse(options, null);
+    public Mono<MapAttribution> getMapAttribution(TilesetID tilesetId, int zoom, List<Double> bounds) {
+        Mono<Response<MapAttribution>> result = this.getMapAttributionWithResponse(tilesetId, zoom, bounds, null);
         return result.flatMap(response -> {
             return Mono.just(response.getValue());
         });
@@ -262,18 +261,13 @@ public final class RenderAsyncClient {
      * @return copyright attribution for the requested section of a tileset.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<MapAttribution>> getMapAttributionWithResponse(MapAttributionOptions options) {
-        return this.getMapAttributionWithResponse(options, null);
+    public Mono<Response<MapAttribution>> getMapAttributionWithResponse(TilesetID tilesetId, int zoom, List<Double> bounds) {
+        return this.getMapAttributionWithResponse(tilesetId, zoom, bounds, null);
     }
 
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Mono<Response<MapAttribution>> getMapAttributionWithResponse(MapAttributionOptions options, Context context) {
-        Mono<Response<MapAttribution>> responseMono =
-            this.serviceClient.getMapAttributionWithResponseAsync(
-                options.getTilesetId(),
-                options.getZoom(),
-                options.getBounds());
-        return responseMono;
+    Mono<Response<MapAttribution>> getMapAttributionWithResponse(TilesetID tilesetId, int zoom, List<Double> bounds, Context context) {
+        return this.serviceClient.getMapAttributionWithResponseAsync(tilesetId, zoom, bounds);
     }
 
     /**
@@ -291,8 +285,8 @@ public final class RenderAsyncClient {
      * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Flux<ByteBuffer> getMapStateTile(MapStateTileOptions options) {
-        Mono<StreamResponse> responseMono = this.getMapStateTileWithResponse(options, null);
+    public Flux<ByteBuffer> getMapStateTile(String statesetId, TileIndex tileIndex) {
+        Mono<StreamResponse> responseMono = this.getMapStateTileWithResponse(statesetId, tileIndex, null);
         return responseMono.flatMapMany(response -> {
             return response.getValue();
         });  
@@ -313,17 +307,13 @@ public final class RenderAsyncClient {
      * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<StreamResponse> getMapStateTileWithResponse(MapStateTileOptions options) {
-        return this.getMapStateTileWithResponse(options, null);
+    public Mono<StreamResponse> getMapStateTileWithResponse(String statesetId, TileIndex tileIndex) {
+        return this.getMapStateTileWithResponse(statesetId, tileIndex, null);
     }
 
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Mono<StreamResponse> getMapStateTileWithResponse(MapStateTileOptions options, Context context) {
-        Mono<StreamResponse> responseMono =
-            this.serviceClient.getMapStateTileWithResponseAsync(
-                options.getStatesetId(),
-                options.getTileIndex());
-        return responseMono;
+    Mono<StreamResponse> getMapStateTileWithResponse(String statesetId, TileIndex tileIndex, Context context) {
+        return this.serviceClient.getMapStateTileWithResponseAsync(statesetId, tileIndex);
     }
 
     /**
@@ -342,8 +332,8 @@ public final class RenderAsyncClient {
      * @return this object is returned from a successful copyright call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<CopyrightCaption> getCopyrightCaption(ResponseFormat format) {
-        Mono<Response<CopyrightCaption>> result = this.getCopyrightCaptionWithResponse(format, null);
+    public Mono<CopyrightCaption> getCopyrightCaption() {
+        Mono<Response<CopyrightCaption>> result = this.getCopyrightCaptionWithResponse(null);
         return result.flatMap(response -> {
             return Mono.just(response.getValue());
         });
@@ -365,16 +355,14 @@ public final class RenderAsyncClient {
      * @return this object is returned from a successful copyright call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<CopyrightCaption>> getCopyrightCaptionWithResponse(ResponseFormat format) {
-        return this.getCopyrightCaptionWithResponse(format, null);
+    public Mono<Response<CopyrightCaption>> getCopyrightCaptionWithResponse() {
+        return this.getCopyrightCaptionWithResponse(null);
     }
 
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Mono<Response<CopyrightCaption>> getCopyrightCaptionWithResponse(ResponseFormat format, Context context) {
-        Mono<Response<CopyrightCaption>> responseMono =
-            this.serviceClient.getCopyrightCaptionWithResponseAsync(
+    Mono<Response<CopyrightCaption>> getCopyrightCaptionWithResponse(Context context) {
+        return this.serviceClient.getCopyrightCaptionWithResponseAsync(
                 ResponseFormat.JSON);
-        return responseMono;
     }
 
     /**
@@ -808,21 +796,22 @@ public final class RenderAsyncClient {
 
     @ServiceMethod(returns = ReturnType.SINGLE)
     Mono<StreamResponse> getMapStaticImageWithResponse(MapStaticImageOptions options, Context context) {
-        Mono<StreamResponse> responseMono = 
-        this.serviceClient.getMapStaticImageWithResponseAsync
+        BoundingBox boundingBox = options.getBoundingBox();
+        LatLong southWest = boundingBox.getSouthWest();
+        LatLong northEast = boundingBox.getNorthEast();
+        return this.serviceClient.getMapStaticImageWithResponseAsync
         (options.getRasterTileFormat(),
         options.getStaticMapLayer(), 
         options.getMapImageStyle(),
         options.getZoom(), 
-        options.getCenter(), 
-        options.getBoundingBox(), 
+        Utility.toCenter(options.getCenter()), 
+        Arrays.asList(southWest.getLongitude(), southWest.getLatitude(), northEast.getLongitude(), northEast.getLatitude()), 
         options.getHeight(), 
         options.getWidth(),
         options.getLanguage(),
         options.getLocalizedMapView(),
         options.getPins(),
         options.getPath());
-        return responseMono;
     }
 
     /**
@@ -841,8 +830,8 @@ public final class RenderAsyncClient {
      * @return this object is returned from a successful copyright request.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Copyright> getCopyrightFromBoundingBox(CopyrightFromBoundingBoxOptions options) {
-        Mono<Response<Copyright>> result = this.getCopyrightFromBoundingBoxWithResponse(options, null);
+    public Mono<Copyright> getCopyrightFromBoundingBox(BoundingBox boundingBox, boolean includeText) {
+        Mono<Response<Copyright>> result = this.getCopyrightFromBoundingBoxWithResponse(boundingBox, includeText, null);
         return result.flatMap(response -> {
             return Mono.just(response.getValue());
         });
@@ -864,75 +853,71 @@ public final class RenderAsyncClient {
      * @return this object is returned from a successful copyright request.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<Copyright>> getCopyrightFromBoundingBoxWithResponse(CopyrightFromBoundingBoxOptions options) {
-        return this.getCopyrightFromBoundingBoxWithResponse(options, null);
+    public Mono<Response<Copyright>> getCopyrightFromBoundingBoxWithResponse(BoundingBox boundingBox, boolean includeText) {
+        return this.getCopyrightFromBoundingBoxWithResponse(boundingBox, includeText, null);
     }
 
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Mono<Response<Copyright>> getCopyrightFromBoundingBoxWithResponse(CopyrightFromBoundingBoxOptions options, Context context) {
-        Mono<Response<Copyright>> responseMono =
-            this.serviceClient.getCopyrightFromBoundingBoxWithResponseAsync(
-                options.getResponseFormat(),
-                options.getBoundingBox(),
-                options.getIncludeText());
-        return responseMono;
-    }
-
-    /**
-     * **Applies to**: S0 and S1 pricing tiers.
-     *
-     * <p>Copyrights API is designed to serve copyright information for Render Tile service. In addition to basic
-     * copyright for the whole map, API is serving specific groups of copyrights for some countries. Returns the
-     * copyright information for a given tile. To obtain the copyright information for a particular tile, the request
-     * should specify the tile's zoom level and x and y coordinates (see: Zoom Levels and Tile Grid).
-     *
-     * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param tileIndex Parameter group.
-     * @param includeText Yes/no value to exclude textual data from response. Only images and country names will be in
-     *     response.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful copyright request.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Copyright> getCopyrightForTile(CopyrightForTitleOptions options) {
-        Mono<Response<Copyright>> result = this.getCopyrightForTileWithResponse(options, null);
-        return result.flatMap(response -> {
-            return Mono.just(response.getValue());
-        });
-    }
-
-    /**
-     * **Applies to**: S0 and S1 pricing tiers.
-     *
-     * <p>Copyrights API is designed to serve copyright information for Render Tile service. In addition to basic
-     * copyright for the whole map, API is serving specific groups of copyrights for some countries. Returns the
-     * copyright information for a given tile. To obtain the copyright information for a particular tile, the request
-     * should specify the tile's zoom level and x and y coordinates (see: Zoom Levels and Tile Grid).
-     *
-     * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param tileIndex Parameter group.
-     * @param includeText Yes/no value to exclude textual data from response. Only images and country names will be in
-     *     response.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful copyright request.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<Copyright>> getCopyrightForTileWithResponse(CopyrightForTitleOptions options) {
-        return this.getCopyrightForTileWithResponse(options, null);
-    }
-
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    Mono<Response<Copyright>> getCopyrightForTileWithResponse(CopyrightForTitleOptions options, Context context) {
-        Mono<Response<Copyright>> responseMono =
-            this.serviceClient.getCopyrightForTileWithResponseAsync(
+    Mono<Response<Copyright>> getCopyrightFromBoundingBoxWithResponse(BoundingBox boundingBox, boolean includeText, Context context) {
+        return this.serviceClient.getCopyrightFromBoundingBoxWithResponseAsync(
                 ResponseFormat.JSON,
-                options.getTileIndex(),
-                options.getIncludeText());
-        return responseMono;
+                Utility.toBoundingBoxPrivate(boundingBox),
+                Utility.toIncludeTextPrivate(includeText));    
+    }
+
+    /**
+     * **Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>Copyrights API is designed to serve copyright information for Render Tile service. In addition to basic
+     * copyright for the whole map, API is serving specific groups of copyrights for some countries. Returns the
+     * copyright information for a given tile. To obtain the copyright information for a particular tile, the request
+     * should specify the tile's zoom level and x and y coordinates (see: Zoom Levels and Tile Grid).
+     *
+     * @param format Desired format of the response. Value can be either _json_ or _xml_.
+     * @param tileIndex Parameter group.
+     * @param includeText Yes/no value to exclude textual data from response. Only images and country names will be in
+     *     response.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful copyright request.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Copyright> getCopyrightForTile(TileIndex tileIndex, boolean includeText) {
+        Mono<Response<Copyright>> result = this.getCopyrightForTileWithResponse(tileIndex, includeText, null);
+        return result.flatMap(response -> {
+            return Mono.just(response.getValue());
+        });
+    }
+
+    /**
+     * **Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>Copyrights API is designed to serve copyright information for Render Tile service. In addition to basic
+     * copyright for the whole map, API is serving specific groups of copyrights for some countries. Returns the
+     * copyright information for a given tile. To obtain the copyright information for a particular tile, the request
+     * should specify the tile's zoom level and x and y coordinates (see: Zoom Levels and Tile Grid).
+     *
+     * @param format Desired format of the response. Value can be either _json_ or _xml_.
+     * @param tileIndex Parameter group.
+     * @param includeText Yes/no value to exclude textual data from response. Only images and country names will be in
+     *     response.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful copyright request.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Response<Copyright>> getCopyrightForTileWithResponse(TileIndex tileIndex, boolean includeText) {
+        return this.getCopyrightForTileWithResponse(tileIndex, includeText, null);
+    }
+
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    Mono<Response<Copyright>> getCopyrightForTileWithResponse(TileIndex tileIndex, boolean includeText, Context context) {
+        return this.serviceClient.getCopyrightForTileWithResponseAsync(
+                ResponseFormat.JSON,
+                tileIndex,
+                Utility.toIncludeTextPrivate(includeText));
     }
 
     /**
@@ -952,8 +937,8 @@ public final class RenderAsyncClient {
      * @return this object is returned from a successful copyright request.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Copyright> getCopyrightForWorld(CopyrightForWorldOptions options) {
-        Mono<Response<Copyright>> result = this.getCopyrightForWorldWithResponse(options, null);
+    public Mono<Copyright> getCopyrightForWorld(boolean includeText) {
+        Mono<Response<Copyright>> result = this.getCopyrightForWorldWithResponse(includeText, null);
         return result.flatMap(response -> {
             return Mono.just(response.getValue());
         });
@@ -976,15 +961,15 @@ public final class RenderAsyncClient {
      * @return this object is returned from a successful copyright request.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<Copyright>> getCopyrightForWorldWithResponse(CopyrightForWorldOptions options) {
-        return this.getCopyrightForWorldWithResponse(options, null);
+    public Mono<Response<Copyright>> getCopyrightForWorldWithResponse(boolean includeText) {
+        return this.getCopyrightForWorldWithResponse(includeText, null);
     }
 
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Mono<Response<Copyright>> getCopyrightForWorldWithResponse(CopyrightForWorldOptions options, Context context) {
+    Mono<Response<Copyright>> getCopyrightForWorldWithResponse(boolean includeText, Context context) {
         Mono<Response<Copyright>> responseMono =
             this.serviceClient.getCopyrightForWorldWithResponseAsync(
-                options.getResponseFormat(), options.getIncludeText());
+                ResponseFormat.JSON, Utility.toIncludeTextPrivate(includeText));
         return responseMono.flatMap(response -> {
             return Mono.just(response);
         });

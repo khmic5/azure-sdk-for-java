@@ -12,7 +12,7 @@ import java.util.List;
 
 /** Metadata for a tileset in the TileJSON format. */
 @Fluent
-public final class MapTileset {
+public final class MapTilesetPrivate {
     /*
      * Describes the version of the TileJSON spec that is implemented by this
      * JSON object.
@@ -137,9 +137,9 @@ public final class MapTileset {
      * Set the tilejson property: Describes the version of the TileJSON spec that is implemented by this JSON object.
      *
      * @param tilejson the tilejson value to set.
-     * @return the MapTileset object itself.
+     * @return the MapTilesetPrivate object itself.
      */
-    public MapTileset setTilejson(String tilejson) {
+    public MapTilesetPrivate setTilejson(String tilejson) {
         this.tilejson = tilejson;
         return this;
     }
@@ -159,9 +159,9 @@ public final class MapTileset {
      * SHOULD NOT interpret the name as HTML.
      *
      * @param name the name value to set.
-     * @return the MapTileset object itself.
+     * @return the MapTilesetPrivate object itself.
      */
-    public MapTileset setName(String name) {
+    public MapTilesetPrivate setName(String name) {
         this.name = name;
         return this;
     }
@@ -181,9 +181,9 @@ public final class MapTileset {
      * Implementations SHOULD NOT interpret the description as HTML.
      *
      * @param description the description value to set.
-     * @return the MapTileset object itself.
+     * @return the MapTilesetPrivate object itself.
      */
-    public MapTileset setDescription(String description) {
+    public MapTilesetPrivate setDescription(String description) {
         this.description = description;
         return this;
     }
@@ -203,9 +203,9 @@ public final class MapTileset {
      * changes across tiles are introduced, the minor version MUST change.
      *
      * @param version the version value to set.
-     * @return the MapTileset object itself.
+     * @return the MapTilesetPrivate object itself.
      */
-    public MapTileset setVersion(String version) {
+    public MapTilesetPrivate setVersion(String version) {
         this.version = version;
         return this;
     }
@@ -227,9 +227,9 @@ public final class MapTileset {
      * a vector for XSS or beacon tracking.
      *
      * @param attribution the attribution value to set.
-     * @return the MapTileset object itself.
+     * @return the MapTilesetPrivate object itself.
      */
-    public MapTileset setAttribution(String attribution) {
+    public MapTilesetPrivate setAttribution(String attribution) {
         this.attribution = attribution;
         return this;
     }
@@ -247,9 +247,9 @@ public final class MapTileset {
      * Set the template property: A mustache template to be used to format data from grids for interaction.
      *
      * @param template the template value to set.
-     * @return the MapTileset object itself.
+     * @return the MapTilesetPrivate object itself.
      */
-    public MapTileset setTemplate(String template) {
+    public MapTilesetPrivate setTemplate(String template) {
         this.template = template;
         return this;
     }
@@ -271,9 +271,9 @@ public final class MapTileset {
      * or beacon tracking.
      *
      * @param legend the legend value to set.
-     * @return the MapTileset object itself.
+     * @return the MapTilesetPrivate object itself.
      */
-    public MapTileset setLegend(String legend) {
+    public MapTilesetPrivate setLegend(String legend) {
         this.legend = legend;
         return this;
     }
@@ -293,9 +293,9 @@ public final class MapTileset {
      * coordinates. The global-mercator (aka Spherical Mercator) profile is assumed.
      *
      * @param scheme the scheme value to set.
-     * @return the MapTileset object itself.
+     * @return the MapTilesetPrivate object itself.
      */
-    public MapTileset setScheme(String scheme) {
+    public MapTilesetPrivate setScheme(String scheme) {
         this.scheme = scheme;
         return this;
     }
@@ -317,9 +317,9 @@ public final class MapTileset {
      * least one endpoint.
      *
      * @param tiles the tiles value to set.
-     * @return the MapTileset object itself.
+     * @return the MapTilesetPrivate object itself.
      */
-    public MapTileset setTiles(List<String> tiles) {
+    public MapTilesetPrivate setTiles(List<String> tiles) {
         this.tiles = tiles;
         return this;
     }
@@ -337,9 +337,9 @@ public final class MapTileset {
      * Set the grids property: An array of interactivity endpoints.
      *
      * @param grids the grids value to set.
-     * @return the MapTileset object itself.
+     * @return the MapTilesetPrivate object itself.
      */
-    public MapTileset setGrids(List<String> grids) {
+    public MapTilesetPrivate setGrids(List<String> grids) {
         this.grids = grids;
         return this;
     }
@@ -357,9 +357,9 @@ public final class MapTileset {
      * Set the data property: An array of data files in GeoJSON format.
      *
      * @param data the data value to set.
-     * @return the MapTileset object itself.
+     * @return the MapTilesetPrivate object itself.
      */
-    public MapTileset setData(List<String> data) {
+    public MapTilesetPrivate setData(List<String> data) {
         this.data = data;
         return this;
     }
@@ -377,9 +377,9 @@ public final class MapTileset {
      * Set the minZoom property: The minimum zoom level.
      *
      * @param minZoom the minZoom value to set.
-     * @return the MapTileset object itself.
+     * @return the MapTilesetPrivate object itself.
      */
-    public MapTileset setMinZoom(Integer minZoom) {
+    public MapTilesetPrivate setMinZoom(Integer minZoom) {
         this.minZoom = minZoom;
         return this;
     }
@@ -397,9 +397,9 @@ public final class MapTileset {
      * Set the maxZoom property: The maximum zoom level.
      *
      * @param maxZoom the maxZoom value to set.
-     * @return the MapTileset object itself.
+     * @return the MapTilesetPrivate object itself.
      */
-    public MapTileset setMaxZoom(Integer maxZoom) {
+    public MapTilesetPrivate setMaxZoom(Integer maxZoom) {
         this.maxZoom = maxZoom;
         return this;
     }
@@ -421,9 +421,9 @@ public final class MapTileset {
      * right, top. Values may be integers or floating point numbers.
      *
      * @param bounds the bounds value to set.
-     * @return the MapTileset object itself.
+     * @return the MapTilesetPrivate object itself.
      */
-    public MapTileset setBounds(List<Float> bounds) {
+    public MapTilesetPrivate setBounds(List<Float> bounds) {
         this.bounds = bounds;
         return this;
     }
@@ -443,9 +443,9 @@ public final class MapTileset {
      * level MUST be between minzoom and maxzoom. Implementations can use this value to set the default location.
      *
      * @param center the center value to set.
-     * @return the MapTileset object itself.
+     * @return the MapTilesetPrivate object itself.
      */
-    public MapTileset setCenter(List<Float> center) {
+    public MapTilesetPrivate setCenter(List<Float> center) {
         this.center = center;
         return this;
     }
