@@ -34,6 +34,9 @@ import com.fasterxml.jackson.databind.util.ByteBufferBackedInputStream;
 
 import reactor.core.publisher.Mono;
 
+
+// NOTE: take public bounding box, inside method convert to private bounding box
+
 /** Initializes a new instance of the synchronous RenderClient type. */
 @ServiceClient(builder = RenderClientBuilder.class)
 public final class RenderClient {
@@ -106,7 +109,7 @@ public final class RenderClient {
     }
 
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<StreamResponse> getMapTileV2WithResponse(MapTileV2Options options, Context context) {
+    public Mono<StreamResponse> getMapTileV2WithResponse(MapTileOptions options, Context context) {
         return this.asyncClient.getMapTileV2WithResponse(options, context);
     } 
 
@@ -172,7 +175,7 @@ public final class RenderClient {
      * @return metadata for a tileset in the TileJSON format.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public MapTileset getMapTileset(TilesetID tilesetId) {
+    public MapTilesetPrivate getMapTileset(TilesetID tilesetId) {
         return this.asyncClient.getMapTileset(tilesetId).block();
     }
     
@@ -187,7 +190,7 @@ public final class RenderClient {
      * @return Response<MapTileset>
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<MapTileset> getMapTilesetWithResponse(TilesetID tilesetID, Context context) {
+    public Response<MapTilesetPrivate> getMapTilesetWithResponse(TilesetID tilesetID, Context context) {
         return this.asyncClient.getMapTilesetWithResponse(tilesetID, context).block();
     }
 

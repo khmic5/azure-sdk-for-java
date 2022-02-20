@@ -3,16 +3,10 @@ package com.azure.maps.render.models;
 import java.util.List;
 import java.util.Objects;
 
-/**
- * Class representing a bounding box
- */
 public final class BoundingBox {
     private LatLong topLeft;
     private LatLong bottomRight;
 
-    /**
-     * Constructor
-     */
     public BoundingBox() {
     }
 
@@ -35,11 +29,7 @@ public final class BoundingBox {
      * @param south
      * @param west
      */
-    public BoundingBox(double west, double north, double east, double south) {
-        Objects.requireNonNull(west, "Left bound is needed");
-        Objects.requireNonNull(south, "Bottom bound is needed");
-        Objects.requireNonNull(east, "Right bound is needed");
-        Objects.requireNonNull(north, "Top bound is needed");
+    public BoundingBox(double north, double east, double south, double west) {
         this.topLeft = new LatLong(north, west);
         this.bottomRight = new LatLong(south, east);
     }
@@ -94,22 +84,35 @@ public final class BoundingBox {
 
     BoundingBox(List<Float> bounds) {
         Objects.requireNonNull(bounds, "Internal bounding box model is needed.");
-        
+        Objects.requireNonNull(bounds.get(0), "Left bound is needed");
+        Objects.requireNonNull(bounds.get(1), "Bottom bound is needed");
+        Objects.requireNonNull(bounds.get(2), "Right bound is needed");
+        Objects.requireNonNull(bounds.get(3), "Top bound is needed");
+
         final float leftBound = bounds.get(0);
         final float bottomBound = bounds.get(1);
         final float rightBound = bounds.get(2);
         final float topBound = bounds.get(3);
 
-        Objects.requireNonNull(leftBound, "Left bound is needed");
-        Objects.requireNonNull(bottomBound, "Bottom bound is needed");
-        Objects.requireNonNull(rightBound, "Right bound is needed");
-        Objects.requireNonNull(topBound, "Top bound is needed");
-
-        final LatLong topRight = new LatLong(rightBound, topBound);
-        final LatLong bottomLeft = new LatLong(leftBound, bottomBound);
+        final String northEastString = String.valueOf(rightBound) + "," + String.valueOf(topBound);
+        final String southWestString = String.valueOf(leftBound) + "," + String.valueOf(bottomBound);
+        final LatLong topRight = stringToCoordinate(northEastString);
+        final LatLong bottomLeft = stringToCoordinate(southWestString);
 
         // derive top and bottom left
         this.topLeft = new LatLong(topRight.getLatitude(), bottomLeft.getLongitude());
         this.bottomRight = new LatLong(bottomLeft.getLatitude(), topRight.getLongitude());
+    }
+
+    // converts a comma-separated string into a latlong pair
+    private LatLong stringToCoordinate(String s) {
+        final String[] coordinateString = s.split(",");
+
+        if (coordinateString != null && coordinateString.length == 2) {
+            return new LatLong(Double.parseDouble(coordinateString[0]),
+                Double.parseDouble(coordinateString[1]));
+        }
+
+        return null;
     }
 }
