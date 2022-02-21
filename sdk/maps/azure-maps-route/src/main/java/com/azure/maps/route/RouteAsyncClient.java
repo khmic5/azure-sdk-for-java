@@ -23,17 +23,17 @@ import com.azure.core.util.serializer.TypeReference;
 import com.azure.maps.route.implementation.RoutesImpl;
 import com.azure.maps.route.implementation.helpers.Utility;
 import com.azure.maps.route.implementation.models.BatchRequest;
-import com.azure.maps.route.implementation.models.ErrorResponseException;
 import com.azure.maps.route.implementation.models.JsonFormat;
 import com.azure.maps.route.implementation.models.ResponseFormat;
 import com.azure.maps.route.implementation.models.RouteDirectionParameters;
-import com.azure.maps.route.implementation.models.RouteDirections;
-import com.azure.maps.route.implementation.models.RouteDirectionsBatchResult;
 import com.azure.maps.route.implementation.models.RouteMatrixResult;
-import com.azure.maps.route.implementation.models.RouteRangeResult;
+import com.azure.maps.route.models.ErrorResponseException;
+import com.azure.maps.route.models.RouteDirections;
+import com.azure.maps.route.models.RouteDirectionsBatchResult;
 import com.azure.maps.route.models.RouteDirectionsOptions;
 import com.azure.maps.route.models.RouteMatrixOptions;
 import com.azure.maps.route.models.RouteRangeOptions;
+import com.azure.maps.route.models.RouteRangeResult;
 
 import reactor.core.publisher.Mono;
 

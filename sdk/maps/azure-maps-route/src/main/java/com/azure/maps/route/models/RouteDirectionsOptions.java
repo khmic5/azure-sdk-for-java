@@ -2,13 +2,6 @@ package com.azure.maps.route.models;
 
 import java.time.OffsetDateTime;
 
-import com.azure.maps.route.implementation.models.AlternativeRouteType;
-import com.azure.maps.route.implementation.models.ComputeTravelTime;
-import com.azure.maps.route.implementation.models.Report;
-import com.azure.maps.route.implementation.models.RouteInstructionsType;
-import com.azure.maps.route.implementation.models.RouteRepresentationForBestOrder;
-import com.azure.maps.route.implementation.models.SectionType;
-
 public class RouteDirectionsOptions extends BaseRouteOptions<RouteDirectionsOptions> {
     private String routePoints;
     private Integer maxAlternatives;

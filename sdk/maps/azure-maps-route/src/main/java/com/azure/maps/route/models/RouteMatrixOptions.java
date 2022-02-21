@@ -3,15 +3,7 @@ package com.azure.maps.route.models;
 import java.time.OffsetDateTime;
 import java.util.List;
 
-import com.azure.maps.route.implementation.models.ComputeTravelTime;
-import com.azure.maps.route.implementation.models.InclineLevel;
-import com.azure.maps.route.implementation.models.RouteAvoidType;
 import com.azure.maps.route.implementation.models.RouteMatrixQuery;
-import com.azure.maps.route.implementation.models.RouteType;
-import com.azure.maps.route.implementation.models.SectionType;
-import com.azure.maps.route.implementation.models.TravelMode;
-import com.azure.maps.route.implementation.models.VehicleLoadType;
-import com.azure.maps.route.implementation.models.WindingnessLevel;
 
 /**
  * Represents the options for requesting a route matrix.

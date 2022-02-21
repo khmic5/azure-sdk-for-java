@@ -6,9 +6,6 @@
 
 package com.azure.maps.route;
 
-import java.time.OffsetDateTime;
-import java.util.List;
-
 import com.azure.core.annotation.Generated;
 import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceClient;
@@ -17,24 +14,15 @@ import com.azure.core.http.rest.Response;
 import com.azure.core.util.Context;
 import com.azure.core.util.polling.SyncPoller;
 import com.azure.maps.route.implementation.models.BatchRequest;
-import com.azure.maps.route.implementation.models.ErrorResponseException;
-import com.azure.maps.route.implementation.models.InclineLevel;
-import com.azure.maps.route.implementation.models.JsonFormat;
-import com.azure.maps.route.implementation.models.ResponseFormat;
-import com.azure.maps.route.implementation.models.RouteAvoidType;
 import com.azure.maps.route.implementation.models.RouteDirectionParameters;
-import com.azure.maps.route.implementation.models.RouteDirections;
-import com.azure.maps.route.implementation.models.RouteDirectionsBatchResult;
 import com.azure.maps.route.implementation.models.RouteMatrixResult;
-import com.azure.maps.route.implementation.models.RouteRangeResult;
-import com.azure.maps.route.implementation.models.RouteType;
-import com.azure.maps.route.implementation.models.TravelMode;
-import com.azure.maps.route.implementation.models.VehicleEngineType;
-import com.azure.maps.route.implementation.models.VehicleLoadType;
-import com.azure.maps.route.implementation.models.WindingnessLevel;
+import com.azure.maps.route.models.ErrorResponseException;
+import com.azure.maps.route.models.RouteDirections;
+import com.azure.maps.route.models.RouteDirectionsBatchResult;
 import com.azure.maps.route.models.RouteDirectionsOptions;
 import com.azure.maps.route.models.RouteMatrixOptions;
 import com.azure.maps.route.models.RouteRangeOptions;
+import com.azure.maps.route.models.RouteRangeResult;
 
 /** Initializes a new instance of the synchronous RouteClient type. */
 @ServiceClient(builder = RouteClientBuilder.class)
