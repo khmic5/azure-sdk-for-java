@@ -314,7 +314,7 @@ public final class RouteClientBuilder {
      * @return an instance of SearchAsyncClient.
      */
     public RouteAsyncClient buildAsyncClient() {
-        return new RouteAsyncClient(buildInnerClient().getRoutes()); //, this.pipeline);
+        return new RouteAsyncClient(buildInnerClient().getRoutes(), this.pipeline);
     }
 
     /**
@@ -323,6 +323,6 @@ public final class RouteClientBuilder {
      * @return an instance of SearchClient.
      */
     public RouteClient buildClient() {
-        return new RouteClient(buildInnerClient().getRoutes()); //(buildAsyncClient());
+        return new RouteClient(buildAsyncClient());
     }
 }

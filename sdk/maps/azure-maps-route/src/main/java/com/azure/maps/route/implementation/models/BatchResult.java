@@ -7,6 +7,7 @@
 package com.azure.maps.route.implementation.models;
 
 import com.azure.core.annotation.Immutable;
+import com.azure.maps.route.models.BatchResultSummary;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** This object is returned from a successful Batch service call. Extend with 'batchItems' property. */

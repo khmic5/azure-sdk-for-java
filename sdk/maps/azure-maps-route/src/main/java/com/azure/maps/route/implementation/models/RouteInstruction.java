@@ -7,6 +7,10 @@
 package com.azure.maps.route.implementation.models;
 
 import com.azure.core.annotation.Fluent;
+import com.azure.maps.route.models.DrivingSide;
+import com.azure.maps.route.models.GuidanceInstructionType;
+import com.azure.maps.route.models.GuidanceManeuver;
+import com.azure.maps.route.models.JunctionType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 

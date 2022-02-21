@@ -107,7 +107,7 @@ public final class RouteClientImpl {
      * @param host server parameter.
      * @param apiVersion Api Version.
      */
-    public RouteClientImpl(String clientId, String host, String apiVersion) {
+    RouteClientImpl(String clientId, String host, String apiVersion) {
         this(
                 new HttpPipelineBuilder()
                         .policies(new UserAgentPolicy(), new RetryPolicy(), new CookiePolicy())
@@ -129,7 +129,7 @@ public final class RouteClientImpl {
      * @param host server parameter.
      * @param apiVersion Api Version.
      */
-    public RouteClientImpl(HttpPipeline httpPipeline, String clientId, String host, String apiVersion) {
+    RouteClientImpl(HttpPipeline httpPipeline, String clientId, String host, String apiVersion) {
         this(httpPipeline, JacksonAdapter.createDefaultSerializerAdapter(), clientId, host, apiVersion);
     }
 
@@ -145,7 +145,7 @@ public final class RouteClientImpl {
      * @param host server parameter.
      * @param apiVersion Api Version.
      */
-    public RouteClientImpl(
+    RouteClientImpl(
             HttpPipeline httpPipeline,
             SerializerAdapter serializerAdapter,
             String clientId,

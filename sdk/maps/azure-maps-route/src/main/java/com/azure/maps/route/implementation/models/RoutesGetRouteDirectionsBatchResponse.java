@@ -9,6 +9,7 @@ package com.azure.maps.route.implementation.models;
 import com.azure.core.http.HttpHeaders;
 import com.azure.core.http.HttpRequest;
 import com.azure.core.http.rest.ResponseBase;
+import com.azure.maps.route.models.RouteDirectionsBatchResult;
 
 /** Contains all response data for the getRouteDirectionsBatch operation. */
 public final class RoutesGetRouteDirectionsBatchResponse

@@ -6,41 +6,31 @@
 
 package com.azure.maps.route;
 
-import java.time.OffsetDateTime;
-import java.util.List;
+import java.time.Duration;
+import java.util.Objects;
+import java.util.function.Supplier;
 
 import com.azure.core.annotation.Generated;
 import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceClient;
 import com.azure.core.annotation.ServiceMethod;
+import com.azure.core.http.HttpPipeline;
 import com.azure.core.http.rest.Response;
 import com.azure.core.util.Context;
+import com.azure.core.util.polling.DefaultPollingStrategy;
 import com.azure.core.util.polling.PollerFlux;
+import com.azure.core.util.serializer.TypeReference;
 import com.azure.maps.route.implementation.RoutesImpl;
-import com.azure.maps.route.implementation.models.AlternativeRouteType;
+import com.azure.maps.route.implementation.helpers.Utility;
 import com.azure.maps.route.implementation.models.BatchRequest;
-import com.azure.maps.route.implementation.models.ComputeTravelTime;
 import com.azure.maps.route.implementation.models.ErrorResponseException;
-import com.azure.maps.route.implementation.models.InclineLevel;
 import com.azure.maps.route.implementation.models.JsonFormat;
-import com.azure.maps.route.implementation.models.Report;
 import com.azure.maps.route.implementation.models.ResponseFormat;
-import com.azure.maps.route.implementation.models.RouteAvoidType;
 import com.azure.maps.route.implementation.models.RouteDirectionParameters;
 import com.azure.maps.route.implementation.models.RouteDirections;
 import com.azure.maps.route.implementation.models.RouteDirectionsBatchResult;
-import com.azure.maps.route.implementation.models.RouteInstructionsType;
 import com.azure.maps.route.implementation.models.RouteMatrixResult;
 import com.azure.maps.route.implementation.models.RouteRangeResult;
-import com.azure.maps.route.implementation.models.RouteRepresentationForBestOrder;
-import com.azure.maps.route.implementation.models.RouteType;
-import com.azure.maps.route.implementation.models.RoutesGetRouteDirectionsBatchResponse;
-import com.azure.maps.route.implementation.models.RoutesRequestRouteDirectionsBatchResponse;
-import com.azure.maps.route.implementation.models.SectionType;
-import com.azure.maps.route.implementation.models.TravelMode;
-import com.azure.maps.route.implementation.models.VehicleEngineType;
-import com.azure.maps.route.implementation.models.VehicleLoadType;
-import com.azure.maps.route.implementation.models.WindingnessLevel;
 import com.azure.maps.route.models.RouteDirectionsOptions;
 import com.azure.maps.route.models.RouteMatrixOptions;
 import com.azure.maps.route.models.RouteRangeOptions;
@@ -50,8 +40,17 @@ import reactor.core.publisher.Mono;
 /** Initializes a new instance of the asynchronous RouteClient type. */
 @ServiceClient(builder = RouteClientBuilder.class, isAsync = true)
 public final class RouteAsyncClient {
+    // route batch size constants
     private final static int ROUTE_MATRIX_SMALL_SIZE = 100;
+    private final static int ROUTE_DIRECTIONS_SMALL_SIZE = 100;
 
+    // polling strategy constants
+    private static final int POLLING_FREQUENCY = 1;
+    private static final String POLLING_BATCH_HEADER_KEY = "BatchId";
+
+    // instance fields
+    private final DefaultPollingStrategy<RouteDirectionsBatchResult,
+        RouteDirectionsBatchResult> forwardStrategy;
     @Generated private final RoutesImpl serviceClient;
 
     /**
@@ -60,8 +59,9 @@ public final class RouteAsyncClient {
      * @param serviceClient the service client implementation.
      */
     @Generated
-    RouteAsyncClient(RoutesImpl serviceClient) {
+    RouteAsyncClient(RoutesImpl serviceClient, HttpPipeline httpPipeline) {
         this.serviceClient = serviceClient;
+        this.forwardStrategy = new DefaultPollingStrategy<>(httpPipeline);
     }
 
     /**
@@ -275,9 +275,9 @@ public final class RouteAsyncClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<RouteDirections> getRouteDirectionsWithAdditionalParameters(
             RouteDirectionsOptions options,
-            RouteDirectionParameters routeDirectionParameters) {
+            RouteDirectionParameters parameters) {
         Mono<Response<RouteDirections>> result =
-            this.getRouteDirectionsWithAdditionalParametersWithResponse(options, routeDirectionParameters);
+            this.getRouteDirectionsWithAdditionalParametersWithResponse(options, parameters);
         return result.flatMap(response -> {
             return Mono.just(response.getValue());
         });
@@ -299,8 +299,8 @@ public final class RouteAsyncClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<RouteDirections>> getRouteDirectionsWithAdditionalParametersWithResponse(
             RouteDirectionsOptions options,
-            RouteDirectionParameters routeDirectionParameters) {
-        return this.getRouteDirectionsWithAdditionalParametersWithResponse(options, null);
+            RouteDirectionParameters parameters) {
+        return this.getRouteDirectionsWithAdditionalParametersWithResponse(options, parameters, null);
     }
 
     /**
@@ -319,12 +319,12 @@ public final class RouteAsyncClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     Mono<Response<RouteDirections>> getRouteDirectionsWithAdditionalParametersWithResponse(
             RouteDirectionsOptions options,
-            RouteDirectionParameters routeDirectionParameters,
+            RouteDirectionParameters parameters,
             Context context) {
         return this.serviceClient.getRouteDirectionsWithAdditionalParametersWithResponseAsync(
                 ResponseFormat.JSON,
                 options.getRoutePoints(),
-                routeDirectionParameters,
+                parameters,
                 options.getMaxAlternatives(),
                 options.getAlternativeType(),
                 options.getMinDeviationDistance(),
@@ -461,97 +461,6 @@ public final class RouteAsyncClient {
 
     /**
      * **Route Directions Batch API**
-     *
-     * <p>**Applies to**: S1 pricing tier.
-     *
-     * <p>The Route Directions Batch API sends batches of queries to [Route Directions
-     * API](https://docs.microsoft.com/rest/api/maps/route/getroutedirections) using just a single API call. You can
-     * call Route Directions Batch API to run either asynchronously (async) or synchronously (sync). The async API
-     * allows caller to batch up to **700** queries and sync API up to **100** queries. ### Submit Asynchronous Batch
-     * Request The Asynchronous API is appropriate for processing big volumes of relatively complex route requests - It
-     * allows the retrieval of results in a separate call (multiple downloads are possible). - The asynchronous API is
-     * optimized for reliability and is not expected to run into a timeout. - The number of batch items is limited to
-     * **700** for this API.
-     *
-     * <p>When you make a request by using async request, by default the service returns a 202 response code along a
-     * redirect URL in the Location field of the response header. This URL should be checked periodically until the
-     * response data or error information is available. The asynchronous responses are stored for **14** days. The
-     * redirect URL returns a 404 response if used after the expiration period.
-     *
-     * <p>Please note that asynchronous batch request is a long-running request. Here's a typical sequence of
-     * operations: 1. Client sends a Route Directions Batch `POST` request to Azure Maps 2. The server will respond with
-     * one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request has been accepted.
-     *
-     * <p>&gt; HTTP `Error` - There was an error processing your Batch request. This could either be a `400 Bad Request`
-     * or any other `Error` status code.
-     *
-     * <p>3. If the batch request was accepted successfully, the `Location` header in the response contains the URL to
-     * download the results of the batch request. This status URI looks like following:
-     *
-     * <p>``` GET https://atlas.microsoft.com/route/directions/batch/{batch-id}?api-version=1.0 ``` Note:- Please
-     * remember to add AUTH information (subscription-key/azure_auth - See [Security](#security)) to the _status URI_
-     * before running it. &lt;br&gt; 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to
-     * download the batch results.
-     *
-     * <p>### POST Body for Batch Request To send the _route directions_ queries you will use a `POST` request where the
-     * request body will contain the `batchItems` array in `json` format and the `Content-Type` header will be set to
-     * `application/json`. Here's a sample request body containing 3 _route directions_ queries:
-     *
-     * <p>```json { "batchItems": [ { "query":
-     * "?query=47.620659,-122.348934:47.610101,-122.342015&amp;travelMode=bicycle&amp;routeType=eco&amp;traffic=false"
-     * }, { "query": "?query=40.759856,-73.985108:40.771136,-73.973506&amp;travelMode=pedestrian&amp;routeType=shortest"
-     * }, { "query": "?query=48.923159,-122.557362:32.621279,-116.840362" } ] } ```
-     *
-     * <p>A _route directions_ query in a batch is just a partial URL _without_ the protocol, base URL, path,
-     * api-version and subscription-key. It can accept any of the supported _route directions_ [URI
-     * parameters](https://docs.microsoft.com/rest/api/maps/route/getroutedirections#uri-parameters). The string values
-     * in the _route directions_ query must be properly escaped (e.g. " character should be escaped with \\ ) and it
-     * should also be properly URL-encoded.
-     *
-     * <p>The async API allows caller to batch up to **700** queries and sync API up to **100** queries, and the batch
-     * should contain at least **1** query.
-     *
-     * <p>### Download Asynchronous Batch Results To download the async batch results you will issue a `GET` request to
-     * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
-     * `POST` batch request and looks like the following:
-     *
-     * <p>```
-     * https://atlas.microsoft.com/route/directions/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
-     * using the _download URL_. 2. The server will respond with one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
-     * time.
-     *
-     * <p>&gt; HTTP `200 OK` - Batch request successfully processed. The response body contains all the batch results.
-     *
-     * <p>### Batch Response Model The returned data content is similar for async and sync requests. When downloading
-     * the results of an async batch request, if the batch has finished processing, the response body contains the batch
-     * response. This batch response contains a `summary` component that indicates the `totalRequests` that were part of
-     * the original batch request and `successfulRequests`i.e. queries which were executed successfully. The batch
-     * response also includes a `batchItems` array which contains a response for each and every query in the batch
-     * request. The `batchItems` will contain the results in the exact same order the original queries were sent in the
-     * batch request. Each item in `batchItems` contains `statusCode` and `response` fields. Each `response` in
-     * `batchItems` is of one of the following types:
-     *
-     * <p>- [`RouteDirections`](https://docs.microsoft.com/rest/api/maps/route/getroutedirections#routedirections) - If
-     * the query completed successfully.
-     *
-     * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
-     *
-     * <p>Here's a sample Batch Response with 1 _successful_ and 1 _failed_ result:
-     *
-     * <p>```json { "summary": { "successfulRequests": 1, "totalRequests": 2 }, "batchItems": [ { "statusCode": 200,
-     * "response": { "routes": [ { "summary": { "lengthInMeters": 1758, "travelTimeInSeconds": 387,
-     * "trafficDelayInSeconds": 0, "departureTime": "2018-07-17T00:49:56+00:00", "arrivalTime":
-     * "2018-07-17T00:56:22+00:00" }, "legs": [ { "summary": { "lengthInMeters": 1758, "travelTimeInSeconds": 387,
-     * "trafficDelayInSeconds": 0, "departureTime": "2018-07-17T00:49:56+00:00", "arrivalTime":
-     * "2018-07-17T00:56:22+00:00" }, "points": [ { "latitude": 47.62094, "longitude": -122.34892 }, { "latitude":
-     * 47.62094, "longitude": -122.3485 }, { "latitude": 47.62095, "longitude": -122.3476 } ] } ], "sections": [ {
-     * "startPointIndex": 0, "endPointIndex": 40, "sectionType": "TRAVEL_MODE", "travelMode": "bicycle" } ] } ] } }, {
-     * "statusCode": 400, "response": { "error": { "code": "400 BadRequest", "message": "Bad request: one or more
      * parameters were incorrectly specified or are mutually exclusive." } } } ] } ```.
      *
      * @param format Desired format of the response. Only `json` format is supported.
@@ -563,105 +472,14 @@ public final class RouteAsyncClient {
      * @return this object is returned from a successful Route Directions Batch service call.
      */
     @Generated
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<RoutesRequestRouteDirectionsBatchResponse> requestRouteDirectionsBatchWithResponse(
-            JsonFormat format, BatchRequest routeDirectionsBatchQueries) {
-        return this.serviceClient.requestRouteDirectionsBatchWithResponseAsync(format, routeDirectionsBatchQueries);
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    PollerFlux<RouteDirectionsBatchResult, RouteDirectionsBatchResult>
+            beginRequestRouteDirectionsBatch(BatchRequest batchRequest) {
+        return this.beginRequestRouteDirectionsBatch(batchRequest, null);
     }
 
     /**
      * **Route Directions Batch API**
-     *
-     * <p>**Applies to**: S1 pricing tier.
-     *
-     * <p>The Route Directions Batch API sends batches of queries to [Route Directions
-     * API](https://docs.microsoft.com/rest/api/maps/route/getroutedirections) using just a single API call. You can
-     * call Route Directions Batch API to run either asynchronously (async) or synchronously (sync). The async API
-     * allows caller to batch up to **700** queries and sync API up to **100** queries. ### Submit Asynchronous Batch
-     * Request The Asynchronous API is appropriate for processing big volumes of relatively complex route requests - It
-     * allows the retrieval of results in a separate call (multiple downloads are possible). - The asynchronous API is
-     * optimized for reliability and is not expected to run into a timeout. - The number of batch items is limited to
-     * **700** for this API.
-     *
-     * <p>When you make a request by using async request, by default the service returns a 202 response code along a
-     * redirect URL in the Location field of the response header. This URL should be checked periodically until the
-     * response data or error information is available. The asynchronous responses are stored for **14** days. The
-     * redirect URL returns a 404 response if used after the expiration period.
-     *
-     * <p>Please note that asynchronous batch request is a long-running request. Here's a typical sequence of
-     * operations: 1. Client sends a Route Directions Batch `POST` request to Azure Maps 2. The server will respond with
-     * one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request has been accepted.
-     *
-     * <p>&gt; HTTP `Error` - There was an error processing your Batch request. This could either be a `400 Bad Request`
-     * or any other `Error` status code.
-     *
-     * <p>3. If the batch request was accepted successfully, the `Location` header in the response contains the URL to
-     * download the results of the batch request. This status URI looks like following:
-     *
-     * <p>``` GET https://atlas.microsoft.com/route/directions/batch/{batch-id}?api-version=1.0 ``` Note:- Please
-     * remember to add AUTH information (subscription-key/azure_auth - See [Security](#security)) to the _status URI_
-     * before running it. &lt;br&gt; 4. Client issues a `GET` request on the _download URL_ obtained in Step 3 to
-     * download the batch results.
-     *
-     * <p>### POST Body for Batch Request To send the _route directions_ queries you will use a `POST` request where the
-     * request body will contain the `batchItems` array in `json` format and the `Content-Type` header will be set to
-     * `application/json`. Here's a sample request body containing 3 _route directions_ queries:
-     *
-     * <p>```json { "batchItems": [ { "query":
-     * "?query=47.620659,-122.348934:47.610101,-122.342015&amp;travelMode=bicycle&amp;routeType=eco&amp;traffic=false"
-     * }, { "query": "?query=40.759856,-73.985108:40.771136,-73.973506&amp;travelMode=pedestrian&amp;routeType=shortest"
-     * }, { "query": "?query=48.923159,-122.557362:32.621279,-116.840362" } ] } ```
-     *
-     * <p>A _route directions_ query in a batch is just a partial URL _without_ the protocol, base URL, path,
-     * api-version and subscription-key. It can accept any of the supported _route directions_ [URI
-     * parameters](https://docs.microsoft.com/rest/api/maps/route/getroutedirections#uri-parameters). The string values
-     * in the _route directions_ query must be properly escaped (e.g. " character should be escaped with \\ ) and it
-     * should also be properly URL-encoded.
-     *
-     * <p>The async API allows caller to batch up to **700** queries and sync API up to **100** queries, and the batch
-     * should contain at least **1** query.
-     *
-     * <p>### Download Asynchronous Batch Results To download the async batch results you will issue a `GET` request to
-     * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
-     * `POST` batch request and looks like the following:
-     *
-     * <p>```
-     * https://atlas.microsoft.com/route/directions/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
-     * using the _download URL_. 2. The server will respond with one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
-     * time.
-     *
-     * <p>&gt; HTTP `200 OK` - Batch request successfully processed. The response body contains all the batch results.
-     *
-     * <p>### Batch Response Model The returned data content is similar for async and sync requests. When downloading
-     * the results of an async batch request, if the batch has finished processing, the response body contains the batch
-     * response. This batch response contains a `summary` component that indicates the `totalRequests` that were part of
-     * the original batch request and `successfulRequests`i.e. queries which were executed successfully. The batch
-     * response also includes a `batchItems` array which contains a response for each and every query in the batch
-     * request. The `batchItems` will contain the results in the exact same order the original queries were sent in the
-     * batch request. Each item in `batchItems` contains `statusCode` and `response` fields. Each `response` in
-     * `batchItems` is of one of the following types:
-     *
-     * <p>- [`RouteDirections`](https://docs.microsoft.com/rest/api/maps/route/getroutedirections#routedirections) - If
-     * the query completed successfully.
-     *
-     * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
-     *
-     * <p>Here's a sample Batch Response with 1 _successful_ and 1 _failed_ result:
-     *
-     * <p>```json { "summary": { "successfulRequests": 1, "totalRequests": 2 }, "batchItems": [ { "statusCode": 200,
-     * "response": { "routes": [ { "summary": { "lengthInMeters": 1758, "travelTimeInSeconds": 387,
-     * "trafficDelayInSeconds": 0, "departureTime": "2018-07-17T00:49:56+00:00", "arrivalTime":
-     * "2018-07-17T00:56:22+00:00" }, "legs": [ { "summary": { "lengthInMeters": 1758, "travelTimeInSeconds": 387,
-     * "trafficDelayInSeconds": 0, "departureTime": "2018-07-17T00:49:56+00:00", "arrivalTime":
-     * "2018-07-17T00:56:22+00:00" }, "points": [ { "latitude": 47.62094, "longitude": -122.34892 }, { "latitude":
-     * 47.62094, "longitude": -122.3485 }, { "latitude": 47.62095, "longitude": -122.3476 } ] } ], "sections": [ {
-     * "startPointIndex": 0, "endPointIndex": 40, "sectionType": "TRAVEL_MODE", "travelMode": "bicycle" } ] } ] } }, {
-     * "statusCode": 400, "response": { "error": { "code": "400 BadRequest", "message": "Bad request: one or more
      * parameters were incorrectly specified or are mutually exclusive." } } } ] } ```.
      *
      * @param format Desired format of the response. Only `json` format is supported.
@@ -674,107 +492,36 @@ public final class RouteAsyncClient {
      */
     @Generated
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public PollerFlux<RouteDirectionsBatchResult, RouteDirectionsBatchResult> beginRequestRouteDirectionsBatch(
-            JsonFormat format, BatchRequest routeDirectionsBatchQueries) {
-        return this.serviceClient.beginRequestRouteDirectionsBatchAsync(format, routeDirectionsBatchQueries);
+    PollerFlux<RouteDirectionsBatchResult, RouteDirectionsBatchResult>
+            beginRequestRouteDirectionsBatch(BatchRequest batchRequest, Context context) {
+        Objects.requireNonNull(batchRequest.getBatchItems(), "'batchItems' is a required parameter.");
+
+        // convert list to batch request
+        // List<BatchRequestItem> items = optionsList.stream()
+        //    .map(item -> Utility.toFuzzySearchBatchRequestItem(item)).collect(Collectors.toList());
+        // BatchRequest batchRequest = new BatchRequest().setBatchItems(items);
+
+        if (batchRequest.getBatchItems().size() <= ROUTE_DIRECTIONS_SMALL_SIZE) {
+            return createPollerFlux(
+                () -> this.serviceClient
+                        .requestRouteDirectionsBatchSyncWithResponseAsync(JsonFormat.JSON, batchRequest, context)
+                    .flatMap(response -> {
+                        return Mono.empty(); //just(Utility.createBatchSearchResponse(response));
+                    }),
+                this.forwardStrategy);
+        }
+        else {
+            return createPollerFlux(
+                () -> this.serviceClient
+                        .requestRouteDirectionsBatchWithResponseAsync(JsonFormat.JSON, batchRequest, context)
+                    .flatMap(response -> {
+                        return Mono.empty(); //just(Utility.createBatchSearchResponse(response));
+                    }),
+                this.forwardStrategy);
+        }
     }
 
     /**
-     * ### Download Asynchronous Batch Results To download the async batch results you will issue a `GET` request to the
-     * batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful `POST`
-     * batch request and looks like the following:
-     *
-     * <p>```
-     * https://atlas.microsoft.com/route/directions/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
-     * using the _download URL_. 2. The server will respond with one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
-     * time.
-     *
-     * <p>&gt; HTTP `200 OK` - Batch request successfully processed. The response body contains all the batch results.
-     *
-     * <p>### Batch Response Model The returned data content is similar for async and sync requests. When downloading
-     * the results of an async batch request, if the batch has finished processing, the response body contains the batch
-     * response. This batch response contains a `summary` component that indicates the `totalRequests` that were part of
-     * the original batch request and `successfulRequests`i.e. queries which were executed successfully. The batch
-     * response also includes a `batchItems` array which contains a response for each and every query in the batch
-     * request. The `batchItems` will contain the results in the exact same order the original queries were sent in the
-     * batch request. Each item in `batchItems` contains `statusCode` and `response` fields. Each `response` in
-     * `batchItems` is of one of the following types:
-     *
-     * <p>- [`RouteDirections`](https://docs.microsoft.com/rest/api/maps/route/getroutedirections#routedirections) - If
-     * the query completed successfully.
-     *
-     * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
-     *
-     * <p>Here's a sample Batch Response with 1 _successful_ and 1 _failed_ result:
-     *
-     * <p>```json { "summary": { "successfulRequests": 1, "totalRequests": 2 }, "batchItems": [ { "statusCode": 200,
-     * "response": { "routes": [ { "summary": { "lengthInMeters": 1758, "travelTimeInSeconds": 387,
-     * "trafficDelayInSeconds": 0, "departureTime": "2018-07-17T00:49:56+00:00", "arrivalTime":
-     * "2018-07-17T00:56:22+00:00" }, "legs": [ { "summary": { "lengthInMeters": 1758, "travelTimeInSeconds": 387,
-     * "trafficDelayInSeconds": 0, "departureTime": "2018-07-17T00:49:56+00:00", "arrivalTime":
-     * "2018-07-17T00:56:22+00:00" }, "points": [ { "latitude": 47.62094, "longitude": -122.34892 }, { "latitude":
-     * 47.62094, "longitude": -122.3485 }, { "latitude": 47.62095, "longitude": -122.3476 } ] } ], "sections": [ {
-     * "startPointIndex": 0, "endPointIndex": 40, "sectionType": "TRAVEL_MODE", "travelMode": "bicycle" } ] } ] } }, {
-     * "statusCode": 400, "response": { "error": { "code": "400 BadRequest", "message": "Bad request: one or more
-     * parameters were incorrectly specified or are mutually exclusive." } } } ] } ```.
-     *
-     * @param batchId Batch id for querying the operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Route Directions Batch service call.
-     */
-    @Generated
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<RoutesGetRouteDirectionsBatchResponse> getRouteDirectionsBatchWithResponse(String batchId) {
-        return this.serviceClient.getRouteDirectionsBatchWithResponseAsync(batchId);
-    }
-
-    /**
-     * ### Download Asynchronous Batch Results To download the async batch results you will issue a `GET` request to the
-     * batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful `POST`
-     * batch request and looks like the following:
-     *
-     * <p>```
-     * https://atlas.microsoft.com/route/directions/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` Here's the typical sequence of operations for downloading the batch results: 1. Client sends a `GET` request
-     * using the _download URL_. 2. The server will respond with one of the following:
-     *
-     * <p>&gt; HTTP `202 Accepted` - Batch request was accepted but is still being processed. Please try again in some
-     * time.
-     *
-     * <p>&gt; HTTP `200 OK` - Batch request successfully processed. The response body contains all the batch results.
-     *
-     * <p>### Batch Response Model The returned data content is similar for async and sync requests. When downloading
-     * the results of an async batch request, if the batch has finished processing, the response body contains the batch
-     * response. This batch response contains a `summary` component that indicates the `totalRequests` that were part of
-     * the original batch request and `successfulRequests`i.e. queries which were executed successfully. The batch
-     * response also includes a `batchItems` array which contains a response for each and every query in the batch
-     * request. The `batchItems` will contain the results in the exact same order the original queries were sent in the
-     * batch request. Each item in `batchItems` contains `statusCode` and `response` fields. Each `response` in
-     * `batchItems` is of one of the following types:
-     *
-     * <p>- [`RouteDirections`](https://docs.microsoft.com/rest/api/maps/route/getroutedirections#routedirections) - If
-     * the query completed successfully.
-     *
-     * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
-     *
-     * <p>Here's a sample Batch Response with 1 _successful_ and 1 _failed_ result:
-     *
-     * <p>```json { "summary": { "successfulRequests": 1, "totalRequests": 2 }, "batchItems": [ { "statusCode": 200,
-     * "response": { "routes": [ { "summary": { "lengthInMeters": 1758, "travelTimeInSeconds": 387,
-     * "trafficDelayInSeconds": 0, "departureTime": "2018-07-17T00:49:56+00:00", "arrivalTime":
-     * "2018-07-17T00:56:22+00:00" }, "legs": [ { "summary": { "lengthInMeters": 1758, "travelTimeInSeconds": 387,
-     * "trafficDelayInSeconds": 0, "departureTime": "2018-07-17T00:49:56+00:00", "arrivalTime":
-     * "2018-07-17T00:56:22+00:00" }, "points": [ { "latitude": 47.62094, "longitude": -122.34892 }, { "latitude":
-     * 47.62094, "longitude": -122.3485 }, { "latitude": 47.62095, "longitude": -122.3476 } ] } ], "sections": [ {
-     * "startPointIndex": 0, "endPointIndex": 40, "sectionType": "TRAVEL_MODE", "travelMode": "bicycle" } ] } ] } }, {
-     * "statusCode": 400, "response": { "error": { "code": "400 BadRequest", "message": "Bad request: one or more
-     * parameters were incorrectly specified or are mutually exclusive." } } } ] } ```.
-     *
      * @param batchId Batch id for querying the operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -783,120 +530,52 @@ public final class RouteAsyncClient {
      */
     @Generated
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public PollerFlux<RouteDirectionsBatchResult, RouteDirectionsBatchResult> beginGetRouteDirectionsBatch(
+    PollerFlux<RouteDirectionsBatchResult, RouteDirectionsBatchResult> beginGetRouteDirectionsBatch(
             String batchId) {
+        return this.beginGetRouteDirectionsBatch(batchId, null);
+    }
+
+    /**
+     * @param batchId Batch id for querying the operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful Route Directions Batch service call.
+     */
+    @Generated
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    PollerFlux<RouteDirectionsBatchResult, RouteDirectionsBatchResult> beginGetRouteDirectionsBatch(
+            String batchId, Context context) {
         return this.serviceClient.beginGetRouteDirectionsBatchAsync(batchId);
     }
 
-    /**
-     * **Route Directions Batch API**
-     *
-     * <p>**Applies to**: S1 pricing tier.
-     *
-     * <p>The Route Directions Batch API sends batches of queries to [Route Directions
-     * API](https://docs.microsoft.com/rest/api/maps/route/getroutedirections) using just a single API call. You can
-     * call Route Directions Batch API to run either asynchronously (async) or synchronously (sync). The async API
-     * allows caller to batch up to **700** queries and sync API up to **100** queries. ### Submit Synchronous Batch
-     * Request The Synchronous API is recommended for lightweight batch requests. When the service receives a request,
-     * it will respond as soon as the batch items are calculated and there will be no possibility to retrieve the
-     * results later. The Synchronous API will return a timeout error (a 408 response) if the request takes longer than
-     * 60 seconds. The number of batch items is limited to **100** for this API. ``` POST
-     * https://atlas.microsoft.com/route/directions/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` ### Batch Response Model The returned data content is similar for async and sync requests. When downloading
-     * the results of an async batch request, if the batch has finished processing, the response body contains the batch
-     * response. This batch response contains a `summary` component that indicates the `totalRequests` that were part of
-     * the original batch request and `successfulRequests`i.e. queries which were executed successfully. The batch
-     * response also includes a `batchItems` array which contains a response for each and every query in the batch
-     * request. The `batchItems` will contain the results in the exact same order the original queries were sent in the
-     * batch request. Each item in `batchItems` contains `statusCode` and `response` fields. Each `response` in
-     * `batchItems` is of one of the following types:
-     *
-     * <p>- [`RouteDirections`](https://docs.microsoft.com/rest/api/maps/route/getroutedirections#routedirections) - If
-     * the query completed successfully.
-     *
-     * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
-     *
-     * <p>Here's a sample Batch Response with 1 _successful_ and 1 _failed_ result:
-     *
-     * <p>```json { "summary": { "successfulRequests": 1, "totalRequests": 2 }, "batchItems": [ { "statusCode": 200,
-     * "response": { "routes": [ { "summary": { "lengthInMeters": 1758, "travelTimeInSeconds": 387,
-     * "trafficDelayInSeconds": 0, "departureTime": "2018-07-17T00:49:56+00:00", "arrivalTime":
-     * "2018-07-17T00:56:22+00:00" }, "legs": [ { "summary": { "lengthInMeters": 1758, "travelTimeInSeconds": 387,
-     * "trafficDelayInSeconds": 0, "departureTime": "2018-07-17T00:49:56+00:00", "arrivalTime":
-     * "2018-07-17T00:56:22+00:00" }, "points": [ { "latitude": 47.62094, "longitude": -122.34892 }, { "latitude":
-     * 47.62094, "longitude": -122.3485 }, { "latitude": 47.62095, "longitude": -122.3476 } ] } ], "sections": [ {
-     * "startPointIndex": 0, "endPointIndex": 40, "sectionType": "TRAVEL_MODE", "travelMode": "bicycle" } ] } ] } }, {
-     * "statusCode": 400, "response": { "error": { "code": "400 BadRequest", "message": "Bad request: one or more
-     * parameters were incorrectly specified or are mutually exclusive." } } } ] } ```.
-     *
-     * @param format Desired format of the response. Only `json` format is supported.
-     * @param routeDirectionsBatchQueries The list of route directions queries/requests to process. The list can contain
-     *     a max of 700 queries for async and 100 queries for sync version and must contain at least 1 query.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Route Directions Batch service call.
-     */
-    @Generated
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<RouteDirectionsBatchResult>> requestRouteDirectionsBatchSyncWithResponse(
-            JsonFormat format, BatchRequest routeDirectionsBatchQueries) {
-        return this.serviceClient.requestRouteDirectionsBatchSyncWithResponseAsync(format, routeDirectionsBatchQueries);
-    }
+    // private utility methods
+    private PollerFlux<RouteDirectionsBatchResult, RouteDirectionsBatchResult> createPollerFlux(
+            Supplier<Mono<? extends Response<?>>> initialOperation,
+            DefaultPollingStrategy<RouteDirectionsBatchResult, RouteDirectionsBatchResult> strategy) {
 
-    /**
-     * **Route Directions Batch API**
-     *
-     * <p>**Applies to**: S1 pricing tier.
-     *
-     * <p>The Route Directions Batch API sends batches of queries to [Route Directions
-     * API](https://docs.microsoft.com/rest/api/maps/route/getroutedirections) using just a single API call. You can
-     * call Route Directions Batch API to run either asynchronously (async) or synchronously (sync). The async API
-     * allows caller to batch up to **700** queries and sync API up to **100** queries. ### Submit Synchronous Batch
-     * Request The Synchronous API is recommended for lightweight batch requests. When the service receives a request,
-     * it will respond as soon as the batch items are calculated and there will be no possibility to retrieve the
-     * results later. The Synchronous API will return a timeout error (a 408 response) if the request takes longer than
-     * 60 seconds. The number of batch items is limited to **100** for this API. ``` POST
-     * https://atlas.microsoft.com/route/directions/batch/sync/json?api-version=1.0&amp;subscription-key={subscription-key}
-     * ``` ### Batch Response Model The returned data content is similar for async and sync requests. When downloading
-     * the results of an async batch request, if the batch has finished processing, the response body contains the batch
-     * response. This batch response contains a `summary` component that indicates the `totalRequests` that were part of
-     * the original batch request and `successfulRequests`i.e. queries which were executed successfully. The batch
-     * response also includes a `batchItems` array which contains a response for each and every query in the batch
-     * request. The `batchItems` will contain the results in the exact same order the original queries were sent in the
-     * batch request. Each item in `batchItems` contains `statusCode` and `response` fields. Each `response` in
-     * `batchItems` is of one of the following types:
-     *
-     * <p>- [`RouteDirections`](https://docs.microsoft.com/rest/api/maps/route/getroutedirections#routedirections) - If
-     * the query completed successfully.
-     *
-     * <p>- `Error` - If the query failed. The response will contain a `code` and a `message` in this case.
-     *
-     * <p>Here's a sample Batch Response with 1 _successful_ and 1 _failed_ result:
-     *
-     * <p>```json { "summary": { "successfulRequests": 1, "totalRequests": 2 }, "batchItems": [ { "statusCode": 200,
-     * "response": { "routes": [ { "summary": { "lengthInMeters": 1758, "travelTimeInSeconds": 387,
-     * "trafficDelayInSeconds": 0, "departureTime": "2018-07-17T00:49:56+00:00", "arrivalTime":
-     * "2018-07-17T00:56:22+00:00" }, "legs": [ { "summary": { "lengthInMeters": 1758, "travelTimeInSeconds": 387,
-     * "trafficDelayInSeconds": 0, "departureTime": "2018-07-17T00:49:56+00:00", "arrivalTime":
-     * "2018-07-17T00:56:22+00:00" }, "points": [ { "latitude": 47.62094, "longitude": -122.34892 }, { "latitude":
-     * 47.62094, "longitude": -122.3485 }, { "latitude": 47.62095, "longitude": -122.3476 } ] } ], "sections": [ {
-     * "startPointIndex": 0, "endPointIndex": 40, "sectionType": "TRAVEL_MODE", "travelMode": "bicycle" } ] } ] } }, {
-     * "statusCode": 400, "response": { "error": { "code": "400 BadRequest", "message": "Bad request: one or more
-     * parameters were incorrectly specified or are mutually exclusive." } } } ] } ```.
-     *
-     * @param format Desired format of the response. Only `json` format is supported.
-     * @param routeDirectionsBatchQueries The list of route directions queries/requests to process. The list can contain
-     *     a max of 700 queries for async and 100 queries for sync version and must contain at least 1 query.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Route Directions Batch service call.
-     */
-    @Generated
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<RouteDirectionsBatchResult> requestRouteDirectionsBatchSync(
-            JsonFormat format, BatchRequest routeDirectionsBatchQueries) {
-        return this.serviceClient.requestRouteDirectionsBatchSyncAsync(format, routeDirectionsBatchQueries);
+        // Create poller instance
+        return PollerFlux.create(
+            Duration.ofSeconds(POLLING_FREQUENCY),
+            context -> initialOperation.get()
+                .flatMap(response -> strategy.canPoll(response).flatMap(canPoll -> {
+                    if (!canPoll) {
+                        return Mono.error(new IllegalStateException(
+                            "Cannot poll with strategy " + strategy.getClass().getSimpleName()));
+                    }
+                    context.setData(POLLING_BATCH_HEADER_KEY, Utility.getBatchId(response.getHeaders()));
+                    return strategy.onInitialResponse(response, context, new TypeReference<RouteDirectionsBatchResult>() {});
+                })),
+            context -> strategy.poll(context, new TypeReference<RouteDirectionsBatchResult>() {}),
+            strategy::cancel,
+            context -> {
+                return strategy
+                    .getResult(context, new TypeReference<RouteDirectionsBatchResult>() {})
+                        .flatMap(result -> {
+                            final String batchId = context.getData(POLLING_BATCH_HEADER_KEY);
+                            // result.setBatchId(batchId);
+                            return Mono.just(result);
+                        });
+            });
     }
 }

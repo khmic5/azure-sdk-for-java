@@ -7,6 +7,7 @@
 package com.azure.maps.route.implementation.models;
 
 import com.azure.core.annotation.Fluent;
+import com.azure.maps.route.models.ErrorDetail;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**

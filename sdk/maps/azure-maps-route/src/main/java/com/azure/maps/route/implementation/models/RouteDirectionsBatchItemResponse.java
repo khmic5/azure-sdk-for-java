@@ -7,6 +7,8 @@
 package com.azure.maps.route.implementation.models;
 
 import com.azure.core.annotation.Fluent;
+import com.azure.maps.route.models.ErrorDetail;
+import com.azure.maps.route.models.RouteDirections;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** The result of the query. RouteDirections if the query completed successfully, ErrorResponse otherwise. */
