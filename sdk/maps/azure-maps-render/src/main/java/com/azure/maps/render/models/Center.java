@@ -6,10 +6,6 @@ import java.util.Objects;
 public class Center {
     private LatLong coordinates;
     private int zoom;
-    //List<float>
-    // The default location of the tileset in the form [longitude, latitude,
-     //* zoom]. The zoom level MUST be between minzoom and maxzoom.
-     //* Implementations can use this value to set the default location.
 
     public Center(double longitude, double latitude, double zoom) {
         this.coordinates = new LatLong(longitude, latitude);
@@ -24,7 +20,7 @@ public class Center {
 
         final float latitude = inputs.get(0);
         final float longitude = inputs.get(1);
-        this.zoom = Math.round(inputs.get(2));
+        this.zoom = inputs.get(2).intValue();
 
         this.coordinates = new LatLong(latitude, longitude);
     }

@@ -17,7 +17,6 @@ import com.azure.core.util.Context;
 import com.azure.core.util.FluxUtil;
 import com.azure.maps.render.models.Copyright;
 import com.azure.maps.render.models.CopyrightCaption;
-import com.azure.maps.render.implementation.models.ErrorResponseException;
 import com.azure.maps.render.models.MapAttribution;
 import com.azure.maps.render.models.BoundingBox;
 import com.azure.maps.render.models.MapStaticImageOptions;
@@ -27,9 +26,6 @@ import com.azure.maps.render.models.TileIndex;
 import com.azure.maps.render.models.TilesetID;
 
 import reactor.core.publisher.Mono;
-
-
-// NOTE: take public bounding box, inside method convert to private bounding box
 
 /** Initializes a new instance of the synchronous RenderClient type. */
 @ServiceClient(builder = RenderClientBuilder.class)
@@ -449,8 +445,6 @@ public final class RenderClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Copyright getCopyrightFromBoundingBox(BoundingBox boundingBox, boolean includeText) {
-        // options.getBoudningbox --> convert to boundingbox private (check utility class in search sdk)
-        // Utility.toprivateboundingbox
         return this.asyncClient.getCopyrightFromBoundingBox(boundingBox, includeText).block();
     }
 

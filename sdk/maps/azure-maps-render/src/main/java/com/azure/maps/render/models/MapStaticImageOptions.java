@@ -2,11 +2,6 @@ package com.azure.maps.render.models;
 
 import java.util.List;
 
-import com.azure.maps.render.models.LocalizedMapView;
-import com.azure.maps.render.models.MapImageStyle;
-import com.azure.maps.render.models.RasterTileFormat;
-import com.azure.maps.render.models.StaticMapLayer;
-
 public class MapStaticImageOptions {
     private RasterTileFormat format;
     private StaticMapLayer layer;
@@ -70,7 +65,7 @@ public class MapStaticImageOptions {
         return boundingBox;
     }
 
-    public MapStaticImageOptions setMapImageStyle(BoundingBox boundingBox) {
+    public MapStaticImageOptions setBoundingBox(BoundingBox boundingBox) {
         this.boundingBox = boundingBox;
         return this;
     }

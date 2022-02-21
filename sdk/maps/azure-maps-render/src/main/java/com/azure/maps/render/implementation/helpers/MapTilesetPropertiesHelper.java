@@ -1,7 +1,5 @@
 package com.azure.maps.render.implementation.helpers;
 
-import java.util.List;
-
 import com.azure.maps.render.implementation.models.MapTilesetPrivate;
 import com.azure.maps.render.models.BoundingBox;
 import com.azure.maps.render.models.Center;

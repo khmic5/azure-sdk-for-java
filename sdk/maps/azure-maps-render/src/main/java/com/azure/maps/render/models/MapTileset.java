@@ -26,7 +26,7 @@ public class MapTileset {
         MapTilesetPropertiesHelper.setAccessor(new MapTilesetPropertiesHelper.MapTileSetAccessor() {
             @Override
             public void setFromMapTilesetPrivate(MapTileset mapTileset, MapTilesetPrivate mapTilesetPrivate) {
-                mapTileset.setToMapTileset(mapTilesetPrivate);
+                mapTileset.setFromMapTilesetPrivate(mapTilesetPrivate);
             }
             @Override
             public void setBounds(MapTileset mapTileset, BoundingBox bounds) {
@@ -108,7 +108,7 @@ public class MapTileset {
         this.center = center;
     }
     
-    private void setToMapTileset(MapTilesetPrivate mapTilesetPrivate) {
+    private void setFromMapTilesetPrivate(MapTilesetPrivate mapTilesetPrivate) {
         this.tilejson = mapTilesetPrivate.getTilejson();
         this.name = mapTilesetPrivate.getName();
         this.description = mapTilesetPrivate.getDescription();

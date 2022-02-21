@@ -18,8 +18,8 @@ import com.azure.maps.render.implementation.RenderV2sImpl;
 import com.azure.maps.render.implementation.helpers.Utility;
 import com.azure.maps.render.models.Copyright;
 import com.azure.maps.render.models.CopyrightCaption;
-import com.azure.maps.render.implementation.models.ErrorResponseException;
 import com.azure.maps.render.models.MapAttribution;
+import com.azure.maps.render.implementation.models.BoundingBoxPrivate;
 import com.azure.maps.render.implementation.models.MapTilesetPrivate;
 import com.azure.maps.render.implementation.models.ResponseFormat;
 import com.azure.maps.render.models.BoundingBox;
@@ -208,7 +208,7 @@ public final class RenderAsyncClient {
     Mono<Response<MapTileset>> getMapTilesetWithResponse(TilesetID tilesetId, Context context) {
         Mono<Response<MapTilesetPrivate>> responseMono = this.serviceClient.getMapTilesetWithResponseAsync(tilesetId);
         return responseMono.flatMap(response -> {
-            Response<MapTileset> simpleResponse = Utility.createMapTileset(response);
+            Response<MapTileset> simpleResponse = Utility.createMapTilesetResponse(response);
             return Mono.just(simpleResponse);
         });
     }
@@ -803,18 +803,18 @@ public final class RenderAsyncClient {
         LatLong southWest = boundingBox.getSouthWest();
         LatLong northEast = boundingBox.getNorthEast();
         return this.serviceClient.getMapStaticImageWithResponseAsync
-        (options.getRasterTileFormat(),
-        options.getStaticMapLayer(), 
-        options.getMapImageStyle(),
-        options.getZoom(), 
-        Utility.toCenterPrivate(options.getCenter()), 
-        Arrays.asList(southWest.getLongitude(), southWest.getLatitude(), northEast.getLongitude(), northEast.getLatitude()), 
-        options.getHeight(), 
-        options.getWidth(),
-        options.getLanguage(),
-        options.getLocalizedMapView(),
-        options.getPins(),
-        options.getPath());
+            (options.getRasterTileFormat(),
+            options.getStaticMapLayer(), 
+            options.getMapImageStyle(),
+            options.getZoom(), 
+            Utility.toCenterPrivate(options.getCenter()), 
+            Arrays.asList(southWest.getLongitude(), southWest.getLatitude(), northEast.getLongitude(), northEast.getLatitude()), 
+            options.getHeight(), 
+            options.getWidth(),
+            options.getLanguage(),
+            options.getLocalizedMapView(),
+            options.getPins(),
+            options.getPath());
     }
 
     /**
@@ -862,9 +862,14 @@ public final class RenderAsyncClient {
 
     @ServiceMethod(returns = ReturnType.SINGLE)
     Mono<Response<Copyright>> getCopyrightFromBoundingBoxWithResponse(BoundingBox boundingBox, boolean includeText, Context context) {
+        LatLong southWest = boundingBox.getSouthWest();
+        LatLong northEast = boundingBox.getNorthEast();
+        BoundingBoxPrivate boundingBoxPrivate = new BoundingBoxPrivate();
+        boundingBoxPrivate.setNorthEast(Arrays.asList(northEast.getLatitude(), northEast.getLongitude())); 
+        boundingBoxPrivate.setSouthWest(Arrays.asList(southWest.getLatitude(), southWest.getLongitude())); 
         return this.serviceClient.getCopyrightFromBoundingBoxWithResponseAsync(
                 ResponseFormat.JSON,
-                Utility.toBoundingBoxPrivate(boundingBox),
+                boundingBoxPrivate,
                 Utility.toIncludeTextPrivate(includeText));    
     }
 

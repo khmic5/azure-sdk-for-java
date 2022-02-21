@@ -3,7 +3,6 @@ package com.azure.maps.render.implementation.helpers;
 import java.util.Arrays;
 import java.util.List;
 
-import com.azure.core.annotation.ReturnValueWireType;
 import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.SimpleResponse;
 import com.azure.maps.render.implementation.models.BoundingBoxPrivate;
@@ -14,12 +13,6 @@ import com.azure.maps.render.models.Center;
 import com.azure.maps.render.models.MapTileset;
 
 public class Utility {
-    public static BoundingBoxPrivate toBoundingBoxPrivate(BoundingBox boundingBox) {
-        BoundingBoxPrivate boundingBoxPrivate = new BoundingBoxPrivate();
-        BoundingBoxPropertiesHelper.setToBoundingBoxPrivate(boundingBox, boundingBoxPrivate);
-        return boundingBoxPrivate;
-    }
-
     public static BoundingBox toBoundingBox(List<Float> boundingBox) {
         BoundingBox result = new BoundingBox(boundingBox.get(3), boundingBox.get(2), boundingBox.get(1), boundingBox.get(0));
         return result;
@@ -38,7 +31,7 @@ public class Utility {
         return new Center(center.get(0), center.get(1), center.get(2));
     }
 
-    public static SimpleResponse<MapTileset> createMapTileset(Response<MapTilesetPrivate> response) {
+    public static SimpleResponse<MapTileset> createMapTilesetResponse(Response<MapTilesetPrivate> response) {
         MapTileset result = Utility.toMapTileset(response.getValue());
         SimpleResponse<MapTileset> simpleResponse = new SimpleResponse<>(response.getRequest(),
             response.getStatusCode(),
