@@ -15,17 +15,16 @@ import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.StreamResponse;
 import com.azure.core.util.Context;
 import com.azure.core.util.FluxUtil;
-import com.azure.maps.render.implementation.models.Copyright;
-import com.azure.maps.render.implementation.models.CopyrightCaption;
+import com.azure.maps.render.models.Copyright;
+import com.azure.maps.render.models.CopyrightCaption;
 import com.azure.maps.render.implementation.models.ErrorResponseException;
-import com.azure.maps.render.implementation.models.MapAttribution;
-import com.azure.maps.render.implementation.models.MapTilesetPrivate;
-import com.azure.maps.render.models.TileIndex;
-import com.azure.maps.render.models.TilesetID;
+import com.azure.maps.render.models.MapAttribution;
 import com.azure.maps.render.models.BoundingBox;
 import com.azure.maps.render.models.MapStaticImageOptions;
 import com.azure.maps.render.models.MapTileOptions;
 import com.azure.maps.render.models.MapTileset;
+import com.azure.maps.render.models.TileIndex;
+import com.azure.maps.render.models.TilesetID;
 
 import reactor.core.publisher.Mono;
 
