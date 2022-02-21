@@ -94,25 +94,11 @@ public final class BoundingBox {
         final float rightBound = bounds.get(2);
         final float topBound = bounds.get(3);
 
-        final String northEastString = String.valueOf(rightBound) + "," + String.valueOf(topBound);
-        final String southWestString = String.valueOf(leftBound) + "," + String.valueOf(bottomBound);
-        final LatLong topRight = stringToCoordinate(northEastString);
-        final LatLong bottomLeft = stringToCoordinate(southWestString);
+        final LatLong topRight = new LatLong(rightBound, topBound);
+        final LatLong bottomLeft = new LatLong(leftBound, bottomBound);
 
         // derive top and bottom left
         this.topLeft = new LatLong(topRight.getLatitude(), bottomLeft.getLongitude());
         this.bottomRight = new LatLong(bottomLeft.getLatitude(), topRight.getLongitude());
-    }
-
-    // converts a comma-separated string into a latlong pair
-    private LatLong stringToCoordinate(String s) {
-        final String[] coordinateString = s.split(",");
-
-        if (coordinateString != null && coordinateString.length == 2) {
-            return new LatLong(Double.parseDouble(coordinateString[0]),
-                Double.parseDouble(coordinateString[1]));
-        }
-
-        return null;
     }
 }

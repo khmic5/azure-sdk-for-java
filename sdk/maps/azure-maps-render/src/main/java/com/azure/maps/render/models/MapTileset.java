@@ -25,7 +25,7 @@ public class MapTileset {
     static {
         MapTilesetPropertiesHelper.setAccessor(new MapTilesetPropertiesHelper.MapTileSetAccessor() {
             @Override
-            public void setToMapTileset(MapTileset mapTileset, MapTilesetPrivate mapTilesetPrivate) {
+            public void setFromMapTilesetPrivate(MapTileset mapTileset, MapTilesetPrivate mapTilesetPrivate) {
                 mapTileset.setToMapTileset(mapTilesetPrivate);
             }
             @Override

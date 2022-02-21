@@ -44,8 +44,8 @@ public final class RenderAsyncClient {
      *
      * @param serviceClient the service client implementation.
      */
-    RenderAsyncClient(RenderClientImpl serviceClient) {
-        this.serviceClient = serviceClient.getRenderV2s();
+    RenderAsyncClient(RenderV2sImpl serviceClient) {
+        this.serviceClient = serviceClient;
     }
 
     /**

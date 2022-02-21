@@ -365,7 +365,7 @@ public final class RenderClientBuilder {
      * @return an instance of RenderAsyncClient.
      */
     public RenderAsyncClient buildAsyncClient() {
-        return new RenderAsyncClient(buildInnerClient());
+        return new RenderAsyncClient(buildInnerClient().getRenderV2s());
     }
 
     /**

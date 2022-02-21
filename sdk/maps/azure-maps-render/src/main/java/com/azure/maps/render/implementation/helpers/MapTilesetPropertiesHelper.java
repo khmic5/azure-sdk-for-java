@@ -11,7 +11,7 @@ public final class MapTilesetPropertiesHelper {
     private static MapTileSetAccessor accessor;
 
     public interface MapTileSetAccessor {
-        void setToMapTileset(MapTileset mapTileset, MapTilesetPrivate mapTilesetPrivate);
+        void setFromMapTilesetPrivate(MapTileset mapTileset, MapTilesetPrivate mapTilesetPrivate);
         void setBounds(MapTileset mapTileset, BoundingBox bounds);
         void setCenter(MapTileset mapTileset, Center center);
     }
@@ -20,8 +20,8 @@ public final class MapTilesetPropertiesHelper {
         accessor = mapTileSetAccessor;
     }
 
-    public static void setToMapTileset(MapTileset mapTileset, MapTilesetPrivate mapTilesetPrivate) {
-        accessor.setToMapTileset(mapTileset, mapTilesetPrivate);
+    public static void setFromMapTilesetPrivate(MapTileset mapTileset, MapTilesetPrivate mapTilesetPrivate) {
+        accessor.setFromMapTilesetPrivate(mapTileset, mapTilesetPrivate);
     }
 
     public static void setBounds(MapTileset mapTileset, BoundingBox bounds) {

@@ -2,11 +2,6 @@ package com.azure.maps.render.models;
 
 import java.time.OffsetDateTime;
 
-import com.azure.maps.render.models.LocalizedMapView;
-import com.azure.maps.render.models.MapTileSize;
-import com.azure.maps.render.models.TileIndex;
-import com.azure.maps.render.models.TilesetID;
-
 public class MapTileOptions {
     private TilesetID tilesetId;
     private TileIndex tileIndex;
@@ -14,10 +9,8 @@ public class MapTileOptions {
     private MapTileSize tileSize;
     private String language;
     private LocalizedMapView localizedMapView;
-    private String query;
 
-    public MapTileOptions(String query) {
-        this.query = query;
+    public MapTileOptions() {
     }
 
     public TilesetID getTilesetID() {
@@ -73,13 +66,4 @@ public class MapTileOptions {
         this.localizedMapView = localizedMapView;
         return this;
     }
-
-    public String getQuery() {
-        return query;
-    }
-
-    public MapTileOptions setQuery(String query) {
-        this.query = query;
-        return this;
-    }  
 }
