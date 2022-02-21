@@ -2,10 +2,10 @@ package com.azure.maps.render.models;
 
 import java.time.OffsetDateTime;
 
-import com.azure.maps.render.implementation.models.LocalizedMapView;
-import com.azure.maps.render.implementation.models.MapTileSize;
-import com.azure.maps.render.implementation.models.TileIndex;
-import com.azure.maps.render.implementation.models.TilesetID;
+import com.azure.maps.render.models.LocalizedMapView;
+import com.azure.maps.render.models.MapTileSize;
+import com.azure.maps.render.models.TileIndex;
+import com.azure.maps.render.models.TilesetID;
 
 public class MapTileOptions {
     private TilesetID tilesetId;

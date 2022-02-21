@@ -2,10 +2,10 @@ package com.azure.maps.render.models;
 
 import java.util.List;
 
-import com.azure.maps.render.implementation.models.LocalizedMapView;
-import com.azure.maps.render.implementation.models.MapImageStyle;
-import com.azure.maps.render.implementation.models.RasterTileFormat;
-import com.azure.maps.render.implementation.models.StaticMapLayer;
+import com.azure.maps.render.models.LocalizedMapView;
+import com.azure.maps.render.models.MapImageStyle;
+import com.azure.maps.render.models.RasterTileFormat;
+import com.azure.maps.render.models.StaticMapLayer;
 
 public class MapStaticImageOptions {
     private RasterTileFormat format;
