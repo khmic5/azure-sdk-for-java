@@ -84,15 +84,16 @@ public final class BoundingBox {
 
     BoundingBox(List<Float> bounds) {
         Objects.requireNonNull(bounds, "Internal bounding box model is needed.");
-        Objects.requireNonNull(bounds.get(0), "Left bound is needed");
-        Objects.requireNonNull(bounds.get(1), "Bottom bound is needed");
-        Objects.requireNonNull(bounds.get(2), "Right bound is needed");
-        Objects.requireNonNull(bounds.get(3), "Top bound is needed");
 
         final float leftBound = bounds.get(0);
         final float bottomBound = bounds.get(1);
         final float rightBound = bounds.get(2);
         final float topBound = bounds.get(3);
+
+        Objects.requireNonNull(leftBound, "Left bound is needed");
+        Objects.requireNonNull(bottomBound, "Bottom bound is needed");
+        Objects.requireNonNull(rightBound, "Right bound is needed");
+        Objects.requireNonNull(topBound, "Top bound is needed");
 
         final LatLong topRight = new LatLong(rightBound, topBound);
         final LatLong bottomLeft = new LatLong(leftBound, bottomBound);
