@@ -34,9 +34,6 @@ import com.fasterxml.jackson.databind.util.ByteBufferBackedInputStream;
 
 import reactor.core.publisher.Mono;
 
-
-// NOTE: take public bounding box, inside method convert to private bounding box
-
 /** Initializes a new instance of the synchronous RenderClient type. */
 @ServiceClient(builder = RenderClientBuilder.class)
 public final class RenderClient {
