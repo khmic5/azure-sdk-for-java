@@ -185,8 +185,8 @@ public final class RenderAsyncClient {
      * @return metadata for a tileset in the TileJSON format.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<MapTilesetPrivate> getMapTileset(TilesetID tilesetId) {
-        Mono<Response<MapTilesetPrivate>> result = this.getMapTilesetWithResponse(tilesetId, null);
+    public Mono<MapTileset> getMapTileset(TilesetID tilesetId) {
+        Mono<Response<MapTileset>> result = this.getMapTilesetWithResponse(tilesetId, null);
         return result.flatMap(response -> {
             return Mono.just(response.getValue());
         });
@@ -208,7 +208,7 @@ public final class RenderAsyncClient {
      * @return metadata for a tileset in the TileJSON format.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<MapTilesetPrivate>> getMapTilesetWithResponse(TilesetID tilesetId) {
+    public Mono<Response<MapTileset>> getMapTilesetWithResponse(TilesetID tilesetId) {
         return this.getMapTilesetWithResponse(tilesetId, null);
     }
     
