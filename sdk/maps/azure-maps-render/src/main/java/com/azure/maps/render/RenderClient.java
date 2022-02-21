@@ -25,6 +25,7 @@ import com.azure.maps.render.implementation.models.TilesetID;
 import com.azure.maps.render.models.BoundingBox;
 import com.azure.maps.render.models.MapStaticImageOptions;
 import com.azure.maps.render.models.MapTileOptions;
+import com.azure.maps.render.models.MapTileset;
 
 import reactor.core.publisher.Mono;
 
@@ -98,13 +99,13 @@ public final class RenderClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public InputStream getMapTileV2(MapTileOptions options) {
-        Mono<byte[]> byteArray = FluxUtil.collectBytesInByteBufferStream(this.asyncClient.getMapTileV2(options));
+        Mono<byte[]> byteArray = FluxUtil.collectBytesInByteBufferStream(this.asyncClient.getMapTile(options));
         return new ByteArrayInputStream(byteArray.block());
     }
 
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<StreamResponse> getMapTileV2WithResponse(MapTileOptions options, Context context) {
-        return this.asyncClient.getMapTileV2WithResponse(options, context);
+    public Mono<StreamResponse> getMapTileWithResponse(MapTileOptions options, Context context) {
+        return this.asyncClient.getMapTileWithResponse(options, context);
     } 
 
     /**
@@ -123,12 +124,12 @@ public final class RenderClient {
      * @return metadata for a tileset in the TileJSON format.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public MapTilesetPrivate getMapTileset(TilesetID tilesetId) {
+    public MapTileset getMapTileset(TilesetID tilesetId) {
         return this.asyncClient.getMapTileset(tilesetId).block();
     }
 
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<MapTilesetPrivate> getMapTilesetWithResponse(TilesetID tilesetID, Context context) {
+    public Response<MapTileset> getMapTilesetWithResponse(TilesetID tilesetID, Context context) {
         return this.asyncClient.getMapTilesetWithResponse(tilesetID, context).block();
     }
 

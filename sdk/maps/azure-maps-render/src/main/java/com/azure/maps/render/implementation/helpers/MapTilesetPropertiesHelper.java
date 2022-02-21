@@ -1,6 +1,10 @@
 package com.azure.maps.render.implementation.helpers;
 
+import java.util.List;
+
 import com.azure.maps.render.implementation.models.MapTilesetPrivate;
+import com.azure.maps.render.models.BoundingBox;
+import com.azure.maps.render.models.Center;
 import com.azure.maps.render.models.MapTileset;
 
 public final class MapTilesetPropertiesHelper {
@@ -8,6 +12,8 @@ public final class MapTilesetPropertiesHelper {
 
     public interface MapTileSetAccessor {
         void setToMapTileset(MapTileset mapTileset, MapTilesetPrivate mapTilesetPrivate);
+        void setBounds(MapTileset mapTileset, BoundingBox bounds);
+        void setCenter(MapTileset mapTileset, Center center);
     }
 
     public static void setAccessor(final MapTileSetAccessor mapTileSetAccessor) {
@@ -16,5 +22,13 @@ public final class MapTilesetPropertiesHelper {
 
     public static void setToMapTileset(MapTileset mapTileset, MapTilesetPrivate mapTilesetPrivate) {
         accessor.setToMapTileset(mapTileset, mapTilesetPrivate);
+    }
+
+    public static void setBounds(MapTileset mapTileset, BoundingBox bounds) {
+        accessor.setBounds(mapTileset, bounds);
+    }
+
+    public static void setCenter(MapTileset mapTileset, Center center) {
+        accessor.setCenter(mapTileset, center);
     }
 }

@@ -120,14 +120,14 @@
   </dependencies>
   <build>
     <plugins>
-      <!-- <plugin>
+      <plugin>
         <groupId>com.github.spotbugs</groupId>
         <artifactId>spotbugs-maven-plugin</artifactId>
         <version>4.2.0</version>
         <configuration>
           <excludeFilterFile>./spotbugs/sportbugs-exclude.xml</excludeFilterFile>
         </configuration>
-      </plugin> -->
+      </plugin>
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
@@ -173,11 +173,6 @@
                 <class>com.azure.core.util.HttpClientOptions</class>
                 <justification>Transitive from Core. Not our problem</justification>
               </item>
-              <!-- <item>
-                <regex>true</regex>
-                <code>.*</code>
-                <package>com\.azure\.resourcemanager(\.[^.]+)+\.fluent(\.[^.]+)*</package>
-              </item> -->
             </revapi.ignore>
           </analysisConfiguration>
         </configuration>

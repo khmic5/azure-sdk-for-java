@@ -10,6 +10,11 @@ public class Center {
     // The default location of the tileset in the form [longitude, latitude,
      //* zoom]. The zoom level MUST be between minzoom and maxzoom.
      //* Implementations can use this value to set the default location.
+
+    public Center(double longitude, double latitude, double zoom) {
+        this.coordinates = new LatLong(longitude, latitude);
+        this.zoom = (int) zoom;
+    }
     
     Center(List<Float> inputs) {
         Objects.requireNonNull(inputs, "Internal bounding box model is needed.");
@@ -28,7 +33,15 @@ public class Center {
         return this.coordinates;
     }
 
+    public void setCoordinates(LatLong coordinates) {
+        this.coordinates = coordinates;
+    }
+
     public int getZoom() {
         return this.zoom;
+    }
+
+    public void setZoom(int zoom) {
+        this.zoom = zoom;
     }
 }

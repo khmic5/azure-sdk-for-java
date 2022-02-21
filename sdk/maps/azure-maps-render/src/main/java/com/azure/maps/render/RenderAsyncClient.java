@@ -17,7 +17,6 @@ import com.azure.core.util.Context;
 import com.azure.maps.render.implementation.RenderClientImpl;
 import com.azure.maps.render.implementation.RenderV2sImpl;
 import com.azure.maps.render.implementation.helpers.Utility;
-import com.azure.maps.render.implementation.models.BoundingBoxPrivate;
 import com.azure.maps.render.implementation.models.Copyright;
 import com.azure.maps.render.implementation.models.CopyrightCaption;
 import com.azure.maps.render.implementation.models.ErrorResponseException;
@@ -30,6 +29,7 @@ import com.azure.maps.render.models.BoundingBox;
 import com.azure.maps.render.models.LatLong;
 import com.azure.maps.render.models.MapStaticImageOptions;
 import com.azure.maps.render.models.MapTileOptions;
+import com.azure.maps.render.models.MapTileset;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -95,8 +95,8 @@ public final class RenderAsyncClient {
      */
 
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Flux<ByteBuffer> getMapTileV2(MapTileOptions options) {
-        Mono<StreamResponse> responseMono = this.getMapTileV2WithResponse(options, null);
+    public Flux<ByteBuffer> getMapTile(MapTileOptions options) {
+        Mono<StreamResponse> responseMono = this.getMapTileWithResponse(options, null);
         return responseMono.flatMapMany(response -> {
             return response.getValue();
         });                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
@@ -148,12 +148,12 @@ public final class RenderAsyncClient {
      * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<StreamResponse> getMapTileV2WithResponse(MapTileOptions options) {
-        return this.getMapTileV2WithResponse(options, null);
+    public Mono<StreamResponse> getMapTileWithResponse(MapTileOptions options) {
+        return this.getMapTileWithResponse(options, null);
     }
 
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Mono<StreamResponse> getMapTileV2WithResponse(MapTileOptions options, Context context) {        
+    Mono<StreamResponse> getMapTileWithResponse(MapTileOptions options, Context context) {        
         return this.serviceClient.getMapTileWithResponseAsync(options.getTilesetID(), 
             options.getTileIndex(), 
             options.getTimeStamp(), 
@@ -178,12 +178,12 @@ public final class RenderAsyncClient {
      * @return metadata for a tileset in the TileJSON format.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<MapTilesetPrivate> getMapTileset(TilesetID tilesetId) {
-        Mono<Response<MapTilesetPrivate>> result = this.getMapTilesetWithResponse(tilesetId, null);
+    public Mono<MapTileset> getMapTileset(TilesetID tilesetId) {
+        Mono<Response<MapTileset>> result = this.getMapTilesetWithResponse(tilesetId, null);
         return result.flatMap(response -> {
             return Mono.just(response.getValue());
         });
-    }
+    } 
 
     /**
      * **Applies to**: S0 and S1 pricing tiers.
@@ -201,13 +201,17 @@ public final class RenderAsyncClient {
      * @return metadata for a tileset in the TileJSON format.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<MapTilesetPrivate>> getMapTilesetWithResponse(TilesetID tilesetId) {
+    public Mono<Response<MapTileset>> getMapTilesetWithResponse(TilesetID tilesetId) {
         return this.getMapTilesetWithResponse(tilesetId, null);
     }
     
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Mono<Response<MapTilesetPrivate>> getMapTilesetWithResponse(TilesetID tilesetId, Context context) {
-        return this.serviceClient.getMapTilesetWithResponseAsync(tilesetId);
+    Mono<Response<MapTileset>> getMapTilesetWithResponse(TilesetID tilesetId, Context context) {
+        Mono<Response<MapTilesetPrivate>> responseMono = this.serviceClient.getMapTilesetWithResponseAsync(tilesetId);
+        return responseMono.flatMap(response -> {
+            Response<MapTileset> simpleResponse = Utility.createMapTileset(response);
+            return Mono.just(simpleResponse);
+        });
     }
 
     /**
@@ -804,7 +808,7 @@ public final class RenderAsyncClient {
         options.getStaticMapLayer(), 
         options.getMapImageStyle(),
         options.getZoom(), 
-        Utility.toCenter(options.getCenter()), 
+        Utility.toCenterPrivate(options.getCenter()), 
         Arrays.asList(southWest.getLongitude(), southWest.getLatitude(), northEast.getLongitude(), northEast.getLatitude()), 
         options.getHeight(), 
         options.getWidth(),

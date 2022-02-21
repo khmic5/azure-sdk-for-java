@@ -1,10 +1,8 @@
 package com.azure.maps.render.models;
 
-import java.util.Arrays;
 import java.util.List;
 
 import com.azure.maps.render.implementation.helpers.MapTilesetPropertiesHelper;
-import com.azure.maps.render.implementation.helpers.MapTilesetPropertiesHelper.MapTileSetAccessor;
 import com.azure.maps.render.implementation.models.MapTilesetPrivate;
 
 public class MapTileset {
@@ -29,6 +27,15 @@ public class MapTileset {
             @Override
             public void setToMapTileset(MapTileset mapTileset, MapTilesetPrivate mapTilesetPrivate) {
                 mapTileset.setToMapTileset(mapTilesetPrivate);
+            }
+            @Override
+            public void setBounds(MapTileset mapTileset, BoundingBox bounds) {
+                mapTileset.setBounds(bounds);
+                
+            }
+            @Override
+            public void setCenter(MapTileset mapTileset, Center center) {
+                mapTileset.setCenter(center);
             }
         });
     }
@@ -92,6 +99,14 @@ public class MapTileset {
     public Center getCenter() {
         return center;
     }   
+
+    private void setBounds(BoundingBox bounds) {
+        this.bounds = bounds;
+    }
+
+    private void setCenter(Center center) {
+        this.center = center;
+    }
     
     private void setToMapTileset(MapTilesetPrivate mapTilesetPrivate) {
         this.tilejson = mapTilesetPrivate.getTilejson();
