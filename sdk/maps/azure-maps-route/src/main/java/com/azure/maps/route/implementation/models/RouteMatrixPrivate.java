@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** Matrix result object. */
 @Immutable
-public final class RouteMatrix {
+public final class RouteMatrixPrivate {
     /*
      * StatusCode property for the current cell in the input matrix.
      */

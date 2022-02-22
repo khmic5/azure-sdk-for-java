@@ -12,7 +12,7 @@ import com.azure.core.http.rest.ResponseBase;
 
 /** Contains all response data for the requestRouteMatrix operation. */
 public final class RoutesRequestRouteMatrixResponse
-        extends ResponseBase<RoutesRequestRouteMatrixHeaders, RouteMatrixResult> {
+        extends ResponseBase<RoutesRequestRouteMatrixHeaders, RouteMatrixResultPrivate> {
     /**
      * Creates an instance of RoutesRequestRouteMatrixResponse.
      *
@@ -26,14 +26,14 @@ public final class RoutesRequestRouteMatrixResponse
             HttpRequest request,
             int statusCode,
             HttpHeaders rawHeaders,
-            RouteMatrixResult value,
+            RouteMatrixResultPrivate value,
             RoutesRequestRouteMatrixHeaders headers) {
         super(request, statusCode, rawHeaders, value, headers);
     }
 
     /** @return the deserialized response body. */
     @Override
-    public RouteMatrixResult getValue() {
+    public RouteMatrixResultPrivate getValue() {
         return super.getValue();
     }
 }

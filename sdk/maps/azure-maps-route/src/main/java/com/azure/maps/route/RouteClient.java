@@ -15,12 +15,12 @@ import com.azure.core.util.Context;
 import com.azure.core.util.polling.SyncPoller;
 import com.azure.maps.route.implementation.models.BatchRequest;
 import com.azure.maps.route.implementation.models.RouteDirectionParameters;
-import com.azure.maps.route.implementation.models.RouteMatrixResult;
 import com.azure.maps.route.models.ErrorResponseException;
 import com.azure.maps.route.models.RouteDirections;
 import com.azure.maps.route.models.RouteDirectionsBatchResult;
 import com.azure.maps.route.models.RouteDirectionsOptions;
 import com.azure.maps.route.models.RouteMatrixOptions;
+import com.azure.maps.route.models.RouteMatrixResult;
 import com.azure.maps.route.models.RouteRangeOptions;
 import com.azure.maps.route.models.RouteRangeResult;
 

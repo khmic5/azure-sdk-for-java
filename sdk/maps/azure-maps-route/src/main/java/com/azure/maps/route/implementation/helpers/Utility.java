@@ -4,12 +4,18 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.azure.core.http.HttpHeaders;
+import com.azure.core.http.rest.Response;
+import com.azure.core.http.rest.SimpleResponse;
+import com.azure.maps.route.implementation.models.RouteMatrixPrivate;
+import com.azure.maps.route.implementation.models.RouteMatrixResultPrivate;
+import com.azure.maps.route.models.RouteMatrix;
+import com.azure.maps.route.models.RouteMatrixResult;
 
 public class Utility {
     private static final Pattern uuidPattern = Pattern.compile("[0-9A-Fa-f\\-]{36}");
 
     /**
-     *
+     * Gets batch Id from headers to be used in the returned batch result object.
      */
     public static String getBatchId(HttpHeaders headers) {
         // this can happen when deserialization is happening
@@ -26,5 +32,40 @@ public class Utility {
         }
 
         return null;
+    }
+
+    /**
+     * Converts a {@link RouteMatrixResultPrivate} to {@link RouteMatrixResult}
+     */
+    public static RouteMatrixResult toRouteMatrixResult(RouteMatrixResultPrivate privateRouteMatrixResult) {
+
+        return null;
+    }
+
+    /**
+     * Converts a {@link RouteMatrixPrivate} to {@link RouteMatrix}
+     */
+    public static RouteMatrix toRouteMatrix(RouteMatrixPrivate routeMatrixPrivate) {
+        RouteMatrix routeMatrix = new RouteMatrix();
+        RouteMatrixPropertiesHelper.setFromAddressPrivate(routeMatrix, routeMatrixPrivate);
+
+        return routeMatrix;
+   }
+
+    /**
+     * converts the internal representation of {@link RouteMatrixResult} into the public one
+     * from inside the HTTP response.
+     * @param response
+     * @return
+     */
+    public static SimpleResponse<RouteMatrixResult> createRouteMatrixResponse(
+            Response<RouteMatrixResultPrivate> response) {
+        RouteMatrixResult result = Utility.toRouteMatrixResult(response.getValue());
+        SimpleResponse<RouteMatrixResult> simpleResponse = new SimpleResponse<>(response.getRequest(),
+            response.getStatusCode(),
+            response.getHeaders(),
+            result);
+
+        return simpleResponse;
     }
 }

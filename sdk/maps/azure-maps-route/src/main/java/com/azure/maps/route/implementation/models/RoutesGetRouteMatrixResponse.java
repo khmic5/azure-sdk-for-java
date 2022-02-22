@@ -11,7 +11,8 @@ import com.azure.core.http.HttpRequest;
 import com.azure.core.http.rest.ResponseBase;
 
 /** Contains all response data for the getRouteMatrix operation. */
-public final class RoutesGetRouteMatrixResponse extends ResponseBase<RoutesGetRouteMatrixHeaders, RouteMatrixResult> {
+public final class RoutesGetRouteMatrixResponse
+        extends ResponseBase<RoutesGetRouteMatrixHeaders, RouteMatrixResultPrivate> {
     /**
      * Creates an instance of RoutesGetRouteMatrixResponse.
      *
@@ -25,14 +26,14 @@ public final class RoutesGetRouteMatrixResponse extends ResponseBase<RoutesGetRo
             HttpRequest request,
             int statusCode,
             HttpHeaders rawHeaders,
-            RouteMatrixResult value,
+            RouteMatrixResultPrivate value,
             RoutesGetRouteMatrixHeaders headers) {
         super(request, statusCode, rawHeaders, value, headers);
     }
 
     /** @return the deserialized response body. */
     @Override
-    public RouteMatrixResult getValue() {
+    public RouteMatrixResultPrivate getValue() {
         return super.getValue();
     }
 }

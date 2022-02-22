@@ -17,7 +17,7 @@ import java.util.List;
  * query.
  */
 @Immutable
-public final class RouteMatrixResult {
+public final class RouteMatrixResultPrivate {
     /*
      * Format Version property
      */
@@ -28,7 +28,7 @@ public final class RouteMatrixResult {
      * Results as a 2 dimensional array of route summaries.
      */
     @JsonProperty(value = "matrix", access = JsonProperty.Access.WRITE_ONLY)
-    private List<List<RouteMatrix>> matrix;
+    private List<List<RouteMatrixPrivate>> matrix;
 
     /*
      * Summary object
@@ -50,7 +50,7 @@ public final class RouteMatrixResult {
      *
      * @return the matrix value.
      */
-    public List<List<RouteMatrix>> getMatrix() {
+    public List<List<RouteMatrixPrivate>> getMatrix() {
         return this.matrix;
     }
 
