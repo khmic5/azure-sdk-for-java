@@ -34,6 +34,11 @@ public final class RouteMatrixResult {
      */
     private RouteMatrixSummary summary;
 
+    /*
+     * Matrix ID to retrieve the information previously obtained.
+     */
+    private String matrixId;
+
     /**
      * Get the formatVersion property: Format Version property.
      *
@@ -70,6 +75,21 @@ public final class RouteMatrixResult {
      */
     public RouteMatrixSummary getSummary() {
         return this.summary;
+    }
+
+    /**
+     * Returns the matrix id
+     */
+    public String getMatrixId() {
+        return this.matrixId;
+    }
+
+    /**
+     * Sets the matrix id.
+     * @param matrixId
+     */
+    public void setMatrixId(String matrixId) {
+        this.matrixId = matrixId;
     }
 
     // private setter

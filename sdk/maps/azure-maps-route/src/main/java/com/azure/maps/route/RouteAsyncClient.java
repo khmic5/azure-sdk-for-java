@@ -27,11 +27,13 @@ import com.azure.maps.route.implementation.models.BatchRequest;
 import com.azure.maps.route.implementation.models.JsonFormat;
 import com.azure.maps.route.implementation.models.ResponseFormat;
 import com.azure.maps.route.implementation.models.RouteDirectionParameters;
+import com.azure.maps.route.implementation.models.RouteMatrixQueryPrivate;
 import com.azure.maps.route.models.ErrorResponseException;
 import com.azure.maps.route.models.RouteDirections;
 import com.azure.maps.route.models.RouteDirectionsBatchResult;
 import com.azure.maps.route.models.RouteDirectionsOptions;
 import com.azure.maps.route.models.RouteMatrixOptions;
+import com.azure.maps.route.models.RouteMatrixQuery;
 import com.azure.maps.route.models.RouteMatrixResult;
 import com.azure.maps.route.models.RouteRangeOptions;
 import com.azure.maps.route.models.RouteRangeResult;
@@ -97,17 +99,18 @@ public final class RouteAsyncClient {
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     PollerFlux<RouteMatrixResult, RouteMatrixResult> beginRequestRouteMatrix(
             RouteMatrixOptions options, Context context) {
-
         // if it's a small batch, then let's wait for results and avoid polling
-        final int originSize = options.getRouteMatrixQuery().getOrigins().getCoordinates().size();
-        final int destSize = options.getRouteMatrixQuery().getDestinations().getCoordinates().size();
+        RouteMatrixQuery query = options.getRouteMatrixQuery();
+        RouteMatrixQueryPrivate privateQuery = Utility.toRouteMatrixQueryPrivate(query);
+        final int originSize = privateQuery.getOrigins().getCoordinates().size();
+        final int destSize = privateQuery.getDestinations().getCoordinates().size();
         boolean waitForResults = (originSize * destSize <= ROUTE_MATRIX_SMALL_SIZE);
 
         return createPollerFlux(
             () ->
                 this.serviceClient.requestRouteMatrixWithResponseAsync(
                     JsonFormat.JSON,
-                    options.getRouteMatrixQuery(),
+                    privateQuery,
                     waitForResults,
                     options.getComputeTravelTime(),
                     options.getFilterSectionType(),
@@ -164,9 +167,7 @@ public final class RouteAsyncClient {
         return createPollerFlux(
             () -> this.serviceClient.getRouteMatrixWithResponseAsync(matrixId, context)
                     .flatMap(response -> {
-                        Response<RouteMatrixResult> response2 = null;
-                        return Mono.just(response2);
-                        // return Mono.just(Utility.createBatchSearchResponse(response));
+                        return Mono.just(Utility.createRouteMatrixResponse(response));
                     }),
             this.routeMatrixStrategy);
     }
@@ -581,6 +582,7 @@ public final class RouteAsyncClient {
                         return Mono.error(new IllegalStateException(
                             "Cannot poll with strategy " + strategy.getClass().getSimpleName()));
                     }
+                    context.setData(POLLING_BATCH_HEADER_KEY, Utility.getBatchId(response.getHeaders()));
                     return strategy.onInitialResponse(response, context, new TypeReference<RouteMatrixResult>() {});
                 })),
             context -> strategy.poll(context, new TypeReference<RouteMatrixResult>() {}),
@@ -589,6 +591,8 @@ public final class RouteAsyncClient {
                 return strategy
                     .getResult(context, new TypeReference<RouteMatrixResult>() {})
                         .flatMap(result -> {
+                            final String matrixId = context.getData(POLLING_BATCH_HEADER_KEY);
+                            result.setMatrixId(matrixId);
                             return Mono.just(result);
                         });
             });

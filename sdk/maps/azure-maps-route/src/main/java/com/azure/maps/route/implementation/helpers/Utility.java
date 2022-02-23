@@ -1,14 +1,21 @@
 package com.azure.maps.route.implementation.helpers;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import com.azure.core.http.HttpHeaders;
 import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.SimpleResponse;
+import com.azure.core.models.GeoPosition;
+import com.azure.maps.route.implementation.models.GeoJsonMultiPoint;
 import com.azure.maps.route.implementation.models.RouteMatrixPrivate;
+import com.azure.maps.route.implementation.models.RouteMatrixQueryPrivate;
 import com.azure.maps.route.implementation.models.RouteMatrixResultPrivate;
 import com.azure.maps.route.models.RouteMatrix;
+import com.azure.maps.route.models.RouteMatrixQuery;
 import com.azure.maps.route.models.RouteMatrixResult;
 
 public class Utility {
@@ -67,5 +74,43 @@ public class Utility {
             result);
 
         return simpleResponse;
+    }
+
+    /**
+     * Converts a private {@link RouteMatrixQueryPrivate} into a public {@link RouteMatrixQuery}
+     * @param query
+     * @return
+     */
+    public static RouteMatrixQueryPrivate toRouteMatrixQueryPrivate(RouteMatrixQuery query) {
+        RouteMatrixQueryPrivate privateQuery = new RouteMatrixQueryPrivate();
+        GeoJsonMultiPoint origins = new GeoJsonMultiPoint();
+        GeoJsonMultiPoint destinations = new GeoJsonMultiPoint();
+
+        // origins
+        List<List<Double>> originCoordinates = query.getOrigins()
+            .getPoints()
+            .stream()
+            .map(point -> {
+                GeoPosition position = point.getCoordinates();
+                return Arrays.asList(position.getLatitude(), position.getLongitude());
+            })
+            .collect(Collectors.toList());
+
+        // destinations
+        List<List<Double>> destCoordinates = query.getDestinations()
+            .getPoints()
+            .stream()
+            .map(point -> {
+                GeoPosition position = point.getCoordinates();
+                return Arrays.asList(position.getLatitude(), position.getLongitude());
+            })
+            .collect(Collectors.toList());
+
+        origins.setCoordinates(originCoordinates);
+        destinations.setCoordinates(destCoordinates);
+        privateQuery.setOrigins(origins);
+        privateQuery.setDestinations(destinations);
+
+        return privateQuery;
     }
 }

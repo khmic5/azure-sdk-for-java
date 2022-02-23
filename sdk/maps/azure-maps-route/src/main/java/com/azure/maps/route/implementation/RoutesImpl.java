@@ -34,7 +34,7 @@ import com.azure.maps.route.implementation.models.BatchRequest;
 import com.azure.maps.route.implementation.models.JsonFormat;
 import com.azure.maps.route.implementation.models.ResponseFormat;
 import com.azure.maps.route.implementation.models.RouteDirectionParameters;
-import com.azure.maps.route.implementation.models.RouteMatrixQuery;
+import com.azure.maps.route.implementation.models.RouteMatrixQueryPrivate;
 import com.azure.maps.route.implementation.models.RouteMatrixResultPrivate;
 import com.azure.maps.route.implementation.models.RoutesGetRouteDirectionsBatchResponse;
 import com.azure.maps.route.implementation.models.RoutesGetRouteMatrixResponse;
@@ -120,7 +120,7 @@ public final class RoutesImpl {
                 @QueryParam("traffic") Boolean useTrafficData,
                 @QueryParam("routeType") RouteType routeType,
                 @QueryParam("vehicleLoadType") VehicleLoadType vehicleLoadType,
-                @BodyParam("application/json") RouteMatrixQuery routeMatrixQuery,
+                @BodyParam("application/json") RouteMatrixQueryPrivate routeMatrixQuery,
                 @HeaderParam("Accept") String accept,
                 Context context);
 
@@ -164,7 +164,7 @@ public final class RoutesImpl {
                 @QueryParam("traffic") Boolean useTrafficData,
                 @QueryParam("routeType") RouteType routeType,
                 @QueryParam("vehicleLoadType") VehicleLoadType vehicleLoadType,
-                @BodyParam("application/json") RouteMatrixQuery routeMatrixQuery,
+                @BodyParam("application/json") RouteMatrixQueryPrivate routeMatrixQuery,
                 @HeaderParam("Accept") String accept,
                 Context context);
 
@@ -509,7 +509,7 @@ public final class RoutesImpl {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<RoutesRequestRouteMatrixResponse> requestRouteMatrixWithResponseAsync(
             JsonFormat format,
-            RouteMatrixQuery routeMatrixQuery,
+            RouteMatrixQueryPrivate routeMatrixQuery,
             Boolean waitForResults,
             ComputeTravelTime computeTravelTime,
             SectionType filterSectionType,
@@ -711,7 +711,7 @@ public final class RoutesImpl {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<RoutesRequestRouteMatrixResponse> requestRouteMatrixWithResponseAsync(
             JsonFormat format,
-            RouteMatrixQuery routeMatrixQuery,
+            RouteMatrixQueryPrivate routeMatrixQuery,
             Boolean waitForResults,
             ComputeTravelTime computeTravelTime,
             SectionType filterSectionType,
@@ -911,7 +911,7 @@ public final class RoutesImpl {
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public PollerFlux<RouteMatrixResultPrivate, RouteMatrixResultPrivate> beginRequestRouteMatrixAsync(
             JsonFormat format,
-            RouteMatrixQuery routeMatrixQuery,
+            RouteMatrixQueryPrivate routeMatrixQuery,
             Boolean waitForResults,
             ComputeTravelTime computeTravelTime,
             SectionType filterSectionType,
@@ -1105,7 +1105,7 @@ public final class RoutesImpl {
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public PollerFlux<RouteMatrixResultPrivate, RouteMatrixResultPrivate> beginRequestRouteMatrixAsync(
             JsonFormat format,
-            RouteMatrixQuery routeMatrixQuery,
+            RouteMatrixQueryPrivate routeMatrixQuery,
             Boolean waitForResults,
             ComputeTravelTime computeTravelTime,
             SectionType filterSectionType,
@@ -1300,7 +1300,7 @@ public final class RoutesImpl {
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<RouteMatrixResultPrivate, RouteMatrixResultPrivate> beginRequestRouteMatrix(
             JsonFormat format,
-            RouteMatrixQuery routeMatrixQuery,
+            RouteMatrixQueryPrivate routeMatrixQuery,
             Boolean waitForResults,
             ComputeTravelTime computeTravelTime,
             SectionType filterSectionType,
@@ -1489,7 +1489,7 @@ public final class RoutesImpl {
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<RouteMatrixResultPrivate, RouteMatrixResultPrivate> beginRequestRouteMatrix(
             JsonFormat format,
-            RouteMatrixQuery routeMatrixQuery,
+            RouteMatrixQueryPrivate routeMatrixQuery,
             Boolean waitForResults,
             ComputeTravelTime computeTravelTime,
             SectionType filterSectionType,
@@ -1927,7 +1927,7 @@ public final class RoutesImpl {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<RouteMatrixResultPrivate>> requestRouteMatrixSyncWithResponseAsync(
             JsonFormat format,
-            RouteMatrixQuery routeMatrixQuery,
+            RouteMatrixQueryPrivate routeMatrixQuery,
             Boolean waitForResults,
             ComputeTravelTime computeTravelTime,
             SectionType filterSectionType,
@@ -2130,7 +2130,7 @@ public final class RoutesImpl {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<RouteMatrixResultPrivate>> requestRouteMatrixSyncWithResponseAsync(
             JsonFormat format,
-            RouteMatrixQuery routeMatrixQuery,
+            RouteMatrixQueryPrivate routeMatrixQuery,
             Boolean waitForResults,
             ComputeTravelTime computeTravelTime,
             SectionType filterSectionType,
@@ -2331,7 +2331,7 @@ public final class RoutesImpl {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<RouteMatrixResultPrivate> requestRouteMatrixSyncAsync(
             JsonFormat format,
-            RouteMatrixQuery routeMatrixQuery,
+            RouteMatrixQueryPrivate routeMatrixQuery,
             Boolean waitForResults,
             ComputeTravelTime computeTravelTime,
             SectionType filterSectionType,
@@ -2528,7 +2528,7 @@ public final class RoutesImpl {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<RouteMatrixResultPrivate> requestRouteMatrixSyncAsync(
             JsonFormat format,
-            RouteMatrixQuery routeMatrixQuery,
+            RouteMatrixQueryPrivate routeMatrixQuery,
             Boolean waitForResults,
             ComputeTravelTime computeTravelTime,
             SectionType filterSectionType,
@@ -2726,7 +2726,7 @@ public final class RoutesImpl {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public RouteMatrixResultPrivate requestRouteMatrixSync(
             JsonFormat format,
-            RouteMatrixQuery routeMatrixQuery,
+            RouteMatrixQueryPrivate routeMatrixQuery,
             Boolean waitForResults,
             ComputeTravelTime computeTravelTime,
             SectionType filterSectionType,
@@ -2916,7 +2916,7 @@ public final class RoutesImpl {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<RouteMatrixResultPrivate> requestRouteMatrixSyncWithResponse(
             JsonFormat format,
-            RouteMatrixQuery routeMatrixQuery,
+            RouteMatrixQueryPrivate routeMatrixQuery,
             Boolean waitForResults,
             ComputeTravelTime computeTravelTime,
             SectionType filterSectionType,

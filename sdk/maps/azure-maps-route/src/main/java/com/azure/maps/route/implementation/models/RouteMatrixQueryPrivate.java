@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** An object with a matrix of coordinates. */
 @Fluent
-public final class RouteMatrixQuery {
+public final class RouteMatrixQueryPrivate {
     /*
      * A valid `GeoJSON MultiPoint` geometry type. Please refer to [RFC
      * 7946](https://tools.ietf.org/html/rfc7946#section-3.1.3) for details.
@@ -41,9 +41,9 @@ public final class RouteMatrixQuery {
      * 7946](https://tools.ietf.org/html/rfc7946#section-3.1.3) for details.
      *
      * @param origins the origins value to set.
-     * @return the RouteMatrixQuery object itself.
+     * @return the RouteMatrixQueryPrivate object itself.
      */
-    public RouteMatrixQuery setOrigins(GeoJsonMultiPoint origins) {
+    public RouteMatrixQueryPrivate setOrigins(GeoJsonMultiPoint origins) {
         this.origins = origins;
         return this;
     }
@@ -63,9 +63,9 @@ public final class RouteMatrixQuery {
      * 7946](https://tools.ietf.org/html/rfc7946#section-3.1.3) for details.
      *
      * @param destinations the destinations value to set.
-     * @return the RouteMatrixQuery object itself.
+     * @return the RouteMatrixQueryPrivate object itself.
      */
-    public RouteMatrixQuery setDestinations(GeoJsonMultiPoint destinations) {
+    public RouteMatrixQueryPrivate setDestinations(GeoJsonMultiPoint destinations) {
         this.destinations = destinations;
         return this;
     }

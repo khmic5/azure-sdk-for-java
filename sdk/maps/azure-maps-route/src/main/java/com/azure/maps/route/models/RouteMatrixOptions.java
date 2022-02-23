@@ -3,8 +3,6 @@ package com.azure.maps.route.models;
 import java.time.OffsetDateTime;
 import java.util.List;
 
-import com.azure.maps.route.implementation.models.RouteMatrixQuery;
-
 /**
  * Represents the options for requesting a route matrix.
  */
