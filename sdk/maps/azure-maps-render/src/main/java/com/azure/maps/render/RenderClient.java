@@ -99,6 +99,7 @@ public final class RenderClient {
      * @return the response.
      * @throws IOException
      */
+
     @ServiceMethod(returns = ReturnType.SINGLE)
     public InputStream getMapTile(MapTileOptions options) throws IOException {
         Iterator<ByteBufferBackedInputStream> iterator = this.asyncClient.getMapTile(options).map(ByteBufferBackedInputStream::new).toStream().iterator();
