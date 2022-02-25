@@ -7,10 +7,10 @@ package com.azure.maps.route.implementation.models;
 import com.azure.core.http.HttpHeaders;
 import com.azure.core.http.HttpRequest;
 import com.azure.core.http.rest.ResponseBase;
+import com.azure.maps.route.models.RouteMatrixResult;
 
 /** Contains all response data for the getRouteMatrix operation. */
-public final class RoutesGetRouteMatrixResponse
-        extends ResponseBase<RoutesGetRouteMatrixHeaders, RouteMatrixResultPrivate> {
+public final class RoutesGetRouteMatrixResponse extends ResponseBase<RoutesGetRouteMatrixHeaders, RouteMatrixResult> {
     /**
      * Creates an instance of RoutesGetRouteMatrixResponse.
      *
@@ -24,14 +24,14 @@ public final class RoutesGetRouteMatrixResponse
             HttpRequest request,
             int statusCode,
             HttpHeaders rawHeaders,
-            RouteMatrixResultPrivate value,
+            RouteMatrixResult value,
             RoutesGetRouteMatrixHeaders headers) {
         super(request, statusCode, rawHeaders, value, headers);
     }
 
     /** @return the deserialized response body. */
     @Override
-    public RouteMatrixResultPrivate getValue() {
+    public RouteMatrixResult getValue() {
         return super.getValue();
     }
 }

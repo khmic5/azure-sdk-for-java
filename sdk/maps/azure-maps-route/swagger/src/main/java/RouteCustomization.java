@@ -66,7 +66,7 @@ public class RouteCustomization extends Customization {
 
     // Customizes the RouteMatrix class by flattening the Response property.
     private void customizeRouteMatrix(PackageCustomization models) {
-        ClassCustomization classCustomization = models.getClass("RouteMatrixPrivate");
+        ClassCustomization classCustomization = models.getClass("RouteMatrix");
         classCustomization.removeMethod("getResponse");
         final String getSummaryMethod =
             "/** " +

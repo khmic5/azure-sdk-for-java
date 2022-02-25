@@ -14,12 +14,9 @@ import com.azure.core.models.GeoPolygonCollection;
 import com.azure.core.models.GeoPosition;
 import com.azure.maps.route.implementation.models.GeoJsonMultiPoint;
 import com.azure.maps.route.implementation.models.RouteDirectionParametersPrivate;
-import com.azure.maps.route.implementation.models.RouteMatrixPrivate;
 import com.azure.maps.route.implementation.models.RouteMatrixQueryPrivate;
-import com.azure.maps.route.implementation.models.RouteMatrixResultPrivate;
 import com.azure.maps.route.models.LatLong;
 import com.azure.maps.route.models.RouteDirectionsParameters;
-import com.azure.maps.route.models.RouteMatrix;
 import com.azure.maps.route.models.RouteMatrixQuery;
 import com.azure.maps.route.models.RouteMatrixResult;
 
@@ -46,23 +43,6 @@ public class Utility {
         return null;
     }
 
-    /**
-     * Converts a {@link RouteMatrixResultPrivate} to {@link RouteMatrixResult}
-     */
-    public static RouteMatrixResult toRouteMatrixResult(RouteMatrixResultPrivate privateRouteMatrixResult) {
-
-        return null;
-    }
-
-    /**
-     * Converts a {@link RouteMatrixPrivate} to {@link RouteMatrix}
-     */
-    public static RouteMatrix toRouteMatrix(RouteMatrixPrivate routeMatrixPrivate) {
-        RouteMatrix routeMatrix = new RouteMatrix();
-        RouteMatrixPropertiesHelper.setFromAddressPrivate(routeMatrix, routeMatrixPrivate);
-
-        return routeMatrix;
-   }
 
     /**
      * converts the internal representation of {@link RouteMatrixResult} into the public one
@@ -71,8 +51,8 @@ public class Utility {
      * @return
      */
     public static SimpleResponse<RouteMatrixResult> createRouteMatrixResponse(
-            Response<RouteMatrixResultPrivate> response) {
-        RouteMatrixResult result = Utility.toRouteMatrixResult(response.getValue());
+            Response<RouteMatrixResult> response) {
+        RouteMatrixResult result = response.getValue();
         SimpleResponse<RouteMatrixResult> simpleResponse = new SimpleResponse<>(response.getRequest(),
             response.getStatusCode(),
             response.getHeaders(),

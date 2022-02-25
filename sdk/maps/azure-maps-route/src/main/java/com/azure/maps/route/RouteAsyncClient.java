@@ -23,7 +23,6 @@ import com.azure.core.util.polling.DefaultPollingStrategy;
 import com.azure.core.util.polling.PollerFlux;
 import com.azure.core.util.serializer.TypeReference;
 import com.azure.maps.route.implementation.RoutesImpl;
-import com.azure.maps.route.implementation.helpers.RouteMatrixResultSerializer;
 import com.azure.maps.route.implementation.helpers.Utility;
 import com.azure.maps.route.implementation.models.BatchRequest;
 import com.azure.maps.route.implementation.models.JsonFormat;
@@ -59,7 +58,6 @@ public final class RouteAsyncClient {
         RouteDirectionsBatchResult> forwardStrategy;
     private final DefaultPollingStrategy<RouteMatrixResult, RouteMatrixResult>
         routeMatrixStrategy;
-    private RouteMatrixResultSerializer serializer;
     @Generated private final RoutesImpl serviceClient;
 
     /**
@@ -70,9 +68,8 @@ public final class RouteAsyncClient {
     @Generated
     RouteAsyncClient(RoutesImpl serviceClient, HttpPipeline httpPipeline) {
         this.serviceClient = serviceClient;
-        this.serializer = new RouteMatrixResultSerializer();
-        this.forwardStrategy = new DefaultPollingStrategy<>(httpPipeline, this.serializer);
-        this.routeMatrixStrategy = new DefaultPollingStrategy<>(httpPipeline, this.serializer);
+        this.forwardStrategy = new DefaultPollingStrategy<>(httpPipeline);
+        this.routeMatrixStrategy = new DefaultPollingStrategy<>(httpPipeline);
     }
 
     /**
@@ -109,6 +106,7 @@ public final class RouteAsyncClient {
         final int destSize = privateQuery.getDestinations().getCoordinates().size();
         boolean waitForResults = (originSize * destSize <= ROUTE_MATRIX_SMALL_SIZE);
 
+        // return this.serviceClient.beginRequestRouteMatrixAsync(format, routeMatrixQuery, waitForResults, computeTravelTime, filterSectionType, arriveAt, departAt, vehicleAxleWeight, vehicleLength, vehicleHeight, vehicleWidth, vehicleMaxSpeed, vehicleWeight, windingness, inclineLevel, travelMode, avoid, useTrafficData, routeType, vehicleLoadType)
         return createPollerFlux(
             () ->
                 this.serviceClient.requestRouteMatrixWithResponseAsync(
@@ -599,7 +597,8 @@ public final class RouteAsyncClient {
                     .getResult(context, new TypeReference<RouteMatrixResult>() {})
                         .flatMap(result -> {
                             final String matrixId = context.getData(POLLING_BATCH_HEADER_KEY);
-                            result.setMatrixId(matrixId);
+                            // TODO set matrixId
+                            // result.setMatrixId(matrixId);
                             return Mono.just(result);
                         });
             });

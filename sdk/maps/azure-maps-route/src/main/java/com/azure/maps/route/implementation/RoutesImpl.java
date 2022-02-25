@@ -33,7 +33,6 @@ import com.azure.maps.route.implementation.models.JsonFormat;
 import com.azure.maps.route.implementation.models.ResponseFormat;
 import com.azure.maps.route.implementation.models.RouteDirectionParametersPrivate;
 import com.azure.maps.route.implementation.models.RouteMatrixQueryPrivate;
-import com.azure.maps.route.implementation.models.RouteMatrixResultPrivate;
 import com.azure.maps.route.implementation.models.RoutesGetRouteDirectionsBatchResponse;
 import com.azure.maps.route.implementation.models.RoutesGetRouteMatrixResponse;
 import com.azure.maps.route.implementation.models.RoutesRequestRouteDirectionsBatchResponse;
@@ -47,6 +46,7 @@ import com.azure.maps.route.models.RouteAvoidType;
 import com.azure.maps.route.models.RouteDirections;
 import com.azure.maps.route.models.RouteDirectionsBatchResult;
 import com.azure.maps.route.models.RouteInstructionsType;
+import com.azure.maps.route.models.RouteMatrixResult;
 import com.azure.maps.route.models.RouteRangeResult;
 import com.azure.maps.route.models.RouteRepresentationForBestOrder;
 import com.azure.maps.route.models.RouteType;
@@ -139,7 +139,7 @@ public final class RoutesImpl {
                 value = ErrorResponseException.class,
                 code = {408})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
-        Mono<Response<RouteMatrixResultPrivate>> requestRouteMatrixSync(
+        Mono<Response<RouteMatrixResult>> requestRouteMatrixSync(
                 @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String clientId,
                 @QueryParam("api-version") String apiVersion,
@@ -907,7 +907,7 @@ public final class RoutesImpl {
      * @return this object is returned from a successful Route Matrix call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public PollerFlux<RouteMatrixResultPrivate, RouteMatrixResultPrivate> beginRequestRouteMatrixAsync(
+    public PollerFlux<RouteMatrixResult, RouteMatrixResult> beginRequestRouteMatrixAsync(
             JsonFormat format,
             RouteMatrixQueryPrivate routeMatrixQuery,
             Boolean waitForResults,
@@ -953,8 +953,8 @@ public final class RoutesImpl {
                                 routeType,
                                 vehicleLoadType),
                 new DefaultPollingStrategy<>(this.client.getHttpPipeline()),
-                new TypeReferenceRouteMatrixResultPrivate(),
-                new TypeReferenceRouteMatrixResultPrivate());
+                new TypeReferenceRouteMatrixResult(),
+                new TypeReferenceRouteMatrixResult());
     }
 
     /**
@@ -1101,7 +1101,7 @@ public final class RoutesImpl {
      * @return this object is returned from a successful Route Matrix call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public PollerFlux<RouteMatrixResultPrivate, RouteMatrixResultPrivate> beginRequestRouteMatrixAsync(
+    public PollerFlux<RouteMatrixResult, RouteMatrixResult> beginRequestRouteMatrixAsync(
             JsonFormat format,
             RouteMatrixQueryPrivate routeMatrixQuery,
             Boolean waitForResults,
@@ -1149,8 +1149,8 @@ public final class RoutesImpl {
                                 vehicleLoadType,
                                 context),
                 new DefaultPollingStrategy<>(this.client.getHttpPipeline()),
-                new TypeReferenceRouteMatrixResultPrivate(),
-                new TypeReferenceRouteMatrixResultPrivate());
+                new TypeReferenceRouteMatrixResult(),
+                new TypeReferenceRouteMatrixResult());
     }
 
     /**
@@ -1296,7 +1296,7 @@ public final class RoutesImpl {
      * @return this object is returned from a successful Route Matrix call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<RouteMatrixResultPrivate, RouteMatrixResultPrivate> beginRequestRouteMatrix(
+    public SyncPoller<RouteMatrixResult, RouteMatrixResult> beginRequestRouteMatrix(
             JsonFormat format,
             RouteMatrixQueryPrivate routeMatrixQuery,
             Boolean waitForResults,
@@ -1485,7 +1485,7 @@ public final class RoutesImpl {
      * @return this object is returned from a successful Route Matrix call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<RouteMatrixResultPrivate, RouteMatrixResultPrivate> beginRequestRouteMatrix(
+    public SyncPoller<RouteMatrixResult, RouteMatrixResult> beginRequestRouteMatrix(
             JsonFormat format,
             RouteMatrixQueryPrivate routeMatrixQuery,
             Boolean waitForResults,
@@ -1653,13 +1653,13 @@ public final class RoutesImpl {
      * @return this object is returned from a successful Route Matrix call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public PollerFlux<RouteMatrixResultPrivate, RouteMatrixResultPrivate> beginGetRouteMatrixAsync(String matrixId) {
+    public PollerFlux<RouteMatrixResult, RouteMatrixResult> beginGetRouteMatrixAsync(String matrixId) {
         return PollerFlux.create(
                 Duration.ofSeconds(1),
                 () -> this.getRouteMatrixWithResponseAsync(matrixId),
                 new DefaultPollingStrategy<>(this.client.getHttpPipeline()),
-                new TypeReferenceRouteMatrixResultPrivate(),
-                new TypeReferenceRouteMatrixResultPrivate());
+                new TypeReferenceRouteMatrixResult(),
+                new TypeReferenceRouteMatrixResult());
     }
 
     /**
@@ -1695,14 +1695,13 @@ public final class RoutesImpl {
      * @return this object is returned from a successful Route Matrix call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public PollerFlux<RouteMatrixResultPrivate, RouteMatrixResultPrivate> beginGetRouteMatrixAsync(
-            String matrixId, Context context) {
+    public PollerFlux<RouteMatrixResult, RouteMatrixResult> beginGetRouteMatrixAsync(String matrixId, Context context) {
         return PollerFlux.create(
                 Duration.ofSeconds(1),
                 () -> this.getRouteMatrixWithResponseAsync(matrixId, context),
                 new DefaultPollingStrategy<>(this.client.getHttpPipeline()),
-                new TypeReferenceRouteMatrixResultPrivate(),
-                new TypeReferenceRouteMatrixResultPrivate());
+                new TypeReferenceRouteMatrixResult(),
+                new TypeReferenceRouteMatrixResult());
     }
 
     /**
@@ -1737,7 +1736,7 @@ public final class RoutesImpl {
      * @return this object is returned from a successful Route Matrix call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<RouteMatrixResultPrivate, RouteMatrixResultPrivate> beginGetRouteMatrix(String matrixId) {
+    public SyncPoller<RouteMatrixResult, RouteMatrixResult> beginGetRouteMatrix(String matrixId) {
         return this.beginGetRouteMatrixAsync(matrixId).getSyncPoller();
     }
 
@@ -1774,8 +1773,7 @@ public final class RoutesImpl {
      * @return this object is returned from a successful Route Matrix call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<RouteMatrixResultPrivate, RouteMatrixResultPrivate> beginGetRouteMatrix(
-            String matrixId, Context context) {
+    public SyncPoller<RouteMatrixResult, RouteMatrixResult> beginGetRouteMatrix(String matrixId, Context context) {
         return this.beginGetRouteMatrixAsync(matrixId, context).getSyncPoller();
     }
 
@@ -1923,7 +1921,7 @@ public final class RoutesImpl {
      * @return this object is returned from a successful Route Matrix call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<RouteMatrixResultPrivate>> requestRouteMatrixSyncWithResponseAsync(
+    public Mono<Response<RouteMatrixResult>> requestRouteMatrixSyncWithResponseAsync(
             JsonFormat format,
             RouteMatrixQueryPrivate routeMatrixQuery,
             Boolean waitForResults,
@@ -2126,7 +2124,7 @@ public final class RoutesImpl {
      * @return this object is returned from a successful Route Matrix call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<RouteMatrixResultPrivate>> requestRouteMatrixSyncWithResponseAsync(
+    public Mono<Response<RouteMatrixResult>> requestRouteMatrixSyncWithResponseAsync(
             JsonFormat format,
             RouteMatrixQueryPrivate routeMatrixQuery,
             Boolean waitForResults,
@@ -2327,7 +2325,7 @@ public final class RoutesImpl {
      * @return this object is returned from a successful Route Matrix call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<RouteMatrixResultPrivate> requestRouteMatrixSyncAsync(
+    public Mono<RouteMatrixResult> requestRouteMatrixSyncAsync(
             JsonFormat format,
             RouteMatrixQueryPrivate routeMatrixQuery,
             Boolean waitForResults,
@@ -2370,7 +2368,7 @@ public final class RoutesImpl {
                         routeType,
                         vehicleLoadType)
                 .flatMap(
-                        (Response<RouteMatrixResultPrivate> res) -> {
+                        (Response<RouteMatrixResult> res) -> {
                             if (res.getValue() != null) {
                                 return Mono.just(res.getValue());
                             } else {
@@ -2524,7 +2522,7 @@ public final class RoutesImpl {
      * @return this object is returned from a successful Route Matrix call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<RouteMatrixResultPrivate> requestRouteMatrixSyncAsync(
+    public Mono<RouteMatrixResult> requestRouteMatrixSyncAsync(
             JsonFormat format,
             RouteMatrixQueryPrivate routeMatrixQuery,
             Boolean waitForResults,
@@ -2569,7 +2567,7 @@ public final class RoutesImpl {
                         vehicleLoadType,
                         context)
                 .flatMap(
-                        (Response<RouteMatrixResultPrivate> res) -> {
+                        (Response<RouteMatrixResult> res) -> {
                             if (res.getValue() != null) {
                                 return Mono.just(res.getValue());
                             } else {
@@ -2722,7 +2720,7 @@ public final class RoutesImpl {
      * @return this object is returned from a successful Route Matrix call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public RouteMatrixResultPrivate requestRouteMatrixSync(
+    public RouteMatrixResult requestRouteMatrixSync(
             JsonFormat format,
             RouteMatrixQueryPrivate routeMatrixQuery,
             Boolean waitForResults,
@@ -2912,7 +2910,7 @@ public final class RoutesImpl {
      * @return this object is returned from a successful Route Matrix call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<RouteMatrixResultPrivate> requestRouteMatrixSyncWithResponse(
+    public Response<RouteMatrixResult> requestRouteMatrixSyncWithResponse(
             JsonFormat format,
             RouteMatrixQueryPrivate routeMatrixQuery,
             Boolean waitForResults,
@@ -9779,12 +9777,12 @@ public final class RoutesImpl {
         return requestRouteDirectionsBatchSyncWithResponseAsync(format, routeDirectionsBatchQueries, context).block();
     }
 
-    private static final class TypeReferenceRouteMatrixResultPrivate extends TypeReference<RouteMatrixResultPrivate> {
+    private static final class TypeReferenceRouteDirectionsBatchResult
+            extends TypeReference<RouteDirectionsBatchResult> {
         // empty
     }
 
-    private static final class TypeReferenceRouteDirectionsBatchResult
-            extends TypeReference<RouteDirectionsBatchResult> {
+    private static final class TypeReferenceRouteMatrixResult extends TypeReference<RouteMatrixResult> {
         // empty
     }
 }
