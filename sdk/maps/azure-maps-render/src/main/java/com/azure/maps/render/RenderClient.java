@@ -92,8 +92,9 @@ public final class RenderClient {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the response.
      */
+
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public InputStream getMapTileV2(MapTileOptions options) {
+    public InputStream getMapTile(MapTileOptions options) {
         Mono<byte[]> byteArray = FluxUtil.collectBytesInByteBufferStream(this.asyncClient.getMapTile(options));
         return new ByteArrayInputStream(byteArray.block());
     }
@@ -155,7 +156,7 @@ public final class RenderClient {
     }
 
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<MapAttribution> getMapAttributionWithResponseTilesetID(TilesetID tilesetId, int zoom, List<Double> bounds, Context context) {
+    public Response<MapAttribution> getMapAttributionWithResponse(TilesetID tilesetId, int zoom, List<Double> bounds, Context context) {
         return this.asyncClient.getMapAttributionWithResponse(tilesetId, zoom, bounds, context).block();
     }
 

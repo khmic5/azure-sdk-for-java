@@ -11,6 +11,10 @@ public class Center {
         this.coordinates = new LatLong(longitude, latitude);
         this.zoom = (int) zoom;
     }
+
+    public Center(double longitude, double latitude) {
+        this.coordinates = new LatLong(longitude, latitude);
+    }
     
     Center(List<Float> inputs) {
         Objects.requireNonNull(inputs, "Internal bounding box model is needed.");

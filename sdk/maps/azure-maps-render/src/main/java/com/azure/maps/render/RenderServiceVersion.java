@@ -6,12 +6,12 @@ public enum RenderServiceVersion implements ServiceVersion{
      /**
      * Service version {@code 1.0}.
      */
-    V1_0("1.0");
+    V2_1("2.1");
 
     private final String version;
 
     /**
-     * Creates a new {@link MapsSearchServiceVersion} with a version string.
+     * Creates a new {@link RenderServiceVersion} with a version string.
      *
      * @param version
      */
@@ -22,10 +22,10 @@ public enum RenderServiceVersion implements ServiceVersion{
     /**
      * Gets the latest service version supported by this client library
      *
-     * @return the latest {@link MapsSearchServiceVersion}
+     * @return the latest {@link RenderServiceVersion}
      */
     public static RenderServiceVersion getLatest() {
-        return V1_0;
+        return V2_1;
     }
 
     /**

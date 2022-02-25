@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.SimpleResponse;
-import com.azure.maps.render.implementation.models.BoundingBoxPrivate;
 import com.azure.maps.render.implementation.models.IncludeText;
 import com.azure.maps.render.implementation.models.MapTilesetPrivate;
 import com.azure.maps.render.models.BoundingBox;
@@ -42,8 +41,7 @@ public class Utility {
 
     public static MapTileset toMapTileset(MapTilesetPrivate privateResult) {
         MapTileset result = new MapTileset();
-        MapTilesetPropertiesHelper.setBounds(result, Utility.toBoundingBox(privateResult.getBounds()));
-        MapTilesetPropertiesHelper.setCenter(result, Utility.toCenter(privateResult.getCenter()));
+        MapTilesetPropertiesHelper.setFromMapTilesetPrivate(result, privateResult);
         return result;
     }
 }
