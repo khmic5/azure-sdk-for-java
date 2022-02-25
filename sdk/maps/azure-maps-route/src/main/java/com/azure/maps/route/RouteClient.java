@@ -14,11 +14,11 @@ import com.azure.core.http.rest.Response;
 import com.azure.core.util.Context;
 import com.azure.core.util.polling.SyncPoller;
 import com.azure.maps.route.implementation.models.BatchRequest;
-import com.azure.maps.route.implementation.models.RouteDirectionParameters;
 import com.azure.maps.route.models.ErrorResponseException;
 import com.azure.maps.route.models.RouteDirections;
 import com.azure.maps.route.models.RouteDirectionsBatchResult;
 import com.azure.maps.route.models.RouteDirectionsOptions;
+import com.azure.maps.route.models.RouteDirectionsParameters;
 import com.azure.maps.route.models.RouteMatrixOptions;
 import com.azure.maps.route.models.RouteMatrixResult;
 import com.azure.maps.route.models.RouteRangeOptions;
@@ -145,7 +145,7 @@ public final class RouteClient {
     @Generated
     @ServiceMethod(returns = ReturnType.SINGLE)
     public RouteDirections getRouteDirectionsWithAdditionalParameters(
-            RouteDirectionsOptions options, RouteDirectionParameters parameters) {
+            RouteDirectionsOptions options, RouteDirectionsParameters parameters) {
         return this.asyncClient.getRouteDirectionsWithAdditionalParameters(options, parameters).block();
     }
 
@@ -169,7 +169,7 @@ public final class RouteClient {
     @Generated
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<RouteDirections> getRouteDirectionsWithAdditionalParametersWithResponse(
-            RouteDirectionsOptions options, RouteDirectionParameters parameters, Context context) {
+            RouteDirectionsOptions options, RouteDirectionsParameters parameters, Context context) {
         return this.asyncClient.getRouteDirectionsWithAdditionalParametersWithResponse(
             options, parameters, context).block();
     }

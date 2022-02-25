@@ -1,9 +1,7 @@
 package com.azure.maps.route.models;
 
-import java.util.List;
-
 public class RouteRangeOptions extends BaseRouteOptions<RouteRangeOptions> {
-    private List<Double> query;
+    private LatLong startingPoint;
     private Double fuelBudgetInLiters;
     private Double energyBudgetInKwH;
     private Double timeBudgetInSec;
@@ -11,8 +9,8 @@ public class RouteRangeOptions extends BaseRouteOptions<RouteRangeOptions> {
 
     public RouteRangeOptions() {}
 
-    public List<Double> getQuery() {
-        return this.query;
+    public LatLong getStartingPoint() {
+        return this.startingPoint;
     }
 
     public Double getFuelBudgetInLiters() {
@@ -31,8 +29,8 @@ public class RouteRangeOptions extends BaseRouteOptions<RouteRangeOptions> {
         return this.distanceBudgetInMeters;
     }
 
-    public RouteRangeOptions query(List<Double> query) {
-        this.query = query;
+    public RouteRangeOptions startingPoint(LatLong startingPoint) {
+        this.startingPoint = startingPoint;
         return this;
     }
 

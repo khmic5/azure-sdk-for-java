@@ -5,11 +5,7 @@
 package com.azure.maps.route.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.models.GeoObject;
-import com.azure.core.models.GeoPoint;
 import com.azure.core.models.GeoPointCollection;
-import com.azure.maps.route.implementation.models.GeoJsonMultiPoint;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** An object with a matrix of coordinates. */
 @Fluent

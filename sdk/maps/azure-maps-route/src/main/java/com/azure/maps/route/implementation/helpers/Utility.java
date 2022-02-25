@@ -9,11 +9,16 @@ import java.util.stream.Collectors;
 import com.azure.core.http.HttpHeaders;
 import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.SimpleResponse;
+import com.azure.core.models.GeoCollection;
+import com.azure.core.models.GeoPolygonCollection;
 import com.azure.core.models.GeoPosition;
 import com.azure.maps.route.implementation.models.GeoJsonMultiPoint;
+import com.azure.maps.route.implementation.models.RouteDirectionParametersPrivate;
 import com.azure.maps.route.implementation.models.RouteMatrixPrivate;
 import com.azure.maps.route.implementation.models.RouteMatrixQueryPrivate;
 import com.azure.maps.route.implementation.models.RouteMatrixResultPrivate;
+import com.azure.maps.route.models.LatLong;
+import com.azure.maps.route.models.RouteDirectionsParameters;
 import com.azure.maps.route.models.RouteMatrix;
 import com.azure.maps.route.models.RouteMatrixQuery;
 import com.azure.maps.route.models.RouteMatrixResult;
@@ -112,5 +117,39 @@ public class Utility {
         privateQuery.setDestinations(destinations);
 
         return privateQuery;
+    }
+
+    /**
+     * Returns the route points (coordinates) as a colon separated string.
+     *
+     * @param routePoints
+     * @return a String containing all route points
+     */
+    public static String toRouteQueryString(List<LatLong> routePoints) {
+        return routePoints
+            .stream()
+            .map(item -> item.toString())
+            .collect(Collectors.joining(":"));
+    }
+
+    /**
+     * Returns the private version of a @{link RouteDirectionsParameters}.
+     *
+     * return private parameters
+     */
+    public static RouteDirectionParametersPrivate toRouteDirectionParametersPrivate(
+            RouteDirectionsParameters parameters) {
+        RouteDirectionParametersPrivate privateParams = new RouteDirectionParametersPrivate();
+
+        // set allowVignette
+        privateParams.setAllowVignette(parameters.getAllowVignette());
+
+        // convert GeoCollection into GeoJsonGeometryCollection
+        GeoCollection collection = parameters.getSupportingPoints();
+
+        //
+        GeoPolygonCollection polygonCollection = parameters.getAvoidAreas();
+
+        return null;
     }
 }

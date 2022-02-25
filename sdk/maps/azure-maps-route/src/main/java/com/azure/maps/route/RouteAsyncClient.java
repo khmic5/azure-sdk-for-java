@@ -7,6 +7,8 @@
 package com.azure.maps.route;
 
 import java.time.Duration;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Supplier;
 
@@ -26,12 +28,13 @@ import com.azure.maps.route.implementation.helpers.Utility;
 import com.azure.maps.route.implementation.models.BatchRequest;
 import com.azure.maps.route.implementation.models.JsonFormat;
 import com.azure.maps.route.implementation.models.ResponseFormat;
-import com.azure.maps.route.implementation.models.RouteDirectionParameters;
 import com.azure.maps.route.implementation.models.RouteMatrixQueryPrivate;
 import com.azure.maps.route.models.ErrorResponseException;
+import com.azure.maps.route.models.LatLong;
 import com.azure.maps.route.models.RouteDirections;
 import com.azure.maps.route.models.RouteDirectionsBatchResult;
 import com.azure.maps.route.models.RouteDirectionsOptions;
+import com.azure.maps.route.models.RouteDirectionsParameters;
 import com.azure.maps.route.models.RouteMatrixOptions;
 import com.azure.maps.route.models.RouteMatrixQuery;
 import com.azure.maps.route.models.RouteMatrixResult;
@@ -233,7 +236,7 @@ public final class RouteAsyncClient {
             RouteDirectionsOptions options, Context context) {
         return this.serviceClient.getRouteDirectionsWithResponseAsync(
                 ResponseFormat.JSON,
-                options.getRoutePoints(),
+                Utility.toRouteQueryString(options.getRoutePoints()),
                 options.getMaxAlternatives(),
                 options.getAlternativeType(),
                 options.getMinDeviationDistance(),
@@ -294,7 +297,7 @@ public final class RouteAsyncClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<RouteDirections> getRouteDirectionsWithAdditionalParameters(
             RouteDirectionsOptions options,
-            RouteDirectionParameters parameters) {
+            RouteDirectionsParameters parameters) {
         Mono<Response<RouteDirections>> result =
             this.getRouteDirectionsWithAdditionalParametersWithResponse(options, parameters);
         return result.flatMap(response -> {
@@ -318,7 +321,7 @@ public final class RouteAsyncClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<RouteDirections>> getRouteDirectionsWithAdditionalParametersWithResponse(
             RouteDirectionsOptions options,
-            RouteDirectionParameters parameters) {
+            RouteDirectionsParameters parameters) {
         return this.getRouteDirectionsWithAdditionalParametersWithResponse(options, parameters, null);
     }
 
@@ -338,12 +341,12 @@ public final class RouteAsyncClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     Mono<Response<RouteDirections>> getRouteDirectionsWithAdditionalParametersWithResponse(
             RouteDirectionsOptions options,
-            RouteDirectionParameters parameters,
+            RouteDirectionsParameters parameters,
             Context context) {
         return this.serviceClient.getRouteDirectionsWithAdditionalParametersWithResponseAsync(
                 ResponseFormat.JSON,
-                options.getRoutePoints(),
-                parameters,
+                Utility.toRouteQueryString(options.getRoutePoints()),
+                Utility.toRouteDirectionParametersPrivate(parameters),
                 options.getMaxAlternatives(),
                 options.getAlternativeType(),
                 options.getMinDeviationDistance(),
@@ -440,9 +443,13 @@ public final class RouteAsyncClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     Mono<Response<RouteRangeResult>> getRouteRangeWithResponse(
             RouteRangeOptions options, Context context) {
+        LatLong startingPoint = options.getStartingPoint();
+        List<Double> startingPointCoordinates = Arrays.asList(
+            startingPoint.getLatitude(), startingPoint.getLongitude());
+
         return this.serviceClient.getRouteRangeWithResponseAsync(
                 ResponseFormat.JSON,
-                options.getQuery(),
+                startingPointCoordinates,
                 options.getFuelBudgetInLiters(),
                 options.getEnergyBudgetInKwH(),
                 options.getTimeBudgetInSec(),
