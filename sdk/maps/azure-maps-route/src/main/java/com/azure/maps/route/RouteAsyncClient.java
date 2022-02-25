@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import com.azure.core.annotation.Generated;
 import com.azure.core.annotation.ReturnType;
@@ -25,6 +26,7 @@ import com.azure.core.util.serializer.TypeReference;
 import com.azure.maps.route.implementation.RoutesImpl;
 import com.azure.maps.route.implementation.helpers.Utility;
 import com.azure.maps.route.implementation.models.BatchRequest;
+import com.azure.maps.route.implementation.models.BatchRequestItem;
 import com.azure.maps.route.implementation.models.JsonFormat;
 import com.azure.maps.route.implementation.models.ResponseFormat;
 import com.azure.maps.route.implementation.models.RouteMatrixQueryPrivate;
@@ -498,8 +500,8 @@ public final class RouteAsyncClient {
     @Generated
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public PollerFlux<RouteDirectionsBatchResult, RouteDirectionsBatchResult>
-            beginRequestRouteDirectionsBatch(BatchRequest batchRequest) {
-        return this.beginRequestRouteDirectionsBatch(batchRequest, null);
+            beginRequestRouteDirectionsBatch(List<RouteDirectionsOptions> optionsList) {
+        return this.beginRequestRouteDirectionsBatch(optionsList, null);
     }
 
     /**
@@ -517,20 +519,21 @@ public final class RouteAsyncClient {
     @Generated
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     PollerFlux<RouteDirectionsBatchResult, RouteDirectionsBatchResult>
-            beginRequestRouteDirectionsBatch(BatchRequest batchRequest, Context context) {
-        Objects.requireNonNull(batchRequest.getBatchItems(), "'batchItems' is a required parameter.");
+            beginRequestRouteDirectionsBatch(List<RouteDirectionsOptions> optionsList, Context context) {
+        Objects.requireNonNull(optionsList, "'optionsList' is a required parameter.");
 
         // convert list to batch request
-        // List<BatchRequestItem> items = optionsList.stream()
-        //    .map(item -> Utility.toFuzzySearchBatchRequestItem(item)).collect(Collectors.toList());
-        // BatchRequest batchRequest = new BatchRequest().setBatchItems(items);
+        List<BatchRequestItem> items = optionsList.stream()
+            .map(item -> Utility.toRouteDirectionsBatchItem(item))
+            .collect(Collectors.toList());
+        BatchRequest batchRequest = new BatchRequest().setBatchItems(items);
 
         if (batchRequest.getBatchItems().size() <= ROUTE_DIRECTIONS_SMALL_SIZE) {
             return createDirectionsPollerFlux(
                 () -> this.serviceClient
                         .requestRouteDirectionsBatchSyncWithResponseAsync(JsonFormat.JSON, batchRequest, context)
                     .flatMap(response -> {
-                        return Mono.empty(); //just(Utility.createBatchSearchResponse(response));
+                        return Mono.just(Utility.createRouteDirectionsResponse(response));
                     }),
                 this.forwardStrategy);
         }
@@ -539,7 +542,7 @@ public final class RouteAsyncClient {
                 () -> this.serviceClient
                         .requestRouteDirectionsBatchWithResponseAsync(JsonFormat.JSON, batchRequest, context)
                     .flatMap(response -> {
-                        return Mono.empty(); //just(Utility.createBatchSearchResponse(response));
+                        return Mono.just(Utility.createRouteDirectionsResponse(response));
                     }),
                 this.forwardStrategy);
         }

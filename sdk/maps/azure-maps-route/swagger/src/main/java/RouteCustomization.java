@@ -29,6 +29,9 @@ public class RouteCustomization extends Customization {
 
         // customize route matrix
         customizeRouteMatrix(models);
+
+        // customize route batch item
+        customizeDirectionsBatchItem(models);
         /*ClassCustomization classCustomization = models.getClass("RouteLeg");
         MethodCustomization methodCustomization = classCustomization.getMethod("getPoints");
         //methodCustomization.setReturnType("List<LatLong>",
@@ -137,6 +140,39 @@ public class RouteCustomization extends Customization {
         methodCustomization.setReturnType("LatLong", "new LatLong(returnValue.getLatitude(), " +
             "returnValue.getLongitude())");
         classCustomization.removeMethod("setCenter");
+    }
 
+    // Customizes the RouteDirectionsBatchItem class
+    private void customizeDirectionsBatchItem(PackageCustomization models) {
+        ClassCustomization classCustomization = models.getClass("RouteDirectionsBatchItem");
+
+        // replaces getResponse() with getError
+        final String getErrorMethod =
+            "/** " +
+            "* Returns the {@link ErrorDetail} in case of an error response." +
+            "* " +
+            "* return {@code ErrorDetail}" +
+            "*/" +
+            "public ErrorDetail getError() {" +
+            "    return this.response.getError();" +
+            "}";
+
+        // classCustomization.removeMethod("getResponse");
+        classCustomization.addMethod(getErrorMethod);
+
+        // Adds getRouteDirections()
+        final String getRouteDirectionsMethod =
+            "/** " +
+            "* Returns the {@link RouteDirections} associated with the response." +
+            "* " +
+            "* return {@code RouteDirections}" +
+            "*/" +
+            "public RouteDirections getRouteDirections() {" +
+            "    return (RouteDirections)this.response;" +
+            "}";
+        classCustomization.addMethod(getRouteDirectionsMethod);
+
+        // remove getResponse
+        classCustomization.removeMethod("getResponse");
     }
 }

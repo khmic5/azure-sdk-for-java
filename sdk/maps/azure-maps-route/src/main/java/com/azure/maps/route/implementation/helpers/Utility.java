@@ -1,7 +1,11 @@
 package com.azure.maps.route.implementation.helpers;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -12,10 +16,14 @@ import com.azure.core.http.rest.SimpleResponse;
 import com.azure.core.models.GeoCollection;
 import com.azure.core.models.GeoPolygonCollection;
 import com.azure.core.models.GeoPosition;
+import com.azure.core.util.UrlBuilder;
+import com.azure.maps.route.implementation.models.BatchRequestItem;
 import com.azure.maps.route.implementation.models.GeoJsonMultiPoint;
 import com.azure.maps.route.implementation.models.RouteDirectionParametersPrivate;
 import com.azure.maps.route.implementation.models.RouteMatrixQueryPrivate;
 import com.azure.maps.route.models.LatLong;
+import com.azure.maps.route.models.RouteDirectionsBatchResult;
+import com.azure.maps.route.models.RouteDirectionsOptions;
 import com.azure.maps.route.models.RouteDirectionsParameters;
 import com.azure.maps.route.models.RouteMatrixQuery;
 import com.azure.maps.route.models.RouteMatrixResult;
@@ -131,5 +139,105 @@ public class Utility {
         GeoPolygonCollection polygonCollection = parameters.getAvoidAreas();
 
         return null;
+    }
+
+    /**
+     * converts the internal representation of {@link RouteDirectionsBatchResult} into the public one
+     * from inside the HTTP response.
+     * @param response
+     * @return
+     */
+    public static SimpleResponse<RouteDirectionsBatchResult> createRouteDirectionsResponse(
+            Response<RouteDirectionsBatchResult> response) {
+        RouteDirectionsBatchResult result = response.getValue();
+        SimpleResponse<RouteDirectionsBatchResult> simpleResponse = new SimpleResponse<>(response.getRequest(),
+            response.getStatusCode(),
+            response.getHeaders(),
+            result);
+
+        return simpleResponse;
+    }
+
+    /**
+     * Converts a high level RouteDirectionsOptions object into a suitable query string for
+     * a batch request.
+     *
+     * @param options
+     * @return
+     */
+    public static BatchRequestItem toRouteDirectionsBatchItem(RouteDirectionsOptions options) {
+        Map<String, Object> params = new HashMap<>();
+
+        // single value parameters
+        params.compute("query", (k, v) -> Utility.toRouteQueryString(options.getRoutePoints()));
+        params.compute("maxAlternatives", (k, v) -> options.getMaxAlternatives());
+        params.compute("alternativeType", (k, v) -> options.getAlternativeType());
+        params.compute("minDeviationDistance", (k, v) -> options.getMinDeviationDistance());
+        params.compute("arriveAt", (k, v) -> options.getArriveAt());
+        params.compute("departAt", (k, v) -> options.getDepartAt());
+        params.compute("minDeviationTime", (k, v) -> options.getMinDeviationTime());
+        params.compute("instructionsType", (k, v) -> options.getInstructionsType());
+        params.compute("language", (k, v) -> options.getLanguage());
+        params.compute("computeBestOrder", (k, v) -> options.getComputeBestWaypointOrder());
+        params.compute("routeRepresentationForBestOrder", (k, v) -> options.getRouteRepresentationForBestOrder());
+        params.compute("computeTravelTimeFor", (k, v) -> options.getComputeTravelTime());
+        params.compute("vehicleHeading", (k, v) -> options.getVehicleHeading());
+        params.compute("report", (k, v) -> options.getReport());
+        params.compute("sectionType", (k, v) -> options.getFilterSectionType());
+        params.compute("vehicleAxleWeight", (k, v) -> options.getVehicleAxleWeight());
+        params.compute("vehicleWidth", (k, v) -> options.getVehicleWidth());
+        params.compute("vehicleHeight", (k, v) -> options.getVehicleHeight());
+        params.compute("vehicleLength", (k, v) -> options.getVehicleLength());
+        params.compute("vehicleMaxSpeed", (k, v) -> options.getVehicleMaxSpeed());
+        params.compute("vehicleWeight", (k, v) -> options.getVehicleWeight());
+        params.compute("vehicleCommercial", (k, v) -> options.isCommercialVehicle());
+        params.compute("windingness", (k, v) -> options.getWindingness());
+        params.compute("hilliness", (k, v) -> options.getInclineLevel());
+        params.compute("travelMode", (k, v) -> options.getTravelMode());
+        params.compute("avoid", (k, v) -> options.getAvoid());
+        params.compute("traffic", (k, v) -> options.getUseTrafficData());
+        params.compute("routeType", (k, v) -> options.getRouteType());
+        params.compute("vehicleLoadType", (k, v) -> options.getVehicleLoadType());
+        params.compute("vehicleEngineType", (k, v) -> options.getVehicleEngineType());
+        params.compute("constantSpeedConsumptionInLitersPerHundredkm", (k, v) -> options.getConstantSpeedConsumptionInLitersPerHundredKm());
+        params.compute("currentFuelInLiters", (k, v) -> options.getCurrentFuelInLiters());
+        params.compute("auxiliaryPowerInLitersPerHour", (k, v) -> options.getAuxiliaryPowerInLitersPerHour());
+        params.compute("fuelEnergyDensityInMJoulesPerLiter", (k, v) -> options.getFuelEnergyDensityInMegajoulesPerLiter());
+        params.compute("accelerationEfficiency", (k, v) -> options.getAccelerationEfficiency());
+        params.compute("decelerationEfficiency", (k, v) -> options.getDecelerationEfficiency());
+        params.compute("uphillEfficiency", (k, v) -> options.getUphillEfficiency());
+        params.compute("downhillEfficiency", (k, v) -> options.getDownhillEfficiency());
+        params.compute("constantSpeedConsumptionInkWhPerHundredkm", (k, v) -> options.getConstantSpeedConsumptionInKwHPerHundredKm());
+        params.compute("currentChargeInkWh", (k, v) -> options.getCurrentChargeInKwH());
+        params.compute("maxChargeInkWh", (k, v) -> options.getMaxChargeInKwH());
+        params.compute("auxiliaryPowerInkW", (k, v) -> options.getAuxiliaryPowerInKw());
+
+        // convert to batchrequestitem
+        BatchRequestItem item = convertParametersToRequestItem(params);
+        return item;
+    }
+
+    /**
+     * Converts a map of parameters into a BatchRequestItem.
+     *
+     * @param params
+     * @return
+     */
+    private static BatchRequestItem convertParametersToRequestItem(Map<String, Object> params) {
+        // batch request item conversion
+        BatchRequestItem item = new BatchRequestItem();
+        UrlBuilder urlBuilder = new UrlBuilder();
+
+        for (String key : params.keySet()) {
+            try {
+                urlBuilder.addQueryParameter(key, URLEncoder.encode(params.get(key).toString(), "UTF-8"));
+            }
+            catch (UnsupportedEncodingException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        item.setQuery(urlBuilder.getQueryString());
+        return item;
     }
 }

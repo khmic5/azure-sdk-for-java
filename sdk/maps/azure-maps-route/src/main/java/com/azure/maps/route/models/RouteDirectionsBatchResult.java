@@ -6,7 +6,6 @@ package com.azure.maps.route.models;
 
 import com.azure.core.annotation.Immutable;
 import com.azure.maps.route.implementation.models.BatchResult;
-import com.azure.maps.route.implementation.models.RouteDirectionsBatchItem;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 

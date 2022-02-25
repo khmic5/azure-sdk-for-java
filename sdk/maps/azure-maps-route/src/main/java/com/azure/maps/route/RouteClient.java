@@ -6,6 +6,8 @@
 
 package com.azure.maps.route;
 
+import java.util.List;
+
 import com.azure.core.annotation.Generated;
 import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceClient;
@@ -230,8 +232,8 @@ public final class RouteClient {
     @Generated
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<RouteDirectionsBatchResult, RouteDirectionsBatchResult>
-            beginRequestRouteDirectionsBatch(BatchRequest batchRequest) {
-        return this.beginRequestRouteDirectionsBatch(batchRequest, null);
+            beginRequestRouteDirectionsBatch(List<RouteDirectionsOptions> optionsList) {
+        return this.beginRequestRouteDirectionsBatch(optionsList, null);
     }
 
     /**
@@ -249,9 +251,9 @@ public final class RouteClient {
     @Generated
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<RouteDirectionsBatchResult, RouteDirectionsBatchResult>
-            beginRequestRouteDirectionsBatch(BatchRequest batchRequest, Context context) {
+            beginRequestRouteDirectionsBatch(List<RouteDirectionsOptions> optionsList, Context context) {
         return this.asyncClient
-            .beginRequestRouteDirectionsBatch(batchRequest, context).getSyncPoller();
+            .beginRequestRouteDirectionsBatch(optionsList, context).getSyncPoller();
     }
 
     /**
