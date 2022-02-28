@@ -633,6 +633,7 @@ public final class RouteAsyncClient {
                 return strategy
                     .getResult(context, new TypeReference<RouteDirectionsBatchResult>() {})
                         .flatMap(result -> {
+                            System.err.println("Returning response " + result);
                             final String batchId = context.getData(POLLING_BATCH_HEADER_KEY);
                             result.setBatchId(batchId);
                             return Mono.just(result);

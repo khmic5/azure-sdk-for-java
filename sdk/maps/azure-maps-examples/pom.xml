@@ -73,8 +73,8 @@
     </dependency>
     <dependency>
       <groupId>com.azure</groupId>
-      <artifactId>azure-resourcemanager-route-generated</artifactId>
-      <version>1.0.0-beta.1</version> <!-- {x-version-update;com.azure.resourcemanager:azure-resourcemanager-render-generated;current} -->
+      <artifactId>azure-maps-route</artifactId>
+      <version>1.0.0-beta.1</version> <!-- {x-version-update;com.azure.maps:azure-maps-route;current} -->
     </dependency>
     <dependency>
       <groupId>com.azure</groupId>

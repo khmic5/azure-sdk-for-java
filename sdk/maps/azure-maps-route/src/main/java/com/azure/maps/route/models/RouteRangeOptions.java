@@ -7,7 +7,10 @@ public class RouteRangeOptions extends BaseRouteOptions<RouteRangeOptions> {
     private Double timeBudgetInSec;
     private Double distanceBudgetInMeters;
 
-    public RouteRangeOptions() {}
+    public RouteRangeOptions(LatLong startingPoint, Double timeBudgetInSec) {
+        this.startingPoint = startingPoint;
+        this.timeBudgetInSec = timeBudgetInSec;
+    }
 
     public LatLong getStartingPoint() {
         return this.startingPoint;
@@ -29,27 +32,27 @@ public class RouteRangeOptions extends BaseRouteOptions<RouteRangeOptions> {
         return this.distanceBudgetInMeters;
     }
 
-    public RouteRangeOptions startingPoint(LatLong startingPoint) {
+    public RouteRangeOptions setStartingPoint(LatLong startingPoint) {
         this.startingPoint = startingPoint;
         return this;
     }
 
-    public RouteRangeOptions fuelBudgetInLiters(Double fuelBudgetInLiters) {
+    public RouteRangeOptions setFuelBudgetInLiters(Double fuelBudgetInLiters) {
         this.fuelBudgetInLiters = fuelBudgetInLiters;
         return this;
     }
 
-    public RouteRangeOptions energyBudgetInKwH(Double energyBudgetInKwH) {
+    public RouteRangeOptions setEnergyBudgetInKwH(Double energyBudgetInKwH) {
         this.energyBudgetInKwH = energyBudgetInKwH;
         return this;
     }
 
-    public RouteRangeOptions timeBudgetInSec(Double timeBudgetInSec) {
+    public RouteRangeOptions setTimeBudgetInSec(Double timeBudgetInSec) {
         this.timeBudgetInSec = timeBudgetInSec;
         return this;
     }
 
-    public RouteRangeOptions distanceBudgetInMeters(Double distanceBudgetInMeters) {
+    public RouteRangeOptions setDistanceBudgetInMeters(Double distanceBudgetInMeters) {
         this.distanceBudgetInMeters = distanceBudgetInMeters;
         return this;
     }

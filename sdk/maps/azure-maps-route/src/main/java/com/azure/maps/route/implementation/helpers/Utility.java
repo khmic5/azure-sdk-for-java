@@ -1,5 +1,6 @@
 package com.azure.maps.route.implementation.helpers;
 
+import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Arrays;
@@ -14,11 +15,18 @@ import com.azure.core.http.HttpHeaders;
 import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.SimpleResponse;
 import com.azure.core.models.GeoCollection;
+import com.azure.core.models.GeoObject;
 import com.azure.core.models.GeoPolygonCollection;
 import com.azure.core.models.GeoPosition;
+import com.azure.core.serializer.json.jackson.JacksonJsonSerializer;
+import com.azure.core.serializer.json.jackson.JacksonJsonSerializerProvider;
 import com.azure.core.util.UrlBuilder;
+import com.azure.core.util.serializer.TypeReference;
 import com.azure.maps.route.implementation.models.BatchRequestItem;
+import com.azure.maps.route.implementation.models.GeoJsonGeometryCollection;
 import com.azure.maps.route.implementation.models.GeoJsonMultiPoint;
+import com.azure.maps.route.implementation.models.GeoJsonMultiPolygon;
+import com.azure.maps.route.implementation.models.GeoJsonObject;
 import com.azure.maps.route.implementation.models.RouteDirectionParametersPrivate;
 import com.azure.maps.route.implementation.models.RouteDirectionsBatchResultPrivate;
 import com.azure.maps.route.implementation.models.RouteMatrixQueryPrivate;
@@ -32,6 +40,8 @@ import com.azure.maps.route.models.RouteMatrixResult;
 
 public class Utility {
     private static final Pattern uuidPattern = Pattern.compile("[0-9A-Fa-f\\-]{36}");
+    private static final JacksonJsonSerializer serializer = new JacksonJsonSerializerProvider()
+        .createInstance();
 
     /**
      * Gets batch Id from headers to be used in the returned batch result object.
@@ -147,11 +157,47 @@ public class Utility {
 
         // convert GeoCollection into GeoJsonGeometryCollection
         GeoCollection collection = parameters.getSupportingPoints();
+        GeoJsonGeometryCollection internalCollection = toGeoJsonGeometryCollection(collection);
+        privateParams.setSupportingPoints(internalCollection);
 
-        //
+        // convert GeoPolygonCollection into a multi polygon
         GeoPolygonCollection polygonCollection = parameters.getAvoidAreas();
+        GeoJsonMultiPolygon avoidAreas = toGeoJsonMultiPolygon(polygonCollection);
+        privateParams.setAvoidAreas(avoidAreas);
 
-        return null;
+        return privateParams;
+    }
+
+    /**
+     * Converts a {@link GeoCollection} into a private {@link GeoJsonGeometryCollection}.
+     *
+     * @param object
+     * @return
+     */
+    public static GeoJsonGeometryCollection toGeoJsonGeometryCollection(GeoCollection collection) {
+        // serialize to GeoJson
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        serializer.serialize(baos, collection);
+
+        // deserialize into GeoJsonObject
+        final TypeReference<GeoJsonGeometryCollection> typeReference = new TypeReference<GeoJsonGeometryCollection>(){};
+        return serializer.deserializeFromBytes(baos.toByteArray(), typeReference);
+    }
+
+    /**
+     * Converts a {@link GeoPolygonCollection} into a private {@link GeoJsonMultiPolygon}.
+     *
+     * @param object
+     * @return
+     */
+    public static GeoJsonMultiPolygon toGeoJsonMultiPolygon(GeoPolygonCollection collection) {
+        // serialize to GeoJson
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        serializer.serialize(baos, collection);
+
+        // deserialize into GeoJsonObject
+        final TypeReference<GeoJsonMultiPolygon> typeReference = new TypeReference<GeoJsonMultiPolygon>(){};
+        return serializer.deserializeFromBytes(baos.toByteArray(), typeReference);
     }
 
     /**
