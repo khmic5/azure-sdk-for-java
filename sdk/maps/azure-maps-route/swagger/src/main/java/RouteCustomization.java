@@ -32,39 +32,6 @@ public class RouteCustomization extends Customization {
 
         // customize route batch item
         customizeDirectionsBatchItem(models);
-        /*ClassCustomization classCustomization = models.getClass("RouteLeg");
-        MethodCustomization methodCustomization = classCustomization.getMethod("getPoints");
-        //methodCustomization.setReturnType("List<LatLong>",
-        //    "%s.stream().map(item -> new LatLong(item.getLatitude(), item.getLongitude()).collect(java.util.Collectors.toList());");
-        methodCustomization.setReturnType("UUID", "UUID.fromString(%s)");
-        // System.out.println(models);
-        */
-
-
-
-        //MethodCustomization getId = foo.getMethod("getPoints");
-        //getId.setReturnType("UUID", "UUID.fromString(%s)");; // change return type to UUID
-
-        /*
-        // Changes to JacksonXmlRootElement for classes that have been renamed.
-        models.getClass("QueueAnalyticsLogging").removeAnnotation("@JacksonXmlRootElement")
-            .addAnnotation("@JacksonXmlRootElement(localName = \"Logging\")");
-
-        models.getClass("QueueMetrics").removeAnnotation("@JacksonXmlRootElement")
-            .addAnnotation("@JacksonXmlRootElement(localName = \"Metrics\")");
-
-        models.getClass("QueueRetentionPolicy").removeAnnotation("@JacksonXmlRootElement")
-            .addAnnotation("@JacksonXmlRootElement(localName = \"RetentionPolicy\")");
-
-        models.getClass("QueueServiceStatistics").removeAnnotation("@JacksonXmlRootElement")
-            .addAnnotation("@JacksonXmlRootElement(localName = \"StorageServiceStats\")");
-
-        models.getClass("QueueSignedIdentifier").removeAnnotation("@JacksonXmlRootElement")
-            .addAnnotation("@JacksonXmlRootElement(localName = \"SignedIdentifier\")");
-
-        models.getClass("QueueAccessPolicy").removeAnnotation("@JacksonXmlRootElement")
-            .addAnnotation("@JacksonXmlRootElement(localName = \"AccessPolicy\")");
-        */
     }
 
     // Customizes the RouteMatrix class by flattening the Response property.

@@ -573,7 +573,12 @@ public final class RouteAsyncClient {
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     PollerFlux<RouteDirectionsBatchResult, RouteDirectionsBatchResult> beginGetRouteDirectionsBatch(
             String batchId, Context context) {
-        return this.serviceClient.beginGetRouteDirectionsBatchAsync(batchId);
+        return createDirectionsPollerFlux(
+            () -> this.serviceClient.getRouteDirectionsBatchWithResponseAsync(batchId, context)
+                    .flatMap(response -> {
+                        return Mono.just(Utility.createRouteDirectionsResponse(response));
+                    }),
+            this.forwardStrategy);
     }
 
     // private utility methods
@@ -600,8 +605,7 @@ public final class RouteAsyncClient {
                     .getResult(context, new TypeReference<RouteMatrixResult>() {})
                         .flatMap(result -> {
                             final String matrixId = context.getData(POLLING_BATCH_HEADER_KEY);
-                            // TODO set matrixId
-                            // result.setMatrixId(matrixId);
+                            result.setMatrixId(matrixId);
                             return Mono.just(result);
                         });
             });
@@ -630,7 +634,7 @@ public final class RouteAsyncClient {
                     .getResult(context, new TypeReference<RouteDirectionsBatchResult>() {})
                         .flatMap(result -> {
                             final String batchId = context.getData(POLLING_BATCH_HEADER_KEY);
-                            // result.setBatchId(batchId);
+                            result.setBatchId(batchId);
                             return Mono.just(result);
                         });
             });

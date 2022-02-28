@@ -32,7 +32,9 @@ import com.azure.maps.route.implementation.models.BatchRequest;
 import com.azure.maps.route.implementation.models.JsonFormat;
 import com.azure.maps.route.implementation.models.ResponseFormat;
 import com.azure.maps.route.implementation.models.RouteDirectionParametersPrivate;
+import com.azure.maps.route.implementation.models.RouteDirectionsBatchResultPrivate;
 import com.azure.maps.route.implementation.models.RouteMatrixQueryPrivate;
+import com.azure.maps.route.implementation.models.RouteMatrixResultPrivate;
 import com.azure.maps.route.implementation.models.RoutesGetRouteDirectionsBatchResponse;
 import com.azure.maps.route.implementation.models.RoutesGetRouteMatrixResponse;
 import com.azure.maps.route.implementation.models.RoutesRequestRouteDirectionsBatchResponse;
@@ -44,9 +46,7 @@ import com.azure.maps.route.models.InclineLevel;
 import com.azure.maps.route.models.Report;
 import com.azure.maps.route.models.RouteAvoidType;
 import com.azure.maps.route.models.RouteDirections;
-import com.azure.maps.route.models.RouteDirectionsBatchResult;
 import com.azure.maps.route.models.RouteInstructionsType;
-import com.azure.maps.route.models.RouteMatrixResult;
 import com.azure.maps.route.models.RouteRangeResult;
 import com.azure.maps.route.models.RouteRepresentationForBestOrder;
 import com.azure.maps.route.models.RouteType;
@@ -139,7 +139,7 @@ public final class RoutesImpl {
                 value = ErrorResponseException.class,
                 code = {408})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
-        Mono<Response<RouteMatrixResult>> requestRouteMatrixSync(
+        Mono<Response<RouteMatrixResultPrivate>> requestRouteMatrixSync(
                 @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String clientId,
                 @QueryParam("api-version") String apiVersion,
@@ -352,7 +352,7 @@ public final class RoutesImpl {
                 value = ErrorResponseException.class,
                 code = {408})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
-        Mono<Response<RouteDirectionsBatchResult>> requestRouteDirectionsBatchSync(
+        Mono<Response<RouteDirectionsBatchResultPrivate>> requestRouteDirectionsBatchSync(
                 @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String clientId,
                 @QueryParam("api-version") String apiVersion,
@@ -907,7 +907,7 @@ public final class RoutesImpl {
      * @return this object is returned from a successful Route Matrix call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public PollerFlux<RouteMatrixResult, RouteMatrixResult> beginRequestRouteMatrixAsync(
+    public PollerFlux<RouteMatrixResultPrivate, RouteMatrixResultPrivate> beginRequestRouteMatrixAsync(
             JsonFormat format,
             RouteMatrixQueryPrivate routeMatrixQuery,
             Boolean waitForResults,
@@ -953,8 +953,8 @@ public final class RoutesImpl {
                                 routeType,
                                 vehicleLoadType),
                 new DefaultPollingStrategy<>(this.client.getHttpPipeline()),
-                new TypeReferenceRouteMatrixResult(),
-                new TypeReferenceRouteMatrixResult());
+                new TypeReferenceRouteMatrixResultPrivate(),
+                new TypeReferenceRouteMatrixResultPrivate());
     }
 
     /**
@@ -1101,7 +1101,7 @@ public final class RoutesImpl {
      * @return this object is returned from a successful Route Matrix call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public PollerFlux<RouteMatrixResult, RouteMatrixResult> beginRequestRouteMatrixAsync(
+    public PollerFlux<RouteMatrixResultPrivate, RouteMatrixResultPrivate> beginRequestRouteMatrixAsync(
             JsonFormat format,
             RouteMatrixQueryPrivate routeMatrixQuery,
             Boolean waitForResults,
@@ -1149,8 +1149,8 @@ public final class RoutesImpl {
                                 vehicleLoadType,
                                 context),
                 new DefaultPollingStrategy<>(this.client.getHttpPipeline()),
-                new TypeReferenceRouteMatrixResult(),
-                new TypeReferenceRouteMatrixResult());
+                new TypeReferenceRouteMatrixResultPrivate(),
+                new TypeReferenceRouteMatrixResultPrivate());
     }
 
     /**
@@ -1296,7 +1296,7 @@ public final class RoutesImpl {
      * @return this object is returned from a successful Route Matrix call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<RouteMatrixResult, RouteMatrixResult> beginRequestRouteMatrix(
+    public SyncPoller<RouteMatrixResultPrivate, RouteMatrixResultPrivate> beginRequestRouteMatrix(
             JsonFormat format,
             RouteMatrixQueryPrivate routeMatrixQuery,
             Boolean waitForResults,
@@ -1485,7 +1485,7 @@ public final class RoutesImpl {
      * @return this object is returned from a successful Route Matrix call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<RouteMatrixResult, RouteMatrixResult> beginRequestRouteMatrix(
+    public SyncPoller<RouteMatrixResultPrivate, RouteMatrixResultPrivate> beginRequestRouteMatrix(
             JsonFormat format,
             RouteMatrixQueryPrivate routeMatrixQuery,
             Boolean waitForResults,
@@ -1653,13 +1653,13 @@ public final class RoutesImpl {
      * @return this object is returned from a successful Route Matrix call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public PollerFlux<RouteMatrixResult, RouteMatrixResult> beginGetRouteMatrixAsync(String matrixId) {
+    public PollerFlux<RouteMatrixResultPrivate, RouteMatrixResultPrivate> beginGetRouteMatrixAsync(String matrixId) {
         return PollerFlux.create(
                 Duration.ofSeconds(1),
                 () -> this.getRouteMatrixWithResponseAsync(matrixId),
                 new DefaultPollingStrategy<>(this.client.getHttpPipeline()),
-                new TypeReferenceRouteMatrixResult(),
-                new TypeReferenceRouteMatrixResult());
+                new TypeReferenceRouteMatrixResultPrivate(),
+                new TypeReferenceRouteMatrixResultPrivate());
     }
 
     /**
@@ -1695,13 +1695,14 @@ public final class RoutesImpl {
      * @return this object is returned from a successful Route Matrix call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public PollerFlux<RouteMatrixResult, RouteMatrixResult> beginGetRouteMatrixAsync(String matrixId, Context context) {
+    public PollerFlux<RouteMatrixResultPrivate, RouteMatrixResultPrivate> beginGetRouteMatrixAsync(
+            String matrixId, Context context) {
         return PollerFlux.create(
                 Duration.ofSeconds(1),
                 () -> this.getRouteMatrixWithResponseAsync(matrixId, context),
                 new DefaultPollingStrategy<>(this.client.getHttpPipeline()),
-                new TypeReferenceRouteMatrixResult(),
-                new TypeReferenceRouteMatrixResult());
+                new TypeReferenceRouteMatrixResultPrivate(),
+                new TypeReferenceRouteMatrixResultPrivate());
     }
 
     /**
@@ -1736,7 +1737,7 @@ public final class RoutesImpl {
      * @return this object is returned from a successful Route Matrix call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<RouteMatrixResult, RouteMatrixResult> beginGetRouteMatrix(String matrixId) {
+    public SyncPoller<RouteMatrixResultPrivate, RouteMatrixResultPrivate> beginGetRouteMatrix(String matrixId) {
         return this.beginGetRouteMatrixAsync(matrixId).getSyncPoller();
     }
 
@@ -1773,7 +1774,8 @@ public final class RoutesImpl {
      * @return this object is returned from a successful Route Matrix call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<RouteMatrixResult, RouteMatrixResult> beginGetRouteMatrix(String matrixId, Context context) {
+    public SyncPoller<RouteMatrixResultPrivate, RouteMatrixResultPrivate> beginGetRouteMatrix(
+            String matrixId, Context context) {
         return this.beginGetRouteMatrixAsync(matrixId, context).getSyncPoller();
     }
 
@@ -1921,7 +1923,7 @@ public final class RoutesImpl {
      * @return this object is returned from a successful Route Matrix call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<RouteMatrixResult>> requestRouteMatrixSyncWithResponseAsync(
+    public Mono<Response<RouteMatrixResultPrivate>> requestRouteMatrixSyncWithResponseAsync(
             JsonFormat format,
             RouteMatrixQueryPrivate routeMatrixQuery,
             Boolean waitForResults,
@@ -2124,7 +2126,7 @@ public final class RoutesImpl {
      * @return this object is returned from a successful Route Matrix call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<RouteMatrixResult>> requestRouteMatrixSyncWithResponseAsync(
+    public Mono<Response<RouteMatrixResultPrivate>> requestRouteMatrixSyncWithResponseAsync(
             JsonFormat format,
             RouteMatrixQueryPrivate routeMatrixQuery,
             Boolean waitForResults,
@@ -2325,7 +2327,7 @@ public final class RoutesImpl {
      * @return this object is returned from a successful Route Matrix call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<RouteMatrixResult> requestRouteMatrixSyncAsync(
+    public Mono<RouteMatrixResultPrivate> requestRouteMatrixSyncAsync(
             JsonFormat format,
             RouteMatrixQueryPrivate routeMatrixQuery,
             Boolean waitForResults,
@@ -2368,7 +2370,7 @@ public final class RoutesImpl {
                         routeType,
                         vehicleLoadType)
                 .flatMap(
-                        (Response<RouteMatrixResult> res) -> {
+                        (Response<RouteMatrixResultPrivate> res) -> {
                             if (res.getValue() != null) {
                                 return Mono.just(res.getValue());
                             } else {
@@ -2522,7 +2524,7 @@ public final class RoutesImpl {
      * @return this object is returned from a successful Route Matrix call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<RouteMatrixResult> requestRouteMatrixSyncAsync(
+    public Mono<RouteMatrixResultPrivate> requestRouteMatrixSyncAsync(
             JsonFormat format,
             RouteMatrixQueryPrivate routeMatrixQuery,
             Boolean waitForResults,
@@ -2567,7 +2569,7 @@ public final class RoutesImpl {
                         vehicleLoadType,
                         context)
                 .flatMap(
-                        (Response<RouteMatrixResult> res) -> {
+                        (Response<RouteMatrixResultPrivate> res) -> {
                             if (res.getValue() != null) {
                                 return Mono.just(res.getValue());
                             } else {
@@ -2720,7 +2722,7 @@ public final class RoutesImpl {
      * @return this object is returned from a successful Route Matrix call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public RouteMatrixResult requestRouteMatrixSync(
+    public RouteMatrixResultPrivate requestRouteMatrixSync(
             JsonFormat format,
             RouteMatrixQueryPrivate routeMatrixQuery,
             Boolean waitForResults,
@@ -2910,7 +2912,7 @@ public final class RoutesImpl {
      * @return this object is returned from a successful Route Matrix call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<RouteMatrixResult> requestRouteMatrixSyncWithResponse(
+    public Response<RouteMatrixResultPrivate> requestRouteMatrixSyncWithResponse(
             JsonFormat format,
             RouteMatrixQueryPrivate routeMatrixQuery,
             Boolean waitForResults,
@@ -8708,14 +8710,14 @@ public final class RoutesImpl {
      * @return this object is returned from a successful Route Directions Batch service call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public PollerFlux<RouteDirectionsBatchResult, RouteDirectionsBatchResult> beginRequestRouteDirectionsBatchAsync(
-            JsonFormat format, BatchRequest routeDirectionsBatchQueries) {
+    public PollerFlux<RouteDirectionsBatchResultPrivate, RouteDirectionsBatchResultPrivate>
+            beginRequestRouteDirectionsBatchAsync(JsonFormat format, BatchRequest routeDirectionsBatchQueries) {
         return PollerFlux.create(
                 Duration.ofSeconds(1),
                 () -> this.requestRouteDirectionsBatchWithResponseAsync(format, routeDirectionsBatchQueries),
                 new DefaultPollingStrategy<>(this.client.getHttpPipeline()),
-                new TypeReferenceRouteDirectionsBatchResult(),
-                new TypeReferenceRouteDirectionsBatchResult());
+                new TypeReferenceRouteDirectionsBatchResultPrivate(),
+                new TypeReferenceRouteDirectionsBatchResultPrivate());
     }
 
     /**
@@ -8823,14 +8825,15 @@ public final class RoutesImpl {
      * @return this object is returned from a successful Route Directions Batch service call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public PollerFlux<RouteDirectionsBatchResult, RouteDirectionsBatchResult> beginRequestRouteDirectionsBatchAsync(
-            JsonFormat format, BatchRequest routeDirectionsBatchQueries, Context context) {
+    public PollerFlux<RouteDirectionsBatchResultPrivate, RouteDirectionsBatchResultPrivate>
+            beginRequestRouteDirectionsBatchAsync(
+                    JsonFormat format, BatchRequest routeDirectionsBatchQueries, Context context) {
         return PollerFlux.create(
                 Duration.ofSeconds(1),
                 () -> this.requestRouteDirectionsBatchWithResponseAsync(format, routeDirectionsBatchQueries, context),
                 new DefaultPollingStrategy<>(this.client.getHttpPipeline()),
-                new TypeReferenceRouteDirectionsBatchResult(),
-                new TypeReferenceRouteDirectionsBatchResult());
+                new TypeReferenceRouteDirectionsBatchResultPrivate(),
+                new TypeReferenceRouteDirectionsBatchResultPrivate());
     }
 
     /**
@@ -8937,8 +8940,8 @@ public final class RoutesImpl {
      * @return this object is returned from a successful Route Directions Batch service call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<RouteDirectionsBatchResult, RouteDirectionsBatchResult> beginRequestRouteDirectionsBatch(
-            JsonFormat format, BatchRequest routeDirectionsBatchQueries) {
+    public SyncPoller<RouteDirectionsBatchResultPrivate, RouteDirectionsBatchResultPrivate>
+            beginRequestRouteDirectionsBatch(JsonFormat format, BatchRequest routeDirectionsBatchQueries) {
         return this.beginRequestRouteDirectionsBatchAsync(format, routeDirectionsBatchQueries).getSyncPoller();
     }
 
@@ -9047,8 +9050,9 @@ public final class RoutesImpl {
      * @return this object is returned from a successful Route Directions Batch service call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<RouteDirectionsBatchResult, RouteDirectionsBatchResult> beginRequestRouteDirectionsBatch(
-            JsonFormat format, BatchRequest routeDirectionsBatchQueries, Context context) {
+    public SyncPoller<RouteDirectionsBatchResultPrivate, RouteDirectionsBatchResultPrivate>
+            beginRequestRouteDirectionsBatch(
+                    JsonFormat format, BatchRequest routeDirectionsBatchQueries, Context context) {
         return this.beginRequestRouteDirectionsBatchAsync(format, routeDirectionsBatchQueries, context).getSyncPoller();
     }
 
@@ -9225,14 +9229,14 @@ public final class RoutesImpl {
      * @return this object is returned from a successful Route Directions Batch service call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public PollerFlux<RouteDirectionsBatchResult, RouteDirectionsBatchResult> beginGetRouteDirectionsBatchAsync(
-            String batchId) {
+    public PollerFlux<RouteDirectionsBatchResultPrivate, RouteDirectionsBatchResultPrivate>
+            beginGetRouteDirectionsBatchAsync(String batchId) {
         return PollerFlux.create(
                 Duration.ofSeconds(1),
                 () -> this.getRouteDirectionsBatchWithResponseAsync(batchId),
                 new DefaultPollingStrategy<>(this.client.getHttpPipeline()),
-                new TypeReferenceRouteDirectionsBatchResult(),
-                new TypeReferenceRouteDirectionsBatchResult());
+                new TypeReferenceRouteDirectionsBatchResultPrivate(),
+                new TypeReferenceRouteDirectionsBatchResultPrivate());
     }
 
     /**
@@ -9285,14 +9289,14 @@ public final class RoutesImpl {
      * @return this object is returned from a successful Route Directions Batch service call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public PollerFlux<RouteDirectionsBatchResult, RouteDirectionsBatchResult> beginGetRouteDirectionsBatchAsync(
-            String batchId, Context context) {
+    public PollerFlux<RouteDirectionsBatchResultPrivate, RouteDirectionsBatchResultPrivate>
+            beginGetRouteDirectionsBatchAsync(String batchId, Context context) {
         return PollerFlux.create(
                 Duration.ofSeconds(1),
                 () -> this.getRouteDirectionsBatchWithResponseAsync(batchId, context),
                 new DefaultPollingStrategy<>(this.client.getHttpPipeline()),
-                new TypeReferenceRouteDirectionsBatchResult(),
-                new TypeReferenceRouteDirectionsBatchResult());
+                new TypeReferenceRouteDirectionsBatchResultPrivate(),
+                new TypeReferenceRouteDirectionsBatchResultPrivate());
     }
 
     /**
@@ -9344,8 +9348,8 @@ public final class RoutesImpl {
      * @return this object is returned from a successful Route Directions Batch service call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<RouteDirectionsBatchResult, RouteDirectionsBatchResult> beginGetRouteDirectionsBatch(
-            String batchId) {
+    public SyncPoller<RouteDirectionsBatchResultPrivate, RouteDirectionsBatchResultPrivate>
+            beginGetRouteDirectionsBatch(String batchId) {
         return this.beginGetRouteDirectionsBatchAsync(batchId).getSyncPoller();
     }
 
@@ -9399,8 +9403,8 @@ public final class RoutesImpl {
      * @return this object is returned from a successful Route Directions Batch service call.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<RouteDirectionsBatchResult, RouteDirectionsBatchResult> beginGetRouteDirectionsBatch(
-            String batchId, Context context) {
+    public SyncPoller<RouteDirectionsBatchResultPrivate, RouteDirectionsBatchResultPrivate>
+            beginGetRouteDirectionsBatch(String batchId, Context context) {
         return this.beginGetRouteDirectionsBatchAsync(batchId, context).getSyncPoller();
     }
 
@@ -9455,7 +9459,7 @@ public final class RoutesImpl {
      * @return this object is returned from a successful Route Directions Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<RouteDirectionsBatchResult>> requestRouteDirectionsBatchSyncWithResponseAsync(
+    public Mono<Response<RouteDirectionsBatchResultPrivate>> requestRouteDirectionsBatchSyncWithResponseAsync(
             JsonFormat format, BatchRequest routeDirectionsBatchQueries) {
         final String accept = "application/json";
         return FluxUtil.withContext(
@@ -9522,7 +9526,7 @@ public final class RoutesImpl {
      * @return this object is returned from a successful Route Directions Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<RouteDirectionsBatchResult>> requestRouteDirectionsBatchSyncWithResponseAsync(
+    public Mono<Response<RouteDirectionsBatchResultPrivate>> requestRouteDirectionsBatchSyncWithResponseAsync(
             JsonFormat format, BatchRequest routeDirectionsBatchQueries, Context context) {
         final String accept = "application/json";
         return service.requestRouteDirectionsBatchSync(
@@ -9586,11 +9590,11 @@ public final class RoutesImpl {
      * @return this object is returned from a successful Route Directions Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<RouteDirectionsBatchResult> requestRouteDirectionsBatchSyncAsync(
+    public Mono<RouteDirectionsBatchResultPrivate> requestRouteDirectionsBatchSyncAsync(
             JsonFormat format, BatchRequest routeDirectionsBatchQueries) {
         return requestRouteDirectionsBatchSyncWithResponseAsync(format, routeDirectionsBatchQueries)
                 .flatMap(
-                        (Response<RouteDirectionsBatchResult> res) -> {
+                        (Response<RouteDirectionsBatchResultPrivate> res) -> {
                             if (res.getValue() != null) {
                                 return Mono.just(res.getValue());
                             } else {
@@ -9651,11 +9655,11 @@ public final class RoutesImpl {
      * @return this object is returned from a successful Route Directions Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<RouteDirectionsBatchResult> requestRouteDirectionsBatchSyncAsync(
+    public Mono<RouteDirectionsBatchResultPrivate> requestRouteDirectionsBatchSyncAsync(
             JsonFormat format, BatchRequest routeDirectionsBatchQueries, Context context) {
         return requestRouteDirectionsBatchSyncWithResponseAsync(format, routeDirectionsBatchQueries, context)
                 .flatMap(
-                        (Response<RouteDirectionsBatchResult> res) -> {
+                        (Response<RouteDirectionsBatchResultPrivate> res) -> {
                             if (res.getValue() != null) {
                                 return Mono.just(res.getValue());
                             } else {
@@ -9715,7 +9719,7 @@ public final class RoutesImpl {
      * @return this object is returned from a successful Route Directions Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public RouteDirectionsBatchResult requestRouteDirectionsBatchSync(
+    public RouteDirectionsBatchResultPrivate requestRouteDirectionsBatchSync(
             JsonFormat format, BatchRequest routeDirectionsBatchQueries) {
         return requestRouteDirectionsBatchSyncAsync(format, routeDirectionsBatchQueries).block();
     }
@@ -9772,17 +9776,17 @@ public final class RoutesImpl {
      * @return this object is returned from a successful Route Directions Batch service call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<RouteDirectionsBatchResult> requestRouteDirectionsBatchSyncWithResponse(
+    public Response<RouteDirectionsBatchResultPrivate> requestRouteDirectionsBatchSyncWithResponse(
             JsonFormat format, BatchRequest routeDirectionsBatchQueries, Context context) {
         return requestRouteDirectionsBatchSyncWithResponseAsync(format, routeDirectionsBatchQueries, context).block();
     }
 
-    private static final class TypeReferenceRouteDirectionsBatchResult
-            extends TypeReference<RouteDirectionsBatchResult> {
+    private static final class TypeReferenceRouteMatrixResultPrivate extends TypeReference<RouteMatrixResultPrivate> {
         // empty
     }
 
-    private static final class TypeReferenceRouteMatrixResult extends TypeReference<RouteMatrixResult> {
+    private static final class TypeReferenceRouteDirectionsBatchResultPrivate
+            extends TypeReference<RouteDirectionsBatchResultPrivate> {
         // empty
     }
 }

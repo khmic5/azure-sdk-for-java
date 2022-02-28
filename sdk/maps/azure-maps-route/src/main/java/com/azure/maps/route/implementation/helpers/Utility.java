@@ -20,7 +20,9 @@ import com.azure.core.util.UrlBuilder;
 import com.azure.maps.route.implementation.models.BatchRequestItem;
 import com.azure.maps.route.implementation.models.GeoJsonMultiPoint;
 import com.azure.maps.route.implementation.models.RouteDirectionParametersPrivate;
+import com.azure.maps.route.implementation.models.RouteDirectionsBatchResultPrivate;
 import com.azure.maps.route.implementation.models.RouteMatrixQueryPrivate;
+import com.azure.maps.route.implementation.models.RouteMatrixResultPrivate;
 import com.azure.maps.route.models.LatLong;
 import com.azure.maps.route.models.RouteDirectionsBatchResult;
 import com.azure.maps.route.models.RouteDirectionsOptions;
@@ -59,14 +61,25 @@ public class Utility {
      * @return
      */
     public static SimpleResponse<RouteMatrixResult> createRouteMatrixResponse(
-            Response<RouteMatrixResult> response) {
-        RouteMatrixResult result = response.getValue();
+            Response<RouteMatrixResultPrivate> response) {
+        RouteMatrixResult result = Utility.toRouteMatrixResult(response.getValue());
         SimpleResponse<RouteMatrixResult> simpleResponse = new SimpleResponse<>(response.getRequest(),
             response.getStatusCode(),
             response.getHeaders(),
             result);
 
         return simpleResponse;
+    }
+
+    /**
+     * Converts a private {@link RouteMatrixResultPrivate} to a public @{link RouteMatrixResult}
+     * @param privateResult
+     * @return a public instance of {@link RouteMatrixResult}
+     */
+    private static RouteMatrixResult toRouteMatrixResult(RouteMatrixResultPrivate privateResult) {
+        RouteMatrixResult result = new RouteMatrixResult();
+        RouteMatrixResultPropertiesHelper.setFromRouteMatrixResultPrivate(result, privateResult);
+        return result;
     }
 
     /**
@@ -148,14 +161,24 @@ public class Utility {
      * @return
      */
     public static SimpleResponse<RouteDirectionsBatchResult> createRouteDirectionsResponse(
-            Response<RouteDirectionsBatchResult> response) {
-        RouteDirectionsBatchResult result = response.getValue();
+            Response<RouteDirectionsBatchResultPrivate> response) {
+        RouteDirectionsBatchResult result = Utility.toRouteDirectionsBatchResult(response.getValue());
         SimpleResponse<RouteDirectionsBatchResult> simpleResponse = new SimpleResponse<>(response.getRequest(),
             response.getStatusCode(),
             response.getHeaders(),
             result);
 
         return simpleResponse;
+    }
+
+    /**
+     * Converts a private {@link RouteDirectionsBatchResultPrivate} to a public @{link RouteDirectionsBatchResult}
+     * @param privateResult
+     * @return a public instance of {@link RouteDirectionsBatchResult}
+     */
+    private static RouteDirectionsBatchResult toRouteDirectionsBatchResult(RouteDirectionsBatchResultPrivate privateResult) {
+
+        return null;
     }
 
     /**

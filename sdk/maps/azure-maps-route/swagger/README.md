@@ -20,11 +20,17 @@ autorest --java --use:@autorest/java@4.0.x
 ``` yaml
 directive:
   - rename-model:
-      from: RouteMatrixQuery
-      to: RouteMatrixQueryPrivate     
+        from: RouteMatrixQuery
+        to: RouteMatrixQueryPrivate     
   - rename-model:
-      from: RouteDirectionParameters
-      to: RouteDirectionParametersPrivate      
+        from: RouteDirectionParameters
+        to: RouteDirectionParametersPrivate 
+  - rename-model:
+        from: RouteMatrixResult
+        to: RouteMatrixResultPrivate
+  - rename-model:
+        from: RouteDirectionsBatchResult
+        to: RouteDirectionsBatchResultPrivate    
 
 title: RouteClient
 input-file: https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/maps/data-plane/Route/preview/1.0/route.json
@@ -42,6 +48,6 @@ generate-sync-async-clients: false
 polling: {}
 models-subpackage: implementation.models
 custom-types-subpackage: models
-custom-types: AlternativeRouteType,BatchResultSummary,ComputeTravelTime,DelayMagnitude,DrivingSide,EffectiveSetting,ErrorAdditionalInfo,ErrorDetail,ErrorResponse,ErrorResponseException,GuidanceInstructionType,GuidanceManeuver,InclineLevel,JunctionType,Report,ResponseSectionType,ResponseTravelMode,Route,RouteAvoidType,RouteDirections,RouteDirectionsBatchResult,RouteDirectionsBatchItem,RouteGuidance,RouteInstructionGroup,RouteInstruction,RouteMatrix,RouteMatrixResult,RouteRange,RouteInstructionsType,RouteLeg,RouteLegSummary,RouteMatrixSummary,RouteOptimizedWaypoint,RouteRangeResult,RouteReport,RouteRepresentationForBestOrder,RouteSection,RouteSectionTec,RouteSectionTecCause,RouteSummary,RouteType,SectionType,SimpleCategory,TravelMode,VehicleEngineType,VehicleLoadType,WindingnessLevel
+custom-types: AlternativeRouteType,BatchResultSummary,ComputeTravelTime,DelayMagnitude,DrivingSide,EffectiveSetting,ErrorAdditionalInfo,ErrorDetail,ErrorResponse,ErrorResponseException,GuidanceInstructionType,GuidanceManeuver,InclineLevel,JunctionType,Report,ResponseSectionType,ResponseTravelMode,Route,RouteAvoidType,RouteDirections,RouteDirectionsBatchItem,RouteGuidance,RouteInstructionGroup,RouteInstruction,RouteMatrix,RouteRange,RouteInstructionsType,RouteLeg,RouteLegSummary,RouteMatrixSummary,RouteOptimizedWaypoint,RouteRangeResult,RouteReport,RouteRepresentationForBestOrder,RouteSection,RouteSectionTec,RouteSectionTecCause,RouteSummary,RouteType,SectionType,SimpleCategory,TravelMode,VehicleEngineType,VehicleLoadType,WindingnessLevel
 customization-class: src/main/java/RouteCustomization.java
 ```
