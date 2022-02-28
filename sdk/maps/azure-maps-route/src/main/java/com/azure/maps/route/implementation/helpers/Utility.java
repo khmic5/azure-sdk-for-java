@@ -72,7 +72,8 @@ public class Utility {
      */
     public static SimpleResponse<RouteMatrixResult> createRouteMatrixResponse(
             Response<RouteMatrixResultPrivate> response) {
-        RouteMatrixResult result = Utility.toRouteMatrixResult(response.getValue());
+        RouteMatrixResult result = response.getValue() != null ?
+            Utility.toRouteMatrixResult(response.getValue()): null;
         SimpleResponse<RouteMatrixResult> simpleResponse = new SimpleResponse<>(response.getRequest(),
             response.getStatusCode(),
             response.getHeaders(),
@@ -208,7 +209,8 @@ public class Utility {
      */
     public static SimpleResponse<RouteDirectionsBatchResult> createRouteDirectionsResponse(
             Response<RouteDirectionsBatchResultPrivate> response) {
-        RouteDirectionsBatchResult result = Utility.toRouteDirectionsBatchResult(response.getValue());
+        RouteDirectionsBatchResult result =
+            response.getValue() != null ? Utility.toRouteDirectionsBatchResult(response.getValue()) : null;
         SimpleResponse<RouteDirectionsBatchResult> simpleResponse = new SimpleResponse<>(response.getRequest(),
             response.getStatusCode(),
             response.getHeaders(),
@@ -223,8 +225,10 @@ public class Utility {
      * @return a public instance of {@link RouteDirectionsBatchResult}
      */
     private static RouteDirectionsBatchResult toRouteDirectionsBatchResult(RouteDirectionsBatchResultPrivate privateResult) {
-
-        return null;
+        RouteDirectionsBatchResult routeDirections = new RouteDirectionsBatchResult();
+        RouteDirectionsBatchResultPropertiesHelper.setFromRouteDirectionsBatchResultPrivate(routeDirections,
+            privateResult);
+        return routeDirections;
     }
 
     /**

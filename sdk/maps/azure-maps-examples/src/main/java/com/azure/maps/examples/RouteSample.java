@@ -9,6 +9,7 @@ import com.azure.core.http.policy.HttpLogOptions;
 import com.azure.core.models.GeoCollection;
 import com.azure.core.models.GeoLinearRing;
 import com.azure.core.models.GeoPoint;
+import com.azure.core.models.GeoPointCollection;
 import com.azure.core.models.GeoPolygon;
 import com.azure.core.models.GeoPolygonCollection;
 import com.azure.core.models.GeoPosition;
@@ -22,6 +23,8 @@ import com.azure.maps.route.models.RouteDirections;
 import com.azure.maps.route.models.RouteDirectionsBatchResult;
 import com.azure.maps.route.models.RouteDirectionsOptions;
 import com.azure.maps.route.models.RouteDirectionsParameters;
+import com.azure.maps.route.models.RouteMatrixOptions;
+import com.azure.maps.route.models.RouteMatrixQuery;
 import com.azure.maps.route.models.RouteRangeOptions;
 import com.azure.maps.route.models.RouteType;
 import com.azure.maps.route.models.TravelMode;
@@ -97,7 +100,7 @@ public class RouteSample {
             .setAvoidVignette(Arrays.asList("AUS", "CHE"))
             .setAvoidAreas(avoidAreas);
         MapsCommon.print(client.getRouteDirectionsWithAdditionalParameters(routeOptions,
-            parameters));*/
+            parameters));
 
         RouteDirectionsOptions options1 = new RouteDirectionsOptions(
             Arrays.asList(new LatLong(47.639987, -122.128384),
@@ -124,24 +127,28 @@ public class RouteSample {
         List<RouteDirectionsOptions> optionsList = Arrays.asList(options1, options2, options3);
         SyncPoller<RouteDirectionsBatchResult, RouteDirectionsBatchResult> poller =
             client.beginRequestRouteDirectionsBatch(optionsList);
-        MapsCommon.print(poller.getFinalResult());
-        /*
-        System.out.println("Request route directions batch async");
-        MapsCommon.print(client.beginRequestRouteDirectionsBatch(JsonFormat.JSON, batchRequest).getFinalResult().getBatchSummary());
-
-        RouteMatrixQuery routeMatrixQuery = MapsCommon.readJson(
-                MapsCommon.readContent(MapsCommon.getResource("/route_matrix_request_body.json")),
-                RouteMatrixQuery.class);
-
-        System.out.println("Request route matrix sync");
-        MapsCommon.print(client.requestRouteMatrixSync(JsonFormat.JSON,
-            routeMatrixQuery, Boolean.TRUE, null, null, null, null, null, null, null, null, null,
-            null, null, null, null, null, null, null, null));
-
-        System.out.println("Post route matrix async");
-        MapsCommon.print(client.beginRequestRouteMatrix(JsonFormat.JSON,
-            routeMatrixQuery, Boolean.FALSE, null, null, null, null, null, null, null, null, null,
-            null, null, null, null, null, null, null, null).getFinalResult().getSummary());
+        // MapsCommon.print(poller.getFinalResult());
         */
+
+        System.out.println("Request route matrix");
+        RouteMatrixQuery matrixQuery = new RouteMatrixQuery();
+
+        // origins
+        GeoPointCollection origins = new GeoPointCollection(Arrays.asList(
+            new GeoPoint(52.36006, 4.85106),
+            new GeoPoint(52.36187, 4.85056)
+        ));
+
+        // origins
+        GeoPointCollection destinations = new GeoPointCollection(Arrays.asList(
+            new GeoPoint(52.36241, 4.85003),
+            new GeoPoint(52.50931, 13.42937)
+        ));
+
+        matrixQuery.setDestinations(destinations);
+        matrixQuery.setOrigins(origins);
+
+        RouteMatrixOptions matrixOptions = new RouteMatrixOptions(matrixQuery);
+        MapsCommon.print(client.beginRequestRouteMatrix(matrixOptions).getFinalResult());
     }
 }
