@@ -108,7 +108,6 @@ public final class RouteAsyncClient {
         final int destSize = privateQuery.getDestinations().getCoordinates().size();
         boolean waitForResults = (originSize * destSize <= 0);
 
-        // return this.serviceClient.beginRequestRouteMatrixAsync(format, routeMatrixQuery, waitForResults, computeTravelTime, filterSectionType, arriveAt, departAt, vehicleAxleWeight, vehicleLength, vehicleHeight, vehicleWidth, vehicleMaxSpeed, vehicleWeight, windingness, inclineLevel, travelMode, avoid, useTrafficData, routeType, vehicleLoadType)
         return createPollerFlux(
             () ->
                 this.serviceClient.requestRouteMatrixWithResponseAsync(
