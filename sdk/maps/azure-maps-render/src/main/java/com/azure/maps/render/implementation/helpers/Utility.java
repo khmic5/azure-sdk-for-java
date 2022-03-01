@@ -1,5 +1,6 @@
 package com.azure.maps.render.implementation.helpers;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -14,7 +15,7 @@ import com.azure.maps.render.models.MapTileset;
 public class Utility {
     public static BoundingBox toBoundingBox(List<Double> boundingBox) {
         if (boundingBox == null || boundingBox.size() == 0) {
-            return new BoundingBox();
+            return null;
         }
         BoundingBox result = new BoundingBox(boundingBox.get(3), boundingBox.get(2), boundingBox.get(1), boundingBox.get(0));
         return result;

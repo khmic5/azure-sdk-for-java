@@ -269,15 +269,15 @@ public final class RenderAsyncClient {
     public Mono<Response<MapAttribution>> getMapAttributionWithResponse(TilesetID tilesetId, int zoom, BoundingBox bounds) {
         return this.getMapAttributionWithResponse(tilesetId, zoom, bounds, null);
     }
-//longitude and latitude of the southwest corner followed by
-//   WGS84 longitude and latitude of the northeast corner
+
     @ServiceMethod(returns = ReturnType.SINGLE)
     Mono<Response<MapAttribution>> getMapAttributionWithResponse(TilesetID tilesetId, int zoom, BoundingBox bounds, Context context) {
         List<Double> bound = new ArrayList<>();
-        if (bounds.getSouthWest() != null && bounds.getNorthEast() != null) {
-            bound = Arrays.asList(bounds.getSouthWest().getLongitude(), bounds.getSouthWest().getLatitude(), bounds.getNorthEast().getLongitude(), bounds.getNorthEast().getLatitude());
+        if (bounds != null ) {
+            if (bounds.getSouthWest() != null && bounds.getNorthEast() != null) {
+                bound = Arrays.asList(bounds.getSouthWest().getLongitude(), bounds.getSouthWest().getLatitude(), bounds.getNorthEast().getLongitude(), bounds.getNorthEast().getLatitude());
+            }
         }
-
         return this.serviceClient.getMapAttributionWithResponseAsync(tilesetId, zoom, bound);
     }
 

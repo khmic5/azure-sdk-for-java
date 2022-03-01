@@ -30,6 +30,10 @@ public final class BoundingBox {
      * @param west
      */
     public BoundingBox(double west, double north, double east, double south) {
+        Objects.requireNonNull(west, "Left bound is needed");
+        Objects.requireNonNull(south, "Bottom bound is needed");
+        Objects.requireNonNull(east, "Right bound is needed");
+        Objects.requireNonNull(north, "Top bound is needed");
         this.topLeft = new LatLong(north, west);
         this.bottomRight = new LatLong(south, east);
     }
@@ -84,7 +88,7 @@ public final class BoundingBox {
 
     BoundingBox(List<Float> bounds) {
         Objects.requireNonNull(bounds, "Internal bounding box model is needed.");
-
+        
         final float leftBound = bounds.get(0);
         final float bottomBound = bounds.get(1);
         final float rightBound = bounds.get(2);
