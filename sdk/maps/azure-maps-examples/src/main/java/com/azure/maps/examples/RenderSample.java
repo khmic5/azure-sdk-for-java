@@ -4,7 +4,6 @@ import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
@@ -25,8 +24,6 @@ import com.azure.maps.render.models.ResponseFormat;
 import com.azure.maps.render.models.StaticMapLayer;
 import com.azure.maps.render.models.TileIndex;
 import com.azure.maps.render.models.TilesetID;
-import com.google.common.base.Charsets;
-import com.google.common.io.CharStreams;
 
 import reactor.core.publisher.Mono;
 
@@ -71,31 +68,31 @@ public class RenderSample {
         builder.addPolicy(subscriptionKeyPolicy);
         RenderClient client = builder.buildClient();
 
-        // System.out.println("Get copyright for caption");
-        // MapsCommon.print(client.getCopyrightCaption(ResponseFormat.JSON));
+        System.out.println("Get copyright for caption");
+        MapsCommon.print(client.getCopyrightCaption(ResponseFormat.JSON));
 
-        // System.out.println("Get copyright for tile");
-        // MapsCommon.print(client.getCopyrightForTile(ResponseFormat.JSON,
-        //     new TileIndex().setX(6).setY(9).setZ(10), null));
+        System.out.println("Get copyright for tile");
+        MapsCommon.print(client.getCopyrightForTile(ResponseFormat.JSON,
+            new TileIndex().setX(6).setY(9).setZ(10), null));
 
-        // System.out.println("Get copyright for world");
-        // MapsCommon.print(client.getCopyrightForWorld(ResponseFormat.JSON, null));
+        System.out.println("Get copyright for world");
+        MapsCommon.print(client.getCopyrightForWorld(ResponseFormat.JSON, null));
 
-        // System.out.println("Get copyright from bounding box");
-        // MapsCommon.print(client.getCopyrightFromBoundingBox(ResponseFormat.JSON,
-        //     new BoundingBox()
-        //         .setNorthEast(Arrays.asList(52.41064,4.84228))
-        //         .setSouthWest(Arrays.asList(52.41072,4.84239)),
-        //     null));
+        System.out.println("Get copyright from bounding box");
+        MapsCommon.print(client.getCopyrightFromBoundingBox(ResponseFormat.JSON,
+            new BoundingBox()
+                .setNorthEast(Arrays.asList(52.41064,4.84228))
+                .setSouthWest(Arrays.asList(52.41072,4.84239)),
+            null));
 
-        // System.out.println("Get map imagery tile");
-        // // client.getMapIm
-        // // openImageFile(client.getMapImageryTileV21(RasterTileFormat.PNG, MapImageryStyle.SATELLITE, 6, 10, 22));
+        System.out.println("Get map imagery tile");
+        // client.getMapIm
+        // openImageFile(client.getMapImageryTileV21(RasterTileFormat.PNG, MapImageryStyle.SATELLITE, 6, 10, 22));
 
-        // /*
-        // System.out.println("Get map satelite tile");
-        // openImageFile(client.getRenders().getMapStateTilePreview(6, 10, 22, statesetId));
-        // */
+        /*
+        System.out.println("Get map satelite tile");
+        openImageFile(client.getRenders().getMapStateTilePreview(6, 10, 22, statesetId));
+        */
 
         System.out.println("Get map static image");
         openImageFile(client.getMapStaticImage(RasterTileFormat.PNG, StaticMapLayer.HYBRID,
@@ -103,15 +100,12 @@ public class RenderSample {
             null, null, null, null, null, null));
 
         System.out.println("Get map tile");
-        // openImageFile(client.getMapTileV2(TilesetID.MICROSOFT_BASE_HYBRID_ROAD,
-        //     new TileIndex().setX(10).setY(22).setZ(6), null, MapTileSize.SIZE512,
-        //     null, null));
+        openImageFile(client.getMapTileV2(TilesetID.MICROSOFT_BASE_HYBRID_ROAD,
+            new TileIndex().setX(10).setY(22).setZ(6), null, MapTileSize.SIZE512,
+            null, null));
         InputStream result = client.getMapTileV2(TilesetID.MICROSOFT_BASE_HYBRID_ROAD,
             new TileIndex().setX(10).setY(22).setZ(6), null, MapTileSize.SIZE512,
             null, null);
-        String toprint = CharStreams.toString(new InputStreamReader(
-                result, Charsets.UTF_8));
-        System.out.println(toprint);
     }
 
     public static void openImageFile(InputStream stream) throws IOException {
