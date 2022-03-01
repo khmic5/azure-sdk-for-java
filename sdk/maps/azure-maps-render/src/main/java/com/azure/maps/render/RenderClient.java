@@ -107,8 +107,11 @@ public final class RenderClient {
     }
 
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<StreamResponse> getMapTileWithResponse(MapTileOptions options, Context context) {
-        return this.asyncClient.getMapTileWithResponse(options, context);
+    public SimpleResponse<InputStream> getMapTileWithResponse(MapTileOptions options, Context context) {
+        Mono<StreamResponse> monoResp = this.asyncClient.getMapTileWithResponse(options, context); 
+        StreamResponse resp = monoResp.block();
+        InputStream is = new ByteArrayInputStream(FluxUtil.collectBytesInByteBufferStream(resp.getValue()).block());
+        return new SimpleResponse<InputStream>(resp.getRequest(), resp.getStatusCode(), resp.getHeaders(), is);
     } 
 
     /**
