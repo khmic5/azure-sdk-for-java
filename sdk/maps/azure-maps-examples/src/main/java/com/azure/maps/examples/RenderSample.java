@@ -103,9 +103,6 @@ public class RenderSample {
         openImageFile(client.getMapTileV2(TilesetID.MICROSOFT_BASE_HYBRID_ROAD,
             new TileIndex().setX(10).setY(22).setZ(6), null, MapTileSize.SIZE512,
             null, null));
-        InputStream result = client.getMapTileV2(TilesetID.MICROSOFT_BASE_HYBRID_ROAD,
-            new TileIndex().setX(10).setY(22).setZ(6), null, MapTileSize.SIZE512,
-            null, null);
     }
 
     public static void openImageFile(InputStream stream) throws IOException {
