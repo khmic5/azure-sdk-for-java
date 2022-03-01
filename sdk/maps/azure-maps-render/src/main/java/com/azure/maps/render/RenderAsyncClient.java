@@ -23,6 +23,7 @@ import com.azure.maps.render.implementation.models.BoundingBoxPrivate;
 import com.azure.maps.render.implementation.models.MapTilesetPrivate;
 import com.azure.maps.render.implementation.models.ResponseFormat;
 import com.azure.maps.render.models.BoundingBox;
+import com.azure.maps.render.models.Center;
 import com.azure.maps.render.models.LatLong;
 import com.azure.maps.render.models.MapStaticImageOptions;
 import com.azure.maps.render.models.MapTileOptions;
@@ -584,6 +585,12 @@ public final class RenderAsyncClient {
         }); 
     }
 
+    public Flux<ByteBuffer> getMapStaticImageTest(MapStaticImageOptions options) {
+        Mono<StreamResponse> responseMono = this.getMapStaticImageWithResponse(options, null);
+        StreamResponse streamResponse = responseMono.block();
+        return streamResponse.getValue();
+    }
+
         /**
      * **Applies to**: S0 and S1 pricing tiers.
      *
@@ -802,13 +809,17 @@ public final class RenderAsyncClient {
         BoundingBox boundingBox = options.getBoundingBox();
         LatLong southWest = boundingBox.getSouthWest();
         LatLong northEast = boundingBox.getNorthEast();
-        return this.serviceClient.getMapStaticImageWithResponseAsync
+        Center center = options.getCenter();
+        List<Double> centerPrivate = null;
+        if (center != null) centerPrivate = Utility.toCenterPrivate(center); //minLon, minLat, maxLon, maxLat'
+        List<Double> bbox = Arrays.asList(southWest.getLatitude(), northEast.getLongitude(), northEast.getLatitude(), southWest.getLongitude());
+        return this.serviceClient.getMapStaticImageWithResponseAsync 
             (options.getRasterTileFormat(),
             options.getStaticMapLayer(), 
             options.getMapImageStyle(),
             options.getZoom(), 
-            Utility.toCenterPrivate(options.getCenter()), 
-            Arrays.asList(southWest.getLongitude(), southWest.getLatitude(), northEast.getLongitude(), northEast.getLatitude()), 
+            centerPrivate, 
+            bbox, 
             options.getHeight(), 
             options.getWidth(),
             options.getLanguage(),

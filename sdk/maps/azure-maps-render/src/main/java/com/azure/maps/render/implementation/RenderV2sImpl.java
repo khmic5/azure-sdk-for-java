@@ -272,6 +272,24 @@ public final class RenderV2sImpl {
         int z = tileIndex.getZ();
         int x = tileIndex.getX();
         int y = tileIndex.getY();
+        Mono<StreamResponse> s = FluxUtil.withContext(
+                context ->
+                        service.getMapTile(
+                                this.client.getHost(),
+                                this.client.getClientId(),
+                                this.client.getApiVersion(),
+                                tilesetId,
+                                z,
+                                x,
+                                y,
+                                timeStamp,
+                                tileSize,
+                                language,
+                                localizedMapView,
+                                accept,
+                                context));
+        StreamResponse resp = s.block();
+        Flux<ByteBuffer> asp = resp.getValue();
         return FluxUtil.withContext(
                 context ->
                         service.getMapTile(

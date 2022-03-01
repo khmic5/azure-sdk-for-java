@@ -2,6 +2,8 @@ package com.azure.maps.render.models;
 
 import java.util.List;
 
+import com.azure.core.exception.HttpResponseException;
+
 public class MapStaticImageOptions {
     private RasterTileFormat format;
     private StaticMapLayer layer;
@@ -48,6 +50,7 @@ public class MapStaticImageOptions {
     }
 
     public MapStaticImageOptions setZoom(Integer zoom) {
+
         this.zoom = zoom;
         return this;
     }

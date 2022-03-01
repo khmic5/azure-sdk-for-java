@@ -97,10 +97,10 @@ public class RenderSample {
         // openImageFile(client.getRenders().getMapStateTilePreview(6, 10, 22, statesetId));
         // */
 
-        // System.out.println("Get map static image");
-        // openImageFile(client.getMapStaticImage(RasterTileFormat.PNG, StaticMapLayer.HYBRID,
-        //     MapImageStyle.MAIN, 14, null, Arrays.asList(-122.338257,47.572299,-122.297745,47.609346),
-        //     null, null, null, null, null, null));
+        System.out.println("Get map static image");
+        openImageFile(client.getMapStaticImage(RasterTileFormat.PNG, StaticMapLayer.HYBRID,
+            MapImageStyle.MAIN, 14, null, Arrays.asList(-122.338257,47.572299,-122.297745,47.609346),
+            null, null, null, null, null, null));
 
         System.out.println("Get map tile");
         // openImageFile(client.getMapTileV2(TilesetID.MICROSOFT_BASE_HYBRID_ROAD,
@@ -114,9 +114,9 @@ public class RenderSample {
         System.out.println(toprint);
     }
 
-    // public static void openImageFile(InputStream stream) throws IOException {
-    //     File file = File.createTempFile("image", ".png");
-    //     Files.copy(stream, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
-    //     Desktop.getDesktop().open(file);
-    // }
+    public static void openImageFile(InputStream stream) throws IOException {
+        File file = File.createTempFile("image", ".png");
+        Files.copy(stream, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        Desktop.getDesktop().open(file);
+    }
 }

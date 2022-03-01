@@ -29,7 +29,7 @@ public final class BoundingBox {
      * @param south
      * @param west
      */
-    public BoundingBox(double north, double east, double south, double west) {
+    public BoundingBox(double west, double north, double east, double south) {
         this.topLeft = new LatLong(north, west);
         this.bottomRight = new LatLong(south, east);
     }
