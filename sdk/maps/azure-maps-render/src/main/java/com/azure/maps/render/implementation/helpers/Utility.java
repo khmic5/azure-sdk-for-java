@@ -12,7 +12,10 @@ import com.azure.maps.render.models.Center;
 import com.azure.maps.render.models.MapTileset;
 
 public class Utility {
-    public static BoundingBox toBoundingBox(List<Float> boundingBox) {
+    public static BoundingBox toBoundingBox(List<Double> boundingBox) {
+        if (boundingBox == null || boundingBox.size() == 0) {
+            return new BoundingBox();
+        }
         BoundingBox result = new BoundingBox(boundingBox.get(3), boundingBox.get(2), boundingBox.get(1), boundingBox.get(0));
         return result;
     }

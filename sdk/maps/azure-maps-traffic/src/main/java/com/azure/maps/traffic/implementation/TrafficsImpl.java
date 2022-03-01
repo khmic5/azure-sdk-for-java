@@ -524,7 +524,7 @@ public final class TrafficsImpl {
                 getTrafficIncidentTileAsync(format, style, zoom, tileIndex, trafficState)
                         .map(ByteBufferBackedInputStream::new)
                         .toStream()
-                        .iterator();
+                        .iterator();AF
         Enumeration<InputStream> enumeration =
                 new Enumeration<InputStream>() {
                     @Override

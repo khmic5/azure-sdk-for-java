@@ -30,7 +30,6 @@ import com.azure.core.http.policy.UserAgentPolicy;
 import com.azure.core.util.ClientOptions;
 import com.azure.core.util.Configuration;
 import com.azure.core.util.CoreUtils;
-import com.azure.core.util.serializer.SerializerAdapter;
 import com.azure.maps.render.implementation.RenderClientImpl;
 import com.azure.maps.render.implementation.RenderClientImplBuilder;
 
@@ -99,7 +98,7 @@ public final class RenderClientBuilder {
      * More details: <a href="https://docs.microsoft.com/azure/azure-maps/azure-maps-authentication">Azure Maps AD Authentication</a>
      *
      * @param mapsClientId the clientId value.
-     * @return the SearchClientBuilder.
+     * @return the RenderhClientBuilder.
      */
     public RenderClientBuilder mapsClientId(String mapsClientId) {
         this.mapsClientId = Objects.requireNonNull(mapsClientId, "'mapsClientId' cannot be null.");;
@@ -110,7 +109,7 @@ public final class RenderClientBuilder {
      * Set endpoint of the service.
      *
      * @param endpoint url of the service
-     * @return SearchClientBuilder
+     * @return RenderClientBuilder
      */
     public RenderClientBuilder endpoint(String endpoint) {
         this.endpoint = Objects.requireNonNull(endpoint, "'endpoint' cannot be null.");
@@ -203,7 +202,7 @@ public final class RenderClientBuilder {
      * Sets the {@link TokenCredential} used to authenticate HTTP requests.
      *
      * @param tokenCredential {@link TokenCredential} used to authenticate HTTP requests.
-     * @return The updated {@link MapsSearchClientBuilder} object.
+     * @return The updated {@link MapsRenderClientBuilder} object.
      * @throws NullPointerException If {@code tokenCredential} is null.
      */
     public RenderClientBuilder credential(TokenCredential tokenCredential) {
@@ -215,7 +214,7 @@ public final class RenderClientBuilder {
      * Sets the {@link AzureKeyCredential} used to authenticate HTTP requests.
      *
      * @param keyCredential The {@link AzureKeyCredential} used to authenticate HTTP requests.
-     * @return The updated {@link MapsSearchClientBuilder} object.
+     * @return The updated {@link MapsRenderClientBuilder} object.
      * @throws NullPointerException If {@code keyCredential} is null.
      */
     public RenderClientBuilder credential(AzureKeyCredential keyCredential)  {
@@ -263,7 +262,7 @@ public final class RenderClientBuilder {
 
         // Configure pipelines and user agent
         List<HttpPipelinePolicy> policies = new ArrayList<>();
-        String clientName = properties.getOrDefault(SDK_NAME, "JavaSearchSDK");
+        String clientName = properties.getOrDefault(SDK_NAME, "JavaRenderSDK");
         String clientVersion = properties.getOrDefault(SDK_VERSION, serviceVersion.getVersion());
         String applicationId = CoreUtils.getApplicationId(clientOptions, httpLogOptions);
         policies.add(new UserAgentPolicy(applicationId, clientName, clientVersion, buildConfiguration));
@@ -309,54 +308,6 @@ public final class RenderClientBuilder {
                         .httpClient(httpClient)
                         .build();
         return httpPipeline;
-    }
-
-    /*
-     * server parameter
-     */
-    private String host;
-
-    /**
-     * Sets server parameter.
-     *
-     * @param host the host value.
-     * @return the RenderClientBuilder.
-     */
-    public RenderClientBuilder host(String host) {
-        this.host = host;
-        return this;
-    }
-
-    /*
-     * Api Version
-     */
-    private String apiVersion;
-
-    /**
-     * Sets Api Version.
-     *
-     * @param apiVersion the apiVersion value.
-     * @return the RenderClientBuilder.
-     */
-    public RenderClientBuilder apiVersion(String apiVersion) {
-        this.apiVersion = apiVersion;
-        return this;
-    }
-
-    /*
-     * The serializer to serialize an object into a string
-     */
-    private SerializerAdapter serializerAdapter;
-
-    /**
-     * Sets The serializer to serialize an object into a string.
-     *
-     * @param serializerAdapter the serializerAdapter value.
-     * @return the RenderClientBuilder.
-     */
-    public RenderClientBuilder serializerAdapter(SerializerAdapter serializerAdapter) {
-        this.serializerAdapter = serializerAdapter;
-        return this;
     }
 
     /**

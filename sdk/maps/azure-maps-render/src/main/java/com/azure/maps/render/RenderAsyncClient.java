@@ -5,6 +5,7 @@
 package com.azure.maps.render;
 
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -236,7 +237,7 @@ public final class RenderAsyncClient {
      * @return copyright attribution for the requested section of a tileset.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<MapAttribution> getMapAttribution(TilesetID tilesetId, int zoom, List<Double> bounds) {
+    public Mono<MapAttribution> getMapAttribution(TilesetID tilesetId, int zoom, BoundingBox bounds) {
         Mono<Response<MapAttribution>> result = this.getMapAttributionWithResponse(tilesetId, zoom, bounds, null);
         return result.flatMap(response -> {
             return Mono.just(response.getValue());
@@ -265,13 +266,19 @@ public final class RenderAsyncClient {
      * @return copyright attribution for the requested section of a tileset.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<MapAttribution>> getMapAttributionWithResponse(TilesetID tilesetId, int zoom, List<Double> bounds) {
+    public Mono<Response<MapAttribution>> getMapAttributionWithResponse(TilesetID tilesetId, int zoom, BoundingBox bounds) {
         return this.getMapAttributionWithResponse(tilesetId, zoom, bounds, null);
     }
-
+//longitude and latitude of the southwest corner followed by
+//   WGS84 longitude and latitude of the northeast corner
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Mono<Response<MapAttribution>> getMapAttributionWithResponse(TilesetID tilesetId, int zoom, List<Double> bounds, Context context) {
-        return this.serviceClient.getMapAttributionWithResponseAsync(tilesetId, zoom, bounds);
+    Mono<Response<MapAttribution>> getMapAttributionWithResponse(TilesetID tilesetId, int zoom, BoundingBox bounds, Context context) {
+        List<Double> bound = new ArrayList<>();
+        if (bounds.getSouthWest() != null && bounds.getNorthEast() != null) {
+            bound = Arrays.asList(bounds.getSouthWest().getLongitude(), bounds.getSouthWest().getLatitude(), bounds.getNorthEast().getLongitude(), bounds.getNorthEast().getLatitude());
+        }
+
+        return this.serviceClient.getMapAttributionWithResponseAsync(tilesetId, zoom, bound);
     }
 
     /**
@@ -986,11 +993,7 @@ public final class RenderAsyncClient {
 
     @ServiceMethod(returns = ReturnType.SINGLE)
     Mono<Response<Copyright>> getCopyrightForWorldWithResponse(boolean includeText, Context context) {
-        Mono<Response<Copyright>> responseMono =
-            this.serviceClient.getCopyrightForWorldWithResponseAsync(
+        return this.serviceClient.getCopyrightForWorldWithResponseAsync(
                 ResponseFormat.JSON, Utility.toIncludeTextPrivate(includeText));
-        return responseMono.flatMap(response -> {
-            return Mono.just(response);
-        });
     }
 }

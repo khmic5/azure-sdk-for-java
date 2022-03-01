@@ -4,7 +4,7 @@ import com.azure.core.util.ServiceVersion;
 
 public enum RenderServiceVersion implements ServiceVersion{
      /**
-     * Service version {@code 1.0}.
+     * Service version {@code 2.1}.
      */
     V2_1("2.1");
 

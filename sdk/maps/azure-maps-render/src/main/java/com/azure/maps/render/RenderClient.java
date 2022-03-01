@@ -5,20 +5,22 @@
 package com.azure.maps.render;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 
 import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceClient;
 import com.azure.core.annotation.ServiceMethod;
 import com.azure.core.http.rest.Response;
+import com.azure.core.http.rest.SimpleResponse;
 import com.azure.core.http.rest.StreamResponse;
 import com.azure.core.util.Context;
 import com.azure.core.util.FluxUtil;
+import com.azure.maps.render.models.BoundingBox;
 import com.azure.maps.render.models.Copyright;
 import com.azure.maps.render.models.CopyrightCaption;
+import com.azure.maps.render.models.ErrorResponseException;
 import com.azure.maps.render.models.MapAttribution;
-import com.azure.maps.render.models.BoundingBox;
 import com.azure.maps.render.models.MapStaticImageOptions;
 import com.azure.maps.render.models.MapTileOptions;
 import com.azure.maps.render.models.MapTileset;
@@ -91,17 +93,21 @@ public final class RenderClient {
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the response.
+     * @throws IOException
      */
 
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public InputStream getMapTile(MapTileOptions options) {
+    public InputStream getMapTile(MapTileOptions options) throws IOException {
         Mono<byte[]> byteArray = FluxUtil.collectBytesInByteBufferStream(this.asyncClient.getMapTile(options));
         return new ByteArrayInputStream(byteArray.block());
     }
 
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<StreamResponse> getMapTileWithResponse(MapTileOptions options, Context context) {
-        return this.asyncClient.getMapTileWithResponse(options, context);
+    public SimpleResponse<InputStream> getMapTileWithResponse(MapTileOptions options, Context context) {
+        Mono<StreamResponse> monoResp = this.asyncClient.getMapTileWithResponse(options, context); 
+        StreamResponse resp = monoResp.block();
+        InputStream is = new ByteArrayInputStream(FluxUtil.collectBytesInByteBufferStream(resp.getValue()).block());
+        return new SimpleResponse<InputStream>(resp.getRequest(), resp.getStatusCode(), resp.getHeaders(), is);
     } 
 
     /**
@@ -151,12 +157,12 @@ public final class RenderClient {
      * @return copyright attribution for the requested section of a tileset.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public MapAttribution getMapAttribution(TilesetID tilesetId, int zoom, List<Double> bounds) {
+    public MapAttribution getMapAttribution(TilesetID tilesetId, int zoom, BoundingBox bounds) {
         return this.asyncClient.getMapAttribution(tilesetId, zoom, bounds).block();
     }
 
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<MapAttribution> getMapAttributionWithResponse(TilesetID tilesetId, int zoom, List<Double> bounds, Context context) {
+    public Response<MapAttribution> getMapAttributionWithResponse(TilesetID tilesetId, int zoom, BoundingBox bounds, Context context) {
         return this.asyncClient.getMapAttributionWithResponse(tilesetId, zoom, bounds, context).block();
     }
 
@@ -175,14 +181,14 @@ public final class RenderClient {
      * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public InputStream getMapStateTile(String statesetId, TileIndex tileIndex) {
-        Mono<byte[]> byteArray = FluxUtil.collectBytesInByteBufferStream(this.asyncClient.getMapStateTile(statesetId, tileIndex));
-        return new ByteArrayInputStream(byteArray.block());
+    public byte[] getMapStateTile(String statesetId, TileIndex tileIndex) {
+        return FluxUtil.byteBufferToArray(this.asyncClient.getMapStateTile(statesetId, tileIndex).blockFirst());
     }
 
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<StreamResponse> getMapStateTileWithResponse(String statesetId, TileIndex tileIndex, Context context) {
-        return this.asyncClient.getMapStateTileWithResponse(statesetId, tileIndex, context);
+    public byte[] getMapStateTileWithResponse(String statesetId, TileIndex tileIndex, Context context) {
+        Mono<byte[]> byteArray = FluxUtil.collectBytesInByteBufferStream(asyncClient.getMapStateTileWithResponse(statesetId, tileIndex, context).block().getValue());
+        return byteArray.block();
     }
 
     /**
@@ -417,16 +423,20 @@ public final class RenderClient {
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the response.
+     * @throws IOException
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public InputStream getMapStaticImage(MapStaticImageOptions options) {
+    public InputStream getMapStaticImage(MapStaticImageOptions options) throws IOException {
         Mono<byte[]> byteArray = FluxUtil.collectBytesInByteBufferStream(this.asyncClient.getMapStaticImage(options));
         return new ByteArrayInputStream(byteArray.block());
-    }
+    } 
 
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<StreamResponse> getMapStaticImageWithResponse(MapStaticImageOptions options, Context context) {
-        return this.asyncClient.getMapStaticImageWithResponse(options, context);
+    public SimpleResponse<InputStream> getMapStaticImageWithResponse(MapStaticImageOptions options, Context context) throws IOException {
+        Mono<StreamResponse> monoResp = this.asyncClient.getMapStaticImageWithResponse(options); 
+        StreamResponse resp = monoResp.block();
+        InputStream is = new ByteArrayInputStream(FluxUtil.collectBytesInByteBufferStream(resp.getValue()).block());
+        return new SimpleResponse<InputStream>(resp.getRequest(), resp.getStatusCode(), resp.getHeaders(), is);
     }
 
     /**
