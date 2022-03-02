@@ -110,7 +110,19 @@ public final class RenderClient {
     public SimpleResponse<InputStream> getMapTileWithResponse(MapTileOptions options, Context context) {
         Mono<StreamResponse> monoResp = this.asyncClient.getMapTileWithResponse(options, context); 
         StreamResponse resp = monoResp.block();
-        InputStream is = new ByteArrayInputStream(FluxUtil.collectBytesInByteBufferStream(resp.getValue()).block());
+        Iterator<ByteBufferBackedInputStream> iterator = resp.getValue().map(ByteBufferBackedInputStream::new).toStream().iterator();
+        Enumeration<InputStream> enumeration = new Enumeration<InputStream>() {
+            @Override
+            public boolean hasMoreElements() {
+                return iterator.hasNext();
+            }
+
+            @Override
+            public InputStream nextElement() {
+                return iterator.next();
+            }
+        };
+        InputStream is = new SequenceInputStream(enumeration);
         return new SimpleResponse<InputStream>(resp.getRequest(), resp.getStatusCode(), resp.getHeaders(), is);
     } 
 
