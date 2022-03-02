@@ -283,7 +283,6 @@ public final class RenderClient {
     }
 
     /**
-     * 
      * @param context
      * @return
      */
@@ -507,6 +506,13 @@ public final class RenderClient {
         return getInputStream(iterator);
     } 
 
+    /**
+     * 
+     * @param options function inputs: format, layer, style, zoom, center, bounding box, height, width, language, localized map view, pins, path
+     * @param context
+     * @return
+     * @throws IOException
+     */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public SimpleResponse<InputStream> getMapStaticImageWithResponse(MapStaticImageOptions options, Context context) throws IOException {
         Mono<StreamResponse> monoResp = this.asyncClient.getMapStaticImageWithResponse(options); 
@@ -537,8 +543,9 @@ public final class RenderClient {
 
     /**
      * 
-     * @param boundingBox
-     * @param includeText
+     * @param boundingBox Parameter group
+     * @param includeText Yes/no value to exclude textual data from response. Only images and country names will be in
+     *     response.
      * @param context
      * @return
      */
@@ -571,8 +578,9 @@ public final class RenderClient {
 
     /**
      * 
-     * @param tileIndex
-     * @param includeText
+     * @param tileIndex Parameter group
+     * @param includeText Yes/no value to exclude textual data from response. Only images and country names will be in
+     *     response.
      * @param context
      * @return
      */
@@ -604,7 +612,8 @@ public final class RenderClient {
 
     /**
      * 
-     * @param includeText
+     * @param includeText Yes/no value to exclude textual data from response. Only images and country names will be in
+     *     response.
      * @param context
      * @return
      */
