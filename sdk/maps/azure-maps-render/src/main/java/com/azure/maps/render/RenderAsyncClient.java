@@ -590,7 +590,7 @@ public final class RenderAsyncClient {
         }); 
     }
 
-        /**
+    /**
      * **Applies to**: S0 and S1 pricing tiers.
      *
      * <p>The static image service renders a user-defined, rectangular image containing a map section using a zoom level
