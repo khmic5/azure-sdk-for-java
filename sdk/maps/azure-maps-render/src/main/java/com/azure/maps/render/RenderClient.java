@@ -107,23 +107,17 @@ public final class RenderClient {
     }
 
     @ServiceMethod(returns = ReturnType.SINGLE)
+    public InputStream getMapTile(MapTileOptions options) throws IOException {
+        Iterator<ByteBufferBackedInputStream> iterator = this.asyncClient.getMapTile(options).map(ByteBufferBackedInputStream::new).toStream().iterator();
+        return getInputStream(iterator);
+    }
+
+    @ServiceMethod(returns = ReturnType.SINGLE)
     public SimpleResponse<InputStream> getMapTileWithResponse(MapTileOptions options, Context context) {
         Mono<StreamResponse> monoResp = this.asyncClient.getMapTileWithResponse(options, context); 
         StreamResponse resp = monoResp.block();
         Iterator<ByteBufferBackedInputStream> iterator = resp.getValue().map(ByteBufferBackedInputStream::new).toStream().iterator();
-        Enumeration<InputStream> enumeration = new Enumeration<InputStream>() {
-            @Override
-            public boolean hasMoreElements() {
-                return iterator.hasNext();
-            }
-
-            @Override
-            public InputStream nextElement() {
-                return iterator.next();
-            }
-        };
-        InputStream is = new SequenceInputStream(enumeration);
-        return new SimpleResponse<InputStream>(resp.getRequest(), resp.getStatusCode(), resp.getHeaders(), is);
+        return new SimpleResponse<InputStream>(resp.getRequest(), resp.getStatusCode(), resp.getHeaders(), getInputStream(iterator));
     } 
 
     /**
