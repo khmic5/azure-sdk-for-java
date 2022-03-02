@@ -170,7 +170,7 @@ public final class RenderAsyncClient {
             options.getLanguage(), 
             options.getLocalizedMapView());
     }
-
+    
     /**
      * Applies to: S0 and S1 pricing tiers.
      * The Get Map Tileset API allows users to request metadata for a tileset.
