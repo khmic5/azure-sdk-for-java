@@ -7,6 +7,9 @@ package com.azure.maps.render;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.SequenceInputStream;
+import java.util.Enumeration;
+import java.util.Iterator;
 
 import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceClient;
@@ -26,6 +29,7 @@ import com.azure.maps.render.models.MapTileOptions;
 import com.azure.maps.render.models.MapTileset;
 import com.azure.maps.render.models.TileIndex;
 import com.azure.maps.render.models.TilesetID;
+import com.fasterxml.jackson.databind.util.ByteBufferBackedInputStream;
 
 import reactor.core.publisher.Mono;
 
@@ -98,15 +102,38 @@ public final class RenderClient {
 
     @ServiceMethod(returns = ReturnType.SINGLE)
     public InputStream getMapTile(MapTileOptions options) throws IOException {
-        Mono<byte[]> byteArray = FluxUtil.collectBytesInByteBufferStream(this.asyncClient.getMapTile(options));
-        return new ByteArrayInputStream(byteArray.block());
+        Iterator<ByteBufferBackedInputStream> iterator = this.asyncClient.getMapTile(options).map(ByteBufferBackedInputStream::new).toStream().iterator();
+        Enumeration<InputStream> enumeration = new Enumeration<InputStream>() {
+            @Override
+            public boolean hasMoreElements() {
+                return iterator.hasNext();
+            }
+
+            @Override
+            public InputStream nextElement() {
+                return iterator.next();
+            }
+        };
+        return new SequenceInputStream(enumeration);
     }
 
     @ServiceMethod(returns = ReturnType.SINGLE)
     public SimpleResponse<InputStream> getMapTileWithResponse(MapTileOptions options, Context context) {
         Mono<StreamResponse> monoResp = this.asyncClient.getMapTileWithResponse(options, context); 
         StreamResponse resp = monoResp.block();
-        InputStream is = new ByteArrayInputStream(FluxUtil.collectBytesInByteBufferStream(resp.getValue()).block());
+        Iterator<ByteBufferBackedInputStream> iterator = resp.getValue().map(ByteBufferBackedInputStream::new).toStream().iterator();
+        Enumeration<InputStream> enumeration = new Enumeration<InputStream>() {
+            @Override
+            public boolean hasMoreElements() {
+                return iterator.hasNext();
+            }
+
+            @Override
+            public InputStream nextElement() {
+                return iterator.next();
+            }
+        };
+        InputStream is = new SequenceInputStream(enumeration);
         return new SimpleResponse<InputStream>(resp.getRequest(), resp.getStatusCode(), resp.getHeaders(), is);
     } 
 
@@ -181,14 +208,40 @@ public final class RenderClient {
      * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public byte[] getMapStateTile(String statesetId, TileIndex tileIndex) {
-        return FluxUtil.byteBufferToArray(this.asyncClient.getMapStateTile(statesetId, tileIndex).blockFirst());
+    public InputStream getMapStateTile(String statesetId, TileIndex tileIndex) {
+        Iterator<ByteBufferBackedInputStream> iterator = this.asyncClient.getMapStateTile(statesetId, tileIndex).map(ByteBufferBackedInputStream::new).toStream().iterator();
+        Enumeration<InputStream> enumeration = new Enumeration<InputStream>() {
+            @Override
+            public boolean hasMoreElements() {
+                return iterator.hasNext();
+            }
+
+            @Override
+            public InputStream nextElement() {
+                return iterator.next();
+            }
+        };
+        return new SequenceInputStream(enumeration);
     }
 
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public byte[] getMapStateTileWithResponse(String statesetId, TileIndex tileIndex, Context context) {
-        Mono<byte[]> byteArray = FluxUtil.collectBytesInByteBufferStream(asyncClient.getMapStateTileWithResponse(statesetId, tileIndex, context).block().getValue());
-        return byteArray.block();
+    public SimpleResponse<InputStream> getMapStateTileWithResponse(String statesetId, TileIndex tileIndex, Context context) {
+        Mono<StreamResponse> monoResp = this.asyncClient.getMapStateTileWithResponse(statesetId, tileIndex, context); 
+        StreamResponse resp = monoResp.block();
+        Iterator<ByteBufferBackedInputStream> iterator = resp.getValue().map(ByteBufferBackedInputStream::new).toStream().iterator();
+        Enumeration<InputStream> enumeration = new Enumeration<InputStream>() {
+            @Override
+            public boolean hasMoreElements() {
+                return iterator.hasNext();
+            }
+
+            @Override
+            public InputStream nextElement() {
+                return iterator.next();
+            }
+        };
+        InputStream is = new SequenceInputStream(enumeration);
+        return new SimpleResponse<InputStream>(resp.getRequest(), resp.getStatusCode(), resp.getHeaders(), is);
     }
 
     /**
@@ -427,15 +480,38 @@ public final class RenderClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public InputStream getMapStaticImage(MapStaticImageOptions options) throws IOException {
-        Mono<byte[]> byteArray = FluxUtil.collectBytesInByteBufferStream(this.asyncClient.getMapStaticImage(options));
-        return new ByteArrayInputStream(byteArray.block());
+        Iterator<ByteBufferBackedInputStream> iterator = this.asyncClient.getMapStaticImage(options).map(ByteBufferBackedInputStream::new).toStream().iterator();
+        Enumeration<InputStream> enumeration = new Enumeration<InputStream>() {
+            @Override
+            public boolean hasMoreElements() {
+                return iterator.hasNext();
+            }
+
+            @Override
+            public InputStream nextElement() {
+                return iterator.next();
+            }
+        };
+        return new SequenceInputStream(enumeration);
     } 
 
     @ServiceMethod(returns = ReturnType.SINGLE)
     public SimpleResponse<InputStream> getMapStaticImageWithResponse(MapStaticImageOptions options, Context context) throws IOException {
         Mono<StreamResponse> monoResp = this.asyncClient.getMapStaticImageWithResponse(options); 
         StreamResponse resp = monoResp.block();
-        InputStream is = new ByteArrayInputStream(FluxUtil.collectBytesInByteBufferStream(resp.getValue()).block());
+        Iterator<ByteBufferBackedInputStream> iterator = resp.getValue().map(ByteBufferBackedInputStream::new).toStream().iterator();
+        Enumeration<InputStream> enumeration = new Enumeration<InputStream>() {
+            @Override
+            public boolean hasMoreElements() {
+                return iterator.hasNext();
+            }
+
+            @Override
+            public InputStream nextElement() {
+                return iterator.next();
+            }
+        };
+        InputStream is = new SequenceInputStream(enumeration);
         return new SimpleResponse<InputStream>(resp.getRequest(), resp.getStatusCode(), resp.getHeaders(), is);
     }
 
