@@ -4,6 +4,9 @@
 
 package com.azure.maps.traffic;
 
+import java.nio.ByteBuffer;
+import java.util.List;
+
 import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceClient;
 import com.azure.core.annotation.ServiceMethod;
@@ -11,23 +14,16 @@ import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.StreamResponse;
 import com.azure.core.util.Context;
 import com.azure.maps.traffic.implementation.TrafficsImpl;
-import com.azure.maps.traffic.implementation.helpers.Utility;
 import com.azure.maps.traffic.implementation.models.ErrorResponseException;
-import com.azure.maps.traffic.implementation.models.IncidentDetailStyle;
-import com.azure.maps.traffic.implementation.models.IncidentGeometryType;
-import com.azure.maps.traffic.implementation.models.ProjectionStandard;
 import com.azure.maps.traffic.implementation.models.ResponseFormat;
-import com.azure.maps.traffic.implementation.models.SpeedUnit;
-import com.azure.maps.traffic.models.TileFormat;
-import com.azure.maps.traffic.models.TileIndex;
 import com.azure.maps.traffic.implementation.models.TrafficFlowSegmentData;
-import com.azure.maps.traffic.implementation.models.TrafficFlowSegmentStyle;
-import com.azure.maps.traffic.models.TrafficFlowTileStyle;
 import com.azure.maps.traffic.implementation.models.TrafficIncidentDetail;
-import com.azure.maps.traffic.implementation.models.TrafficIncidentTileStyle;
 import com.azure.maps.traffic.implementation.models.TrafficIncidentViewport;
-import java.nio.ByteBuffer;
-import java.util.List;
+import com.azure.maps.traffic.models.TrafficFlowSegmentOptions;
+import com.azure.maps.traffic.models.TrafficFlowTileOptions;
+import com.azure.maps.traffic.models.TrafficIncidentDetailOptions;
+import com.azure.maps.traffic.models.TrafficIncidentTileOptions;
+
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -69,10 +65,8 @@ public final class TrafficAsyncClient {
      * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Flux<ByteBuffer> getTrafficFlowTile(
-            TileFormat format, TrafficFlowTileStyle style, int zoom, TileIndex tileIndex, Integer thickness) {
-                Mono<StreamResponse> responseMono = this.getTrafficFlowTileWithResponse(
-                    format, style, zoom, tileIndex, thickness, null);
+    public Flux<ByteBuffer> getTrafficFlowTile(TrafficFlowTileOptions options) {
+                Mono<StreamResponse> responseMono = this.getTrafficFlowTileWithResponse(options, null);
                     return responseMono.flatMapMany(response -> {
                         return response.getValue();
                     });  
@@ -102,14 +96,18 @@ public final class TrafficAsyncClient {
      * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<StreamResponse> getTrafficFlowTileWithResponse(
-            TileFormat format, TrafficFlowTileStyle style, int zoom, TileIndex tileIndex, Integer thickness) {
-                return this.getTrafficFlowTileWithResponse(format, style, zoom, tileIndex, thickness, null);
+    public Mono<StreamResponse> getTrafficFlowTileWithResponse(TrafficFlowTileOptions options) {
+                return this.getTrafficFlowTileWithResponse(options, null);
     }
 
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Mono<StreamResponse> getTrafficFlowTileWithResponse(TileFormat format, TrafficFlowTileStyle style, int zoom, TileIndex tileIndex, Integer thickness, Context context) {        
-        return this.serviceClient.getTrafficFlowTileWithResponseAsync(format, style, zoom, tileIndex, thickness);
+    Mono<StreamResponse> getTrafficFlowTileWithResponse(TrafficFlowTileOptions options, Context context) {        
+        return this.serviceClient.getTrafficFlowTileWithResponseAsync(
+            options.getFormat(), 
+            options.getTrafficFlowTileStyle(), 
+            options.getZoom(), 
+            options.getTileIndex(), 
+            options.getThickness());
     }
 
     /**
@@ -143,15 +141,8 @@ public final class TrafficAsyncClient {
      * @return this object is returned from a successful Traffic Flow Segment call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<TrafficFlowSegmentData> getTrafficFlowSegment(
-            ResponseFormat format,
-            TrafficFlowSegmentStyle style,
-            int zoom,
-            List<Double> coordinates,
-            SpeedUnit unit,
-            Integer thickness,
-            Boolean openLr) {
-                Mono<Response<TrafficFlowSegmentData>> result = this.getTrafficFlowSegmentWithResponse(format, style, zoom, coordinates, unit, thickness, openLr, null);
+    public Mono<TrafficFlowSegmentData> getTrafficFlowSegment(TrafficFlowSegmentOptions options) {
+                Mono<Response<TrafficFlowSegmentData>> result = this.getTrafficFlowSegmentWithResponse(options, null);
         return result.flatMap(response -> {
             return Mono.just(response.getValue());
         });
@@ -188,29 +179,20 @@ public final class TrafficAsyncClient {
      * @return this object is returned from a successful Traffic Flow Segment call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<TrafficFlowSegmentData>> getTrafficFlowSegmentWithResponse(
-            ResponseFormat format,
-            TrafficFlowSegmentStyle style,
-            int zoom,
-            List<Double> coordinates,
-            SpeedUnit unit,
-            Integer thickness,
-            Boolean openLr) {
-       return this.getTrafficFlowSegmentWithResponse(format, style, zoom, coordinates, unit, thickness, openLr, null);
+    public Mono<Response<TrafficFlowSegmentData>> getTrafficFlowSegmentWithResponse(TrafficFlowSegmentOptions options) {
+       return this.getTrafficFlowSegmentWithResponse(options, null);
     }
 
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Mono<Response<TrafficFlowSegmentData>> getTrafficFlowSegmentWithResponse(
-        ResponseFormat format,
-        TrafficFlowSegmentStyle style,
-        int zoom,
-        List<Double> coordinates,
-        SpeedUnit unit,
-        Integer thickness,
-        Boolean openLr, 
-        Context context) {
+    Mono<Response<TrafficFlowSegmentData>> getTrafficFlowSegmentWithResponse(TrafficFlowSegmentOptions options, Context context) {
             return this.serviceClient.getTrafficFlowSegmentWithResponseAsync(
-                   format, style, zoom, coordinates, unit, thickness, openLr);
+                   options.getFormat(), 
+                   options.getTrafficFlowSegmentStyle(), 
+                   options.getZoom(), 
+                   options.getCoordinates(), 
+                   options.getUnit(), 
+                   options.getThickness(),
+                   options.getOpenLr());
     }
 
     /**
@@ -238,9 +220,8 @@ public final class TrafficAsyncClient {
      * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Flux<ByteBuffer> getTrafficIncidentTile(
-            TileFormat format, TrafficIncidentTileStyle style, int zoom, TileIndex tileIndex, String trafficState) {
-                Mono<StreamResponse> responseMono = this.getTrafficIncidentTileWithResponse(format, style, zoom, tileIndex, trafficState, null);
+    public Flux<ByteBuffer> getTrafficIncidentTile(TrafficIncidentTileOptions options) {
+                Mono<StreamResponse> responseMono = this.getTrafficIncidentTileWithResponse(options, null);
                 return responseMono.flatMapMany(response -> {
                     return response.getValue();
                 }); 
@@ -271,14 +252,18 @@ public final class TrafficAsyncClient {
      * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<StreamResponse> getTrafficIncidentTileWithResponse(
-            TileFormat format, TrafficIncidentTileStyle style, int zoom, TileIndex tileIndex, String trafficState) {
-        return this.getTrafficIncidentTileWithResponse(format, style, zoom, tileIndex, trafficState, null);
+    public Mono<StreamResponse> getTrafficIncidentTileWithResponse(TrafficIncidentTileOptions options) {
+        return this.getTrafficIncidentTileWithResponse(options, null);
     }
 
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Mono<StreamResponse> getTrafficIncidentTileWithResponse(TileFormat format, TrafficIncidentTileStyle style, int zoom, TileIndex tileIndex, String trafficState, Context context) {        
-        return this.serviceClient.getTrafficIncidentTileWithResponseAsync(format, style, zoom, tileIndex, trafficState);
+    Mono<StreamResponse> getTrafficIncidentTileWithResponse(TrafficIncidentTileOptions options, Context context) {        
+        return this.serviceClient.getTrafficIncidentTileWithResponseAsync(
+            options.getFormat(), 
+            options.getTrafficIncidentTileStyle(), 
+            options.getZoom(), 
+            options.getTileIndex(),
+            options.getTrafficState());
     }
 
     /**
@@ -329,29 +314,8 @@ public final class TrafficAsyncClient {
      * @return this object is returned from a successful Traffic incident Detail call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<TrafficIncidentDetail> getTrafficIncidentDetail(
-            ResponseFormat format,
-            IncidentDetailStyle style,
-            List<Double> boundingbox,
-            int boundingZoom,
-            String trafficmodelid,
-            String language,
-            ProjectionStandard projection,
-            IncidentGeometryType geometries,
-            Boolean expandCluster,
-            Boolean originalPosition) {
-        Mono<Response<TrafficIncidentDetail>> result = this.getTrafficIncidentDetailWithResponse(
-            format, 
-            style,
-            boundingbox,
-            boundingZoom,
-            trafficmodelid,
-            language,
-            projection,
-            geometries,
-            expandCluster,
-            originalPosition,
-            null);
+    public Mono<TrafficIncidentDetail> getTrafficIncidentDetail(TrafficIncidentDetailOptions options) {
+        Mono<Response<TrafficIncidentDetail>> result = this.getTrafficIncidentDetailWithResponse(options, null);
         return result.flatMap(response -> {
             return Mono.just(response.getValue());
         });
@@ -405,55 +369,23 @@ public final class TrafficAsyncClient {
      * @return this object is returned from a successful Traffic incident Detail call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<TrafficIncidentDetail>> getTrafficIncidentDetailWithResponse(
-            ResponseFormat format,
-            IncidentDetailStyle style,
-            List<Double> boundingbox,
-            int boundingZoom,
-            String trafficmodelid,
-            String language,
-            ProjectionStandard projection,
-            IncidentGeometryType geometries,
-            Boolean expandCluster,
-            Boolean originalPosition) {
-        return this.getTrafficIncidentDetailWithResponse(
-            format,
-            style,
-            boundingbox,
-            boundingZoom,
-            trafficmodelid,
-            language,
-            projection,
-            geometries,
-            expandCluster,
-            originalPosition, 
-            null);
+    public Mono<Response<TrafficIncidentDetail>> getTrafficIncidentDetailWithResponse(TrafficIncidentDetailOptions options) {
+        return this.getTrafficIncidentDetailWithResponse(options, null);
     }
     
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Mono<Response<TrafficIncidentDetail>> getTrafficIncidentDetailWithResponse(
-        ResponseFormat format,
-        IncidentDetailStyle style,
-        List<Double> boundingbox,
-        int boundingZoom,
-        String trafficmodelid,
-        String language,
-        ProjectionStandard projection,
-        IncidentGeometryType geometries,
-        Boolean expandCluster,
-        Boolean originalPosition, 
-        Context context) {
+    Mono<Response<TrafficIncidentDetail>> getTrafficIncidentDetailWithResponse(TrafficIncidentDetailOptions options, Context context) {
         return this.serviceClient.getTrafficIncidentDetailWithResponseAsync(
-            format,
-            style,
-            boundingbox,
-            boundingZoom,
-            trafficmodelid,
-            language,
-            projection,
-            geometries,
-            expandCluster,
-            originalPosition);
+            options.getFormat(),
+            options.getIncidentDetailStyle(),
+            options.getBoundingBox(),
+            options.getBoundingZoom(),
+            options.getTrafficmodelid(),
+            options.getLanguage(),
+            options.getProjectionStandard(),
+            options.getIncidentGeometryType(),
+            options.getExpandCluster(),
+            options.getOriginalPosition());
     }
 
     /**

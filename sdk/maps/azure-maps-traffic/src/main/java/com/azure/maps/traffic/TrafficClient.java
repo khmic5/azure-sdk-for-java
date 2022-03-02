@@ -17,19 +17,14 @@ import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.SimpleResponse;
 import com.azure.core.http.rest.StreamResponse;
 import com.azure.maps.traffic.implementation.models.ErrorResponseException;
-import com.azure.maps.traffic.implementation.models.IncidentDetailStyle;
-import com.azure.maps.traffic.implementation.models.IncidentGeometryType;
-import com.azure.maps.traffic.implementation.models.ProjectionStandard;
 import com.azure.maps.traffic.implementation.models.ResponseFormat;
-import com.azure.maps.traffic.implementation.models.SpeedUnit;
-import com.azure.maps.traffic.models.TileFormat;
-import com.azure.maps.traffic.models.TileIndex;
 import com.azure.maps.traffic.implementation.models.TrafficFlowSegmentData;
-import com.azure.maps.traffic.implementation.models.TrafficFlowSegmentStyle;
-import com.azure.maps.traffic.models.TrafficFlowTileStyle;
 import com.azure.maps.traffic.implementation.models.TrafficIncidentDetail;
-import com.azure.maps.traffic.implementation.models.TrafficIncidentTileStyle;
 import com.azure.maps.traffic.implementation.models.TrafficIncidentViewport;
+import com.azure.maps.traffic.models.TrafficFlowSegmentOptions;
+import com.azure.maps.traffic.models.TrafficFlowTileOptions;
+import com.azure.maps.traffic.models.TrafficIncidentDetailOptions;
+import com.azure.maps.traffic.models.TrafficIncidentTileOptions;
 import com.fasterxml.jackson.databind.util.ByteBufferBackedInputStream;
 
 import reactor.core.publisher.Mono;
@@ -77,9 +72,8 @@ public final class TrafficClient {
      * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public InputStream getTrafficFlowTile(
-            TileFormat format, TrafficFlowTileStyle style, int zoom, TileIndex tileIndex, Integer thickness) {
-        Iterator<ByteBufferBackedInputStream> iterator = this.asyncClient.getTrafficFlowTile(format, style, zoom, tileIndex, thickness).map(ByteBufferBackedInputStream::new).toStream().iterator();
+    public InputStream getTrafficFlowTile(TrafficFlowTileOptions options) {
+        Iterator<ByteBufferBackedInputStream> iterator = this.asyncClient.getTrafficFlowTile(options).map(ByteBufferBackedInputStream::new).toStream().iterator();
         return getInputStream(iterator);
     }
 
@@ -96,8 +90,8 @@ public final class TrafficClient {
      * @return
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SimpleResponse<InputStream> getTrafficFlowTileWithResponse(TileFormat format, TrafficFlowTileStyle style, int zoom, TileIndex tileIndex, Integer thickness) {
-        Mono<StreamResponse> monoResp = this.asyncClient.getTrafficFlowTileWithResponse(format, style, zoom, tileIndex, thickness); 
+    public SimpleResponse<InputStream> getTrafficFlowTileWithResponse(TrafficFlowTileOptions options) {
+        Mono<StreamResponse> monoResp = this.asyncClient.getTrafficFlowTileWithResponse(options); 
         StreamResponse resp = monoResp.block();
         Iterator<ByteBufferBackedInputStream> iterator = resp.getValue().map(ByteBufferBackedInputStream::new).toStream().iterator();
         return new SimpleResponse<InputStream>(resp.getRequest(), resp.getStatusCode(), resp.getHeaders(), getInputStream(iterator));
@@ -134,15 +128,8 @@ public final class TrafficClient {
      * @return this object is returned from a successful Traffic Flow Segment call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public TrafficFlowSegmentData getTrafficFlowSegment(
-            ResponseFormat format,
-            TrafficFlowSegmentStyle style,
-            int zoom,
-            List<Double> coordinates,
-            SpeedUnit unit,
-            Integer thickness,
-            Boolean openLr) {
-        return this.asyncClient.getTrafficFlowSegment(format, style, zoom, coordinates, unit, thickness, openLr).block();
+    public TrafficFlowSegmentData getTrafficFlowSegment(TrafficFlowSegmentOptions options) {
+        return this.asyncClient.getTrafficFlowSegment(options).block();
     }
     
     /**
@@ -165,15 +152,8 @@ public final class TrafficClient {
      * @return
      */    
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<TrafficFlowSegmentData> getTrafficFlowSegmentWithResponse(
-        ResponseFormat format,
-        TrafficFlowSegmentStyle style,
-        int zoom,
-        List<Double> coordinates,
-        SpeedUnit unit,
-        Integer thickness,
-        Boolean openLr) {
-        return this.asyncClient.getTrafficFlowSegmentWithResponse(format, style, zoom, coordinates, unit, thickness, openLr).block();
+    public Response<TrafficFlowSegmentData> getTrafficFlowSegmentWithResponse(TrafficFlowSegmentOptions options) {
+        return this.asyncClient.getTrafficFlowSegmentWithResponse(options).block();
     }
 
     /**
@@ -201,9 +181,8 @@ public final class TrafficClient {
      * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public InputStream getTrafficIncidentTile(
-            TileFormat format, TrafficIncidentTileStyle style, int zoom, TileIndex tileIndex, String trafficState) {
-                Iterator<ByteBufferBackedInputStream> iterator = this.asyncClient.getTrafficIncidentTile(format, style, zoom, tileIndex, trafficState).map(ByteBufferBackedInputStream::new).toStream().iterator();
+    public InputStream getTrafficIncidentTile(TrafficIncidentTileOptions options) {
+                Iterator<ByteBufferBackedInputStream> iterator = this.asyncClient.getTrafficIncidentTile(options).map(ByteBufferBackedInputStream::new).toStream().iterator();
                 return getInputStream(iterator);
     }
 
@@ -222,8 +201,8 @@ public final class TrafficClient {
      * @return
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SimpleResponse<InputStream> getTrafficIncidentTileWithResponse(TileFormat format, TrafficIncidentTileStyle style, int zoom, TileIndex tileIndex, String trafficState) {
-        Mono<StreamResponse> monoResp = this.asyncClient.getTrafficIncidentTileWithResponse(format, style, zoom, tileIndex, trafficState); 
+    public SimpleResponse<InputStream> getTrafficIncidentTileWithResponse(TrafficIncidentTileOptions options) {
+        Mono<StreamResponse> monoResp = this.asyncClient.getTrafficIncidentTileWithResponse(options); 
         StreamResponse resp = monoResp.block();
         Iterator<ByteBufferBackedInputStream> iterator = resp.getValue().map(ByteBufferBackedInputStream::new).toStream().iterator();
         return new SimpleResponse<InputStream>(resp.getRequest(), resp.getStatusCode(), resp.getHeaders(), getInputStream(iterator));
@@ -277,28 +256,8 @@ public final class TrafficClient {
      * @return this object is returned from a successful Traffic incident Detail call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public TrafficIncidentDetail getTrafficIncidentDetail(
-            ResponseFormat format,
-            IncidentDetailStyle style,
-            List<Double> boundingbox,
-            int boundingZoom,
-            String trafficmodelid,
-            String language,
-            ProjectionStandard projection,
-            IncidentGeometryType geometries,
-            Boolean expandCluster,
-            Boolean originalPosition) {
-        return this.asyncClient.getTrafficIncidentDetail(
-                format,
-                style,
-                boundingbox,
-                boundingZoom,
-                trafficmodelid,
-                language,
-                projection,
-                geometries,
-                expandCluster,
-                originalPosition).block();
+    public TrafficIncidentDetail getTrafficIncidentDetail(TrafficIncidentDetailOptions options) {
+        return this.asyncClient.getTrafficIncidentDetail(options).block();
     }
 
     /**
@@ -336,28 +295,8 @@ public final class TrafficClient {
      * @return
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<TrafficIncidentDetail> getTrafficIncidentDetailWithResponse(
-        ResponseFormat format,
-            IncidentDetailStyle style,
-            List<Double> boundingbox,
-            int boundingZoom,
-            String trafficmodelid,
-            String language,
-            ProjectionStandard projection,
-            IncidentGeometryType geometries,
-            Boolean expandCluster,
-            Boolean originalPosition) {
-        return this.asyncClient.getTrafficIncidentDetailWithResponse(
-            format,
-            style,
-            boundingbox,
-            boundingZoom,
-            trafficmodelid,
-            language,
-            projection,
-            geometries,
-            expandCluster,
-            originalPosition).block();
+    public Response<TrafficIncidentDetail> getTrafficIncidentDetailWithResponse(TrafficIncidentDetailOptions options) {
+        return this.asyncClient.getTrafficIncidentDetailWithResponse(options).block();
     }
 
     /**
