@@ -37,6 +37,7 @@ import reactor.core.publisher.Mono;
 /** Initializes a new instance of the synchronous RenderClient type. */
 @ServiceClient(builder = RenderClientBuilder.class)
 public final class RenderClient {
+
     /**
      * Initializes an instance of RenderClient client.
      *
@@ -112,6 +113,40 @@ public final class RenderClient {
         return getInputStream(iterator);
     }
 
+    /**
+     * @param tilesetId A tileset is a collection of raster or vector data broken up into a uniform grid of square tiles
+     *     at preset zoom levels. Every tileset has a **tilesetId** to use when making requests. The **tilesetId** for
+     *     tilesets created using [Azure Maps Creator](https://aka.ms/amcreator) are generated through the [Tileset
+     *     Create API](https://docs.microsoft.com/en-us/rest/api/maps/tileset). The ready-to-use tilesets supplied by
+     *     Azure Maps are listed below. For example, microsoft.base.
+     * @param tileIndex Parameter group.
+     * @param timeStamp The desired date and time of the requested tile. This parameter must be specified in the
+     *     standard date-time format (e.g. 2019-11-14T16:03:00-08:00), as defined by [ISO
+     *     8601](https://en.wikipedia.org/wiki/ISO_8601). This parameter is only supported when tilesetId parameter is
+     *     set to one of the values below.
+     *     <p>* microsoft.weather.infrared.main: We provide tiles up to 3 hours in the past. Tiles are available in
+     *     10-minute intervals. We round the timeStamp value to the nearest 10-minute time frame. *
+     *     microsoft.weather.radar.main: We provide tiles up to 1.5 hours in the past and up to 2 hours in the future.
+     *     Tiles are available in 5-minute intervals. We round the timeStamp value to the nearest 5-minute time frame.
+     * @param tileSize The size of the returned map tile in pixels.
+     * @param language Language in which search results should be returned. Should be one of supported IETF language
+     *     tags, case insensitive. When data in specified language is not available for a specific field, default
+     *     language is used.
+     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
+     *     details.
+     * @param localizedMapView The View parameter (also called the "user region" parameter) allows you to show the
+     *     correct maps for a certain country/region for geopolitically disputed regions. Different countries have
+     *     different views of such regions, and the View parameter allows your application to comply with the view
+     *     required by the country your application will be serving. By default, the View parameter is set to “Unified”
+     *     even if you haven’t defined it in the request. It is your responsibility to determine the location of your
+     *     users, and then set the View parameter correctly for that location. Alternatively, you have the option to set
+     *     ‘View=Auto’, which will return the map data based on the IP address of the request. The View parameter in
+     *     Azure Maps must be used in compliance with applicable laws, including those regarding mapping, of the country
+     *     where maps, images and other data and third party content that you are authorized to access via Azure Maps is
+     *     made available. Example: view=IN.
+     *     <p>Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the
+     *     available Views.
+     */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public SimpleResponse<InputStream> getMapTileWithResponse(MapTileOptions options, Context context) {
         Mono<StreamResponse> monoResp = this.asyncClient.getMapTileWithResponse(options, context); 
