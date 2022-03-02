@@ -4,6 +4,12 @@
 
 package com.azure.maps.traffic;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
 import com.azure.core.annotation.ServiceClientBuilder;
 import com.azure.core.credential.AzureKeyCredential;
 import com.azure.core.credential.TokenCredential;
@@ -24,16 +30,8 @@ import com.azure.core.http.policy.UserAgentPolicy;
 import com.azure.core.util.ClientOptions;
 import com.azure.core.util.Configuration;
 import com.azure.core.util.CoreUtils;
-import com.azure.core.util.serializer.JacksonAdapter;
-import com.azure.core.util.serializer.SerializerAdapter;
 import com.azure.maps.traffic.implementation.TrafficClientImpl;
 import com.azure.maps.traffic.implementation.TrafficClientImplBuilder;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 /** A builder for creating a new instance of the TrafficClient type. */
 @ServiceClientBuilder(serviceClients = {TrafficClient.class, TrafficAsyncClient.class})

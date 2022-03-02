@@ -4,31 +4,30 @@
 
 package com.azure.maps.traffic;
 
-import com.azure.core.annotation.ReturnType;
-import com.azure.core.annotation.ServiceClient;
-import com.azure.core.annotation.ServiceMethod;
-import com.azure.maps.traffic.implementation.TrafficsImpl;
-import com.azure.maps.traffic.models.ErrorResponseException;
-import com.azure.maps.traffic.models.IncidentDetailStyle;
-import com.azure.maps.traffic.models.IncidentGeometryType;
-import com.azure.maps.traffic.models.ProjectionStandard;
-import com.azure.maps.traffic.models.ResponseFormat;
-import com.azure.maps.traffic.models.SpeedUnit;
-import com.azure.maps.traffic.models.TileFormat;
-import com.azure.maps.traffic.models.TileIndex;
-import com.azure.maps.traffic.models.TrafficFlowSegmentData;
-import com.azure.maps.traffic.models.TrafficFlowSegmentStyle;
-import com.azure.maps.traffic.models.TrafficFlowTileStyle;
-import com.azure.maps.traffic.models.TrafficIncidentDetail;
-import com.azure.maps.traffic.models.TrafficIncidentTileStyle;
-import com.azure.maps.traffic.models.TrafficIncidentViewport;
-import com.fasterxml.jackson.databind.util.ByteBufferBackedInputStream;
-
 import java.io.InputStream;
 import java.io.SequenceInputStream;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
+
+import com.azure.core.annotation.ReturnType;
+import com.azure.core.annotation.ServiceClient;
+import com.azure.core.annotation.ServiceMethod;
+import com.azure.maps.traffic.implementation.models.ErrorResponseException;
+import com.azure.maps.traffic.implementation.models.IncidentDetailStyle;
+import com.azure.maps.traffic.implementation.models.IncidentGeometryType;
+import com.azure.maps.traffic.implementation.models.ProjectionStandard;
+import com.azure.maps.traffic.implementation.models.ResponseFormat;
+import com.azure.maps.traffic.implementation.models.SpeedUnit;
+import com.azure.maps.traffic.models.TileFormat;
+import com.azure.maps.traffic.models.TileIndex;
+import com.azure.maps.traffic.implementation.models.TrafficFlowSegmentData;
+import com.azure.maps.traffic.implementation.models.TrafficFlowSegmentStyle;
+import com.azure.maps.traffic.models.TrafficFlowTileStyle;
+import com.azure.maps.traffic.implementation.models.TrafficIncidentDetail;
+import com.azure.maps.traffic.implementation.models.TrafficIncidentTileStyle;
+import com.azure.maps.traffic.implementation.models.TrafficIncidentViewport;
+import com.fasterxml.jackson.databind.util.ByteBufferBackedInputStream;
 
 /** Initializes a new instance of the synchronous TrafficClient type. */
 @ServiceClient(builder = TrafficClientBuilder.class)
