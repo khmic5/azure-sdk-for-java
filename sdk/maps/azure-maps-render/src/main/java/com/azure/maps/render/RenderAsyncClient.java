@@ -272,13 +272,11 @@ public final class RenderAsyncClient {
 
     @ServiceMethod(returns = ReturnType.SINGLE)
     Mono<Response<MapAttribution>> getMapAttributionWithResponse(TilesetID tilesetId, int zoom, BoundingBox bounds, Context context) {
-        List<Double> bound = new ArrayList<>();
+        List<Double> boundList = new ArrayList<>();
         if (bounds != null ) {
-            if (bounds.getSouthWest() != null && bounds.getNorthEast() != null) {
-                bound = Arrays.asList(bounds.getSouthWest().getLongitude(), bounds.getSouthWest().getLatitude(), bounds.getNorthEast().getLongitude(), bounds.getNorthEast().getLatitude());
-            }
+            boundList = Arrays.asList(bounds.getSouthWest().getLongitude(), bounds.getSouthWest().getLatitude(), bounds.getNorthEast().getLongitude(), bounds.getNorthEast().getLatitude());
         }
-        return this.serviceClient.getMapAttributionWithResponseAsync(tilesetId, zoom, bound);
+        return this.serviceClient.getMapAttributionWithResponseAsync(tilesetId, zoom, boundList);
     }
 
     /**
@@ -817,8 +815,7 @@ public final class RenderAsyncClient {
         LatLong southWest = boundingBox.getSouthWest();
         LatLong northEast = boundingBox.getNorthEast();
         Center center = options.getCenter();
-        List<Double> centerPrivate = null;
-        if (center != null) centerPrivate = Utility.toCenterPrivate(center); //minLon, minLat, maxLon, maxLat'
+        List<Double> centerPrivate = center != null ? Utility.toCenterPrivate(center) : null;
         List<Double> bbox = Arrays.asList(southWest.getLatitude(), northEast.getLongitude(), northEast.getLatitude(), southWest.getLongitude());
         return this.serviceClient.getMapStaticImageWithResponseAsync 
             (options.getRasterTileFormat(),

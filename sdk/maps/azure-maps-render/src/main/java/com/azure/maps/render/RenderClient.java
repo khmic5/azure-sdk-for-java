@@ -4,7 +4,6 @@
 
 package com.azure.maps.render;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.SequenceInputStream;
@@ -18,7 +17,6 @@ import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.SimpleResponse;
 import com.azure.core.http.rest.StreamResponse;
 import com.azure.core.util.Context;
-import com.azure.core.util.FluxUtil;
 import com.azure.maps.render.models.BoundingBox;
 import com.azure.maps.render.models.Copyright;
 import com.azure.maps.render.models.CopyrightCaption;
@@ -100,9 +98,7 @@ public final class RenderClient {
      * @throws IOException
      */
 
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public InputStream getMapTile(MapTileOptions options) throws IOException {
-        Iterator<ByteBufferBackedInputStream> iterator = this.asyncClient.getMapTile(options).map(ByteBufferBackedInputStream::new).toStream().iterator();
+    private InputStream getInputStream(Iterator<ByteBufferBackedInputStream> iterator) {
         Enumeration<InputStream> enumeration = new Enumeration<InputStream>() {
             @Override
             public boolean hasMoreElements() {
@@ -118,23 +114,17 @@ public final class RenderClient {
     }
 
     @ServiceMethod(returns = ReturnType.SINGLE)
+    public InputStream getMapTile(MapTileOptions options) throws IOException {
+        Iterator<ByteBufferBackedInputStream> iterator = this.asyncClient.getMapTile(options).map(ByteBufferBackedInputStream::new).toStream().iterator();
+        return getInputStream(iterator);
+    }
+
+    @ServiceMethod(returns = ReturnType.SINGLE)
     public SimpleResponse<InputStream> getMapTileWithResponse(MapTileOptions options, Context context) {
         Mono<StreamResponse> monoResp = this.asyncClient.getMapTileWithResponse(options, context); 
         StreamResponse resp = monoResp.block();
         Iterator<ByteBufferBackedInputStream> iterator = resp.getValue().map(ByteBufferBackedInputStream::new).toStream().iterator();
-        Enumeration<InputStream> enumeration = new Enumeration<InputStream>() {
-            @Override
-            public boolean hasMoreElements() {
-                return iterator.hasNext();
-            }
-
-            @Override
-            public InputStream nextElement() {
-                return iterator.next();
-            }
-        };
-        InputStream is = new SequenceInputStream(enumeration);
-        return new SimpleResponse<InputStream>(resp.getRequest(), resp.getStatusCode(), resp.getHeaders(), is);
+        return new SimpleResponse<InputStream>(resp.getRequest(), resp.getStatusCode(), resp.getHeaders(), getInputStream(iterator));
     } 
 
     /**
@@ -210,18 +200,7 @@ public final class RenderClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public InputStream getMapStateTile(String statesetId, TileIndex tileIndex) {
         Iterator<ByteBufferBackedInputStream> iterator = this.asyncClient.getMapStateTile(statesetId, tileIndex).map(ByteBufferBackedInputStream::new).toStream().iterator();
-        Enumeration<InputStream> enumeration = new Enumeration<InputStream>() {
-            @Override
-            public boolean hasMoreElements() {
-                return iterator.hasNext();
-            }
-
-            @Override
-            public InputStream nextElement() {
-                return iterator.next();
-            }
-        };
-        return new SequenceInputStream(enumeration);
+        return getInputStream(iterator);
     }
 
     @ServiceMethod(returns = ReturnType.SINGLE)
@@ -229,19 +208,7 @@ public final class RenderClient {
         Mono<StreamResponse> monoResp = this.asyncClient.getMapStateTileWithResponse(statesetId, tileIndex, context); 
         StreamResponse resp = monoResp.block();
         Iterator<ByteBufferBackedInputStream> iterator = resp.getValue().map(ByteBufferBackedInputStream::new).toStream().iterator();
-        Enumeration<InputStream> enumeration = new Enumeration<InputStream>() {
-            @Override
-            public boolean hasMoreElements() {
-                return iterator.hasNext();
-            }
-
-            @Override
-            public InputStream nextElement() {
-                return iterator.next();
-            }
-        };
-        InputStream is = new SequenceInputStream(enumeration);
-        return new SimpleResponse<InputStream>(resp.getRequest(), resp.getStatusCode(), resp.getHeaders(), is);
+        return new SimpleResponse<InputStream>(resp.getRequest(), resp.getStatusCode(), resp.getHeaders(), getInputStream(iterator));
     }
 
     /**
@@ -481,18 +448,7 @@ public final class RenderClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public InputStream getMapStaticImage(MapStaticImageOptions options) throws IOException {
         Iterator<ByteBufferBackedInputStream> iterator = this.asyncClient.getMapStaticImage(options).map(ByteBufferBackedInputStream::new).toStream().iterator();
-        Enumeration<InputStream> enumeration = new Enumeration<InputStream>() {
-            @Override
-            public boolean hasMoreElements() {
-                return iterator.hasNext();
-            }
-
-            @Override
-            public InputStream nextElement() {
-                return iterator.next();
-            }
-        };
-        return new SequenceInputStream(enumeration);
+        return getInputStream(iterator);
     } 
 
     @ServiceMethod(returns = ReturnType.SINGLE)
@@ -500,19 +456,7 @@ public final class RenderClient {
         Mono<StreamResponse> monoResp = this.asyncClient.getMapStaticImageWithResponse(options); 
         StreamResponse resp = monoResp.block();
         Iterator<ByteBufferBackedInputStream> iterator = resp.getValue().map(ByteBufferBackedInputStream::new).toStream().iterator();
-        Enumeration<InputStream> enumeration = new Enumeration<InputStream>() {
-            @Override
-            public boolean hasMoreElements() {
-                return iterator.hasNext();
-            }
-
-            @Override
-            public InputStream nextElement() {
-                return iterator.next();
-            }
-        };
-        InputStream is = new SequenceInputStream(enumeration);
-        return new SimpleResponse<InputStream>(resp.getRequest(), resp.getStatusCode(), resp.getHeaders(), is);
+        return new SimpleResponse<InputStream>(resp.getRequest(), resp.getStatusCode(), resp.getHeaders(), getInputStream(iterator));
     }
 
     /**
