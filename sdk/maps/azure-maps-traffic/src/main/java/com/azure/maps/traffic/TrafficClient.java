@@ -22,21 +22,31 @@ import com.azure.maps.traffic.models.TrafficFlowTileStyle;
 import com.azure.maps.traffic.models.TrafficIncidentDetail;
 import com.azure.maps.traffic.models.TrafficIncidentTileStyle;
 import com.azure.maps.traffic.models.TrafficIncidentViewport;
+import com.fasterxml.jackson.databind.util.ByteBufferBackedInputStream;
+
 import java.io.InputStream;
+import java.io.SequenceInputStream;
+import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.List;
 
 /** Initializes a new instance of the synchronous TrafficClient type. */
 @ServiceClient(builder = TrafficClientBuilder.class)
 public final class TrafficClient {
-    private final TrafficsImpl serviceClient;
-
-    /**
-     * Initializes an instance of Traffics client.
+     /**
+     * Initializes an instance of TrafficClient client.
      *
      * @param serviceClient the service client implementation.
      */
-    TrafficClient(TrafficsImpl serviceClient) {
-        this.serviceClient = serviceClient;
+    private final TrafficAsyncClient asyncClient;
+
+    /**
+     * Initializes an instance of Traffic client.
+     *
+     * @param serviceClient the service client implementation.
+     */
+    TrafficClient(TrafficAsyncClient asyncClient) {
+        this.asyncClient = asyncClient;
     }
 
     /**
@@ -65,7 +75,8 @@ public final class TrafficClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public InputStream getTrafficFlowTile(
             TileFormat format, TrafficFlowTileStyle style, int zoom, TileIndex tileIndex, Integer thickness) {
-        return this.serviceClient.getTrafficFlowTile(format, style, zoom, tileIndex, thickness);
+        Iterator<ByteBufferBackedInputStream> iterator = this.asyncClient.getTrafficFlowTile(format, style, zoom, tileIndex, thickness).map(ByteBufferBackedInputStream::new).toStream().iterator();
+        return getInputStream(iterator);
     }
 
     /**
@@ -107,7 +118,7 @@ public final class TrafficClient {
             SpeedUnit unit,
             Integer thickness,
             Boolean openLr) {
-        return this.serviceClient.getTrafficFlowSegment(format, style, zoom, coordinates, unit, thickness, openLr);
+        return this.asyncClient.getTrafficFlowSegment(format, style, zoom, coordinates, unit, thickness, openLr).block();
     }
 
     /**
@@ -137,7 +148,8 @@ public final class TrafficClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public InputStream getTrafficIncidentTile(
             TileFormat format, TrafficIncidentTileStyle style, int zoom, TileIndex tileIndex, String trafficState) {
-        return this.serviceClient.getTrafficIncidentTile(format, style, zoom, tileIndex, trafficState);
+                Iterator<ByteBufferBackedInputStream> iterator = this.asyncClient.getTrafficIncidentTile(format, style, zoom, tileIndex, trafficState).map(ByteBufferBackedInputStream::new).toStream().iterator();
+                return getInputStream(iterator);
     }
 
     /**
@@ -199,7 +211,7 @@ public final class TrafficClient {
             IncidentGeometryType geometries,
             Boolean expandCluster,
             Boolean originalPosition) {
-        return this.serviceClient.getTrafficIncidentDetail(
+        return this.asyncClient.getTrafficIncidentDetail(
                 format,
                 style,
                 boundingbox,
@@ -209,7 +221,7 @@ public final class TrafficClient {
                 projection,
                 geometries,
                 expandCluster,
-                originalPosition);
+                originalPosition).block();
     }
 
     /**
@@ -258,7 +270,22 @@ public final class TrafficClient {
             List<Double> overviewbox,
             int overviewzoom,
             Boolean copyright) {
-        return this.serviceClient.getTrafficIncidentViewport(
-                format, boundingbox, boundingzoom, overviewbox, overviewzoom, copyright);
+        return this.asyncClient.getTrafficIncidentViewport(
+                format, boundingbox, boundingzoom, overviewbox, overviewzoom, copyright).block();
+    }
+
+    private InputStream getInputStream(Iterator<ByteBufferBackedInputStream> iterator) {
+        Enumeration<InputStream> enumeration = new Enumeration<InputStream>() {
+            @Override
+            public boolean hasMoreElements() {
+                return iterator.hasNext();
+            }
+
+            @Override
+            public InputStream nextElement() {
+                return iterator.next();
+            }
+        };
+        return new SequenceInputStream(enumeration);
     }
 }
