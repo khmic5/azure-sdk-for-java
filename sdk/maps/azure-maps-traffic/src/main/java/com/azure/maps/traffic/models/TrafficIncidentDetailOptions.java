@@ -2,11 +2,6 @@ package com.azure.maps.traffic.models;
 
 import java.util.List;
 
-import com.azure.maps.traffic.implementation.models.IncidentDetailStyle;
-import com.azure.maps.traffic.implementation.models.IncidentGeometryType;
-import com.azure.maps.traffic.implementation.models.ProjectionStandard;
-import com.azure.maps.traffic.implementation.models.ResponseFormat;
-
 public class TrafficIncidentDetailOptions {
     private ResponseFormat format;
     private IncidentDetailStyle style;

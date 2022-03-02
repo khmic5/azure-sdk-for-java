@@ -1,7 +1,5 @@
 package com.azure.maps.traffic.models;
 
-import com.azure.maps.traffic.implementation.models.TrafficIncidentTileStyle;
-
 public class TrafficIncidentTileOptions {
     private TileFormat format;
     private TrafficIncidentTileStyle style;

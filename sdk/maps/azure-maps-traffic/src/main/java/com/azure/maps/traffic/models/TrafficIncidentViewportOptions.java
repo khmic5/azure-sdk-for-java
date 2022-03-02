@@ -2,8 +2,6 @@ package com.azure.maps.traffic.models;
 
 import java.util.List;
 
-import com.azure.maps.traffic.implementation.models.ResponseFormat;
-
 public class TrafficIncidentViewportOptions {
     private ResponseFormat format;
     private List<Double> boundingbox;

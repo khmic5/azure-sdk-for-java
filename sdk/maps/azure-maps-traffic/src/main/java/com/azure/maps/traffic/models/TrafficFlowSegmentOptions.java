@@ -2,10 +2,6 @@ package com.azure.maps.traffic.models;
 
 import java.util.List;
 
-import com.azure.maps.traffic.implementation.models.ResponseFormat;
-import com.azure.maps.traffic.implementation.models.SpeedUnit;
-import com.azure.maps.traffic.implementation.models.TrafficFlowSegmentStyle;
-
 public class TrafficFlowSegmentOptions {
     private ResponseFormat format;
     private TrafficFlowSegmentStyle style;
