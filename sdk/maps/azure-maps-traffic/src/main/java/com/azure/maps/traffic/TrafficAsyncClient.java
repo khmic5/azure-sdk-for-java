@@ -5,7 +5,6 @@
 package com.azure.maps.traffic;
 
 import java.nio.ByteBuffer;
-import java.util.List;
 
 import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceClient;
@@ -15,7 +14,6 @@ import com.azure.core.http.rest.StreamResponse;
 import com.azure.core.util.Context;
 import com.azure.maps.traffic.implementation.TrafficsImpl;
 import com.azure.maps.traffic.implementation.models.ErrorResponseException;
-import com.azure.maps.traffic.implementation.models.ResponseFormat;
 import com.azure.maps.traffic.implementation.models.TrafficFlowSegmentData;
 import com.azure.maps.traffic.implementation.models.TrafficIncidentDetail;
 import com.azure.maps.traffic.implementation.models.TrafficIncidentViewport;
@@ -23,6 +21,7 @@ import com.azure.maps.traffic.models.TrafficFlowSegmentOptions;
 import com.azure.maps.traffic.models.TrafficFlowTileOptions;
 import com.azure.maps.traffic.models.TrafficIncidentDetailOptions;
 import com.azure.maps.traffic.models.TrafficIncidentTileOptions;
+import com.azure.maps.traffic.models.TrafficIncidentViewportOptions;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -427,15 +426,8 @@ public final class TrafficAsyncClient {
      * @return this object is returned from a successful Traffic Incident Viewport call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<TrafficIncidentViewport> getTrafficIncidentViewport(
-            ResponseFormat format,
-            List<Double> boundingbox,
-            int boundingzoom,
-            List<Double> overviewbox,
-            int overviewzoom,
-            Boolean copyright) {
-        Mono<Response<TrafficIncidentViewport>> result = this.getTrafficIncidentViewportWithResponse(
-            format, boundingbox, boundingzoom, overviewbox, overviewzoom, copyright, null);
+    public Mono<TrafficIncidentViewport> getTrafficIncidentViewport(TrafficIncidentViewportOptions options) {
+        Mono<Response<TrafficIncidentViewport>> result = this.getTrafficIncidentViewportWithResponse(options, null);
         return result.flatMap(response -> {
             return Mono.just(response.getValue());
         });
@@ -480,25 +472,18 @@ public final class TrafficAsyncClient {
      * @return this object is returned from a successful Traffic Incident Viewport call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<TrafficIncidentViewport>> getTrafficIncidentViewportWithResponse(
-            ResponseFormat format,
-            List<Double> boundingbox,
-            int boundingzoom,
-            List<Double> overviewbox,
-            int overviewzoom,
-            Boolean copyright) {
-        return this.getTrafficIncidentViewportWithResponse(format, boundingbox, boundingzoom, overviewbox, overviewzoom, copyright, null);
+    public Mono<Response<TrafficIncidentViewport>> getTrafficIncidentViewportWithResponse(TrafficIncidentViewportOptions options) {
+        return this.getTrafficIncidentViewportWithResponse(options, null);
     }
     
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Mono<Response<TrafficIncidentViewport>> getTrafficIncidentViewportWithResponse(
-        ResponseFormat format,
-        List<Double> boundingbox,
-        int boundingzoom,
-        List<Double> overviewbox,
-        int overviewzoom,
-        Boolean copyright, 
-        Context context) {
-            return this.serviceClient.getTrafficIncidentViewportWithResponseAsync(format, boundingbox, boundingzoom, overviewbox, overviewzoom, copyright);
+    Mono<Response<TrafficIncidentViewport>> getTrafficIncidentViewportWithResponse(TrafficIncidentViewportOptions options, Context context) {
+            return this.serviceClient.getTrafficIncidentViewportWithResponseAsync(
+                options.getFormat(), 
+                options.getBoundingBox(), 
+                options.getBoundingZoom(), 
+                options.getOverviewBox(), 
+                options.getOverviewZoom(), 
+                options.getCopyright());
     }
 }

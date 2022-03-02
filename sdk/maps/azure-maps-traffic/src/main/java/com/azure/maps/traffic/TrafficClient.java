@@ -25,6 +25,7 @@ import com.azure.maps.traffic.models.TrafficFlowSegmentOptions;
 import com.azure.maps.traffic.models.TrafficFlowTileOptions;
 import com.azure.maps.traffic.models.TrafficIncidentDetailOptions;
 import com.azure.maps.traffic.models.TrafficIncidentTileOptions;
+import com.azure.maps.traffic.models.TrafficIncidentViewportOptions;
 import com.fasterxml.jackson.databind.util.ByteBufferBackedInputStream;
 
 import reactor.core.publisher.Mono;
@@ -338,15 +339,8 @@ public final class TrafficClient {
      * @return this object is returned from a successful Traffic Incident Viewport call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public TrafficIncidentViewport getTrafficIncidentViewport(
-            ResponseFormat format,
-            List<Double> boundingbox,
-            int boundingzoom,
-            List<Double> overviewbox,
-            int overviewzoom,
-            Boolean copyright) {
-        return this.asyncClient.getTrafficIncidentViewport(
-                format, boundingbox, boundingzoom, overviewbox, overviewzoom, copyright).block();
+    public TrafficIncidentViewport getTrafficIncidentViewport(TrafficIncidentViewportOptions options) {
+        return this.asyncClient.getTrafficIncidentViewport(options).block();
     }
 
     /**
@@ -375,14 +369,8 @@ public final class TrafficClient {
      * @return
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<TrafficIncidentViewport> getTrafficIncidentViewportWithResponse(
-            ResponseFormat format,
-            List<Double> boundingbox,
-            int boundingzoom,
-            List<Double> overviewbox,
-            int overviewzoom,
-            Boolean copyright) {
-        return this.asyncClient.getTrafficIncidentViewportWithResponse(format, boundingbox, boundingzoom, overviewbox, overviewzoom, copyright).block();
+    public Response<TrafficIncidentViewport> getTrafficIncidentViewportWithResponse(TrafficIncidentViewportOptions options) {
+        return this.asyncClient.getTrafficIncidentViewportWithResponse(options).block();
     }
 
     private InputStream getInputStream(Iterator<ByteBufferBackedInputStream> iterator) {
