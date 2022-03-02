@@ -3,6 +3,9 @@ package com.azure.maps.render.models;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Class representing a bounding box
+ */
 public final class BoundingBox {
     private LatLong topLeft;
     private LatLong bottomRight;
