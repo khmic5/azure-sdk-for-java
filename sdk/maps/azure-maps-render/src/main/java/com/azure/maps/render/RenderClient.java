@@ -178,6 +178,21 @@ public final class RenderClient {
         return this.asyncClient.getMapAttribution(tilesetId, zoom, bounds).block();
     }
 
+    /* @param tilesetId A tileset is a collection of raster or vector data broken up into a uniform grid of square tiles
+     *     at preset zoom levels. Every tileset has a **tilesetId** to use when making requests. The **tilesetId** for
+     *     tilesets created using [Azure Maps Creator](https://aka.ms/amcreator) are generated through the [Tileset
+     *     Create API](https://docs.microsoft.com/en-us/rest/api/maps/tileset). The ready-to-use tilesets supplied by
+     *     Azure Maps are listed below. For example, microsoft.base.
+     * @param zoom Zoom level for the desired map attribution.
+     * @param bounds The string that represents the rectangular area of a bounding box. The bounds parameter is defined
+     *     by the 4 bounding box coordinates, with WGS84 longitude and latitude of the southwest corner followed by
+     *     WGS84 longitude and latitude of the northeast corner. The string is presented in the following format:
+     *     `[SouthwestCorner_Longitude, SouthwestCorner_Latitude, NortheastCorner_Longitude, NortheastCorner_Latitude]`.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return copyright attribution for the requested section of a tileset.
+     */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<MapAttribution> getMapAttributionWithResponse(TilesetID tilesetId, int zoom, BoundingBox bounds, Context context) {
         return this.asyncClient.getMapAttributionWithResponse(tilesetId, zoom, bounds, context).block();
@@ -202,7 +217,7 @@ public final class RenderClient {
         Iterator<ByteBufferBackedInputStream> iterator = this.asyncClient.getMapStateTile(statesetId, tileIndex).map(ByteBufferBackedInputStream::new).toStream().iterator();
         return getInputStream(iterator);
     }
-
+    
     @ServiceMethod(returns = ReturnType.SINGLE)
     public SimpleResponse<InputStream> getMapStateTileWithResponse(String statesetId, TileIndex tileIndex, Context context) {
         Mono<StreamResponse> monoResp = this.asyncClient.getMapStateTileWithResponse(statesetId, tileIndex, context); 

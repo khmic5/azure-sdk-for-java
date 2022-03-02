@@ -590,12 +590,6 @@ public final class RenderAsyncClient {
         }); 
     }
 
-    public Flux<ByteBuffer> getMapStaticImageTest(MapStaticImageOptions options) {
-        Mono<StreamResponse> responseMono = this.getMapStaticImageWithResponse(options, null);
-        StreamResponse streamResponse = responseMono.block();
-        return streamResponse.getValue();
-    }
-
         /**
      * **Applies to**: S0 and S1 pricing tiers.
      *
