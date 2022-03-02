@@ -93,7 +93,6 @@ public final class RenderAsyncClient {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the response.
      */
-
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Flux<ByteBuffer> getMapTile(MapTileOptions options) {
         Mono<StreamResponse> responseMono = this.getMapTileWithResponse(options, null);
@@ -170,7 +169,7 @@ public final class RenderAsyncClient {
             options.getLanguage(), 
             options.getLocalizedMapView());
     }
-    
+
     /**
      * Applies to: S0 and S1 pricing tiers.
      * The Get Map Tileset API allows users to request metadata for a tileset.
