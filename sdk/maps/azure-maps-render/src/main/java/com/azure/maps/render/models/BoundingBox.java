@@ -7,6 +7,9 @@ public final class BoundingBox {
     private LatLong topLeft;
     private LatLong bottomRight;
 
+    /**
+     * Constructor
+     */
     public BoundingBox() {
     }
 
