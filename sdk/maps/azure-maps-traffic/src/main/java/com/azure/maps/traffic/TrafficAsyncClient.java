@@ -209,12 +209,8 @@ public final class TrafficAsyncClient {
         Integer thickness,
         Boolean openLr, 
         Context context) {
-            Mono<Response<TrafficFlowSegmentData>> responseMono = this.serviceClient.getTrafficFlowSegmentWithResponseAsync(
+            return this.serviceClient.getTrafficFlowSegmentWithResponseAsync(
                    format, style, zoom, coordinates, unit, thickness, openLr);
-            return responseMono.flatMap(response -> {
-                Response<TrafficFlowSegmentData> simpleResponse = Utility.createTrafficFlowSegmentResponse(response);
-                return Mono.just(simpleResponse);
-            });
     }
 
     /**
@@ -433,30 +429,6 @@ public final class TrafficAsyncClient {
             originalPosition, 
             null);
     }
-
-    // return this.serviceClient.getTrafficIncidentDetailAsync(
-    //             format,
-    //             style,
-    //             boundingbox,
-    //             boundingZoom,
-    //             trafficmodelid,
-    //             language,
-    //             projection,
-    //             geometries,
-    //             expandCluster,
-    //             originalPosition);
-
-    // return this.serviceClient.getTrafficIncidentDetailWithResponseAsync(
-    //             format,
-    //             style,
-    //             boundingbox,
-    //             boundingZoom,
-    //             trafficmodelid,
-    //             language,
-    //             projection,
-    //             geometries,
-    //             expandCluster,
-    //             originalPosition);
     
     @ServiceMethod(returns = ReturnType.SINGLE)
     Mono<Response<TrafficIncidentDetail>> getTrafficIncidentDetailWithResponse(
@@ -483,7 +455,6 @@ public final class TrafficAsyncClient {
             expandCluster,
             originalPosition);
     }
-
 
     /**
      * __Traffic Incident Viewport__
@@ -531,8 +502,11 @@ public final class TrafficAsyncClient {
             List<Double> overviewbox,
             int overviewzoom,
             Boolean copyright) {
-        return this.serviceClient.getTrafficIncidentViewportAsync(
-                format, boundingbox, boundingzoom, overviewbox, overviewzoom, copyright);
+        Mono<Response<TrafficIncidentViewport>> result = this.getTrafficIncidentViewportWithResponse(
+            format, boundingbox, boundingzoom, overviewbox, overviewzoom, copyright, null);
+        return result.flatMap(response -> {
+            return Mono.just(response.getValue());
+        });
     }
 
     /**
@@ -581,7 +555,18 @@ public final class TrafficAsyncClient {
             List<Double> overviewbox,
             int overviewzoom,
             Boolean copyright) {
-        return this.serviceClient.getTrafficIncidentViewportWithResponseAsync(
-                format, boundingbox, boundingzoom, overviewbox, overviewzoom, copyright);
+        return this.getTrafficIncidentViewportWithResponse(format, boundingbox, boundingzoom, overviewbox, overviewzoom, copyright, null);
+    }
+    
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    Mono<Response<TrafficIncidentViewport>> getTrafficIncidentViewportWithResponse(
+        ResponseFormat format,
+        List<Double> boundingbox,
+        int boundingzoom,
+        List<Double> overviewbox,
+        int overviewzoom,
+        Boolean copyright, 
+        Context context) {
+            return this.serviceClient.getTrafficIncidentViewportWithResponseAsync(format, boundingbox, boundingzoom, overviewbox, overviewzoom, copyright);
     }
 }
