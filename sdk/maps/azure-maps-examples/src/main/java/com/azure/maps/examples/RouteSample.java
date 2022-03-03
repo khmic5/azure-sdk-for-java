@@ -51,7 +51,7 @@ public class RouteSample {
         builder.httpLogOptions(new HttpLogOptions().setLogLevel(HttpLogDetailLevel.BODY_AND_HEADERS));
         RouteClient client = builder.buildClient();
 
-        /* One-shot operations
+        /* One-shot operations */
 
         System.out.println("Get route directions");
         List<LatLong> routePoints = Arrays.asList(
@@ -127,8 +127,9 @@ public class RouteSample {
         List<RouteDirectionsOptions> optionsList = Arrays.asList(options1, options2, options3);
         SyncPoller<RouteDirectionsBatchResult, RouteDirectionsBatchResult> poller =
             client.beginRequestRouteDirectionsBatch(optionsList);
-        // MapsCommon.print(poller.getFinalResult());
-        */
+        // this will print a lot of data
+        RouteDirectionsBatchResult batch = poller.getFinalResult();
+        MapsCommon.print("Batch summary: " + batch.getBatchItems().size());
 
         System.out.println("Request route matrix");
         RouteMatrixQuery matrixQuery = new RouteMatrixQuery();
