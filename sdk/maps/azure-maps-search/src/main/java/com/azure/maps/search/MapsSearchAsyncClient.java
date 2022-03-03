@@ -163,7 +163,7 @@ public final class MapsSearchAsyncClient {
      * @return this object is returned from a successful Search calls.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Mono<Response<SearchAddressResult>> fuzzySearchWithResponse(FuzzySearchOptions options) {
+    public Mono<Response<SearchAddressResult>> fuzzySearchWithResponse(FuzzySearchOptions options) {
         return this.fuzzySearchWithResponse(options, null);
     }
 

@@ -110,5 +110,4 @@ public class MapsSearchClientBuilderTest {
             builder.buildClient();
         });
     }
-
 }
