@@ -2,10 +2,10 @@ package com.azure.maps.traffic.models;
 
 import java.util.List;
 
-public class TrafficIncidentDetailOptions {
+public final class TrafficIncidentDetailOptions {
     private ResponseFormat format;
     private IncidentDetailStyle style;
-    private List<Double> boundingbox;
+    private GeoBoundingBox boundingbox;
     private int boundingZoom;
     private String trafficmodelid;
     private String language;
@@ -35,11 +35,11 @@ public class TrafficIncidentDetailOptions {
         return this;
     }
 
-    public List<Double> getBoundingBox() {
+    public GeoBoundingBox getBoundingBox() {
         return boundingbox;
     }
 
-    public TrafficIncidentDetailOptions setBoundingBox(List<Double> boundingbox) {
+    public TrafficIncidentDetailOptions setBoundingBox(GeoBoundingBox boundingbox) {
         this.boundingbox = boundingbox;
         return this;
     }

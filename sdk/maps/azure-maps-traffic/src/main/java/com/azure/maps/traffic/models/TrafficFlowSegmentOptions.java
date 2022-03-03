@@ -2,7 +2,7 @@ package com.azure.maps.traffic.models;
 
 import java.util.List;
 
-public class TrafficFlowSegmentOptions {
+public final class TrafficFlowSegmentOptions {
     private ResponseFormat format;
     private TrafficFlowSegmentStyle style;
     private int zoom;

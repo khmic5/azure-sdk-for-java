@@ -1,6 +1,6 @@
 package com.azure.maps.traffic.models;
 
-public class TrafficFlowTileOptions {
+public final class TrafficFlowTileOptions {
     private TileFormat format;
     private TrafficFlowTileStyle style;
     private int zoom;

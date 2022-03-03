@@ -7,6 +7,7 @@
 package com.azure.maps.traffic.implementation.models;
 
 import com.azure.core.annotation.Immutable;
+import com.azure.maps.traffic.models.TrafficIncidentPointOfInterest;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 

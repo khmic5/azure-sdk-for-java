@@ -1,6 +1,6 @@
 package com.azure.maps.traffic.models;
 
-public class TrafficIncidentTileOptions {
+public final class TrafficIncidentTileOptions {
     private TileFormat format;
     private TrafficIncidentTileStyle style;
     private int zoom;

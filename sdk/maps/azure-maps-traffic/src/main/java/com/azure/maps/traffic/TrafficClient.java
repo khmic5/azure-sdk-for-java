@@ -8,7 +8,6 @@ import java.io.InputStream;
 import java.io.SequenceInputStream;
 import java.util.Enumeration;
 import java.util.Iterator;
-import java.util.List;
 
 import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceClient;
@@ -16,8 +15,6 @@ import com.azure.core.annotation.ServiceMethod;
 import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.SimpleResponse;
 import com.azure.core.http.rest.StreamResponse;
-import com.azure.maps.traffic.implementation.models.ErrorResponseException;
-import com.azure.maps.traffic.implementation.models.ResponseFormat;
 import com.azure.maps.traffic.implementation.models.TrafficFlowSegmentData;
 import com.azure.maps.traffic.implementation.models.TrafficIncidentDetail;
 import com.azure.maps.traffic.implementation.models.TrafficIncidentViewport;

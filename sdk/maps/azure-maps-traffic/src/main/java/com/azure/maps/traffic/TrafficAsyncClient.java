@@ -13,7 +13,7 @@ import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.StreamResponse;
 import com.azure.core.util.Context;
 import com.azure.maps.traffic.implementation.TrafficsImpl;
-import com.azure.maps.traffic.implementation.models.ErrorResponseException;
+import com.azure.maps.traffic.implementation.helpers.Utility;
 import com.azure.maps.traffic.implementation.models.TrafficFlowSegmentData;
 import com.azure.maps.traffic.implementation.models.TrafficIncidentDetail;
 import com.azure.maps.traffic.implementation.models.TrafficIncidentViewport;
@@ -377,7 +377,7 @@ public final class TrafficAsyncClient {
         return this.serviceClient.getTrafficIncidentDetailWithResponseAsync(
             options.getFormat(),
             options.getIncidentDetailStyle(),
-            options.getBoundingBox(),
+            Utility.toBoundingBox(options.getBoundingBox()),
             options.getBoundingZoom(),
             options.getTrafficmodelid(),
             options.getLanguage(),
@@ -480,7 +480,7 @@ public final class TrafficAsyncClient {
     Mono<Response<TrafficIncidentViewport>> getTrafficIncidentViewportWithResponse(TrafficIncidentViewportOptions options, Context context) {
             return this.serviceClient.getTrafficIncidentViewportWithResponseAsync(
                 options.getFormat(), 
-                options.getBoundingBox(), 
+                Utility.toBoundingBox(options.getBoundingBox()),
                 options.getBoundingZoom(), 
                 options.getOverviewBox(), 
                 options.getOverviewZoom(), 
