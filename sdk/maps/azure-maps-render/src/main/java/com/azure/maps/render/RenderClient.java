@@ -114,6 +114,10 @@ public final class RenderClient {
     }
 
     /**
+     * The Get Map Tiles With Response API allows users to request map tiles in vector or raster formats typically to be integrated
+     * into a map control or SDK with response. Some example tiles that can be requested are Azure Maps road tiles, real-time Weather
+     * Radar tiles or the map tiles created using [Azure Maps Creator](https://aka.ms/amcreator). By default, Azure Maps
+     * uses vector tiles for its web map control (Web SDK) and Android SDK.
      * @param tilesetId A tileset is a collection of raster or vector data broken up into a uniform grid of square tiles
      *     at preset zoom levels. Every tileset has a **tilesetId** to use when making requests. The **tilesetId** for
      *     tilesets created using [Azure Maps Creator](https://aka.ms/amcreator) are generated through the [Tileset
