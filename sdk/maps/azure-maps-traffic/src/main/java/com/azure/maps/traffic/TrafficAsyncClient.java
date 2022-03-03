@@ -188,7 +188,7 @@ public final class TrafficAsyncClient {
                    options.getFormat(), 
                    options.getTrafficFlowSegmentStyle(), 
                    options.getZoom(), 
-                   options.getCoordinates(), 
+                   Utility.toCoordinates(options.getCoordinates()), 
                    options.getUnit(), 
                    options.getThickness(),
                    options.getOpenLr());
@@ -482,7 +482,7 @@ public final class TrafficAsyncClient {
                 options.getFormat(), 
                 Utility.toBoundingBox(options.getBoundingBox()),
                 options.getBoundingZoom(), 
-                options.getOverviewBox(), 
+                Utility.toBoundingBox(options.getOverviewBox()), 
                 options.getOverviewZoom(), 
                 options.getCopyright());
     }

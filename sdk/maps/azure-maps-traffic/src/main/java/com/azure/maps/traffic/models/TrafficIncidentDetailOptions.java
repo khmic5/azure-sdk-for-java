@@ -1,7 +1,5 @@
 package com.azure.maps.traffic.models;
 
-import java.util.List;
-
 public final class TrafficIncidentDetailOptions {
     private ResponseFormat format;
     private IncidentDetailStyle style;

@@ -1,16 +1,19 @@
 package com.azure.maps.traffic.models;
 
-import java.util.List;
-
 public final class TrafficFlowSegmentOptions {
     private ResponseFormat format;
     private TrafficFlowSegmentStyle style;
     private int zoom;
-    private List<Double> coordinates;
+    private GeoPosition coordinates;
     private SpeedUnit unit;
     private Integer thickness;
     private Boolean openLr;
-
+/**
+ * Coordinates of the point close to the road segment. This parameter is a list of four
+     *     coordinates, containing two coordinate pairs (lat, long, lat, long), and calculated using EPSG4326
+     *     projection. When this endpoint is called directly, coordinates are passed in as a single string containing
+     *     four coordinates, separated by commas.
+ */
     public TrafficFlowSegmentOptions() {
     }
 
@@ -41,11 +44,11 @@ public final class TrafficFlowSegmentOptions {
         return this;
     }
     
-    public List<Double> getCoordinates() {
+    public GeoPosition getCoordinates() {
         return coordinates;
     }
 
-    public TrafficFlowSegmentOptions setCoordinates(List<Double> coordinates) {
+    public TrafficFlowSegmentOptions setCoordinates(GeoPosition coordinates) {
         this.coordinates = coordinates;
         return this;
     }

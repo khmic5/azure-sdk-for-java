@@ -1,12 +1,10 @@
 package com.azure.maps.traffic.models;
 
-import java.util.List;
-
 public final class TrafficIncidentViewportOptions {
     private ResponseFormat format;
     private GeoBoundingBox boundingbox;
     private int boundingzoom;
-    private List<Double> overviewbox;
+    private GeoBoundingBox overviewbox;
     private int overviewzoom;
     private Boolean copyright;
 
@@ -35,11 +33,11 @@ public final class TrafficIncidentViewportOptions {
         return this;
     }
 
-    public List<Double> getOverviewBox() {
+    public GeoBoundingBox getOverviewBox() {
         return overviewbox;
     }
 
-    public TrafficIncidentViewportOptions setOverviewBox(List<Double> overviewBox) {
+    public TrafficIncidentViewportOptions setOverview(GeoBoundingBox overviewBox) {
         this.overviewbox = overviewBox;
         return this;
     }
