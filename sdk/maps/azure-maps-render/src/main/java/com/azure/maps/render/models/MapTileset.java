@@ -40,15 +40,6 @@ public final class MapTileset {
             public void setCenter(MapTileset mapTileset, Center center) {
                 mapTileset.setCenter(center);
             }
-            @Override
-            public void setBounds(MapTileset mapTileset, BoundingBox bounds) {
-                mapTileset.setBounds(bounds);
-                
-            }
-            @Override
-            public void setCenter(MapTileset mapTileset, Center center) {
-                mapTileset.setCenter(center);
-            }
         });
     }
 

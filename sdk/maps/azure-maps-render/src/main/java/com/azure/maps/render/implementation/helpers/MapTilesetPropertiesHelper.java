@@ -29,12 +29,4 @@ public final class MapTilesetPropertiesHelper {
     public static void setCenter(MapTileset mapTileset, Center center) {
         accessor.setCenter(mapTileset, center);
     }
-
-    public static void setBounds(MapTileset mapTileset, BoundingBox bounds) {
-        accessor.setBounds(mapTileset, bounds);
-    }
-
-    public static void setCenter(MapTileset mapTileset, Center center) {
-        accessor.setCenter(mapTileset, center);
-    }
 }
