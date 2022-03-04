@@ -15,7 +15,6 @@ import com.azure.core.annotation.ServiceMethod;
 import com.azure.core.http.rest.Response;
 import com.azure.core.util.Context;
 import com.azure.core.util.polling.SyncPoller;
-import com.azure.maps.route.implementation.models.BatchRequest;
 import com.azure.maps.route.models.ErrorResponseException;
 import com.azure.maps.route.models.RouteDirections;
 import com.azure.maps.route.models.RouteDirectionsBatchResult;

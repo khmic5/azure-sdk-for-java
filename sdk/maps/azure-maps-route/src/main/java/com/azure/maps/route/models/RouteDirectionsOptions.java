@@ -3,8 +3,10 @@ package com.azure.maps.route.models;
 import java.time.OffsetDateTime;
 import java.util.List;
 
+import com.azure.core.models.GeoPosition;
+
 public class RouteDirectionsOptions extends BaseRouteOptions<RouteDirectionsOptions> {
-    private List<LatLong> routePoints;
+    private List<GeoPosition> routePoints;
     private Integer maxAlternatives;
     private AlternativeRouteType alternativeType;
     private Integer minDeviationDistance;
@@ -19,11 +21,11 @@ public class RouteDirectionsOptions extends BaseRouteOptions<RouteDirectionsOpti
     private Report report;
     private SectionType filterSectionType;
 
-    public RouteDirectionsOptions(List<LatLong> routePoints) {
+    public RouteDirectionsOptions(List<GeoPosition> routePoints) {
         this.routePoints = routePoints;
     }
 
-    public List<LatLong> getRoutePoints() {
+    public List<GeoPosition> getRoutePoints() {
         return this.routePoints;
     }
 
@@ -79,7 +81,7 @@ public class RouteDirectionsOptions extends BaseRouteOptions<RouteDirectionsOpti
         return this.filterSectionType;
     }
 
-    public RouteDirectionsOptions setRoutePoints(List<LatLong> routePoints) {
+    public RouteDirectionsOptions setRoutePoints(List<GeoPosition> routePoints) {
         this.routePoints = routePoints;
         return this;
     }
