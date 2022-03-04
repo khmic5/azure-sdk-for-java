@@ -5,6 +5,7 @@
 package com.azure.maps.route.models;
 
 import com.azure.core.annotation.Fluent;
+import com.azure.core.models.GeoPosition;
 import com.azure.maps.route.implementation.models.LatLongPair;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
@@ -30,15 +31,15 @@ public final class RouteRange {
      *
      * @return the center value.
      */
-    public LatLong getCenter() {
+    public GeoPosition getCenter() {
         LatLongPair returnValue = this.center;
-        return new LatLong(returnValue.getLatitude(), returnValue.getLongitude());
+        return new GeoPosition(returnValue.getLongitude(), returnValue.getLatitude());
     }
 
-    /** * Returns a list of {@link LatLong} coordinates.* * return the coordinates */
-    public List<LatLong> getBoundary() {
+    /** * Returns a list of {@link GeoPosition} coordinates.* * return the coordinates */
+    public List<GeoPosition> getBoundary() {
         return this.boundary.stream()
-                .map(item -> new LatLong(item.getLatitude(), item.getLongitude()))
+                .map(item -> new GeoPosition(item.getLongitude(), item.getLatitude()))
                 .collect(Collectors.toList());
     }
 }

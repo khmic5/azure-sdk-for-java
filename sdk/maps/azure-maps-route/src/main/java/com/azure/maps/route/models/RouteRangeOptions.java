@@ -1,18 +1,20 @@
 package com.azure.maps.route.models;
 
+import com.azure.core.models.GeoPosition;
+
 public class RouteRangeOptions extends BaseRouteOptions<RouteRangeOptions> {
-    private LatLong startingPoint;
+    private GeoPosition startingPoint;
     private Double fuelBudgetInLiters;
     private Double energyBudgetInKwH;
     private Double timeBudgetInSec;
     private Double distanceBudgetInMeters;
 
-    public RouteRangeOptions(LatLong startingPoint, Double timeBudgetInSec) {
+    public RouteRangeOptions(GeoPosition startingPoint, Double timeBudgetInSec) {
         this.startingPoint = startingPoint;
         this.timeBudgetInSec = timeBudgetInSec;
     }
 
-    public LatLong getStartingPoint() {
+    public GeoPosition getStartingPoint() {
         return this.startingPoint;
     }
 
@@ -32,7 +34,7 @@ public class RouteRangeOptions extends BaseRouteOptions<RouteRangeOptions> {
         return this.distanceBudgetInMeters;
     }
 
-    public RouteRangeOptions setStartingPoint(LatLong startingPoint) {
+    public RouteRangeOptions setStartingPoint(GeoPosition startingPoint) {
         this.startingPoint = startingPoint;
         return this;
     }
