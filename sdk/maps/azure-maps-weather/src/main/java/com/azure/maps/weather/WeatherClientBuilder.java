@@ -4,11 +4,13 @@
 
 package com.azure.maps.weather;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.annotation.ServiceClientBuilder;
 import com.azure.core.http.HttpClient;
 import com.azure.core.http.HttpHeaders;
 import com.azure.core.http.HttpPipeline;
 import com.azure.core.http.HttpPipelineBuilder;
+import com.azure.core.http.HttpPipelinePosition;
 import com.azure.core.http.policy.AddHeadersPolicy;
 import com.azure.core.http.policy.CookiePolicy;
 import com.azure.core.http.policy.HttpLogOptions;
@@ -27,19 +29,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /** A builder for creating a new instance of the WeatherClient type. */
 @ServiceClientBuilder(serviceClients = {WeatherClient.class, WeatherAsyncClient.class})
 public final class WeatherClientBuilder {
-    private static final String SDK_NAME = "name";
+    @Generated private static final String SDK_NAME = "name";
 
-    private static final String SDK_VERSION = "version";
+    @Generated private static final String SDK_VERSION = "version";
 
-    static final String[] DEFAULT_SCOPES = new String[] {"https://atlas.microsoft.com/.default"};
-
-    private final Map<String, String> properties = new HashMap<>();
+    @Generated private final Map<String, String> properties = new HashMap<>();
 
     /** Create an instance of the WeatherClientBuilder. */
+    @Generated
     public WeatherClientBuilder() {
         this.pipelinePolicies = new ArrayList<>();
     }
@@ -51,7 +53,7 @@ public final class WeatherClientBuilder {
      * Account API. To use Azure AD security in Azure Maps see the following
      * [articles](https://aka.ms/amauthdetails) for guidance.
      */
-    private String clientId;
+    @Generated private String clientId;
 
     /**
      * Sets Specifies which account is intended for usage in conjunction with the Azure AD security model. It represents
@@ -61,6 +63,7 @@ public final class WeatherClientBuilder {
      * @param clientId the clientId value.
      * @return the WeatherClientBuilder.
      */
+    @Generated
     public WeatherClientBuilder clientId(String clientId) {
         this.clientId = clientId;
         return this;
@@ -69,7 +72,7 @@ public final class WeatherClientBuilder {
     /*
      * server parameter
      */
-    private String host;
+    @Generated private String host;
 
     /**
      * Sets server parameter.
@@ -77,6 +80,7 @@ public final class WeatherClientBuilder {
      * @param host the host value.
      * @return the WeatherClientBuilder.
      */
+    @Generated
     public WeatherClientBuilder host(String host) {
         this.host = host;
         return this;
@@ -85,7 +89,7 @@ public final class WeatherClientBuilder {
     /*
      * Api Version
      */
-    private String apiVersion;
+    @Generated private String apiVersion;
 
     /**
      * Sets Api Version.
@@ -93,6 +97,7 @@ public final class WeatherClientBuilder {
      * @param apiVersion the apiVersion value.
      * @return the WeatherClientBuilder.
      */
+    @Generated
     public WeatherClientBuilder apiVersion(String apiVersion) {
         this.apiVersion = apiVersion;
         return this;
@@ -101,7 +106,7 @@ public final class WeatherClientBuilder {
     /*
      * The HTTP pipeline to send requests through
      */
-    private HttpPipeline pipeline;
+    @Generated private HttpPipeline pipeline;
 
     /**
      * Sets The HTTP pipeline to send requests through.
@@ -109,6 +114,7 @@ public final class WeatherClientBuilder {
      * @param pipeline the pipeline value.
      * @return the WeatherClientBuilder.
      */
+    @Generated
     public WeatherClientBuilder pipeline(HttpPipeline pipeline) {
         this.pipeline = pipeline;
         return this;
@@ -117,7 +123,7 @@ public final class WeatherClientBuilder {
     /*
      * The serializer to serialize an object into a string
      */
-    private SerializerAdapter serializerAdapter;
+    @Generated private SerializerAdapter serializerAdapter;
 
     /**
      * Sets The serializer to serialize an object into a string.
@@ -125,6 +131,7 @@ public final class WeatherClientBuilder {
      * @param serializerAdapter the serializerAdapter value.
      * @return the WeatherClientBuilder.
      */
+    @Generated
     public WeatherClientBuilder serializerAdapter(SerializerAdapter serializerAdapter) {
         this.serializerAdapter = serializerAdapter;
         return this;
@@ -133,7 +140,7 @@ public final class WeatherClientBuilder {
     /*
      * The HTTP client used to send the request.
      */
-    private HttpClient httpClient;
+    @Generated private HttpClient httpClient;
 
     /**
      * Sets The HTTP client used to send the request.
@@ -141,6 +148,7 @@ public final class WeatherClientBuilder {
      * @param httpClient the httpClient value.
      * @return the WeatherClientBuilder.
      */
+    @Generated
     public WeatherClientBuilder httpClient(HttpClient httpClient) {
         this.httpClient = httpClient;
         return this;
@@ -150,7 +158,7 @@ public final class WeatherClientBuilder {
      * The configuration store that is used during construction of the service
      * client.
      */
-    private Configuration configuration;
+    @Generated private Configuration configuration;
 
     /**
      * Sets The configuration store that is used during construction of the service client.
@@ -158,6 +166,7 @@ public final class WeatherClientBuilder {
      * @param configuration the configuration value.
      * @return the WeatherClientBuilder.
      */
+    @Generated
     public WeatherClientBuilder configuration(Configuration configuration) {
         this.configuration = configuration;
         return this;
@@ -166,7 +175,7 @@ public final class WeatherClientBuilder {
     /*
      * The logging configuration for HTTP requests and responses.
      */
-    private HttpLogOptions httpLogOptions;
+    @Generated private HttpLogOptions httpLogOptions;
 
     /**
      * Sets The logging configuration for HTTP requests and responses.
@@ -174,6 +183,7 @@ public final class WeatherClientBuilder {
      * @param httpLogOptions the httpLogOptions value.
      * @return the WeatherClientBuilder.
      */
+    @Generated
     public WeatherClientBuilder httpLogOptions(HttpLogOptions httpLogOptions) {
         this.httpLogOptions = httpLogOptions;
         return this;
@@ -183,7 +193,7 @@ public final class WeatherClientBuilder {
      * The retry policy that will attempt to retry failed requests, if
      * applicable.
      */
-    private RetryPolicy retryPolicy;
+    @Generated private RetryPolicy retryPolicy;
 
     /**
      * Sets The retry policy that will attempt to retry failed requests, if applicable.
@@ -191,6 +201,7 @@ public final class WeatherClientBuilder {
      * @param retryPolicy the retryPolicy value.
      * @return the WeatherClientBuilder.
      */
+    @Generated
     public WeatherClientBuilder retryPolicy(RetryPolicy retryPolicy) {
         this.retryPolicy = retryPolicy;
         return this;
@@ -199,13 +210,13 @@ public final class WeatherClientBuilder {
     /*
      * The list of Http pipeline policies to add.
      */
-    private final List<HttpPipelinePolicy> pipelinePolicies;
+    @Generated private final List<HttpPipelinePolicy> pipelinePolicies;
 
     /*
      * The client options such as application ID and custom headers to set on a
      * request.
      */
-    private ClientOptions clientOptions;
+    @Generated private ClientOptions clientOptions;
 
     /**
      * Sets The client options such as application ID and custom headers to set on a request.
@@ -213,6 +224,7 @@ public final class WeatherClientBuilder {
      * @param clientOptions the clientOptions value.
      * @return the WeatherClientBuilder.
      */
+    @Generated
     public WeatherClientBuilder clientOptions(ClientOptions clientOptions) {
         this.clientOptions = clientOptions;
         return this;
@@ -224,6 +236,7 @@ public final class WeatherClientBuilder {
      * @param customPolicy The custom Http pipeline policy to add.
      * @return the WeatherClientBuilder.
      */
+    @Generated
     public WeatherClientBuilder addPolicy(HttpPipelinePolicy customPolicy) {
         pipelinePolicies.add(customPolicy);
         return this;
@@ -234,12 +247,13 @@ public final class WeatherClientBuilder {
      *
      * @return an instance of WeatherClientImpl.
      */
+    @Generated
     private WeatherClientImpl buildInnerClient() {
         if (host == null) {
             this.host = "https://atlas.microsoft.com";
         }
         if (apiVersion == null) {
-            this.apiVersion = "1.0";
+            this.apiVersion = "1.1";
         }
         if (pipeline == null) {
             this.pipeline = createHttpPipeline();
@@ -251,6 +265,7 @@ public final class WeatherClientBuilder {
         return client;
     }
 
+    @Generated
     private HttpPipeline createHttpPipeline() {
         Configuration buildConfiguration =
                 (configuration == null) ? Configuration.getGlobalConfiguration() : configuration;
@@ -270,16 +285,24 @@ public final class WeatherClientBuilder {
         if (headers.getSize() > 0) {
             policies.add(new AddHeadersPolicy(headers));
         }
+        policies.addAll(
+                this.pipelinePolicies.stream()
+                        .filter(p -> p.getPipelinePosition() == HttpPipelinePosition.PER_CALL)
+                        .collect(Collectors.toList()));
         HttpPolicyProviders.addBeforeRetryPolicies(policies);
         policies.add(retryPolicy == null ? new RetryPolicy() : retryPolicy);
         policies.add(new CookiePolicy());
-        policies.addAll(this.pipelinePolicies);
+        policies.addAll(
+                this.pipelinePolicies.stream()
+                        .filter(p -> p.getPipelinePosition() == HttpPipelinePosition.PER_RETRY)
+                        .collect(Collectors.toList()));
         HttpPolicyProviders.addAfterRetryPolicies(policies);
         policies.add(new HttpLoggingPolicy(httpLogOptions));
         HttpPipeline httpPipeline =
                 new HttpPipelineBuilder()
                         .policies(policies.toArray(new HttpPipelinePolicy[0]))
                         .httpClient(httpClient)
+                        .clientOptions(clientOptions)
                         .build();
         return httpPipeline;
     }
@@ -289,8 +312,9 @@ public final class WeatherClientBuilder {
      *
      * @return an instance of WeatherAsyncClient.
      */
+    @Generated
     public WeatherAsyncClient buildAsyncClient() {
-        return new WeatherAsyncClient(buildInnerClient());
+        return new WeatherAsyncClient(buildInnerClient().getWeathers());
     }
 
     /**
@@ -298,7 +322,8 @@ public final class WeatherClientBuilder {
      *
      * @return an instance of WeatherClient.
      */
+    @Generated
     public WeatherClient buildClient() {
-        return new WeatherClient(buildInnerClient());
+        return new WeatherClient(buildInnerClient().getWeathers());
     }
 }
