@@ -3,8 +3,10 @@ package com.azure.maps.traffic.implementation.helpers;
 import java.util.Arrays;
 import java.util.List;
 
-import com.azure.maps.traffic.models.GeoPosition;
-import com.azure.maps.traffic.models.GeoBoundingBox;
+import com.azure.core.models.GeoBoundingBox;
+import com.azure.core.models.GeoPosition;
+
+
 
 public class Utility {
     // public static SimpleResponse<TrafficFlowSegmentData> createTrafficFlowSegmentResponse(Response<TrafficFlowSegmentData> response) {
