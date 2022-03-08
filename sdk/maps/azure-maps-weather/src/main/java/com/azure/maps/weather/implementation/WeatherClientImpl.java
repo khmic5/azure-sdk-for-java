@@ -105,7 +105,7 @@ public final class WeatherClientImpl {
      * @param host server parameter.
      * @param apiVersion Api Version.
      */
-    public WeatherClientImpl(String clientId, String host, String apiVersion) {
+    WeatherClientImpl(String clientId, String host, String apiVersion) {
         this(
                 new HttpPipelineBuilder()
                         .policies(new UserAgentPolicy(), new RetryPolicy(), new CookiePolicy())
@@ -127,7 +127,7 @@ public final class WeatherClientImpl {
      * @param host server parameter.
      * @param apiVersion Api Version.
      */
-    public WeatherClientImpl(HttpPipeline httpPipeline, String clientId, String host, String apiVersion) {
+    WeatherClientImpl(HttpPipeline httpPipeline, String clientId, String host, String apiVersion) {
         this(httpPipeline, JacksonAdapter.createDefaultSerializerAdapter(), clientId, host, apiVersion);
     }
 
@@ -143,7 +143,7 @@ public final class WeatherClientImpl {
      * @param host server parameter.
      * @param apiVersion Api Version.
      */
-    public WeatherClientImpl(
+    WeatherClientImpl(
             HttpPipeline httpPipeline,
             SerializerAdapter serializerAdapter,
             String clientId,

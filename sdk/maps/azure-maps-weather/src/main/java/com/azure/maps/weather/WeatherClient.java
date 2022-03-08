@@ -4,13 +4,16 @@
 
 package com.azure.maps.weather;
 
+import java.time.LocalDate;
+import java.util.List;
+
 import com.azure.core.annotation.Generated;
 import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceClient;
 import com.azure.core.annotation.ServiceMethod;
 import com.azure.core.http.rest.Response;
+import com.azure.core.models.GeoPosition;
 import com.azure.core.util.Context;
-import com.azure.maps.weather.implementation.WeathersImpl;
 import com.azure.maps.weather.implementation.models.ActiveStormResult;
 import com.azure.maps.weather.implementation.models.AirQualityResult;
 import com.azure.maps.weather.implementation.models.BasinId;
@@ -34,13 +37,14 @@ import com.azure.maps.weather.implementation.models.StormLocationsResult;
 import com.azure.maps.weather.implementation.models.StormSearchResult;
 import com.azure.maps.weather.implementation.models.WeatherAlongRouteResult;
 import com.azure.maps.weather.implementation.models.WeatherDataUnit;
-import java.time.LocalDate;
-import java.util.List;
+import com.azure.maps.weather.models.TropicalStormForecastOptions;
+import com.azure.maps.weather.models.TropicalStormLocationOptions;
+import com.azure.maps.weather.models.Waypoint;
 
 /** Initializes a new instance of the synchronous WeatherClient type. */
 @ServiceClient(builder = WeatherClientBuilder.class)
 public final class WeatherClient {
-    @Generated private final WeathersImpl serviceClient;
+    private WeatherAsyncClient asyncClient;
 
     /**
      * Initializes an instance of Weathers client.
@@ -48,8 +52,8 @@ public final class WeatherClient {
      * @param serviceClient the service client implementation.
      */
     @Generated
-    WeatherClient(WeathersImpl serviceClient) {
-        this.serviceClient = serviceClient;
+    WeatherClient(WeatherAsyncClient asyncClient) {
+        this.asyncClient = asyncClient;
     }
 
     /**
@@ -85,240 +89,223 @@ public final class WeatherClient {
      */
     @Generated
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public HourlyForecastResult getHourlyForecast(
-            JsonFormat format, List<Double> coordinates, WeatherDataUnit unit, Integer duration, String language) {
-        return this.serviceClient.getHourlyForecast(format, coordinates, unit, duration, language);
-    }
-
-    /**
-     * **Get Hourly Forecast**
-     *
-     * <p>**Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
-     *
-     * <p>Request detailed weather forecast by the hour for the next 1, 12, 24 (1 day), 72 (3 days), 120 (5 days), and
-     * 240 hours (10 days) for the given the given coordinate location. The API returns details such as temperature,
-     * humidity, wind, precipitation, and ultraviolet (UV) index.
-     *
-     * <p>In S0 you can request hourly forecast for the next 1, 12, 24 hours (1 day), and 72 hours (3 days). In S1 you
-     * can also request hourly forecast for the next 120 (5 days) and 240 hours (10 days).
-     *
-     * @param format Desired format of the response. Only `json` format is supported.
-     * @param coordinates The applicable query specified as a comma separated string composed by latitude followed by
-     *     longitude e.g. "47.641268,-122.125679".
-     * @param unit Specifies to return the data in either metric units or imperial units. Default value is metric.
-     * @param duration Time frame of the returned weather forecast. By default, the forecast data for next hour will be
-     *     returned. Available values are * `1` - Return forecast data for the next hour. Default value. * `12` - Return
-     *     hourly forecast for next 12 hours. * `24` - Return hourly forecast for next 24 hours. * `72` - Return hourly
-     *     forecast for next 72 hours (3 days). * `120` - Return hourly forecast for next 120 hours (5 days). Only
-     *     available in S1 SKU. * `240` - Return hourly forecast for next 240 hours (10 days). Only available in S1 SKU.
-     * @param language Language in which search results should be returned. Should be one of supported IETF language
-     *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used.
-     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
-     *     details.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response.
-     */
-    @Generated
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<HourlyForecastResult> getHourlyForecastWithResponse(
-            JsonFormat format,
-            List<Double> coordinates,
-            WeatherDataUnit unit,
-            Integer duration,
-            String language,
-            Context context) {
-        return this.serviceClient.getHourlyForecastWithResponse(format, coordinates, unit, duration, language, context);
-    }
-
-    /**
-     * **Get Minute Forecast**
-     *
-     * <p>**Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
-     *
-     * <p>Get Minute Forecast service returns minute-by-minute forecasts for a given location for the next 120 minutes.
-     * Users can request weather forecasts in the interval of 1, 5 and 15 minutes. The response will include details
-     * such as the type of precipitation (including rain, snow, or a mixture of both), start time, and precipitation
-     * intensity value (dBZ).
-     *
-     * @param format Desired format of the response. Only `json` format is supported.
-     * @param coordinates The applicable query specified as a comma separated string composed by latitude followed by
-     *     longitude e.g. "47.641268,-122.125679".
-     * @param interval Specifies time interval in minutes for the returned weather forecast. Supported values are * `1`
-     *     - Retrieve forecast for 1-minute intervals. Returned by default. * `5` - Retrieve forecasts for 5-minute
-     *     intervals. * `15` - Retrieve forecasts for 15-minute intervals.
-     * @param language Language in which search results should be returned. Should be one of supported IETF language
-     *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used.
-     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
-     *     details.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response.
-     */
-    @Generated
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public MinuteForecastResult getMinuteForecast(
-            JsonFormat format, List<Double> coordinates, Integer interval, String language) {
-        return this.serviceClient.getMinuteForecast(format, coordinates, interval, language);
-    }
-
-    /**
-     * **Get Minute Forecast**
-     *
-     * <p>**Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
-     *
-     * <p>Get Minute Forecast service returns minute-by-minute forecasts for a given location for the next 120 minutes.
-     * Users can request weather forecasts in the interval of 1, 5 and 15 minutes. The response will include details
-     * such as the type of precipitation (including rain, snow, or a mixture of both), start time, and precipitation
-     * intensity value (dBZ).
-     *
-     * @param format Desired format of the response. Only `json` format is supported.
-     * @param coordinates The applicable query specified as a comma separated string composed by latitude followed by
-     *     longitude e.g. "47.641268,-122.125679".
-     * @param interval Specifies time interval in minutes for the returned weather forecast. Supported values are * `1`
-     *     - Retrieve forecast for 1-minute intervals. Returned by default. * `5` - Retrieve forecasts for 5-minute
-     *     intervals. * `15` - Retrieve forecasts for 15-minute intervals.
-     * @param language Language in which search results should be returned. Should be one of supported IETF language
-     *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used.
-     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
-     *     details.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response.
-     */
-    @Generated
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<MinuteForecastResult> getMinuteForecastWithResponse(
-            JsonFormat format, List<Double> coordinates, Integer interval, String language, Context context) {
-        return this.serviceClient.getMinuteForecastWithResponse(format, coordinates, interval, language, context);
-    }
-
-    /**
-     * **Get Quarter-Day Forecast**
-     *
-     * <p>**Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
-     *
-     * <p>Service returns detailed weather forecast by quarter-day for the next 1, 5, 10, or 15 days for a given
-     * location. Response data is presented by quarters of the day - morning, afternoon, evening, and overnight. Details
-     * such as temperature, humidity, wind, precipitation, and UV index are returned.
-     *
-     * @param format Desired format of the response. Only `json` format is supported.
-     * @param coordinates The applicable query specified as a comma separated string composed by latitude followed by
-     *     longitude e.g. "47.641268,-122.125679".
-     * @param unit Specifies to return the data in either metric units or imperial units. Default value is metric.
-     * @param duration Specifies for how many days the quester-day forecast responses are returned. Supported values
-     *     are: * `1` - Return forecast data for the next day. Returned by default. * `5` - Return forecast data for the
-     *     next 5 days. * `10` - Return forecast data for next 10 days. * `15` - Return forecast data for the next 15
-     *     days.
-     * @param language Language in which search results should be returned. Should be one of supported IETF language
-     *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used.
-     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
-     *     details.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response.
-     */
-    @Generated
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public QuarterDayForecastResult getQuarterDayForecast(
-            JsonFormat format, List<Double> coordinates, WeatherDataUnit unit, Integer duration, String language) {
-        return this.serviceClient.getQuarterDayForecast(format, coordinates, unit, duration, language);
-    }
-
-    /**
-     * **Get Quarter-Day Forecast**
-     *
-     * <p>**Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
-     *
-     * <p>Service returns detailed weather forecast by quarter-day for the next 1, 5, 10, or 15 days for a given
-     * location. Response data is presented by quarters of the day - morning, afternoon, evening, and overnight. Details
-     * such as temperature, humidity, wind, precipitation, and UV index are returned.
-     *
-     * @param format Desired format of the response. Only `json` format is supported.
-     * @param coordinates The applicable query specified as a comma separated string composed by latitude followed by
-     *     longitude e.g. "47.641268,-122.125679".
-     * @param unit Specifies to return the data in either metric units or imperial units. Default value is metric.
-     * @param duration Specifies for how many days the quester-day forecast responses are returned. Supported values
-     *     are: * `1` - Return forecast data for the next day. Returned by default. * `5` - Return forecast data for the
-     *     next 5 days. * `10` - Return forecast data for next 10 days. * `15` - Return forecast data for the next 15
-     *     days.
-     * @param language Language in which search results should be returned. Should be one of supported IETF language
-     *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used.
-     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
-     *     details.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response.
-     */
-    @Generated
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<QuarterDayForecastResult> getQuarterDayForecastWithResponse(
-            JsonFormat format,
-            List<Double> coordinates,
-            WeatherDataUnit unit,
-            Integer duration,
-            String language,
-            Context context) {
-        return this.serviceClient.getQuarterDayForecastWithResponse(
-                format, coordinates, unit, duration, language, context);
-    }
-
-    /**
-     * **Get Current Conditions**
-     *
-     * <p>**Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
-     *
-     * <p>Get Current Conditions service returns detailed current weather conditions such as precipitation, temperature
-     * and wind for a given coordinate location. Also, observations from the past 6 or 24 hours for a particular
-     * location can be retrieved. The basic information returned with the response include details such as observation
-     * date and time, brief description of the weather conditions, weather icon, precipitation indicator flags, and
-     * temperature. Additional details such as RealFeel™ Temperature and UV index are also returned.
-     *
-     * @param format Desired format of the response. Only `json` format is supported.
-     * @param coordinates The applicable query specified as a comma separated string composed by latitude followed by
-     *     longitude e.g. "47.641268,-122.125679".
-     * @param unit Specifies to return the data in either metric units or imperial units. Default value is metric.
-     * @param details Return full details for the current conditions. Available values are * `true` - Returns full
-     *     details. By default all details are returned. * `false` - Returns a truncated version of the current
-     *     condition data, which includes observation date time, weather phrase, icon code, precipitation indicator
-     *     flag, and temperature.
-     * @param duration Time frame of the returned weather conditions. By default, the most current weather conditions
-     *     will be returned. Default value is 0. Supported values are: * `0` - Return the most current weather
-     *     conditions. * `6` - Return weather conditions from past 6 hours. * `24` - Return weather conditions from past
-     *     24 hours.
-     * @param language Language in which search results should be returned. Should be one of supported IETF language
-     *     tags, case insensitive. When data in specified language is not available for a specific field, default
-     *     language is used.
-     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
-     *     details.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response.
-     */
-    @Generated
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public CurrentConditionsResult getCurrentConditions(
-            JsonFormat format,
-            List<Double> coordinates,
-            WeatherDataUnit unit,
-            String details,
-            Integer duration,
+    public HourlyForecastResult getHourlyForecast(GeoPosition position, WeatherDataUnit unit, Integer duration,
             String language) {
-        return this.serviceClient.getCurrentConditions(format, coordinates, unit, details, duration, language);
+        return this.asyncClient.getHourlyForecast(position, unit, duration, language).block();
+    }
+
+    /**
+     * **Get Hourly Forecast**
+     *
+     * <p>**Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Request detailed weather forecast by the hour for the next 1, 12, 24 (1 day), 72 (3 days), 120 (5 days), and
+     * 240 hours (10 days) for the given the given coordinate location. The API returns details such as temperature,
+     * humidity, wind, precipitation, and ultraviolet (UV) index.
+     *
+     * <p>In S0 you can request hourly forecast for the next 1, 12, 24 hours (1 day), and 72 hours (3 days). In S1 you
+     * can also request hourly forecast for the next 120 (5 days) and 240 hours (10 days).
+     *
+     * @param format Desired format of the response. Only `json` format is supported.
+     * @param coordinates The applicable query specified as a comma separated string composed by latitude followed by
+     *     longitude e.g. "47.641268,-122.125679".
+     * @param unit Specifies to return the data in either metric units or imperial units. Default value is metric.
+     * @param duration Time frame of the returned weather forecast. By default, the forecast data for next hour will be
+     *     returned. Available values are * `1` - Return forecast data for the next hour. Default value. * `12` - Return
+     *     hourly forecast for next 12 hours. * `24` - Return hourly forecast for next 24 hours. * `72` - Return hourly
+     *     forecast for next 72 hours (3 days). * `120` - Return hourly forecast for next 120 hours (5 days). Only
+     *     available in S1 SKU. * `240` - Return hourly forecast for next 240 hours (10 days). Only available in S1 SKU.
+     * @param language Language in which search results should be returned. Should be one of supported IETF language
+     *     tags, case insensitive. When data in specified language is not available for a specific field, default
+     *     language is used.
+     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
+     *     details.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response.
+     */
+    @Generated
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<HourlyForecastResult> getHourlyForecastWithResponse(GeoPosition position, WeatherDataUnit unit,
+            Integer duration, String language, Context context) {
+        return this.asyncClient.getHourlyForecastWithResponse(position, unit, duration, language, context).block();
+    }
+
+    /**
+     * **Get Minute Forecast**
+     *
+     * <p>**Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Get Minute Forecast service returns minute-by-minute forecasts for a given location for the next 120 minutes.
+     * Users can request weather forecasts in the interval of 1, 5 and 15 minutes. The response will include details
+     * such as the type of precipitation (including rain, snow, or a mixture of both), start time, and precipitation
+     * intensity value (dBZ).
+     *
+     * @param format Desired format of the response. Only `json` format is supported.
+     * @param coordinates The applicable query specified as a comma separated string composed by latitude followed by
+     *     longitude e.g. "47.641268,-122.125679".
+     * @param interval Specifies time interval in minutes for the returned weather forecast. Supported values are * `1`
+     *     - Retrieve forecast for 1-minute intervals. Returned by default. * `5` - Retrieve forecasts for 5-minute
+     *     intervals. * `15` - Retrieve forecasts for 15-minute intervals.
+     * @param language Language in which search results should be returned. Should be one of supported IETF language
+     *     tags, case insensitive. When data in specified language is not available for a specific field, default
+     *     language is used.
+     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
+     *     details.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response.
+     */
+    @Generated
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public MinuteForecastResult getMinuteForecast(GeoPosition position, Integer interval, String language) {
+        return this.asyncClient.getMinuteForecast(position, interval, language).block();
+    }
+
+    /**
+     * **Get Minute Forecast**
+     *
+     * <p>**Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Get Minute Forecast service returns minute-by-minute forecasts for a given location for the next 120 minutes.
+     * Users can request weather forecasts in the interval of 1, 5 and 15 minutes. The response will include details
+     * such as the type of precipitation (including rain, snow, or a mixture of both), start time, and precipitation
+     * intensity value (dBZ).
+     *
+     * @param format Desired format of the response. Only `json` format is supported.
+     * @param coordinates The applicable query specified as a comma separated string composed by latitude followed by
+     *     longitude e.g. "47.641268,-122.125679".
+     * @param interval Specifies time interval in minutes for the returned weather forecast. Supported values are * `1`
+     *     - Retrieve forecast for 1-minute intervals. Returned by default. * `5` - Retrieve forecasts for 5-minute
+     *     intervals. * `15` - Retrieve forecasts for 15-minute intervals.
+     * @param language Language in which search results should be returned. Should be one of supported IETF language
+     *     tags, case insensitive. When data in specified language is not available for a specific field, default
+     *     language is used.
+     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
+     *     details.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response.
+     */
+    @Generated
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<MinuteForecastResult> getMinuteForecastWithResponse(GeoPosition position, Integer interval,
+            String language, Context context) {
+        return this.asyncClient.getMinuteForecastWithResponse(position, interval, language, context).block();
+    }
+
+    /**
+     * **Get Quarter-Day Forecast**
+     *
+     * <p>**Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Service returns detailed weather forecast by quarter-day for the next 1, 5, 10, or 15 days for a given
+     * location. Response data is presented by quarters of the day - morning, afternoon, evening, and overnight. Details
+     * such as temperature, humidity, wind, precipitation, and UV index are returned.
+     *
+     * @param format Desired format of the response. Only `json` format is supported.
+     * @param coordinates The applicable query specified as a comma separated string composed by latitude followed by
+     *     longitude e.g. "47.641268,-122.125679".
+     * @param unit Specifies to return the data in either metric units or imperial units. Default value is metric.
+     * @param duration Specifies for how many days the quester-day forecast responses are returned. Supported values
+     *     are: * `1` - Return forecast data for the next day. Returned by default. * `5` - Return forecast data for the
+     *     next 5 days. * `10` - Return forecast data for next 10 days. * `15` - Return forecast data for the next 15
+     *     days.
+     * @param language Language in which search results should be returned. Should be one of supported IETF language
+     *     tags, case insensitive. When data in specified language is not available for a specific field, default
+     *     language is used.
+     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
+     *     details.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response.
+     */
+    @Generated
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public QuarterDayForecastResult getQuarterDayForecast(GeoPosition position, WeatherDataUnit unit, Integer duration,
+            String language) {
+        return this.asyncClient.getQuarterDayForecast(position, unit, duration, language).block();
+    }
+
+    /**
+     * **Get Quarter-Day Forecast**
+     *
+     * <p>**Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Service returns detailed weather forecast by quarter-day for the next 1, 5, 10, or 15 days for a given
+     * location. Response data is presented by quarters of the day - morning, afternoon, evening, and overnight. Details
+     * such as temperature, humidity, wind, precipitation, and UV index are returned.
+     *
+     * @param format Desired format of the response. Only `json` format is supported.
+     * @param coordinates The applicable query specified as a comma separated string composed by latitude followed by
+     *     longitude e.g. "47.641268,-122.125679".
+     * @param unit Specifies to return the data in either metric units or imperial units. Default value is metric.
+     * @param duration Specifies for how many days the quester-day forecast responses are returned. Supported values
+     *     are: * `1` - Return forecast data for the next day. Returned by default. * `5` - Return forecast data for the
+     *     next 5 days. * `10` - Return forecast data for next 10 days. * `15` - Return forecast data for the next 15
+     *     days.
+     * @param language Language in which search results should be returned. Should be one of supported IETF language
+     *     tags, case insensitive. When data in specified language is not available for a specific field, default
+     *     language is used.
+     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
+     *     details.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response.
+     */
+    @Generated
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<QuarterDayForecastResult> getQuarterDayForecastWithResponse(GeoPosition position, WeatherDataUnit unit,
+            Integer duration, String language, Context context) {
+        return this.asyncClient.getQuarterDayForecastWithResponse(position, unit, duration, language, context).block();
+    }
+
+    /**
+     * **Get Current Conditions**
+     *
+     * <p>**Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Get Current Conditions service returns detailed current weather conditions such as precipitation, temperature
+     * and wind for a given coordinate location. Also, observations from the past 6 or 24 hours for a particular
+     * location can be retrieved. The basic information returned with the response include details such as observation
+     * date and time, brief description of the weather conditions, weather icon, precipitation indicator flags, and
+     * temperature. Additional details such as RealFeel™ Temperature and UV index are also returned.
+     *
+     * @param format Desired format of the response. Only `json` format is supported.
+     * @param coordinates The applicable query specified as a comma separated string composed by latitude followed by
+     *     longitude e.g. "47.641268,-122.125679".
+     * @param unit Specifies to return the data in either metric units or imperial units. Default value is metric.
+     * @param details Return full details for the current conditions. Available values are * `true` - Returns full
+     *     details. By default all details are returned. * `false` - Returns a truncated version of the current
+     *     condition data, which includes observation date time, weather phrase, icon code, precipitation indicator
+     *     flag, and temperature.
+     * @param duration Time frame of the returned weather conditions. By default, the most current weather conditions
+     *     will be returned. Default value is 0. Supported values are: * `0` - Return the most current weather
+     *     conditions. * `6` - Return weather conditions from past 6 hours. * `24` - Return weather conditions from past
+     *     24 hours.
+     * @param language Language in which search results should be returned. Should be one of supported IETF language
+     *     tags, case insensitive. When data in specified language is not available for a specific field, default
+     *     language is used.
+     *     <p>Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for
+     *     details.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response.
+     */
+    @Generated
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public CurrentConditionsResult getCurrentConditions(GeoPosition position, WeatherDataUnit unit, String details,
+            Integer duration, String language) {
+        return this.asyncClient.getCurrentConditions(position, unit, details, duration, language).block();
     }
 
     /**
@@ -357,16 +344,9 @@ public final class WeatherClient {
      */
     @Generated
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<CurrentConditionsResult> getCurrentConditionsWithResponse(
-            JsonFormat format,
-            List<Double> coordinates,
-            WeatherDataUnit unit,
-            String details,
-            Integer duration,
-            String language,
-            Context context) {
-        return this.serviceClient.getCurrentConditionsWithResponse(
-                format, coordinates, unit, details, duration, language, context);
+    public Response<CurrentConditionsResult> getCurrentConditionsWithResponse(GeoPosition position, WeatherDataUnit unit,
+            String details, Integer duration, String language, Context context) {
+        return this.asyncClient.getCurrentConditionsWithResponse(position, unit, details, duration, language, context).block();
     }
 
     /**
@@ -401,9 +381,8 @@ public final class WeatherClient {
      */
     @Generated
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public DailyForecastResult getDailyForecast(
-            JsonFormat format, List<Double> coordinates, WeatherDataUnit unit, Integer duration, String language) {
-        return this.serviceClient.getDailyForecast(format, coordinates, unit, duration, language);
+    public DailyForecastResult getDailyForecast(GeoPosition position, WeatherDataUnit unit, Integer duration, String language) {
+        return this.asyncClient.getDailyForecast(position, unit, duration, language).block();
     }
 
     /**
@@ -439,14 +418,9 @@ public final class WeatherClient {
      */
     @Generated
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<DailyForecastResult> getDailyForecastWithResponse(
-            JsonFormat format,
-            List<Double> coordinates,
-            WeatherDataUnit unit,
-            Integer duration,
-            String language,
-            Context context) {
-        return this.serviceClient.getDailyForecastWithResponse(format, coordinates, unit, duration, language, context);
+    public Response<DailyForecastResult> getDailyForecastWithResponse(GeoPosition position, WeatherDataUnit unit,
+            Integer duration, String language, Context context) {
+        return this.asyncClient.getDailyForecastWithResponse(position, unit, duration, language, context).block();
     }
 
     /**
@@ -503,8 +477,8 @@ public final class WeatherClient {
      */
     @Generated
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public WeatherAlongRouteResult getWeatherAlongRoute(JsonFormat format, String query, String language) {
-        return this.serviceClient.getWeatherAlongRoute(format, query, language);
+    public WeatherAlongRouteResult getWeatherAlongRoute(List<Waypoint> waypoints, String language) {
+        return this.asyncClient.getWeatherAlongRoute(waypoints, language).block();
     }
 
     /**
@@ -562,9 +536,9 @@ public final class WeatherClient {
      */
     @Generated
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<WeatherAlongRouteResult> getWeatherAlongRouteWithResponse(
-            JsonFormat format, String query, String language, Context context) {
-        return this.serviceClient.getWeatherAlongRouteWithResponse(format, query, language, context);
+    public Response<WeatherAlongRouteResult> getWeatherAlongRouteWithResponse(List<Waypoint> waypoints, String language,
+            Context context) {
+        return this.asyncClient.getWeatherAlongRouteWithResponse(waypoints, language, context).block();
     }
 
     /**
@@ -599,9 +573,8 @@ public final class WeatherClient {
      */
     @Generated
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SevereWeatherAlertsResult getSevereWeatherAlerts(
-            JsonFormat format, List<Double> coordinates, String language, String details) {
-        return this.serviceClient.getSevereWeatherAlerts(format, coordinates, language, details);
+    public SevereWeatherAlertsResult getSevereWeatherAlerts(GeoPosition position, String language, boolean includeDetails) {
+        return this.asyncClient.getSevereWeatherAlerts(position, language, includeDetails).block();
     }
 
     /**
@@ -637,9 +610,9 @@ public final class WeatherClient {
      */
     @Generated
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<SevereWeatherAlertsResult> getSevereWeatherAlertsWithResponse(
-            JsonFormat format, List<Double> coordinates, String language, String details, Context context) {
-        return this.serviceClient.getSevereWeatherAlertsWithResponse(format, coordinates, language, details, context);
+    public Response<SevereWeatherAlertsResult> getSevereWeatherAlertsWithResponse(GeoPosition position, String language,
+            boolean includeDetails, Context context) {
+        return this.asyncClient.getSevereWeatherAlertsWithResponse(position, language, includeDetails, context).block();
     }
 
     /**
@@ -682,14 +655,9 @@ public final class WeatherClient {
      */
     @Generated
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public DailyIndicesResult getDailyIndices(
-            JsonFormat format,
-            List<Double> coordinates,
-            String language,
-            Integer duration,
-            Integer indexId,
-            Integer indexGroupId) {
-        return this.serviceClient.getDailyIndices(format, coordinates, language, duration, indexId, indexGroupId);
+    public DailyIndicesResult getDailyIndices(GeoPosition position, String language, Integer duration,
+            Integer indexId, Integer indexGroupId) {
+        return this.asyncClient.getDailyIndices(position, language, duration, indexId, indexGroupId).block();
     }
 
     /**
@@ -733,106 +701,99 @@ public final class WeatherClient {
      */
     @Generated
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<DailyIndicesResult> getDailyIndicesWithResponse(
-            JsonFormat format,
-            List<Double> coordinates,
-            String language,
-            Integer duration,
-            Integer indexId,
-            Integer indexGroupId,
+    public Response<DailyIndicesResult> getDailyIndicesWithResponse(GeoPosition position, String language, Integer duration,
+            Integer indexId, Integer indexGroupId, Context context) {
+        return this.asyncClient.getDailyIndicesWithResponse(position, language, duration, indexId,
+            indexGroupId, context).block();
+    }
+
+    /**
+     * **Get Tropical Storm Active**
+     *
+     * <p>**Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Get all government-issued active tropical storms. Information about the tropical storms includes, government
+     * ID, basin ID, year of origin, name and if it is subtropical.
+     *
+     * @param format Desired format of the response. Only `json` format is supported.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return all government-issued active storms.
+     */
+    @Generated
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public ActiveStormResult getTropicalStormActive() {
+        return this.asyncClient.getTropicalStormActive().block();
+    }
+
+    /**
+     * **Get Tropical Storm Active**
+     *
+     * <p>**Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Get all government-issued active tropical storms. Information about the tropical storms includes, government
+     * ID, basin ID, year of origin, name and if it is subtropical.
+     *
+     * @param format Desired format of the response. Only `json` format is supported.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return all government-issued active storms.
+     */
+    @Generated
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<ActiveStormResult> getTropicalStormActiveWithResponse(Context context) {
+        return this.asyncClient.getTropicalStormActiveWithResponse(context).block();
+    }
+
+    /**
+     * **Get Tropical Storm Search**
+     *
+     * <p>**Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Search government-issued tropical storms by year, basin ID, and government ID. Information about the tropical
+     * storms includes, government ID, basin ID, status, year, name and if it is subtropical.
+     *
+     * @param format Desired format of the response. Only `json` format is supported.
+     * @param year Year of the cyclone(s).
+     * @param basinId Basin identifier.
+     * @param governmentStormId Government storm Id.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return search government-issued storms.
+     */
+    @Generated
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public StormSearchResult searchTropicalStorm(int year, BasinId basinId, Integer governmentStormId) {
+        return this.asyncClient.searchTropicalStorm(year, basinId, governmentStormId).block();
+    }
+
+    /**
+     * **Get Tropical Storm Search**
+     *
+     * <p>**Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>Search government-issued tropical storms by year, basin ID, and government ID. Information about the tropical
+     * storms includes, government ID, basin ID, status, year, name and if it is subtropical.
+     *
+     * @param format Desired format of the response. Only `json` format is supported.
+     * @param year Year of the cyclone(s).
+     * @param basinId Basin identifier.
+     * @param governmentStormId Government storm Id.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return search government-issued storms.
+     */
+    @Generated
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<StormSearchResult> searchTropicalStormWithResponse(int year, BasinId basinId, Integer governmentStormId,
             Context context) {
-        return this.serviceClient.getDailyIndicesWithResponse(
-                format, coordinates, language, duration, indexId, indexGroupId, context);
-    }
-
-    /**
-     * **Get Tropical Storm Active**
-     *
-     * <p>**Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
-     *
-     * <p>Get all government-issued active tropical storms. Information about the tropical storms includes, government
-     * ID, basin ID, year of origin, name and if it is subtropical.
-     *
-     * @param format Desired format of the response. Only `json` format is supported.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return all government-issued active storms.
-     */
-    @Generated
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public ActiveStormResult getTropicalStormActive(JsonFormat format) {
-        return this.serviceClient.getTropicalStormActive(format);
-    }
-
-    /**
-     * **Get Tropical Storm Active**
-     *
-     * <p>**Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
-     *
-     * <p>Get all government-issued active tropical storms. Information about the tropical storms includes, government
-     * ID, basin ID, year of origin, name and if it is subtropical.
-     *
-     * @param format Desired format of the response. Only `json` format is supported.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return all government-issued active storms.
-     */
-    @Generated
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<ActiveStormResult> getTropicalStormActiveWithResponse(JsonFormat format, Context context) {
-        return this.serviceClient.getTropicalStormActiveWithResponse(format, context);
-    }
-
-    /**
-     * **Get Tropical Storm Search**
-     *
-     * <p>**Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
-     *
-     * <p>Search government-issued tropical storms by year, basin ID, and government ID. Information about the tropical
-     * storms includes, government ID, basin ID, status, year, name and if it is subtropical.
-     *
-     * @param format Desired format of the response. Only `json` format is supported.
-     * @param year Year of the cyclone(s).
-     * @param basinId Basin identifier.
-     * @param governmentStormId Government storm Id.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return search government-issued storms.
-     */
-    @Generated
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public StormSearchResult searchTropicalStorm(
-            JsonFormat format, int year, BasinId basinId, Integer governmentStormId) {
-        return this.serviceClient.searchTropicalStorm(format, year, basinId, governmentStormId);
-    }
-
-    /**
-     * **Get Tropical Storm Search**
-     *
-     * <p>**Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
-     *
-     * <p>Search government-issued tropical storms by year, basin ID, and government ID. Information about the tropical
-     * storms includes, government ID, basin ID, status, year, name and if it is subtropical.
-     *
-     * @param format Desired format of the response. Only `json` format is supported.
-     * @param year Year of the cyclone(s).
-     * @param basinId Basin identifier.
-     * @param governmentStormId Government storm Id.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return search government-issued storms.
-     */
-    @Generated
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<StormSearchResult> searchTropicalStormWithResponse(
-            JsonFormat format, int year, BasinId basinId, Integer governmentStormId, Context context) {
-        return this.serviceClient.searchTropicalStormWithResponse(format, year, basinId, governmentStormId, context);
+        return this.asyncClient.searchTropicalStormWithResponse(year, basinId, governmentStormId, context).block();
     }
 
     /**
@@ -859,24 +820,8 @@ public final class WeatherClient {
      */
     @Generated
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public StormForecastResult getTropicalStormForecast(
-            JsonFormat format,
-            int year,
-            BasinId basinId,
-            int governmentStormId,
-            WeatherDataUnit unit,
-            Boolean includeDetails,
-            Boolean includeGeometricDetails,
-            Boolean includeWindowGeometry) {
-        return this.serviceClient.getTropicalStormForecast(
-                format,
-                year,
-                basinId,
-                governmentStormId,
-                unit,
-                includeDetails,
-                includeGeometricDetails,
-                includeWindowGeometry);
+    public StormForecastResult getTropicalStormForecast(TropicalStormForecastOptions options) {
+        return this.asyncClient.getTropicalStormForecast(options).block();
     }
 
     /**
@@ -904,26 +849,9 @@ public final class WeatherClient {
      */
     @Generated
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<StormForecastResult> getTropicalStormForecastWithResponse(
-            JsonFormat format,
-            int year,
-            BasinId basinId,
-            int governmentStormId,
-            WeatherDataUnit unit,
-            Boolean includeDetails,
-            Boolean includeGeometricDetails,
-            Boolean includeWindowGeometry,
+    public Response<StormForecastResult> getTropicalStormForecastWithResponse(TropicalStormForecastOptions options,
             Context context) {
-        return this.serviceClient.getTropicalStormForecastWithResponse(
-                format,
-                year,
-                basinId,
-                governmentStormId,
-                unit,
-                includeDetails,
-                includeGeometricDetails,
-                includeWindowGeometry,
-                context);
+        return this.asyncClient.getTropicalStormForecastWithResponse(options, context).block();
     }
 
     /**
@@ -950,24 +878,8 @@ public final class WeatherClient {
      */
     @Generated
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public StormLocationsResult getTropicalStormLocations(
-            JsonFormat format,
-            int year,
-            BasinId basinId,
-            int governmentStormId,
-            Boolean includeDetails,
-            Boolean includeGeometricDetails,
-            WeatherDataUnit unit,
-            Boolean includeCurrentStorm) {
-        return this.serviceClient.getTropicalStormLocations(
-                format,
-                year,
-                basinId,
-                governmentStormId,
-                includeDetails,
-                includeGeometricDetails,
-                unit,
-                includeCurrentStorm);
+    public StormLocationsResult getTropicalStormLocations(TropicalStormLocationOptions options) {
+        return this.asyncClient.getTropicalStormLocations(options).block();
     }
 
     /**
@@ -995,26 +907,9 @@ public final class WeatherClient {
      */
     @Generated
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<StormLocationsResult> getTropicalStormLocationsWithResponse(
-            JsonFormat format,
-            int year,
-            BasinId basinId,
-            int governmentStormId,
-            Boolean includeDetails,
-            Boolean includeGeometricDetails,
-            WeatherDataUnit unit,
-            Boolean includeCurrentStorm,
+    public Response<StormLocationsResult> getTropicalStormLocationsWithResponse(TropicalStormLocationOptions options,
             Context context) {
-        return this.serviceClient.getTropicalStormLocationsWithResponse(
-                format,
-                year,
-                basinId,
-                governmentStormId,
-                includeDetails,
-                includeGeometricDetails,
-                unit,
-                includeCurrentStorm,
-                context);
+        return this.asyncClient.getTropicalStormLocationsWithResponse(options, context).block();
     }
 
     /**
@@ -1043,9 +938,8 @@ public final class WeatherClient {
      */
     @Generated
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public AirQualityResult getCurrentAirQuality(
-            JsonFormat format, List<Double> coordinates, String language, Boolean includePollutantDetails) {
-        return this.serviceClient.getCurrentAirQuality(format, coordinates, language, includePollutantDetails);
+    public AirQualityResult getCurrentAirQuality(GeoPosition position, String language, Boolean includePollutantDetails) {
+        return this.asyncClient.getCurrentAirQuality(position, language, includePollutantDetails).block();
     }
 
     /**
@@ -1075,14 +969,10 @@ public final class WeatherClient {
      */
     @Generated
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<AirQualityResult> getCurrentAirQualityWithResponse(
-            JsonFormat format,
-            List<Double> coordinates,
-            String language,
-            Boolean includePollutantDetails,
-            Context context) {
-        return this.serviceClient.getCurrentAirQualityWithResponse(
-                format, coordinates, language, includePollutantDetails, context);
+    public Response<AirQualityResult> getCurrentAirQualityWithResponse(GeoPosition position, String language,
+            Boolean includePollutantDetails, Context context) {
+        return this.asyncClient.getCurrentAirQualityWithResponse(position, language,
+            includePollutantDetails, context).block();
     }
 
     /**
@@ -1112,9 +1002,9 @@ public final class WeatherClient {
      */
     @Generated
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public DailyAirQualityForecastResult getAirQualityDailyForecasts(
-            JsonFormat format, List<Double> coordinates, String language, DailyDuration duration) {
-        return this.serviceClient.getAirQualityDailyForecasts(format, coordinates, language, duration);
+    public DailyAirQualityForecastResult getAirQualityDailyForecasts(GeoPosition position, String language,
+            DailyDuration duration) {
+        return this.asyncClient.getAirQualityDailyForecasts(position, language, duration).block();
     }
 
     /**
@@ -1145,10 +1035,9 @@ public final class WeatherClient {
      */
     @Generated
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<DailyAirQualityForecastResult> getAirQualityDailyForecastsWithResponse(
-            JsonFormat format, List<Double> coordinates, String language, DailyDuration duration, Context context) {
-        return this.serviceClient.getAirQualityDailyForecastsWithResponse(
-                format, coordinates, language, duration, context);
+    public Response<DailyAirQualityForecastResult> getAirQualityDailyForecastsWithResponse(GeoPosition position,
+            String language, DailyDuration duration, Context context) {
+        return this.asyncClient.getAirQualityDailyForecastsWithResponse(position, language, duration, context).block();
     }
 
     /**
@@ -1180,14 +1069,9 @@ public final class WeatherClient {
      */
     @Generated
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public AirQualityResult getAirQualityHourlyForecasts(
-            JsonFormat format,
-            List<Double> coordinates,
-            String language,
-            HourlyDuration duration,
+    public AirQualityResult getAirQualityHourlyForecasts(GeoPosition position, String language, HourlyDuration duration,
             Boolean includePollutantDetails) {
-        return this.serviceClient.getAirQualityHourlyForecasts(
-                format, coordinates, language, duration, includePollutantDetails);
+        return this.asyncClient.getAirQualityHourlyForecasts(position, language, duration, includePollutantDetails).block();
     }
 
     /**
@@ -1220,15 +1104,10 @@ public final class WeatherClient {
      */
     @Generated
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<AirQualityResult> getAirQualityHourlyForecastsWithResponse(
-            JsonFormat format,
-            List<Double> coordinates,
-            String language,
-            HourlyDuration duration,
-            Boolean includePollutantDetails,
-            Context context) {
-        return this.serviceClient.getAirQualityHourlyForecastsWithResponse(
-                format, coordinates, language, duration, includePollutantDetails, context);
+    public Response<AirQualityResult> getAirQualityHourlyForecastsWithResponse(GeoPosition position, String language,
+            HourlyDuration duration, Boolean includePollutantDetails, Context context) {
+        return this.asyncClient.getAirQualityHourlyForecastsWithResponse(position, language, duration,
+            includePollutantDetails, context).block();
     }
 
     /**
@@ -1258,9 +1137,9 @@ public final class WeatherClient {
      */
     @Generated
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public DailyHistoricalActualsResult getDailyHistoricalActuals(
-            JsonFormat format, List<Double> coordinates, LocalDate startDate, LocalDate endDate, WeatherDataUnit unit) {
-        return this.serviceClient.getDailyHistoricalActuals(format, coordinates, startDate, endDate, unit);
+    public DailyHistoricalActualsResult getDailyHistoricalActuals(GeoPosition position, LocalDate startDate,
+            LocalDate endDate, WeatherDataUnit unit) {
+        return this.asyncClient.getDailyHistoricalActuals(position, startDate, endDate, unit).block();
     }
 
     /**
@@ -1291,15 +1170,9 @@ public final class WeatherClient {
      */
     @Generated
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<DailyHistoricalActualsResult> getDailyHistoricalActualsWithResponse(
-            JsonFormat format,
-            List<Double> coordinates,
-            LocalDate startDate,
-            LocalDate endDate,
-            WeatherDataUnit unit,
-            Context context) {
-        return this.serviceClient.getDailyHistoricalActualsWithResponse(
-                format, coordinates, startDate, endDate, unit, context);
+    public Response<DailyHistoricalActualsResult> getDailyHistoricalActualsWithResponse(GeoPosition position,
+            LocalDate startDate, LocalDate endDate, WeatherDataUnit unit, Context context) {
+        return this.asyncClient.getDailyHistoricalActualsWithResponse(position, startDate, endDate, unit, context).block();
     }
 
     /**
@@ -1328,9 +1201,9 @@ public final class WeatherClient {
      */
     @Generated
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public DailyHistoricalRecordsResult getDailyHistoricalRecords(
-            JsonFormat format, List<Double> coordinates, LocalDate startDate, LocalDate endDate, WeatherDataUnit unit) {
-        return this.serviceClient.getDailyHistoricalRecords(format, coordinates, startDate, endDate, unit);
+    public DailyHistoricalRecordsResult getDailyHistoricalRecords(GeoPosition position, LocalDate startDate,
+            LocalDate endDate, WeatherDataUnit unit) {
+        return this.asyncClient.getDailyHistoricalRecords(position, startDate, endDate, unit).block();
     }
 
     /**
@@ -1360,15 +1233,10 @@ public final class WeatherClient {
      */
     @Generated
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<DailyHistoricalRecordsResult> getDailyHistoricalRecordsWithResponse(
-            JsonFormat format,
-            List<Double> coordinates,
-            LocalDate startDate,
-            LocalDate endDate,
-            WeatherDataUnit unit,
-            Context context) {
-        return this.serviceClient.getDailyHistoricalRecordsWithResponse(
-                format, coordinates, startDate, endDate, unit, context);
+    public Response<DailyHistoricalRecordsResult> getDailyHistoricalRecordsWithResponse(GeoPosition position,
+        LocalDate startDate, LocalDate endDate, WeatherDataUnit unit, Context context) {
+        return this.asyncClient.getDailyHistoricalRecordsWithResponse(position, startDate, endDate,
+            unit, context).block();
     }
 
     /**
@@ -1400,9 +1268,9 @@ public final class WeatherClient {
      */
     @Generated
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public DailyHistoricalNormalsResult getDailyHistoricalNormals(
-            JsonFormat format, List<Double> coordinates, LocalDate startDate, LocalDate endDate, WeatherDataUnit unit) {
-        return this.serviceClient.getDailyHistoricalNormals(format, coordinates, startDate, endDate, unit);
+    public DailyHistoricalNormalsResult getDailyHistoricalNormals(GeoPosition position, LocalDate startDate,
+            LocalDate endDate, WeatherDataUnit unit) {
+        return this.asyncClient.getDailyHistoricalNormals(position, startDate, endDate, unit).block();
     }
 
     /**
@@ -1435,14 +1303,9 @@ public final class WeatherClient {
      */
     @Generated
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<DailyHistoricalNormalsResult> getDailyHistoricalNormalsWithResponse(
-            JsonFormat format,
-            List<Double> coordinates,
-            LocalDate startDate,
-            LocalDate endDate,
-            WeatherDataUnit unit,
-            Context context) {
-        return this.serviceClient.getDailyHistoricalNormalsWithResponse(
-                format, coordinates, startDate, endDate, unit, context);
+    public Response<DailyHistoricalNormalsResult> getDailyHistoricalNormalsWithResponse(GeoPosition position,
+        LocalDate startDate, LocalDate endDate, WeatherDataUnit unit, Context context) {
+        return this.asyncClient.getDailyHistoricalNormalsWithResponse(position, startDate,
+            endDate, unit, context).block();
     }
 }

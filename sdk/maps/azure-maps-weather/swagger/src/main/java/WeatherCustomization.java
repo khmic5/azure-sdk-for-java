@@ -13,7 +13,7 @@ import org.slf4j.Logger;
 /**
  * Customization class for Queue Storage.
  */
-public class RouteCustomization extends Customization {
+public class WeatherCustomization extends Customization {
     @Override
     public void customize(LibraryCustomization customization, Logger logger) {
         PackageCustomization models = customization.getPackage("com.azure.maps.route.models");

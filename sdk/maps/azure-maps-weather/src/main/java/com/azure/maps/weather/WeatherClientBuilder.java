@@ -30,6 +30,7 @@ import com.azure.core.util.ClientOptions;
 import com.azure.core.util.Configuration;
 import com.azure.core.util.CoreUtils;
 import com.azure.maps.weather.implementation.WeatherClientImpl;
+import com.azure.maps.weather.implementation.WeatherClientImplBuilder;
 
 /**
  * Builder class used to instantiate both synchronous and asynchronous {@link WeatherClient} clients.<br/>
@@ -313,7 +314,7 @@ public final class WeatherClientBuilder {
      * @return an instance of WeatherAsyncClient.
      */
     public WeatherAsyncClient buildAsyncClient() {
-        return null; // new WeatherAsyncClient(buildInnerClient().getWeathers(), this.pipeline);
+        return new WeatherAsyncClient(buildInnerClient().getWeathers());
     }
 
     /**
@@ -322,6 +323,6 @@ public final class WeatherClientBuilder {
      * @return an instance of WeatherClient.
      */
     public WeatherClient buildClient() {
-        return null; //new WeatherClient(buildAsyncClient());
+        return new WeatherClient(buildAsyncClient());
     }
 }
