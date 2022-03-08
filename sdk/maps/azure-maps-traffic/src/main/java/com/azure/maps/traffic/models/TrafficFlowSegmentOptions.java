@@ -1,5 +1,7 @@
 package com.azure.maps.traffic.models;
 
+import com.azure.core.models.GeoPosition;
+
 public final class TrafficFlowSegmentOptions {
     private ResponseFormat format;
     private TrafficFlowSegmentStyle style;

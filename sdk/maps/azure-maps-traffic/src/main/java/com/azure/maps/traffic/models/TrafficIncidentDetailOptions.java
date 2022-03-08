@@ -1,5 +1,7 @@
 package com.azure.maps.traffic.models;
 
+import com.azure.core.models.GeoBoundingBox;
+
 public final class TrafficIncidentDetailOptions {
     private ResponseFormat format;
     private IncidentDetailStyle style;
