@@ -18,11 +18,6 @@ autorest --java --use:@autorest/java@4.0.x
 ## Java
 
 ``` yaml
-directive:
-  - rename-model:
-        from: RouteMatrixQuery
-        to: RouteMatrixQueryPrivate      
-
 title: WeatherClient
 input-file: https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/maps/data-plane/Weather/stable/1.1/weather.json
 namespace: com.azure.maps.weather
