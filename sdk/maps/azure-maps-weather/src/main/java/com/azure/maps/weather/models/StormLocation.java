@@ -5,6 +5,7 @@
 package com.azure.maps.weather.models;
 
 import com.azure.core.annotation.Fluent;
+import com.azure.core.models.GeoPosition;
 import com.azure.maps.weather.implementation.models.LatLongPair;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
@@ -104,19 +105,9 @@ public final class StormLocation {
      *
      * @return the coordinates value.
      */
-    public LatLongPair getCoordinates() {
-        return this.coordinates;
-    }
-
-    /**
-     * Set the coordinates property: Coordinates of the storm.
-     *
-     * @param coordinates the coordinates value to set.
-     * @return the StormLocation object itself.
-     */
-    public StormLocation setCoordinates(LatLongPair coordinates) {
-        this.coordinates = coordinates;
-        return this;
+    public GeoPosition getCoordinates() {
+        LatLongPair returnValue = this.coordinates;
+        return new GeoPosition(returnValue.getLongitude(), returnValue.getLatitude());
     }
 
     /**

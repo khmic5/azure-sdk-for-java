@@ -16,11 +16,15 @@ import org.slf4j.Logger;
 public class WeatherCustomization extends Customization {
     @Override
     public void customize(LibraryCustomization customization, Logger logger) {
-        PackageCustomization models = customization.getPackage("com.azure.maps.route.models");
+        PackageCustomization models = customization.getPackage("com.azure.maps.weather.models");
 
-        // customize route leg
-        customizeRouteLeg(models);
+        // customize classes with latlongpair
+        customizeLatLongPairClasses(models, "StormForecast", "getCoordinates", "setCoordinates");
+        customizeLatLongPairClasses(models, "StormLocation", "getCoordinates", "setCoordinates");
+        customizeLatLongPairClasses(models, "WeatherWindow", "getTopLeft", "setTopLeft");
+        customizeLatLongPairClasses(models, "WeatherWindow", "getBottomRight", "setBottomRight");
 
+        /*
         // customize route instruction
         customizeRouteInstruction(models);
 
@@ -32,6 +36,16 @@ public class WeatherCustomization extends Customization {
 
         // customize route batch item
         customizeDirectionsBatchItem(models);
+        */
+    }
+
+    // Customizes the StormForecast class
+    private void customizeLatLongPairClasses(PackageCustomization models, String clazz, String getter, String setter) {
+        ClassCustomization classCustomization = models.getClass(clazz);
+        MethodCustomization methodCustomization = classCustomization.getMethod(getter);
+        methodCustomization.setReturnType("GeoPosition", "new GeoPosition(returnValue.getLongitude(), " +
+            "returnValue.getLatitude())");
+        classCustomization.removeMethod(setter);
     }
 
     // Customizes the RouteMatrix class by flattening the Response property.

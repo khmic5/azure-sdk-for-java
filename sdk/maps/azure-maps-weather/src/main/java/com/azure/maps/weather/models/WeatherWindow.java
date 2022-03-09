@@ -5,6 +5,7 @@
 package com.azure.maps.weather.models;
 
 import com.azure.core.annotation.Fluent;
+import com.azure.core.models.GeoPosition;
 import com.azure.maps.weather.implementation.models.GeoJsonGeometry;
 import com.azure.maps.weather.implementation.models.LatLongPair;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -66,19 +67,9 @@ public final class WeatherWindow {
      *
      * @return the topLeft value.
      */
-    public LatLongPair getTopLeft() {
-        return this.topLeft;
-    }
-
-    /**
-     * Set the topLeft property: Location of the point on the left side of the window at the time of the timeframe.
-     *
-     * @param topLeft the topLeft value to set.
-     * @return the WeatherWindow object itself.
-     */
-    public WeatherWindow setTopLeft(LatLongPair topLeft) {
-        this.topLeft = topLeft;
-        return this;
+    public GeoPosition getTopLeft() {
+        LatLongPair returnValue = this.topLeft;
+        return new GeoPosition(returnValue.getLongitude(), returnValue.getLatitude());
     }
 
     /**
@@ -86,19 +77,9 @@ public final class WeatherWindow {
      *
      * @return the bottomRight value.
      */
-    public LatLongPair getBottomRight() {
-        return this.bottomRight;
-    }
-
-    /**
-     * Set the bottomRight property: Location of the point on the right side of the window at the end of the timeframe.
-     *
-     * @param bottomRight the bottomRight value to set.
-     * @return the WeatherWindow object itself.
-     */
-    public WeatherWindow setBottomRight(LatLongPair bottomRight) {
-        this.bottomRight = bottomRight;
-        return this;
+    public GeoPosition getBottomRight() {
+        LatLongPair returnValue = this.bottomRight;
+        return new GeoPosition(returnValue.getLongitude(), returnValue.getLatitude());
     }
 
     /**
