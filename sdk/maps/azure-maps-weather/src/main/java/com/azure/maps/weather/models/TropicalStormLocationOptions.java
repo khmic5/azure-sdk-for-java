@@ -1,8 +1,5 @@
 package com.azure.maps.weather.models;
 
-import com.azure.maps.weather.implementation.models.BasinId;
-import com.azure.maps.weather.implementation.models.WeatherDataUnit;
-
 public class TropicalStormLocationOptions {
     private int year;
     private BasinId basinId;
