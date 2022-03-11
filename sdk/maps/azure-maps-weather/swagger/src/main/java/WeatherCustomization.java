@@ -24,6 +24,11 @@ public class WeatherCustomization extends Customization {
         customizeLatLongPairClasses(models, "WeatherWindow", "getTopLeft", "setTopLeft");
         customizeLatLongPairClasses(models, "WeatherWindow", "getBottomRight", "setBottomRight");
 
+        // customize WeatherWindow
+        customizeGeoJsonGeometryProperty(models, "WeatherWindow", "getGeometry", "setGeometry", "geometry");
+        customizeGeoJsonGeometryProperty(models, "StormWindRadiiSummary", "getRadiiGeometry", "setRadiiGeometry",
+            "radiiGeometry");
+
         /*
         // customize route instruction
         customizeRouteInstruction(models);
@@ -48,20 +53,25 @@ public class WeatherCustomization extends Customization {
         classCustomization.removeMethod(setter);
     }
 
-    // Customizes the RouteMatrix class by flattening the Response property.
-    private void customizeRouteMatrix(PackageCustomization models) {
-        ClassCustomization classCustomization = models.getClass("RouteMatrix");
-        classCustomization.removeMethod("getResponse");
-        final String getSummaryMethod =
+    // Customizes the WeatherWindow and StormWindRadiiSummary classes
+    // Have to customize it this way because setting return type imports the wrong Utility package.
+    private void customizeGeoJsonGeometryProperty(PackageCustomization models,String clazz, String getter,
+            String setter, String property) {
+        ClassCustomization classCustomization = models.getClass(clazz);
+        classCustomization.removeMethod(getter);
+        classCustomization.removeMethod(setter);
+        final String getPolygonMethod =
             "/** " +
-            "* Returns a {@link RouteLegSummary} summarizing this route section." +
+            "* Returns a {@link GeoPolygon} for this weather window" +
             "*" +
-            "* return RouteLegSummary" +
+            "* return GeoPolygon" +
             "*/" +
-            "public RouteLegSummary getSummary() {" +
-            "    return this.response.getSummary();" +
+            "public GeoPolygon getPolygon() {" +
+            "    return Utility.toGeoPolygon(this." + property + ");" +
             "}";
-        classCustomization.addMethod(getSummaryMethod);
+        classCustomization.addMethod(getPolygonMethod, Arrays.asList(
+            "com.azure.maps.weather.implementation.helpers.Utility",
+            "com.azure.core.models.GeoPolygon"));
     }
 
     // Customizes the RouteLeg class

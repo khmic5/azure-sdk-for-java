@@ -5,6 +5,8 @@
 package com.azure.maps.weather.models;
 
 import com.azure.core.annotation.Fluent;
+import com.azure.core.models.GeoPolygon;
+import com.azure.maps.weather.implementation.helpers.Utility;
 import com.azure.maps.weather.implementation.models.GeoJsonGeometry;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
@@ -102,25 +104,8 @@ public final class StormWindRadiiSummary {
         return this;
     }
 
-    /**
-     * Get the radiiGeometry property: GeoJSON object. Displayed when radiiGeometry=true in request. Describes the
-     * outline of the wind radius quadrants.
-     *
-     * @return the radiiGeometry value.
-     */
-    public GeoJsonGeometry getRadiiGeometry() {
-        return this.radiiGeometry;
-    }
-
-    /**
-     * Set the radiiGeometry property: GeoJSON object. Displayed when radiiGeometry=true in request. Describes the
-     * outline of the wind radius quadrants.
-     *
-     * @param radiiGeometry the radiiGeometry value to set.
-     * @return the StormWindRadiiSummary object itself.
-     */
-    public StormWindRadiiSummary setRadiiGeometry(GeoJsonGeometry radiiGeometry) {
-        this.radiiGeometry = radiiGeometry;
-        return this;
+    /** * Returns a {@link GeoPolygon} for this weather window** return GeoPolygon */
+    public GeoPolygon getPolygon() {
+        return Utility.toGeoPolygon(this.radiiGeometry);
     }
 }

@@ -5,7 +5,9 @@
 package com.azure.maps.weather.models;
 
 import com.azure.core.annotation.Fluent;
+import com.azure.core.models.GeoPolygon;
 import com.azure.core.models.GeoPosition;
+import com.azure.maps.weather.implementation.helpers.Utility;
 import com.azure.maps.weather.implementation.models.GeoJsonGeometry;
 import com.azure.maps.weather.implementation.models.LatLongPair;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -164,25 +166,8 @@ public final class WeatherWindow {
         return this;
     }
 
-    /**
-     * Get the geometry property: Displayed when windowGeometry=true in request. GeoJSON object containing coordinates
-     * describing the window of movement during the specified timeframe.
-     *
-     * @return the geometry value.
-     */
-    public GeoJsonGeometry getGeometry() {
-        return this.geometry;
-    }
-
-    /**
-     * Set the geometry property: Displayed when windowGeometry=true in request. GeoJSON object containing coordinates
-     * describing the window of movement during the specified timeframe.
-     *
-     * @param geometry the geometry value to set.
-     * @return the WeatherWindow object itself.
-     */
-    public WeatherWindow setGeometry(GeoJsonGeometry geometry) {
-        this.geometry = geometry;
-        return this;
+    /** * Returns a {@link GeoPolygon} for this weather window** return GeoPolygon */
+    public GeoPolygon getPolygon() {
+        return Utility.toGeoPolygon(this.geometry);
     }
 }
