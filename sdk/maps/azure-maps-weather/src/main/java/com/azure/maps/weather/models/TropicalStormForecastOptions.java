@@ -1,21 +1,21 @@
 package com.azure.maps.weather.models;
 
 public class TropicalStormForecastOptions {
-    private int year;
+    private Integer year;
     private BasinId basinId;
-    private int governmentStormId;
+    private Integer governmentStormId;
     private WeatherDataUnit unit;
     private Boolean includeDetails;
     private Boolean includeGeometricDetails;
     private Boolean includeWindowGeometry;
 
-    public TropicalStormForecastOptions(int year, BasinId basinId, int governmentStormId) {
+    public TropicalStormForecastOptions(Integer year, BasinId basinId, Integer governmentStormId) {
         this.year = year;
         this.basinId = basinId;
         this.governmentStormId = governmentStormId;
     }
 
-    public int getYear() {
+    public Integer getYear() {
         return this.year;
     }
 
@@ -23,7 +23,7 @@ public class TropicalStormForecastOptions {
         return this.basinId;
     }
 
-    public int getGovernmentStormId() {
+    public Integer getGovernmentStormId() {
         return this.governmentStormId;
     }
 
@@ -43,37 +43,37 @@ public class TropicalStormForecastOptions {
         return this.includeWindowGeometry;
     }
 
-    public TropicalStormForecastOptions year(int year) {
+    public TropicalStormForecastOptions setYear(Integer year) {
         this.year = year;
         return this;
     }
 
-    public TropicalStormForecastOptions basinId(BasinId basinId) {
+    public TropicalStormForecastOptions setBasinId(BasinId basinId) {
         this.basinId = basinId;
         return this;
     }
 
-    public TropicalStormForecastOptions governmentStormId(int governmentStormId) {
+    public TropicalStormForecastOptions setGovernmentStormId(Integer governmentStormId) {
         this.governmentStormId = governmentStormId;
         return this;
     }
 
-    public TropicalStormForecastOptions unit(WeatherDataUnit unit) {
+    public TropicalStormForecastOptions setUnit(WeatherDataUnit unit) {
         this.unit = unit;
         return this;
     }
 
-    public TropicalStormForecastOptions includeDetails(Boolean includeDetails) {
+    public TropicalStormForecastOptions setIncludeDetails(Boolean includeDetails) {
         this.includeDetails = includeDetails;
         return this;
     }
 
-    public TropicalStormForecastOptions includeGeometricDetails(Boolean includeGeometricDetails) {
+    public TropicalStormForecastOptions setIncludeGeometricDetails(Boolean includeGeometricDetails) {
         this.includeGeometricDetails = includeGeometricDetails;
         return this;
     }
 
-    public TropicalStormForecastOptions includeWindowGeometry(Boolean includeWindowGeometry) {
+    public TropicalStormForecastOptions setIncludeWindowGeometry(Boolean includeWindowGeometry) {
         this.includeWindowGeometry = includeWindowGeometry;
         return this;
     }

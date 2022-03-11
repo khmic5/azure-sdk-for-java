@@ -572,7 +572,7 @@ public final class WeatherClient {
      */
     @Generated
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SevereWeatherAlertsResult getSevereWeatherAlerts(GeoPosition position, String language, boolean includeDetails) {
+    public SevereWeatherAlertsResult getSevereWeatherAlerts(GeoPosition position, String language, Boolean includeDetails) {
         return this.asyncClient.getSevereWeatherAlerts(position, language, includeDetails).block();
     }
 
@@ -610,7 +610,7 @@ public final class WeatherClient {
     @Generated
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<SevereWeatherAlertsResult> getSevereWeatherAlertsWithResponse(GeoPosition position, String language,
-            boolean includeDetails, Context context) {
+            Boolean includeDetails, Context context) {
         return this.asyncClient.getSevereWeatherAlertsWithResponse(position, language, includeDetails, context).block();
     }
 
@@ -766,7 +766,7 @@ public final class WeatherClient {
      */
     @Generated
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public StormSearchResult searchTropicalStorm(int year, BasinId basinId, Integer governmentStormId) {
+    public StormSearchResult searchTropicalStorm(Integer year, BasinId basinId, Integer governmentStormId) {
         return this.asyncClient.searchTropicalStorm(year, basinId, governmentStormId).block();
     }
 
@@ -790,7 +790,7 @@ public final class WeatherClient {
      */
     @Generated
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<StormSearchResult> searchTropicalStormWithResponse(int year, BasinId basinId, Integer governmentStormId,
+    public Response<StormSearchResult> searchTropicalStormWithResponse(Integer year, BasinId basinId, Integer governmentStormId,
             Context context) {
         return this.asyncClient.searchTropicalStormWithResponse(year, basinId, governmentStormId, context).block();
     }

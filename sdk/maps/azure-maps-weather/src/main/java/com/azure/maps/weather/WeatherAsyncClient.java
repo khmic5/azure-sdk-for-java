@@ -853,7 +853,7 @@ public final class WeatherAsyncClient {
     @Generated
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<SevereWeatherAlertsResult> getSevereWeatherAlerts(GeoPosition position,
-            String language, boolean includeDetails) {
+            String language, Boolean includeDetails) {
         Mono<Response<SevereWeatherAlertsResult>> responseMono = this.getSevereWeatherAlertsWithResponse(position,
             language, includeDetails);
 
@@ -895,7 +895,7 @@ public final class WeatherAsyncClient {
     @Generated
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<SevereWeatherAlertsResult>> getSevereWeatherAlertsWithResponse(GeoPosition position,
-            String language, boolean includeDetails) {
+            String language, Boolean includeDetails) {
         return this.getSevereWeatherAlertsWithResponse(position, language, includeDetails, null);
     }
 
@@ -932,7 +932,7 @@ public final class WeatherAsyncClient {
     @Generated
     @ServiceMethod(returns = ReturnType.SINGLE)
     Mono<Response<SevereWeatherAlertsResult>> getSevereWeatherAlertsWithResponse(GeoPosition position,
-            String language, boolean includeDetails, Context context) {
+            String language, Boolean includeDetails, Context context) {
         List<Double> coordinates = Arrays.asList(position.getLatitude(), position.getLongitude());
         String details = String.valueOf(includeDetails);
         return this.serviceClient.getSevereWeatherAlertsWithResponseAsync(JsonFormat.JSON, coordinates,
@@ -1164,7 +1164,7 @@ public final class WeatherAsyncClient {
      */
     @Generated
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<StormSearchResult> searchTropicalStorm(int year, BasinId basinId, Integer governmentStormId) {
+    public Mono<StormSearchResult> searchTropicalStorm(Integer year, BasinId basinId, Integer governmentStormId) {
         Mono<Response<StormSearchResult>> responseMono = this.searchTropicalStormWithResponse(year, basinId, governmentStormId);
 
         return responseMono.flatMap(item -> {
@@ -1191,7 +1191,7 @@ public final class WeatherAsyncClient {
      */
     @Generated
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<StormSearchResult>> searchTropicalStormWithResponse(int year, BasinId basinId,
+    public Mono<Response<StormSearchResult>> searchTropicalStormWithResponse(Integer year, BasinId basinId,
             Integer governmentStormId) {
         return this.searchTropicalStormWithResponse(year, basinId, governmentStormId, null);
     }
@@ -1215,7 +1215,7 @@ public final class WeatherAsyncClient {
      */
     @Generated
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Mono<Response<StormSearchResult>> searchTropicalStormWithResponse(int year, BasinId basinId,
+    Mono<Response<StormSearchResult>> searchTropicalStormWithResponse(Integer year, BasinId basinId,
             Integer governmentStormId, Context context) {
         return this.serviceClient.searchTropicalStormWithResponseAsync(JsonFormat.JSON, year, basinId,
             governmentStormId, context);
@@ -2002,7 +2002,7 @@ public final class WeatherAsyncClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<DailyHistoricalNormalsResult>> getDailyHistoricalNormalsWithResponse(GeoPosition position,
             LocalDate startDate, LocalDate endDate, WeatherDataUnit unit) {
-        return this.getDailyHistoricalNormalsWithResponse(position, startDate, endDate, unit);
+        return this.getDailyHistoricalNormalsWithResponse(position, startDate, endDate, unit, null);
     }
 
     /**

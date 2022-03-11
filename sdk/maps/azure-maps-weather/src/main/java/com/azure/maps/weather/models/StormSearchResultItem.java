@@ -57,19 +57,9 @@ public final class StormSearchResultItem {
      *
      * @return the year value.
      */
-    public String getYear() {
-        return this.year;
-    }
-
-    /**
-     * Set the year property: Year of origination.
-     *
-     * @param year the year value to set.
-     * @return the StormSearchResultItem object itself.
-     */
-    public StormSearchResultItem setYear(String year) {
-        this.year = year;
-        return this;
+    public Integer getYear() {
+        String returnValue = this.year;
+        return Integer.valueOf(returnValue);
     }
 
     /**

@@ -1,21 +1,21 @@
 package com.azure.maps.weather.models;
 
 public class TropicalStormLocationOptions {
-    private int year;
+    private Integer year;
     private BasinId basinId;
-    private int governmentStormId;
+    private Integer governmentStormId;
     private WeatherDataUnit unit;
     private Boolean includeDetails;
     private Boolean includeGeometricDetails;
     private Boolean includeCurrentStorm;
 
-    public TropicalStormLocationOptions(int year, BasinId basinId, int governmentStormId) {
+    public TropicalStormLocationOptions(Integer year, BasinId basinId, Integer governmentStormId) {
         this.year = year;
         this.basinId = basinId;
         this.governmentStormId = governmentStormId;
     }
 
-    public int getYear() {
+    public Integer getYear() {
         return this.year;
     }
 
@@ -23,7 +23,7 @@ public class TropicalStormLocationOptions {
         return this.basinId;
     }
 
-    public int getGovernmentStormId() {
+    public Integer getGovernmentStormId() {
         return this.governmentStormId;
     }
 
@@ -43,37 +43,37 @@ public class TropicalStormLocationOptions {
         return this.includeCurrentStorm;
     }
 
-    public TropicalStormLocationOptions year(int year) {
+    public TropicalStormLocationOptions setYear(Integer year) {
         this.year = year;
         return this;
     }
 
-    public TropicalStormLocationOptions basinId(BasinId basinId) {
+    public TropicalStormLocationOptions setBasinId(BasinId basinId) {
         this.basinId = basinId;
         return this;
     }
 
-    public TropicalStormLocationOptions governmentStormId(int governmentStormId) {
+    public TropicalStormLocationOptions setGovernmentStormId(Integer governmentStormId) {
         this.governmentStormId = governmentStormId;
         return this;
     }
 
-    public TropicalStormLocationOptions unit(WeatherDataUnit unit) {
+    public TropicalStormLocationOptions setUnit(WeatherDataUnit unit) {
         this.unit = unit;
         return this;
     }
 
-    public TropicalStormLocationOptions includeDetails(Boolean includeDetails) {
+    public TropicalStormLocationOptions setIncludeDetails(Boolean includeDetails) {
         this.includeDetails = includeDetails;
         return this;
     }
 
-    public TropicalStormLocationOptions includeGeometricDetails(Boolean includeGeometricDetails) {
+    public TropicalStormLocationOptions setIncludeGeometricDetails(Boolean includeGeometricDetails) {
         this.includeGeometricDetails = includeGeometricDetails;
         return this;
     }
 
-    public TropicalStormLocationOptions includeCurrentStorm(Boolean includeCurrentStorm) {
+    public TropicalStormLocationOptions setIncludeCurrentStorm(Boolean includeCurrentStorm) {
         this.includeCurrentStorm = includeCurrentStorm;
         return this;
     }
