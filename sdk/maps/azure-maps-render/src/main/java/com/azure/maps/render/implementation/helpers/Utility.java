@@ -1,6 +1,5 @@
 package com.azure.maps.render.implementation.helpers;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 

@@ -1,5 +1,6 @@
 package com.azure.maps.render;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.Duration;
@@ -28,74 +29,64 @@ public class TestUtils {
 
     static MapTileset getExpectedMapTileset() throws IOException {
         InputStream is = ClassLoader.getSystemResourceAsStream("maptileset.json");
-        byte[] data = null;
-        data = is.readAllBytes();
+        byte[] data = toByteArray(is);
         SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
         TypeReference<MapTilesetPrivate> interimType = new TypeReference<MapTilesetPrivate>(){};
         MapTilesetPrivate mapTilesetPrivate = null;
         mapTilesetPrivate = jacksonAdapter.<MapTilesetPrivate>deserialize(data, interimType.getJavaType(),
         SerializerEncoding.JSON);
+        is.close();
         return Utility.toMapTileset(mapTilesetPrivate);
     }
 
     static MapAttribution getExpectedMapAttribution() throws IOException {
         InputStream is = ClassLoader.getSystemResourceAsStream("mapattribution.json");
-        byte[] data = null;
-        data = is.readAllBytes();
+        byte[] data = toByteArray(is);
         SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
         TypeReference<MapAttribution> interimType = new TypeReference<MapAttribution>(){};
+        is.close();
         return jacksonAdapter.<MapAttribution>deserialize(data, interimType.getJavaType(),
         SerializerEncoding.JSON);
     }
 
     static CopyrightCaption getExpectedCopyrightCaption() throws IOException {
         InputStream is = ClassLoader.getSystemResourceAsStream("copyrightcaption.json");
-        byte[] data = null;
-        data = is.readAllBytes();
+        byte[] data = toByteArray(is);
         SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
         TypeReference<CopyrightCaption> interimType = new TypeReference<CopyrightCaption>(){};
+        is.close();
         return jacksonAdapter.<CopyrightCaption>deserialize(data, interimType.getJavaType(),
         SerializerEncoding.JSON);
     }
 
     static Copyright getExpectedCopyrightFromBoundingBox() throws IOException {
         InputStream is = ClassLoader.getSystemResourceAsStream("getcopyrightfromboundingbox.json");
-        byte[] data = null;
-        data = is.readAllBytes();
+        byte[] data = toByteArray(is);
         SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
         TypeReference<Copyright> interimType = new TypeReference<Copyright>(){};
+        is.close();
         return jacksonAdapter.<Copyright>deserialize(data, interimType.getJavaType(),
         SerializerEncoding.JSON);
     }
 
     static Copyright getExpectedCopyrightForTile() throws IOException {
         InputStream is = ClassLoader.getSystemResourceAsStream("getcopyrightfortile.json");
-        byte[] data = null;
-        data = is.readAllBytes();
+        byte[] data = toByteArray(is);
         SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
         TypeReference<Copyright> interimType = new TypeReference<Copyright>(){};
+        is.close();
         return jacksonAdapter.<Copyright>deserialize(data, interimType.getJavaType(),
         SerializerEncoding.JSON);
     }
 
     static Copyright getExpectedCopyrightForWorld() throws IOException {
         InputStream is = ClassLoader.getSystemResourceAsStream("getcopyrightforworld.json");
-        byte[] data = null;
-        data = is.readAllBytes();
+        byte[] data = toByteArray(is);
         SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
         TypeReference<Copyright> interimType = new TypeReference<Copyright>(){};
+        is.close();
         return jacksonAdapter.<Copyright>deserialize(data, interimType.getJavaType(),
         SerializerEncoding.JSON);
-    }
-
-    static byte[] getExpectedMapTile() throws IOException {
-        InputStream is = ClassLoader.getSystemResourceAsStream("maptile.png");
-        return is.readAllBytes();
-    }
-
-    static byte[] getExpectedMapStaticImage() throws IOException {
-        InputStream is = ClassLoader.getSystemResourceAsStream("mapstaticimage.png");
-        return is.readAllBytes();
     }
 
     /**
@@ -114,5 +105,26 @@ public class TestUtils {
                     .forEach(serviceVersion -> argumentsList.add(Arguments.of(httpClient, serviceVersion)));
             });
         return argumentsList.stream();
+    }
+
+    /**
+     * Code referenced from 
+     * https://www.techiedelight.com/convert-inputstream-byte-array-java/#:~:text=Convert%20InputStream%20to%20byte%20array%20in%20Java%201,Commons%20IO%20...%204%204.%20Using%20sun.misc.IOUtils%20
+     * @param InputStream in
+     * @return byte[]
+     * @throws IOException
+     */
+    public static byte[] toByteArray(InputStream in) throws IOException {
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+ 
+        byte[] buffer = new byte[1024];
+        int len;
+ 
+        // read bytes from the input stream and store them in the buffer
+        while ((len = in.read(buffer)) != -1) {
+            // write bytes from the buffer into the output stream
+            os.write(buffer, 0, len);
+        }
+        return os.toByteArray();
     }
 }
