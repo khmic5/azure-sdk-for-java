@@ -48,8 +48,10 @@ public class TestUtils {
         byte[] data = toByteArray(is);
         SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
         TypeReference<RouteMatrixResult> interimType = new TypeReference<RouteMatrixResult>(){};
-        return jacksonAdapter.<RouteMatrixResult>deserialize(data, interimType.getJavaType(),
+        RouteMatrixResult result = jacksonAdapter.<RouteMatrixResult>deserialize(data, interimType.getJavaType(),
         SerializerEncoding.JSON);
+        is.close();
+        return result;
     }
 
     static RouteMatrixResult getExpectedGetRequestRouteMatrix() throws IOException {
@@ -57,8 +59,10 @@ public class TestUtils {
         byte[] data = toByteArray(is);
         SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
         TypeReference<RouteMatrixResult> interimType = new TypeReference<RouteMatrixResult>(){};
-        return jacksonAdapter.<RouteMatrixResult>deserialize(data, interimType.getJavaType(),
+        RouteMatrixResult result = jacksonAdapter.<RouteMatrixResult>deserialize(data, interimType.getJavaType(),
         SerializerEncoding.JSON);
+        is.close();
+        return result;
     }
 
     static RouteDirections getExpectedRouteDirections() throws IOException {
@@ -66,8 +70,10 @@ public class TestUtils {
         byte[] data = toByteArray(is);
         SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
         TypeReference<RouteDirections> interimType = new TypeReference<RouteDirections>(){};
-        return jacksonAdapter.<RouteDirections>deserialize(data, interimType.getJavaType(),
+        RouteDirections result = jacksonAdapter.<RouteDirections>deserialize(data, interimType.getJavaType(),
         SerializerEncoding.JSON);
+        is.close();
+        return result;
     }
 
     static RouteDirections getExpectedRouteDirectionsWithAdditionalParameters() throws IOException {
@@ -75,8 +81,10 @@ public class TestUtils {
         byte[] data = toByteArray(is);
         SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
         TypeReference<RouteDirections> interimType = new TypeReference<RouteDirections>(){};
-        return jacksonAdapter.<RouteDirections>deserialize(data, interimType.getJavaType(),
+        RouteDirections result = jacksonAdapter.<RouteDirections>deserialize(data, interimType.getJavaType(),
         SerializerEncoding.JSON);
+        is.close();
+        return result;
     }
 
     static RouteRangeResult getExpectedRouteRange() throws IOException {
@@ -84,8 +92,10 @@ public class TestUtils {
         byte[] data = toByteArray(is);
         SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
         TypeReference<RouteRangeResult> interimType = new TypeReference<RouteRangeResult>(){};
-        return jacksonAdapter.<RouteRangeResult>deserialize(data, interimType.getJavaType(),
+        RouteRangeResult result = jacksonAdapter.<RouteRangeResult>deserialize(data, interimType.getJavaType(),
         SerializerEncoding.JSON);
+        is.close();
+        return result;
     }
 
     static RouteDirectionsBatchResult getExpectedBeginRequestRouteDirectionsBatch() throws IOException {
@@ -93,8 +103,10 @@ public class TestUtils {
         byte[] data = toByteArray(is);
         SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
         TypeReference<RouteDirectionsBatchResult> interimType = new TypeReference<RouteDirectionsBatchResult>(){};
-        return jacksonAdapter.<RouteDirectionsBatchResult>deserialize(data, interimType.getJavaType(),
+        RouteDirectionsBatchResult result = jacksonAdapter.<RouteDirectionsBatchResult>deserialize(data, interimType.getJavaType(),
         SerializerEncoding.JSON);
+        is.close();
+        return result;
     }
 
     static RouteDirectionsBatchResult getExpectedBeginRequestRouteDirectionsBatchBatchId() throws IOException {
@@ -102,8 +114,10 @@ public class TestUtils {
         byte[] data = toByteArray(is);
         SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
         TypeReference<RouteDirectionsBatchResult> interimType = new TypeReference<RouteDirectionsBatchResult>(){};
-        return jacksonAdapter.<RouteDirectionsBatchResult>deserialize(data, interimType.getJavaType(),
+        RouteDirectionsBatchResult result = jacksonAdapter.<RouteDirectionsBatchResult>deserialize(data, interimType.getJavaType(),
         SerializerEncoding.JSON);
+        is.close();
+        return result;
     }
 
     // Code referenced from 
