@@ -1,0 +1,20 @@
+{
+    "results": [
+        {
+            "year": "2022",
+            "basinId": "SI",
+            "govId": 21,
+            "name": "CHARLOTTE",
+            "isActive": true,
+            "isSubtropical": false
+        },
+        {
+            "year": "2022",
+            "basinId": "SI",
+            "govId": 22,
+            "name": "HALIMA",
+            "isActive": true,
+            "isSubtropical": false
+        }
+    ]
+}
