@@ -106,7 +106,7 @@ public final class RouteAsyncClient {
         RouteMatrixQueryPrivate privateQuery = Utility.toRouteMatrixQueryPrivate(query);
         final int originSize = privateQuery.getOrigins().getCoordinates().size();
         final int destSize = privateQuery.getDestinations().getCoordinates().size();
-        boolean waitForResults = (originSize * destSize <= 0);
+        boolean waitForResults = (originSize * destSize <= ROUTE_MATRIX_SMALL_SIZE);
 
         return createPollerFlux(
             () ->
@@ -527,7 +527,7 @@ public final class RouteAsyncClient {
             .collect(Collectors.toList());
         BatchRequest batchRequest = new BatchRequest().setBatchItems(items);
 
-        if (batchRequest.getBatchItems().size() <= ROUTE_MATRIX_SMALL_SIZE) {
+        if (batchRequest.getBatchItems().size() <= ROUTE_DIRECTIONS_SMALL_SIZE) {
             return createDirectionsPollerFlux(
                 () -> this.serviceClient
                         .requestRouteDirectionsBatchSyncWithResponseAsync(JsonFormat.JSON, batchRequest, context)
