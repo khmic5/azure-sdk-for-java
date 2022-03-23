@@ -19,6 +19,7 @@ import com.azure.core.annotation.ServiceClient;
 import com.azure.core.annotation.ServiceMethod;
 import com.azure.core.http.HttpPipeline;
 import com.azure.core.http.rest.Response;
+import com.azure.core.models.GeoPosition;
 import com.azure.core.util.Context;
 import com.azure.core.util.polling.DefaultPollingStrategy;
 import com.azure.core.util.polling.PollerFlux;
@@ -31,7 +32,6 @@ import com.azure.maps.route.implementation.models.JsonFormat;
 import com.azure.maps.route.implementation.models.ResponseFormat;
 import com.azure.maps.route.implementation.models.RouteMatrixQueryPrivate;
 import com.azure.maps.route.models.ErrorResponseException;
-import com.azure.maps.route.models.LatLong;
 import com.azure.maps.route.models.RouteDirections;
 import com.azure.maps.route.models.RouteDirectionsBatchResult;
 import com.azure.maps.route.models.RouteDirectionsOptions;
@@ -442,9 +442,9 @@ public final class RouteAsyncClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     Mono<Response<RouteRangeResult>> getRouteRangeWithResponse(
             RouteRangeOptions options, Context context) {
-        LatLong startingPoint = options.getStartingPoint();
+        GeoPosition startingPoint = options.getStartingPoint();
         List<Double> startingPointCoordinates = Arrays.asList(
-            startingPoint.getLatitude(), startingPoint.getLongitude());
+            startingPoint.getLongitude(), startingPoint.getLatitude());
 
         return this.serviceClient.getRouteRangeWithResponseAsync(
                 ResponseFormat.JSON,

@@ -54,14 +54,14 @@ public class RouteCustomization extends Customization {
     private void customizeRouteLeg(PackageCustomization models) {
         final String getPointsMethod =
             "/** " +
-            "* Returns a list of {@link LatLong} coordinates." +
+            "* Returns a list of {@link GeoPosition} coordinates." +
             "*" +
             "* return the coordinates" +
             "*/" +
-            "public List<LatLong> getPoints() {" +
+            "public List<GeoPosition> getPoints() {" +
             "    return this.points" +
             "        .stream()" +
-            "        .map(item -> new LatLong(item.getLatitude(), item.getLongitude()))" +
+            "        .map(item -> new GeoPosition(item.getLongitude(), item.getLatitude()))" +
             "        .collect(Collectors.toList());" +
             "}";
 
@@ -75,8 +75,8 @@ public class RouteCustomization extends Customization {
     private void customizeRouteInstruction(PackageCustomization models) {
         ClassCustomization classCustomization = models.getClass("RouteInstruction");
         MethodCustomization methodCustomization = classCustomization.getMethod("getPoint");
-        methodCustomization.setReturnType("LatLong", "new LatLong(returnValue.getLatitude(), " +
-            "returnValue.getLongitude())");
+        methodCustomization.setReturnType("GeoPosition", "new GeoPosition(returnValue.getLongitude(), " +
+            "returnValue.getLatitude())");
         classCustomization.removeMethod("setPoint");
     }
 
@@ -87,14 +87,14 @@ public class RouteCustomization extends Customization {
         // replaces getBoundary()
         final String getBoundaryMethod =
             "/** " +
-            "* Returns a list of {@link LatLong} coordinates." +
+            "* Returns a list of {@link GeoPosition} coordinates." +
             "* " +
             "* return the coordinates" +
             "*/" +
-            "public List<LatLong> getBoundary() {" +
+            "public List<GeoPosition> getBoundary() {" +
             "    return this.boundary" +
             "        .stream()" +
-            "        .map(item -> new LatLong(item.getLatitude(), item.getLongitude()))" +
+            "        .map(item -> new GeoPosition(item.getLongitude(), item.getLatitude()))" +
             "        .collect(Collectors.toList());" +
             "}";
 
@@ -102,10 +102,10 @@ public class RouteCustomization extends Customization {
         classCustomization.addMethod(getBoundaryMethod, Arrays.asList("java.util.List",
             "java.util.stream.Collectors", "java.util.Arrays"));
 
-        // changes the Center property to be LatLong
+        // changes the Center property to be GeoPosition
         MethodCustomization methodCustomization = classCustomization.getMethod("getCenter");
-        methodCustomization.setReturnType("LatLong", "new LatLong(returnValue.getLatitude(), " +
-            "returnValue.getLongitude())");
+        methodCustomization.setReturnType("GeoPosition", "new GeoPosition(returnValue.getLongitude(), " +
+            "returnValue.getLatitude())");
         classCustomization.removeMethod("setCenter");
     }
 

@@ -5,6 +5,7 @@
 package com.azure.maps.route.models;
 
 import com.azure.core.annotation.Immutable;
+import com.azure.core.models.GeoPosition;
 import com.azure.maps.route.implementation.models.LatLongPair;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
@@ -37,10 +38,10 @@ public final class RouteLeg {
         return this.summary;
     }
 
-    /** * Returns a list of {@link LatLong} coordinates.** return the coordinates */
-    public List<LatLong> getPoints() {
+    /** * Returns a list of {@link GeoPosition} coordinates.** return the coordinates */
+    public List<GeoPosition> getPoints() {
         return this.points.stream()
-                .map(item -> new LatLong(item.getLatitude(), item.getLongitude()))
+                .map(item -> new GeoPosition(item.getLongitude(), item.getLatitude()))
                 .collect(Collectors.toList());
     }
 }

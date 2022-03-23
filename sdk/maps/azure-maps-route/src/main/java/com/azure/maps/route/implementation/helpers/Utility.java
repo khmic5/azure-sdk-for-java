@@ -15,7 +15,6 @@ import com.azure.core.http.HttpHeaders;
 import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.SimpleResponse;
 import com.azure.core.models.GeoCollection;
-import com.azure.core.models.GeoObject;
 import com.azure.core.models.GeoPolygonCollection;
 import com.azure.core.models.GeoPosition;
 import com.azure.core.serializer.json.jackson.JacksonJsonSerializer;
@@ -26,12 +25,10 @@ import com.azure.maps.route.implementation.models.BatchRequestItem;
 import com.azure.maps.route.implementation.models.GeoJsonGeometryCollection;
 import com.azure.maps.route.implementation.models.GeoJsonMultiPoint;
 import com.azure.maps.route.implementation.models.GeoJsonMultiPolygon;
-import com.azure.maps.route.implementation.models.GeoJsonObject;
 import com.azure.maps.route.implementation.models.RouteDirectionParametersPrivate;
 import com.azure.maps.route.implementation.models.RouteDirectionsBatchResultPrivate;
 import com.azure.maps.route.implementation.models.RouteMatrixQueryPrivate;
 import com.azure.maps.route.implementation.models.RouteMatrixResultPrivate;
-import com.azure.maps.route.models.LatLong;
 import com.azure.maps.route.models.RouteDirectionsBatchResult;
 import com.azure.maps.route.models.RouteDirectionsOptions;
 import com.azure.maps.route.models.RouteDirectionsParameters;
@@ -109,7 +106,7 @@ public class Utility {
             .stream()
             .map(point -> {
                 GeoPosition position = point.getCoordinates();
-                return Arrays.asList(position.getLatitude(), position.getLongitude());
+                return Arrays.asList(position.getLongitude(), position.getLatitude());
             })
             .collect(Collectors.toList());
 
@@ -119,7 +116,7 @@ public class Utility {
             .stream()
             .map(point -> {
                 GeoPosition position = point.getCoordinates();
-                return Arrays.asList(position.getLatitude(), position.getLongitude());
+                return Arrays.asList(position.getLongitude(), position.getLatitude());
             })
             .collect(Collectors.toList());
 
@@ -127,7 +124,6 @@ public class Utility {
         destinations.setCoordinates(destCoordinates);
         privateQuery.setOrigins(origins);
         privateQuery.setDestinations(destinations);
-
         return privateQuery;
     }
 
@@ -137,10 +133,10 @@ public class Utility {
      * @param routePoints
      * @return a String containing all route points
      */
-    public static String toRouteQueryString(List<LatLong> routePoints) {
+    public static String toRouteQueryString(List<GeoPosition> routePoints) {
         return routePoints
             .stream()
-            .map(item -> item.toString())
+            .map(item -> item.getLatitude() + "," + item.getLongitude())
             .collect(Collectors.joining(":"));
     }
 

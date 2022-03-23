@@ -363,7 +363,7 @@ public final class RoutesImpl {
     }
 
     /**
-     * **Applies to**: S1 pricing tier.
+     * **Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>The Matrix Routing service allows calculation of a matrix of route summaries for a set of routes defined by
      * origin and destination locations by using an asynchronous (async) or synchronous (sync) POST request. For every
@@ -564,7 +564,7 @@ public final class RoutesImpl {
     }
 
     /**
-     * **Applies to**: S1 pricing tier.
+     * **Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>The Matrix Routing service allows calculation of a matrix of route summaries for a set of routes defined by
      * origin and destination locations by using an asynchronous (async) or synchronous (sync) POST request. For every
@@ -765,7 +765,7 @@ public final class RoutesImpl {
     }
 
     /**
-     * **Applies to**: S1 pricing tier.
+     * **Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>The Matrix Routing service allows calculation of a matrix of route summaries for a set of routes defined by
      * origin and destination locations by using an asynchronous (async) or synchronous (sync) POST request. For every
@@ -958,7 +958,7 @@ public final class RoutesImpl {
     }
 
     /**
-     * **Applies to**: S1 pricing tier.
+     * **Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>The Matrix Routing service allows calculation of a matrix of route summaries for a set of routes defined by
      * origin and destination locations by using an asynchronous (async) or synchronous (sync) POST request. For every
@@ -1154,7 +1154,7 @@ public final class RoutesImpl {
     }
 
     /**
-     * **Applies to**: S1 pricing tier.
+     * **Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>The Matrix Routing service allows calculation of a matrix of route summaries for a set of routes defined by
      * origin and destination locations by using an asynchronous (async) or synchronous (sync) POST request. For every
@@ -1342,7 +1342,7 @@ public final class RoutesImpl {
     }
 
     /**
-     * **Applies to**: S1 pricing tier.
+     * **Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>The Matrix Routing service allows calculation of a matrix of route summaries for a set of routes defined by
      * origin and destination locations by using an asynchronous (async) or synchronous (sync) POST request. For every
@@ -1533,7 +1533,9 @@ public final class RoutesImpl {
     }
 
     /**
-     * If the Matrix Route request was accepted successfully, the Location header in the response contains the URL to
+     * **Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>If the Matrix Route request was accepted successfully, the Location header in the response contains the URL to
      * download the results of the request. This status URI looks like the following:
      *
      * <p>``` GET
@@ -1578,7 +1580,9 @@ public final class RoutesImpl {
     }
 
     /**
-     * If the Matrix Route request was accepted successfully, the Location header in the response contains the URL to
+     * **Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>If the Matrix Route request was accepted successfully, the Location header in the response contains the URL to
      * download the results of the request. This status URI looks like the following:
      *
      * <p>``` GET
@@ -1622,7 +1626,9 @@ public final class RoutesImpl {
     }
 
     /**
-     * If the Matrix Route request was accepted successfully, the Location header in the response contains the URL to
+     * **Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>If the Matrix Route request was accepted successfully, the Location header in the response contains the URL to
      * download the results of the request. This status URI looks like the following:
      *
      * <p>``` GET
@@ -1663,7 +1669,9 @@ public final class RoutesImpl {
     }
 
     /**
-     * If the Matrix Route request was accepted successfully, the Location header in the response contains the URL to
+     * **Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>If the Matrix Route request was accepted successfully, the Location header in the response contains the URL to
      * download the results of the request. This status URI looks like the following:
      *
      * <p>``` GET
@@ -1706,7 +1714,9 @@ public final class RoutesImpl {
     }
 
     /**
-     * If the Matrix Route request was accepted successfully, the Location header in the response contains the URL to
+     * **Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>If the Matrix Route request was accepted successfully, the Location header in the response contains the URL to
      * download the results of the request. This status URI looks like the following:
      *
      * <p>``` GET
@@ -1742,7 +1752,9 @@ public final class RoutesImpl {
     }
 
     /**
-     * If the Matrix Route request was accepted successfully, the Location header in the response contains the URL to
+     * **Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>If the Matrix Route request was accepted successfully, the Location header in the response contains the URL to
      * download the results of the request. This status URI looks like the following:
      *
      * <p>``` GET
@@ -1780,7 +1792,7 @@ public final class RoutesImpl {
     }
 
     /**
-     * **Applies to**: S1 pricing tier.
+     * **Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>The Matrix Routing service allows calculation of a matrix of route summaries for a set of routes defined by
      * origin and destination locations by using an asynchronous (async) or synchronous (sync) POST request. For every
@@ -1982,7 +1994,7 @@ public final class RoutesImpl {
     }
 
     /**
-     * **Applies to**: S1 pricing tier.
+     * **Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>The Matrix Routing service allows calculation of a matrix of route summaries for a set of routes defined by
      * origin and destination locations by using an asynchronous (async) or synchronous (sync) POST request. For every
@@ -2184,7 +2196,7 @@ public final class RoutesImpl {
     }
 
     /**
-     * **Applies to**: S1 pricing tier.
+     * **Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>The Matrix Routing service allows calculation of a matrix of route summaries for a set of routes defined by
      * origin and destination locations by using an asynchronous (async) or synchronous (sync) POST request. For every
@@ -2380,7 +2392,7 @@ public final class RoutesImpl {
     }
 
     /**
-     * **Applies to**: S1 pricing tier.
+     * **Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>The Matrix Routing service allows calculation of a matrix of route summaries for a set of routes defined by
      * origin and destination locations by using an asynchronous (async) or synchronous (sync) POST request. For every
@@ -2579,7 +2591,7 @@ public final class RoutesImpl {
     }
 
     /**
-     * **Applies to**: S1 pricing tier.
+     * **Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>The Matrix Routing service allows calculation of a matrix of route summaries for a set of routes defined by
      * origin and destination locations by using an asynchronous (async) or synchronous (sync) POST request. For every
@@ -2768,7 +2780,7 @@ public final class RoutesImpl {
     }
 
     /**
-     * **Applies to**: S1 pricing tier.
+     * **Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>The Matrix Routing service allows calculation of a matrix of route summaries for a set of routes defined by
      * origin and destination locations by using an asynchronous (async) or synchronous (sync) POST request. For every
@@ -2960,7 +2972,7 @@ public final class RoutesImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>Returns a route between an origin and a destination, passing through waypoints if they are specified. The
      * route will take into account factors such as current traffic and the typical road speeds on the requested day of
@@ -3281,7 +3293,7 @@ public final class RoutesImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>Returns a route between an origin and a destination, passing through waypoints if they are specified. The
      * route will take into account factors such as current traffic and the typical road speeds on the requested day of
@@ -3602,7 +3614,7 @@ public final class RoutesImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>Returns a route between an origin and a destination, passing through waypoints if they are specified. The
      * route will take into account factors such as current traffic and the typical road speeds on the requested day of
@@ -3917,7 +3929,7 @@ public final class RoutesImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>Returns a route between an origin and a destination, passing through waypoints if they are specified. The
      * route will take into account factors such as current traffic and the typical road speeds on the requested day of
@@ -4235,7 +4247,7 @@ public final class RoutesImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>Returns a route between an origin and a destination, passing through waypoints if they are specified. The
      * route will take into account factors such as current traffic and the typical road speeds on the requested day of
@@ -4543,7 +4555,7 @@ public final class RoutesImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>Returns a route between an origin and a destination, passing through waypoints if they are specified. The
      * route will take into account factors such as current traffic and the typical road speeds on the requested day of
@@ -4854,7 +4866,7 @@ public final class RoutesImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>Returns a route between an origin and a destination, passing through waypoints if they are specified. The
      * route will take into account factors such as current traffic and the typical road speeds on the requested day of
@@ -5191,7 +5203,7 @@ public final class RoutesImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>Returns a route between an origin and a destination, passing through waypoints if they are specified. The
      * route will take into account factors such as current traffic and the typical road speeds on the requested day of
@@ -5528,7 +5540,7 @@ public final class RoutesImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>Returns a route between an origin and a destination, passing through waypoints if they are specified. The
      * route will take into account factors such as current traffic and the typical road speeds on the requested day of
@@ -5859,7 +5871,7 @@ public final class RoutesImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>Returns a route between an origin and a destination, passing through waypoints if they are specified. The
      * route will take into account factors such as current traffic and the typical road speeds on the requested day of
@@ -6193,7 +6205,7 @@ public final class RoutesImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>Returns a route between an origin and a destination, passing through waypoints if they are specified. The
      * route will take into account factors such as current traffic and the typical road speeds on the requested day of
@@ -6517,7 +6529,7 @@ public final class RoutesImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>Returns a route between an origin and a destination, passing through waypoints if they are specified. The
      * route will take into account factors such as current traffic and the typical road speeds on the requested day of
@@ -6846,7 +6858,7 @@ public final class RoutesImpl {
     /**
      * __Route Range (Isochrone) API__
      *
-     * <p>**Applies to**: S1 pricing tier.
+     * <p>**Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>This service will calculate a set of locations that can be reached from the origin point based on fuel,
      * energy, time or distance budget that is specified. A polygon boundary (or Isochrone) is returned in a
@@ -7107,7 +7119,7 @@ public final class RoutesImpl {
     /**
      * __Route Range (Isochrone) API__
      *
-     * <p>**Applies to**: S1 pricing tier.
+     * <p>**Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>This service will calculate a set of locations that can be reached from the origin point based on fuel,
      * energy, time or distance budget that is specified. A polygon boundary (or Isochrone) is returned in a
@@ -7368,7 +7380,7 @@ public final class RoutesImpl {
     /**
      * __Route Range (Isochrone) API__
      *
-     * <p>**Applies to**: S1 pricing tier.
+     * <p>**Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>This service will calculate a set of locations that can be reached from the origin point based on fuel,
      * energy, time or distance budget that is specified. A polygon boundary (or Isochrone) is returned in a
@@ -7621,7 +7633,7 @@ public final class RoutesImpl {
     /**
      * __Route Range (Isochrone) API__
      *
-     * <p>**Applies to**: S1 pricing tier.
+     * <p>**Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>This service will calculate a set of locations that can be reached from the origin point based on fuel,
      * energy, time or distance budget that is specified. A polygon boundary (or Isochrone) is returned in a
@@ -7877,7 +7889,7 @@ public final class RoutesImpl {
     /**
      * __Route Range (Isochrone) API__
      *
-     * <p>**Applies to**: S1 pricing tier.
+     * <p>**Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>This service will calculate a set of locations that can be reached from the origin point based on fuel,
      * energy, time or distance budget that is specified. A polygon boundary (or Isochrone) is returned in a
@@ -8123,7 +8135,7 @@ public final class RoutesImpl {
     /**
      * __Route Range (Isochrone) API__
      *
-     * <p>**Applies to**: S1 pricing tier.
+     * <p>**Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>This service will calculate a set of locations that can be reached from the origin point based on fuel,
      * energy, time or distance budget that is specified. A polygon boundary (or Isochrone) is returned in a
@@ -8372,7 +8384,7 @@ public final class RoutesImpl {
     /**
      * **Route Directions Batch API**
      *
-     * <p>**Applies to**: S1 pricing tier.
+     * <p>**Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>The Route Directions Batch API sends batches of queries to [Route Directions
      * API](https://docs.microsoft.com/rest/api/maps/route/getroutedirections) using just a single API call. You can
@@ -8491,7 +8503,7 @@ public final class RoutesImpl {
     /**
      * **Route Directions Batch API**
      *
-     * <p>**Applies to**: S1 pricing tier.
+     * <p>**Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>The Route Directions Batch API sends batches of queries to [Route Directions
      * API](https://docs.microsoft.com/rest/api/maps/route/getroutedirections) using just a single API call. You can
@@ -8609,7 +8621,7 @@ public final class RoutesImpl {
     /**
      * **Route Directions Batch API**
      *
-     * <p>**Applies to**: S1 pricing tier.
+     * <p>**Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>The Route Directions Batch API sends batches of queries to [Route Directions
      * API](https://docs.microsoft.com/rest/api/maps/route/getroutedirections) using just a single API call. You can
@@ -8723,7 +8735,7 @@ public final class RoutesImpl {
     /**
      * **Route Directions Batch API**
      *
-     * <p>**Applies to**: S1 pricing tier.
+     * <p>**Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>The Route Directions Batch API sends batches of queries to [Route Directions
      * API](https://docs.microsoft.com/rest/api/maps/route/getroutedirections) using just a single API call. You can
@@ -8839,7 +8851,7 @@ public final class RoutesImpl {
     /**
      * **Route Directions Batch API**
      *
-     * <p>**Applies to**: S1 pricing tier.
+     * <p>**Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>The Route Directions Batch API sends batches of queries to [Route Directions
      * API](https://docs.microsoft.com/rest/api/maps/route/getroutedirections) using just a single API call. You can
@@ -8948,7 +8960,7 @@ public final class RoutesImpl {
     /**
      * **Route Directions Batch API**
      *
-     * <p>**Applies to**: S1 pricing tier.
+     * <p>**Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>The Route Directions Batch API sends batches of queries to [Route Directions
      * API](https://docs.microsoft.com/rest/api/maps/route/getroutedirections) using just a single API call. You can
@@ -9057,9 +9069,11 @@ public final class RoutesImpl {
     }
 
     /**
-     * ### Download Asynchronous Batch Results To download the async batch results you will issue a `GET` request to the
-     * batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful `POST`
-     * batch request and looks like the following:
+     * **Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>### Download Asynchronous Batch Results To download the async batch results you will issue a `GET` request to
+     * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
+     * `POST` batch request and looks like the following:
      *
      * <p>```
      * https://atlas.microsoft.com/route/directions/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
@@ -9119,9 +9133,11 @@ public final class RoutesImpl {
     }
 
     /**
-     * ### Download Asynchronous Batch Results To download the async batch results you will issue a `GET` request to the
-     * batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful `POST`
-     * batch request and looks like the following:
+     * **Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>### Download Asynchronous Batch Results To download the async batch results you will issue a `GET` request to
+     * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
+     * `POST` batch request and looks like the following:
      *
      * <p>```
      * https://atlas.microsoft.com/route/directions/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
@@ -9181,9 +9197,11 @@ public final class RoutesImpl {
     }
 
     /**
-     * ### Download Asynchronous Batch Results To download the async batch results you will issue a `GET` request to the
-     * batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful `POST`
-     * batch request and looks like the following:
+     * **Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>### Download Asynchronous Batch Results To download the async batch results you will issue a `GET` request to
+     * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
+     * `POST` batch request and looks like the following:
      *
      * <p>```
      * https://atlas.microsoft.com/route/directions/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
@@ -9240,9 +9258,11 @@ public final class RoutesImpl {
     }
 
     /**
-     * ### Download Asynchronous Batch Results To download the async batch results you will issue a `GET` request to the
-     * batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful `POST`
-     * batch request and looks like the following:
+     * **Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>### Download Asynchronous Batch Results To download the async batch results you will issue a `GET` request to
+     * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
+     * `POST` batch request and looks like the following:
      *
      * <p>```
      * https://atlas.microsoft.com/route/directions/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
@@ -9300,9 +9320,11 @@ public final class RoutesImpl {
     }
 
     /**
-     * ### Download Asynchronous Batch Results To download the async batch results you will issue a `GET` request to the
-     * batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful `POST`
-     * batch request and looks like the following:
+     * **Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>### Download Asynchronous Batch Results To download the async batch results you will issue a `GET` request to
+     * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
+     * `POST` batch request and looks like the following:
      *
      * <p>```
      * https://atlas.microsoft.com/route/directions/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
@@ -9354,9 +9376,11 @@ public final class RoutesImpl {
     }
 
     /**
-     * ### Download Asynchronous Batch Results To download the async batch results you will issue a `GET` request to the
-     * batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful `POST`
-     * batch request and looks like the following:
+     * **Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>### Download Asynchronous Batch Results To download the async batch results you will issue a `GET` request to
+     * the batch download endpoint. This _download URL_ can be obtained from the `Location` header of a successful
+     * `POST` batch request and looks like the following:
      *
      * <p>```
      * https://atlas.microsoft.com/route/directions/batch/{batch-id}?api-version=1.0&amp;subscription-key={subscription-key}
@@ -9411,7 +9435,7 @@ public final class RoutesImpl {
     /**
      * **Route Directions Batch API**
      *
-     * <p>**Applies to**: S1 pricing tier.
+     * <p>**Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>The Route Directions Batch API sends batches of queries to [Route Directions
      * API](https://docs.microsoft.com/rest/api/maps/route/getroutedirections) using just a single API call. You can
@@ -9477,7 +9501,7 @@ public final class RoutesImpl {
     /**
      * **Route Directions Batch API**
      *
-     * <p>**Applies to**: S1 pricing tier.
+     * <p>**Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>The Route Directions Batch API sends batches of queries to [Route Directions
      * API](https://docs.microsoft.com/rest/api/maps/route/getroutedirections) using just a single API call. You can
@@ -9542,7 +9566,7 @@ public final class RoutesImpl {
     /**
      * **Route Directions Batch API**
      *
-     * <p>**Applies to**: S1 pricing tier.
+     * <p>**Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>The Route Directions Batch API sends batches of queries to [Route Directions
      * API](https://docs.microsoft.com/rest/api/maps/route/getroutedirections) using just a single API call. You can
@@ -9606,7 +9630,7 @@ public final class RoutesImpl {
     /**
      * **Route Directions Batch API**
      *
-     * <p>**Applies to**: S1 pricing tier.
+     * <p>**Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>The Route Directions Batch API sends batches of queries to [Route Directions
      * API](https://docs.microsoft.com/rest/api/maps/route/getroutedirections) using just a single API call. You can
@@ -9671,7 +9695,7 @@ public final class RoutesImpl {
     /**
      * **Route Directions Batch API**
      *
-     * <p>**Applies to**: S1 pricing tier.
+     * <p>**Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>The Route Directions Batch API sends batches of queries to [Route Directions
      * API](https://docs.microsoft.com/rest/api/maps/route/getroutedirections) using just a single API call. You can
@@ -9727,7 +9751,7 @@ public final class RoutesImpl {
     /**
      * **Route Directions Batch API**
      *
-     * <p>**Applies to**: S1 pricing tier.
+     * <p>**Applies to**: see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>The Route Directions Batch API sends batches of queries to [Route Directions
      * API](https://docs.microsoft.com/rest/api/maps/route/getroutedirections) using just a single API call. You can

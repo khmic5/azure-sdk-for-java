@@ -5,6 +5,7 @@
 package com.azure.maps.route.models;
 
 import com.azure.core.annotation.Fluent;
+import com.azure.core.models.GeoPosition;
 import com.azure.maps.route.implementation.models.LatLongPair;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
@@ -199,9 +200,9 @@ public final class RouteInstruction {
      *
      * @return the point value.
      */
-    public LatLong getPoint() {
+    public GeoPosition getPoint() {
         LatLongPair returnValue = this.point;
-        return new LatLong(returnValue.getLatitude(), returnValue.getLongitude());
+        return new GeoPosition(returnValue.getLongitude(), returnValue.getLatitude());
     }
 
     /**
