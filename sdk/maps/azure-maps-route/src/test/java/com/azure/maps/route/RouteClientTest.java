@@ -140,8 +140,8 @@ public class RouteClientTest extends RouteTestBase {
     public void testGetRouteDirections(HttpClient httpClient, RouteServiceVersion serviceVersion) throws IOException {
         client = getRouteClient(httpClient, serviceVersion);
         List<GeoPosition> routePoints = Arrays.asList(
-            new GeoPosition(52.50931, 13.42936),
-            new GeoPosition(52.50274, 13.43872));
+            new GeoPosition(13.42936, 52.50931),
+            new GeoPosition(13.43872, 52.50274));
         RouteDirectionsOptions routeOptions = new RouteDirectionsOptions(routePoints);
         RouteDirections actualResult = client.getRouteDirections(routeOptions);
         RouteDirections expectedResult = TestUtils.getExpectedRouteDirections();
@@ -155,8 +155,8 @@ public class RouteClientTest extends RouteTestBase {
     public void testGetRouteDirectionsWithResponse(HttpClient httpClient, RouteServiceVersion serviceVersion) throws IOException {
         client = getRouteClient(httpClient, serviceVersion);
         List<GeoPosition> routePoints = Arrays.asList(
-            new GeoPosition(52.50931, 13.42936),
-            new GeoPosition(52.50274, 13.43872));
+            new GeoPosition(13.42936, 52.50931),
+            new GeoPosition(13.43872, 52.50274));
         RouteDirectionsOptions routeOptions = new RouteDirectionsOptions(routePoints);
         validateGetRouteDirectionsWithResponse(TestUtils.getExpectedRouteDirections(), 200, client.getRouteDirectionsWithResponse(routeOptions, null));
     }
@@ -181,8 +181,8 @@ public class RouteClientTest extends RouteTestBase {
     public void testGetRouteDirectionsWithAdditionalParameters(HttpClient httpClient, RouteServiceVersion serviceVersion) throws IOException {
         client = getRouteClient(httpClient, serviceVersion);
         List<GeoPosition> routePoints = Arrays.asList(
-            new GeoPosition(52.50931, 13.42936),
-            new GeoPosition(52.50274, 13.43872));
+            new GeoPosition(13.42936, 52.50931),
+            new GeoPosition(13.43872, 52.50274));
         RouteDirectionsOptions routeOptions = new RouteDirectionsOptions(routePoints);
         GeoCollection supportingPoints = new GeoCollection(Arrays.asList(new GeoPoint(13.42936, 52.5093),
             new GeoPoint(13.42859, 52.50844)));
@@ -223,8 +223,8 @@ public class RouteClientTest extends RouteTestBase {
     public void testGetRouteDirectionsWithAdditionalParametersWithResponse(HttpClient httpClient, RouteServiceVersion serviceVersion) throws IOException {
         client = getRouteClient(httpClient, serviceVersion);
         List<GeoPosition> routePoints = Arrays.asList(
-            new GeoPosition(52.50931, 13.42936),
-            new GeoPosition(52.50274, 13.43872));
+            new GeoPosition(13.42936, 52.50931),
+            new GeoPosition(13.43872, 52.50274));
         RouteDirectionsOptions routeOptions = new RouteDirectionsOptions(routePoints);
         GeoCollection supportingPoints = new GeoCollection(Arrays.asList(new GeoPoint(13.42936, 52.5093),
             new GeoPoint(13.42859, 52.50844)));

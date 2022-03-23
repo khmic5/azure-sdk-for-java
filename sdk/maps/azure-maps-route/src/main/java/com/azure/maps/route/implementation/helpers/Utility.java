@@ -136,7 +136,7 @@ public class Utility {
     public static String toRouteQueryString(List<GeoPosition> routePoints) {
         return routePoints
             .stream()
-            .map(item -> item.getLongitude() + "," + item.getLatitude())
+            .map(item -> item.getLatitude() + "," + item.getLongitude())
             .collect(Collectors.joining(":"));
     }
 
