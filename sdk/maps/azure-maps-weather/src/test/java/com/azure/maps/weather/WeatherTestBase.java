@@ -180,7 +180,6 @@ public class WeatherTestBase extends TestBase {
         assertNotNull(actual);
         assertNotNull(expected);
         assertEquals(expected.getWaypoints().size(), actual.getWaypoints().size());
-        assertEquals(expected.getSummary().getHazards().getDetails().size(), actual.getSummary().getHazards().getDetails().size());
         assertEquals(expected.getClass().getName(), actual.getClass().getName());
     }
 
