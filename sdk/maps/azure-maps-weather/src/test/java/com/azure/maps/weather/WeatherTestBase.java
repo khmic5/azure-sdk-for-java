@@ -141,12 +141,24 @@ public class WeatherTestBase extends TestBase {
         assertEquals(expected.getClass().getSimpleName(), actual.getClass().getSimpleName());
     }
 
+    static void validateGetQuarterDayForecastWithResponse(QuarterDayForecastResult expected, int expectedStatusCode, Response<QuarterDayForecastResult> response) {
+        assertNotNull(response);
+        assertEquals(expectedStatusCode, response.getStatusCode());
+        validateGetQuarterDayForecast(expected, response.getValue());
+    }
+
     static void validateGetCurrentConditions(CurrentConditionsResult expected, CurrentConditionsResult actual) {
         assertNotNull(actual);
         assertNotNull(expected);
         assertEquals(expected.getResults().size(), actual.getResults().size());
         assertEquals(expected.getClass().getName(), actual.getClass().getName());
         assertEquals(expected.getClass().getSimpleName(), actual.getClass().getSimpleName());
+    }
+
+    static void validateGetCurrentConditionsWithResponse(CurrentConditionsResult expected, int expectedStatusCode, Response<CurrentConditionsResult> response) {
+        assertNotNull(response);
+        assertEquals(expectedStatusCode, response.getStatusCode());
+        validateGetCurrentConditions(expected, response.getValue());
     }
 
     static void validateGetDailyForecast(DailyForecastResult expected, DailyForecastResult actual) {
@@ -157,13 +169,25 @@ public class WeatherTestBase extends TestBase {
         assertEquals(expected.getSummary().getCategory(), actual.getSummary().getCategory());
     }
 
+    static void validateGetDailyForecastWithResponse(DailyForecastResult expected, int expectedStatusCode, Response<DailyForecastResult> response) {
+        assertNotNull(response);
+        assertEquals(expectedStatusCode, response.getStatusCode());
+        validateGetDailyForecast(expected, response.getValue());
+    }
+
+
     static void validateGetExpectedWeatherAlongRoute(WeatherAlongRouteResult expected, WeatherAlongRouteResult actual) {
         assertNotNull(actual);
         assertNotNull(expected);
         assertEquals(expected.getWaypoints().size(), actual.getWaypoints().size());
         assertEquals(expected.getSummary().getHazards().getDetails().size(), actual.getSummary().getHazards().getDetails().size());
-        assertEquals(expected.getSummary().getIconCode(), actual.getSummary().getIconCode());
         assertEquals(expected.getClass().getName(), actual.getClass().getName());
+    }
+
+    static void validateGetExpectedWeatherAlongRouteWithResponse(WeatherAlongRouteResult expected, int expectedStatusCode, Response<WeatherAlongRouteResult> response) {
+        assertNotNull(response);
+        assertEquals(expectedStatusCode, response.getStatusCode());
+        validateGetExpectedWeatherAlongRoute(expected, response.getValue());
     }
 
     static void validateGetSevereWeatherAlerts(SevereWeatherAlertsResult expected, SevereWeatherAlertsResult actual) {
@@ -174,12 +198,24 @@ public class WeatherTestBase extends TestBase {
         assertEquals(expected.getClass().getSimpleName(), actual.getClass().getSimpleName());
     }
 
+    static void validateGetSevereWeatherAlertsWithResponse(SevereWeatherAlertsResult expected, int expectedStatusCode, Response<SevereWeatherAlertsResult> response) {
+        assertNotNull(response);
+        assertEquals(expectedStatusCode, response.getStatusCode());
+        validateGetSevereWeatherAlerts(expected, response.getValue());
+    }
+
     static void validateGetDailyIndices(DailyIndicesResult expected, DailyIndicesResult actual) {
         assertNotNull(actual);
         assertNotNull(expected);
         assertEquals(expected.getResults().size(), actual.getResults().size());
         assertEquals(expected.getClass().getName(), actual.getClass().getName());
         assertEquals(expected.getClass().getSimpleName(), actual.getClass().getSimpleName());
+    }
+
+    static void validateGetDailyIndicesWithResponse(DailyIndicesResult expected, int expectedStatusCode, Response<DailyIndicesResult> response) {
+        assertNotNull(response);
+        assertEquals(expectedStatusCode, response.getStatusCode());
+        validateGetDailyIndices(expected, response.getValue());
     }
 
     static void validateGetExpectedTropicalStormActive(ActiveStormResult expected, ActiveStormResult actual) {
@@ -190,12 +226,24 @@ public class WeatherTestBase extends TestBase {
         assertEquals(expected.getClass().getSimpleName(), actual.getClass().getSimpleName());
     }
 
+    static void validateGetExpectedTropicalStormActiveWithResponse(ActiveStormResult expected, int expectedStatusCode, Response<ActiveStormResult> response) {
+        assertNotNull(response);
+        assertEquals(expectedStatusCode, response.getStatusCode());
+        validateGetExpectedTropicalStormActive(expected, response.getValue());
+    }
+
     static void validateGetSearchTropicalStorm(StormSearchResult expected, StormSearchResult actual) {
         assertNotNull(actual);
         assertNotNull(expected);
         assertEquals(expected.getClass().getName(), actual.getClass().getName());
         assertEquals(expected.getClass().getSimpleName(), actual.getClass().getSimpleName());
         assertEquals(expected.getNextLink(), actual.getNextLink());
+    }
+
+    static void validateGetSearchTropicalStormWithResponse(StormSearchResult expected, int expectedStatusCode, Response<StormSearchResult> response) {
+        assertNotNull(response);
+        assertEquals(expectedStatusCode, response.getStatusCode());
+        validateGetSearchTropicalStorm(expected, response.getValue());
     }
 
     static void validateGetTropicalStormForecast(StormForecastResult expected, StormForecastResult actual) {
@@ -206,12 +254,24 @@ public class WeatherTestBase extends TestBase {
         assertEquals(expected.getClass().getSimpleName(), actual.getClass().getSimpleName());
     }
 
+    static void validateGetTropicalStormForecastWithResponse(StormForecastResult expected, int expectedStatusCode, Response<StormForecastResult> response) {
+        assertNotNull(response);
+        assertEquals(expectedStatusCode, response.getStatusCode());
+        validateGetTropicalStormForecast(expected, response.getValue());
+    }
+
     static void validateGetTropicalStormLocations(StormLocationsResult expected, StormLocationsResult actual) {
         assertNotNull(actual);
         assertNotNull(expected);
         assertEquals(expected.getNextLink(), actual.getNextLink());
         assertEquals(expected.getClass().getName(), actual.getClass().getName());
         assertEquals(expected.getClass().getSimpleName(), actual.getClass().getSimpleName());
+    }
+
+    static void validateGetTropicalStormLocationsWithResponse(StormLocationsResult expected, int expectedStatusCode, Response<StormLocationsResult> response) {
+        assertNotNull(response);
+        assertEquals(expectedStatusCode, response.getStatusCode());
+        validateGetTropicalStormLocations(expected, response.getValue());
     }
 
     static void validateGetCurrentAirQuality(AirQualityResult expected, AirQualityResult actual) {
@@ -223,12 +283,24 @@ public class WeatherTestBase extends TestBase {
         assertEquals(expected.getClass().getSimpleName(), actual.getClass().getSimpleName());
     }
 
+    static void validateGetCurrentAirQualityWithResponse(AirQualityResult expected, int expectedStatusCode, Response<AirQualityResult> response) {
+        assertNotNull(response);
+        assertEquals(expectedStatusCode, response.getStatusCode());
+        validateGetCurrentAirQuality(expected, response.getValue());
+    }
+
     static void validateGetAirQualityDailyForecasts(DailyAirQualityForecastResult expected, DailyAirQualityForecastResult actual) {
         assertNotNull(actual);
         assertNotNull(expected);
         assertEquals(expected.getNextLink(), actual.getNextLink());
         assertEquals(expected.getClass().getName(), actual.getClass().getName());
         assertEquals(expected.getClass().getSimpleName(), actual.getClass().getSimpleName());
+    }
+
+    static void validateGetAirQualityDailyForecastsWithResponse(DailyAirQualityForecastResult expected, int expectedStatusCode, Response<DailyAirQualityForecastResult> response) {
+        assertNotNull(response);
+        assertEquals(expectedStatusCode, response.getStatusCode());
+        validateGetAirQualityDailyForecasts(expected, response.getValue());
     }
 
     static void validateGetAirQualityHourlyForecasts(AirQualityResult expected, AirQualityResult actual) {
@@ -239,12 +311,24 @@ public class WeatherTestBase extends TestBase {
         assertEquals(expected.getClass().getSimpleName(), actual.getClass().getSimpleName());
     }
 
+    static void validateGetAirQualityHourlyForecastsWithResponse(AirQualityResult expected, int expectedStatusCode, Response<AirQualityResult> response) {
+        assertNotNull(response);
+        assertEquals(expectedStatusCode, response.getStatusCode());
+        validateGetAirQualityHourlyForecasts(expected, response.getValue());
+    }
+
     static void validateGetDailyHistoricalRecords(DailyHistoricalRecordsResult expected, DailyHistoricalRecordsResult actual) {
         assertNotNull(actual);
         assertNotNull(expected);
         assertEquals(expected.getNextLink(), actual.getNextLink());
         assertEquals(expected.getClass().getName(), actual.getClass().getName());
         assertEquals(expected.getClass().getSimpleName(), actual.getClass().getSimpleName());
+    }
+
+    static void validateGetDailyHistoricalRecordsWithResponse(DailyHistoricalRecordsResult expected, int expectedStatusCode, Response<DailyHistoricalRecordsResult> response) {
+        assertNotNull(response);
+        assertEquals(expectedStatusCode, response.getStatusCode());
+        validateGetDailyHistoricalRecords(expected, response.getValue());
     }
 
     static void validateGetDailyHistoricalActuals(DailyHistoricalActualsResult expected, DailyHistoricalActualsResult actual) {
@@ -255,11 +339,23 @@ public class WeatherTestBase extends TestBase {
         assertEquals(expected.getClass().getSimpleName(), actual.getClass().getSimpleName());
     }
 
+    static void validateGetDailyHistoricalActualsWithResponse(DailyHistoricalActualsResult expected, int expectedStatusCode, Response<DailyHistoricalActualsResult> response) {
+        assertNotNull(response);
+        assertEquals(expectedStatusCode, response.getStatusCode());
+        validateGetDailyHistoricalActuals(expected, response.getValue());
+    }
+
     static void validateGetDailyHistoricalNormalsResult(DailyHistoricalNormalsResult expected, DailyHistoricalNormalsResult actual) {
         assertNotNull(actual);
         assertNotNull(expected);
         assertEquals(expected.getNextLink(), actual.getNextLink());
         assertEquals(expected.getClass().getName(), actual.getClass().getName());
         assertEquals(expected.getClass().getSimpleName(), actual.getClass().getSimpleName());
+    }
+
+    static void validateGetDailyHistoricalNormalsResultWithResponse(DailyHistoricalNormalsResult expected, int expectedStatusCode, Response<DailyHistoricalNormalsResult> response) {
+        assertNotNull(response);
+        assertEquals(expectedStatusCode, response.getStatusCode());
+        validateGetDailyHistoricalNormalsResult(expected, response.getValue());
     }
 }
