@@ -513,13 +513,13 @@ public class WeatherAsyncClientTest extends WeatherTestBase {
                 storm.getBasinId(), storm.getGovId())
                 .setIncludeWindowGeometry(true);
             StepVerifier.create(client.getTropicalStormForecast(forecastOptions))
-            .assertNext(actualResults -> {
-                try {
-                    validateGetTropicalStormForecast(TestUtils.getExpectedTropicalStormForecast(), actualResults);
-                } catch (IOException e) {
-                    Assertions.fail("Unable to get tropical storm forecast");
-                }
-            }).verifyComplete();
+                .assertNext(actualResults -> {
+                    try {
+                        validateGetTropicalStormForecast(TestUtils.getExpectedTropicalStormForecast(), actualResults);
+                    } catch (IOException e) {
+                        Assertions.fail("Unable to get tropical storm forecast");
+                    }
+                }).verifyComplete();
         }
     }
 
@@ -543,7 +543,7 @@ public class WeatherAsyncClientTest extends WeatherTestBase {
                         Assertions.fail("unable to get tropical storm forecast");
                     }
                 }).verifyComplete();
-            }
+        }
     }
 
     // Case 2: 400 invalid input
@@ -576,13 +576,13 @@ public class WeatherAsyncClientTest extends WeatherTestBase {
             TropicalStormLocationOptions locationOptions = new TropicalStormLocationOptions(storm.getYear(),
                 storm.getBasinId(), storm.getGovId());
             StepVerifier.create(client.getTropicalStormLocations(locationOptions))
-            .assertNext(actualResults -> {
-                try {
-                    validateGetTropicalStormLocations(TestUtils.getExpectedTropicalStormLocations(), actualResults);
-                } catch (IOException e) {
-                    Assertions.fail("Unable to get tropical storm locations");
-                }
-            }).verifyComplete();
+                .assertNext(actualResults -> {
+                    try {
+                        validateGetTropicalStormLocations(TestUtils.getExpectedTropicalStormLocations(), actualResults);
+                    } catch (IOException e) {
+                        Assertions.fail("Unable to get tropical storm locations");
+                    }
+                }).verifyComplete();
         }
     }
 
@@ -605,7 +605,7 @@ public class WeatherAsyncClientTest extends WeatherTestBase {
                         Assertions.fail("unable to get tropical storm locations");
                     }
                 }).verifyComplete();
-            }
+        }
     }
 
     // Case 2: 400 invalid input
@@ -631,15 +631,14 @@ public class WeatherAsyncClientTest extends WeatherTestBase {
     @MethodSource("com.azure.maps.weather.TestUtils#getTestParameters")
     public void testAsyncGetCurrentAirQuality(HttpClient httpClient, WeatherServiceVersion serviceVersion) throws IOException {
         WeatherAsyncClient client = getWeatherAsyncClient(httpClient, serviceVersion);
-        StepVerifier.create(client.getCurrentAirQuality(
-            new GeoPosition(-122.138874, 47.632346), "es", false))
-        .assertNext(actualResults -> {
-            try {
-                validateGetCurrentAirQuality(TestUtils.getExpectedCurrentAirQuality(), actualResults);
-            } catch (IOException e) {
-                Assertions.fail("Unable to get current air quality");
-            }
-        }).verifyComplete();
+        StepVerifier.create(client.getCurrentAirQuality(new GeoPosition(-122.138874, 47.632346), "es", false))
+            .assertNext(actualResults -> {
+                try {
+                    validateGetCurrentAirQuality(TestUtils.getExpectedCurrentAirQuality(), actualResults);
+                } catch (IOException e) {
+                    Assertions.fail("Unable to get current air quality");
+                }
+            }).verifyComplete();
     }
 
     // Test async get current air quality with response
@@ -648,8 +647,7 @@ public class WeatherAsyncClientTest extends WeatherTestBase {
     @MethodSource("com.azure.maps.weather.TestUtils#getTestParameters")
     public void testAsyncGetCurrentAirQualityWithResponse(HttpClient httpClient, WeatherServiceVersion serviceVersion) {
         WeatherAsyncClient client = getWeatherAsyncClient(httpClient, serviceVersion);
-        StepVerifier.create(client.getCurrentAirQualityWithResponse(
-            new GeoPosition(-122.138874, 47.632346), "es", false, null))
+        StepVerifier.create(client.getCurrentAirQualityWithResponse(new GeoPosition(-122.138874, 47.632346), "es", false, null))
             .assertNext(response -> {
                 try {
                     validateGetCurrentAirQualityWithResponse(TestUtils.getExpectedCurrentAirQuality(), 200, response);
@@ -664,8 +662,7 @@ public class WeatherAsyncClientTest extends WeatherTestBase {
     @MethodSource("com.azure.maps.weather.TestUtils#getTestParameters")
     public void testAsyncInvalidGetCurrentAirQualityWithResponse(HttpClient httpClient, WeatherServiceVersion serviceVersion) {
         WeatherAsyncClient client = getWeatherAsyncClient(httpClient, serviceVersion);
-        StepVerifier.create(client.getCurrentAirQualityWithResponse(
-            new GeoPosition(-1000000, 47.632346), "es", false, null))
+        StepVerifier.create(client.getCurrentAirQualityWithResponse(new GeoPosition(-1000000, 47.632346), "es", false, null))
             .verifyErrorSatisfies(ex -> {
                 final HttpResponseException httpResponseException = (HttpResponseException) ex;
                 assertEquals(400, httpResponseException.getResponse().getStatusCode());
@@ -677,15 +674,14 @@ public class WeatherAsyncClientTest extends WeatherTestBase {
     @MethodSource("com.azure.maps.weather.TestUtils#getTestParameters")
     public void testAsyncGetAirQualityDailyForecasts(HttpClient httpClient, WeatherServiceVersion serviceVersion) throws IOException {
         WeatherAsyncClient client = getWeatherAsyncClient(httpClient, serviceVersion);
-        StepVerifier.create(client.getAirQualityDailyForecasts(
-            new GeoPosition(-122.138874, 47.632346), "en", DailyDuration.TWO_DAYS))
-        .assertNext(actualResults -> {
-            try {
-                validateGetAirQualityDailyForecasts(TestUtils.getExpectedAirQualityDailyForecasts(), actualResults);
-            } catch (IOException e) {
-                Assertions.fail("Unable to get air quality daily forecast");
-            }
-        }).verifyComplete();
+        StepVerifier.create(client.getAirQualityDailyForecasts(new GeoPosition(-122.138874, 47.632346), "en", DailyDuration.TWO_DAYS))
+            .assertNext(actualResults -> {
+                try {
+                    validateGetAirQualityDailyForecasts(TestUtils.getExpectedAirQualityDailyForecasts(), actualResults);
+                } catch (IOException e) {
+                    Assertions.fail("Unable to get air quality daily forecast");
+                }
+            }).verifyComplete();
     }
 
     // Test async get air quality daily forecast with response
@@ -725,13 +721,13 @@ public class WeatherAsyncClientTest extends WeatherTestBase {
         WeatherAsyncClient client = getWeatherAsyncClient(httpClient, serviceVersion);
         StepVerifier.create(client.getAirQualityHourlyForecasts(
             new GeoPosition(-122.138874, 47.632346), "fr", HourlyDuration.ONE_HOUR, false))
-        .assertNext(actualResults -> {
-            try {
-                validateGetAirQualityHourlyForecasts(TestUtils.getExpectedAirQualityHourlyForecasts(), actualResults);
-            } catch (IOException e) {
-                Assertions.fail("Unable to get air quality hourly forecast");
-            }
-        }).verifyComplete();
+            .assertNext(actualResults -> {
+                try {
+                    validateGetAirQualityHourlyForecasts(TestUtils.getExpectedAirQualityHourlyForecasts(), actualResults);
+                } catch (IOException e) {
+                    Assertions.fail("Unable to get air quality hourly forecast");
+                }
+            }).verifyComplete();
     }
 
     // Test async get air quality hourly forecasts with response
@@ -772,13 +768,13 @@ public class WeatherAsyncClientTest extends WeatherTestBase {
         LocalDate before = LocalDate.now().minusDays(30);
         LocalDate today = LocalDate.now();
         StepVerifier.create(client.getDailyHistoricalActuals(new GeoPosition(30.0734812, 62.6490341), before, today, null))
-        .assertNext(actualResults -> {
-            try {
-                validateGetDailyHistoricalActuals(TestUtils.getExpectedDailyHistoricalActuals(), actualResults);
-            } catch (IOException e) {
-                Assertions.fail("Unable to get daily historical actuals forecast");
-            }
-        }).verifyComplete();
+            .assertNext(actualResults -> {
+                try {
+                    validateGetDailyHistoricalActuals(TestUtils.getExpectedDailyHistoricalActuals(), actualResults);
+                } catch (IOException e) {
+                    Assertions.fail("Unable to get daily historical actuals forecast");
+                }
+            }).verifyComplete();
     }
 
     // Test async get daily historical actuals with response
@@ -821,13 +817,13 @@ public class WeatherAsyncClientTest extends WeatherTestBase {
         LocalDate beforeYears = LocalDate.now().minusYears(10);
         LocalDate afterYears = beforeYears.plusDays(30);
         StepVerifier.create(client.getDailyHistoricalRecords(new GeoPosition(-75.165222, 39.952583), beforeYears, afterYears, null))
-        .assertNext(actualResults -> {
-            try {
-                validateGetDailyHistoricalRecords(TestUtils.getExpectedDailyHistoricalRecords(), actualResults);
-            } catch (IOException e) {
-                Assertions.fail("Unable to get daily historical records forecast");
-            }
-        }).verifyComplete();
+            .assertNext(actualResults -> {
+                try {
+                    validateGetDailyHistoricalRecords(TestUtils.getExpectedDailyHistoricalRecords(), actualResults);
+                } catch (IOException e) {
+                    Assertions.fail("Unable to get daily historical records forecast");
+                }
+            }).verifyComplete();
     }
 
     // Test async get daily historical records with response
@@ -870,13 +866,13 @@ public class WeatherAsyncClientTest extends WeatherTestBase {
         LocalDate before = LocalDate.now().minusDays(30);
         LocalDate today = LocalDate.now();
         StepVerifier.create(client.getDailyHistoricalNormals(new GeoPosition(30.0734812, 62.6490341), before, today, null))
-        .assertNext(actualResults -> {
-            try {
-                validateGetDailyHistoricalNormalsResult(TestUtils.getExpectedDailyHistoricalNormalsResult(), actualResults);
-            } catch (IOException e) {
-                Assertions.fail("Unable to get daily historical normals result");
-            }
-        }).verifyComplete();
+            .assertNext(actualResults -> {
+                try {
+                    validateGetDailyHistoricalNormalsResult(TestUtils.getExpectedDailyHistoricalNormalsResult(), actualResults);
+                } catch (IOException e) {
+                    Assertions.fail("Unable to get daily historical normals result");
+                }
+            }).verifyComplete();
     }
 
     // Test async get daily historical normals with response
