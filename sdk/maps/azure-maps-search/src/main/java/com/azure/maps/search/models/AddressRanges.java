@@ -5,6 +5,7 @@
 package com.azure.maps.search.models;
 
 import com.azure.core.annotation.Immutable;
+import com.azure.core.models.GeoPosition;
 import com.azure.maps.search.implementation.helpers.AddressRangesPropertiesHelper;
 import com.azure.maps.search.implementation.models.AddressRangesPrivate;
 
@@ -16,8 +17,8 @@ import com.azure.maps.search.implementation.models.AddressRangesPrivate;
 public final class AddressRanges {
     private String rangeLeft;
     private String rangeRight;
-    private LatLong from;
-    private LatLong to;
+    private GeoPosition from;
+    private GeoPosition to;
 
     static {
         AddressRangesPropertiesHelper.setAccessor(new AddressRangesPropertiesHelper.AddressRangesAccessor() {
@@ -51,7 +52,7 @@ public final class AddressRanges {
      *
      * @return the from value.
      */
-    public LatLong getFrom() {
+    public GeoPosition getFrom() {
         return this.from;
     }
 
@@ -60,7 +61,7 @@ public final class AddressRanges {
      *
      * @return the to value.
      */
-    public LatLong getTo() {
+    public GeoPosition getTo() {
         return this.to;
     }
 
@@ -68,7 +69,7 @@ public final class AddressRanges {
     private void setFromAddressRangesPrivate(AddressRangesPrivate addressRangesPrivate) {
         this.rangeLeft = addressRangesPrivate.getRangeLeft();
         this.rangeRight = addressRangesPrivate.getRangeRight();
-        this.from = new LatLong(addressRangesPrivate.getFrom());
-        this.to = new LatLong(addressRangesPrivate.getTo());
+        this.from = new GeoPosition(addressRangesPrivate.getFrom().getLon(), addressRangesPrivate.getFrom().getLat());
+        this.to = new GeoPosition(addressRangesPrivate.getTo().getLon(), addressRangesPrivate.getTo().getLat());
     }
 }

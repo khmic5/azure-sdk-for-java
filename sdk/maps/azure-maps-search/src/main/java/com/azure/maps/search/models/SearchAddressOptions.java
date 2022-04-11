@@ -3,11 +3,13 @@ package com.azure.maps.search.models;
 import java.util.List;
 import java.util.Optional;
 
+import com.azure.core.models.GeoPosition;
+
 /**
  * Class holding optional parameters for Search.
  */
 public final class SearchAddressOptions extends BaseSearchOptions<SearchAddressOptions> {
-    private LatLong coordinates;
+    private GeoPosition coordinates;
     private Boolean isTypeAhead;
     private List<SearchIndexes> extendedPostalCodesFor;
     private GeographicEntityType entityType;
@@ -26,7 +28,7 @@ public final class SearchAddressOptions extends BaseSearchOptions<SearchAddressO
      * Returns the coordinates.
      * @return
      */
-    public Optional<LatLong> getCoordinates() {
+    public Optional<GeoPosition> getCoordinates() {
         return Optional.ofNullable(coordinates);
     }
 
@@ -97,7 +99,7 @@ public final class SearchAddressOptions extends BaseSearchOptions<SearchAddressO
      * @param coordinates
      * @return
      */
-    public SearchAddressOptions setCoordinates(LatLong coordinates) {
+    public SearchAddressOptions setCoordinates(GeoPosition coordinates) {
         this.coordinates = coordinates;
         return this;
     }

@@ -7,6 +7,7 @@ package com.azure.maps.search.models;
 import java.util.List;
 
 import com.azure.core.annotation.Immutable;
+import com.azure.core.models.GeoPosition;
 import com.azure.maps.search.implementation.helpers.ReverseSearchAddressResultItemPropertiesHelper;
 import com.azure.maps.search.implementation.helpers.Utility;
 import com.azure.maps.search.implementation.models.ReverseSearchAddressResultItemPrivate;
@@ -15,7 +16,7 @@ import com.azure.maps.search.implementation.models.ReverseSearchAddressResultIte
 @Immutable
 public final class ReverseSearchAddressResultItem {
     private Address address;
-    private LatLong position;
+    private GeoPosition position;
     private List<RoadUseType> roadUse;
     private MatchType matchType;
 
@@ -40,11 +41,11 @@ public final class ReverseSearchAddressResultItem {
     }
 
     /**
-     * Get the position property: Position property as LatLong.
+     * Get the position property: Position property as GeoPosition.
      *
      * @return the position value.
      */
-    public LatLong getPosition() {
+    public GeoPosition getPosition() {
         return this.position;
     }
 
@@ -76,6 +77,6 @@ public final class ReverseSearchAddressResultItem {
 
         // position in the internal model is a string separated by commas
         final String position = privateItem.getPosition();
-        this.position = LatLong.fromCommaSeparatedString(position);
+        this.position = Utility.fromCommaSeparatedString(position);
     }
 }

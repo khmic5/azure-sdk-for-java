@@ -2,6 +2,8 @@ package com.azure.maps.search.models;
 
 import java.util.List;
 
+import com.azure.core.models.GeoPosition;
+
 /**
  * Options for searching point of interest category.
  */
@@ -13,9 +15,9 @@ public final class SearchPointOfInterestCategoryOptions extends BaseSearchPointO
     /**
      * Builds fuzzy search options with query string and coordinates.
      * @param query The query to be used to search for points of interest.
-     * @param coordinates The {@link LatLong} coordinates to be searched.
+     * @param coordinates The {@link GeoPosition} coordinates to be searched.
      */
-    public SearchPointOfInterestCategoryOptions(String query, LatLong coordinates) {
+    public SearchPointOfInterestCategoryOptions(String query, GeoPosition coordinates) {
         this.query = query;
         this.setCoordinates(coordinates);
     }

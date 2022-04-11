@@ -2,6 +2,8 @@ package com.azure.maps.search.models;
 
 import java.util.List;
 
+import com.azure.core.models.GeoPosition;
+
 /**
  * Options for searching nearby points of interest.
  */
@@ -10,9 +12,9 @@ public final class SearchNearbyPointsOfInterestOptions extends BaseSearchPointOf
 
     /**
      * Builds search nearby options with coordinates.
-     * @param coordinates The {@link LatLong} coordinates to be searched.
+     * @param coordinates The {@link GeoPosition} coordinates to be searched.
      */
-    public SearchNearbyPointsOfInterestOptions(LatLong coordinates) {
+    public SearchNearbyPointsOfInterestOptions(GeoPosition coordinates) {
         this.setCoordinates(coordinates);
     }
 

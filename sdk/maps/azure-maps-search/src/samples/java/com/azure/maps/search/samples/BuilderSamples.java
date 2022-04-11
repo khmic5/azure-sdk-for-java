@@ -23,7 +23,6 @@ import com.azure.maps.search.models.BatchReverseSearchResult;
 import com.azure.maps.search.models.BatchSearchResult;
 import com.azure.maps.search.models.FuzzySearchOptions;
 import com.azure.maps.search.models.GeographicEntityType;
-import com.azure.maps.search.models.LatLong;
 import com.azure.maps.search.models.OperatingHoursRange;
 import com.azure.maps.search.models.ReverseSearchAddressOptions;
 import com.azure.maps.search.models.ReverseSearchCrossStreetAddressOptions;
@@ -105,14 +104,14 @@ public class BuilderSamples {
         // options
         MapsCommon.print(client.searchAddress(
             new SearchAddressOptions("1 Main Street")
-                .setCoordinates(new LatLong(40.706270, -74.011454))
+                .setCoordinates(new GeoPosition(-74.011454, 40.706270))
                 .setRadiusInMeters(40000)
                 .setTop(5)));
 
         // complete
         MapsCommon.print(client.searchAddressWithResponse(
             new SearchAddressOptions("1 Main Street")
-                .setCoordinates(new LatLong(40.706270, -74.011454))
+                .setCoordinates(new GeoPosition(-74.011454, 40.706270))
                 .setRadiusInMeters(40000)
                 .setTop(5), null).getStatusCode());
 
@@ -122,21 +121,21 @@ public class BuilderSamples {
 
         // simple
         MapsCommon.print(client.reverseSearchAddress(
-            new ReverseSearchAddressOptions(new LatLong(37.337, -121.89))));
+            new ReverseSearchAddressOptions(new GeoPosition(-121.89, 37.337))));
 
         MapsCommon.print(client.reverseSearchAddress(
-            new ReverseSearchAddressOptions(new LatLong(37.337, -121.89))));
+            new ReverseSearchAddressOptions(new GeoPosition(-121.89, 37.337))));
 
         // options
         MapsCommon.print(client.reverseSearchAddress(
-            new ReverseSearchAddressOptions(new LatLong(37.337, -121.89))
+            new ReverseSearchAddressOptions(new GeoPosition(-121.89, 37.337))
                 .setIncludeSpeedLimit(true)
                 .setEntityType(GeographicEntityType.COUNTRY_SECONDARY_SUBDIVISION) // returns only city
         ));
 
         // complete
         MapsCommon.print(client.reverseSearchAddressWithResponse(
-            new ReverseSearchAddressOptions(new LatLong(37.337, -121.89))
+            new ReverseSearchAddressOptions(new GeoPosition(-121.89, 37.337))
                 .setIncludeSpeedLimit(true)
                 .setEntityType(GeographicEntityType.COUNTRY_SECONDARY_SUBDIVISION) // returns only city
             , null).getStatusCode());
@@ -147,17 +146,17 @@ public class BuilderSamples {
 
         // options
         MapsCommon.print(client.reverseSearchCrossStreetAddress(
-            new ReverseSearchCrossStreetAddressOptions(new LatLong(37.337, -121.89))));
+            new ReverseSearchCrossStreetAddressOptions(new GeoPosition(-121.89, 37.337))));
 
         // options
         MapsCommon.print(client.reverseSearchCrossStreetAddress(
-            new ReverseSearchCrossStreetAddressOptions(new LatLong(37.337, -121.89))
+            new ReverseSearchCrossStreetAddressOptions(new GeoPosition(-121.89, 37.337))
                 .setTop(2)
                 .setHeading(5)));
 
         // complete
         MapsCommon.print(client.reverseSearchCrossStreetAddressWithResponse(
-            new ReverseSearchCrossStreetAddressOptions(new LatLong(37.337, -121.89))
+            new ReverseSearchCrossStreetAddressOptions(new GeoPosition(-121.89, 37.337))
                 .setTop(2)
                 .setHeading(5),
             null).getStatusCode());
@@ -195,7 +194,7 @@ public class BuilderSamples {
 
         // with options
         SearchAddressResult results = client.fuzzySearch(
-            new FuzzySearchOptions("1 Microsoft Way", new LatLong(40.706270, -74.011454))
+            new FuzzySearchOptions("1 Microsoft Way", new GeoPosition(-74.011454, 40.706270))
                 .setTop(5));
         MapsCommon.print(results);
 
@@ -227,17 +226,17 @@ public class BuilderSamples {
 
         // coordinates
         MapsCommon.print(client.searchPointOfInterest(
-            new SearchPointOfInterestOptions("pizza", new LatLong(36.98844, -121.97483))));
+            new SearchPointOfInterestOptions("pizza", new GeoPosition(-121.97483, 36.98844))));
 
         // options
         MapsCommon.print(client.searchPointOfInterest(
-            new SearchPointOfInterestOptions("pizza", new LatLong(36.98844, -121.97483))
+            new SearchPointOfInterestOptions("pizza", new GeoPosition(-121.97483, 36.98844))
                 .setTop(10)
                 .setOperatingHours(OperatingHoursRange.NEXT_SEVEN_DAYS)));
 
         // with response
         MapsCommon.print(client.searchPointOfInterestWithResponse(
-            new SearchPointOfInterestOptions("pizza", new LatLong(36.98844, -121.97483))
+            new SearchPointOfInterestOptions("pizza", new GeoPosition(-121.97483, 36.98844))
                 .setTop(10)
                 .setOperatingHours(OperatingHoursRange.NEXT_SEVEN_DAYS),
             null).getStatusCode());
@@ -248,13 +247,13 @@ public class BuilderSamples {
 
         // options
         MapsCommon.print(client.searchNearbyPointOfInterest(
-            new SearchNearbyPointsOfInterestOptions(new LatLong(40.706270, -74.011454))
+            new SearchNearbyPointsOfInterestOptions(new GeoPosition(-74.011454, 40.706270))
                 .setCountryFilter(Arrays.asList("US"))
                 .setTop(10)));
 
         // response
         MapsCommon.print(client.searchNearbyPointOfInterestWithResponse(
-            new SearchNearbyPointsOfInterestOptions(new LatLong(40.706270, -74.011454))
+            new SearchNearbyPointsOfInterestOptions(new GeoPosition(-74.011454, 40.706270))
                 .setCountryFilter(Arrays.asList("US"))
                 .setTop(10),
             null).getStatusCode());
@@ -265,13 +264,13 @@ public class BuilderSamples {
 
         // complete - search for italian restaurant in NYC
         MapsCommon.print(client.searchPointOfInterestCategory(
-            new SearchPointOfInterestCategoryOptions("pasta", new LatLong(40.706270, -74.011454))
+            new SearchPointOfInterestCategoryOptions("pasta", new GeoPosition(-74.011454, 40.706270))
                 .setCategoryFilter(Arrays.asList(7315))
                 .setTop(3)));
 
         // with response
         MapsCommon.print(client.searchPointOfInterestCategoryWithResponse(
-            new SearchPointOfInterestCategoryOptions("pasta", new LatLong(40.706270, -74.011454))
+            new SearchPointOfInterestCategoryOptions("pasta", new GeoPosition(-74.011454, 40.706270))
                 .setCategoryFilter(Arrays.asList(7315))
                 .setTop(3),
             null).getStatusCode());
@@ -371,12 +370,12 @@ public class BuilderSamples {
         // This is also a batch API like searchAddressBatch(), so the same calling
         // patterns apply.
         List<ReverseSearchAddressOptions> reverseOptionsList = new ArrayList<>();
-        reverseOptionsList.add(new ReverseSearchAddressOptions(new LatLong(48.858561, 2.294911)));
+        reverseOptionsList.add(new ReverseSearchAddressOptions(new GeoPosition(2.294911, 48.858561)));
         reverseOptionsList.add(
-            new ReverseSearchAddressOptions(new LatLong(47.639765, -122.127896))
+            new ReverseSearchAddressOptions(new GeoPosition(-122.127896, 47.639765))
                 .setRadiusInMeters(5000)
             );
-        reverseOptionsList.add(new ReverseSearchAddressOptions(new LatLong(47.621028, -122.348170)));
+        reverseOptionsList.add(new ReverseSearchAddressOptions(new GeoPosition(-122.348170, 47.621028)));
 
         System.out.println("Reverse Search Address Batch Async");
         BatchReverseSearchResult br1 =
@@ -390,10 +389,10 @@ public class BuilderSamples {
         // This is also a batch API like postSearchAddressBatch(), so the same calling
         // patterns apply.
         List<FuzzySearchOptions> fuzzyOptionsList = new ArrayList<>();
-        fuzzyOptionsList.add(new FuzzySearchOptions("atm", new LatLong(47.639769, -122.128362))
+        fuzzyOptionsList.add(new FuzzySearchOptions("atm", new GeoPosition(-122.128362, 47.639769))
             .setRadiusInMeters(5000).setTop(5));
         fuzzyOptionsList.add(new FuzzySearchOptions("Statue of Liberty").setTop(2));
-        fuzzyOptionsList.add(new FuzzySearchOptions("Starbucks", new LatLong(47.639769, -122.128362))
+        fuzzyOptionsList.add(new FuzzySearchOptions("Starbucks", new GeoPosition(-122.128362, 47.639769))
             .setRadiusInMeters(5000));
 
         System.out.println("Post Search Fuzzy Batch Async");

@@ -8,8 +8,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.azure.core.annotation.Immutable;
+import com.azure.core.models.GeoBoundingBox;
+import com.azure.core.models.GeoPosition;
 import com.azure.maps.search.implementation.helpers.SearchAddressResultItemPropertiesHelper;
 import com.azure.maps.search.implementation.helpers.Utility;
+import com.azure.maps.search.implementation.models.BoundingBoxPrivate;
 import com.azure.maps.search.implementation.models.EntryPointPrivate;
 import com.azure.maps.search.implementation.models.SearchAddressResultItemPrivate;
 
@@ -24,8 +27,8 @@ public final class SearchAddressResultItem {
     private GeographicEntityType entityType;
     private PointOfInterest pointOfInterest;
     private Address address;
-    private LatLong position;
-    private BoundingBox viewport;
+    private GeoPosition position;
+    private GeoBoundingBox viewport;
     private List<EntryPoint> entryPoints;
     private AddressRanges addressRanges;
     private DataSource dataSource;
@@ -124,7 +127,7 @@ public final class SearchAddressResultItem {
      *
      * @return the position value.
      */
-    public LatLong getPosition() {
+    public GeoPosition getPosition() {
         return this.position;
     }
 
@@ -134,7 +137,7 @@ public final class SearchAddressResultItem {
      *
      * @return the viewport value.
      */
-    public BoundingBox getBoundingBox() {
+    public GeoBoundingBox getBoundingBox() {
         return this.viewport;
     }
 
@@ -199,14 +202,19 @@ public final class SearchAddressResultItem {
         this.entityType = privateResultItem.getEntityType();
         this.pointOfInterest = privateResultItem.getPointOfInterest();
         this.address = Utility.toAddress(privateResultItem.getAddress());
-        this.position = new LatLong(privateResultItem.getPosition());
+        this.position = new GeoPosition(privateResultItem.getPosition().getLon(),
+            privateResultItem.getPosition().getLat());
         this.dataSource = privateResultItem.getDataSources();
         this.matchType = privateResultItem.getMatchType();
         this.detourTime = privateResultItem.getDetourTime();
 
         // convert bounding box
-        this.viewport = new BoundingBox(new LatLong(privateResultItem.getViewport().getTopLeft()),
-            new LatLong(privateResultItem.getViewport().getBottomRight()));
+        BoundingBoxPrivate viewport = privateResultItem.getViewport();
+        final double west = viewport.getTopLeft().getLon();
+        final double north = viewport.getTopLeft().getLat();
+        final double east = viewport.getBottomRight().getLon();
+        final double south = viewport.getBottomRight().getLat();
+        this.viewport = new GeoBoundingBox(west, south, east, north);
 
         // convert address ranges
         if (privateResultItem.getAddressRanges() != null) {

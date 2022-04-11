@@ -5,6 +5,7 @@
 package com.azure.maps.search.models;
 
 import com.azure.core.annotation.Immutable;
+import com.azure.core.models.GeoPosition;
 import com.azure.maps.search.implementation.helpers.ReverseSearchCrossStreetAddressResultItemPropertiesHelper;
 import com.azure.maps.search.implementation.helpers.Utility;
 import com.azure.maps.search.implementation.models.ReverseSearchCrossStreetAddressResultItemPrivate;
@@ -13,7 +14,7 @@ import com.azure.maps.search.implementation.models.ReverseSearchCrossStreetAddre
 @Immutable
 public final class ReverseSearchCrossStreetAddressResultItem {
     private Address address;
-    private LatLong position;
+    private GeoPosition position;
 
     static {
         ReverseSearchCrossStreetAddressResultItemPropertiesHelper.setAccessor(
@@ -38,11 +39,11 @@ public final class ReverseSearchCrossStreetAddressResultItem {
     }
 
     /**
-     * Get the position property: Position property as LatLong.
+     * Get the position property: Position property as GeoPosition.
      *
      * @return the position value.
      */
-    public LatLong getPosition() {
+    public GeoPosition getPosition() {
         return this.position;
     }
 
@@ -53,6 +54,6 @@ public final class ReverseSearchCrossStreetAddressResultItem {
 
         // position in the internal model is a string separated by commas
         final String position = privateItem.getPosition();
-        this.position = LatLong.fromCommaSeparatedString(position);
+        this.position = Utility.fromCommaSeparatedString(position);
     }
 }

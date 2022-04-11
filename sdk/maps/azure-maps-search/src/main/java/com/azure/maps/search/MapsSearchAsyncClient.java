@@ -17,6 +17,7 @@ import com.azure.core.annotation.ServiceMethod;
 import com.azure.core.http.HttpPipeline;
 import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.SimpleResponse;
+import com.azure.core.models.GeoPosition;
 import com.azure.core.util.Context;
 import com.azure.core.util.polling.DefaultPollingStrategy;
 import com.azure.core.util.polling.PollerFlux;
@@ -38,10 +39,8 @@ import com.azure.maps.search.implementation.models.SearchAlongRouteRequest;
 import com.azure.maps.search.implementation.models.SearchInsideGeometryRequest;
 import com.azure.maps.search.models.BatchReverseSearchResult;
 import com.azure.maps.search.models.BatchSearchResult;
-import com.azure.maps.search.models.BoundingBox;
 import com.azure.maps.search.models.ErrorResponseException;
 import com.azure.maps.search.models.FuzzySearchOptions;
-import com.azure.maps.search.models.LatLong;
 import com.azure.maps.search.models.PointOfInterestCategoryTreeResult;
 import com.azure.maps.search.models.Polygon;
 import com.azure.maps.search.models.ReverseSearchAddressOptions;
@@ -185,11 +184,11 @@ public final class MapsSearchAsyncClient {
                 options.getSkip(),
                 options.getCategoryFilter(),
                 options.getCountryFilter(),
-                options.getCoordinates().map(LatLong::getLat).orElse(null),
-                options.getCoordinates().map(LatLong::getLon).orElse(null),
+                options.getCoordinates().map(GeoPosition::getLatitude).orElse(null),
+                options.getCoordinates().map(GeoPosition::getLongitude).orElse(null),
                 options.getRadiusInMeters(),
-                options.getBoundingBox().map(BoundingBox::getTopLeft).map(LatLong::toString).orElse(null),
-                options.getBoundingBox().map(BoundingBox::getBottomRight).map(LatLong::toString).orElse(null),
+                options.getBoundingBox().map(item -> new GeoPosition(item.getWest(), item.getNorth())).map(Utility::positionToString).orElse(null),
+                options.getBoundingBox().map(item -> new GeoPosition(item.getEast(), item.getSouth())).map(Utility::positionToString).orElse(null),
                 options.getLanguage(),
                 options.getExtendedPostalCodesFor(),
                 options.getMinFuzzyLevel(),
@@ -253,11 +252,11 @@ public final class MapsSearchAsyncClient {
                 options.getSkip(),
                 options.getCategoryFilter(),
                 options.getCountryFilter(),
-                options.getCoordinates().map(LatLong::getLat).orElse(null),
-                options.getCoordinates().map(LatLong::getLon).orElse(null),
+                options.getCoordinates().map(GeoPosition::getLatitude).orElse(null),
+                options.getCoordinates().map(GeoPosition::getLongitude).orElse(null),
                 options.getRadiusInMeters(),
-                options.getBoundingBox().map(BoundingBox::getTopLeft).map(LatLong::toString).orElse(null),
-                options.getBoundingBox().map(BoundingBox::getBottomRight).map(LatLong::toString).orElse(null),
+                options.getBoundingBox().map(item -> new GeoPosition(item.getWest(), item.getNorth())).map(Utility::positionToString).orElse(null),
+                options.getBoundingBox().map(item -> new GeoPosition(item.getEast(), item.getSouth())).map(Utility::positionToString).orElse(null),
                 options.getLanguage(),
                 options.getExtendedPostalCodesFor(),
                 options.getBrandFilter(),
@@ -319,12 +318,12 @@ public final class MapsSearchAsyncClient {
             SearchNearbyPointsOfInterestOptions options, Context context) {
         // this should throw an exception if the coordinates are null, as for
         // this method they are mandatory
-        final LatLong coordinates = options.getCoordinates().get();
+        final GeoPosition coordinates = options.getCoordinates().get();
         Mono<Response<SearchAddressResultPrivate>> responseMono =
             this.serviceClient.searchNearbyPointOfInterestWithResponseAsync(
                 ResponseFormat.JSON,
-                coordinates.getLat(),
-                coordinates.getLon(),
+                coordinates.getLatitude(),
+                coordinates.getLongitude(),
                 options.getTop(),
                 options.getSkip(),
                 options.getCategoryFilter(),
@@ -394,11 +393,11 @@ public final class MapsSearchAsyncClient {
                 options.getSkip(),
                 options.getCategoryFilter(),
                 options.getCountryFilter(),
-                options.getCoordinates().map(LatLong::getLat).orElse(null),
-                options.getCoordinates().map(LatLong::getLon).orElse(null),
+                options.getCoordinates().map(GeoPosition::getLatitude).orElse(null),
+                options.getCoordinates().map(GeoPosition::getLongitude).orElse(null),
                 options.getRadiusInMeters(),
-                options.getBoundingBox().map(BoundingBox::getTopLeft).map(LatLong::toString).orElse(null),
-                options.getBoundingBox().map(BoundingBox::getBottomRight).map(LatLong::toString).orElse(null),
+                options.getBoundingBox().map(item -> new GeoPosition(item.getWest(), item.getNorth())).map(Utility::positionToString).orElse(null),
+                options.getBoundingBox().map(item -> new GeoPosition(item.getEast(), item.getSouth())).map(Utility::positionToString).orElse(null),
                 options.getLanguage(),
                 options.getExtendedPostalCodesFor(),
                 options.getBrandFilter(),
@@ -517,11 +516,11 @@ public final class MapsSearchAsyncClient {
                 options.getTop(),
                 options.getSkip(),
                 options.getCountryFilter(),
-                options.getCoordinates().map(LatLong::getLat).orElse(null),
-                options.getCoordinates().map(LatLong::getLon).orElse(null),
+                options.getCoordinates().map(GeoPosition::getLatitude).orElse(null),
+                options.getCoordinates().map(GeoPosition::getLongitude).orElse(null),
                 options.getRadiusInMeters(),
-                options.getBoundingBox().map(BoundingBox::getTopLeft).map(LatLong::toString).orElse(null),
-                options.getBoundingBox().map(BoundingBox::getBottomRight).map(LatLong::toString).orElse(null),
+                options.getBoundingBox().map(item -> new GeoPosition(item.getWest(), item.getNorth())).map(Utility::positionToString).orElse(null),
+                options.getBoundingBox().map(item -> new GeoPosition(item.getEast(), item.getSouth())).map(Utility::positionToString).orElse(null),
                 options.getLanguage(),
                 options.getExtendedPostalCodesFor(),
                 options.getEntityType(),
@@ -579,7 +578,7 @@ public final class MapsSearchAsyncClient {
         Mono<Response<ReverseSearchAddressResultPrivate>> responseMono =
             this.serviceClient.reverseSearchAddressWithResponseAsync(
                 ResponseFormat.JSON,
-                Arrays.asList(options.getCoordinates().getLat(), options.getCoordinates().getLon()),
+                Arrays.asList(options.getCoordinates().getLatitude(), options.getCoordinates().getLongitude()),
                 options.getLanguage(),
                 options.includeSpeedLimit(),
                 options.getHeading(),
@@ -649,7 +648,7 @@ public final class MapsSearchAsyncClient {
         Mono<Response<ReverseSearchCrossStreetAddressResultPrivate>> responseMono =
             this.serviceClient.reverseSearchCrossStreetAddressWithResponseAsync(
                 ResponseFormat.JSON,
-                Arrays.asList(options.getCoordinates().getLat(), options.getCoordinates().getLon()),
+                Arrays.asList(options.getCoordinates().getLatitude(), options.getCoordinates().getLongitude()),
                 options.getTop(),
                 options.getHeading(),
                 options.getRadiusInMeters(),

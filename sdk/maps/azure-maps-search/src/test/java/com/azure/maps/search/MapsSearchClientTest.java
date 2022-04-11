@@ -1,5 +1,8 @@
 package com.azure.maps.search;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,12 +13,12 @@ import com.azure.core.exception.HttpResponseException;
 import com.azure.core.http.HttpClient;
 import com.azure.core.models.GeoLineString;
 import com.azure.core.models.GeoObject;
+import com.azure.core.models.GeoPosition;
 import com.azure.core.util.Context;
 import com.azure.core.util.polling.SyncPoller;
 import com.azure.maps.search.models.BatchReverseSearchResult;
 import com.azure.maps.search.models.BatchSearchResult;
 import com.azure.maps.search.models.FuzzySearchOptions;
-import com.azure.maps.search.models.LatLong;
 import com.azure.maps.search.models.PointOfInterestCategoryTreeResult;
 import com.azure.maps.search.models.Polygon;
 import com.azure.maps.search.models.ReverseSearchAddressOptions;
@@ -32,9 +35,6 @@ import com.azure.maps.search.models.SearchPointOfInterestOptions;
 import com.azure.maps.search.models.SearchStructuredAddressOptions;
 import com.azure.maps.search.models.StructuredAddress;
 import com.nimbusds.jose.shaded.json.parser.ParseException;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -115,7 +115,7 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
     @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
     public void testSearchPointOfInterest(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
         client = getMapsSearchClient(httpClient, serviceVersion);
-        SearchAddressResult actualResult = client.searchPointOfInterest(new SearchPointOfInterestOptions("caviar lobster pasta", new LatLong(36.98844, -121.97483)));
+        SearchAddressResult actualResult = client.searchPointOfInterest(new SearchPointOfInterestOptions("caviar lobster pasta", new GeoPosition(-121.97483, 36.98844)));
         SearchAddressResult expectedResult = TestUtils.getExpectedSearchPointOfInterestResults();
         validateSearchPointOfInterest(expectedResult, actualResult);
     }
@@ -126,7 +126,7 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
     @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
     public void testSearchPointOfInterestWithResponse(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
         client = getMapsSearchClient(httpClient, serviceVersion);
-        validateSearchPointOfInterestWithResponse(TestUtils.getExpectedSearchPointOfInterestResults(), 200, client.searchPointOfInterestWithResponse(new SearchPointOfInterestOptions("caviar lobster pasta", new LatLong(36.98844, -121.97483)), Context.NONE));
+        validateSearchPointOfInterestWithResponse(TestUtils.getExpectedSearchPointOfInterestResults(), 200, client.searchPointOfInterestWithResponse(new SearchPointOfInterestOptions("caviar lobster pasta", new GeoPosition(-121.97483, 36.98844)), Context.NONE));
     }
 
     // Case 2: 400 incorrect input
@@ -135,7 +135,7 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
     public void testInvalidSearchPointOfInterestWithResponse(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
         client = getMapsSearchClient(httpClient, serviceVersion);
         final HttpResponseException httpResponseException = assertThrows(HttpResponseException.class,
-                () -> client.searchPointOfInterestWithResponse(new SearchPointOfInterestOptions("", new LatLong()), Context.NONE));
+                () -> client.searchPointOfInterestWithResponse(new SearchPointOfInterestOptions("", new GeoPosition(-121.97483, 36.98844)), Context.NONE));
             assertEquals(400, httpResponseException.getResponse().getStatusCode());
     }
 
@@ -145,7 +145,7 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
     public void testSearchNearbyPointOfInterest(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
         client = getMapsSearchClient(httpClient, serviceVersion);
         SearchAddressResult actualResult = client.searchNearbyPointOfInterest(
-            new SearchNearbyPointsOfInterestOptions(new LatLong(40.706270, -74.011454)));
+            new SearchNearbyPointsOfInterestOptions(new GeoPosition(-74.011454, 40.706270)));
         SearchAddressResult expectedResult = TestUtils.getExpectedSearchNearbyPointOfInterestResults();
         validateSearchNearbyPointOfInterest(expectedResult, actualResult);
     }
@@ -156,7 +156,7 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
     @MethodSource("com.azure.maps.search.TestUtils#getTestParameters")
     public void testSearchNearbyPointOfInterestWithResponse(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
         client = getMapsSearchClient(httpClient, serviceVersion);
-        validateSearchNearbyPointOfInterestWithResponse(TestUtils.getExpectedSearchNearbyPointOfInterestResults(), 200, client.searchNearbyPointOfInterestWithResponse(new SearchNearbyPointsOfInterestOptions(new LatLong(40.706270, -74.011454)), Context.NONE));
+        validateSearchNearbyPointOfInterestWithResponse(TestUtils.getExpectedSearchNearbyPointOfInterestResults(), 200, client.searchNearbyPointOfInterestWithResponse(new SearchNearbyPointsOfInterestOptions(new GeoPosition(-74.011454, 40.706270)), Context.NONE));
     }
 
     // Case 2: 400 incorrect input
@@ -165,7 +165,7 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
     public void testInvalidSearchNearbyPointOfInterestWithResponse(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
         client = getMapsSearchClient(httpClient, serviceVersion);
         final HttpResponseException httpResponseException = assertThrows(HttpResponseException.class,
-                () -> client.searchNearbyPointOfInterestWithResponse(new SearchNearbyPointsOfInterestOptions(new LatLong(-100, -100)), Context.NONE));
+                () -> client.searchNearbyPointOfInterestWithResponse(new SearchNearbyPointsOfInterestOptions(new GeoPosition(-100, -100)), Context.NONE));
             assertEquals(400, httpResponseException.getResponse().getStatusCode());
     }
 
@@ -175,7 +175,7 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
     public void testSearchPointOfInterestCategory(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
         client = getMapsSearchClient(httpClient, serviceVersion);
         SearchAddressResult actualResult = client.searchPointOfInterestCategory(
-            new SearchPointOfInterestCategoryOptions("atm", new LatLong(40.706270, -74.011454)));
+            new SearchPointOfInterestCategoryOptions("atm", new GeoPosition(-74.011454, 40.706270)));
         SearchAddressResult expectedResult = TestUtils.getExpectedSearchPointOfInterestCategoryResults();
         validateSearchPointOfInterestCategory(expectedResult, actualResult);
     }
@@ -187,7 +187,7 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
     public void testSearchPointOfInterestCategoryWithResponse(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
         client = getMapsSearchClient(httpClient, serviceVersion);
         validateSearchPointOfInterestCategoryWithResponse(TestUtils.getExpectedSearchPointOfInterestCategoryResults(), 200, client.searchPointOfInterestCategoryWithResponse(
-            new SearchPointOfInterestCategoryOptions("atm", new LatLong(40.706270, -74.011454)), Context.NONE));
+            new SearchPointOfInterestCategoryOptions("atm", new GeoPosition(-74.011454, 40.706270)), Context.NONE));
     }
 
     // Case 2: 400 incorrect input
@@ -197,7 +197,7 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
         client = getMapsSearchClient(httpClient, serviceVersion);
         final HttpResponseException httpResponseException = assertThrows(HttpResponseException.class,
                 () -> client.searchPointOfInterestCategoryWithResponse(
-                    new SearchPointOfInterestCategoryOptions("atm", new LatLong(-100, -100)), Context.NONE));
+                    new SearchPointOfInterestCategoryOptions("atm", new GeoPosition(-100, -100)), Context.NONE));
             assertEquals(400, httpResponseException.getResponse().getStatusCode());
     }
 
@@ -254,7 +254,7 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
     public void testReverseSearchAddress(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
         client = getMapsSearchClient(httpClient, serviceVersion);
         ReverseSearchAddressResult actualResult = client.reverseSearchAddress(
-            new ReverseSearchAddressOptions(new LatLong(37.337, -121.89)));
+            new ReverseSearchAddressOptions(new GeoPosition(-121.89, 37.337)));
         ReverseSearchAddressResult expectedResult = TestUtils.getExpectedReverseSearchAddressResults();
         validateReverseSearchAddress(expectedResult, actualResult);
     }
@@ -266,7 +266,7 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
     public void testReverseSearchAddressWithResponse(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
         client = getMapsSearchClient(httpClient, serviceVersion);
         validateReverseSearchAddressWithResponse(TestUtils.getExpectedReverseSearchAddressResults(), 200, client.reverseSearchAddressWithResponse(
-            new ReverseSearchAddressOptions(new LatLong(37.337, -121.89)), Context.NONE));
+            new ReverseSearchAddressOptions(new GeoPosition(-121.89, 37.337)), Context.NONE));
     }
 
     // Case 2: 400 Invalid Input
@@ -276,7 +276,7 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
         client = getMapsSearchClient(httpClient, serviceVersion);
         final HttpResponseException httpResponseException = assertThrows(HttpResponseException.class,
                 () -> client.reverseSearchAddressWithResponse(
-                    new ReverseSearchAddressOptions(new LatLong(-100, -121.89)), Context.NONE));
+                    new ReverseSearchAddressOptions(new GeoPosition(-121.89, -100)), Context.NONE));
             assertEquals(400, httpResponseException.getResponse().getStatusCode());
     }
 
@@ -286,7 +286,7 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
     public void testReverseSearchCrossStreetAddress(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
         client = getMapsSearchClient(httpClient, serviceVersion);
         ReverseSearchCrossStreetAddressResult actualResult = client.reverseSearchCrossStreetAddress(
-            new ReverseSearchCrossStreetAddressOptions(new LatLong(37.337, -121.89)));
+            new ReverseSearchCrossStreetAddressOptions(new GeoPosition(-121.89, 37.337)));
         ReverseSearchCrossStreetAddressResult expectedResult = TestUtils.getExpectedReverseSearchCrossStreetAddressResults();
         validateReverseSearchCrossStreetAddress(expectedResult, actualResult);
     }
@@ -298,7 +298,7 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
     public void testReverseSearchCrossStreetAddressWithResponse(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
         client = getMapsSearchClient(httpClient, serviceVersion);
         validateReverseSearchCrossStreetAddressWithResponse(TestUtils.getExpectedReverseSearchCrossStreetAddressResults(), 200, client.reverseSearchCrossStreetAddressWithResponse(
-            new ReverseSearchCrossStreetAddressOptions(new LatLong(37.337, -121.89)), Context.NONE));
+            new ReverseSearchCrossStreetAddressOptions(new GeoPosition(-121.89, 37.337)), Context.NONE));
     }
 
     // Case 2: 400 Invalid Input
@@ -308,7 +308,7 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
         client = getMapsSearchClient(httpClient, serviceVersion);
         final HttpResponseException httpResponseException = assertThrows(HttpResponseException.class,
                 () -> client.reverseSearchCrossStreetAddressWithResponse(
-                    new ReverseSearchCrossStreetAddressOptions(new LatLong(-100, -121.89)), Context.NONE));
+                    new ReverseSearchCrossStreetAddressOptions(new GeoPosition(-121.89, -100)), Context.NONE));
             assertEquals(400, httpResponseException.getResponse().getStatusCode());
     }
 
@@ -329,8 +329,8 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
     public void testSearchStructuredAddressWithResponse(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
         client = getMapsSearchClient(httpClient, serviceVersion);
         validateSearchStructuredAddressWithResponse(
-            TestUtils.getExpectedSearchStructuredAddress(), 
-            200, 
+            TestUtils.getExpectedSearchStructuredAddress(),
+            200,
         client.searchStructuredAddressWithResponse(
             new StructuredAddress("US"),
             new SearchStructuredAddressOptions(), null));
@@ -429,10 +429,10 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
     public void testBeginFuzzySearchBatch(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
         client = getMapsSearchClient(httpClient, serviceVersion);
         List<FuzzySearchOptions> fuzzyOptionsList = new ArrayList<>();
-        fuzzyOptionsList.add(new FuzzySearchOptions("atm", new LatLong(47.639769, -122.128362))
+        fuzzyOptionsList.add(new FuzzySearchOptions("atm", new GeoPosition(-122.128362, 47.639769))
             .setRadiusInMeters(5000).setTop(5));
         fuzzyOptionsList.add(new FuzzySearchOptions("Statue of Liberty").setTop(2));
-        fuzzyOptionsList.add(new FuzzySearchOptions("Starbucks", new LatLong(47.639769, -122.128362))
+        fuzzyOptionsList.add(new FuzzySearchOptions("Starbucks", new GeoPosition(-122.128362, 47.639769))
             .setRadiusInMeters(5000));
         SyncPoller<BatchSearchResult, BatchSearchResult> syncPoller = client.beginFuzzySearchBatch(fuzzyOptionsList);
         syncPoller = setPollInterval(syncPoller);
@@ -466,14 +466,14 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
     public void testBeginReverSearchAddressBatch(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
         client = getMapsSearchClient(httpClient, serviceVersion);
         List<ReverseSearchAddressOptions> reverseOptionsList = new ArrayList<>();
-        reverseOptionsList.add(new ReverseSearchAddressOptions(new LatLong(48.858561, 2.294911)));
-        reverseOptionsList.add(new ReverseSearchAddressOptions(new LatLong(47.639765, -122.127896)).setRadiusInMeters(5000));
-        reverseOptionsList.add(new ReverseSearchAddressOptions(new LatLong(47.621028, -122.348170)));
+        reverseOptionsList.add(new ReverseSearchAddressOptions(new GeoPosition(2.294911, 48.858561)));
+        reverseOptionsList.add(new ReverseSearchAddressOptions(new GeoPosition(-122.127896, 47.639765)).setRadiusInMeters(5000));
+        reverseOptionsList.add(new ReverseSearchAddressOptions(new GeoPosition(-122.348170, 47.621028)));
         SyncPoller<BatchReverseSearchResult, BatchReverseSearchResult> syncPoller = client.beginReverseSearchAddressBatch(reverseOptionsList);
         syncPoller = setPollInterval(syncPoller);
         syncPoller.waitForCompletion();
         BatchReverseSearchResult actualResult = syncPoller.getFinalResult();
         BatchReverseSearchResult expectedResult = TestUtils.getExpectedReverseSearchAddressBatch();
         validateBeginReverseSearchAddressBatch(expectedResult, actualResult);
-    } 
+    }
 }

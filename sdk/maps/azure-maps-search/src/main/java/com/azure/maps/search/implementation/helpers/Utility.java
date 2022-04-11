@@ -6,6 +6,7 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -13,7 +14,9 @@ import java.util.stream.Collectors;
 import com.azure.core.http.HttpHeaders;
 import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.SimpleResponse;
+import com.azure.core.models.GeoBoundingBox;
 import com.azure.core.models.GeoObject;
+import com.azure.core.models.GeoPosition;
 import com.azure.core.serializer.json.jackson.JacksonJsonSerializer;
 import com.azure.core.serializer.json.jackson.JacksonJsonSerializerProvider;
 import com.azure.core.util.UrlBuilder;
@@ -21,6 +24,7 @@ import com.azure.core.util.serializer.TypeReference;
 import com.azure.maps.search.implementation.models.AddressPrivate;
 import com.azure.maps.search.implementation.models.AddressRangesPrivate;
 import com.azure.maps.search.implementation.models.BatchRequestItem;
+import com.azure.maps.search.implementation.models.BoundingBoxCompassNotation;
 import com.azure.maps.search.implementation.models.EntryPointPrivate;
 import com.azure.maps.search.implementation.models.GeoJsonFeatureCollection;
 import com.azure.maps.search.implementation.models.GeoJsonObject;
@@ -42,10 +46,8 @@ import com.azure.maps.search.models.BaseSearchOptions;
 import com.azure.maps.search.models.BatchResultSummary;
 import com.azure.maps.search.models.BatchReverseSearchResult;
 import com.azure.maps.search.models.BatchSearchResult;
-import com.azure.maps.search.models.BoundingBox;
 import com.azure.maps.search.models.EntryPoint;
 import com.azure.maps.search.models.FuzzySearchOptions;
-import com.azure.maps.search.models.LatLong;
 import com.azure.maps.search.models.Polygon;
 import com.azure.maps.search.models.ReverseSearchAddressBatchItem;
 import com.azure.maps.search.models.ReverseSearchAddressOptions;
@@ -157,6 +159,71 @@ public class Utility {
             Matcher matcher = uuidPattern.matcher(location);
             matcher.find();
             return matcher.group();
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns a GeoPosition from a comma-separated position string.
+     * @param position
+     * @return
+     */
+    public static GeoPosition fromCommaSeparatedString(String position) {
+        if (position != null) {
+            final String[] coords = position.split(",");
+
+            if (coords != null && coords.length == 2) {
+                return new GeoPosition(Double.parseDouble(coords[1]), Double.parseDouble(coords[0]));
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns a string representation of a {@link GeoPosition}.
+     *
+     * @return string representation
+     */
+    public static String positionToString(GeoPosition position) {
+        return position.getLatitude() + "," + position.getLongitude();
+    }
+
+    /**
+     * Converts a {@link BoundingBoxCompassNotation} into a {@link GeoBoundingBox}
+     *
+     * @param internalBoundingBox
+     * @return a GeoBoundingBox.
+     */
+    public static GeoBoundingBox toGeoBoundingBox(BoundingBoxCompassNotation internalBoundingBox) {
+        Objects.requireNonNull(internalBoundingBox, "Internal bounding box model is needed.");
+        Objects.requireNonNull(internalBoundingBox.getNorthEast(), "Top right of the bounding box is needed.");
+        Objects.requireNonNull(internalBoundingBox.getSouthWest(), "Bottom left of the bounding box is needed.");
+
+        final String northEastString = internalBoundingBox.getNorthEast();
+        final String southWestString = internalBoundingBox.getSouthWest();
+        final GeoPosition topRight = stringToCoordinate(northEastString);
+        final GeoPosition bottomLeft = stringToCoordinate(southWestString);
+
+        GeoBoundingBox box = new GeoBoundingBox(bottomLeft.getLongitude(), bottomLeft.getLatitude(),
+            topRight.getLongitude(), topRight.getLatitude());
+
+        return box;
+    }
+
+    /**
+     * Converts a comma-separated string into a {@link GeoPosition}.
+     *
+     * @param s - string to convert
+     * @return a GeoPosition
+     */
+    private static GeoPosition stringToCoordinate(String s) {
+        final String[] coordinateString = s.split(",");
+
+        if (coordinateString != null && coordinateString.length == 2) {
+            return new GeoPosition(Double.parseDouble(coordinateString[1]),
+                Double.parseDouble(coordinateString[0]));
         }
 
         return null;
@@ -330,8 +397,8 @@ public class Utility {
         params.compute("extendedPostalCodesFor", (k, v) -> listToCommaSeparatedString(options.getExtendedPostalCodesFor()));
 
         // double parameters
-        params.compute("lat", (k, v) -> options.getCoordinates().map(LatLong::getLat).orElse(null));
-        params.compute("lon", (k, v) -> options.getCoordinates().map(LatLong::getLon).orElse(null));
+        params.compute("lat", (k, v) -> options.getCoordinates().map(GeoPosition::getLatitude).orElse(null));
+        params.compute("lon", (k, v) -> options.getCoordinates().map(GeoPosition::getLongitude).orElse(null));
 
         // batch request item conversion
         BatchRequestItem item = convertParametersToRequestItem(params);
@@ -358,8 +425,8 @@ public class Utility {
         params.compute("brandSet", (k, v) -> listToCommaSeparatedString(options.getBrandFilter()));
 
         // double parameters
-        params.compute("lat", (k, v) -> options.getCoordinates().map(LatLong::getLat).orElse(null));
-        params.compute("lon", (k, v) -> options.getCoordinates().map(LatLong::getLon).orElse(null));
+        params.compute("lat", (k, v) -> options.getCoordinates().map(GeoPosition::getLatitude).orElse(null));
+        params.compute("lon", (k, v) -> options.getCoordinates().map(GeoPosition::getLongitude).orElse(null));
 
         // convert to item
         BatchRequestItem fuzzyItem = convertParametersToRequestItem(params);
@@ -398,9 +465,9 @@ public class Utility {
         params.compute("radius", (k, v) -> options.getRadiusInMeters());
         params.compute("view", (k, v) -> options.getLocalizedMapView());
         params.compute("topLeft", (k, v) -> options.getBoundingBox()
-            .map(BoundingBox::getTopLeft).map(LatLong::toString).orElse(null));
+            .map(item -> new GeoPosition(item.getWest(), item.getNorth())).map(Utility::positionToString).orElse(null));
         params.compute("btmRight", (k, v) -> options.getBoundingBox()
-            .map(BoundingBox::getBottomRight).map(LatLong::toString).orElse(null));
+            .map(item -> new GeoPosition(item.getEast(), item.getSouth())).map(Utility::positionToString).orElse(null));
 
         return params;
     }

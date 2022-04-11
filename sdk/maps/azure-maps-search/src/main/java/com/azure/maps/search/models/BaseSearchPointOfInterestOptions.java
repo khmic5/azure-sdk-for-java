@@ -3,6 +3,8 @@ package com.azure.maps.search.models;
 import java.util.List;
 import java.util.Optional;
 
+import com.azure.core.models.GeoPosition;
+
 /**
  * Class holding optional parameters for POI Search.
  */
@@ -11,7 +13,7 @@ public abstract class BaseSearchPointOfInterestOptions<T extends BaseSearchPoint
     private List<String> brandFilter;
     private List<ElectricVehicleConnector> electricVehicleConnectorFilter;
     private OperatingHoursRange operatingHours;
-    private LatLong coordinates;
+    private GeoPosition coordinates;
 
     /**
      * Returns the category filter.
@@ -49,7 +51,7 @@ public abstract class BaseSearchPointOfInterestOptions<T extends BaseSearchPoint
      * Returns the coordinates.
      * @return
      */
-    public Optional<LatLong> getCoordinates() {
+    public Optional<GeoPosition> getCoordinates() {
         return Optional.ofNullable(coordinates);
     }
 
@@ -103,7 +105,7 @@ public abstract class BaseSearchPointOfInterestOptions<T extends BaseSearchPoint
      * @return
      */
     @SuppressWarnings("unchecked")
-    public T setCoordinates(LatLong coordinates) {
+    public T setCoordinates(GeoPosition coordinates) {
         this.coordinates = coordinates;
         return (T) this;
     }

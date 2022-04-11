@@ -3,6 +3,8 @@ package com.azure.maps.search.models;
 import java.util.List;
 import java.util.Optional;
 
+import com.azure.core.models.GeoBoundingBox;
+
 /**
  * Class holding optional parameters for Search.
  */
@@ -11,7 +13,7 @@ public abstract class BaseSearchOptions<T extends BaseSearchOptions<T>> {
     private Integer skip;
     private List<String> countryFilter;
     private Integer radiusInMeters;
-    private BoundingBox boundingBox;
+    private GeoBoundingBox boundingBox;
     private String language;
     private LocalizedMapView localizedMapView;
 
@@ -51,7 +53,7 @@ public abstract class BaseSearchOptions<T extends BaseSearchOptions<T>> {
      * Returns the bounding box.
      * @return
      */
-    public Optional<BoundingBox> getBoundingBox() {
+    public Optional<GeoBoundingBox> getBoundingBox() {
         return Optional.ofNullable(boundingBox);
     }
 
@@ -121,7 +123,7 @@ public abstract class BaseSearchOptions<T extends BaseSearchOptions<T>> {
      * @return
      */
     @SuppressWarnings("unchecked")
-    public T setBoundingBox(BoundingBox box) {
+    public T setGeoBoundingBox(GeoBoundingBox box) {
         this.boundingBox = box;
         return (T) this;
     }

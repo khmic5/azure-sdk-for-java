@@ -2,6 +2,8 @@ package com.azure.maps.search.models;
 
 import java.util.List;
 
+import com.azure.core.models.GeoPosition;
+
 /**
  * Class holding parameters for a fuzzy search.
  */
@@ -27,9 +29,9 @@ public final class FuzzySearchOptions extends BaseSearchPointOfInterestOptions<F
     /**
      * Builds fuzzy search options with query string and coordinates.
      * @param query The query to be used to search for points of interest.
-     * @param coordinates The {@link LatLong} coordinates to be searched.
+     * @param coordinates The {@link GeoPosition} coordinates to be searched.
      */
-    public FuzzySearchOptions(String query, LatLong coordinates) {
+    public FuzzySearchOptions(String query, GeoPosition coordinates) {
         this.query = query;
         this.setCoordinates(coordinates);
     }

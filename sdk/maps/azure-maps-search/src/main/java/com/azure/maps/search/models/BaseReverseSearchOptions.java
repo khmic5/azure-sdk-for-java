@@ -1,5 +1,7 @@
 package com.azure.maps.search.models;
 
+import com.azure.core.models.GeoPosition;
+
 /**
  * Class holding optional parameters for reverse search.
  */
@@ -8,7 +10,7 @@ public abstract class BaseReverseSearchOptions<T extends BaseReverseSearchOption
     private Integer heading;
     private Integer radiusInMeters;
     private LocalizedMapView localizedMapView;
-    private LatLong coordinates;
+    private GeoPosition coordinates;
 
     /**
      * Returns an Integer with the radius, in meters.
@@ -43,10 +45,10 @@ public abstract class BaseReverseSearchOptions<T extends BaseReverseSearchOption
     }
 
     /**
-     * Returns a LatLong with the requested coordinates.
+     * Returns a GeoPosition with the requested coordinates.
      * @return the coordinates to be used in the search.
      */
-    public LatLong getCoordinates() {
+    public GeoPosition getCoordinates() {
         return this.coordinates;
     }
 
@@ -100,7 +102,7 @@ public abstract class BaseReverseSearchOptions<T extends BaseReverseSearchOption
      * @return
      */
     @SuppressWarnings("unchecked")
-    public T setCoordinates(LatLong coordinates) {
+    public T setCoordinates(GeoPosition coordinates) {
         this.coordinates = coordinates;
         return (T) this;
     }

@@ -1,5 +1,7 @@
 package com.azure.maps.search.models;
 
+import com.azure.core.models.GeoPosition;
+
 /**
  * Class holding optional parameters for Search.
  */
@@ -8,9 +10,9 @@ public final class ReverseSearchCrossStreetAddressOptions extends BaseReverseSea
 
     /**
      * Builds reverse cross street search options with coordinates.
-     * @param coordinates The {@link LatLong} coordinates to be searched.
+     * @param coordinates The {@link GeoPosition} coordinates to be searched.
      */
-    public ReverseSearchCrossStreetAddressOptions(LatLong coordinates) {
+    public ReverseSearchCrossStreetAddressOptions(GeoPosition coordinates) {
         this.setCoordinates(coordinates);
     }
 

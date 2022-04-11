@@ -7,6 +7,7 @@
 package com.azure.maps.search.models;
 
 import com.azure.core.annotation.Immutable;
+import com.azure.core.models.GeoPosition;
 import com.azure.maps.search.implementation.helpers.SearchSummaryPropertiesHelper;
 import com.azure.maps.search.implementation.models.SearchSummaryPrivate;
 
@@ -21,7 +22,7 @@ public final class SearchSummary {
     private Integer skip;
     private Integer totalResults;
     private Integer fuzzyLevel;
-    private LatLong geoBias;
+    private GeoPosition geoBias;
 
     static {
         SearchSummaryPropertiesHelper.setAccessor(new SearchSummaryPropertiesHelper.SearchSummaryAccessor() {
@@ -112,7 +113,7 @@ public final class SearchSummary {
      *
      * @return the geoBias value.
      */
-    public LatLong getGeoBias() {
+    public GeoPosition getGeoBias() {
         return this.geoBias;
     }
 
@@ -128,7 +129,8 @@ public final class SearchSummary {
         this.fuzzyLevel = privateSearchSummary.getFuzzyLevel();
 
         if (privateSearchSummary.getGeoBias() != null) {
-            this.geoBias = new LatLong(privateSearchSummary.getGeoBias());
+            this.geoBias = new GeoPosition(privateSearchSummary.getGeoBias().getLon(),
+                privateSearchSummary.getGeoBias().getLat());
         }
     }
 }

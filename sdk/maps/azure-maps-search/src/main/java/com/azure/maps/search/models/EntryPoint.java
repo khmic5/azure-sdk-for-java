@@ -5,6 +5,7 @@
 package com.azure.maps.search.models;
 
 import com.azure.core.annotation.Immutable;
+import com.azure.core.models.GeoPosition;
 import com.azure.maps.search.implementation.helpers.EntryPointPropertiesHelper;
 import com.azure.maps.search.implementation.models.LatLongPairAbbreviated;
 
@@ -12,7 +13,7 @@ import com.azure.maps.search.implementation.models.LatLongPairAbbreviated;
 @Immutable
 public final class EntryPoint {
     private EntryPointType type;
-    private LatLong position;
+    private GeoPosition position;
 
     static {
         EntryPointPropertiesHelper.setAccessor(new EntryPointPropertiesHelper.EntryPointAccessor() {
@@ -43,7 +44,7 @@ public final class EntryPoint {
      *
      * @return the position value.
      */
-    public LatLong getPosition() {
+    public GeoPosition getPosition() {
         return position;
     }
 
@@ -53,6 +54,6 @@ public final class EntryPoint {
     }
 
     private void setPosition(LatLongPairAbbreviated position) {
-        this.position = new LatLong(position);
+        this.position = new GeoPosition(position.getLon(), position.getLat());
     }
 }

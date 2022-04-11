@@ -2,6 +2,8 @@ package com.azure.maps.search.models;
 
 import java.util.List;
 
+import com.azure.core.models.GeoPosition;
+
 /**
  * Class holding optional parameters for Reverse Search.
  */
@@ -16,9 +18,9 @@ public final class ReverseSearchAddressOptions extends BaseReverseSearchOptions<
 
     /**
      * Builds fuzzy search options with query string and coordinates.
-     * @param coordinates The {@link LatLong} coordinates to be searched.
+     * @param coordinates The {@link GeoPosition} coordinates to be searched.
      */
-    public ReverseSearchAddressOptions(LatLong coordinates) {
+    public ReverseSearchAddressOptions(GeoPosition coordinates) {
         this.setCoordinates(coordinates);
     }
 

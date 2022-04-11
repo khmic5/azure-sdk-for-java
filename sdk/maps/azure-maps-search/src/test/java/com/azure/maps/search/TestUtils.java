@@ -1,5 +1,6 @@
 package com.azure.maps.search;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,7 +46,7 @@ public class TestUtils {
         SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
         TypeReference<PolygonPrivate> interimType = new TypeReference<PolygonPrivate>(){};
         byte[] data = null;
-        data = is.readAllBytes();
+        data = toByteArray(is);
         PolygonPrivate polygonPrivate = null;
         polygonPrivate = jacksonAdapter.<PolygonPrivate>deserialize(data, interimType.getJavaType(),
                SerializerEncoding.JSON);
@@ -76,28 +77,28 @@ public class TestUtils {
     static SearchAddressResult getExpectedFuzzySearchResults() throws IOException {
         InputStream is = ClassLoader.getSystemResourceAsStream("searchaddressresult.json");
         byte[] data = null;
-        data = is.readAllBytes();
+        data = toByteArray(is);
         return getSearchAddressResult(data);
     }
 
     static SearchAddressResult getExpectedSearchPointOfInterestResults() throws IOException {
         InputStream is = ClassLoader.getSystemResourceAsStream("searchpointofinterestresult.json");
         byte[] data = null;
-        data = is.readAllBytes();
+        data = toByteArray(is);
         return getSearchAddressResult(data);
     }
 
     static SearchAddressResult getExpectedSearchNearbyPointOfInterestResults() throws IOException {
         InputStream is = ClassLoader.getSystemResourceAsStream("searchnearbypointofinterestresult.json");
         byte[] data = null;
-        data = is.readAllBytes();
+        data = toByteArray(is);
         return getSearchAddressResult(data);
     }
 
     static SearchAddressResult getExpectedSearchPointOfInterestCategoryResults() throws IOException {
         InputStream is = ClassLoader.getSystemResourceAsStream("searchpointofinterestcategoryresult.json");
         byte[] data = null;
-        data = is.readAllBytes();
+        data = toByteArray(is);
         return getSearchAddressResult(data);
     }
 
@@ -106,7 +107,7 @@ public class TestUtils {
         SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
         TypeReference<PointOfInterestCategoryTreeResult> interimType = new TypeReference<PointOfInterestCategoryTreeResult>(){};
         byte[] data = null;
-        data = is.readAllBytes();
+        data = toByteArray(is);
         PointOfInterestCategoryTreeResult pointOfInterestCategoryTreeResult = null;
         pointOfInterestCategoryTreeResult = jacksonAdapter.<PointOfInterestCategoryTreeResult>deserialize(data, interimType.getJavaType(),
                SerializerEncoding.JSON);
@@ -116,7 +117,7 @@ public class TestUtils {
     static SearchAddressResult getExpectedSearchAddressResults() throws IOException {
         InputStream is = ClassLoader.getSystemResourceAsStream("searchaddressresult.json");
         byte[] data = null;
-        data = is.readAllBytes();
+        data = toByteArray(is);
         return getSearchAddressResult(data);
     }
 
@@ -125,7 +126,7 @@ public class TestUtils {
         SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
         TypeReference<ReverseSearchAddressResultPrivate> interimType = new TypeReference<ReverseSearchAddressResultPrivate>(){};
         byte[] data = null;
-        data = is.readAllBytes();
+        data = toByteArray(is);
         ReverseSearchAddressResultPrivate searchReverseAddressResultPrivate = null;
         searchReverseAddressResultPrivate = jacksonAdapter.<ReverseSearchAddressResultPrivate>deserialize(data, interimType.getJavaType(),
                SerializerEncoding.JSON);
@@ -138,7 +139,7 @@ public class TestUtils {
         SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
         TypeReference<ReverseSearchCrossStreetAddressResultPrivate> interimType = new TypeReference<ReverseSearchCrossStreetAddressResultPrivate>(){};
         byte[] data = null;
-        data = is.readAllBytes();
+        data = toByteArray(is);
         ReverseSearchCrossStreetAddressResultPrivate reverseSearchCrossStreetAddressResultPrivate = null;
         reverseSearchCrossStreetAddressResultPrivate = jacksonAdapter.<ReverseSearchCrossStreetAddressResultPrivate>deserialize(data, interimType.getJavaType(),
                SerializerEncoding.JSON);
@@ -149,7 +150,7 @@ public class TestUtils {
     static SearchAddressResult getExpectedSearchStructuredAddress() throws IOException {
         InputStream is = ClassLoader.getSystemResourceAsStream("searchstructuredaddressresult.json");
         byte[] data = null;
-        data = is.readAllBytes();
+        data = toByteArray(is);
         return getSearchAddressResult(data);
     }
 
@@ -165,7 +166,7 @@ public class TestUtils {
     static SearchAddressResult getExpectedSearchInsideGeometry() throws IOException {
         InputStream is = ClassLoader.getSystemResourceAsStream("searchinsidegeometryresult.json");
         byte[] data = null;
-        data = is.readAllBytes();
+        data = toByteArray(is);
         return getSearchAddressResult(data);
     }
 
@@ -181,7 +182,7 @@ public class TestUtils {
     static SearchAddressResult getExpectedSearchAlongRoute() throws IOException {
         InputStream is = ClassLoader.getSystemResourceAsStream("searchalongrouteresult.json");
         byte[] data = null;
-        data = is.readAllBytes();
+        data = toByteArray(is);
         return getSearchAddressResult(data);
     }
 
@@ -189,7 +190,7 @@ public class TestUtils {
         InputStream is = ClassLoader.getSystemResourceAsStream("beginfuzzysearchbatchresult.json");
         SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
         TypeReference<BatchSearchResult> interimType = new TypeReference<BatchSearchResult>(){};
-        byte[] data = is.readAllBytes();
+        byte[] data = toByteArray(is);
         BatchSearchResult expectedFuzzySearchBatch = jacksonAdapter.<BatchSearchResult>deserialize(data, interimType.getJavaType(),
            SerializerEncoding.JSON);
         return expectedFuzzySearchBatch;
@@ -199,7 +200,7 @@ public class TestUtils {
         InputStream is = ClassLoader.getSystemResourceAsStream("beginsearchaddressbatchresult.json");
         SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
         TypeReference<BatchSearchResult> interimType = new TypeReference<BatchSearchResult>(){};
-        byte[] data = is.readAllBytes();
+        byte[] data = toByteArray(is);
         BatchSearchResult expectedSearchAddressBatch = jacksonAdapter.<BatchSearchResult>deserialize(data, interimType.getJavaType(),
            SerializerEncoding.JSON);
         return expectedSearchAddressBatch;
@@ -209,7 +210,7 @@ public class TestUtils {
         InputStream is = ClassLoader.getSystemResourceAsStream("beginreversesearchaddressbatchresult.json");
         SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
         TypeReference<BatchReverseSearchResult> interimType = new TypeReference<BatchReverseSearchResult>(){};
-        byte[] data = is.readAllBytes();
+        byte[] data = toByteArray(is);
         BatchReverseSearchResult expectedReverseSearchAddressBatch = jacksonAdapter.<BatchReverseSearchResult>deserialize(data, interimType.getJavaType(),
            SerializerEncoding.JSON);
         return expectedReverseSearchAddressBatch;
@@ -233,5 +234,20 @@ public class TestUtils {
                     .forEach(serviceVersion -> argumentsList.add(Arguments.of(httpClient, serviceVersion)));
             });
         return argumentsList.stream();
+    }
+
+    // Code referenced from
+    // https://www.techiedelight.com/convert-inputstream-byte-array-java/#:~:text=Convert%20InputStream%20to%20byte%20array%20in%20Java%201,Commons%20IO%20...%204%204.%20Using%20sun.misc.IOUtils%20
+    public static byte[] toByteArray(InputStream in) throws IOException {
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024];
+        int len;
+        // read bytes from the input stream and store them in the buffer
+        while ((len = in.read(buffer)) != -1)
+        {
+            // write bytes from the buffer into the output stream
+            os.write(buffer, 0, len);
+        }
+        return os.toByteArray();
     }
 }

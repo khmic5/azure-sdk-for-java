@@ -7,7 +7,9 @@ package com.azure.maps.search.models;
 import java.util.List;
 
 import com.azure.core.annotation.Immutable;
+import com.azure.core.models.GeoBoundingBox;
 import com.azure.maps.search.implementation.helpers.AddressPropertiesHelper;
+import com.azure.maps.search.implementation.helpers.Utility;
 import com.azure.maps.search.implementation.models.AddressPrivate;
 
 /** The address of the result. */
@@ -33,7 +35,7 @@ public final class Address {
     private String freeformAddress;
     private String countrySubdivisionName;
     private String localName;
-    private BoundingBox boundingBox;
+    private GeoBoundingBox boundingBox;
 
     static {
         AddressPropertiesHelper.setAccessor(new AddressPropertiesHelper.AddressAccessor() {
@@ -234,7 +236,7 @@ public final class Address {
      *
      * @return the boundingBox value.
      */
-    public BoundingBox getBoundingBox() {
+    public GeoBoundingBox getBoundingBox() {
         return this.boundingBox;
     }
 
@@ -262,7 +264,7 @@ public final class Address {
 
         // transform bounding box
         if (addressPrivate.getBoundingBox() != null) {
-            this.boundingBox = new BoundingBox(addressPrivate.getBoundingBox());
+            this.boundingBox = Utility.toGeoBoundingBox(addressPrivate.getBoundingBox());
         }
     }
 }
