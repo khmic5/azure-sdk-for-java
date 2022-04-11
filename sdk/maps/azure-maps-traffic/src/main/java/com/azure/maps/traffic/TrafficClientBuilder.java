@@ -315,18 +315,18 @@ public final class TrafficClientBuilder {
     }
 
     /**
-     * Builds an instance of SearchAsyncClient async client.
+     * Builds an instance of TrafficAsyncClient async client.
      *
-     * @return an instance of SearchAsyncClient.
+     * @return an instance of TrafficAsyncClient.
      */
     public TrafficAsyncClient buildAsyncClient() {
         return new TrafficAsyncClient(buildInnerClient().getTraffics());
     }
 
     /**
-     * Builds an instance of SearchClient sync client.
+     * Builds an instance of TrafficClient sync client.
      *
-     * @return an instance of SearchClient.
+     * @return an instance of TrafficClient.
      */
     public TrafficClient buildClient() {
         return new TrafficClient(buildAsyncClient());

@@ -1,0 +1,30 @@
+{
+    "results": [
+        {
+            "countryCode": "US",
+            "alertId": 2351779,
+            "description": {
+                "localized": "Flood Warning",
+                "english": "Flood Warning"
+            },
+            "category": "FLOOD",
+            "priority": 24,
+            "source": "U.S. National Weather Service",
+            "sourceId": 2,
+            "alertAreas": [
+                {
+                    "name": "Liberty",
+                    "summary": "Flood Warning in effect until Monday, 2:00 AM EDT.  Source: U.S. National Weather Service",
+                    "startTime": "2022-03-19T16:24:00-04:00",
+                    "endTime": "2022-03-28T02:00:00-04:00",
+                    "latestStatus": {
+                        "localized": "Extend",
+                        "english": "Extend"
+                    },
+                    "alertDetails": "...FLOOD WARNING REMAINS IN EFFECT UNTIL FURTHER NOTICE...\n\n* WHAT...Minor flooding is occurring and minor flooding is forecast\n  to continue.\n\n* WHERE...Apalachicola River near Blountstown.\n\n* WHEN...Until further notice.\n\n* IMPACTS...At 18.0 feet, Forest Road 115 in Liberty County at River\n  Styx Campground will flood, isolating access to the site.\n\n* ADDITIONAL DETAILS...\n  - At 8:15 AM CDT Wednesday /9:15 AM EDT Wednesday/ the stage\n    was 17.4 feet.\n  - Recent Activity...The maximum river stage in the 24 hours\n    ending at 8:15 AM CDT Wednesday /9:15 AM EDT Wednesday/ was\n    18.0 feet.\n  - Forecast...The river is expected to rise to a crest of 17.7\n    feet early tomorrow afternoon. It will then fall below flood\n    stage early Sunday afternoon.\n  - Flood stage is 17.0 feet.\n  - Flood History...This crest compares to a previous crest of\n    17.4 feet on 03/20/2014.\n  - http://www.weather.gov/safety/flood\n\n&&",
+                    "alertDetailsLanguageCode": "en"
+                }
+            ]
+        }
+    ]
+}

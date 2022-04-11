@@ -72,8 +72,7 @@ public class TestUtils {
         return argumentsList.stream();
     }
 
-    public static byte[] toByteArray(InputStream in) throws IOException
-    {
+    public static byte[] toByteArray(InputStream in) throws IOException {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
  
         byte[] buffer = new byte[1024];

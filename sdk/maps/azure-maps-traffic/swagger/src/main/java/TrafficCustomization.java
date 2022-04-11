@@ -5,7 +5,6 @@ import com.azure.autorest.customization.Customization;
 import com.azure.autorest.customization.LibraryCustomization;
 import com.azure.autorest.customization.MethodCustomization;
 import com.azure.autorest.customization.PackageCustomization;
-import com.azure.autorest.customization.implementation.ls.EclipseLanguageClient;
 
 import org.slf4j.Logger;
 

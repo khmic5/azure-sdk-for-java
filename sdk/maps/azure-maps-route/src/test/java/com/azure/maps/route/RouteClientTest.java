@@ -40,7 +40,7 @@ public class RouteClientTest extends RouteTestBase {
         return getRouteAsyncClientBuilder(httpClient, serviceVersion).buildClient();
     }
 
-    // Test begin get request route matrix
+    // Test begin request route matrix
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("com.azure.maps.route.TestUtils#getTestParameters")
     public void testBeginRequestRouteMatrix(HttpClient httpClient, RouteServiceVersion serviceVersion) throws IOException {
@@ -61,7 +61,7 @@ public class RouteClientTest extends RouteTestBase {
         validateBeginRequestRouteMatrix(expectedResult, actualResult);
     }
 
-    // // Test begin get request route matrix with context
+    // Test begin request route matrix with context
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("com.azure.maps.route.TestUtils#getTestParameters")
     public void testBeginRequestRouteMatrixWithContext(HttpClient httpClient, RouteServiceVersion serviceVersion) throws IOException {
@@ -148,8 +148,8 @@ public class RouteClientTest extends RouteTestBase {
         validateGetRouteDirections(expectedResult, actualResult);
     }
 
-    // // Test get route directions with response
-    // // Case 1: 200
+    // Test get route directions with response
+    // Case 1: 200
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("com.azure.maps.route.TestUtils#getTestParameters")
     public void testGetRouteDirectionsWithResponse(HttpClient httpClient, RouteServiceVersion serviceVersion) throws IOException {
