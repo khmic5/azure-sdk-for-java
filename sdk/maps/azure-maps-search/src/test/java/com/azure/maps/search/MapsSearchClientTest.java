@@ -135,7 +135,7 @@ public class MapsSearchClientTest extends MapsSearchClientTestBase {
     public void testInvalidSearchPointOfInterestWithResponse(HttpClient httpClient, MapsSearchServiceVersion serviceVersion) throws IOException {
         client = getMapsSearchClient(httpClient, serviceVersion);
         final HttpResponseException httpResponseException = assertThrows(HttpResponseException.class,
-                () -> client.searchPointOfInterestWithResponse(new SearchPointOfInterestOptions("", new GeoPosition(-121.97483, 36.98844)), Context.NONE));
+                () -> client.searchPointOfInterestWithResponse(new SearchPointOfInterestOptions("", new GeoPosition(0.0, 0.0)), Context.NONE));
             assertEquals(400, httpResponseException.getResponse().getStatusCode());
     }
 
