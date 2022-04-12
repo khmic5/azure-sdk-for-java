@@ -12,7 +12,7 @@ import java.util.List;
 
 /** Parameter group. */
 @Fluent
-public final class BoundingBoxPrivate {
+public final class BoundingBox {
     /*
      * Minimum coordinates (south-west point) of bounding box in latitude
      * longitude coordinate system. E.g. 52.41064,4.84228
@@ -42,9 +42,9 @@ public final class BoundingBoxPrivate {
      * coordinate system. E.g. 52.41064,4.84228.
      *
      * @param southWest the southWest value to set.
-     * @return the BoundingBoxPrivate object itself.
+     * @return the BoundingBox object itself.
      */
-    public BoundingBoxPrivate setSouthWest(List<Double> southWest) {
+    public BoundingBox setSouthWest(List<Double> southWest) {
         this.southWest = southWest;
         return this;
     }
@@ -64,9 +64,9 @@ public final class BoundingBoxPrivate {
      * coordinate system. E.g. 52.41064,4.84228.
      *
      * @param northEast the northEast value to set.
-     * @return the BoundingBoxPrivate object itself.
+     * @return the BoundingBox object itself.
      */
-    public BoundingBoxPrivate setNorthEast(List<Double> northEast) {
+    public BoundingBox setNorthEast(List<Double> northEast) {
         this.northEast = northEast;
         return this;
     }

@@ -14,8 +14,6 @@ import com.azure.core.util.serializer.JacksonAdapter;
 import com.azure.core.util.serializer.SerializerAdapter;
 import com.azure.core.util.serializer.SerializerEncoding;
 import com.azure.core.util.serializer.TypeReference;
-import com.azure.maps.render.implementation.helpers.Utility;
-import com.azure.maps.render.implementation.models.MapTilesetPrivate;
 import com.azure.maps.render.models.Copyright;
 import com.azure.maps.render.models.CopyrightCaption;
 import com.azure.maps.render.models.MapAttribution;
@@ -31,12 +29,10 @@ public class TestUtils {
         InputStream is = ClassLoader.getSystemResourceAsStream("maptileset.json");
         byte[] data = toByteArray(is);
         SerializerAdapter jacksonAdapter = JacksonAdapter.createDefaultSerializerAdapter();
-        TypeReference<MapTilesetPrivate> interimType = new TypeReference<MapTilesetPrivate>(){};
-        MapTilesetPrivate mapTilesetPrivate = null;
-        mapTilesetPrivate = jacksonAdapter.<MapTilesetPrivate>deserialize(data, interimType.getJavaType(),
-        SerializerEncoding.JSON);
+        TypeReference<MapTileset> interimType = new TypeReference<MapTileset>(){};
         is.close();
-        return Utility.toMapTileset(mapTilesetPrivate);
+        return jacksonAdapter.<MapTileset>deserialize(data, interimType.getJavaType(),
+        SerializerEncoding.JSON);
     }
 
     static MapAttribution getExpectedMapAttribution() throws IOException {

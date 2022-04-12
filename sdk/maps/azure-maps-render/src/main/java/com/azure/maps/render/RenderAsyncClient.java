@@ -14,18 +14,16 @@ import com.azure.core.annotation.ServiceClient;
 import com.azure.core.annotation.ServiceMethod;
 import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.StreamResponse;
+import com.azure.core.models.GeoBoundingBox;
+import com.azure.core.models.GeoPosition;
 import com.azure.core.util.Context;
 import com.azure.maps.render.implementation.RenderV2sImpl;
 import com.azure.maps.render.implementation.helpers.Utility;
 import com.azure.maps.render.models.Copyright;
 import com.azure.maps.render.models.CopyrightCaption;
 import com.azure.maps.render.models.MapAttribution;
-import com.azure.maps.render.implementation.models.BoundingBoxPrivate;
-import com.azure.maps.render.implementation.models.MapTilesetPrivate;
+import com.azure.maps.render.implementation.models.BoundingBox;
 import com.azure.maps.render.implementation.models.ResponseFormat;
-import com.azure.maps.render.models.BoundingBox;
-import com.azure.maps.render.models.Center;
-import com.azure.maps.render.models.LatLong;
 import com.azure.maps.render.models.MapStaticImageOptions;
 import com.azure.maps.render.models.MapTileOptions;
 import com.azure.maps.render.models.MapTileset;
@@ -223,10 +221,9 @@ public final class RenderAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     Mono<Response<MapTileset>> getMapTilesetWithResponse(TilesetID tilesetId, Context context) {
-        Mono<Response<MapTilesetPrivate>> responseMono = this.serviceClient.getMapTilesetWithResponseAsync(tilesetId);
+        Mono<Response<MapTileset>> responseMono = this.serviceClient.getMapTilesetWithResponseAsync(tilesetId);
         return responseMono.flatMap(response -> {
-            Response<MapTileset> simpleResponse = Utility.createMapTilesetResponse(response);
-            return Mono.just(simpleResponse);
+            return Mono.just(response);
         });
     }
 
@@ -252,7 +249,7 @@ public final class RenderAsyncClient {
      * @return copyright attribution for the requested section of a tileset.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<MapAttribution> getMapAttribution(TilesetID tilesetId, int zoom, BoundingBox bounds) {
+    public Mono<MapAttribution> getMapAttribution(TilesetID tilesetId, int zoom, GeoBoundingBox bounds) {
         Mono<Response<MapAttribution>> result = this.getMapAttributionWithResponse(tilesetId, zoom, bounds, null);
         return result.flatMap(response -> {
             return Mono.just(response.getValue());
@@ -281,7 +278,7 @@ public final class RenderAsyncClient {
      * @return copyright attribution for the requested section of a tileset.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<MapAttribution>> getMapAttributionWithResponse(TilesetID tilesetId, int zoom, BoundingBox bounds) {
+    public Mono<Response<MapAttribution>> getMapAttributionWithResponse(TilesetID tilesetId, int zoom, GeoBoundingBox bounds) {
         return this.getMapAttributionWithResponse(tilesetId, zoom, bounds, null);
     }
 
@@ -302,10 +299,10 @@ public final class RenderAsyncClient {
      * @return
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Mono<Response<MapAttribution>> getMapAttributionWithResponse(TilesetID tilesetId, int zoom, BoundingBox bounds, Context context) {
+    Mono<Response<MapAttribution>> getMapAttributionWithResponse(TilesetID tilesetId, int zoom, GeoBoundingBox bounds, Context context) {
         List<Double> boundList = new ArrayList<>();
         if (bounds != null ) {
-            boundList = Arrays.asList(bounds.getSouthWest().getLongitude(), bounds.getSouthWest().getLatitude(), bounds.getNorthEast().getLongitude(), bounds.getNorthEast().getLatitude());
+            boundList = Arrays.asList(bounds.getWest(), bounds.getSouth(), bounds.getEast(), bounds.getNorth());
         }
         return this.serviceClient.getMapAttributionWithResponseAsync(tilesetId, zoom, boundList);
     }
@@ -325,8 +322,8 @@ public final class RenderAsyncClient {
      * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Flux<ByteBuffer> getMapStateTile(String statesetId, TileIndex tileIndex) {
-        Mono<StreamResponse> responseMono = this.getMapStateTileWithResponse(statesetId, tileIndex, null);
+    public Flux<ByteBuffer> downloadMapStateTile(String statesetId, TileIndex tileIndex) {
+        Mono<StreamResponse> responseMono = this.downloadMapStateTileWithResponse(statesetId, tileIndex, null);
         return responseMono.flatMapMany(response -> {
             return response.getValue();
         });  
@@ -347,8 +344,8 @@ public final class RenderAsyncClient {
      * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<StreamResponse> getMapStateTileWithResponse(String statesetId, TileIndex tileIndex) {
-        return this.getMapStateTileWithResponse(statesetId, tileIndex, null);
+    public Mono<StreamResponse> downloadMapStateTileWithResponse(String statesetId, TileIndex tileIndex) {
+        return this.downloadMapStateTileWithResponse(statesetId, tileIndex, null);
     }
 
     /**
@@ -361,7 +358,7 @@ public final class RenderAsyncClient {
      * @return
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Mono<StreamResponse> getMapStateTileWithResponse(String statesetId, TileIndex tileIndex, Context context) {
+    Mono<StreamResponse> downloadMapStateTileWithResponse(String statesetId, TileIndex tileIndex, Context context) {
         return this.serviceClient.getMapStateTileWithResponseAsync(statesetId, tileIndex);
     }
 
@@ -863,12 +860,11 @@ public final class RenderAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     Mono<StreamResponse> getMapStaticImageWithResponse(MapStaticImageOptions options, Context context) {
-        BoundingBox boundingBox = options.getBoundingBox();
-        LatLong southWest = boundingBox.getSouthWest();
-        LatLong northEast = boundingBox.getNorthEast();
-        Center center = options.getCenter();
-        List<Double> centerPrivate = center != null ? Utility.toCenterPrivate(center) : null;
-        List<Double> bbox = Arrays.asList(southWest.getLatitude(), northEast.getLongitude(), northEast.getLatitude(), southWest.getLongitude());
+        GeoBoundingBox boundingBox = options.getBoundingBox();
+        GeoPosition center = options.getCenter();
+        List<Double> centerPrivate = center != null ? Arrays.asList(center.getLatitude(), 
+            center.getLongitude(), Double.valueOf(center.getAltitude())) : null;
+        List<Double> bbox = Arrays.asList(boundingBox.getWest(), boundingBox.getSouth(), boundingBox.getEast(), boundingBox.getNorth());
         return this.serviceClient.getMapStaticImageWithResponseAsync 
             (options.getRasterTileFormat(),
             options.getStaticMapLayer(), 
@@ -899,7 +895,7 @@ public final class RenderAsyncClient {
      * @return this object is returned from a successful copyright request.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Copyright> getCopyrightFromBoundingBox(BoundingBox boundingBox, boolean includeText) {
+    public Mono<Copyright> getCopyrightFromBoundingBox(GeoBoundingBox boundingBox, boolean includeText) {
         Mono<Response<Copyright>> result = this.getCopyrightFromBoundingBoxWithResponse(boundingBox, includeText, null);
         return result.flatMap(response -> {
             return Mono.just(response.getValue());
@@ -922,7 +918,7 @@ public final class RenderAsyncClient {
      * @return this object is returned from a successful copyright request.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<Copyright>> getCopyrightFromBoundingBoxWithResponse(BoundingBox boundingBox, boolean includeText) {
+    public Mono<Response<Copyright>> getCopyrightFromBoundingBoxWithResponse(GeoBoundingBox boundingBox, boolean includeText) {
         return this.getCopyrightFromBoundingBoxWithResponse(boundingBox, includeText, null);
     }
 
@@ -936,15 +932,10 @@ public final class RenderAsyncClient {
      * @return
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Mono<Response<Copyright>> getCopyrightFromBoundingBoxWithResponse(BoundingBox boundingBox, boolean includeText, Context context) {
-        LatLong southWest = boundingBox.getSouthWest();
-        LatLong northEast = boundingBox.getNorthEast();
-        BoundingBoxPrivate boundingBoxPrivate = new BoundingBoxPrivate();
-        boundingBoxPrivate.setNorthEast(Arrays.asList(northEast.getLatitude(), northEast.getLongitude())); 
-        boundingBoxPrivate.setSouthWest(Arrays.asList(southWest.getLatitude(), southWest.getLongitude())); 
+    Mono<Response<Copyright>> getCopyrightFromBoundingBoxWithResponse(GeoBoundingBox boundingBox, boolean includeText, Context context) {
         return this.serviceClient.getCopyrightFromBoundingBoxWithResponseAsync(
                 ResponseFormat.JSON,
-                boundingBoxPrivate,
+                new BoundingBox().setSouthWest(Arrays.asList(boundingBox.getSouth(), boundingBox.getWest())).setNorthEast(Arrays.asList(boundingBox.getNorth(), boundingBox.getEast())),
                 Utility.toIncludeTextPrivate(includeText));    
     }
 

@@ -39,8 +39,6 @@ public final class RenderClientImplBuilder {
 
     @Generated private static final String SDK_VERSION = "version";
 
-    @Generated private static final String[] DEFAULT_SCOPES = new String[] {"https://atlas.microsoft.com/.default"};
-
     @Generated private final Map<String, String> properties = new HashMap<>();
 
     /** Create an instance of the RenderClientImplBuilder. */

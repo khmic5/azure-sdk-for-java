@@ -2,6 +2,9 @@ package com.azure.maps.render.models;
 
 import java.util.List;
 
+import com.azure.core.models.GeoBoundingBox;
+import com.azure.core.models.GeoPosition;
+
 /**
  * Organize inputs for get map static image
  */
@@ -10,8 +13,8 @@ public final class MapStaticImageOptions {
     private StaticMapLayer layer;
     private MapImageStyle style;
     private Integer zoom;
-    private Center center;
-    private BoundingBox boundingBox;
+    private GeoPosition center;
+    private GeoBoundingBox boundingBox;
     private Integer height;
     private Integer width;
     private String language;
@@ -96,7 +99,7 @@ public final class MapStaticImageOptions {
      * gets center
      * @return
      */
-    public Center getCenter() {
+    public GeoPosition getCenter() {
         return center;
     }
 
@@ -105,7 +108,7 @@ public final class MapStaticImageOptions {
      * @param center
      * @return
      */
-    public MapStaticImageOptions setCenter(Center center) {
+    public MapStaticImageOptions setCenter(GeoPosition center) {
         this.center = center;
         return this;
     }
@@ -114,7 +117,7 @@ public final class MapStaticImageOptions {
      * gets bounding box
      * @return
      */
-    public BoundingBox getBoundingBox() {
+    public GeoBoundingBox getBoundingBox() {
         return boundingBox;
     }
 
@@ -123,7 +126,7 @@ public final class MapStaticImageOptions {
      * @param boundingBox
      * @return
      */
-    public MapStaticImageOptions setBoundingBox(BoundingBox boundingBox) {
+    public MapStaticImageOptions setBoundingBox(GeoBoundingBox boundingBox) {
         this.boundingBox = boundingBox;
         return this;
     }

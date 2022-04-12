@@ -25,9 +25,8 @@ import com.azure.core.util.FluxUtil;
 import com.azure.core.util.logging.ClientLogger;
 import com.azure.core.util.serializer.CollectionFormat;
 import com.azure.core.util.serializer.JacksonAdapter;
-import com.azure.maps.render.implementation.models.BoundingBoxPrivate;
+import com.azure.maps.render.implementation.models.BoundingBox;
 import com.azure.maps.render.implementation.models.IncludeText;
-import com.azure.maps.render.implementation.models.MapTilesetPrivate;
 import com.azure.maps.render.implementation.models.ResponseFormat;
 import com.azure.maps.render.models.Copyright;
 import com.azure.maps.render.models.CopyrightCaption;
@@ -36,6 +35,7 @@ import com.azure.maps.render.models.LocalizedMapView;
 import com.azure.maps.render.models.MapAttribution;
 import com.azure.maps.render.models.MapImageStyle;
 import com.azure.maps.render.models.MapTileSize;
+import com.azure.maps.render.models.MapTileset;
 import com.azure.maps.render.models.RasterTileFormat;
 import com.azure.maps.render.models.StaticMapLayer;
 import com.azure.maps.render.models.TileIndex;
@@ -105,7 +105,7 @@ public final class RenderV2sImpl {
         @Get("/map/tileset")
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
-        Mono<Response<MapTilesetPrivate>> getMapTileset(
+        Mono<Response<MapTileset>> getMapTileset(
                 @HostParam("$host") String host,
                 @HeaderParam("x-ms-client-id") String clientId,
                 @QueryParam("api-version") String apiVersion,
@@ -216,7 +216,7 @@ public final class RenderV2sImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>The Get Map Tiles API allows users to request map tiles in vector or raster formats typically to be integrated
      * into a map control or SDK. Some example tiles that can be requested are Azure Maps road tiles, real-time Weather
@@ -258,7 +258,7 @@ public final class RenderV2sImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response body on successful completion of {@link Mono}.
+     * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<StreamResponse> getMapTileWithResponseAsync(
@@ -272,24 +272,6 @@ public final class RenderV2sImpl {
         int z = tileIndex.getZ();
         int x = tileIndex.getX();
         int y = tileIndex.getY();
-        Mono<StreamResponse> s = FluxUtil.withContext(
-                context ->
-                        service.getMapTile(
-                                this.client.getHost(),
-                                this.client.getClientId(),
-                                this.client.getApiVersion(),
-                                tilesetId,
-                                z,
-                                x,
-                                y,
-                                timeStamp,
-                                tileSize,
-                                language,
-                                localizedMapView,
-                                accept,
-                                context));
-        StreamResponse resp = s.block();
-        Flux<ByteBuffer> asp = resp.getValue();
         return FluxUtil.withContext(
                 context ->
                         service.getMapTile(
@@ -309,7 +291,7 @@ public final class RenderV2sImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>The Get Map Tiles API allows users to request map tiles in vector or raster formats typically to be integrated
      * into a map control or SDK. Some example tiles that can be requested are Azure Maps road tiles, real-time Weather
@@ -352,7 +334,7 @@ public final class RenderV2sImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response body on successful completion of {@link Mono}.
+     * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<StreamResponse> getMapTileWithResponseAsync(
@@ -384,7 +366,7 @@ public final class RenderV2sImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>The Get Map Tiles API allows users to request map tiles in vector or raster formats typically to be integrated
      * into a map control or SDK. Some example tiles that can be requested are Azure Maps road tiles, real-time Weather
@@ -441,7 +423,7 @@ public final class RenderV2sImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>The Get Map Tiles API allows users to request map tiles in vector or raster formats typically to be integrated
      * into a map control or SDK. Some example tiles that can be requested are Azure Maps road tiles, real-time Weather
@@ -501,7 +483,7 @@ public final class RenderV2sImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>The Get Map Tiles API allows users to request map tiles in vector or raster formats typically to be integrated
      * into a map control or SDK. Some example tiles that can be requested are Azure Maps road tiles, real-time Weather
@@ -574,7 +556,7 @@ public final class RenderV2sImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>The Get Map Tiles API allows users to request map tiles in vector or raster formats typically to be integrated
      * into a map control or SDK. Some example tiles that can be requested are Azure Maps road tiles, real-time Weather
@@ -634,123 +616,7 @@ public final class RenderV2sImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
-     *
-     * <p>The Get Map Tileset API allows users to request metadata for a tileset.
-     *
-     * @param tilesetId A tileset is a collection of raster or vector data broken up into a uniform grid of square tiles
-     *     at preset zoom levels. Every tileset has a **tilesetId** to use when making requests. The **tilesetId** for
-     *     tilesets created using [Azure Maps Creator](https://aka.ms/amcreator) are generated through the [Tileset
-     *     Create API](https://docs.microsoft.com/en-us/rest/api/maps/tileset). The ready-to-use tilesets supplied by
-     *     Azure Maps are listed below. For example, microsoft.base.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return metadata for a tileset in the TileJSON format along with {@link Response} on successful completion of
-     *     {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<MapTilesetPrivate>> getMapTilesetWithResponseAsync(TilesetID tilesetId) {
-        final String accept = "application/json";
-        return FluxUtil.withContext(
-                context ->
-                        service.getMapTileset(
-                                this.client.getHost(),
-                                this.client.getClientId(),
-                                this.client.getApiVersion(),
-                                tilesetId,
-                                accept,
-                                context));
-    }
-
-    /**
-     * **Applies to**: S0 and S1 pricing tiers.
-     *
-     * <p>The Get Map Tileset API allows users to request metadata for a tileset.
-     *
-     * @param tilesetId A tileset is a collection of raster or vector data broken up into a uniform grid of square tiles
-     *     at preset zoom levels. Every tileset has a **tilesetId** to use when making requests. The **tilesetId** for
-     *     tilesets created using [Azure Maps Creator](https://aka.ms/amcreator) are generated through the [Tileset
-     *     Create API](https://docs.microsoft.com/en-us/rest/api/maps/tileset). The ready-to-use tilesets supplied by
-     *     Azure Maps are listed below. For example, microsoft.base.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return metadata for a tileset in the TileJSON format along with {@link Response} on successful completion of
-     *     {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<MapTilesetPrivate>> getMapTilesetWithResponseAsync(TilesetID tilesetId, Context context) {
-        final String accept = "application/json";
-        return service.getMapTileset(
-                this.client.getHost(),
-                this.client.getClientId(),
-                this.client.getApiVersion(),
-                tilesetId,
-                accept,
-                context);
-    }
-
-    /**
-     * **Applies to**: S0 and S1 pricing tiers.
-     *
-     * <p>The Get Map Tileset API allows users to request metadata for a tileset.
-     *
-     * @param tilesetId A tileset is a collection of raster or vector data broken up into a uniform grid of square tiles
-     *     at preset zoom levels. Every tileset has a **tilesetId** to use when making requests. The **tilesetId** for
-     *     tilesets created using [Azure Maps Creator](https://aka.ms/amcreator) are generated through the [Tileset
-     *     Create API](https://docs.microsoft.com/en-us/rest/api/maps/tileset). The ready-to-use tilesets supplied by
-     *     Azure Maps are listed below. For example, microsoft.base.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return metadata for a tileset in the TileJSON format on successful completion of {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<MapTilesetPrivate> getMapTilesetAsync(TilesetID tilesetId) {
-        return getMapTilesetWithResponseAsync(tilesetId)
-                .flatMap(
-                        (Response<MapTilesetPrivate> res) -> {
-                            if (res.getValue() != null) {
-                                return Mono.just(res.getValue());
-                            } else {
-                                return Mono.empty();
-                            }
-                        });
-    }
-
-    /**
-     * **Applies to**: S0 and S1 pricing tiers.
-     *
-     * <p>The Get Map Tileset API allows users to request metadata for a tileset.
-     *
-     * @param tilesetId A tileset is a collection of raster or vector data broken up into a uniform grid of square tiles
-     *     at preset zoom levels. Every tileset has a **tilesetId** to use when making requests. The **tilesetId** for
-     *     tilesets created using [Azure Maps Creator](https://aka.ms/amcreator) are generated through the [Tileset
-     *     Create API](https://docs.microsoft.com/en-us/rest/api/maps/tileset). The ready-to-use tilesets supplied by
-     *     Azure Maps are listed below. For example, microsoft.base.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorResponseException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return metadata for a tileset in the TileJSON format on successful completion of {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<MapTilesetPrivate> getMapTilesetAsync(TilesetID tilesetId, Context context) {
-        return getMapTilesetWithResponseAsync(tilesetId, context)
-                .flatMap(
-                        (Response<MapTilesetPrivate> res) -> {
-                            if (res.getValue() != null) {
-                                return Mono.just(res.getValue());
-                            } else {
-                                return Mono.empty();
-                            }
-                        });
-    }
-
-    /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>The Get Map Tileset API allows users to request metadata for a tileset.
      *
@@ -765,12 +631,21 @@ public final class RenderV2sImpl {
      * @return metadata for a tileset in the TileJSON format.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public MapTilesetPrivate getMapTileset(TilesetID tilesetId) {
-        return getMapTilesetAsync(tilesetId).block();
+    public Mono<Response<MapTileset>> getMapTilesetWithResponseAsync(TilesetID tilesetId) {
+        final String accept = "application/json";
+        return FluxUtil.withContext(
+                context ->
+                        service.getMapTileset(
+                                this.client.getHost(),
+                                this.client.getClientId(),
+                                this.client.getApiVersion(),
+                                tilesetId,
+                                accept,
+                                context));
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>The Get Map Tileset API allows users to request metadata for a tileset.
      *
@@ -783,15 +658,120 @@ public final class RenderV2sImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return metadata for a tileset in the TileJSON format along with {@link Response}.
+     * @return metadata for a tileset in the TileJSON format.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<MapTilesetPrivate> getMapTilesetWithResponse(TilesetID tilesetId, Context context) {
+    public Mono<Response<MapTileset>> getMapTilesetWithResponseAsync(TilesetID tilesetId, Context context) {
+        final String accept = "application/json";
+        return service.getMapTileset(
+                this.client.getHost(),
+                this.client.getClientId(),
+                this.client.getApiVersion(),
+                tilesetId,
+                accept,
+                context);
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>The Get Map Tileset API allows users to request metadata for a tileset.
+     *
+     * @param tilesetId A tileset is a collection of raster or vector data broken up into a uniform grid of square tiles
+     *     at preset zoom levels. Every tileset has a **tilesetId** to use when making requests. The **tilesetId** for
+     *     tilesets created using [Azure Maps Creator](https://aka.ms/amcreator) are generated through the [Tileset
+     *     Create API](https://docs.microsoft.com/en-us/rest/api/maps/tileset). The ready-to-use tilesets supplied by
+     *     Azure Maps are listed below. For example, microsoft.base.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return metadata for a tileset in the TileJSON format.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<MapTileset> getMapTilesetAsync(TilesetID tilesetId) {
+        return getMapTilesetWithResponseAsync(tilesetId)
+                .flatMap(
+                        (Response<MapTileset> res) -> {
+                            if (res.getValue() != null) {
+                                return Mono.just(res.getValue());
+                            } else {
+                                return Mono.empty();
+                            }
+                        });
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>The Get Map Tileset API allows users to request metadata for a tileset.
+     *
+     * @param tilesetId A tileset is a collection of raster or vector data broken up into a uniform grid of square tiles
+     *     at preset zoom levels. Every tileset has a **tilesetId** to use when making requests. The **tilesetId** for
+     *     tilesets created using [Azure Maps Creator](https://aka.ms/amcreator) are generated through the [Tileset
+     *     Create API](https://docs.microsoft.com/en-us/rest/api/maps/tileset). The ready-to-use tilesets supplied by
+     *     Azure Maps are listed below. For example, microsoft.base.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return metadata for a tileset in the TileJSON format.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<MapTileset> getMapTilesetAsync(TilesetID tilesetId, Context context) {
+        return getMapTilesetWithResponseAsync(tilesetId, context)
+                .flatMap(
+                        (Response<MapTileset> res) -> {
+                            if (res.getValue() != null) {
+                                return Mono.just(res.getValue());
+                            } else {
+                                return Mono.empty();
+                            }
+                        });
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>The Get Map Tileset API allows users to request metadata for a tileset.
+     *
+     * @param tilesetId A tileset is a collection of raster or vector data broken up into a uniform grid of square tiles
+     *     at preset zoom levels. Every tileset has a **tilesetId** to use when making requests. The **tilesetId** for
+     *     tilesets created using [Azure Maps Creator](https://aka.ms/amcreator) are generated through the [Tileset
+     *     Create API](https://docs.microsoft.com/en-us/rest/api/maps/tileset). The ready-to-use tilesets supplied by
+     *     Azure Maps are listed below. For example, microsoft.base.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return metadata for a tileset in the TileJSON format.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public MapTileset getMapTileset(TilesetID tilesetId) {
+        return getMapTilesetAsync(tilesetId).block();
+    }
+
+    /**
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
+     *
+     * <p>The Get Map Tileset API allows users to request metadata for a tileset.
+     *
+     * @param tilesetId A tileset is a collection of raster or vector data broken up into a uniform grid of square tiles
+     *     at preset zoom levels. Every tileset has a **tilesetId** to use when making requests. The **tilesetId** for
+     *     tilesets created using [Azure Maps Creator](https://aka.ms/amcreator) are generated through the [Tileset
+     *     Create API](https://docs.microsoft.com/en-us/rest/api/maps/tileset). The ready-to-use tilesets supplied by
+     *     Azure Maps are listed below. For example, microsoft.base.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return metadata for a tileset in the TileJSON format.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<MapTileset> getMapTilesetWithResponse(TilesetID tilesetId, Context context) {
         return getMapTilesetWithResponseAsync(tilesetId, context).block();
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>The Get Map Attribution API allows users to request map copyright attribution information for a section of a
      * tileset.
@@ -809,8 +789,7 @@ public final class RenderV2sImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return copyright attribution for the requested section of a tileset along with {@link Response} on successful
-     *     completion of {@link Mono}.
+     * @return copyright attribution for the requested section of a tileset.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<MapAttribution>> getMapAttributionWithResponseAsync(
@@ -832,7 +811,7 @@ public final class RenderV2sImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>The Get Map Attribution API allows users to request map copyright attribution information for a section of a
      * tileset.
@@ -851,8 +830,7 @@ public final class RenderV2sImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return copyright attribution for the requested section of a tileset along with {@link Response} on successful
-     *     completion of {@link Mono}.
+     * @return copyright attribution for the requested section of a tileset.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<MapAttribution>> getMapAttributionWithResponseAsync(
@@ -872,7 +850,7 @@ public final class RenderV2sImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>The Get Map Attribution API allows users to request map copyright attribution information for a section of a
      * tileset.
@@ -890,7 +868,7 @@ public final class RenderV2sImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return copyright attribution for the requested section of a tileset on successful completion of {@link Mono}.
+     * @return copyright attribution for the requested section of a tileset.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<MapAttribution> getMapAttributionAsync(TilesetID tilesetId, int zoom, List<Double> bounds) {
@@ -906,7 +884,7 @@ public final class RenderV2sImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>The Get Map Attribution API allows users to request map copyright attribution information for a section of a
      * tileset.
@@ -925,7 +903,7 @@ public final class RenderV2sImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return copyright attribution for the requested section of a tileset on successful completion of {@link Mono}.
+     * @return copyright attribution for the requested section of a tileset.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<MapAttribution> getMapAttributionAsync(
@@ -942,7 +920,7 @@ public final class RenderV2sImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>The Get Map Attribution API allows users to request map copyright attribution information for a section of a
      * tileset.
@@ -968,7 +946,7 @@ public final class RenderV2sImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>The Get Map Attribution API allows users to request map copyright attribution information for a section of a
      * tileset.
@@ -987,7 +965,7 @@ public final class RenderV2sImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return copyright attribution for the requested section of a tileset along with {@link Response}.
+     * @return copyright attribution for the requested section of a tileset.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<MapAttribution> getMapAttributionWithResponse(
@@ -996,7 +974,7 @@ public final class RenderV2sImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>Fetches state tiles in vector format typically to be integrated into indoor maps module of map control or SDK.
      * The map control will call this API after user turns on dynamic styling (see [Zoom Levels and Tile
@@ -1007,7 +985,7 @@ public final class RenderV2sImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response body on successful completion of {@link Mono}.
+     * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<StreamResponse> getMapStateTileWithResponseAsync(String statesetId, TileIndex tileIndex) {
@@ -1030,7 +1008,7 @@ public final class RenderV2sImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>Fetches state tiles in vector format typically to be integrated into indoor maps module of map control or SDK.
      * The map control will call this API after user turns on dynamic styling (see [Zoom Levels and Tile
@@ -1042,7 +1020,7 @@ public final class RenderV2sImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response body on successful completion of {@link Mono}.
+     * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<StreamResponse> getMapStateTileWithResponseAsync(
@@ -1064,7 +1042,7 @@ public final class RenderV2sImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>Fetches state tiles in vector format typically to be integrated into indoor maps module of map control or SDK.
      * The map control will call this API after user turns on dynamic styling (see [Zoom Levels and Tile
@@ -1083,7 +1061,7 @@ public final class RenderV2sImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>Fetches state tiles in vector format typically to be integrated into indoor maps module of map control or SDK.
      * The map control will call this API after user turns on dynamic styling (see [Zoom Levels and Tile
@@ -1103,7 +1081,7 @@ public final class RenderV2sImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>Fetches state tiles in vector format typically to be integrated into indoor maps module of map control or SDK.
      * The map control will call this API after user turns on dynamic styling (see [Zoom Levels and Tile
@@ -1136,7 +1114,7 @@ public final class RenderV2sImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>Fetches state tiles in vector format typically to be integrated into indoor maps module of map control or SDK.
      * The map control will call this API after user turns on dynamic styling (see [Zoom Levels and Tile
@@ -1156,7 +1134,7 @@ public final class RenderV2sImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>Copyrights API is designed to serve copyright information for Render Tile service. In addition to basic
      * copyright for the whole map, API is serving specific groups of copyrights for some countries.
@@ -1168,8 +1146,7 @@ public final class RenderV2sImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful copyright call along with {@link Response} on successful
-     *     completion of {@link Mono}.
+     * @return this object is returned from a successful copyright call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<CopyrightCaption>> getCopyrightCaptionWithResponseAsync(ResponseFormat format) {
@@ -1186,7 +1163,7 @@ public final class RenderV2sImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>Copyrights API is designed to serve copyright information for Render Tile service. In addition to basic
      * copyright for the whole map, API is serving specific groups of copyrights for some countries.
@@ -1199,8 +1176,7 @@ public final class RenderV2sImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful copyright call along with {@link Response} on successful
-     *     completion of {@link Mono}.
+     * @return this object is returned from a successful copyright call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<CopyrightCaption>> getCopyrightCaptionWithResponseAsync(
@@ -1211,7 +1187,7 @@ public final class RenderV2sImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>Copyrights API is designed to serve copyright information for Render Tile service. In addition to basic
      * copyright for the whole map, API is serving specific groups of copyrights for some countries.
@@ -1223,7 +1199,7 @@ public final class RenderV2sImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful copyright call on successful completion of {@link Mono}.
+     * @return this object is returned from a successful copyright call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<CopyrightCaption> getCopyrightCaptionAsync(ResponseFormat format) {
@@ -1239,7 +1215,7 @@ public final class RenderV2sImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>Copyrights API is designed to serve copyright information for Render Tile service. In addition to basic
      * copyright for the whole map, API is serving specific groups of copyrights for some countries.
@@ -1252,7 +1228,7 @@ public final class RenderV2sImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful copyright call on successful completion of {@link Mono}.
+     * @return this object is returned from a successful copyright call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<CopyrightCaption> getCopyrightCaptionAsync(ResponseFormat format, Context context) {
@@ -1268,7 +1244,7 @@ public final class RenderV2sImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>Copyrights API is designed to serve copyright information for Render Tile service. In addition to basic
      * copyright for the whole map, API is serving specific groups of copyrights for some countries.
@@ -1288,7 +1264,7 @@ public final class RenderV2sImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>Copyrights API is designed to serve copyright information for Render Tile service. In addition to basic
      * copyright for the whole map, API is serving specific groups of copyrights for some countries.
@@ -1301,7 +1277,7 @@ public final class RenderV2sImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful copyright call along with {@link Response}.
+     * @return this object is returned from a successful copyright call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<CopyrightCaption> getCopyrightCaptionWithResponse(ResponseFormat format, Context context) {
@@ -1309,7 +1285,7 @@ public final class RenderV2sImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>The static image service renders a user-defined, rectangular image containing a map section using a zoom level
      * from 0 to 20. The static image service renders a user-defined, rectangular image containing a map section using a
@@ -1514,7 +1490,7 @@ public final class RenderV2sImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response body on successful completion of {@link Mono}.
+     * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<StreamResponse> getMapStaticImageWithResponseAsync(
@@ -1570,7 +1546,7 @@ public final class RenderV2sImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>The static image service renders a user-defined, rectangular image containing a map section using a zoom level
      * from 0 to 20. The static image service renders a user-defined, rectangular image containing a map section using a
@@ -1776,7 +1752,7 @@ public final class RenderV2sImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response body on successful completion of {@link Mono}.
+     * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<StreamResponse> getMapStaticImageWithResponseAsync(
@@ -1831,7 +1807,7 @@ public final class RenderV2sImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>The static image service renders a user-defined, rectangular image containing a map section using a zoom level
      * from 0 to 20. The static image service renders a user-defined, rectangular image containing a map section using a
@@ -2069,7 +2045,7 @@ public final class RenderV2sImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>The static image service renders a user-defined, rectangular image containing a map section using a zoom level
      * from 0 to 20. The static image service renders a user-defined, rectangular image containing a map section using a
@@ -2310,7 +2286,7 @@ public final class RenderV2sImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>The static image service renders a user-defined, rectangular image containing a map section using a zoom level
      * from 0 to 20. The static image service renders a user-defined, rectangular image containing a map section using a
@@ -2564,7 +2540,7 @@ public final class RenderV2sImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>The static image service renders a user-defined, rectangular image containing a map section using a zoom level
      * from 0 to 20. The static image service renders a user-defined, rectangular image containing a map section using a
@@ -2805,27 +2781,26 @@ public final class RenderV2sImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>Returns copyright information for a given bounding box. Bounding-box requests should specify the minimum and
      * maximum longitude and latitude (EPSG-3857) coordinates.
      *
      * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param boundingBoxPrivate Parameter group.
+     * @param boundingBox Parameter group.
      * @param includeText Yes/no value to exclude textual data from response. Only images and country names will be in
      *     response.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful copyright request along with {@link Response} on successful
-     *     completion of {@link Mono}.
+     * @return this object is returned from a successful copyright request.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<Copyright>> getCopyrightFromBoundingBoxWithResponseAsync(
-            ResponseFormat format, BoundingBoxPrivate boundingBoxPrivate, IncludeText includeText) {
+            ResponseFormat format, BoundingBox boundingBox, IncludeText includeText) {
         final String accept = "application/json";
-        List<Double> southWest = boundingBoxPrivate.getSouthWest();
-        List<Double> northEast = boundingBoxPrivate.getNorthEast();
+        List<Double> southWest = boundingBox.getSouthWest();
+        List<Double> northEast = boundingBox.getNorthEast();
         String southWestConverted =
                 JacksonAdapter.createDefaultSerializerAdapter().serializeList(southWest, CollectionFormat.CSV);
         String northEastConverted =
@@ -2845,28 +2820,27 @@ public final class RenderV2sImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>Returns copyright information for a given bounding box. Bounding-box requests should specify the minimum and
      * maximum longitude and latitude (EPSG-3857) coordinates.
      *
      * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param boundingBoxPrivate Parameter group.
+     * @param boundingBox Parameter group.
      * @param includeText Yes/no value to exclude textual data from response. Only images and country names will be in
      *     response.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful copyright request along with {@link Response} on successful
-     *     completion of {@link Mono}.
+     * @return this object is returned from a successful copyright request.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<Copyright>> getCopyrightFromBoundingBoxWithResponseAsync(
-            ResponseFormat format, BoundingBoxPrivate boundingBoxPrivate, IncludeText includeText, Context context) {
+            ResponseFormat format, BoundingBox boundingBox, IncludeText includeText, Context context) {
         final String accept = "application/json";
-        List<Double> southWest = boundingBoxPrivate.getSouthWest();
-        List<Double> northEast = boundingBoxPrivate.getNorthEast();
+        List<Double> southWest = boundingBox.getSouthWest();
+        List<Double> northEast = boundingBox.getNorthEast();
         String southWestConverted =
                 JacksonAdapter.createDefaultSerializerAdapter().serializeList(southWest, CollectionFormat.CSV);
         String northEastConverted =
@@ -2884,24 +2858,24 @@ public final class RenderV2sImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>Returns copyright information for a given bounding box. Bounding-box requests should specify the minimum and
      * maximum longitude and latitude (EPSG-3857) coordinates.
      *
      * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param boundingBoxPrivate Parameter group.
+     * @param boundingBox Parameter group.
      * @param includeText Yes/no value to exclude textual data from response. Only images and country names will be in
      *     response.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful copyright request on successful completion of {@link Mono}.
+     * @return this object is returned from a successful copyright request.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Copyright> getCopyrightFromBoundingBoxAsync(
-            ResponseFormat format, BoundingBoxPrivate boundingBoxPrivate, IncludeText includeText) {
-        return getCopyrightFromBoundingBoxWithResponseAsync(format, boundingBoxPrivate, includeText)
+            ResponseFormat format, BoundingBox boundingBox, IncludeText includeText) {
+        return getCopyrightFromBoundingBoxWithResponseAsync(format, boundingBox, includeText)
                 .flatMap(
                         (Response<Copyright> res) -> {
                             if (res.getValue() != null) {
@@ -2913,25 +2887,25 @@ public final class RenderV2sImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>Returns copyright information for a given bounding box. Bounding-box requests should specify the minimum and
      * maximum longitude and latitude (EPSG-3857) coordinates.
      *
      * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param boundingBoxPrivate Parameter group.
+     * @param boundingBox Parameter group.
      * @param includeText Yes/no value to exclude textual data from response. Only images and country names will be in
      *     response.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful copyright request on successful completion of {@link Mono}.
+     * @return this object is returned from a successful copyright request.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Copyright> getCopyrightFromBoundingBoxAsync(
-            ResponseFormat format, BoundingBoxPrivate boundingBoxPrivate, IncludeText includeText, Context context) {
-        return getCopyrightFromBoundingBoxWithResponseAsync(format, boundingBoxPrivate, includeText, context)
+            ResponseFormat format, BoundingBox boundingBox, IncludeText includeText, Context context) {
+        return getCopyrightFromBoundingBoxWithResponseAsync(format, boundingBox, includeText, context)
                 .flatMap(
                         (Response<Copyright> res) -> {
                             if (res.getValue() != null) {
@@ -2943,13 +2917,13 @@ public final class RenderV2sImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>Returns copyright information for a given bounding box. Bounding-box requests should specify the minimum and
      * maximum longitude and latitude (EPSG-3857) coordinates.
      *
      * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param boundingBoxPrivate Parameter group.
+     * @param boundingBox Parameter group.
      * @param includeText Yes/no value to exclude textual data from response. Only images and country names will be in
      *     response.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -2959,34 +2933,34 @@ public final class RenderV2sImpl {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Copyright getCopyrightFromBoundingBox(
-            ResponseFormat format, BoundingBoxPrivate boundingBoxPrivate, IncludeText includeText) {
-        return getCopyrightFromBoundingBoxAsync(format, boundingBoxPrivate, includeText).block();
+            ResponseFormat format, BoundingBox boundingBox, IncludeText includeText) {
+        return getCopyrightFromBoundingBoxAsync(format, boundingBox, includeText).block();
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>Returns copyright information for a given bounding box. Bounding-box requests should specify the minimum and
      * maximum longitude and latitude (EPSG-3857) coordinates.
      *
      * @param format Desired format of the response. Value can be either _json_ or _xml_.
-     * @param boundingBoxPrivate Parameter group.
+     * @param boundingBox Parameter group.
      * @param includeText Yes/no value to exclude textual data from response. Only images and country names will be in
      *     response.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful copyright request along with {@link Response}.
+     * @return this object is returned from a successful copyright request.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<Copyright> getCopyrightFromBoundingBoxWithResponse(
-            ResponseFormat format, BoundingBoxPrivate boundingBoxPrivate, IncludeText includeText, Context context) {
-        return getCopyrightFromBoundingBoxWithResponseAsync(format, boundingBoxPrivate, includeText, context).block();
+            ResponseFormat format, BoundingBox boundingBox, IncludeText includeText, Context context) {
+        return getCopyrightFromBoundingBoxWithResponseAsync(format, boundingBox, includeText, context).block();
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>Copyrights API is designed to serve copyright information for Render Tile service. In addition to basic
      * copyright for the whole map, API is serving specific groups of copyrights for some countries. Returns the
@@ -3000,8 +2974,7 @@ public final class RenderV2sImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful copyright request along with {@link Response} on successful
-     *     completion of {@link Mono}.
+     * @return this object is returned from a successful copyright request.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<Copyright>> getCopyrightForTileWithResponseAsync(
@@ -3026,7 +2999,7 @@ public final class RenderV2sImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>Copyrights API is designed to serve copyright information for Render Tile service. In addition to basic
      * copyright for the whole map, API is serving specific groups of copyrights for some countries. Returns the
@@ -3041,8 +3014,7 @@ public final class RenderV2sImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful copyright request along with {@link Response} on successful
-     *     completion of {@link Mono}.
+     * @return this object is returned from a successful copyright request.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<Copyright>> getCopyrightForTileWithResponseAsync(
@@ -3065,7 +3037,7 @@ public final class RenderV2sImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>Copyrights API is designed to serve copyright information for Render Tile service. In addition to basic
      * copyright for the whole map, API is serving specific groups of copyrights for some countries. Returns the
@@ -3079,7 +3051,7 @@ public final class RenderV2sImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful copyright request on successful completion of {@link Mono}.
+     * @return this object is returned from a successful copyright request.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Copyright> getCopyrightForTileAsync(
@@ -3096,7 +3068,7 @@ public final class RenderV2sImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>Copyrights API is designed to serve copyright information for Render Tile service. In addition to basic
      * copyright for the whole map, API is serving specific groups of copyrights for some countries. Returns the
@@ -3111,7 +3083,7 @@ public final class RenderV2sImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful copyright request on successful completion of {@link Mono}.
+     * @return this object is returned from a successful copyright request.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Copyright> getCopyrightForTileAsync(
@@ -3128,7 +3100,7 @@ public final class RenderV2sImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>Copyrights API is designed to serve copyright information for Render Tile service. In addition to basic
      * copyright for the whole map, API is serving specific groups of copyrights for some countries. Returns the
@@ -3150,7 +3122,7 @@ public final class RenderV2sImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>Copyrights API is designed to serve copyright information for Render Tile service. In addition to basic
      * copyright for the whole map, API is serving specific groups of copyrights for some countries. Returns the
@@ -3165,7 +3137,7 @@ public final class RenderV2sImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful copyright request along with {@link Response}.
+     * @return this object is returned from a successful copyright request.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<Copyright> getCopyrightForTileWithResponse(
@@ -3174,7 +3146,7 @@ public final class RenderV2sImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>Copyrights API is designed to serve copyright information for Render Tile service. In addition to basic
      * copyright for the whole map, API is serving specific groups of copyrights for some countries. Returns the
@@ -3187,8 +3159,7 @@ public final class RenderV2sImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful copyright request along with {@link Response} on successful
-     *     completion of {@link Mono}.
+     * @return this object is returned from a successful copyright request.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<Copyright>> getCopyrightForWorldWithResponseAsync(
@@ -3207,7 +3178,7 @@ public final class RenderV2sImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>Copyrights API is designed to serve copyright information for Render Tile service. In addition to basic
      * copyright for the whole map, API is serving specific groups of copyrights for some countries. Returns the
@@ -3221,8 +3192,7 @@ public final class RenderV2sImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful copyright request along with {@link Response} on successful
-     *     completion of {@link Mono}.
+     * @return this object is returned from a successful copyright request.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<Copyright>> getCopyrightForWorldWithResponseAsync(
@@ -3239,7 +3209,7 @@ public final class RenderV2sImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>Copyrights API is designed to serve copyright information for Render Tile service. In addition to basic
      * copyright for the whole map, API is serving specific groups of copyrights for some countries. Returns the
@@ -3252,7 +3222,7 @@ public final class RenderV2sImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful copyright request on successful completion of {@link Mono}.
+     * @return this object is returned from a successful copyright request.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Copyright> getCopyrightForWorldAsync(ResponseFormat format, IncludeText includeText) {
@@ -3268,7 +3238,7 @@ public final class RenderV2sImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>Copyrights API is designed to serve copyright information for Render Tile service. In addition to basic
      * copyright for the whole map, API is serving specific groups of copyrights for some countries. Returns the
@@ -3282,7 +3252,7 @@ public final class RenderV2sImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful copyright request on successful completion of {@link Mono}.
+     * @return this object is returned from a successful copyright request.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Copyright> getCopyrightForWorldAsync(ResponseFormat format, IncludeText includeText, Context context) {
@@ -3298,7 +3268,7 @@ public final class RenderV2sImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>Copyrights API is designed to serve copyright information for Render Tile service. In addition to basic
      * copyright for the whole map, API is serving specific groups of copyrights for some countries. Returns the
@@ -3319,7 +3289,7 @@ public final class RenderV2sImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>Copyrights API is designed to serve copyright information for Render Tile service. In addition to basic
      * copyright for the whole map, API is serving specific groups of copyrights for some countries. Returns the
@@ -3333,7 +3303,7 @@ public final class RenderV2sImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful copyright request along with {@link Response}.
+     * @return this object is returned from a successful copyright request.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<Copyright> getCopyrightForWorldWithResponse(

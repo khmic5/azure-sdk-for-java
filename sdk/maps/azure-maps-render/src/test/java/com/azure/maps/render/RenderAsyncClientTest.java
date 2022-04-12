@@ -4,14 +4,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import com.azure.core.exception.HttpResponseException;
 import com.azure.core.http.HttpClient;
-import com.azure.maps.render.implementation.helpers.Utility;
-import com.azure.maps.render.models.BoundingBox;
+import com.azure.core.models.GeoBoundingBox;
 import com.azure.maps.render.models.TileIndex;
 import com.azure.maps.render.models.TilesetID;
 
@@ -92,9 +88,9 @@ public class RenderAsyncClientTest extends RenderClientTestBase {
     @MethodSource("com.azure.maps.render.TestUtils#getTestParameters")
     public void testAsyncGetMapAttribution(HttpClient httpClient, RenderServiceVersion serviceVersion) {
         RenderAsyncClient client = getRenderAsyncClient(httpClient, serviceVersion);
-        List<Double> bounds = Arrays.asList(47.579490,-122.414162,47.668372,-122.247157);
+        GeoBoundingBox bounds = new GeoBoundingBox(-122.414162,47.57949,-122.247157,47.668372);
         new TilesetID();
-        StepVerifier.create(client.getMapAttribution(TilesetID.MICROSOFT_BASE, 6, Utility.toBoundingBox(bounds)))
+        StepVerifier.create(client.getMapAttribution(TilesetID.MICROSOFT_BASE, 6, bounds))
         .assertNext(actualResults -> {
             try {
                 validateGetMapAttribution(TestUtils.getExpectedMapAttribution(), actualResults);
@@ -110,9 +106,9 @@ public class RenderAsyncClientTest extends RenderClientTestBase {
     @MethodSource("com.azure.maps.render.TestUtils#getTestParameters")
     public void testAsyncGetMapAttributionWithResponse(HttpClient httpClient, RenderServiceVersion serviceVersion) {
         RenderAsyncClient client = getRenderAsyncClient(httpClient, serviceVersion);
-        List<Double> bounds = Arrays.asList(47.579490,-122.414162,47.668372,-122.247157);
+        GeoBoundingBox bounds = new GeoBoundingBox(-122.414162,47.57949,-122.247157,47.668372);
         new TilesetID();
-        StepVerifier.create(client.getMapAttributionWithResponse(TilesetID.MICROSOFT_BASE, 6, Utility.toBoundingBox(bounds)))
+        StepVerifier.create(client.getMapAttributionWithResponse(TilesetID.MICROSOFT_BASE, 6, bounds))
                 .assertNext(response ->
                 {
                     try {
@@ -129,8 +125,8 @@ public class RenderAsyncClientTest extends RenderClientTestBase {
     @MethodSource("com.azure.maps.render.TestUtils#getTestParameters")
     public void testAsyncInvalidGetMapAttributionWithResponse(HttpClient httpClient, RenderServiceVersion serviceVersion) {
         RenderAsyncClient client = getRenderAsyncClient(httpClient, serviceVersion);
-        List<Double> bounds = new ArrayList<>();
-        StepVerifier.create(client.getMapAttributionWithResponse(new TilesetID(), 6, Utility.toBoundingBox(bounds)))
+        GeoBoundingBox bounds = new GeoBoundingBox(-10000,0,0,0);
+        StepVerifier.create(client.getMapAttributionWithResponse(new TilesetID(), 6, bounds))
                 .verifyErrorSatisfies(ex -> {
                     final HttpResponseException httpResponseException = (HttpResponseException) ex;
                     assertEquals(400, httpResponseException.getResponse().getStatusCode());
@@ -175,7 +171,7 @@ public class RenderAsyncClientTest extends RenderClientTestBase {
     @MethodSource("com.azure.maps.render.TestUtils#getTestParameters")
     public void testAsyncGetCopyrightFromBoundingBox(HttpClient httpClient, RenderServiceVersion serviceVersion) {
         RenderAsyncClient client = getRenderAsyncClient(httpClient, serviceVersion);
-        BoundingBox boundingBox = new BoundingBox(52.41064, 4.84228, 52.41072, 4.84239);
+        GeoBoundingBox boundingBox = new GeoBoundingBox(52.41064, 4.84228, 52.41072, 4.84239);
         StepVerifier.create(client.getCopyrightFromBoundingBox(boundingBox, true))
         .assertNext(actualResults -> {
             try {
@@ -192,7 +188,7 @@ public class RenderAsyncClientTest extends RenderClientTestBase {
     @MethodSource("com.azure.maps.render.TestUtils#getTestParameters")
     public void testAsyncGetCopyrightFromBoundingBoxWithResponse(HttpClient httpClient, RenderServiceVersion serviceVersion) {
         RenderAsyncClient client = getRenderAsyncClient(httpClient, serviceVersion);
-        BoundingBox boundingBox = new BoundingBox(52.41064, 4.84228, 52.41072, 4.84239);
+        GeoBoundingBox boundingBox = new GeoBoundingBox(52.41064, 4.84228, 52.41072, 4.84239);
         StepVerifier.create(client.getCopyrightFromBoundingBoxWithResponse(boundingBox, true))
                 .assertNext(response ->
                 {
@@ -210,7 +206,7 @@ public class RenderAsyncClientTest extends RenderClientTestBase {
     @MethodSource("com.azure.maps.render.TestUtils#getTestParameters")
     public void testAsyncInvalidGetCopyrightFromBoundingBoxWithResponse(HttpClient httpClient, RenderServiceVersion serviceVersion) {
         RenderAsyncClient client = getRenderAsyncClient(httpClient, serviceVersion);
-        StepVerifier.create(client.getCopyrightFromBoundingBoxWithResponse(new BoundingBox(-100, -100, -100, -100), true))
+        StepVerifier.create(client.getCopyrightFromBoundingBoxWithResponse(new GeoBoundingBox(-100, -100, -100, -100), true))
                 .verifyErrorSatisfies(ex -> {
                     final HttpResponseException httpResponseException = (HttpResponseException) ex;
                     assertEquals(400, httpResponseException.getResponse().getStatusCode());

@@ -16,8 +16,8 @@ import com.azure.core.annotation.ServiceMethod;
 import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.SimpleResponse;
 import com.azure.core.http.rest.StreamResponse;
+import com.azure.core.models.GeoBoundingBox;
 import com.azure.core.util.Context;
-import com.azure.maps.render.models.BoundingBox;
 import com.azure.maps.render.models.Copyright;
 import com.azure.maps.render.models.CopyrightCaption;
 import com.azure.maps.render.models.ErrorResponseException;
@@ -98,7 +98,7 @@ public final class RenderClient {
      * @throws IOException
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public InputStream getMapTile(MapTileOptions options) throws IOException {
+    public InputStream getMapTile(MapTileOptions options) {
         Iterator<ByteBufferBackedInputStream> iterator = this.asyncClient.getMapTile(options).map(ByteBufferBackedInputStream::new).toStream().iterator();
         return getInputStream(iterator);
     }
@@ -206,7 +206,7 @@ public final class RenderClient {
      * @return copyright attribution for the requested section of a tileset.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public MapAttribution getMapAttribution(TilesetID tilesetId, int zoom, BoundingBox bounds) {
+    public MapAttribution getMapAttribution(TilesetID tilesetId, int zoom, GeoBoundingBox bounds) {
         return this.asyncClient.getMapAttribution(tilesetId, zoom, bounds).block();
     }
 
@@ -229,7 +229,7 @@ public final class RenderClient {
      * @return copyright attribution for the requested section of a tileset.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<MapAttribution> getMapAttributionWithResponse(TilesetID tilesetId, int zoom, BoundingBox bounds, Context context) {
+    public Response<MapAttribution> getMapAttributionWithResponse(TilesetID tilesetId, int zoom, GeoBoundingBox bounds, Context context) {
         return this.asyncClient.getMapAttributionWithResponse(tilesetId, zoom, bounds, context).block();
     }
 
@@ -248,8 +248,8 @@ public final class RenderClient {
      * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public InputStream getMapStateTile(String statesetId, TileIndex tileIndex) {
-        Iterator<ByteBufferBackedInputStream> iterator = this.asyncClient.getMapStateTile(statesetId, tileIndex).map(ByteBufferBackedInputStream::new).toStream().iterator();
+    public InputStream downloadMapStateTile(String statesetId, TileIndex tileIndex) {
+        Iterator<ByteBufferBackedInputStream> iterator = this.asyncClient.downloadMapStateTile(statesetId, tileIndex).map(ByteBufferBackedInputStream::new).toStream().iterator();
         return getInputStream(iterator);
     }
     
@@ -264,8 +264,8 @@ public final class RenderClient {
      * @return
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SimpleResponse<InputStream> getMapStateTileWithResponse(String statesetId, TileIndex tileIndex, Context context) {
-        Mono<StreamResponse> monoResp = this.asyncClient.getMapStateTileWithResponse(statesetId, tileIndex, context); 
+    public SimpleResponse<InputStream> downloadMapStateTileWithResponse(String statesetId, TileIndex tileIndex, Context context) {
+        Mono<StreamResponse> monoResp = this.asyncClient.downloadMapStateTileWithResponse(statesetId, tileIndex, context); 
         StreamResponse resp = monoResp.block();
         Iterator<ByteBufferBackedInputStream> iterator = resp.getValue().map(ByteBufferBackedInputStream::new).toStream().iterator();
         return new SimpleResponse<InputStream>(resp.getRequest(), resp.getStatusCode(), resp.getHeaders(), getInputStream(iterator));
@@ -512,7 +512,7 @@ public final class RenderClient {
      * @throws IOException
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public InputStream getMapStaticImage(MapStaticImageOptions options) throws IOException {
+    public InputStream getMapStaticImage(MapStaticImageOptions options) {
         Iterator<ByteBufferBackedInputStream> iterator = this.asyncClient.getMapStaticImage(options).map(ByteBufferBackedInputStream::new).toStream().iterator();
         return getInputStream(iterator);
     } 
@@ -531,7 +531,7 @@ public final class RenderClient {
      * @throws IOException
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SimpleResponse<InputStream> getMapStaticImageWithResponse(MapStaticImageOptions options, Context context) throws IOException {
+    public SimpleResponse<InputStream> getMapStaticImageWithResponse(MapStaticImageOptions options, Context context) {
         Mono<StreamResponse> monoResp = this.asyncClient.getMapStaticImageWithResponse(options); 
         StreamResponse resp = monoResp.block();
         Iterator<ByteBufferBackedInputStream> iterator = resp.getValue().map(ByteBufferBackedInputStream::new).toStream().iterator();
@@ -554,7 +554,7 @@ public final class RenderClient {
      * @return this object is returned from a successful copyright request.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Copyright getCopyrightFromBoundingBox(BoundingBox boundingBox, boolean includeText) {
+    public Copyright getCopyrightFromBoundingBox(GeoBoundingBox boundingBox, boolean includeText) {
         return this.asyncClient.getCopyrightFromBoundingBox(boundingBox, includeText).block();
     }
 
@@ -568,7 +568,7 @@ public final class RenderClient {
      * @return
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<Copyright> getCopyrightFromBoundingBoxWithResponse(BoundingBox boundingBox, boolean includeText, Context context) {
+    public Response<Copyright> getCopyrightFromBoundingBoxWithResponse(GeoBoundingBox boundingBox, boolean includeText, Context context) {
         return this.asyncClient.getCopyrightFromBoundingBoxWithResponse(boundingBox, includeText, context).block();
     }
 
