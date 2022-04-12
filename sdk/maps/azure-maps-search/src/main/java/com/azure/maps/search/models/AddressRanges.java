@@ -8,6 +8,7 @@ import com.azure.core.annotation.Immutable;
 import com.azure.core.models.GeoPosition;
 import com.azure.maps.search.implementation.helpers.AddressRangesPropertiesHelper;
 import com.azure.maps.search.implementation.models.AddressRangesPrivate;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * Describes the address range on both sides of the street for a search result. Coordinates for the start and end
@@ -17,7 +18,9 @@ import com.azure.maps.search.implementation.models.AddressRangesPrivate;
 public final class AddressRanges {
     private String rangeLeft;
     private String rangeRight;
+    @JsonIgnore
     private GeoPosition from;
+    @JsonIgnore
     private GeoPosition to;
 
     static {

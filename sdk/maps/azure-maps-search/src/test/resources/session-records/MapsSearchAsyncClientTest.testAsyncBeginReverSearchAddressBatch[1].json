@@ -1,61 +1,21 @@
 {
   "networkCallRecords" : [ {
     "Method" : "POST",
-    "Uri" : "https://REDACTED.microsoft.com/search/address/reverse/batch/json?api-version=1.0",
+    "Uri" : "https://REDACTED.microsoft.com/search/address/reverse/batch/sync/json?api-version=1.0",
     "Headers" : {
-      "User-Agent" : "azsdk-java-JavaSearchSDK/1.0 (11.0.13; Windows 10; 10.0)",
+      "User-Agent" : "azsdk-java-JavaSearchSDK/1.0 (14.0.2; Windows 10; 10.0)",
       "Content-Type" : "application/json"
     },
     "Response" : {
-      "date" : "Wed, 26 Jan 2022 03:18:06 GMT",
-      "content-length" : "2",
+      "date" : "Tue, 12 Apr 2022 06:10:09 GMT",
       "x-content-type-options" : "nosniff",
-      "x-msedge-ref" : "Ref A: 5B7B0523878F4D2092E1DC2386376574 Ref B: TPE30EDGE0516 Ref C: 2022-01-26T03:18:06Z",
-      "x-ms-azuremaps-region" : "West US 2",
-      "content-type" : "application/json; charset=utf-8",
-      "location" : "https://atlas.microsoft.com/search/address/reverse/batch/e43c1e9b-2508-4b36-b979-60f3ccd1cec5?api-version=1.0",
-      "x-cache" : "CONFIG_NOCACHE",
-      "retry-after" : "0",
-      "StatusCode" : "202",
-      "Body" : "\"\"",
-      "strict-transport-security" : "max-age=31536000; includeSubDomains"
-    },
-    "Exception" : null
-  }, {
-    "Method" : "GET",
-    "Uri" : "https://REDACTED.microsoft.com/search/address/reverse/batch/e43c1e9b-2508-4b36-b979-60f3ccd1cec5?api-version=1.0",
-    "Headers" : {
-      "User-Agent" : "azsdk-java-JavaSearchSDK/1.0 (11.0.13; Windows 10; 10.0)"
-    },
-    "Response" : {
-      "date" : "Wed, 26 Jan 2022 03:18:36 GMT",
-      "x-content-type-options" : "nosniff",
-      "x-msedge-ref" : "Ref A: 72804CA6DF3F4FC4935F5B2F3006CCDA Ref B: TPE30EDGE0516 Ref C: 2022-01-26T03:18:37Z",
-      "x-ms-azuremaps-region" : "West US 2",
+      "x-msedge-ref" : "Ref A: EB89D86B35434F2B913D05DFD6DDD0B3 Ref B: SIN30EDGE0313 Ref C: 2022-04-12T06:10:09Z",
+      "x-ms-azuremaps-region" : "West Europe",
       "content-type" : "application/json",
       "x-cache" : "CONFIG_NOCACHE",
       "retry-after" : "0",
       "StatusCode" : "200",
-      "Body" : "{\"batchItems\":[{\"statusCode\":200,\"response\":{\"summary\":{\"queryTime\":6,\"numResults\":1},\"addresses\":[{\"address\":{\"buildingNumber\":\"5\",\"streetNumber\":\"5\",\"routeNumbers\":[],\"street\":\"Esplanade des Ouvriers de la Tour Eiffel\",\"streetName\":\"Esplanade des Ouvriers de la Tour Eiffel\",\"streetNameAndNumber\":\"5 Esplanade des Ouvriers de la Tour Eiffel\",\"countryCode\":\"FR\",\"countrySubdivision\":\"Île-de-France\",\"countrySecondarySubdivision\":\"Paris\",\"municipality\":\"Paris\",\"postalCode\":\"75007\",\"municipalitySubdivision\":\"7ème Arrondissement\",\"country\":\"France\",\"countryCodeISO3\":\"FRA\",\"freeformAddress\":\"5 Esplanade des Ouvriers de la Tour Eiffel, 75007 Paris\",\"boundingBox\":{\"northEast\":\"48.858576,2.295027\",\"southWest\":\"48.858321,2.294559\",\"entity\":\"position\"},\"localName\":\"Paris\"},\"position\":\"48.858582,2.294525\"}]}},{\"statusCode\":200,\"response\":{\"summary\":{\"queryTime\":6,\"numResults\":1},\"addresses\":[{\"address\":{\"buildingNumber\":\"16000\",\"streetNumber\":\"16000\",\"routeNumbers\":[],\"street\":\"Northeast 31st Street\",\"streetName\":\"Northeast 31st Street\",\"streetNameAndNumber\":\"16000 Northeast 31st Street\",\"countryCode\":\"US\",\"countrySubdivision\":\"WA\",\"countrySecondarySubdivision\":\"King\",\"municipality\":\"Redmond\",\"postalCode\":\"98052\",\"country\":\"United States\",\"countryCodeISO3\":\"USA\",\"freeformAddress\":\"16000 Northeast 31st Street, Bellevue, WA 98052\",\"boundingBox\":{\"northEast\":\"47.638953,-122.126573\",\"southWest\":\"47.638821,-122.126584\",\"entity\":\"position\"},\"countrySubdivisionName\":\"Washington\",\"localName\":\"Bellevue\"},\"position\":\"47.638954,-122.126572\"}]}},{\"statusCode\":200,\"response\":{\"summary\":{\"queryTime\":7,\"numResults\":1},\"addresses\":[{\"address\":{\"buildingNumber\":\"410\",\"streetNumber\":\"410\",\"routeNumbers\":[],\"street\":\"Thomas Street\",\"streetName\":\"Thomas Street\",\"streetNameAndNumber\":\"410 Thomas Street\",\"countryCode\":\"US\",\"countrySubdivision\":\"WA\",\"countrySecondarySubdivision\":\"King\",\"municipality\":\"Seattle\",\"postalCode\":\"98109\",\"municipalitySubdivision\":\"Queen Anne\",\"country\":\"United States\",\"countryCodeISO3\":\"USA\",\"freeformAddress\":\"410 Thomas Street, Seattle, WA 98109\",\"boundingBox\":{\"northEast\":\"47.620954,-122.347601\",\"southWest\":\"47.620944,-122.348498\",\"entity\":\"position\"},\"countrySubdivisionName\":\"Washington\",\"localName\":\"Seattle\"},\"position\":\"47.620945,-122.348175\"}]}}],\"summary\":{\"successfulRequests\":3,\"totalRequests\":3}}",
-      "strict-transport-security" : "max-age=31536000; includeSubDomains"
-    },
-    "Exception" : null
-  }, {
-    "Method" : "GET",
-    "Uri" : "https://REDACTED.microsoft.com/search/address/reverse/batch/e43c1e9b-2508-4b36-b979-60f3ccd1cec5?api-version=1.0",
-    "Headers" : {
-      "User-Agent" : "azsdk-java-JavaSearchSDK/1.0 (11.0.13; Windows 10; 10.0)"
-    },
-    "Response" : {
-      "date" : "Wed, 26 Jan 2022 03:18:36 GMT",
-      "x-content-type-options" : "nosniff",
-      "x-msedge-ref" : "Ref A: AB8E68BA32F64273A0A90EB91E7F2434 Ref B: TPE30EDGE0516 Ref C: 2022-01-26T03:18:37Z",
-      "x-ms-azuremaps-region" : "West US 2",
-      "content-type" : "application/json",
-      "x-cache" : "CONFIG_NOCACHE",
-      "retry-after" : "0",
-      "StatusCode" : "200",
-      "Body" : "{\"batchItems\":[{\"statusCode\":200,\"response\":{\"summary\":{\"queryTime\":6,\"numResults\":1},\"addresses\":[{\"address\":{\"buildingNumber\":\"5\",\"streetNumber\":\"5\",\"routeNumbers\":[],\"street\":\"Esplanade des Ouvriers de la Tour Eiffel\",\"streetName\":\"Esplanade des Ouvriers de la Tour Eiffel\",\"streetNameAndNumber\":\"5 Esplanade des Ouvriers de la Tour Eiffel\",\"countryCode\":\"FR\",\"countrySubdivision\":\"Île-de-France\",\"countrySecondarySubdivision\":\"Paris\",\"municipality\":\"Paris\",\"postalCode\":\"75007\",\"municipalitySubdivision\":\"7ème Arrondissement\",\"country\":\"France\",\"countryCodeISO3\":\"FRA\",\"freeformAddress\":\"5 Esplanade des Ouvriers de la Tour Eiffel, 75007 Paris\",\"boundingBox\":{\"northEast\":\"48.858576,2.295027\",\"southWest\":\"48.858321,2.294559\",\"entity\":\"position\"},\"localName\":\"Paris\"},\"position\":\"48.858582,2.294525\"}]}},{\"statusCode\":200,\"response\":{\"summary\":{\"queryTime\":6,\"numResults\":1},\"addresses\":[{\"address\":{\"buildingNumber\":\"16000\",\"streetNumber\":\"16000\",\"routeNumbers\":[],\"street\":\"Northeast 31st Street\",\"streetName\":\"Northeast 31st Street\",\"streetNameAndNumber\":\"16000 Northeast 31st Street\",\"countryCode\":\"US\",\"countrySubdivision\":\"WA\",\"countrySecondarySubdivision\":\"King\",\"municipality\":\"Redmond\",\"postalCode\":\"98052\",\"country\":\"United States\",\"countryCodeISO3\":\"USA\",\"freeformAddress\":\"16000 Northeast 31st Street, Bellevue, WA 98052\",\"boundingBox\":{\"northEast\":\"47.638953,-122.126573\",\"southWest\":\"47.638821,-122.126584\",\"entity\":\"position\"},\"countrySubdivisionName\":\"Washington\",\"localName\":\"Bellevue\"},\"position\":\"47.638954,-122.126572\"}]}},{\"statusCode\":200,\"response\":{\"summary\":{\"queryTime\":7,\"numResults\":1},\"addresses\":[{\"address\":{\"buildingNumber\":\"410\",\"streetNumber\":\"410\",\"routeNumbers\":[],\"street\":\"Thomas Street\",\"streetName\":\"Thomas Street\",\"streetNameAndNumber\":\"410 Thomas Street\",\"countryCode\":\"US\",\"countrySubdivision\":\"WA\",\"countrySecondarySubdivision\":\"King\",\"municipality\":\"Seattle\",\"postalCode\":\"98109\",\"municipalitySubdivision\":\"Queen Anne\",\"country\":\"United States\",\"countryCodeISO3\":\"USA\",\"freeformAddress\":\"410 Thomas Street, Seattle, WA 98109\",\"boundingBox\":{\"northEast\":\"47.620954,-122.347601\",\"southWest\":\"47.620944,-122.348498\",\"entity\":\"position\"},\"countrySubdivisionName\":\"Washington\",\"localName\":\"Seattle\"},\"position\":\"47.620945,-122.348175\"}]}}],\"summary\":{\"successfulRequests\":3,\"totalRequests\":3}}",
+      "Body" : "{\"batchItems\":[{\"statusCode\":200,\"response\":{\"summary\":{\"queryTime\":6,\"numResults\":1},\"addresses\":[{\"address\":{\"buildingNumber\":\"5\",\"streetNumber\":\"5\",\"routeNumbers\":[],\"street\":\"Esplanade des Ouvriers de la Tour Eiffel\",\"streetName\":\"Esplanade des Ouvriers de la Tour Eiffel\",\"streetNameAndNumber\":\"5 Esplanade des Ouvriers de la Tour Eiffel\",\"countryCode\":\"FR\",\"countrySubdivision\":\"Île-de-France\",\"countrySecondarySubdivision\":\"Paris\",\"municipality\":\"Paris\",\"postalCode\":\"75007\",\"municipalitySubdivision\":\"7ème Arrondissement\",\"country\":\"France\",\"countryCodeISO3\":\"FRA\",\"freeformAddress\":\"5 Esplanade des Ouvriers de la Tour Eiffel, 75007 Paris\",\"boundingBox\":{\"northEast\":\"48.858576,2.295027\",\"southWest\":\"48.858321,2.294559\",\"entity\":\"position\"},\"localName\":\"Paris\"},\"position\":\"48.858582,2.294525\"}]}},{\"statusCode\":200,\"response\":{\"summary\":{\"queryTime\":4,\"numResults\":1},\"addresses\":[{\"address\":{\"buildingNumber\":\"16000\",\"streetNumber\":\"16000\",\"routeNumbers\":[],\"street\":\"Northeast 31st Street\",\"streetName\":\"Northeast 31st Street\",\"streetNameAndNumber\":\"16000 Northeast 31st Street\",\"countryCode\":\"US\",\"countrySubdivision\":\"WA\",\"countrySecondarySubdivision\":\"King\",\"municipality\":\"Redmond\",\"postalCode\":\"98008\",\"country\":\"United States\",\"countryCodeISO3\":\"USA\",\"freeformAddress\":\"16000 Northeast 31st Street, Bellevue, WA 98008\",\"boundingBox\":{\"northEast\":\"47.638988,-122.126617\",\"southWest\":\"47.638122,-122.127537\",\"entity\":\"position\"},\"countrySubdivisionName\":\"Washington\",\"localName\":\"Bellevue\"},\"position\":\"47.638988,-122.127541\"}]}},{\"statusCode\":200,\"response\":{\"summary\":{\"queryTime\":7,\"numResults\":1},\"addresses\":[{\"address\":{\"buildingNumber\":\"410\",\"streetNumber\":\"410\",\"routeNumbers\":[],\"street\":\"Thomas Street\",\"streetName\":\"Thomas Street\",\"streetNameAndNumber\":\"410 Thomas Street\",\"countryCode\":\"US\",\"countrySubdivision\":\"WA\",\"countrySecondarySubdivision\":\"King\",\"municipality\":\"Seattle\",\"postalCode\":\"98109\",\"municipalitySubdivision\":\"Queen Anne\",\"country\":\"United States\",\"countryCodeISO3\":\"USA\",\"freeformAddress\":\"410 Thomas Street, Seattle, WA 98109\",\"boundingBox\":{\"northEast\":\"47.620954,-122.347601\",\"southWest\":\"47.620944,-122.348498\",\"entity\":\"position\"},\"countrySubdivisionName\":\"Washington\",\"localName\":\"Seattle\"},\"position\":\"47.620945,-122.348175\"}]}}],\"summary\":{\"successfulRequests\":3,\"totalRequests\":3}}",
       "strict-transport-security" : "max-age=31536000; includeSubDomains"
     },
     "Exception" : null

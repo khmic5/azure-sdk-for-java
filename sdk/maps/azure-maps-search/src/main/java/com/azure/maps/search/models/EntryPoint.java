@@ -8,11 +8,13 @@ import com.azure.core.annotation.Immutable;
 import com.azure.core.models.GeoPosition;
 import com.azure.maps.search.implementation.helpers.EntryPointPropertiesHelper;
 import com.azure.maps.search.implementation.models.LatLongPairAbbreviated;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /** The entry point for the POI being returned. */
 @Immutable
 public final class EntryPoint {
     private EntryPointType type;
+    @JsonIgnore
     private GeoPosition position;
 
     static {

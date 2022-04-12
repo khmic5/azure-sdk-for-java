@@ -11,11 +11,13 @@ import com.azure.core.models.GeoPosition;
 import com.azure.maps.search.implementation.helpers.ReverseSearchAddressResultItemPropertiesHelper;
 import com.azure.maps.search.implementation.helpers.Utility;
 import com.azure.maps.search.implementation.models.ReverseSearchAddressResultItemPrivate;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /** Result object for a Search Address Reverse response. */
 @Immutable
 public final class ReverseSearchAddressResultItem {
     private Address address;
+    @JsonIgnore
     private GeoPosition position;
     private List<RoadUseType> roadUse;
     private MatchType matchType;

@@ -437,7 +437,7 @@ public class Utility {
         Map<String, Object> params = new HashMap<>();
 
         // single value parameters
-        params.compute("query", (k, v) -> options.getCoordinates());
+        params.compute("query", (k, v) -> positionToString(options.getCoordinates()));
         params.compute("allowFreeformNewline", (k, v) -> options.allowFreeformNewline());
         params.compute("entityType", (k, v) -> options.getEntityType());
         params.compute("heading", (k, v) -> options.getHeading());

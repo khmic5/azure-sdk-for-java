@@ -285,20 +285,14 @@ public class MapsSearchClientTestBase extends TestBase {
 
 
     static void validateBeginFuzzySearchBatch(BatchSearchResult expected, BatchSearchResult actual) {
-        assertNotNull(actual.getBatchId());
-        assertNotNull(actual.getBatchId());
         assertEquals(expected.getBatchItems().size(), actual.getBatchItems().size());
     }
 
     static void validateBeginSearchAddressBatch(BatchSearchResult expected, BatchSearchResult actual) {
-        assertNotNull(actual.getBatchId());
-        assertNotNull(actual.getBatchId());
         assertEquals(expected.getBatchItems().size(), actual.getBatchItems().size());
     }
 
     static void validateBeginReverseSearchAddressBatch(BatchReverseSearchResult expected, BatchReverseSearchResult actual) {
-        assertNotNull(actual.getBatchId());
-        assertNotNull(actual.getBatchId());
         assertEquals(expected.getBatchItems().size(), actual.getBatchItems().size());
     }
 }

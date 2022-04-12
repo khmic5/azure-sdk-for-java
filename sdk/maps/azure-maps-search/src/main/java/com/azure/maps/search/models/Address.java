@@ -11,6 +11,7 @@ import com.azure.core.models.GeoBoundingBox;
 import com.azure.maps.search.implementation.helpers.AddressPropertiesHelper;
 import com.azure.maps.search.implementation.helpers.Utility;
 import com.azure.maps.search.implementation.models.AddressPrivate;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /** The address of the result. */
 @Immutable
@@ -35,6 +36,7 @@ public final class Address {
     private String freeformAddress;
     private String countrySubdivisionName;
     private String localName;
+    @JsonIgnore
     private GeoBoundingBox boundingBox;
 
     static {

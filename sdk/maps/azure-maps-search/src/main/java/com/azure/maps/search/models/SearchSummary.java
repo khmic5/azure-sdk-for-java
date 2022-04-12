@@ -10,6 +10,7 @@ import com.azure.core.annotation.Immutable;
 import com.azure.core.models.GeoPosition;
 import com.azure.maps.search.implementation.helpers.SearchSummaryPropertiesHelper;
 import com.azure.maps.search.implementation.models.SearchSummaryPrivate;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /** Summary object for a Search API response. */
 @Immutable
@@ -22,6 +23,7 @@ public final class SearchSummary {
     private Integer skip;
     private Integer totalResults;
     private Integer fuzzyLevel;
+    @JsonIgnore
     private GeoPosition geoBias;
 
     static {

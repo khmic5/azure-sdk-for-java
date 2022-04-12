@@ -15,6 +15,7 @@ import com.azure.maps.search.implementation.helpers.Utility;
 import com.azure.maps.search.implementation.models.BoundingBoxPrivate;
 import com.azure.maps.search.implementation.models.EntryPointPrivate;
 import com.azure.maps.search.implementation.models.SearchAddressResultItemPrivate;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /** Result object for a Search API response. */
 @Immutable
@@ -27,7 +28,9 @@ public final class SearchAddressResultItem {
     private GeographicEntityType entityType;
     private PointOfInterest pointOfInterest;
     private Address address;
+    @JsonIgnore
     private GeoPosition position;
+    @JsonIgnore
     private GeoBoundingBox viewport;
     private List<EntryPoint> entryPoints;
     private AddressRanges addressRanges;
