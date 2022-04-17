@@ -12,6 +12,8 @@ import com.azure.core.util.Context;
 import com.azure.maps.timezone.implementation.TimezonesImpl;
 import com.azure.maps.timezone.models.ErrorResponseException;
 import com.azure.maps.timezone.models.IanaId;
+import com.azure.maps.timezone.models.TimezoneCoordinateOptions;
+import com.azure.maps.timezone.models.TimezoneIDOptions;
 import com.azure.maps.timezone.implementation.models.JsonFormat;
 import com.azure.maps.timezone.implementation.models.TimezoneIanaVersionResult;
 import com.azure.maps.timezone.implementation.models.TimezoneOptions;
@@ -60,15 +62,8 @@ public final class TimezoneAsyncClient {
      * @return this object is returned from a successful Timezone By ID call or By Coordinates call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<TimezoneResult> getTimezoneByID(
-        String timezoneId,
-        String acceptLanguage,
-        TimezoneOptions options,
-        OffsetDateTime timeStamp,
-        OffsetDateTime daylightSavingsTimeFrom,
-        Integer daylightSavingsTimeLastingYears) {
-            Mono<Response<TimezoneResult>> result = this.getTimezoneByIDWithResponse(timezoneId, acceptLanguage, 
-                options, timeStamp, daylightSavingsTimeFrom, daylightSavingsTimeLastingYears);
+    public Mono<TimezoneResult> getTimezoneByID(TimezoneIDOptions options) {
+            Mono<Response<TimezoneResult>> result = this.getTimezoneByIDWithResponse(options);
             return result.flatMap(response -> {
                 return Mono.just(response.getValue());
             });
@@ -99,15 +94,8 @@ public final class TimezoneAsyncClient {
      * @return this object is returned from a successful Timezone By ID call or By Coordinates call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<TimezoneResult>> getTimezoneByIDWithResponse(
-        String timezoneId,
-        String acceptLanguage,
-        TimezoneOptions options,
-        OffsetDateTime timeStamp,
-        OffsetDateTime daylightSavingsTimeFrom,
-        Integer daylightSavingsTimeLastingYears) {
-            return this.getTimezoneByIDWithResponse(timezoneId, acceptLanguage, 
-                options, timeStamp, daylightSavingsTimeFrom, daylightSavingsTimeLastingYears, null);
+    public Mono<Response<TimezoneResult>> getTimezoneByIDWithResponse(TimezoneIDOptions options) {
+            return this.getTimezoneByIDWithResponse(options, null);
     }
 
     /**
@@ -135,21 +123,16 @@ public final class TimezoneAsyncClient {
      * @return this object is returned from a successful Timezone By ID call or By Coordinates call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<TimezoneResult>> getTimezoneByIDWithResponse(
-            String timezoneId,
-            String acceptLanguage,
-            TimezoneOptions options,
-            OffsetDateTime timeStamp,
-            OffsetDateTime daylightSavingsTimeFrom,
-            Integer daylightSavingsTimeLastingYears, Context context) {
+    public Mono<Response<TimezoneResult>> getTimezoneByIDWithResponse(TimezoneIDOptions options, Context context) {
         return this.serviceClient.getTimezoneByIDWithResponseAsync(
                 JsonFormat.JSON,
-                timezoneId,
-                acceptLanguage,
-                options,
-                timeStamp,
-                daylightSavingsTimeFrom,
-                daylightSavingsTimeLastingYears, context);
+                options.getTimezoneId(),
+                options.getAcceptLanguage(),
+                options.getOptions(),
+                options.getTimeStamp(),
+                options.getDaylightSavingsTimeFrom(),
+                options.getDaylightSavingsTimeLastingYears(), 
+                context);
     }
 
     /**
@@ -180,20 +163,8 @@ public final class TimezoneAsyncClient {
      * @return this object is returned from a successful Timezone By ID call or By Coordinates call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<TimezoneResult> getTimezoneByCoordinates(
-            List<Double> coordinates,
-            String acceptLanguage,
-            TimezoneOptions options,
-            OffsetDateTime timeStamp,
-            OffsetDateTime daylightSavingsTimeFrom,
-            Integer daylightSavingsTimeLastingYears) {
-                Mono<Response<TimezoneResult>> result = this.getTimezoneByCoordinatesWithResponse(
-                    coordinates,
-                    acceptLanguage,
-                    options,
-                    timeStamp,
-                    daylightSavingsTimeFrom,
-                    daylightSavingsTimeLastingYears);
+    public Mono<TimezoneResult> getTimezoneByCoordinates(TimezoneCoordinateOptions options) {
+                Mono<Response<TimezoneResult>> result = this.getTimezoneByCoordinatesWithResponse(options);
                 return result.flatMap(response -> {
                     return Mono.just(response.getValue());
                 });
@@ -227,20 +198,8 @@ public final class TimezoneAsyncClient {
      * @return this object is returned from a successful Timezone By ID call or By Coordinates call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<TimezoneResult>> getTimezoneByCoordinatesWithResponse(
-        List<Double> coordinates,
-        String acceptLanguage,
-        TimezoneOptions options,
-        OffsetDateTime timeStamp,
-        OffsetDateTime daylightSavingsTimeFrom,
-        Integer daylightSavingsTimeLastingYears) {
-        return this.getTimezoneByCoordinatesWithResponse(
-            coordinates,
-            acceptLanguage,
-            options,
-            timeStamp,
-            daylightSavingsTimeFrom,
-            daylightSavingsTimeLastingYears, null);
+    public Mono<Response<TimezoneResult>> getTimezoneByCoordinatesWithResponse(TimezoneCoordinateOptions options) {
+        return this.getTimezoneByCoordinatesWithResponse(options, null);
     }
 
     /**
@@ -271,21 +230,16 @@ public final class TimezoneAsyncClient {
      * @return this object is returned from a successful Timezone By ID call or By Coordinates call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<TimezoneResult>> getTimezoneByCoordinatesWithResponse(
-            List<Double> coordinates,
-            String acceptLanguage,
-            TimezoneOptions options,
-            OffsetDateTime timeStamp,
-            OffsetDateTime daylightSavingsTimeFrom,
-            Integer daylightSavingsTimeLastingYears, Context context) {
+    public Mono<Response<TimezoneResult>> getTimezoneByCoordinatesWithResponse(TimezoneCoordinateOptions options, Context context) {
         return this.serviceClient.getTimezoneByCoordinatesWithResponseAsync(
                 JsonFormat.JSON,
-                coordinates,
-                acceptLanguage,
-                options,
-                timeStamp,
-                daylightSavingsTimeFrom,
-                daylightSavingsTimeLastingYears, context);
+                options.getCoordinates(),
+                options.getAcceptLanguage(),
+                options.getOptions(),
+                options.getTimeStamp(),
+                options.getDaylightSavingsTimeFrom(),
+                options.getDaylightSavingsTimeLastingYears(), 
+                context);
     }
 
     /**
