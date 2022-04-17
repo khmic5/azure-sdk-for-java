@@ -43,8 +43,8 @@ public class GeolocationClientTestBase extends TestBase {
 
     GeolocationClientBuilder getGeolocationAsyncClientBuilder(HttpClient httpClient, GeolocationServiceVersion serviceVersion) {
         GeolocationClientBuilder builder = new GeolocationClientBuilder()
-        .httpLogOptions(new HttpLogOptions().setLogLevel(HttpLogDetailLevel.BODY_AND_HEADERS))
-        .serviceVersion(serviceVersion);
+            .httpLogOptions(new HttpLogOptions().setLogLevel(HttpLogDetailLevel.BODY_AND_HEADERS))
+            .serviceVersion(serviceVersion);
         String endpoint = getEndpoint();
         if (getEndpoint() != null) {
             builder.endpoint(endpoint);

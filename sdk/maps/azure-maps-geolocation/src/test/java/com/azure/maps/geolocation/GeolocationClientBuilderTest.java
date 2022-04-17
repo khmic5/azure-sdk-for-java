@@ -8,7 +8,7 @@ import com.azure.identity.DefaultAzureCredentialBuilder;
 import org.junit.jupiter.api.Test;
 
 public class GeolocationClientBuilderTest {
-    // Test for null RenderClientId, the client ID value
+    // Test for null GeolocationClientId, the client ID value
     @Test
     public void missingClientId() {
         assertThrows(NullPointerException.class, () -> {

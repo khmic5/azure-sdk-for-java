@@ -111,7 +111,7 @@ public final class GeolocationClientBuilder {
      * Targeting a specific service version may also mean that the service will return an error for newer APIs.
      *
      * @param version {@link GeolocationServiceVersion} of the service to be used when making requests.
-     * @return the updated RouteClientBuilder object
+     * @return the updated GeolocationClientBuilder object
      */
     public GeolocationClientBuilder serviceVersion(GeolocationServiceVersion version) {
         this.serviceVersion = version;
@@ -259,7 +259,7 @@ public final class GeolocationClientBuilder {
 
         // Configure pipelines and user agent
         List<HttpPipelinePolicy> policies = new ArrayList<>();
-        String clientName = properties.getOrDefault(SDK_NAME, "JavaSearchSDK");
+        String clientName = properties.getOrDefault(SDK_NAME, "JavaGeolocationSDK");
         String clientVersion = properties.getOrDefault(SDK_VERSION, serviceVersion.getVersion());
         String applicationId = CoreUtils.getApplicationId(clientOptions, httpLogOptions);
         policies.add(new UserAgentPolicy(applicationId, clientName, clientVersion, buildConfiguration));
@@ -300,26 +300,26 @@ public final class GeolocationClientBuilder {
 
         // build the http pipeline
         HttpPipeline httpPipeline =
-                new HttpPipelineBuilder()
-                        .policies(policies.toArray(new HttpPipelinePolicy[0]))
-                        .httpClient(httpClient)
-                        .build();
+            new HttpPipelineBuilder()
+                .policies(policies.toArray(new HttpPipelinePolicy[0]))
+                .httpClient(httpClient)
+                .build();
         return httpPipeline;
     }
 
     /**
-     * Builds an instance of SearchAsyncClient async client.
+     * Builds an instance of GeolocationAsyncClient async client.
      *
-     * @return an instance of SearchAsyncClient.
+     * @return an instance of GeolocationAsyncClient.
      */
     public GeolocationAsyncClient buildAsyncClient() {
         return new GeolocationAsyncClient(buildInnerClient().getGeolocations());
     }
 
     /**
-     * Builds an instance of SearchClient sync client.
+     * Builds an instance of GeolocationClient sync client.
      *
-     * @return an instance of SearchClient.
+     * @return an instance of GeolocationClient.
      */
     public GeolocationClient buildClient() {
         return new GeolocationClient(buildAsyncClient());

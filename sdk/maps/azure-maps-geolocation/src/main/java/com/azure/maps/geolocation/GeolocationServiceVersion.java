@@ -11,7 +11,7 @@ public enum GeolocationServiceVersion implements ServiceVersion {
     private final String version;
 
     /**
-     * Creates a new {@link RouteServiceVersion} with a version string.
+     * Creates a new {@link GeolocationServiceVersion} with a version string.
      *
      * @param version
      */
@@ -22,7 +22,7 @@ public enum GeolocationServiceVersion implements ServiceVersion {
     /**
      * Gets the latest service version supported by this client library
      *
-     * @return the latest {@link RouteServiceVersion}
+     * @return the latest {@link GeolocationServiceVersion}
      */
     public static GeolocationServiceVersion getLatest() {
         return V1_0;
