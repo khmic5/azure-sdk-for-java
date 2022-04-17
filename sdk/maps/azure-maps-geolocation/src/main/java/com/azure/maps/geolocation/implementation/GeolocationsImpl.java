@@ -69,7 +69,7 @@ public final class GeolocationsImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>This service will return the ISO country code for the provided IP address. Developers can use this information
      * to block or alter certain content based on geographical locations where the application is being viewed from.
@@ -79,8 +79,7 @@ public final class GeolocationsImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful call to IP Address to country/region API along with {@link
-     *     Response} on successful completion of {@link Mono}.
+     * @return this object is returned from a successful call to IP Address to country/region API.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<IpAddressToLocationResult>> getLocationWithResponseAsync(JsonFormat format, String ipAddress) {
@@ -98,7 +97,7 @@ public final class GeolocationsImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>This service will return the ISO country code for the provided IP address. Developers can use this information
      * to block or alter certain content based on geographical locations where the application is being viewed from.
@@ -109,8 +108,7 @@ public final class GeolocationsImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful call to IP Address to country/region API along with {@link
-     *     Response} on successful completion of {@link Mono}.
+     * @return this object is returned from a successful call to IP Address to country/region API.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<IpAddressToLocationResult>> getLocationWithResponseAsync(
@@ -127,7 +125,7 @@ public final class GeolocationsImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>This service will return the ISO country code for the provided IP address. Developers can use this information
      * to block or alter certain content based on geographical locations where the application is being viewed from.
@@ -137,8 +135,7 @@ public final class GeolocationsImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful call to IP Address to country/region API on successful
-     *     completion of {@link Mono}.
+     * @return this object is returned from a successful call to IP Address to country/region API.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<IpAddressToLocationResult> getLocationAsync(JsonFormat format, String ipAddress) {
@@ -154,7 +151,7 @@ public final class GeolocationsImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>This service will return the ISO country code for the provided IP address. Developers can use this information
      * to block or alter certain content based on geographical locations where the application is being viewed from.
@@ -165,8 +162,7 @@ public final class GeolocationsImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful call to IP Address to country/region API on successful
-     *     completion of {@link Mono}.
+     * @return this object is returned from a successful call to IP Address to country/region API.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<IpAddressToLocationResult> getLocationAsync(JsonFormat format, String ipAddress, Context context) {
@@ -182,7 +178,7 @@ public final class GeolocationsImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>This service will return the ISO country code for the provided IP address. Developers can use this information
      * to block or alter certain content based on geographical locations where the application is being viewed from.
@@ -200,7 +196,7 @@ public final class GeolocationsImpl {
     }
 
     /**
-     * **Applies to**: S0 and S1 pricing tiers.
+     * **Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>This service will return the ISO country code for the provided IP address. Developers can use this information
      * to block or alter certain content based on geographical locations where the application is being viewed from.
@@ -211,8 +207,7 @@ public final class GeolocationsImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful call to IP Address to country/region API along with {@link
-     *     Response}.
+     * @return this object is returned from a successful call to IP Address to country/region API.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<IpAddressToLocationResult> getLocationWithResponse(

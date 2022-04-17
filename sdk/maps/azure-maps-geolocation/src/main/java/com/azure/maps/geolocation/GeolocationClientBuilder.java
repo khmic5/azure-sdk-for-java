@@ -249,7 +249,7 @@ public final class GeolocationClientBuilder {
 
     private HttpPipeline createHttpPipeline() {
         Configuration buildConfiguration =
-                (configuration == null) ? Configuration.getGlobalConfiguration() : configuration;
+            (configuration == null) ? Configuration.getGlobalConfiguration() : configuration;
         if (httpLogOptions == null) {
             httpLogOptions = new HttpLogOptions();
         }
