@@ -87,7 +87,7 @@ public final class RouteClientBuilder {
      * @return the SearchClientBuilder.
      */
     public RouteClientBuilder mapsClientId(String mapsClientId) {
-        this.mapsClientId = Objects.requireNonNull(mapsClientId, "'mapsClientId' cannot be null.");;
+        this.mapsClientId = Objects.requireNonNull(mapsClientId, "'mapsClientId' cannot be null.");
         return this;
     }
 
