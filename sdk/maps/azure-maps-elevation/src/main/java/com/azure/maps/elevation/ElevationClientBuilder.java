@@ -264,7 +264,7 @@ public final class ElevationClientBuilder {
 
         // Configure pipelines and user agent
         List<HttpPipelinePolicy> policies = new ArrayList<>();
-        String clientName = properties.getOrDefault(SDK_NAME, "JavaTrafficSDK");
+        String clientName = properties.getOrDefault(SDK_NAME, "JavaElevationSDK");
         String clientVersion = properties.getOrDefault(SDK_VERSION, serviceVersion.getVersion());
         String applicationId = CoreUtils.getApplicationId(clientOptions, httpLogOptions);
         policies.add(new UserAgentPolicy(applicationId, clientName, clientVersion, buildConfiguration));

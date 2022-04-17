@@ -8,7 +8,7 @@ import com.azure.identity.DefaultAzureCredentialBuilder;
 import org.junit.jupiter.api.Test;
 
 public class ElevationClientBuilderTest {
-    // Test for null RenderClientId, the client ID value
+    // Test for null elevationClientId, the client ID value
     @Test
     public void missingMapsClientId() {
         assertThrows(NullPointerException.class, () -> {

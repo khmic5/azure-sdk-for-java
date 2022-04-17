@@ -7,29 +7,29 @@ package com.azure.maps.timezone;
 import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceClient;
 import com.azure.core.annotation.ServiceMethod;
-import com.azure.maps.timezone.implementation.TimezoneClientImpl;
+import com.azure.core.http.rest.Response;
+import com.azure.core.util.Context;
 import com.azure.maps.timezone.models.ErrorResponseException;
 import com.azure.maps.timezone.models.IanaId;
-import com.azure.maps.timezone.models.JsonFormat;
-import com.azure.maps.timezone.models.TimezoneIanaVersionResult;
-import com.azure.maps.timezone.models.TimezoneOptions;
-import com.azure.maps.timezone.models.TimezoneResult;
-import com.azure.maps.timezone.models.TimezoneWindows;
+import com.azure.maps.timezone.implementation.models.TimezoneIanaVersionResult;
+import com.azure.maps.timezone.implementation.models.TimezoneOptions;
+import com.azure.maps.timezone.implementation.models.TimezoneResult;
+import com.azure.maps.timezone.implementation.models.TimezoneWindows;
 import java.time.OffsetDateTime;
 import java.util.List;
 
 /** Initializes a new instance of the synchronous TimezoneClient type. */
 @ServiceClient(builder = TimezoneClientBuilder.class)
 public final class TimezoneClient {
-    private final TimezoneClientImpl serviceClient;
+    private final TimezoneAsyncClient asyncClient;
 
     /**
      * Initializes an instance of TimezoneClient client.
      *
      * @param serviceClient the service client implementation.
      */
-    TimezoneClient(TimezoneClientImpl serviceClient) {
-        this.serviceClient = serviceClient;
+    TimezoneClient(TimezoneAsyncClient asyncClient) {
+        this.asyncClient = asyncClient;
     }
 
     /**
@@ -58,21 +58,60 @@ public final class TimezoneClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public TimezoneResult getTimezoneByID(
-            JsonFormat format,
             String timezoneId,
             String acceptLanguage,
             TimezoneOptions options,
             OffsetDateTime timeStamp,
             OffsetDateTime daylightSavingsTimeFrom,
             Integer daylightSavingsTimeLastingYears) {
-        return this.serviceClient.getTimezoneByID(
-                format,
+        return this.asyncClient.getTimezoneByID(
                 timezoneId,
                 acceptLanguage,
                 options,
                 timeStamp,
                 daylightSavingsTimeFrom,
-                daylightSavingsTimeLastingYears);
+                daylightSavingsTimeLastingYears).block();
+    }
+
+    /**
+     * __Time Zone by Id__
+     *
+     * <p>**Applies to**: S0 and S1 pricing tiers.
+     *
+     * <p>This API returns current, historical, and future time zone information for the specified IANA time zone ID.
+     *
+     * @param format Desired format of the response. Only `json` format is supported.
+     * @param timezoneId The IANA time zone ID.
+     * @param acceptLanguage Specifies the language code in which the timezone names should be returned. If no language
+     *     code is provided, the response will be in "EN". Please refer to [Supported
+     *     Languages](https://docs.microsoft.com/en-us/azure/azure-maps/supported-languages) for details.
+     * @param options Alternatively, use alias "o". Options available for types of information returned in the result.
+     * @param timeStamp Alternatively, use alias "stamp", or "s". Reference time, if omitted, the API will use the
+     *     machine time serving the request.
+     * @param daylightSavingsTimeFrom Alternatively, use alias "tf". The start date from which daylight savings time
+     *     (DST) transitions are requested, only applies when "options" = all or "options" = transitions.
+     * @param daylightSavingsTimeLastingYears Alternatively, use alias "ty". The number of years from "transitionsFrom"
+     *     for which DST transitions are requested, only applies when "options" = all or "options" = transitions.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return this object is returned from a successful Timezone By ID call or By Coordinates call.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<TimezoneResult> getTimezoneByIDWithResponse(
+            String timezoneId,
+            String acceptLanguage,
+            TimezoneOptions options,
+            OffsetDateTime timeStamp,
+            OffsetDateTime daylightSavingsTimeFrom,
+            Integer daylightSavingsTimeLastingYears, Context context) {
+        return this.asyncClient.getTimezoneByIDWithResponse(
+                timezoneId,
+                acceptLanguage,
+                options,
+                timeStamp,
+                daylightSavingsTimeFrom,
+                daylightSavingsTimeLastingYears, context).block();
     }
 
     /**
@@ -104,21 +143,36 @@ public final class TimezoneClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public TimezoneResult getTimezoneByCoordinates(
-            JsonFormat format,
             List<Double> coordinates,
             String acceptLanguage,
             TimezoneOptions options,
             OffsetDateTime timeStamp,
             OffsetDateTime daylightSavingsTimeFrom,
             Integer daylightSavingsTimeLastingYears) {
-        return this.serviceClient.getTimezoneByCoordinates(
-                format,
+        return this.asyncClient.getTimezoneByCoordinates(
                 coordinates,
                 acceptLanguage,
                 options,
                 timeStamp,
                 daylightSavingsTimeFrom,
-                daylightSavingsTimeLastingYears);
+                daylightSavingsTimeLastingYears).block();
+    }
+
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<TimezoneResult> getTimezoneByCoordinatesWithResponse(
+            List<Double> coordinates,
+            String acceptLanguage,
+            TimezoneOptions options,
+            OffsetDateTime timeStamp,
+            OffsetDateTime daylightSavingsTimeFrom,
+            Integer daylightSavingsTimeLastingYears, Context context) {
+        return this.asyncClient.getTimezoneByCoordinatesWithResponse(
+                coordinates,
+                acceptLanguage,
+                options,
+                timeStamp,
+                daylightSavingsTimeFrom,
+                daylightSavingsTimeLastingYears, context).block();
     }
 
     /**
@@ -135,8 +189,13 @@ public final class TimezoneClient {
      * @return this object is returned from a successful Timezone Enum Windows call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public List<TimezoneWindows> getWindowsTimezoneIds(JsonFormat format) {
-        return this.serviceClient.getWindowsTimezoneIds(format);
+    public List<TimezoneWindows> getWindowsTimezoneIds() {
+        return this.asyncClient.getWindowsTimezoneIds().block();
+    }
+
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<List<TimezoneWindows>> getWindowsTimezoneIdsWithResponse(Context context) {
+        return this.asyncClient.getWindowsTimezoneIdsWithResponse(context).block();
     }
 
     /**
@@ -154,8 +213,13 @@ public final class TimezoneClient {
      * @return this object is returned from a successful Timezone Enum IANA call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public List<IanaId> getIanaTimezoneIds(JsonFormat format) {
-        return this.serviceClient.getIanaTimezoneIds(format);
+    public List<IanaId> getIanaTimezoneIds() {
+        return this.asyncClient.getIanaTimezoneIds().block();
+    }
+
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<List<IanaId>> getIanaTimezoneIdsWithResponse(Context context) {
+        return this.asyncClient.getIanaTimezoneIdsWithResponse(context).block();
     }
 
     /**
@@ -172,8 +236,13 @@ public final class TimezoneClient {
      * @return this object is returned from a successful Timezone IANA Version call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public TimezoneIanaVersionResult getIanaVersion(JsonFormat format) {
-        return this.serviceClient.getIanaVersion(format);
+    public TimezoneIanaVersionResult getIanaVersion() {
+        return this.asyncClient.getIanaVersion().block();
+    }
+
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<TimezoneIanaVersionResult> getIanaVersionWithResponse(Context context) {
+        return this.asyncClient.getIanaVersionWithResponse(context).block();
     }
 
     /**
@@ -195,7 +264,13 @@ public final class TimezoneClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public List<IanaId> convertWindowsTimezoneToIana(
-            JsonFormat format, String windowsTimezoneId, String windowsTerritoryCode) {
-        return this.serviceClient.convertWindowsTimezoneToIana(format, windowsTimezoneId, windowsTerritoryCode);
+            String windowsTimezoneId, String windowsTerritoryCode) {
+        return this.asyncClient.convertWindowsTimezoneToIana(windowsTimezoneId, windowsTerritoryCode).block();
+    }
+
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<List<IanaId>> convertWindowsTimezoneToIanaWithResponse(
+            String windowsTimezoneId, String windowsTerritoryCode, Context context) {
+        return this.asyncClient.convertWindowsTimezoneToIanaWithResponse(windowsTimezoneId, windowsTerritoryCode, context).block();
     }
 }
