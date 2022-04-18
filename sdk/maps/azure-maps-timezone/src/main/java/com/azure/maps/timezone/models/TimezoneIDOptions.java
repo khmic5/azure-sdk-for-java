@@ -1,9 +1,6 @@
 package com.azure.maps.timezone.models;
 
 import java.time.OffsetDateTime;
-
-import com.azure.maps.timezone.implementation.models.TimezoneOptions;
-
 /**
  * Organizes inputs for get timezone by ID
  */

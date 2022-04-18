@@ -1,23 +1,22 @@
 package com.azure.maps.timezone.models;
 
 import java.time.OffsetDateTime;
-import java.util.List;
 
-import com.azure.maps.timezone.implementation.models.TimezoneOptions;
+import com.azure.core.models.GeoPosition;
 
 public final class TimezoneCoordinateOptions {
-    private List<Double> coordinates;
+    private GeoPosition coordinates;
     private String acceptLanguage;
     private TimezoneOptions options;
     private OffsetDateTime timeStamp;
     private OffsetDateTime daylightSavingsTimeFrom;
     private Integer daylightSavingsTimeLastingYears;
 
-    public List<Double> getCoordinates() {
+    public GeoPosition getCoordinates() {
         return coordinates;
     }
 
-    public TimezoneCoordinateOptions setCoordinates(List<Double> coordinates) {
+    public TimezoneCoordinateOptions setCoordinates(GeoPosition coordinates) {
         this.coordinates = coordinates;
         return this;
     }

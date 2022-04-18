@@ -25,12 +25,12 @@ import com.azure.core.util.logging.ClientLogger;
 import com.azure.core.util.serializer.CollectionFormat;
 import com.azure.core.util.serializer.JacksonAdapter;
 import com.azure.maps.timezone.implementation.models.JsonFormat;
-import com.azure.maps.timezone.implementation.models.TimezoneIanaVersionResult;
-import com.azure.maps.timezone.implementation.models.TimezoneOptions;
-import com.azure.maps.timezone.implementation.models.TimezoneResult;
-import com.azure.maps.timezone.implementation.models.TimezoneWindows;
 import com.azure.maps.timezone.models.ErrorResponseException;
 import com.azure.maps.timezone.models.IanaId;
+import com.azure.maps.timezone.models.TimezoneIanaVersionResult;
+import com.azure.maps.timezone.models.TimezoneOptions;
+import com.azure.maps.timezone.models.TimezoneResult;
+import com.azure.maps.timezone.models.TimezoneWindows;
 import java.time.OffsetDateTime;
 import java.util.List;
 import reactor.core.publisher.Mono;
@@ -147,7 +147,7 @@ public final class TimezonesImpl {
     /**
      * __Time Zone by Id__
      *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
+     * <p>**Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>This API returns current, historical, and future time zone information for the specified IANA time zone ID.
      *
@@ -166,8 +166,7 @@ public final class TimezonesImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Timezone By ID call or By Coordinates call along with {@link
-     *     Response} on successful completion of {@link Mono}.
+     * @return this object is returned from a successful Timezone By ID call or By Coordinates call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<TimezoneResult>> getTimezoneByIDWithResponseAsync(
@@ -199,7 +198,7 @@ public final class TimezonesImpl {
     /**
      * __Time Zone by Id__
      *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
+     * <p>**Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>This API returns current, historical, and future time zone information for the specified IANA time zone ID.
      *
@@ -219,8 +218,7 @@ public final class TimezonesImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Timezone By ID call or By Coordinates call along with {@link
-     *     Response} on successful completion of {@link Mono}.
+     * @return this object is returned from a successful Timezone By ID call or By Coordinates call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<TimezoneResult>> getTimezoneByIDWithResponseAsync(
@@ -251,7 +249,7 @@ public final class TimezonesImpl {
     /**
      * __Time Zone by Id__
      *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
+     * <p>**Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>This API returns current, historical, and future time zone information for the specified IANA time zone ID.
      *
@@ -270,8 +268,7 @@ public final class TimezonesImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Timezone By ID call or By Coordinates call on successful
-     *     completion of {@link Mono}.
+     * @return this object is returned from a successful Timezone By ID call or By Coordinates call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<TimezoneResult> getTimezoneByIDAsync(
@@ -303,7 +300,7 @@ public final class TimezonesImpl {
     /**
      * __Time Zone by Id__
      *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
+     * <p>**Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>This API returns current, historical, and future time zone information for the specified IANA time zone ID.
      *
@@ -323,8 +320,7 @@ public final class TimezonesImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Timezone By ID call or By Coordinates call on successful
-     *     completion of {@link Mono}.
+     * @return this object is returned from a successful Timezone By ID call or By Coordinates call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<TimezoneResult> getTimezoneByIDAsync(
@@ -358,7 +354,7 @@ public final class TimezonesImpl {
     /**
      * __Time Zone by Id__
      *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
+     * <p>**Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>This API returns current, historical, and future time zone information for the specified IANA time zone ID.
      *
@@ -402,7 +398,7 @@ public final class TimezonesImpl {
     /**
      * __Time Zone by Id__
      *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
+     * <p>**Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>This API returns current, historical, and future time zone information for the specified IANA time zone ID.
      *
@@ -422,8 +418,7 @@ public final class TimezonesImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Timezone By ID call or By Coordinates call along with {@link
-     *     Response}.
+     * @return this object is returned from a successful Timezone By ID call or By Coordinates call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<TimezoneResult> getTimezoneByIDWithResponse(
@@ -450,7 +445,7 @@ public final class TimezonesImpl {
     /**
      * __Time Zone by Coordinates__
      *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
+     * <p>**Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>This API returns current, historical, and future time zone information for a specified latitude-longitude
      * pair. In addition, the API provides sunset and sunrise times for a given location.
@@ -472,8 +467,7 @@ public final class TimezonesImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Timezone By ID call or By Coordinates call along with {@link
-     *     Response} on successful completion of {@link Mono}.
+     * @return this object is returned from a successful Timezone By ID call or By Coordinates call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<TimezoneResult>> getTimezoneByCoordinatesWithResponseAsync(
@@ -507,7 +501,7 @@ public final class TimezonesImpl {
     /**
      * __Time Zone by Coordinates__
      *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
+     * <p>**Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>This API returns current, historical, and future time zone information for a specified latitude-longitude
      * pair. In addition, the API provides sunset and sunrise times for a given location.
@@ -530,8 +524,7 @@ public final class TimezonesImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Timezone By ID call or By Coordinates call along with {@link
-     *     Response} on successful completion of {@link Mono}.
+     * @return this object is returned from a successful Timezone By ID call or By Coordinates call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<TimezoneResult>> getTimezoneByCoordinatesWithResponseAsync(
@@ -564,7 +557,7 @@ public final class TimezonesImpl {
     /**
      * __Time Zone by Coordinates__
      *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
+     * <p>**Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>This API returns current, historical, and future time zone information for a specified latitude-longitude
      * pair. In addition, the API provides sunset and sunrise times for a given location.
@@ -586,8 +579,7 @@ public final class TimezonesImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Timezone By ID call or By Coordinates call on successful
-     *     completion of {@link Mono}.
+     * @return this object is returned from a successful Timezone By ID call or By Coordinates call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<TimezoneResult> getTimezoneByCoordinatesAsync(
@@ -619,7 +611,7 @@ public final class TimezonesImpl {
     /**
      * __Time Zone by Coordinates__
      *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
+     * <p>**Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>This API returns current, historical, and future time zone information for a specified latitude-longitude
      * pair. In addition, the API provides sunset and sunrise times for a given location.
@@ -642,8 +634,7 @@ public final class TimezonesImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Timezone By ID call or By Coordinates call on successful
-     *     completion of {@link Mono}.
+     * @return this object is returned from a successful Timezone By ID call or By Coordinates call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<TimezoneResult> getTimezoneByCoordinatesAsync(
@@ -677,7 +668,7 @@ public final class TimezonesImpl {
     /**
      * __Time Zone by Coordinates__
      *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
+     * <p>**Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>This API returns current, historical, and future time zone information for a specified latitude-longitude
      * pair. In addition, the API provides sunset and sunrise times for a given location.
@@ -724,7 +715,7 @@ public final class TimezonesImpl {
     /**
      * __Time Zone by Coordinates__
      *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
+     * <p>**Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>This API returns current, historical, and future time zone information for a specified latitude-longitude
      * pair. In addition, the API provides sunset and sunrise times for a given location.
@@ -747,8 +738,7 @@ public final class TimezonesImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Timezone By ID call or By Coordinates call along with {@link
-     *     Response}.
+     * @return this object is returned from a successful Timezone By ID call or By Coordinates call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<TimezoneResult> getTimezoneByCoordinatesWithResponse(
@@ -775,7 +765,7 @@ public final class TimezonesImpl {
     /**
      * __Windows Time Zones__
      *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
+     * <p>**Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>This API returns a full list of Windows Time Zone IDs.
      *
@@ -783,8 +773,7 @@ public final class TimezonesImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Timezone Enum Windows call along with {@link Response} on
-     *     successful completion of {@link Mono}.
+     * @return this object is returned from a successful Timezone Enum Windows call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<List<TimezoneWindows>>> getWindowsTimezoneIdsWithResponseAsync(JsonFormat format) {
@@ -803,7 +792,7 @@ public final class TimezonesImpl {
     /**
      * __Windows Time Zones__
      *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
+     * <p>**Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>This API returns a full list of Windows Time Zone IDs.
      *
@@ -812,8 +801,7 @@ public final class TimezonesImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Timezone Enum Windows call along with {@link Response} on
-     *     successful completion of {@link Mono}.
+     * @return this object is returned from a successful Timezone Enum Windows call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<List<TimezoneWindows>>> getWindowsTimezoneIdsWithResponseAsync(
@@ -826,7 +814,7 @@ public final class TimezonesImpl {
     /**
      * __Windows Time Zones__
      *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
+     * <p>**Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>This API returns a full list of Windows Time Zone IDs.
      *
@@ -834,8 +822,7 @@ public final class TimezonesImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Timezone Enum Windows call on successful completion of {@link
-     *     Mono}.
+     * @return this object is returned from a successful Timezone Enum Windows call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<List<TimezoneWindows>> getWindowsTimezoneIdsAsync(JsonFormat format) {
@@ -853,7 +840,7 @@ public final class TimezonesImpl {
     /**
      * __Windows Time Zones__
      *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
+     * <p>**Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>This API returns a full list of Windows Time Zone IDs.
      *
@@ -862,8 +849,7 @@ public final class TimezonesImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Timezone Enum Windows call on successful completion of {@link
-     *     Mono}.
+     * @return this object is returned from a successful Timezone Enum Windows call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<List<TimezoneWindows>> getWindowsTimezoneIdsAsync(JsonFormat format, Context context) {
@@ -881,7 +867,7 @@ public final class TimezonesImpl {
     /**
      * __Windows Time Zones__
      *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
+     * <p>**Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>This API returns a full list of Windows Time Zone IDs.
      *
@@ -899,7 +885,7 @@ public final class TimezonesImpl {
     /**
      * __Windows Time Zones__
      *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
+     * <p>**Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>This API returns a full list of Windows Time Zone IDs.
      *
@@ -908,7 +894,7 @@ public final class TimezonesImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Timezone Enum Windows call along with {@link Response}.
+     * @return this object is returned from a successful Timezone Enum Windows call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<List<TimezoneWindows>> getWindowsTimezoneIdsWithResponse(JsonFormat format, Context context) {
@@ -918,7 +904,7 @@ public final class TimezonesImpl {
     /**
      * __IANA Time Zones__
      *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
+     * <p>**Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>This API returns a full list of IANA time zone IDs. Updates to the IANA service will be reflected in the
      * system within one day.
@@ -927,8 +913,7 @@ public final class TimezonesImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Timezone Enum IANA call along with {@link Response} on
-     *     successful completion of {@link Mono}.
+     * @return this object is returned from a successful Timezone Enum IANA call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<List<IanaId>>> getIanaTimezoneIdsWithResponseAsync(JsonFormat format) {
@@ -947,7 +932,7 @@ public final class TimezonesImpl {
     /**
      * __IANA Time Zones__
      *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
+     * <p>**Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>This API returns a full list of IANA time zone IDs. Updates to the IANA service will be reflected in the
      * system within one day.
@@ -957,8 +942,7 @@ public final class TimezonesImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Timezone Enum IANA call along with {@link Response} on
-     *     successful completion of {@link Mono}.
+     * @return this object is returned from a successful Timezone Enum IANA call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<List<IanaId>>> getIanaTimezoneIdsWithResponseAsync(JsonFormat format, Context context) {
@@ -970,7 +954,7 @@ public final class TimezonesImpl {
     /**
      * __IANA Time Zones__
      *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
+     * <p>**Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>This API returns a full list of IANA time zone IDs. Updates to the IANA service will be reflected in the
      * system within one day.
@@ -979,8 +963,7 @@ public final class TimezonesImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Timezone Enum IANA call on successful completion of {@link
-     *     Mono}.
+     * @return this object is returned from a successful Timezone Enum IANA call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<List<IanaId>> getIanaTimezoneIdsAsync(JsonFormat format) {
@@ -998,7 +981,7 @@ public final class TimezonesImpl {
     /**
      * __IANA Time Zones__
      *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
+     * <p>**Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>This API returns a full list of IANA time zone IDs. Updates to the IANA service will be reflected in the
      * system within one day.
@@ -1008,8 +991,7 @@ public final class TimezonesImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Timezone Enum IANA call on successful completion of {@link
-     *     Mono}.
+     * @return this object is returned from a successful Timezone Enum IANA call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<List<IanaId>> getIanaTimezoneIdsAsync(JsonFormat format, Context context) {
@@ -1027,7 +1009,7 @@ public final class TimezonesImpl {
     /**
      * __IANA Time Zones__
      *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
+     * <p>**Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>This API returns a full list of IANA time zone IDs. Updates to the IANA service will be reflected in the
      * system within one day.
@@ -1046,7 +1028,7 @@ public final class TimezonesImpl {
     /**
      * __IANA Time Zones__
      *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
+     * <p>**Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>This API returns a full list of IANA time zone IDs. Updates to the IANA service will be reflected in the
      * system within one day.
@@ -1056,7 +1038,7 @@ public final class TimezonesImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Timezone Enum IANA call along with {@link Response}.
+     * @return this object is returned from a successful Timezone Enum IANA call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<List<IanaId>> getIanaTimezoneIdsWithResponse(JsonFormat format, Context context) {
@@ -1066,7 +1048,7 @@ public final class TimezonesImpl {
     /**
      * __Time Zone IANA Version__
      *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
+     * <p>**Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>This API returns the current IANA version number as Metadata.
      *
@@ -1074,8 +1056,7 @@ public final class TimezonesImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Timezone IANA Version call along with {@link Response} on
-     *     successful completion of {@link Mono}.
+     * @return this object is returned from a successful Timezone IANA Version call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<TimezoneIanaVersionResult>> getIanaVersionWithResponseAsync(JsonFormat format) {
@@ -1094,7 +1075,7 @@ public final class TimezonesImpl {
     /**
      * __Time Zone IANA Version__
      *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
+     * <p>**Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>This API returns the current IANA version number as Metadata.
      *
@@ -1103,8 +1084,7 @@ public final class TimezonesImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Timezone IANA Version call along with {@link Response} on
-     *     successful completion of {@link Mono}.
+     * @return this object is returned from a successful Timezone IANA Version call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<TimezoneIanaVersionResult>> getIanaVersionWithResponseAsync(
@@ -1117,7 +1097,7 @@ public final class TimezonesImpl {
     /**
      * __Time Zone IANA Version__
      *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
+     * <p>**Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>This API returns the current IANA version number as Metadata.
      *
@@ -1125,8 +1105,7 @@ public final class TimezonesImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Timezone IANA Version call on successful completion of {@link
-     *     Mono}.
+     * @return this object is returned from a successful Timezone IANA Version call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<TimezoneIanaVersionResult> getIanaVersionAsync(JsonFormat format) {
@@ -1144,7 +1123,7 @@ public final class TimezonesImpl {
     /**
      * __Time Zone IANA Version__
      *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
+     * <p>**Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>This API returns the current IANA version number as Metadata.
      *
@@ -1153,8 +1132,7 @@ public final class TimezonesImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Timezone IANA Version call on successful completion of {@link
-     *     Mono}.
+     * @return this object is returned from a successful Timezone IANA Version call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<TimezoneIanaVersionResult> getIanaVersionAsync(JsonFormat format, Context context) {
@@ -1172,7 +1150,7 @@ public final class TimezonesImpl {
     /**
      * __Time Zone IANA Version__
      *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
+     * <p>**Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>This API returns the current IANA version number as Metadata.
      *
@@ -1190,7 +1168,7 @@ public final class TimezonesImpl {
     /**
      * __Time Zone IANA Version__
      *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
+     * <p>**Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>This API returns the current IANA version number as Metadata.
      *
@@ -1199,7 +1177,7 @@ public final class TimezonesImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Timezone IANA Version call along with {@link Response}.
+     * @return this object is returned from a successful Timezone IANA Version call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<TimezoneIanaVersionResult> getIanaVersionWithResponse(JsonFormat format, Context context) {
@@ -1209,7 +1187,7 @@ public final class TimezonesImpl {
     /**
      * __Windows to IANA Time Zone__
      *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
+     * <p>**Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>This API returns a corresponding IANA ID, given a valid Windows Time Zone ID. Multiple IANA IDs may be
      * returned for a single Windows ID. It is possible to narrow these results by adding an optional territory
@@ -1221,8 +1199,7 @@ public final class TimezonesImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Timezone Windows To IANA call along with {@link Response} on
-     *     successful completion of {@link Mono}.
+     * @return this object is returned from a successful Timezone Windows To IANA call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<List<IanaId>>> convertWindowsTimezoneToIanaWithResponseAsync(
@@ -1244,7 +1221,7 @@ public final class TimezonesImpl {
     /**
      * __Windows to IANA Time Zone__
      *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
+     * <p>**Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>This API returns a corresponding IANA ID, given a valid Windows Time Zone ID. Multiple IANA IDs may be
      * returned for a single Windows ID. It is possible to narrow these results by adding an optional territory
@@ -1257,8 +1234,7 @@ public final class TimezonesImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Timezone Windows To IANA call along with {@link Response} on
-     *     successful completion of {@link Mono}.
+     * @return this object is returned from a successful Timezone Windows To IANA call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<List<IanaId>>> convertWindowsTimezoneToIanaWithResponseAsync(
@@ -1278,7 +1254,7 @@ public final class TimezonesImpl {
     /**
      * __Windows to IANA Time Zone__
      *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
+     * <p>**Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>This API returns a corresponding IANA ID, given a valid Windows Time Zone ID. Multiple IANA IDs may be
      * returned for a single Windows ID. It is possible to narrow these results by adding an optional territory
@@ -1290,8 +1266,7 @@ public final class TimezonesImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Timezone Windows To IANA call on successful completion of
-     *     {@link Mono}.
+     * @return this object is returned from a successful Timezone Windows To IANA call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<List<IanaId>> convertWindowsTimezoneToIanaAsync(
@@ -1310,7 +1285,7 @@ public final class TimezonesImpl {
     /**
      * __Windows to IANA Time Zone__
      *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
+     * <p>**Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>This API returns a corresponding IANA ID, given a valid Windows Time Zone ID. Multiple IANA IDs may be
      * returned for a single Windows ID. It is possible to narrow these results by adding an optional territory
@@ -1323,8 +1298,7 @@ public final class TimezonesImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Timezone Windows To IANA call on successful completion of
-     *     {@link Mono}.
+     * @return this object is returned from a successful Timezone Windows To IANA call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<List<IanaId>> convertWindowsTimezoneToIanaAsync(
@@ -1343,7 +1317,7 @@ public final class TimezonesImpl {
     /**
      * __Windows to IANA Time Zone__
      *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
+     * <p>**Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>This API returns a corresponding IANA ID, given a valid Windows Time Zone ID. Multiple IANA IDs may be
      * returned for a single Windows ID. It is possible to narrow these results by adding an optional territory
@@ -1366,7 +1340,7 @@ public final class TimezonesImpl {
     /**
      * __Windows to IANA Time Zone__
      *
-     * <p>**Applies to**: S0 and S1 pricing tiers.
+     * <p>**Applies to:** see pricing [tiers](https://aka.ms/AzureMapsPricingTier).
      *
      * <p>This API returns a corresponding IANA ID, given a valid Windows Time Zone ID. Multiple IANA IDs may be
      * returned for a single Windows ID. It is possible to narrow these results by adding an optional territory
@@ -1379,7 +1353,7 @@ public final class TimezonesImpl {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return this object is returned from a successful Timezone Windows To IANA call along with {@link Response}.
+     * @return this object is returned from a successful Timezone Windows To IANA call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<List<IanaId>> convertWindowsTimezoneToIanaWithResponse(

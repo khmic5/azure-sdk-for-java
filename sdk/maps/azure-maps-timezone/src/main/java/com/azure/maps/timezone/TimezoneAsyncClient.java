@@ -10,16 +10,15 @@ import com.azure.core.annotation.ServiceMethod;
 import com.azure.core.http.rest.Response;
 import com.azure.core.util.Context;
 import com.azure.maps.timezone.implementation.TimezonesImpl;
+import com.azure.maps.timezone.implementation.helper.Utility;
 import com.azure.maps.timezone.models.ErrorResponseException;
 import com.azure.maps.timezone.models.IanaId;
 import com.azure.maps.timezone.models.TimezoneCoordinateOptions;
 import com.azure.maps.timezone.models.TimezoneIDOptions;
 import com.azure.maps.timezone.implementation.models.JsonFormat;
-import com.azure.maps.timezone.implementation.models.TimezoneIanaVersionResult;
-import com.azure.maps.timezone.implementation.models.TimezoneOptions;
-import com.azure.maps.timezone.implementation.models.TimezoneResult;
-import com.azure.maps.timezone.implementation.models.TimezoneWindows;
-import java.time.OffsetDateTime;
+import com.azure.maps.timezone.models.TimezoneIanaVersionResult;
+import com.azure.maps.timezone.models.TimezoneResult;
+import com.azure.maps.timezone.models.TimezoneWindows;
 import java.util.List;
 import reactor.core.publisher.Mono;
 
@@ -233,7 +232,7 @@ public final class TimezoneAsyncClient {
     public Mono<Response<TimezoneResult>> getTimezoneByCoordinatesWithResponse(TimezoneCoordinateOptions options, Context context) {
         return this.serviceClient.getTimezoneByCoordinatesWithResponseAsync(
                 JsonFormat.JSON,
-                options.getCoordinates(),
+                Utility.toCoordinateList(options.getCoordinates()),
                 options.getAcceptLanguage(),
                 options.getOptions(),
                 options.getTimeStamp(),

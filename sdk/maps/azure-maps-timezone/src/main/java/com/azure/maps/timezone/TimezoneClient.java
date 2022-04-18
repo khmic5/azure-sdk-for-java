@@ -13,9 +13,10 @@ import com.azure.maps.timezone.models.ErrorResponseException;
 import com.azure.maps.timezone.models.IanaId;
 import com.azure.maps.timezone.models.TimezoneCoordinateOptions;
 import com.azure.maps.timezone.models.TimezoneIDOptions;
-import com.azure.maps.timezone.implementation.models.TimezoneIanaVersionResult;
-import com.azure.maps.timezone.implementation.models.TimezoneResult;
-import com.azure.maps.timezone.implementation.models.TimezoneWindows;
+import com.azure.maps.timezone.models.TimezoneId;
+import com.azure.maps.timezone.models.TimezoneIanaVersionResult;
+import com.azure.maps.timezone.models.TimezoneResult;
+import com.azure.maps.timezone.models.TimezoneWindows;
 import java.util.List;
 
 /** Initializes a new instance of the synchronous TimezoneClient type. */
@@ -119,6 +120,11 @@ public final class TimezoneClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public TimezoneResult getTimezoneByCoordinates(TimezoneCoordinateOptions options) {
+        TimezoneResult tr = this.asyncClient.getTimezoneByCoordinates(options).block();
+        List<TimezoneId> list = tr.getTimeZones();
+        for (TimezoneId id : list) {
+            System.out.println("snoopy " + id.getReferenceTime().getStandardOffset());
+        }
         return this.asyncClient.getTimezoneByCoordinates(options).block();
     }
 
