@@ -16,6 +16,7 @@ import com.azure.core.http.policy.BearerTokenAuthenticationPolicy;
 import com.azure.core.http.policy.HttpLogDetailLevel;
 import com.azure.core.http.policy.HttpLogOptions;
 import com.azure.core.http.policy.HttpPipelinePolicy;
+import com.azure.core.http.rest.Response;
 import com.azure.core.test.InterceptorManager;
 import com.azure.core.test.TestBase;
 import com.azure.core.test.TestMode;
@@ -99,10 +100,22 @@ public class TimezoneClientTestBase extends TestBase {
         assertEquals(expected.getTimeZones().size(), actual.getTimeZones().size());
     }
 
+    static void validateGetTimezoneByIdWithResponse(TimezoneResult expected, int expectedStatusCode, Response<TimezoneResult> response) {
+        assertNotNull(response);
+        assertEquals(expectedStatusCode, response.getStatusCode());
+        validateGetTimezoneById(expected, response.getValue());
+    }
+
     static void validateGetTimezoneByCoordinates(TimezoneResult actual, TimezoneResult expected) {
         assertNotNull(actual);
         assertNotNull(expected);
         assertEquals(expected.getTimeZones().size(), actual.getTimeZones().size());
+    }
+
+    static void validateGetTimezoneByCoordinatesWithResponse(TimezoneResult expected, int expectedStatusCode, Response<TimezoneResult> response) {
+        assertNotNull(response);
+        assertEquals(expectedStatusCode, response.getStatusCode());
+        validateGetTimezoneByCoordinates(expected, response.getValue());
     }
 
     static void validateGetWindowsTimezoneIds(List<TimezoneWindows> actual, List<TimezoneWindows> expected) {
@@ -115,6 +128,12 @@ public class TimezoneClientTestBase extends TestBase {
         }
     }
 
+    static void validateGetWindowsTimezoneIdsWithResponse(List<TimezoneWindows> expected, int expectedStatusCode, Response<List<TimezoneWindows>> response) {
+        assertNotNull(response);
+        assertEquals(expectedStatusCode, response.getStatusCode());
+        validateGetWindowsTimezoneIds(expected, response.getValue());
+    }
+
     static void validateGetIanaTimezoneIds(List<IanaId> actual, List<IanaId> expected) {
         assertNotNull(actual);
         assertNotNull(expected);
@@ -125,10 +144,22 @@ public class TimezoneClientTestBase extends TestBase {
         }
     }
 
+    static void validateGetIanaTimezoneIdsWithResponse(List<IanaId> expected, int expectedStatusCode, Response<List<IanaId>> response) {
+        assertNotNull(response);
+        assertEquals(expectedStatusCode, response.getStatusCode());
+        validateGetIanaTimezoneIds(expected, response.getValue());
+    }
+
     static void validateGetIanaVersion(TimezoneIanaVersionResult actual, TimezoneIanaVersionResult expected) {
         assertNotNull(actual);
         assertNotNull(expected);
         assertEquals(expected.getVersion(), actual.getVersion());
+    }
+
+    static void validateGetIanaVersionWithResponse(TimezoneIanaVersionResult expected, int expectedStatusCode, Response<TimezoneIanaVersionResult> response) {
+        assertNotNull(response);
+        assertEquals(expectedStatusCode, response.getStatusCode());
+        validateGetIanaVersion(expected, response.getValue());
     }
 
     static void validateConvertWindowsTimezoneToIana(List<IanaId> actual, List<IanaId> expected) {
@@ -141,4 +172,9 @@ public class TimezoneClientTestBase extends TestBase {
         }
     }
 
+    static void validateConvertWindowsTimezoneToIanaWithResponse(List<IanaId> expected, int expectedStatusCode, Response<List<IanaId>> response) {
+        assertNotNull(response);
+        assertEquals(expectedStatusCode, response.getStatusCode());
+        validateConvertWindowsTimezoneToIana(expected, response.getValue());
+    }
 }
