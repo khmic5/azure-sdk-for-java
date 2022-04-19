@@ -13,10 +13,10 @@ import com.azure.maps.timezone.models.ErrorResponseException;
 import com.azure.maps.timezone.models.IanaId;
 import com.azure.maps.timezone.models.TimezoneCoordinateOptions;
 import com.azure.maps.timezone.models.TimezoneIDOptions;
-import com.azure.maps.timezone.models.TimezoneId;
 import com.azure.maps.timezone.models.TimezoneIanaVersionResult;
 import com.azure.maps.timezone.models.TimezoneResult;
 import com.azure.maps.timezone.models.TimezoneWindows;
+
 import java.util.List;
 
 /** Initializes a new instance of the synchronous TimezoneClient type. */
@@ -44,7 +44,7 @@ public final class TimezoneClient {
      * @param timezoneId The IANA time zone ID.
      * @param acceptLanguage Specifies the language code in which the timezone names should be returned. If no language
      *     code is provided, the response will be in "EN". Please refer to [Supported
-     *     Languages](https://docs.microsoft.com/en-us/azure/azure-maps/supported-languages) for details.
+     *     Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for details.
      * @param options Alternatively, use alias "o". Options available for types of information returned in the result.
      * @param timeStamp Alternatively, use alias "stamp", or "s". Reference time, if omitted, the API will use the
      *     machine time serving the request.
@@ -73,7 +73,7 @@ public final class TimezoneClient {
      * @param timezoneId The IANA time zone ID.
      * @param acceptLanguage Specifies the language code in which the timezone names should be returned. If no language
      *     code is provided, the response will be in "EN". Please refer to [Supported
-     *     Languages](https://docs.microsoft.com/en-us/azure/azure-maps/supported-languages) for details.
+     *     Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for details.
      * @param options Alternatively, use alias "o". Options available for types of information returned in the result.
      * @param timeStamp Alternatively, use alias "stamp", or "s". Reference time, if omitted, the API will use the
      *     machine time serving the request.
@@ -105,7 +105,7 @@ public final class TimezoneClient {
      *     coordinates are passed in as a single string containing coordinates, separated by commas.
      * @param acceptLanguage Specifies the language code in which the timezone names should be returned. If no language
      *     code is provided, the response will be in "EN". Please refer to [Supported
-     *     Languages](https://docs.microsoft.com/en-us/azure/azure-maps/supported-languages) for details.
+     *     Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for details.
      * @param options Alternatively, use alias "o". Options available for types of information returned in the result.
      * @param timeStamp Alternatively, use alias "stamp", or "s". Reference time, if omitted, the API will use the
      *     machine time serving the request.
@@ -120,11 +120,6 @@ public final class TimezoneClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public TimezoneResult getTimezoneByCoordinates(TimezoneCoordinateOptions options) {
-        TimezoneResult tr = this.asyncClient.getTimezoneByCoordinates(options).block();
-        List<TimezoneId> list = tr.getTimeZones();
-        for (TimezoneId id : list) {
-            System.out.println("snoopy " + id.getReferenceTime().getStandardOffset());
-        }
         return this.asyncClient.getTimezoneByCoordinates(options).block();
     }
 
@@ -142,7 +137,7 @@ public final class TimezoneClient {
      *     coordinates are passed in as a single string containing coordinates, separated by commas.
      * @param acceptLanguage Specifies the language code in which the timezone names should be returned. If no language
      *     code is provided, the response will be in "EN". Please refer to [Supported
-     *     Languages](https://docs.microsoft.com/en-us/azure/azure-maps/supported-languages) for details.
+     *     Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for details.
      * @param options Alternatively, use alias "o". Options available for types of information returned in the result.
      * @param timeStamp Alternatively, use alias "stamp", or "s". Reference time, if omitted, the API will use the
      *     machine time serving the request.

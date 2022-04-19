@@ -87,7 +87,7 @@ public final class TimezoneClientBuilder {
      *
      * More details: <a href="https://docs.microsoft.com/azure/azure-maps/azure-maps-authentication">Azure Maps AD Authentication</a>
      *
-     * @param elevationClientId the clientId value.
+     * @param timezoneClientId the clientId value.
      * @return the TimezoneClientBuilder.
      */
     public TimezoneClientBuilder timezoneClientId(String timezoneClientId) {

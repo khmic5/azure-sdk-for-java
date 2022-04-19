@@ -46,8 +46,8 @@ public class TimezoneClientTestBase extends TestBase {
 
     TimezoneClientBuilder getTimezoneAsyncClientBuilder(HttpClient httpClient, TimezoneServiceVersion serviceVersion) {
         TimezoneClientBuilder builder = new TimezoneClientBuilder()
-        .httpLogOptions(new HttpLogOptions().setLogLevel(HttpLogDetailLevel.BODY_AND_HEADERS))
-        .serviceVersion(serviceVersion);
+            .httpLogOptions(new HttpLogOptions().setLogLevel(HttpLogDetailLevel.BODY_AND_HEADERS))
+            .serviceVersion(serviceVersion);
         String endpoint = getEndpoint();
         if (getEndpoint() != null) {
             builder.endpoint(endpoint);

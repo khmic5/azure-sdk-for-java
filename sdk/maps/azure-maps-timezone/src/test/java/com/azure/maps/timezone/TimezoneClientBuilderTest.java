@@ -89,9 +89,9 @@ public class TimezoneClientBuilderTest {
         });
     }
 
-    // Test for null map id, valid token credential
+    // Test for null timezone id, valid token credential
     @Test
-    public void missingMapsClientIdValidTokenCredential() {
+    public void missingTimezoneClientIdValidTokenCredential() {
         assertThrows(IllegalArgumentException.class, () -> {
             final TimezoneClientBuilder builder = new TimezoneClientBuilder();
             DefaultAzureCredential tokenCredential = new DefaultAzureCredentialBuilder().build();
@@ -100,7 +100,7 @@ public class TimezoneClientBuilderTest {
         });
     }
 
-    // Test for null key credential and null token credential despite valid mapsClientId
+    // Test for null key credential and null token credential despite valid timezoneClientId
     @Test
     public void missingCredentials() {
         assertThrows(IllegalArgumentException.class, () -> {

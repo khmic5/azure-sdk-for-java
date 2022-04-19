@@ -47,7 +47,7 @@ public final class TimezoneAsyncClient {
      * @param timezoneId The IANA time zone ID.
      * @param acceptLanguage Specifies the language code in which the timezone names should be returned. If no language
      *     code is provided, the response will be in "EN". Please refer to [Supported
-     *     Languages](https://docs.microsoft.com/en-us/azure/azure-maps/supported-languages) for details.
+     *     Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for details.
      * @param options Alternatively, use alias "o". Options available for types of information returned in the result.
      * @param timeStamp Alternatively, use alias "stamp", or "s". Reference time, if omitted, the API will use the
      *     machine time serving the request.
@@ -62,10 +62,10 @@ public final class TimezoneAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<TimezoneResult> getTimezoneByID(TimezoneIDOptions options) {
-            Mono<Response<TimezoneResult>> result = this.getTimezoneByIDWithResponse(options);
-            return result.flatMap(response -> {
-                return Mono.just(response.getValue());
-            });
+        Mono<Response<TimezoneResult>> result = this.getTimezoneByIDWithResponse(options);
+        return result.flatMap(response -> {
+            return Mono.just(response.getValue());
+        });
     }
 
     /**
@@ -79,7 +79,7 @@ public final class TimezoneAsyncClient {
      * @param timezoneId The IANA time zone ID.
      * @param acceptLanguage Specifies the language code in which the timezone names should be returned. If no language
      *     code is provided, the response will be in "EN". Please refer to [Supported
-     *     Languages](https://docs.microsoft.com/en-us/azure/azure-maps/supported-languages) for details.
+     *     Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for details.
      * @param options Alternatively, use alias "o". Options available for types of information returned in the result.
      * @param timeStamp Alternatively, use alias "stamp", or "s". Reference time, if omitted, the API will use the
      *     machine time serving the request.
@@ -94,7 +94,7 @@ public final class TimezoneAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<TimezoneResult>> getTimezoneByIDWithResponse(TimezoneIDOptions options) {
-            return this.getTimezoneByIDWithResponse(options, null);
+        return this.getTimezoneByIDWithResponse(options, null);
     }
 
     /**
@@ -108,7 +108,7 @@ public final class TimezoneAsyncClient {
      * @param timezoneId The IANA time zone ID.
      * @param acceptLanguage Specifies the language code in which the timezone names should be returned. If no language
      *     code is provided, the response will be in "EN". Please refer to [Supported
-     *     Languages](https://docs.microsoft.com/en-us/azure/azure-maps/supported-languages) for details.
+     *     Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for details.
      * @param options Alternatively, use alias "o". Options available for types of information returned in the result.
      * @param timeStamp Alternatively, use alias "stamp", or "s". Reference time, if omitted, the API will use the
      *     machine time serving the request.
@@ -124,14 +124,14 @@ public final class TimezoneAsyncClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<TimezoneResult>> getTimezoneByIDWithResponse(TimezoneIDOptions options, Context context) {
         return this.serviceClient.getTimezoneByIDWithResponseAsync(
-                JsonFormat.JSON,
-                options.getTimezoneId(),
-                options.getAcceptLanguage(),
-                options.getOptions(),
-                options.getTimeStamp(),
-                options.getDaylightSavingsTimeFrom(),
-                options.getDaylightSavingsTimeLastingYears(), 
-                context);
+            JsonFormat.JSON,
+            options.getTimezoneId(),
+            options.getAcceptLanguage(),
+            options.getOptions(),
+            options.getTimeStamp(),
+            options.getDaylightSavingsTimeFrom(),
+            options.getDaylightSavingsTimeLastingYears(), 
+            context);
     }
 
     /**
@@ -148,7 +148,7 @@ public final class TimezoneAsyncClient {
      *     coordinates are passed in as a single string containing coordinates, separated by commas.
      * @param acceptLanguage Specifies the language code in which the timezone names should be returned. If no language
      *     code is provided, the response will be in "EN". Please refer to [Supported
-     *     Languages](https://docs.microsoft.com/en-us/azure/azure-maps/supported-languages) for details.
+     *     Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for details.
      * @param options Alternatively, use alias "o". Options available for types of information returned in the result.
      * @param timeStamp Alternatively, use alias "stamp", or "s". Reference time, if omitted, the API will use the
      *     machine time serving the request.
@@ -163,10 +163,10 @@ public final class TimezoneAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<TimezoneResult> getTimezoneByCoordinates(TimezoneCoordinateOptions options) {
-                Mono<Response<TimezoneResult>> result = this.getTimezoneByCoordinatesWithResponse(options);
-                return result.flatMap(response -> {
-                    return Mono.just(response.getValue());
-                });
+        Mono<Response<TimezoneResult>> result = this.getTimezoneByCoordinatesWithResponse(options);
+        return result.flatMap(response -> {
+            return Mono.just(response.getValue());
+        });
     }
 
     /**
@@ -183,7 +183,7 @@ public final class TimezoneAsyncClient {
      *     coordinates are passed in as a single string containing coordinates, separated by commas.
      * @param acceptLanguage Specifies the language code in which the timezone names should be returned. If no language
      *     code is provided, the response will be in "EN". Please refer to [Supported
-     *     Languages](https://docs.microsoft.com/en-us/azure/azure-maps/supported-languages) for details.
+     *     Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for details.
      * @param options Alternatively, use alias "o". Options available for types of information returned in the result.
      * @param timeStamp Alternatively, use alias "stamp", or "s". Reference time, if omitted, the API will use the
      *     machine time serving the request.
@@ -215,7 +215,7 @@ public final class TimezoneAsyncClient {
      *     coordinates are passed in as a single string containing coordinates, separated by commas.
      * @param acceptLanguage Specifies the language code in which the timezone names should be returned. If no language
      *     code is provided, the response will be in "EN". Please refer to [Supported
-     *     Languages](https://docs.microsoft.com/en-us/azure/azure-maps/supported-languages) for details.
+     *     Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for details.
      * @param options Alternatively, use alias "o". Options available for types of information returned in the result.
      * @param timeStamp Alternatively, use alias "stamp", or "s". Reference time, if omitted, the API will use the
      *     machine time serving the request.
@@ -231,14 +231,14 @@ public final class TimezoneAsyncClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<TimezoneResult>> getTimezoneByCoordinatesWithResponse(TimezoneCoordinateOptions options, Context context) {
         return this.serviceClient.getTimezoneByCoordinatesWithResponseAsync(
-                JsonFormat.JSON,
-                Utility.toCoordinateList(options.getCoordinates()),
-                options.getAcceptLanguage(),
-                options.getOptions(),
-                options.getTimeStamp(),
-                options.getDaylightSavingsTimeFrom(),
-                options.getDaylightSavingsTimeLastingYears(), 
-                context);
+            JsonFormat.JSON,
+            Utility.toCoordinateList(options.getCoordinates()),
+            options.getAcceptLanguage(),
+            options.getOptions(),
+            options.getTimeStamp(),
+            options.getDaylightSavingsTimeFrom(),
+            options.getDaylightSavingsTimeLastingYears(), 
+            context);
     }
 
     /**

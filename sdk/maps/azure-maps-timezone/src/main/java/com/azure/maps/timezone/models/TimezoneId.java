@@ -8,9 +8,7 @@ package com.azure.maps.timezone.models;
 
 import com.azure.core.annotation.Fluent;
 import com.azure.core.models.GeoPosition;
-import com.azure.maps.timezone.implementation.models.ReferenceTime;
 import com.azure.maps.timezone.implementation.models.RepresentativePoint;
-import com.azure.maps.timezone.implementation.models.TimeTransition;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 

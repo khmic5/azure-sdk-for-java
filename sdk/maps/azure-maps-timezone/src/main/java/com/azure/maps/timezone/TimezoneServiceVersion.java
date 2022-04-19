@@ -2,6 +2,9 @@ package com.azure.maps.timezone;
 
 import com.azure.core.util.ServiceVersion;
 
+/**
+ * Timezone Service Version
+ */
 public enum TimezoneServiceVersion implements ServiceVersion {
     /**
      * Service version {@code 1.0}.
@@ -11,7 +14,7 @@ public enum TimezoneServiceVersion implements ServiceVersion {
     private final String version;
 
     /**
-     * Creates a new {@link ElevationServiceVersion} with a version string.
+     * Creates a new {@link TimezoneServiceVersion} with a version string.
      *
      * @param version
      */

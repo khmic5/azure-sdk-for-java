@@ -39,6 +39,7 @@ public class TimezoneClientTest extends TimezoneClientTestBase {
         TimezoneResult expectedResult = TestUtils.getExpectedTimezoneById();
         validateGetTimezoneById(actualResult, expectedResult);
     }
+    
 
     // Test get timezone by id with response
     // Case 1: 200
