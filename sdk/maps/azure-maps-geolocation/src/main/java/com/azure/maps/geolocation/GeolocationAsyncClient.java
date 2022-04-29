@@ -82,7 +82,7 @@ public final class GeolocationAsyncClient {
      * @return this object is returned from a successful call to IP Address to country/region API.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<IpAddressToLocationResult>> getLocationWithResponse(String ipAddress, Context context) {
+    Mono<Response<IpAddressToLocationResult>> getLocationWithResponse(String ipAddress, Context context) {
         return this.serviceClient.getLocationWithResponseAsync(JsonFormat.JSON, ipAddress, context);
     }
 }
