@@ -4,7 +4,7 @@ import java.time.OffsetDateTime;
 /**
  * Organizes inputs for get timezone by ID
  */
-public final class TimezoneIDOptions {
+public final class TimezoneIdOptions {
     private String timezoneId;
     private String acceptLanguage;
     private TimezoneOptions options;
@@ -25,7 +25,7 @@ public final class TimezoneIDOptions {
      * @param timezoneId
      * @return
      */
-    public TimezoneIDOptions setTimezoneId(String timezoneId) {
+    public TimezoneIdOptions setTimezoneId(String timezoneId) {
         this.timezoneId = timezoneId;
         return this;
     }
@@ -43,7 +43,7 @@ public final class TimezoneIDOptions {
      * @param acceptLanguage
      * @return
      */
-    public TimezoneIDOptions setAcceptLanguage(String acceptLanguage) {
+    public TimezoneIdOptions setAcceptLanguage(String acceptLanguage) {
         this.acceptLanguage = acceptLanguage;
         return this;
     }
@@ -61,7 +61,7 @@ public final class TimezoneIDOptions {
      * @param options
      * @return
      */
-    public TimezoneIDOptions setOptions(TimezoneOptions options) {
+    public TimezoneIdOptions setOptions(TimezoneOptions options) {
         this.options = options;
         return this;
     }
@@ -79,7 +79,7 @@ public final class TimezoneIDOptions {
      * @param timeStamp
      * @return
      */
-    public TimezoneIDOptions setTimeStamp(OffsetDateTime timeStamp) {
+    public TimezoneIdOptions setTimeStamp(OffsetDateTime timeStamp) {
         this.timeStamp = timeStamp;
         return this;
     }
@@ -97,7 +97,7 @@ public final class TimezoneIDOptions {
      * @param daylightSavingsTimeFrom
      * @return
      */
-    public TimezoneIDOptions setDaylightSavingsTimeFrom(OffsetDateTime daylightSavingsTimeFrom) {
+    public TimezoneIdOptions setDaylightSavingsTimeFrom(OffsetDateTime daylightSavingsTimeFrom) {
         this.daylightSavingsTimeFrom = daylightSavingsTimeFrom;
         return this;
     }
@@ -115,7 +115,7 @@ public final class TimezoneIDOptions {
      * @param daylightSavingsTimeLastingYears
      * @return
      */
-    public TimezoneIDOptions setDaylightSavingsTimeLastingYears(Integer daylightSavingsTimeLastingYears) {
+    public TimezoneIdOptions setDaylightSavingsTimeLastingYears(Integer daylightSavingsTimeLastingYears) {
         this.daylightSavingsTimeLastingYears = daylightSavingsTimeLastingYears;
         return this;
     }

@@ -14,7 +14,7 @@ import com.azure.maps.timezone.implementation.helper.Utility;
 import com.azure.maps.timezone.models.ErrorResponseException;
 import com.azure.maps.timezone.models.IanaId;
 import com.azure.maps.timezone.models.TimezoneCoordinateOptions;
-import com.azure.maps.timezone.models.TimezoneIDOptions;
+import com.azure.maps.timezone.models.TimezoneIdOptions;
 import com.azure.maps.timezone.implementation.models.JsonFormat;
 import com.azure.maps.timezone.models.TimezoneIanaVersionResult;
 import com.azure.maps.timezone.models.TimezoneResult;
@@ -61,8 +61,8 @@ public final class TimezoneAsyncClient {
      * @return this object is returned from a successful Timezone By ID call or By Coordinates call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<TimezoneResult> getTimezoneByID(TimezoneIDOptions options) {
-        Mono<Response<TimezoneResult>> result = this.getTimezoneByIDWithResponse(options);
+    public Mono<TimezoneResult> getTimezoneById(TimezoneIdOptions options) {
+        Mono<Response<TimezoneResult>> result = this.getTimezoneByIdWithResponse(options);
         return result.flatMap(response -> {
             return Mono.just(response.getValue());
         });
@@ -93,8 +93,8 @@ public final class TimezoneAsyncClient {
      * @return this object is returned from a successful Timezone By ID call or By Coordinates call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<TimezoneResult>> getTimezoneByIDWithResponse(TimezoneIDOptions options) {
-        return this.getTimezoneByIDWithResponse(options, null);
+    public Mono<Response<TimezoneResult>> getTimezoneByIdWithResponse(TimezoneIdOptions options) {
+        return this.getTimezoneByIdWithResponse(options, null);
     }
 
     /**
@@ -122,7 +122,7 @@ public final class TimezoneAsyncClient {
      * @return this object is returned from a successful Timezone By ID call or By Coordinates call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<TimezoneResult>> getTimezoneByIDWithResponse(TimezoneIDOptions options, Context context) {
+    Mono<Response<TimezoneResult>> getTimezoneByIdWithResponse(TimezoneIdOptions options, Context context) {
         return this.serviceClient.getTimezoneByIDWithResponseAsync(
             JsonFormat.JSON,
             options.getTimezoneId(),
@@ -229,7 +229,7 @@ public final class TimezoneAsyncClient {
      * @return this object is returned from a successful Timezone By ID call or By Coordinates call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<TimezoneResult>> getTimezoneByCoordinatesWithResponse(TimezoneCoordinateOptions options, Context context) {
+    Mono<Response<TimezoneResult>> getTimezoneByCoordinatesWithResponse(TimezoneCoordinateOptions options, Context context) {
         return this.serviceClient.getTimezoneByCoordinatesWithResponseAsync(
             JsonFormat.JSON,
             Utility.toCoordinateList(options.getCoordinates()),
@@ -294,7 +294,7 @@ public final class TimezoneAsyncClient {
      * @return this object is returned from a successful Timezone Enum Windows call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<List<TimezoneWindows>>> getWindowsTimezoneIdsWithResponse(Context context) {
+    Mono<Response<List<TimezoneWindows>>> getWindowsTimezoneIdsWithResponse(Context context) {
         return this.serviceClient.getWindowsTimezoneIdsWithResponseAsync(JsonFormat.JSON, context);
     }
 
@@ -354,7 +354,7 @@ public final class TimezoneAsyncClient {
      * @return this object is returned from a successful Timezone Enum IANA call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<List<IanaId>>> getIanaTimezoneIdsWithResponse(Context context) {
+    Mono<Response<List<IanaId>>> getIanaTimezoneIdsWithResponse(Context context) {
         return this.serviceClient.getIanaTimezoneIdsWithResponseAsync(JsonFormat.JSON, context);
     }
 
@@ -411,7 +411,7 @@ public final class TimezoneAsyncClient {
      * @return this object is returned from a successful Timezone IANA Version call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<TimezoneIanaVersionResult>> getIanaVersionWithResponse(Context context) {
+    Mono<Response<TimezoneIanaVersionResult>> getIanaVersionWithResponse(Context context) {
         return this.serviceClient.getIanaVersionWithResponseAsync(JsonFormat.JSON, context);
     }
 
@@ -480,7 +480,7 @@ public final class TimezoneAsyncClient {
      * @return this object is returned from a successful Timezone Windows To IANA call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<List<IanaId>>> convertWindowsTimezoneToIanaWithResponse(String windowsTimezoneId, String windowsTerritoryCode, Context context) {
+    Mono<Response<List<IanaId>>> convertWindowsTimezoneToIanaWithResponse(String windowsTimezoneId, String windowsTerritoryCode, Context context) {
         return this.serviceClient.convertWindowsTimezoneToIanaWithResponseAsync(
             JsonFormat.JSON, windowsTimezoneId, windowsTerritoryCode, context);
     }

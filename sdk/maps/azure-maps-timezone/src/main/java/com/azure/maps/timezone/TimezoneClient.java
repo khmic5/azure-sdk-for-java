@@ -12,7 +12,7 @@ import com.azure.core.util.Context;
 import com.azure.maps.timezone.models.ErrorResponseException;
 import com.azure.maps.timezone.models.IanaId;
 import com.azure.maps.timezone.models.TimezoneCoordinateOptions;
-import com.azure.maps.timezone.models.TimezoneIDOptions;
+import com.azure.maps.timezone.models.TimezoneIdOptions;
 import com.azure.maps.timezone.models.TimezoneIanaVersionResult;
 import com.azure.maps.timezone.models.TimezoneResult;
 import com.azure.maps.timezone.models.TimezoneWindows;
@@ -58,8 +58,8 @@ public final class TimezoneClient {
      * @return this object is returned from a successful Timezone By ID call or By Coordinates call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public TimezoneResult getTimezoneByID(TimezoneIDOptions options) {
-        return this.asyncClient.getTimezoneByID(options).block();
+    public TimezoneResult getTimezoneById(TimezoneIdOptions options) {
+        return this.asyncClient.getTimezoneById(options).block();
     }
 
     /**
@@ -87,8 +87,8 @@ public final class TimezoneClient {
      * @return this object is returned from a successful Timezone By ID call or By Coordinates call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<TimezoneResult> getTimezoneByIDWithResponse(TimezoneIDOptions options, Context context) {
-        return this.asyncClient.getTimezoneByIDWithResponse(options, context).block();
+    public Response<TimezoneResult> getTimezoneByIdWithResponse(TimezoneIdOptions options, Context context) {
+        return this.asyncClient.getTimezoneByIdWithResponse(options, context).block();
     }
 
     /**
