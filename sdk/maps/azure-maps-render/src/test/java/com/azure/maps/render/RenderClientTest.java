@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 import com.azure.core.exception.HttpResponseException;
 import com.azure.core.http.HttpClient;
@@ -169,11 +168,12 @@ public class RenderClientTest extends RenderClientTestBase {
         new StaticMapLayer();
         new RasterTileFormat();
         MapStaticImageOptions mapStaticImageOptions = new MapStaticImageOptions().setStaticMapLayer(StaticMapLayer.BASIC)
-        .setMapImageStyle(MapImageStyle.MAIN).setZoom(2)
-        .setBoundingBox(bbox).setRasterTileFormat(RasterTileFormat.PNG);
-        InputStream actualResult = client.getMapStaticImage(mapStaticImageOptions);
-        validateGetMapStaticImage(actualResult);
-        actualResult.close();
+            .setMapImageStyle(MapImageStyle.MAIN).setZoom(2)
+            .setBoundingBox(bbox).setRasterTileFormat(RasterTileFormat.PNG);
+        try(ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
+            client.getMapStaticImage(stream, mapStaticImageOptions);
+            validateGetMapStaticImage(stream.toByteArray());
+        }
     }
 
     // Test get mapstatic image with response
@@ -188,7 +188,9 @@ public class RenderClientTest extends RenderClientTestBase {
         MapStaticImageOptions mapStaticImageOptions = new MapStaticImageOptions().setStaticMapLayer(StaticMapLayer.BASIC)
         .setMapImageStyle(MapImageStyle.MAIN).setZoom(2)
         .setBoundingBox(bbox).setRasterTileFormat(RasterTileFormat.PNG);
-        validateGetMapStaticImageWithResponse(200, client.getMapStaticImageWithResponse(mapStaticImageOptions, null));
+        try(ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
+            validateGetMapStaticImageWithResponse(200, client.getMapStaticImageWithResponse(stream, mapStaticImageOptions, null), stream);
+        }
     }
 
     // Test get copyright from bounding box

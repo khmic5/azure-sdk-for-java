@@ -162,16 +162,15 @@ public class RenderClientTestBase extends TestBase {
         validateGetCopyrightCaptionFromBoundingBox(expected, response.getValue());
     }
 
-    static void validateGetMapStaticImage(InputStream actual) throws IOException {
+    static void validateGetMapStaticImage(byte[] actual) throws IOException {
         assertNotNull(actual);
-        assertTrue(actual.available() > 0);
-        actual.close();
+        assertTrue(actual.length > 0);
     }
 
-    static void validateGetMapStaticImageWithResponse(int expectedStatusCode, SimpleResponse<InputStream> response) throws IOException {
+    static void validateGetMapStaticImageWithResponse(int expectedStatusCode, Response<Void> response, ByteArrayOutputStream stream) throws IOException {
         assertNotNull(response);
         assertEquals(expectedStatusCode, response.getStatusCode());
-        validateGetMapStaticImage(response.getValue());
+        validateGetMapStaticImage(stream.toByteArray());
     }
 
     static void validateGetCopyrightForTile(Copyright expected, Copyright actual) {

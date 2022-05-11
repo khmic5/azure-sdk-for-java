@@ -5,11 +5,7 @@
 package com.azure.maps.render;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.SequenceInputStream;
-import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.Objects;
 
 import com.azure.core.annotation.ReturnType;
@@ -30,7 +26,6 @@ import com.azure.maps.render.models.MapTileOptions;
 import com.azure.maps.render.models.MapTileset;
 import com.azure.maps.render.models.TileIndex;
 import com.azure.maps.render.models.TilesetID;
-import com.fasterxml.jackson.databind.util.ByteBufferBackedInputStream;
 
 import reactor.core.publisher.Mono;
 
@@ -251,9 +246,8 @@ public final class RenderClient {
      * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public InputStream downloadMapStateTile(String statesetId, TileIndex tileIndex) {
-        Iterator<ByteBufferBackedInputStream> iterator = this.asyncClient.downloadMapStateTile(statesetId, tileIndex).map(ByteBufferBackedInputStream::new).toStream().iterator();
-        return getInputStream(iterator);
+    public void downloadMapStateTile(OutputStream stream, String statesetId, TileIndex tileIndex) {
+        downloadMapStateTileWithResponse(stream, statesetId, tileIndex, Context.NONE);
     }
     
     /**
@@ -267,11 +261,12 @@ public final class RenderClient {
      * @return
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SimpleResponse<InputStream> downloadMapStateTileWithResponse(String statesetId, TileIndex tileIndex, Context context) {
-        Mono<StreamResponse> monoResp = this.asyncClient.downloadMapStateTileWithResponse(statesetId, tileIndex, context); 
+    public Response<Void> downloadMapStateTileWithResponse(OutputStream stream, String statesetId, TileIndex tileIndex, Context context) {
+        Objects.requireNonNull(stream);
+        Mono<StreamResponse> monoResp = this.asyncClient.downloadMapStateTileWithResponse(statesetId, tileIndex, context)
+            .flatMap(response -> FluxUtil.writeToOutputStream(response.getValue(), stream).thenReturn(response)); 
         StreamResponse resp = monoResp.block();
-        Iterator<ByteBufferBackedInputStream> iterator = resp.getValue().map(ByteBufferBackedInputStream::new).toStream().iterator();
-        return new SimpleResponse<InputStream>(resp.getRequest(), resp.getStatusCode(), resp.getHeaders(), getInputStream(iterator));
+        return new SimpleResponse<Void>(resp.getRequest(), resp.getStatusCode(), resp.getHeaders(), null);
     }
 
     /**
@@ -515,9 +510,8 @@ public final class RenderClient {
      * @throws IOException
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public InputStream getMapStaticImage(MapStaticImageOptions options) {
-        Iterator<ByteBufferBackedInputStream> iterator = this.asyncClient.getMapStaticImage(options).map(ByteBufferBackedInputStream::new).toStream().iterator();
-        return getInputStream(iterator);
+    public void getMapStaticImage(OutputStream stream, MapStaticImageOptions options) {
+        getMapStaticImageWithResponse(stream, options, Context.NONE);
     } 
 
     /**
@@ -534,11 +528,12 @@ public final class RenderClient {
      * @throws IOException
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SimpleResponse<InputStream> getMapStaticImageWithResponse(MapStaticImageOptions options, Context context) {
-        Mono<StreamResponse> monoResp = this.asyncClient.getMapStaticImageWithResponse(options); 
+    public Response<Void> getMapStaticImageWithResponse(OutputStream stream, MapStaticImageOptions options, Context context) {
+        Objects.requireNonNull(stream);
+        Mono<StreamResponse> monoResp = this.asyncClient.getMapStaticImageWithResponse(options)
+            .flatMap(response -> FluxUtil.writeToOutputStream(response.getValue(), stream).thenReturn(response));
         StreamResponse resp = monoResp.block();
-        Iterator<ByteBufferBackedInputStream> iterator = resp.getValue().map(ByteBufferBackedInputStream::new).toStream().iterator();
-        return new SimpleResponse<InputStream>(resp.getRequest(), resp.getStatusCode(), resp.getHeaders(), getInputStream(iterator));
+        return new SimpleResponse<Void>(resp.getRequest(), resp.getStatusCode(), resp.getHeaders(), null);
     }
 
     /**
@@ -647,20 +642,5 @@ public final class RenderClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<Copyright> getCopyrightForWorldWithResponse(boolean includeText, Context context) {
         return this.asyncClient.getCopyrightForWorldWithResponse(includeText, context).block();
-    }
-
-    private InputStream getInputStream(Iterator<ByteBufferBackedInputStream> iterator) {
-        Enumeration<InputStream> enumeration = new Enumeration<InputStream>() {
-            @Override
-            public boolean hasMoreElements() {
-                return iterator.hasNext();
-            }
-
-            @Override
-            public InputStream nextElement() {
-                return iterator.next();
-            }
-        };
-        return new SequenceInputStream(enumeration);
     }
 }
