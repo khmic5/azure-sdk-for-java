@@ -14,12 +14,6 @@ public final class MapTileOptions {
     private LocalizedMapView localizedMapView;
 
     /**
-     * Constructor
-     */
-    public MapTileOptions() {
-    }
-
-    /**
      * get tileset id
      */
     public TilesetID getTilesetID() {

@@ -6,9 +6,11 @@ package com.azure.maps.render;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.SequenceInputStream;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.Objects;
 
 import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceClient;
@@ -18,6 +20,7 @@ import com.azure.core.http.rest.SimpleResponse;
 import com.azure.core.http.rest.StreamResponse;
 import com.azure.core.models.GeoBoundingBox;
 import com.azure.core.util.Context;
+import com.azure.core.util.FluxUtil;
 import com.azure.maps.render.models.Copyright;
 import com.azure.maps.render.models.CopyrightCaption;
 import com.azure.maps.render.models.ErrorResponseException;
@@ -98,9 +101,8 @@ public final class RenderClient {
      * @throws IOException
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public InputStream getMapTile(MapTileOptions options) {
-        Iterator<ByteBufferBackedInputStream> iterator = this.asyncClient.getMapTile(options).map(ByteBufferBackedInputStream::new).toStream().iterator();
-        return getInputStream(iterator);
+    public void getMapTile(OutputStream stream, MapTileOptions options) {
+        getMapTileWithResponse(stream, options, Context.NONE);
     }
 
     /**
@@ -142,11 +144,12 @@ public final class RenderClient {
      *     available Views.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SimpleResponse<InputStream> getMapTileWithResponse(MapTileOptions options, Context context) {
-        Mono<StreamResponse> monoResp = this.asyncClient.getMapTileWithResponse(options, context); 
+    public Response<Void> getMapTileWithResponse(OutputStream stream, MapTileOptions options, Context context) {
+        Objects.requireNonNull(stream);
+        Mono<StreamResponse> monoResp = this.asyncClient.getMapTileWithResponse(options, context)
+            .flatMap(response -> FluxUtil.writeToOutputStream(response.getValue(), stream).thenReturn(response)); 
         StreamResponse resp = monoResp.block();
-        Iterator<ByteBufferBackedInputStream> iterator = resp.getValue().map(ByteBufferBackedInputStream::new).toStream().iterator();
-        return new SimpleResponse<InputStream>(resp.getRequest(), resp.getStatusCode(), resp.getHeaders(), getInputStream(iterator));
+        return new SimpleResponse<Void>(resp.getRequest(), resp.getStatusCode(), resp.getHeaders(), null);
     } 
 
     /**

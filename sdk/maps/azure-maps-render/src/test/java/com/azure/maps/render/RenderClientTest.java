@@ -3,6 +3,7 @@ package com.azure.maps.render;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -40,9 +41,10 @@ public class RenderClientTest extends RenderClientTestBase {
         MapTileOptions mapTileOptions = new MapTileOptions();
         mapTileOptions.setTilesetId(TilesetID.MICROSOFT_BASE_ROAD);
         mapTileOptions.setTileIndex(new TileIndex().setX(10).setY(22).setZ(6));
-        InputStream actualResult = client.getMapTile(mapTileOptions);
-        validateGetMapTile(actualResult);
-        actualResult.close();
+        try(ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
+            client.getMapTile(stream, mapTileOptions);
+            validateGetMapTile(stream.toByteArray());
+        }
     }
 
     // Test get map tile with response
@@ -54,7 +56,9 @@ public class RenderClientTest extends RenderClientTestBase {
         MapTileOptions mapTileOptions = new MapTileOptions();
         mapTileOptions.setTilesetId(TilesetID.MICROSOFT_BASE_ROAD);
         mapTileOptions.setTileIndex(new TileIndex().setX(10).setY(22).setZ(6));
-        validateGetMapTileWithResponse(200, client.getMapTileWithResponse(mapTileOptions, null));
+        try(ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
+            validateGetMapTileWithResponse(200, client.getMapTileWithResponse(stream, mapTileOptions, null), stream);
+        }
     }
 
     // Case 2: Respone 400, incorrect input
@@ -65,9 +69,11 @@ public class RenderClientTest extends RenderClientTestBase {
         MapTileOptions mapTileOptions = new MapTileOptions();
         mapTileOptions.setTilesetId(TilesetID.MICROSOFT_BASE_ROAD);
         mapTileOptions.setTileIndex(new TileIndex().setX(10).setY(22).setZ(-1000));
-        final HttpResponseException httpResponseException = assertThrows(HttpResponseException.class,
-                () -> client.getMapTileWithResponse(mapTileOptions, null));
+        try(ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
+            final HttpResponseException httpResponseException = assertThrows(HttpResponseException.class,
+                () -> client.getMapTileWithResponse(stream, mapTileOptions, null));
             assertEquals(400, httpResponseException.getResponse().getStatusCode());
+        }
     }
 
     // Test get map tileset

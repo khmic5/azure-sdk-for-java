@@ -11,6 +11,11 @@ import java.util.Map;
 import java.util.Objects;
 
 import com.azure.core.annotation.ServiceClientBuilder;
+import com.azure.core.client.traits.AzureKeyCredentialTrait;
+import com.azure.core.client.traits.ConfigurationTrait;
+import com.azure.core.client.traits.EndpointTrait;
+import com.azure.core.client.traits.HttpTrait;
+import com.azure.core.client.traits.TokenCredentialTrait;
 import com.azure.core.credential.AzureKeyCredential;
 import com.azure.core.credential.TokenCredential;
 import com.azure.core.http.HttpClient;
@@ -25,17 +30,22 @@ import com.azure.core.http.policy.HttpLogOptions;
 import com.azure.core.http.policy.HttpLoggingPolicy;
 import com.azure.core.http.policy.HttpPipelinePolicy;
 import com.azure.core.http.policy.HttpPolicyProviders;
+import com.azure.core.http.policy.RetryOptions;
 import com.azure.core.http.policy.RetryPolicy;
 import com.azure.core.http.policy.UserAgentPolicy;
 import com.azure.core.util.ClientOptions;
 import com.azure.core.util.Configuration;
 import com.azure.core.util.CoreUtils;
+import com.azure.core.util.builder.ClientBuilderUtil;
 import com.azure.maps.render.implementation.RenderClientImpl;
 import com.azure.maps.render.implementation.RenderClientImplBuilder;
 
 /** A builder for creating a new instance of the RenderClient type. */
 @ServiceClientBuilder(serviceClients = {RenderClient.class, RenderAsyncClient.class})
-public final class RenderClientBuilder {
+public final class RenderClientBuilder implements AzureKeyCredentialTrait<RenderClientBuilder>,
+    TokenCredentialTrait<RenderClientBuilder>, HttpTrait<RenderClientBuilder>,
+    ConfigurationTrait<RenderClientBuilder>, EndpointTrait<RenderClientBuilder>  {
+        
     // auth scope
     static final String[] DEFAULT_SCOPES = new String[] {"https://atlas.microsoft.com/.default"};
 
@@ -44,12 +54,15 @@ public final class RenderClientBuilder {
     private static final String SDK_VERSION = "version";
     private static final String RENDER_SUBSCRIPTION_KEY = "subscription-key";
     private static final String X_MS_CLIENT_ID = "x-ms-client-id";
+    private static final RetryPolicy DEFAULT_RETRY_POLICY = new RetryPolicy();
 
     // instance fields
     private final Map<String, String> properties = new HashMap<>();
     private String endpoint;
     private RenderServiceVersion serviceVersion;
     private String mapsClientId;
+    private RetryOptions retryOptions;
+
     /*
      * The HTTP pipeline to send requests through
      */
@@ -111,6 +124,7 @@ public final class RenderClientBuilder {
      * @param endpoint url of the service
      * @return RenderClientBuilder
      */
+    @Override
     public RenderClientBuilder endpoint(String endpoint) {
         this.endpoint = Objects.requireNonNull(endpoint, "'endpoint' cannot be null.");
         return this;
@@ -132,6 +146,7 @@ public final class RenderClientBuilder {
      * @param pipeline the pipeline value.
      * @return the RenderClientBuilder.
      */
+    @Override
     public RenderClientBuilder pipeline(HttpPipeline pipeline) {
         this.pipeline = Objects.requireNonNull(pipeline, "'pipeline' cannot be null.");
         return this;
@@ -143,6 +158,7 @@ public final class RenderClientBuilder {
      * @param httpClient the httpClient value.
      * @return the RenderClientBuilder.
      */
+    @Override
     public RenderClientBuilder httpClient(HttpClient httpClient) {
         this.httpClient = Objects.requireNonNull(httpClient, "'httpClient' cannot be null.");
         return this;
@@ -154,6 +170,7 @@ public final class RenderClientBuilder {
      * @param configuration the configuration value.
      * @return the RenderClientBuilder.
      */
+    @Override
     public RenderClientBuilder configuration(Configuration configuration) {
         this.configuration = Objects.requireNonNull(configuration, "'configuration' cannot be null.");;
         return this;
@@ -165,6 +182,7 @@ public final class RenderClientBuilder {
      * @param configuration the configuration value.
      * @return the RenderClientBuilder.
      */
+    @Override
     public RenderClientBuilder httpLogOptions(HttpLogOptions httpLogOptions) {
         this.httpLogOptions = Objects.requireNonNull(httpLogOptions, "'logOptions' cannot be null.");
         return this;
@@ -187,6 +205,7 @@ public final class RenderClientBuilder {
      * @param clientOptions the clientOptions value.
      * @return the RenderClientBuilder.
      */
+    @Override
     public RenderClientBuilder clientOptions(ClientOptions clientOptions) {
         this.clientOptions = Objects.requireNonNull(clientOptions, "'clientOptions' cannot be null.");
         return this;
@@ -198,6 +217,7 @@ public final class RenderClientBuilder {
      * @param customPolicy The custom Http pipeline policy to add.
      * @return the RenderClientBuilder.
      */
+    @Override
     public RenderClientBuilder addPolicy(HttpPipelinePolicy customPolicy) {
         pipelinePolicies.add(Objects.requireNonNull(customPolicy, "'customPolicy' cannot be null."));
         return this;
@@ -210,6 +230,7 @@ public final class RenderClientBuilder {
      * @return The updated {@link MapsRenderClientBuilder} object.
      * @throws NullPointerException If {@code tokenCredential} is null.
      */
+    @Override
     public RenderClientBuilder credential(TokenCredential tokenCredential) {
         this.tokenCredential = Objects.requireNonNull(tokenCredential, "'tokenCredential' cannot be null.");
         return this;
@@ -222,6 +243,7 @@ public final class RenderClientBuilder {
      * @return The updated {@link MapsRenderClientBuilder} object.
      * @throws NullPointerException If {@code keyCredential} is null.
      */
+    @Override
     public RenderClientBuilder credential(AzureKeyCredential keyCredential)  {
         this.keyCredential = Objects.requireNonNull(keyCredential, "'keyCredential' cannot be null.");
         return this;
@@ -300,6 +322,8 @@ public final class RenderClientBuilder {
 
         // Add final policies
         HttpPolicyProviders.addBeforeRetryPolicies(policies);
+        policies.add(ClientBuilderUtil.validateAndGetRetryPolicy(retryPolicy, retryOptions, DEFAULT_RETRY_POLICY));
+
         policies.add(retryPolicy == null ? new RetryPolicy() : retryPolicy);
         policies.add(new CookiePolicy());
         policies.addAll(this.pipelinePolicies);
@@ -331,5 +355,16 @@ public final class RenderClientBuilder {
      */
     public RenderClient buildClient() {
         return new RenderClient(buildAsyncClient());
+    }
+
+    /**
+     * Sets retry options
+     * @param retryOptions
+     * @return
+     */
+    @Override
+    public RenderClientBuilder retryOptions(RetryOptions retryOptions) {
+        this.retryOptions = retryOptions;
+        return this;
     }
 }
