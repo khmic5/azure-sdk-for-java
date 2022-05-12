@@ -3,7 +3,6 @@ import org.slf4j.Logger;
 import java.util.Arrays;
 
 import com.azure.autorest.customization.ClassCustomization;
-import com.azure.autorest.customization.ConstructorCustomization;
 import com.azure.autorest.customization.Customization;
 import com.azure.autorest.customization.PackageCustomization;
 
@@ -16,10 +15,13 @@ public class RenderCustomization extends Customization {
         PackageCustomization models = customization.getPackage("com.azure.maps.render.models");
 
          // customize maptileset
-        //  customizeMapTileset(models);
+         customizeMapTileset(models);
 
-         // custome error repsponse exception
+         // customize error repsponse exception
          customizeErrorResponseException(models);
+
+         // customize tilesetid
+         customizeTilesetId(models);
     }
 
     // Customizes the MapTileset class
@@ -54,33 +56,26 @@ public class RenderCustomization extends Customization {
 
     // Customizes the ErrorResponseException class
     private void customizeErrorResponseException(PackageCustomization models) {
+        final String getValueMethod = 
+            "/** " +
+            "* Gets the deserialized response value." +
+            "*/" +
+            "@Override " +
+            "public ResponseError getValue() {" +
+            "   return (ResponseError) super.getValue();" +
+            "}";
         ClassCustomization classCustomization = models.getClass("ErrorResponseException");
         MethodCustomization mc = classCustomization.getMethod("getValue");
-        // mc.rename("hello");
-        ClassCustomization cc = models.getClass("ErrorResponseException");
-        cc.removeMethod("getValue");
-        // classCustomization.getConstructor("ErrorResponseException(String message, HttpResponse response, ErrorResponse value)")
-        //     .replaceParameters("String message, HttpResponse response, ResponseError value");
-        // final String errorResponseExceptionMethod = 
-        //     "/** " +
-        //     "* Initializes a new instance of the ErrorResponseException class." +
-        //     "* @param message the exception message or the response content if a message is not available." +
-        //     "* @param response the HTTP response." +
-        //     "* @param value the deserialized response value." +
-        //     "*/" +
-        //     "public ErrorResponseException(String message, HttpResponse response, ResponseError value) {" +
-        //     "    super(message, response, value);" +
-        //     "}";
-        // final String getValueMethod = 
-        //     "@Override" +
-        //     "/** " +
-        //     "* Gets the deserialized response value." +
-        //     "*/" +
-        //     "@Override" +
-        //     "public ResponseError getValue() {" +
-        //     "    return (ResponseError) super.getValue();" +
-        //     "}";
-        // classCustomization.addConstructor(errorResponseExceptionMethod, Arrays.asList("com.azure.core.models.ResponseError"));
-        // classCustomization.addMethod(getValueMethod, Arrays.asList("com.azure.core.models.ResponseError"));
+        mc.removeAnnotation("@Override");
+        classCustomization.removeMethod("getValue");
+        classCustomization.addMethod(getValueMethod, Arrays.asList("com.azure.core.models.ResponseError"));
+        classCustomization.getConstructor("ErrorResponseException(String message, HttpResponse response, ErrorResponse value)")
+            .replaceParameters("String message, HttpResponse response, ResponseError value");
     }
+
+     // Customizes the TilesetId class
+     private void customizeTilesetId(PackageCustomization models) {
+        ClassCustomization classCustomization = models.getClass("TilesetID");
+        classCustomization.rename("TilesetId");
+     }
 }

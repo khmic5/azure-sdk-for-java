@@ -28,7 +28,7 @@ import com.azure.maps.render.models.MapStaticImageOptions;
 import com.azure.maps.render.models.MapTileOptions;
 import com.azure.maps.render.models.MapTileset;
 import com.azure.maps.render.models.TileIndex;
-import com.azure.maps.render.models.TilesetID;
+import com.azure.maps.render.models.TilesetId;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -182,7 +182,7 @@ public final class RenderAsyncClient {
      * @return metadata for a tileset in the TileJSON format.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<MapTileset> getMapTileset(TilesetID tilesetId) {
+    public Mono<MapTileset> getMapTileset(TilesetId tilesetId) {
         Mono<Response<MapTileset>> result = this.getMapTilesetWithResponse(tilesetId, null);
         return result.flatMap(response -> {
             return Mono.just(response.getValue());
@@ -205,7 +205,7 @@ public final class RenderAsyncClient {
      * @return metadata for a tileset in the TileJSON format.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<MapTileset>> getMapTilesetWithResponse(TilesetID tilesetId) {
+    public Mono<Response<MapTileset>> getMapTilesetWithResponse(TilesetId tilesetId) {
         return this.getMapTilesetWithResponse(tilesetId, null);
     }
     
@@ -220,7 +220,7 @@ public final class RenderAsyncClient {
      * @return
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Mono<Response<MapTileset>> getMapTilesetWithResponse(TilesetID tilesetId, Context context) {
+    Mono<Response<MapTileset>> getMapTilesetWithResponse(TilesetId tilesetId, Context context) {
         Mono<Response<MapTileset>> responseMono = this.serviceClient.getMapTilesetWithResponseAsync(tilesetId);
         return responseMono.flatMap(response -> {
             return Mono.just(response);
@@ -249,7 +249,7 @@ public final class RenderAsyncClient {
      * @return copyright attribution for the requested section of a tileset.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<MapAttribution> getMapAttribution(TilesetID tilesetId, int zoom, GeoBoundingBox bounds) {
+    public Mono<MapAttribution> getMapAttribution(TilesetId tilesetId, int zoom, GeoBoundingBox bounds) {
         Mono<Response<MapAttribution>> result = this.getMapAttributionWithResponse(tilesetId, zoom, bounds, null);
         return result.flatMap(response -> {
             return Mono.just(response.getValue());
@@ -278,7 +278,7 @@ public final class RenderAsyncClient {
      * @return copyright attribution for the requested section of a tileset.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<MapAttribution>> getMapAttributionWithResponse(TilesetID tilesetId, int zoom, GeoBoundingBox bounds) {
+    public Mono<Response<MapAttribution>> getMapAttributionWithResponse(TilesetId tilesetId, int zoom, GeoBoundingBox bounds) {
         return this.getMapAttributionWithResponse(tilesetId, zoom, bounds, null);
     }
 
@@ -299,7 +299,7 @@ public final class RenderAsyncClient {
      * @return
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Mono<Response<MapAttribution>> getMapAttributionWithResponse(TilesetID tilesetId, int zoom, GeoBoundingBox bounds, Context context) {
+    Mono<Response<MapAttribution>> getMapAttributionWithResponse(TilesetId tilesetId, int zoom, GeoBoundingBox bounds, Context context) {
         List<Double> boundList = new ArrayList<>();
         if (bounds != null ) {
             boundList = Arrays.asList(bounds.getWest(), bounds.getSouth(), bounds.getEast(), bounds.getNorth());

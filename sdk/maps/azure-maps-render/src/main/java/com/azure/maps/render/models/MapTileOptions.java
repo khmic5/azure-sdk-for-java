@@ -6,7 +6,7 @@ import java.time.OffsetDateTime;
  * Map tile options class to organize inputs for get map tile
  */
 public final class MapTileOptions {
-    private TilesetID tilesetId;
+    private TilesetId tilesetId;
     private TileIndex tileIndex;
     private OffsetDateTime timeStamp;
     private MapTileSize tileSize;
@@ -16,7 +16,7 @@ public final class MapTileOptions {
     /**
      * get tileset id
      */
-    public TilesetID getTilesetID() {
+    public TilesetId getTilesetID() {
         return tilesetId;
     }
 
@@ -25,7 +25,7 @@ public final class MapTileOptions {
      * @param tilesetID
      * @return
      */
-    public MapTileOptions setTilesetId(TilesetID tilesetID) {
+    public MapTileOptions setTilesetId(TilesetId tilesetID) {
         this.tilesetId = tilesetID;
         return this;
     }

@@ -25,7 +25,7 @@ import com.azure.maps.render.models.MapStaticImageOptions;
 import com.azure.maps.render.models.MapTileOptions;
 import com.azure.maps.render.models.MapTileset;
 import com.azure.maps.render.models.TileIndex;
-import com.azure.maps.render.models.TilesetID;
+import com.azure.maps.render.models.TilesetId;
 
 import reactor.core.publisher.Mono;
 
@@ -163,7 +163,7 @@ public final class RenderClient {
      * @return metadata for a tileset in the TileJSON format.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public MapTileset getMapTileset(TilesetID tilesetId) {
+    public MapTileset getMapTileset(TilesetId tilesetId) {
         return this.asyncClient.getMapTileset(tilesetId).block();
     }
     
@@ -178,7 +178,7 @@ public final class RenderClient {
      * @return Response<MapTileset>
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<MapTileset> getMapTilesetWithResponse(TilesetID tilesetID, Context context) {
+    public Response<MapTileset> getMapTilesetWithResponse(TilesetId tilesetID, Context context) {
         return this.asyncClient.getMapTilesetWithResponse(tilesetID, context).block();
     }
 
@@ -204,7 +204,7 @@ public final class RenderClient {
      * @return copyright attribution for the requested section of a tileset.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public MapAttribution getMapAttribution(TilesetID tilesetId, int zoom, GeoBoundingBox bounds) {
+    public MapAttribution getMapAttribution(TilesetId tilesetId, int zoom, GeoBoundingBox bounds) {
         return this.asyncClient.getMapAttribution(tilesetId, zoom, bounds).block();
     }
 
@@ -227,7 +227,7 @@ public final class RenderClient {
      * @return copyright attribution for the requested section of a tileset.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<MapAttribution> getMapAttributionWithResponse(TilesetID tilesetId, int zoom, GeoBoundingBox bounds, Context context) {
+    public Response<MapAttribution> getMapAttributionWithResponse(TilesetId tilesetId, int zoom, GeoBoundingBox bounds, Context context) {
         return this.asyncClient.getMapAttributionWithResponse(tilesetId, zoom, bounds, context).block();
     }
 

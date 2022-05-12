@@ -9,7 +9,7 @@ import com.azure.core.exception.HttpResponseException;
 import com.azure.core.http.HttpClient;
 import com.azure.core.models.GeoBoundingBox;
 import com.azure.maps.render.models.TileIndex;
-import com.azure.maps.render.models.TilesetID;
+import com.azure.maps.render.models.TilesetId;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
@@ -41,8 +41,8 @@ public class RenderAsyncClientTest extends RenderClientTestBase {
     @MethodSource("com.azure.maps.render.TestUtils#getTestParameters")
     public void testAsyncGetMapTileset(HttpClient httpClient, RenderServiceVersion serviceVersion) {
         RenderAsyncClient client = getRenderAsyncClient(httpClient, serviceVersion);
-        new TilesetID();
-        StepVerifier.create(client.getMapTileset(TilesetID.MICROSOFT_BASE))
+        new TilesetId();
+        StepVerifier.create(client.getMapTileset(TilesetId.MICROSOFT_BASE))
         .assertNext(actualResults -> {
             try {
                 validateGetMapTileset(TestUtils.getExpectedMapTileset(), actualResults);
@@ -58,8 +58,8 @@ public class RenderAsyncClientTest extends RenderClientTestBase {
     @MethodSource("com.azure.maps.render.TestUtils#getTestParameters")
     public void testAsyncGetMapTilesetWithResponse(HttpClient httpClient, RenderServiceVersion serviceVersion) {
         RenderAsyncClient client = getRenderAsyncClient(httpClient, serviceVersion);
-        new TilesetID();
-        StepVerifier.create(client.getMapTilesetWithResponse(TilesetID.MICROSOFT_BASE))
+        new TilesetId();
+        StepVerifier.create(client.getMapTilesetWithResponse(TilesetId.MICROSOFT_BASE))
                 .assertNext(response ->
                 {
                     try {
@@ -76,7 +76,7 @@ public class RenderAsyncClientTest extends RenderClientTestBase {
     @MethodSource("com.azure.maps.render.TestUtils#getTestParameters")
     public void testAsyncInvalidGetMapTilesetWithResponse(HttpClient httpClient, RenderServiceVersion serviceVersion) {
         RenderAsyncClient client = getRenderAsyncClient(httpClient, serviceVersion);
-        StepVerifier.create(client.getMapTilesetWithResponse(new TilesetID()))
+        StepVerifier.create(client.getMapTilesetWithResponse(new TilesetId()))
                 .verifyErrorSatisfies(ex -> {
                     final HttpResponseException httpResponseException = (HttpResponseException) ex;
                     assertEquals(400, httpResponseException.getResponse().getStatusCode());
@@ -89,8 +89,8 @@ public class RenderAsyncClientTest extends RenderClientTestBase {
     public void testAsyncGetMapAttribution(HttpClient httpClient, RenderServiceVersion serviceVersion) {
         RenderAsyncClient client = getRenderAsyncClient(httpClient, serviceVersion);
         GeoBoundingBox bounds = new GeoBoundingBox(-122.414162,47.57949,-122.247157,47.668372);
-        new TilesetID();
-        StepVerifier.create(client.getMapAttribution(TilesetID.MICROSOFT_BASE, 6, bounds))
+        new TilesetId();
+        StepVerifier.create(client.getMapAttribution(TilesetId.MICROSOFT_BASE, 6, bounds))
         .assertNext(actualResults -> {
             try {
                 validateGetMapAttribution(TestUtils.getExpectedMapAttribution(), actualResults);
@@ -107,8 +107,8 @@ public class RenderAsyncClientTest extends RenderClientTestBase {
     public void testAsyncGetMapAttributionWithResponse(HttpClient httpClient, RenderServiceVersion serviceVersion) {
         RenderAsyncClient client = getRenderAsyncClient(httpClient, serviceVersion);
         GeoBoundingBox bounds = new GeoBoundingBox(-122.414162,47.57949,-122.247157,47.668372);
-        new TilesetID();
-        StepVerifier.create(client.getMapAttributionWithResponse(TilesetID.MICROSOFT_BASE, 6, bounds))
+        new TilesetId();
+        StepVerifier.create(client.getMapAttributionWithResponse(TilesetId.MICROSOFT_BASE, 6, bounds))
                 .assertNext(response ->
                 {
                     try {
@@ -126,7 +126,7 @@ public class RenderAsyncClientTest extends RenderClientTestBase {
     public void testAsyncInvalidGetMapAttributionWithResponse(HttpClient httpClient, RenderServiceVersion serviceVersion) {
         RenderAsyncClient client = getRenderAsyncClient(httpClient, serviceVersion);
         GeoBoundingBox bounds = new GeoBoundingBox(-10000,0,0,0);
-        StepVerifier.create(client.getMapAttributionWithResponse(new TilesetID(), 6, bounds))
+        StepVerifier.create(client.getMapAttributionWithResponse(new TilesetId(), 6, bounds))
                 .verifyErrorSatisfies(ex -> {
                     final HttpResponseException httpResponseException = (HttpResponseException) ex;
                     assertEquals(400, httpResponseException.getResponse().getStatusCode());
