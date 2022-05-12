@@ -16,7 +16,7 @@ public final class TileIndex {
      * Zoom level for the desired tile.
      *
      * Please see [Zoom Levels and Tile
-     * Grid](https://docs.microsoft.com/azure/location-based-services/zoom-levels-and-tile-grid)
+     * Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid)
      * for details.
      */
     @JsonProperty(value = "z", required = true)
@@ -48,7 +48,7 @@ public final class TileIndex {
      * Get the z property: Zoom level for the desired tile.
      *
      * <p>Please see [Zoom Levels and Tile
-     * Grid](https://docs.microsoft.com/azure/location-based-services/zoom-levels-and-tile-grid) for details.
+     * Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
      *
      * @return the z value.
      */
@@ -60,7 +60,7 @@ public final class TileIndex {
      * Set the z property: Zoom level for the desired tile.
      *
      * <p>Please see [Zoom Levels and Tile
-     * Grid](https://docs.microsoft.com/azure/location-based-services/zoom-levels-and-tile-grid) for details.
+     * Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid) for details.
      *
      * @param z the z value to set.
      * @return the TileIndex object itself.
